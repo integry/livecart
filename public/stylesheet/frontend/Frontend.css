@@ -1831,6 +1831,11 @@ table.addressSelector
     width: 64%;
 }
 
+td.productNameRow
+{
+	padding-top: 0;
+}
+
 .shipment .subTotal, #cart .subTotal
 {
 	white-space: nowrap;
@@ -2923,7 +2928,6 @@ html[xmlns] .rootCategories .ul .li {
 *************************/
 .one-page-checkout-login-field
 {
-	float: left;
 	margin-right: 1em;
 }
 
@@ -2945,15 +2949,14 @@ html[xmlns] .rootCategories .ul .li {
 #checkout-payment
 {
 	float: left;
-	width: 51%;
+	width: 77%;
 }
 
 #checkout-right
 {
 	float: right;
-	width: 46%;
+	width: 22%;
 	padding-left: 1%;
-	padding-right: 1%;
 }
 
 #checkout-cart #cart
@@ -2985,16 +2988,8 @@ html[xmlns] .rootCategories .ul .li {
 
 .onePageCheckout-index h2 .step
 {
-	border-width: 1px;
 	padding: 5px;
-	margin-right: 7px;
-	background-color: green;
-	color: white;
-}
-
-.onePageCheckout-index .step-incomplete h2 .step
-{
-	background-color: red;
+	margin: 0 7px;
 }
 
 .onePageCheckout-index .step-disabled form,
@@ -3076,6 +3071,93 @@ html[xmlns] .rootCategories .ul .li {
 #upsellProducts .pricingInfo .price
 {
 	font-size:small;
+}
+
+#checkout-options, #checkoutLogin, .registerColumn
+{
+	display: inline-block;
+	width: 48%;
+	margin-right: 1%;
+	vertical-align: top;
+}
+
+.onePageCheckout-index .step-disabled .notAvailable
+{
+	display: none !important;
+}
+
+.onePageCheckout-index .modifyStep
+{
+	float: right;
+}
+
+.step-incomplete .modifyStep,
+.step.opened .modifyStep
+{
+	display: none;
+}
+
+.step.closed form,
+.step.closed div.form
+{
+	display: none !important;
+}
+
+.registerColumn input.text,
+.registerColumn select
+{
+	width: 170px;
+}
+
+.registerColumn div.input
+{
+	margin: 10px 0;
+}
+
+.step .stepTitle
+{
+	border-width: 1px;
+	border-radius: 5px;
+	line-height: 30px;
+	border-color: lightgreen;
+}
+
+.step.step-incomplete .stepTitle
+{
+	border-color: inherit;
+}
+
+.step .stepTitle h2
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.onePageCheckout-index .step
+{
+	margin-bottom: 1em;
+}
+
+.stepPreview
+{
+	padding-top: 4px;
+}
+
+.onePageCheckout-index .step.opened .stepPreview
+{
+	display: none;
+}
+
+.onePageCheckout-index .step .modifyStep
+{
+	margin-right: 1em;
+}
+
+.onePageCheckout-index .completeOverview h2
+{
+	margin-top: 0;
+	padding-top: 0;
 }
 
 /******* tabs *********/

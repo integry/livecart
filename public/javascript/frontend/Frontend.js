@@ -264,7 +264,7 @@ Product.ChangeRecurringPlanAction.prototype =
 {
 	initialize: function(url, node)
 	{
-		var 
+		var
 			changedDropdownName = $("recurringBillingPlan"),
 			form = changedDropdownName.up("form");
 			progressIndicator = $(node).up("div").down("span");
@@ -1084,6 +1084,7 @@ Frontend.OnePageCheckout.prototype =
 	findUsedNodes: function()
 	{
 		this.nodes.root = $('content');
+		this.nodes.checkoutOptions = $('checkout-options');
 		this.nodes.login = $('checkout-login');
 		this.nodes.shipping = $('checkout-shipping');
 		this.nodes.shippingAddress = $('checkout-shipping-address');
@@ -1093,7 +1094,7 @@ Frontend.OnePageCheckout.prototype =
 		this.nodes.cart = $('checkout-cart');
 		this.nodes.overview = $('checkout-overview');
 
-		this.steps = [this.nodes.shippingAddress, this.nodes.shippingMethod, this.nodes.billingAddress, this.nodes.payment];
+		this.steps = [this.nodes.login, this.nodes.billingAddress, this.nodes.shippingAddress, this.nodes.shippingMethod, this.nodes.payment];
 	},
 
 	bindEvents: function()
@@ -1101,6 +1102,8 @@ Frontend.OnePageCheckout.prototype =
 		Observer.add('order', this.updateOrderTotals.bind(this));
 		Observer.add('order', this.updateOrderStatus.bind(this));
 		Observer.add('cart', this.updateCartHTML.bind(this));
+		Observer.add('billingAddress', this.updateBillingAddressHTML.bind(this));
+		Observer.add('shippingAddress', this.updateShippingAddressHTML.bind(this));
 		Observer.add('shippingMethods', this.updateShippingMethodsHTML.bind(this));
 		Observer.add('user', this.updateShippingOptions.bind(this));
 		Observer.add('overview', this.updateOverviewHTML.bind(this));
@@ -1108,12 +1111,33 @@ Frontend.OnePageCheckout.prototype =
 		Observer.add('editableSteps', this.updateEditableSteps.bind(this));
 		Observer.add('completedSteps', this.updateCompletedSteps.bind(this));
 
+		this.initCheckoutOptions();
 		this.initShippingOptions();
 		this.initShippingAddressForm();
 		this.initBillingAddressForm();
 		this.initCartForm();
 		this.initOverview();
 		this.initPaymentForm();
+
+		this.bindModifyLinks();
+
+		jQuery('#checkout-overview').css({width: jQuery('#checkout-overview').width() + 'px'}).sticky({ topSpacing: 10 });
+	},
+
+	bindModifyLinks: function()
+	{
+		var self = this;
+		jQuery('.modifyStep a').click(function(e)
+		{
+			e.preventDefault();
+			self.reopenStep(jQuery(this).closest('div.step'));
+		});
+	},
+
+	updateCheckoutOptions: function(e)
+	{
+		var el = e ? Event.element(e) : null;
+		new LiveCart.AjaxRequest(this.nodes.checkoutOptions, el);
 	},
 
 	updateShippingOptions: function(e)
@@ -1131,20 +1155,11 @@ Frontend.OnePageCheckout.prototype =
 		}
 
 		var billingForm = this.nodes.billingAddress.down('form');
-		var el = e ? Event.element(e) : form.down('div');
+		var el = e ? Event.element(e) : form.down('input.submit');
 
 		if (!jQuery(el).is(':visible'))
 		{
-			el = form.down('div');
-		}
-
-		if (billingForm)
-		{
-			form.elements.namedItem('sameAsShipping').value = (billingForm.elements.namedItem('sameAsShipping').checked ? 'on' : '');
-		}
-		else
-		{
-			form.elements.namedItem('sameAsShipping').value = 'on';
+			el = form.down('input.submit');
 		}
 
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
@@ -1153,11 +1168,11 @@ Frontend.OnePageCheckout.prototype =
 	updateBillingAddress: function(e)
 	{
 		var form = this.nodes.billingAddress.down('form');
-		var el = e ? Event.element(e) : form.down('div');
+		var el = e ? Event.element(e) : form.down('input.submit');
 
 		if (!jQuery(el).is(':visible'))
 		{
-			el = form.down('div');
+			el = form.down('input.submit');
 		}
 
 		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
@@ -1250,6 +1265,11 @@ Frontend.OnePageCheckout.prototype =
 		indicator.show();
 	},
 
+	initCheckoutOptions: function()
+	{
+		this.formOnChange(this.nodes.checkoutOptions, this.updateCheckoutOptions.bind(this));
+	},
+
 	initShippingOptions: function()
 	{
 		this.formOnChange(this.nodes.shippingMethod.down('form'), this.updateShippingOptions.bind(this));
@@ -1257,11 +1277,18 @@ Frontend.OnePageCheckout.prototype =
 
 	initShippingAddressForm: function()
 	{
+		jQuery('#sameAsBilling').change(function()
+		{
+			jQuery('#shippingAddressForm').toggle(jQuery(this).attr('checked') != 'checked');
+		});
+
+		jQuery('#sameAsBilling').change();
+
 		var form = this.nodes.shippingAddress.down('form');
 		this.formOnChange(form, this.updateShippingAddress.bind(this));
 		new Order.AddressSelector(form);
 
-		jQuery('.confirmAddress', form).click(this.updateShippingAddress.bind(this));
+		//jQuery('.confirmAddress', form).click(this.updateShippingAddress.bind(this));
 	},
 
 	initBillingAddressForm: function()
@@ -1270,7 +1297,7 @@ Frontend.OnePageCheckout.prototype =
 		this.formOnChange(form, this.updateBillingAddress.bind(this));
 		new Order.AddressSelector(form);
 
-		jQuery('.confirmAddress', form).click(this.updateBillingAddress.bind(this));
+		//jQuery('.confirmAddress', form).click(this.updateBillingAddress.bind(this));
 	},
 
 	initCartForm: function()
@@ -1465,6 +1492,18 @@ Frontend.OnePageCheckout.prototype =
 		}
 	},
 
+	updateBillingAddressHTML: function(params)
+	{
+		this.updateElement(this.nodes.billingAddress, params);
+		this.initBillingAddressForm();
+	},
+
+	updateShippingAddressHTML: function(params)
+	{
+		this.updateElement(this.nodes.shippingAddress, params);
+		this.initShippingAddressForm();
+	},
+
 	updateShippingMethodsHTML: function(params)
 	{
 		this.updateElement(this.nodes.shippingMethod, params);
@@ -1495,16 +1534,21 @@ Frontend.OnePageCheckout.prototype =
 			var status = value[1];
 			var node = this.nodes[step];
 
-			if (status)
+			if (node)
 			{
-				node.removeClassName(className);
-			}
-			else
-			{
-				node.addClassName(className);
-				this.disableFurtherSteps(node);
+				if (status)
+				{
+					node.removeClassName(className);
+				}
+				else
+				{
+					node.addClassName(className);
+					this.disableFurtherSteps(node);
+				}
 			}
 		}.bind(this));
+
+		this.updateStepControls();
 	},
 
 	updateOrderTotals: function(order)
@@ -1513,6 +1557,55 @@ Frontend.OnePageCheckout.prototype =
 		{
 			this.updateElement(el, order.formattedTotal);
 		}.bind(this));
+	},
+
+	updateStepControls: function()
+	{
+		var self = this;
+		var opened = false;
+
+		jQuery(this.nodes.root).find('div.step').each(function()
+		{
+			var step = jQuery(this);
+			if (!step.hasClass('step-incomplete') || opened)
+			{
+				self.closeStep(step);
+			}
+			else
+			{
+				self.openStep(step);
+				opened = true;
+			}
+		});
+	},
+
+	closeStep: function(step)
+	{
+		step = jQuery(step);
+
+		step.removeClass('opened');
+		step.addClass('closed');
+	},
+
+	openStep: function(step)
+	{
+		step = jQuery(step);
+
+		step.addClass('opened');
+		step.removeClass('closed');
+
+		jQuery(step).find('input[type=text]').first().focus();
+	},
+
+	reopenStep: function(step)
+	{
+		var self = this;
+		jQuery(this.nodes.root).find('div.step').each(function()
+		{
+			self.closeStep(this);
+		});
+
+		this.openStep(step);
 	},
 
 	updateOrderStatus: function(order)
@@ -1527,6 +1620,14 @@ Frontend.OnePageCheckout.prototype =
 		{
 			return;
 		}
+
+		jQuery(form).submit(function(e)
+		{
+			e.preventDefault();
+			func();
+		});
+
+		return;
 
 		var skippedFields = skippedFields || [];
 
@@ -1621,6 +1722,8 @@ Frontend.OnePageCheckout.prototype =
 					this.disableFurtherSteps(form);
 				}
 			}
+
+			this.bindModifyLinks();
 		}.bind(this);
 	},
 
@@ -1669,6 +1772,8 @@ Frontend.OnePageCheckout.prototype =
 				new Effect.Highlight(element);
 			}
 		}
+
+		this.bindModifyLinks();
 	}
 }
 
@@ -1837,4 +1942,4 @@ FrontendToolbar.prototype = {
 if (window.FooterToolbar)
 {
 	FrontendToolbar.prototype = Object.extend(FooterToolbar.prototype, FrontendToolbar.prototype);
-}
+};

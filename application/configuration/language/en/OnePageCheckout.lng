@@ -12,3 +12,6 @@ _no_payment_method_selected=Please select a payment method
 _please_enter_shipping_address=Please enter the shipping address first
 _opc_login_msg=Log in to use a previously saved address
 _confirm_address=Confirm address
+_modify=Modify
+_new_customer=New Customer
+_the_same_as_billing_address=My shipping and billing addresses are the same

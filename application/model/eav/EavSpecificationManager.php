@@ -101,6 +101,11 @@ class EavSpecificationManager extends EavSpecificationManagerCommon
 	{
 		return parent::fetchSpecificationData(__CLASS__, $productIDs, $fullSpecification);
 	}
+
+	public function unserialize($serialized)
+	{
+		parent::unserialize($serialized);
+	}
 }
 
 ?>

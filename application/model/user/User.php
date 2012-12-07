@@ -590,7 +590,39 @@ class User extends ActiveRecordModel implements EavAble
 	public function serialize($skippedRelations = array(), $properties = array())
 	{
 		$properties[] = 'specificationInstance';
+
+		foreach (array('defaultShippingAddressID', 'defaultBillingAddressID') as $addr)
+		{
+			$skippedRelations[] = $addr;
+			$addr = substr($addr, 0, -2);
+			$key = 'addr_' . $addr;
+
+			if ($this->$addr->get())
+			{
+				$this->$key = $this->$addr->get()->userAddress->get();
+				$properties[] = $key;
+			}
+		}
+
 		return parent::serialize($skippedRelations, $properties);
+	}
+
+	public function unserialize($serialized)
+	{
+		//die($serialized);
+		parent::unserialize($serialized);
+
+		foreach (array('defaultShippingAddressID', 'defaultBillingAddressID') as $addr)
+		{
+			$addr = substr($addr, 0, -2);
+			$key = 'addr_' . $addr;
+
+			if ($this->$key)
+			{
+				$class = substr($addr, 7);
+				$this->$addr->set($class::getNewInstance($this, $this->$key));
+			}
+		}
 	}
 
 	public function __destruct()

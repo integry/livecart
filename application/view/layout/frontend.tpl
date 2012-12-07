@@ -55,7 +55,7 @@
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
-	{loadJs}
+	{loadJs form=true}
 	{compiledJs glue=true nameMethod=hash}
 
 	{*

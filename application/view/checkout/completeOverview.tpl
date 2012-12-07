@@ -32,6 +32,7 @@
 	{/if}
 {/function}
 
+{if !$hideAddress}
 <div id="overviewAddresses">
 	{if $order.ShippingAddress && !$order.isMultiAddress}
 		<div class="addressContainer">
@@ -65,5 +66,6 @@
 
 	<div class="clear"></div>
 </div>
+{/if}
 
 </fieldset>
