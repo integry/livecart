@@ -349,7 +349,7 @@ class LiveCart extends Application implements Serializable
 
 			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
 			{
-				$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));
+				$this->renderer->getSmartyInstance()->registerFilter('prefilter', array($this, 'templateLocator'));
 			}
 			$this->logStat('Init renderer');
 		}
@@ -777,9 +777,10 @@ class LiveCart extends Application implements Serializable
 	public function renderBlock($block, Controller $controllerInstance)
 	{
 		$id = $block['view'];
+
 		$cache = new OutputCache($id);
-		$controllerInstance->setCache($cache);	
-		
+		$controllerInstance->setCache($cache);
+
 		$this->processInstancePlugins('outputBlock', $block);
 
 		if (is_string($block))
