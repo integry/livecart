@@ -469,7 +469,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 	public function unserialize($serialized)
 	{
 		ClassLoader::import('application.model.eav.EavSpecificationManager');
-		return parent::unserialize($serialized);
+		$res = parent::unserialize($serialized);
+
+		if (!empty($this->specificationInstance))
+		{
+			$this->specificationInstance->setOwner($this->eavObject->get());
+		}
+
+		return $res;
 	}
 }
 

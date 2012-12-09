@@ -9,7 +9,7 @@
  * @package application.model.eav
  * @author Integry Systems <http://integry.com>
  */
-abstract class EavSpecificationManagerCommon
+abstract class EavSpecificationManagerCommon implements Serializable
 {
 	/**
 	 * Owner object instance
@@ -902,6 +902,16 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		unset($this->owner);
+	}
+
+	public function serialize()
+	{
+		return serialize($this);
+	}
+
+	public function unserialize($serialized)
+	{
+		return unserialize($serialized);
 	}
 }
 

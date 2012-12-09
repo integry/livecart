@@ -1,4 +1,8 @@
-<h2><span class="step">{$steps.payment}</span>{t _payment_info}</h2>
+<div class="stepTitle">
+	{include file="onePageCheckout/block/modifyStep.tpl"}
+	<h2><span class="step">{$steps.payment}</span>{t _payment_info}</h2>
+</div>
+
 {form action="controller=onePageCheckout action=setPaymentMethod" method="POST" handle=$form id="checkout-select-payment-method"}
 	<p class="selectMethodMsg">
 		{t _select_payment_method}

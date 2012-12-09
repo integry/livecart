@@ -3,6 +3,10 @@
 	{assign var="colspan" value=$colspan-1}
 {/if}
 
+{if $hideSku}
+	{assign var="colspan" value=$colspan-1}
+{/if}
+
 {if !$nochanges}
 	<div class="orderOverviewControls">
 		<a href="{link controller=order}">{t _any_changes}</a>
@@ -12,7 +16,7 @@
 <table class="table shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
 	<thead>
 		<tr>
-			<th class="sku">{t _sku}</th>
+			{if !$hideSku}<th class="sku">{t _sku}</th>{/if}
 			{if !$productsInSeparateLine}
 				<th class="productName">{t _product}</th>
 			{/if}

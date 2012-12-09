@@ -127,6 +127,9 @@ _country=Country
 _state=State
 _postal_code=Postal Code
 
+_your_personal_details=Your Personal Details
+_your_address=Your Address
+
 ########################
 # View order
 ########################

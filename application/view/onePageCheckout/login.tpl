@@ -1,13 +1,29 @@
-<h2>{t _returning}</h2>
+<div class="stepTitle">
+	{include file="onePageCheckout/block/modifyStep.tpl"}
+	<h2><span class="step">1</span>{t Checkout Options}</h2>
+</div>
+
 {if $failedLogin}
 	<div class="errorMsg failed">
 		{t _login_failed}
 	</div>
 {/if}
-<p id="login-msg">
-	{t _opc_login_msg}
-</p>
-<form method="POST" action="{link controller=onePageCheckout action=doLogin}">
+
+<form method="POST" action="{link controller=onePageCheckout action=doProceedRegistration}" id="checkout-options">
+	<h3>{t _new_customer}</h3>
+	<p>
+		Shopping here for the first time? The next step would be to enter your address and contact information.
+	</p>
+
+	{include file="onePageCheckout/block/continueButton.tpl"}
+</form>
+
+<form method="POST" action="{link controller=onePageCheckout action=doLogin}" id="checkoutLogin">
+	<h3>Returning Customer</h3>
+	<p id="login-msg">
+		{t _opc_login_msg}
+	</p>
+
 	<div class="one-page-checkout-login-field">
 		<label>{t _your_email}:</label>
 		<input type="text" class="text" id="email" name="email" />
@@ -27,3 +43,7 @@
 	</div>
 	<div class="clear"></div>
 </form>
+
+{if $preview_options}
+	<div class="stepPreview">{$preview_options}</div>
+{/if}

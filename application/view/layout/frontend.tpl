@@ -61,7 +61,7 @@
 
 	<!-- JavaScript includes -->
 	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
-	{loadJs}
+	{loadJs form=true}
 	{compiledJs glue=true nameMethod=hash}
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 

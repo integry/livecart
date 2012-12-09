@@ -329,7 +329,14 @@ class CheckoutController extends FrontendController
 		{
 			if ($id = $form->get($type . 'Address'))
 			{
-				$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+				try
+				{
+					$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+				}
+				catch (ARNotFoundException $e)
+				{
+					$address = UserAddress::getNewInstance();
+				}
 			}
 			else
 			{
@@ -378,6 +385,8 @@ class CheckoutController extends FrontendController
 				{
 					$address = $this->createAddress(ucfirst($type) . 'Address', $type . '_');
 				}
+
+				$this->lastAddress = $address;
 
 				$this->request->set($type . 'Address', $address->userAddress->get()->getID());
 			}

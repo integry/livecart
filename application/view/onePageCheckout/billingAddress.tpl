@@ -1,16 +1,18 @@
-<h2><span class="step">{$steps.billingAddress}</span>{t _billing_address}</h2>
-
-{form action="controller=onePageCheckout action=doSelectBillingAddress" method="POST" handle=$form}
-	{if !$order.isMultiAddress}
-		<p>
-			{checkbox name="sameAsShipping" class="checkbox"}
-			<label for="sameAsShipping" class="checkbox">{t _the_same_as_shipping_address}</label>
-		</p>
-	{/if}
-
-	{include file="checkout/block/selectAddress.tpl" confirmButton=true addresses=$billingAddresses prefix="billing" states=$billing_states}
-{/form}
-
-<div class="notAvailable">
-	<p>{t _please_enter_shipping_address}</p>
+<div class="stepTitle">
+	{include file="onePageCheckout/block/modifyStep.tpl"}
+	<h2><span class="step">{$steps.billingAddress}</span>{t _billing_address}</h2>
 </div>
+
+{if $user.ID > 0}
+	{form action="controller=onePageCheckout action=doSelectBillingAddress" method="POST" handle=$form}
+		{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
+		{include file="checkout/orderFields.tpl"}
+		{include file="onePageCheckout/block/continueButton.tpl"}
+	{/form}
+{else}
+	{include file="onePageCheckout/register.tpl" states=$billing_states}
+{/if}
+
+{if $preview_billing}
+	<div class="stepPreview">{$preview_billing.compact}</div>
+{/if}

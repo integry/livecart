@@ -132,7 +132,26 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	public function serialize($skippedRelations = array(), $properties = array())
 	{
 		$properties[] = 'specificationInstance';
+		$properties[] = 'serializedState';
+
+		// for some reason directly unserializing State class causes a segfault...
+		if ($this->state->get())
+		{
+			$this->serializedState = $this->state->get()->getID();
+			$this->state->setNull();
+		}
+
 		return parent::serialize($skippedRelations, $properties);
+	}
+
+	public function unserialize($serialized)
+	{
+		parent::unserialize($serialized);
+
+		if ($this->serializedState)
+		{
+			$this->state->set(State::getInstanceByID($this->serializedState, true));
+		}
 	}
 
 	public function __destruct()

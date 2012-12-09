@@ -27,10 +27,14 @@
 	</div>
 
 	{if !$user.ID}
-	<div id="checkout-login">
+	<div id="checkout-login" class="step">
 		{$login}
 	</div>
 	{/if}
+
+	<div id="checkout-billing" class="step">
+		{$billingAddress}
+	</div>
 
 	<div id="checkout-shipping">
 		<div id="checkout-shipping-address" class="step">
@@ -39,10 +43,6 @@
 		<div id="checkout-shipping-method" class="step">
 			{$shippingMethods}
 		</div>
-	</div>
-
-	<div id="checkout-billing" class="step">
-		{$billingAddress}
 	</div>
 
 	<div id="checkout-payment" class="step">

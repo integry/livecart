@@ -1,4 +1,8 @@
-<h2><span class="step">{$steps.shippingMethod}</span>{t _select_shipping}</h2>
+<div class="stepTitle">
+	{include file="onePageCheckout/block/modifyStep.tpl"}
+	<h2><span class="step">{$steps.shippingMethod}</span>{t _select_shipping}</h2>
+</div>
+
 <div class="form">
 	{form action="controller=onePageCheckout action=doSelectShippingMethod" method="POST" handle=$form}
 		{foreach from=$shipments key="key" item="shipment"}
@@ -19,6 +23,8 @@
 				{/if}
 			{/if}
 		{/foreach}
+
+		{include file="onePageCheckout/block/continueButton.tpl"}
 	{/form}
 	{if !$shipments}
 		<div class="errorText">{t _err_no_rates_for_address}</div>
@@ -28,3 +34,14 @@
 <div class="notAvailable">
 	<p>{t _no_shipping_address_provided}</p>
 </div>
+
+{if $preview_shipping_methods}
+	<div class="stepPreview">
+	{foreach from=$preview_shipping_methods item=method}
+		<div class="shippingPreview">
+			{$method.ShippingService.name_lang}
+			({$method.formattedPrice[$method.costCurrency]})
+		</div>
+	{/foreach}
+	</div>
+{/if}
