@@ -32,10 +32,8 @@ function smarty_function_calendar($params, $smarty)
 		$fieldName = $params['name'];
 	}
 
-	if(!isset($params['id']))
-	{
-		$params['id'] = uniqid();
-	}
+	$id = isset($params['id']) ? $params['id'] : uniqid();
+	unset($params['id']);
 
 	$params['format'] = isset($params['format']) ? $params['format'] : "%d-%b-%Y";
 	$format = $params['format'];
@@ -55,62 +53,25 @@ function smarty_function_calendar($params, $smarty)
 	unset($params['name']);
 
 	$params['class'] = !isset($params['class']) ? 'date' : $params['class']. ' date';
+	$params['class'] .= ' span2';
 
-	$output  = '<input type="text" value="'.$value.'" name="'.$params['id'].'_visible" ';
+	if (!empty($params['nobutton']))
+	{
+		unset($params['nobutton']);
+	}
+
+	$params['readonly'] = true;
+
+	$output = '<div class="input-append date" id="' . $id .'" data-date="' . $value . '" data-date-format="dd-mm-yyyy">';
+
+	$output .= '<input type="text" value="'.$value.'" name="'.$fieldName.'"';
 	foreach ($params as $n => $v)
 		$output .= ' ' . $n . '="' . $v . '"';
 	$output .= "/>";
 
-	$output .= '<input type="hidden" class="hidden" class="calendar" name="'.$fieldName.'" value="'.$value.'" class="calendar-real" id="'.$params['id'].'_real" />';
+	$output .= '<span class="add-on"><i class="icon-th"></i></span></div>';
 
-	$buttonID = $params['id'];
-	if ($params['nobutton'] == false)
-	{
-		$output .= '<img src="image/silk/calendar.png" id="'.$params['id'].'_button" class="calendar_button" title="Date selector" onmouseover="Element.addClassName(this, \'calendar_button_hover\');" onmouseout="Element.removeClassName(this, \'calendar_button_hover\');" />';
-		$buttonID .= "_button";
-	}
-	unset($params['nobutton']);
-	$output .= <<<JAVASCRIPT
-<script type="text/javascript">
-	var visible = $("{$params['id']}");
-	var button = $("{$buttonID}");
-	var realInput = $(button.parentNode).down('.hidden');
-	button.realInput = realInput;
-
-	button.showInput = visible;
-	visible.realInput = realInput;
-	visible.showInput = visible;
-
-	var updateDate = function(e)
-	{
-		Calendar.updateDate.bind(this)();
-		Event.stop(e);
-	};
-
-	realInput.className = realInput.name + '_real';
-
-	Event.observe(visible, "dbclick", updateDate.bind(visible));
-	Event.observe(visible, "keyup",	 updateDate.bind(visible));
-	Event.observe(visible, "blur",	updateDate.bind(visible));
-	Event.observe(button, "mousedown", updateDate.bind(button));
-	Event.observe(button, "click", updateDate.bind(button));
-	Event.observe(visible, "blur", function() { if (!this.value) { this.realInput.value = ''; } });
-
-	window.setTimeout(function()
-		{
-			Calendar.setup({
-				inputField:	 "{$params['id']}",
-				inputFieldReal: "{$params['id']}_real",
-				ifFormat:	   "{$format}",
-				button:		 "{$params['id']}_button",
-				align:		  "BR",
-				singleClick:	true
-			});
-		}, 200);
-
-	visible.ondblclick = button.onclick;
-</script>
-JAVASCRIPT;
+	$output .= "<script type='text/javascript'>jQuery('#" . $id . "').datepicker();</script>";
 
 	return $output;
 }
