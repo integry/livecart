@@ -290,7 +290,8 @@ CssCustomize.prototype =
 			}
 		};
 
-		var sheet = this.getCurrentStyleSheet(document.styleSheets[1]);
+		//var sheet = this.getCurrentStyleSheet(document.styleSheets[1]);
+		var sheet = this.getCurrentStyleSheet(this.theme, true);
 		sheet.insertRule(this.newRuleName.value + '{' + this.newRuleText.value + '}', 0);
 
 		this.newRuleForm.hide();

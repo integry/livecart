@@ -16,7 +16,7 @@
 
 </div>
 
-<div class="clear"></div>
-
-{block ROOT_CATEGORIES}
-{block BREADCRUMB}
+<div class="span12">
+	{block ROOT_CATEGORIES}
+	{block BREADCRUMB}
+</div>

@@ -323,6 +323,8 @@ ActiveList.prototype = {
 	{
 		var container = this.getContainer(li, action);
 
+		jQuery(li).data('container', container);
+
 		if(container.style.display == 'none')
 		{
 			this.toggleContainerOn(container, highlight);
@@ -356,16 +358,8 @@ ActiveList.prototype = {
 				width: 'auto',
 				autoResize: true,
 				beforeClose: function(event, ui){
-					jQuery(container).html('').data('originalParent').appendChild(container);
-					this.toggleContainerOff(container);
-//				 $(this).remove();
+					//jQuery(container).html('').data('originalParent').appendChild(container);
 			   }.bind(this),
-
-				/*beforeClose: function()
-				{
-					this.toggleContainerOff(container);
-				}.bind(this)
-				*/
 			}).dialog('open');
 
 		Sortable.destroy(this.ul);
@@ -402,8 +396,7 @@ ActiveList.prototype = {
 		var container = $(container);
 		this.createSortable(true);
 
-		//jQuery(container).dialog('close');
-
+		jQuery(container).dialog('close');
 
 		// Create parent sortable as well
 		var parentList = this.ul.up(".activeList");
@@ -412,17 +405,10 @@ ActiveList.prototype = {
 		   ActiveList.prototype.activeListsUsers[parentList.id].createSortable(true);
 		}
 
-		if(BrowserDetect.browser != 'Explorer')
+		container.style.display = 'none';
+		if(highlight)
 		{
-			setTimeout(function() {
-				container.style.display = 'none';
-				if(highlight) this.highlight(container.up('li'), highlight);
-			}.bind(this), 40);
-		}
-		else
-		{
-			container.style.display = 'none';
-			if(highlight) this.highlight(container.up('li'), highlight);
+			this.highlight(container.up('li'), highlight);
 		}
 
 		Element.removeClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
@@ -466,7 +452,13 @@ ActiveList.prototype = {
 	{
 		if(!li) li = this._currentLi;
 
-		return document.getElementsByClassName(this.cssPrefix + action + 'Container' , li)[0];
+		var container = document.getElementsByClassName(this.cssPrefix + action + 'Container' , li)[0];
+		if (!container)
+		{
+			container = jQuery(li).data('container');
+		}
+
+		return container;
 	},
 
 	/**
@@ -1348,7 +1340,6 @@ ActiveList.prototype = {
 			for(var i = 0; i < containers.length; i++)
 			{
 				if(0 >= containers[i].offsetHeight) continue;
-
 				activeList.value.toggleContainerOff(containers[i]);
 			}
 		});

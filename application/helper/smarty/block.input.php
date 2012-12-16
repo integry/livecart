@@ -18,9 +18,19 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 
 		$fieldType = $smarty->getTemplateVars('last_fieldType');
 
+		if ($formHandler && $formHandler->getValidator())
+		{
+			$err = $formHandler->getValidator()->getErrorList();
+			$msg = empty($err[$params['name']]) ? '' : $err[$params['name']];
+		}
+		else
+		{
+			$msg = '';
+		}
+
 		$content = '<div class="input ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . (!empty($params['class']) ? ' ' . $params['class'] : '' ) . '">' .
 						$content .
-						'<div class="errorText hidden"></div>
+						'<div class="text-error' . ($msg ? '' : ' hidden') . '">' . $msg . '</div>
 					</div>';
 
 		$smarty->assign('last_fieldType', '');

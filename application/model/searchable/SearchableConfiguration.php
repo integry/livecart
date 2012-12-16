@@ -26,7 +26,7 @@ class SearchableConfiguration extends SearchableModel
 	public function getSelectFilter($searchTerm)
 	{
 		// create initial index
-		if (0 && !SearchableItem::getRecordCount())
+		if (!SearchableItem::getRecordCount())
 		{
 			$app = ActiveRecordModel::getApplication();
 			$sc = new SearchableConfigurationIndexing($app->getConfig(), $app);

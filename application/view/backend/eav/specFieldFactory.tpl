@@ -6,7 +6,7 @@
 
 {if $field.type == 1 || $field.type == 5}
 	{if $field.isMultiValue}
-		<fieldset class="container multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
+		<div class="multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 
 			<div class="eavCheckboxes">
 				{foreach from=$field.values key="id" item="value"}
@@ -32,7 +32,7 @@
 			<a href="#" class="eavSelectAll">{t _select_all}</a> | <a href="#" class="deselect eavDeselectAll">{t _deselect_all}</a> | <a class="eavSort" href="#">A-Z</a> | {t _eav_filter}: <input type="text" class="text filter" />
 		</p>
 
-		</fieldset>
+		</div>
 		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
 		{if !$disableNewOptionValues}
@@ -45,7 +45,7 @@
 	{/if}
 
 {elseif $field.type == 2}
-	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric"}{$field.valueSuffix_lang}
+	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number"}{$field.valueSuffix_lang}
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}

@@ -1007,6 +1007,12 @@ form
      display: inline;
 }
 
+.ui-dialog form
+{
+	position: relative;
+	z-index: 5000;
+}
+
 .formReadonly .controls
 {
     display: none;
@@ -1065,7 +1071,6 @@ fieldset.controls
     padding-left: 1em;
     padding-right: 1em;
     margin-top: 1em;
-    z-index: 0;
 }
 
 fieldset.group
@@ -1087,7 +1092,6 @@ fieldset
     margin-bottom: 10px;
     border: 1px solid #DDD;
     position: relative;
-    z-index: 10;
 }
 
 legend

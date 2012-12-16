@@ -9,10 +9,6 @@
 		</a>
 
 		<ul class="dropdown-menu">
-			<li class="logout">
-				<a href="{link controller=user action=logout}">{t _sign_out}</a>
-			</li>
-
 			{if $user.ID > 0}
 				<li class="logout">
 					<a href="{link controller=user action=logout}">{t _sign_out}</a>

@@ -6,12 +6,10 @@
 
 	{input name="password"}
 		{label}{t _your_pass}:{/label}
-		<fieldset class="container">
-			<input type="password" class="text" id="password" name="password" />
-			<a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
-				{t _remind_password}
-			</a>
-		</fieldset>
+		<input type="password" class="text" id="password" name="password" />
+		<a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
+			{t _remind_password}
+		</a>
 	{/input}
 
    	<p class="submit">

@@ -8,7 +8,6 @@
 
 	<h1>{t _personal_info}</h1>
 
-	<fieldset class="container">
 	{form action="controller=user action=savePersonal" method="POST" handle=$form}
 
 		{input name="firstName"}
@@ -37,7 +36,6 @@
 		</p>
 
 	{/form}
-	</fieldset>
 
 </div>
 

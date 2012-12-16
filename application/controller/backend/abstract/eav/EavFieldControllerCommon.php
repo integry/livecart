@@ -215,7 +215,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 			$categoryID = $this->request->get('categoryID');
 
 			$values = $this->request->get('values');
-			$images = $_FILES['images'];
+			$images = !empty($_FILES['images']) ? $_FILES['images'] : array();
 			$delImg = $this->request->get('delete');
 
 			$specField->loadRequestData($this->request);
@@ -274,7 +274,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 					{
 						$newIDs[$specFieldValues->getID()] = $key;
 					}
-					
+
 					if (isset($images['tmp_name'][$key]))
 					{
 						$path = $specFieldValues->getImagePath(true);
@@ -282,11 +282,11 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 						{
 							mkdir(dirname($path), 0777, true);
 						}
-						
+
 						move_uploaded_file($images['tmp_name'][$key], $path);
 						$newImages[$specFieldValues->getID()] = $specFieldValues->getImagePath();
 					}
-					
+
 					if (isset($delImg[$key]))
 					{
 						$path = $specFieldValues->getImagePath(true);

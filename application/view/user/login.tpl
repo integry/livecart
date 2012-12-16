@@ -22,7 +22,7 @@
 			{/if}
 		</p>
 
-		{capture var="return"}{link controller="user"}{/capture}
+		{capture assign="return"}{link controller="user"}{/capture}
 		{include file="user/loginForm.tpl" return=$return}
 	</div>
 

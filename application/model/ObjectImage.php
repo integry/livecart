@@ -225,6 +225,7 @@ abstract class ObjectImage extends MultilingualObject
 
 			$url = $app->getFullUploadUrl($urlPrefix . $array['paths'][$key]);
 			$url = str_replace('/public//public/', '/public/', $url);
+			$url = str_replace('/public/public/', '/public/', $url);
 			$array['urls'][$key] = $url;
 		}
 

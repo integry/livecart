@@ -270,7 +270,6 @@ img.calendar_button
 }
 
 /* left floats */
-#leftSide,
 #logoContainer,
 .allFilters .filterGroup,
 .resultStats .pagingInfo, .categoryLayoutSwitch,
@@ -307,7 +306,6 @@ input.radio, input.checkbox,
 }
 
 /* right floats */
-#rightSide,
 #topMenuContainer,
 #currency, #language,
 .resultStats .sortOptions,

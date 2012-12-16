@@ -37,6 +37,7 @@ function smarty_function_loadJs($params, Smarty_Internal_Template $smarty)
 	{
 		$files[] = "library/form/Validator.js";
 		$files[] = "library/form/ActiveForm.js";
+		$files[] = "library/form/State.js";
 	}
 
 	foreach ($files as $file)
@@ -45,6 +46,7 @@ function smarty_function_loadJs($params, Smarty_Internal_Template $smarty)
 	}
 
 	smarty_function_includeCss(array('file' => "library/lightbox/lightbox.css"), $smarty);
+	smarty_function_includeCss(array('file' => "library/jquery/jquery-plugins.css"), $smarty);
 }
 
 ?>

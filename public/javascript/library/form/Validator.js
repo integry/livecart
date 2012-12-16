@@ -223,6 +223,16 @@ function IsFileUploadedCheck(element, params)
 	}
 }
 
+function NotPastDateCheck(element, params)
+{
+	var today = new Date();
+	today.setHours(0,0,0,0)
+
+	var chosenDate = jQuery(element).closest('div.date').data('date_object');
+
+	return chosenDate >= today;
+}
+
 function OrCheck(element, constraints)
 {
 	var form = element.form ? element.form : $A(element)[0].form;

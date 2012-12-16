@@ -47,7 +47,7 @@ ActiveForm.prototype = {
 		{
 			return;
 		}
-		
+
 		if ('form' != form.tagName.toLowerCase())
 		{
 			form = form.down('form');
@@ -58,36 +58,27 @@ ActiveForm.prototype = {
 			return;
 		}
 
-		var messages = document.getElementsByClassName('errorText', form);
-		for (var k = 0; k < messages.length; k++)
-		{
-			messages[k].innerHTML = '';
-			messages[k].style.display = 'none';
-		}
-
 		for (var k = 0; k < form.elements.length; k++)
 		{
-			form.elements.item(k).removeClassName('hasError');
+			this.resetErrorMessage(form.elements.item(k));
 		}
 	},
 
 	resetErrorMessage: function(formElement)
 	{
-		formElement.removeClassName('hasError');
-		var parent = $($(formElement).up());
-		if (!parent)
+		jQuery(formElement).removeClass('hasError');
+		this.getErrorContainer(formElement).html('').hide().addClass('hidden');
+	},
+
+	getErrorContainer: function(formElement)
+	{
+		var parent = jQuery(formElement).closest('div.input');
+		if (!parent.length)
 		{
-			return;
+			parent = jQuery(formElement).parent();
 		}
 
-		var errorText = parent.down(".errorText");
-
-		if (errorText)
-		{
-		  	errorText.innerHTML = '';
-		  	errorText.style.display = 'none';
-		  	Element.addClassName(errorText, 'hidden');
-		}
+		return parent.find(".errorText, .text-error");
 	},
 
 	setErrorMessages: function(form, errorMessages)
@@ -115,14 +106,12 @@ ActiveForm.prototype = {
 			Element.focus(formElement);
 		}
 
-		formElement.addClassName('hasError');
+		jQuery(formElement).addClass('hasError');
+		var errorContainer = this.getErrorContainer(formElement);
 
-		var errorContainer = $(formElement.parentNode).down(".errorText");
-		if (errorContainer)
+		if (errorContainer.length > 0)
 		{
-			errorContainer.innerHTML = errorMessage;
-		  	Element.removeClassName(errorContainer, 'hidden');
-			Effect.Appear(errorContainer);
+			errorContainer.html(errorMessage).removeClass('hidden').show('fast');
 		}
 		else
 		{
@@ -507,11 +496,11 @@ Form.focus = function(form)
 /******** jQuery onShow ********/
 
 ;(function($){
-  $.fn.extend({ 
+  $.fn.extend({
     onShow: function(callback, unbind){
       return this.each(function(){
         var obj = this;
-        var bindopt = (unbind==undefined)?true:unbind; 
+        var bindopt = (unbind==undefined)?true:unbind;
         if($.isFunction(callback)){
           if($(this).is(':hidden')){
             var checkVis = function(){
@@ -520,7 +509,7 @@ Form.focus = function(form)
                 if(bindopt){
                   $('body').unbind('click keyup keydown', checkVis);
                 }
-              }                         
+              }
             }
             $('body').bind('click keyup keydown', checkVis);
           }

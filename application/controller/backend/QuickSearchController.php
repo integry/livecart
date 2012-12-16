@@ -118,6 +118,14 @@ class QuickSearchController extends StoreManagementController
 			$res[$searchable->getClassName()] = $searchable->fetchData();
 		}
 
+		if (!empty($res['SearchableItem']))
+		{
+			foreach ($res['SearchableItem']['records'] as &$item)
+			{
+				$item['meta'] = unserialize($item['meta']);
+			}
+		}
+
 		return new ActionResponse
 		(
 			'customResultTemplates', $this->getCustomResultTemplates(),

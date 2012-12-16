@@ -86,9 +86,11 @@
 		<div id="containerWrapper2">
 		<div id="containerWrapper3">
 			<div class="container">
-				{block PAGE-TOP}
-				{$ACTION_VIEW}
-				{block PAGE-BOTTOM}
+				<div class="row">
+					{block PAGE-TOP}
+					{$ACTION_VIEW}
+					{block PAGE-BOTTOM}
+				</div>
 			</div>
 		</div>
 		</div>

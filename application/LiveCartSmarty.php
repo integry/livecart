@@ -40,6 +40,9 @@ class LiveCartSmarty extends Smarty
 
 		$this->registerPlugin('modifier', 'config', array($this, 'config'));
 		$this->registerPlugin('modifier', 'branding', array($this, 'branding'));
+
+		//$this->registerPlugin('compiler', 'testtest', array($this, 'applyViewPluginszz'));
+
 		$this->setAutoloadFilters(array('config'), 'pre');
 	}
 
@@ -141,14 +144,9 @@ class LiveCartSmarty extends Smarty
 		echo $this->application->getRenderer()->applyLayoutModifications($path, $output);
 	}
 
-	public function _compile_source($resource_name, &$source_content, &$compiled_content, $cache_include_path=null)
+	public function applyViewPlugins($resource_name, $source_content)
 	{
-		$source_content = $this->processPlugins($source_content, $resource_name);
-		$res = parent::_compile_source($resource_name, $source_content, $compiled_content, $cache_include_path);
-
-		$compiled_content = '<?php $currentErrorLevel = error_reporting(); error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE); ?>' . $compiled_content;
-
-		return $res;
+		return $this->processPlugins($source_content, $resource_name);
 	}
 
    /**

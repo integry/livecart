@@ -9,7 +9,6 @@
 
 	<h1>{t _change_pass}</h1>
 
-	<fieldset class="container">
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form}
 
 		{input name="currentpassword"}
@@ -36,7 +35,6 @@
 		</p>
 
 	{/form}
-	</fieldset>
 
 	</div>
 

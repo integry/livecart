@@ -12,6 +12,8 @@
  */
 function smarty_prefilter_config($source, $smarty)
 {
+	$source = $smarty->smarty->applyViewPlugins($smarty->template_resource, $source);
+
 	// replace `backticks` to {curly braces} for <label>
 	$source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
 

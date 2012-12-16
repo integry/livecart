@@ -8,9 +8,7 @@
 
 	<h1>{t _user_registration}</h1>
 
-	<fieldset class="container">
-		{include file="user/regForm.tpl"}
-	</fieldset>
+	{include file="user/regForm.tpl"}
 
 </div>
 

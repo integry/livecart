@@ -174,7 +174,7 @@ class UserController extends FrontendController
 		$response->set('perPage', $perPage);
 		$response->set('user', $this->user->toArray());
 		$response->set('orders', $orderArray);
-		
+
 		return $response;
 	}
 
@@ -1599,10 +1599,10 @@ class UserController extends FrontendController
 			{
 				$order->cancelFurtherRebills();
 			}
-		} 
+		}
 		if ($status == false)
 		{
-			
+
 			$this->setErrorMessage($this->translate('_cannot_cancel_subscription_contantc_store_administrator'));
 		}
 		return new ActionRedirectResponse('user', 'viewOrder', $params);
@@ -1610,7 +1610,7 @@ class UserController extends FrontendController
 
 	public function generateTestInvoices()
 	{
-		return ; 
+		return ;
 
 		ClassLoader::import('application.model.category.*');
 		ClassLoader::import('application.model.product.*');
@@ -1620,7 +1620,7 @@ class UserController extends FrontendController
 		$config->save();
 
 		// data
-		$userID = 110; 
+		$userID = 110;
 		$product1ID = 339;
 		$recurringProductPeriodID = 19;
 		// ~
