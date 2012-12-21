@@ -150,6 +150,7 @@ class CssFile
 		$patched = str_replace('url(..', 'url(../../../' . dirname($relPath) . '/..', $patched);
 		$patched = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $patched);
 		$patched = str_replace('url(\"..', 'url(\'' . dirname($relPath) . '/..', $patched);
+		$patched = preg_replace('/url\(([a-z])/', 'url(../../../' . dirname($relPath) . '/\1', $patched);
 
 		$this->saveFile($this->getPatchedFilePath(), $patched);
 	}
