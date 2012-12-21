@@ -71,7 +71,7 @@ function smarty_function_calendar($params, $smarty)
 
 	$output .= '<span class="add-on"><i class="icon-th"></i></span></div>';
 
-	$output .= "<script type='text/javascript'>jQuery('#" . $id . "').datepicker();</script>";
+	$output .= "<script type='text/javascript'>jQuery('#" . $id . "').bootstrap_datepicker();</script>";
 
 	return $output;
 }
