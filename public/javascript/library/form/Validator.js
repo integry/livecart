@@ -228,7 +228,12 @@ function NotPastDateCheck(element, params)
 	var today = new Date();
 	today.setHours(0,0,0,0)
 
-	var chosenDate = jQuery(element).closest('div.date').data('date_object');
+	var chosenDate = jQuery(element).closest('div.date').data('datepicker').date;
+
+	if (!chosenDate)
+	{
+		return true;
+	}
 
 	return chosenDate >= today;
 }
