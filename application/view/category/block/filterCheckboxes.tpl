@@ -1,5 +1,5 @@
 {if $sectionFilters.filters}
-	<div class="filterGroup filterTypeCheckbox">
+	<div class="filterGroup filterTypeCheckbox" id="filterGroup_{$sectionFilters.ID}">
 		<h4>{translate text=$title}</h4>
 		<ul>
 			{foreach from=$sectionFilters.filters item="filter" name="filters"}
