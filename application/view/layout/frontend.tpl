@@ -42,6 +42,7 @@
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}
+	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
 
 	{if {isRTL}}
 		{includeCss file="frontend/FrontendRTL.css"}
@@ -60,8 +61,9 @@
 	<![endif]-->
 
 	<!-- JavaScript includes -->
-	{* <script type="text/javascript" src="firebug/firebug.js"></script> *}
 	{loadJs form=true}
+	{includeJs file="library/jquery/jquery-ui.js"}
+
 	{compiledJs glue=true nameMethod=hash}
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 
