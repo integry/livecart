@@ -1624,7 +1624,7 @@ fieldset.group p
     outline: 0;
 }
 
-.tabHelp
+.tabs li .tabHelp
 {
 	display: none;
 }

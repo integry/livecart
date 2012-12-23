@@ -1899,25 +1899,38 @@ Backend.MultiInstanceEditor.prototype =
 		this.nodes = {};
 		this.nodes.parent = this.getInstanceContainer(this.id);
 		this.nodes.form = this.nodes.parent.down("form");
-		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
 	},
 
 	bindEvents: function(args)
 	{
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+
 	},
 
 	init: function(args)
 	{
 		this.namespace.prototype.setCurrentId(this.id);
 
-		Backend.showContainer(this.getMainContainerId());
-		this.getListContainer(this.owner).hide();
+		this.showContainer($(this.getMainContainerId()));
+		//Backend.showContainer(this.getMainContainerId());
+		//this.getListContainer(this.owner).hide();
 
 		this.tabControl = TabControl.prototype.getInstance(this.getMainContainerId(), false);
 
 		this.setPath();
+	},
+
+	showContainer: function(container)
+	{
+		jQuery(container).dialog('close');
+		jQuery(container).dialog(
+			{
+				autoOpen: false,
+				title: this.getTitle(container),
+				resizable: false,
+				width: 'auto',
+				autoResize: true,
+			}).dialog('open');
 	},
 
 	setPath: function()
@@ -1930,8 +1943,9 @@ Backend.MultiInstanceEditor.prototype =
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		//Form.restore(this.nodes.form, false, false);
 
-		Backend.hideContainer(this.getMainContainerId());
-		this.getListContainer(this.owner).show();
+		jQuery($(this.getMainContainerId())).dialog('close');
+		//Backend.hideContainer(this.getMainContainerId());
+		//this.getListContainer(this.owner).show();
 
 		this.namespace.prototype.setCurrentId(0);
 	},
@@ -2055,12 +2069,7 @@ Backend.MultiInstanceEditor.prototype =
 	{
 		if ($(this.getAddContainerId()))
 		{
-			Element.hide($(this.getAddContainerId()));
-		}
-
-		if (this.getListContainer())
-		{
-			Element.show(this.getListContainer());
+			jQuery($(this.getAddContainerId())).dialog('close');
 		}
 	},
 
@@ -2070,8 +2079,7 @@ Backend.MultiInstanceEditor.prototype =
 
 		if (!noHide)
 		{
-			Element.hide(container);
-			Element.show(this.getListContainer());
+			jQuery(container).dialog('close');
 		}
 
 		ActiveForm.prototype.destroyTinyMceFields(container);
@@ -2087,8 +2095,15 @@ Backend.MultiInstanceEditor.prototype =
 	{
 		container = $(this.getAddContainerId());
 
-		Element.hide(this.getListContainer());
-		Element.show(container);
+		jQuery(container).dialog('close');
+		jQuery(container).dialog(
+			{
+				autoOpen: false,
+				title: this.getTitle(container),
+				resizable: false,
+				width: 'auto',
+				autoResize: true,
+			}).dialog('open');
 
 		if (window.tinyMCE)
 		{
@@ -2106,6 +2121,19 @@ Backend.MultiInstanceEditor.prototype =
 		{
 			Event.observe(cancel, 'click', function(e) { this.cancelAdd(); Event.stop(e); }.bind(this));
 		}
+	},
+
+	getTitle: function(container)
+	{
+		if (!jQuery(container).data('title'))
+		{
+			var title = jQuery(container).find('h2');
+			jQuery(container).data('title', title.html());
+		}
+
+		jQuery(container).find('h2').hide();
+
+		return jQuery(container).data('title');
 	},
 
 	saveAdd: function(e)
