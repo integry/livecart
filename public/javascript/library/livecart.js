@@ -129,7 +129,42 @@ LiveCart.AjaxRequest.prototype = {
 
 		document.body.style.cursor = 'progress';
 
-		this.request = new Ajax.Request(url, options);
+		if (form && jQuery(form).attr('enctype'))
+		{
+			var self = this;
+
+			var cloned = form.cloneNode(true);
+			form.parentNode.appendChild(cloned);
+			jQuery(cloned).hide().attr('onsubmit', '');
+
+			jQuery(cloned).iframePostForm
+			({
+				post: function()
+				{
+				},
+
+				complete: function(response)
+				{
+					var contentType = jQuery(cloned).data('contentType');
+					cloned.parentNode.removeChild(cloned);
+					var r = {};
+					r.responseText = response;
+					r.getResponseHeader = function()
+					{
+						return contentType;
+					};
+
+					self.onComplete = null;
+					self.postProcessResponse(url, r);
+				}
+			});
+
+			jQuery(cloned).submit();
+		}
+		else
+		{
+			this.request = new Ajax.Request(url, options);
+		}
 	},
 
 	getIndicator: function(indicatorId, form)

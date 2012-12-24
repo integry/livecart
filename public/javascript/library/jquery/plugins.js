@@ -274,10 +274,11 @@ hs=function(w,t,c){return w.each(function(){var s=this._jqm;$(t).each(function()
 			element.attr('target', options.iframeID);
 
 			// Submit listener.
-			element.submit(function ()
+			element.submit(function (e)
 			{
 				// If status is false then abort.
 				status = options.post.apply(this);
+				var form = this;
 
 				if (status === false)
 				{
@@ -287,6 +288,7 @@ hs=function(w,t,c){return w.each(function(){var s=this._jqm;$(t).each(function()
 				iframe = $('#' + options.iframeID).load(function ()
 				{
 					response = iframe.contents().find('body');
+					jQuery(form).data('contentType', jQuery(this).contents()[0].contentType);
 
 					if (options.json)
 					{
