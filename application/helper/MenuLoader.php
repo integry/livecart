@@ -13,13 +13,18 @@ class MenuLoader
 	/**
 	 * Reads menu structure from files of directorie or from cache. Store if neccesary structure in cache.
 	 */
-	public function __construct(LiveCart $application)
+	public function __construct(LiveCart $application, $menu = null)
 	{
 		$this->application = $application;
 
+		if (!$menu)
+		{
+			$menu = 'backend_menu';
+		}
+
 		foreach ($this->application->getConfigContainer()->getModuleDirectories() as $dir)
 		{
-			$dir .= '/application/configuration/backend_menu';
+			$dir .= '/application/configuration/' . $menu;
 			if (file_exists($dir))
 			{
 				$this->createFromDir($this->mainMenu, $dir);

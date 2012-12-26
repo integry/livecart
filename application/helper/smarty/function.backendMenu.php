@@ -24,7 +24,7 @@ function smarty_function_backendMenu($params, Smarty_Internal_Template $smarty)
 	// load language file for menu
 	$locale->translationManager()->loadFile('backend/menu');
 
-	$menuLoader = new MenuLoader($smarty->getApplication());
+	$menuLoader = new MenuLoader($smarty->getApplication(), $params['menu']);
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 	$router = $smarty->getApplication()->getRouter();
 
@@ -69,6 +69,11 @@ function smarty_function_backendMenu($params, Smarty_Internal_Template $smarty)
 				}
 
 				$filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => (isset($subValue['action']) ? $subValue['action'] : null)), true);
+				if (!empty($subValue['query']))
+				{
+					$filteredSubValue['url'] .= '?' . $subValue['query'];
+				}
+
 				$filteredSubValue['controller'] = $subValue['controller'];
 				$filteredSubValue['action'] = isset($subValue['action']) ? $subValue['action'] : '';
 				$filteredSubValue['icon'] = isset($subValue['icon']) ? $subValue['icon'] : '';
