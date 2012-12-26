@@ -12,15 +12,15 @@ function smarty_block_label($params, $content, Smarty_Internal_Template $smarty,
 {
 	if (!$repeat)
 	{
-		$fieldType = $smarty->getTemplateVars('last_fieldType');
+		$class = $smarty->getTemplateVars('last_fieldType') . ' ' . $params['class'];
 
 		if ('checkbox' == $fieldType)
 		{
-			$label = '<label class="' . $fieldType . '" for="' . $smarty->getTemplateVars('last_fieldID') . '">';
+			$label = '<label class="' . $class . '" for="' . $smarty->getTemplateVars('last_fieldID') . '">';
 		}
 		else
 		{
-			$label = '<label class="' . $fieldType . '">';
+			$label = '<label class="' . $class . '">';
 		}
 
 		$content = $label . $content . '</label>';
