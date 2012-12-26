@@ -43,7 +43,7 @@
 	{/input}
 
 	{input name="sameAddress"}
-		{checkbox}
+		{checkbox id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses"}
 		{label}{t _same_billing_and_shipping_addresses?}:{/label}
 	{/input}
 

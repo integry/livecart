@@ -1364,7 +1364,6 @@ a.progressIndicator
 div.textarea
 {
  	margin-bottom: 7px;
- 	margin-left: 170px;
 }
 
 input.wide
@@ -1391,6 +1390,7 @@ label.wide
 {
 	display: block;
 	float: none;
+	width: 100%;
 }
 
 select.narrow

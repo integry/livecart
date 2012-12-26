@@ -1931,6 +1931,13 @@ Backend.MultiInstanceEditor.prototype =
 				width: 'auto',
 				autoResize: true,
 			}).dialog('open');
+
+		this.initContainer(container);
+	},
+
+	initContainer: function(container)
+	{
+
 	},
 
 	setPath: function()
