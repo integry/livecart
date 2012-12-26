@@ -499,7 +499,7 @@ class LiveCart extends Application implements Serializable
 			$this->logStat('Before executing block: ' . $actionName);
 		}
 
-		if ($response = $this->processInitPlugins($controllerInstance, 'before-' . $actionName))
+		if ($response = $this->processInitPlugins($controllerInstance, array('before-' . $actionName, 'before-init')))
 		{
 			if (!($response instanceof RawResponse) || $response->getContent())
 			{
@@ -651,9 +651,22 @@ class LiveCart extends Application implements Serializable
 
 	private function processPlugins(Controller $controllerInstance, Response $response, $action)
 	{
+		if (!is_array($action))
+		{
+			$action = array($action);
+		}
+
 		foreach ($this->getControllerHierarchy($controllerInstance) as $name)
 		{
-			foreach ($this->getPlugins('controller/' . $name . '/' . $action) as $plugin)
+			$plugins = array();
+			foreach ($action as $act)
+			{
+				$plugins = array_merge($plugins, $this->getPlugins('controller/' . $name . '/' . $act));
+			}
+
+			$plugins = array_merge($plugins, $this->getPlugins('controller/' . $name . '/all'));
+
+			foreach ($plugins as $plugin)
 			{
 				include_once($plugin['path']);
 				$plugin = new $plugin['class']($response, $controllerInstance);
