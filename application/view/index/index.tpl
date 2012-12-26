@@ -4,7 +4,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="span9">
+{include file="block/content-start.tpl"}
 
 	{block HOME-PAGE-TOP}
 
@@ -23,6 +23,6 @@
 
 	{include file="category/categoryProductList.tpl"}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
