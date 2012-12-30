@@ -767,13 +767,13 @@ Backend.SpecField.prototype = {
 			{
 				this.nodes.stepLevOne[i].style.display = 'none';
 				Element.removeClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
-				Element.removeClassName(this.nodes.stateLinks[i].parentNode, 'active');
+				jQuery(this.nodes.stateLinks[i].parentNode).removeClass('active ui-state-active');
 			}
 			else
 			{
 				this.nodes.stepLevOne[i].style.display = 'block';
 				Element.addClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
-				Element.addClassName(this.nodes.stateLinks[i].parentNode, 'active');
+				jQuery(this.nodes.stateLinks[i].parentNode).addClass('active ui-state-active');
 			}
 		}
 	},
@@ -928,25 +928,25 @@ Backend.SpecField.prototype = {
 			if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
 			this.focus();
 		});
-		
+
 		// image field
 		var input = li.down("input." + this.cssPrefix + "image");
 		input.name = "images[" + id + "]";
-		
+
 		if (value.imagePath)
 		{
 			jQuery(li.down('.valueImage')).html('<img src="' + value.imagePath + '" />').show();
 		}
-		
+
 		var uploadContainer = li.down('.uploadSpecFieldImage');
 		var deleteLabel = li.down('label.checkbox');
 		var deleteCb = li.down('input.checkbox.deleteImage');
-		
+
 		deleteCb.id = li.id + 'deleteImage';
 		deleteCb.name = "delete[" + id + "]";
 		deleteCb.checked = false;
 		jQuery(deleteLabel).attr('for', deleteCb.id);
-		
+
 		jQuery(deleteCb).click(function()
 		{
 			jQuery(uploadContainer).toggle(!deleteCb.checked);
@@ -1054,7 +1054,7 @@ Backend.SpecField.prototype = {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
 		this.nodes.form.action = this.id.match(/new/) ? Backend.SpecField.prototype.links.create : Backend.SpecField.prototype.links.update;
-		
+
 		jQuery(this.nodes.form).iframePostForm(
 			{
 				post: function() {},
@@ -1089,7 +1089,7 @@ Backend.SpecField.prototype = {
 				ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent);
 				Form.backup(this.nodes.form);
 				this.backupName = this.nodes.name.value;
-				
+
 				var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
 
 				this.nodes.specFieldValuesUl.childElements().each(function(li)
@@ -1099,17 +1099,17 @@ Backend.SpecField.prototype = {
 						this.deleteValueFieldAction(li)
 					}
 					else
-					{					
-						var match = li.id.match(/_([0-9]+)$/); 
+					{
+						var match = li.id.match(/_([0-9]+)$/);
 						var id = match ? match[1] : 0;
-						
+
 						if (jsonResponse.newImages[id])
 						{
 							var img = jsonResponse.newImages[id] != '#' ? '<img src="' + jsonResponse.newImages[id] + '" />' : '';
 							jQuery(li.down('.valueImage')).html(img).show();
 						}
 					}
-					
+
 				}.bind(this))
 
 				activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');
