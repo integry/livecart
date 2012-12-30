@@ -133,8 +133,26 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			var self = this;
 
-			var cloned = form.cloneNode(true);
+			var cloned = jQuery(form).clone()[0];
 			form.parentNode.appendChild(cloned);
+			jQuery(cloned).html('');
+
+			jQuery(form).find(':input').each(function() {
+				var clEl = jQuery(this).clone().appendTo(cloned);
+				if (clEl.attr('type') != 'file')
+				{
+					clEl.val(jQuery(this).val());
+				}
+				else
+				{
+					var parent = jQuery(clEl).parent();
+					jQuery(this).before(jQuery(clEl));
+					parent.append(jQuery(this));
+				}
+			});
+
+			jQuery(cloned).unbind();
+
 			jQuery(cloned).hide().attr('onsubmit', '');
 
 			jQuery(cloned).iframePostForm
@@ -145,6 +163,13 @@ LiveCart.AjaxRequest.prototype = {
 
 				complete: function(response)
 				{
+					if (response.substr(0, 4) == '<pre')
+					{
+						response = response.substr(response.indexOf('{'), response.length);
+						response = response.substr(0, response.length - 6);
+					}
+
+					console.log(response);
 					var contentType = jQuery(cloned).data('contentType');
 					cloned.parentNode.removeChild(cloned);
 					var r = {};
@@ -154,7 +179,7 @@ LiveCart.AjaxRequest.prototype = {
 						return contentType;
 					};
 
-					self.onComplete = null;
+					//self.onComplete = null;
 					self.postProcessResponse(url, r);
 				}
 			});
