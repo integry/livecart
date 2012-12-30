@@ -1,6 +1,7 @@
-<ul class="tabs tabList">
-	<li class="active"><a href="#step_main" class="specField_change_state" >{t _SpecField_main}</a></li>
-	<li class=""><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+<ul class="tabs tabList ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+	<li class="active ui-state-default ui-state-active ui-corner-top"><a href="#step_main" class="specField_change_state" >{t _SpecField_main}</a></li>
+	<li class="ui-state-default ui-corner-top"><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
 </ul>
 
 <form action="{link controller="backend.specField" action=save}" method="post" class="specField {denied role="category.update"}formReadonly{/denied}" enctype="multipart/form-data">
@@ -203,3 +204,4 @@
 	</fieldset>
 
 </form>
+</div>
