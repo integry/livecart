@@ -17,6 +17,7 @@ class SessionController extends StoreManagementController
 		$this->loadLanguageFile('User');
 		$response = new ActionResponse('email', $this->request->get('email'));
 		$response->setHeader('NeedLogin', 1);
+		$response->set('return', $this->request->get('return'));
 		return $response;
 	}
 
@@ -34,7 +35,14 @@ class SessionController extends StoreManagementController
 		// login
 		SessionUser::setUser($user);
 
-		return new ActionRedirectResponse('backend.index', 'index');
+		if ($this->request->get('return'))
+		{
+			return new RedirectResponse($this->request->get('return'));
+		}
+		else
+		{
+			return new ActionRedirectResponse('backend.index', 'index');
+		}
 	}
 
 	public function logout()
