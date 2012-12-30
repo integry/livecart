@@ -62,6 +62,33 @@ function smarty_function_calendar($params, $smarty)
 
 	$params['readonly'] = true;
 
+	if ($value)
+	{
+		if (preg_match('/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/', $value, $matches))
+		{
+			if ($matches[1] > 0)
+			{
+				$value = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+			}
+			else
+			{
+				$value = '';
+			}
+		}
+		else
+		{
+			$stamp = strtotime($value);
+			if ($stamp > 0)
+			{
+				$value = date('Y-m-d', $stamp);
+			}
+			else
+			{
+				$value = '';
+			}
+		}
+	}
+
 	$output = '<div class="input-append date" id="' . $id .'" data-date="' . $value . '" data-date-format="dd-mm-yyyy">';
 
 	$output .= '<input type="text" value="'.$value.'" name="'.$fieldName.'"';

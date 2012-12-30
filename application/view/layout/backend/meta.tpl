@@ -19,6 +19,8 @@
 	{includeCss file="library/jquery/jquery-plugins.css" front=true}
 	{compiledCss glue=true nameMethod=hash}
 
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
 	{if !'DISABLE_WYSIWYG'|config}
 		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
 	{/if}
@@ -42,6 +44,7 @@
 	{includeJs file="backend/BackendToolbar.js"}
 
 	{compiledJs glue=true nameMethod=hash}
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 
 	{literal}
 	<script language="javascript" type="text/javascript">
