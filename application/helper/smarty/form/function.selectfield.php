@@ -71,7 +71,7 @@ function smarty_function_selectfield($params, $smarty)
 		}
 		else
 		{
-			if ($fieldValue == $value && (strlen($fieldValue) == strlen($value)))
+			if ((is_array($fieldValue) && in_array($value, $fieldValue)) || (!is_array($fieldValue) && ($fieldValue == $value) && (strlen($fieldValue) == strlen($value))))
 			{
 				$content .= "\t" . '<option value="' . $value . '" selected="selected">' . htmlspecialchars($title)  . '</option>' . "\n";
 			}

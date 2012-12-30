@@ -1215,12 +1215,16 @@ ActiveGrid.MassActionHandler.prototype =
 		this.request = new LiveCart.AjaxRequest(this.form, indicator , this.dataResponse.bind(this),  {onInteractive: function(func, arg) {window.setTimeout(func.bind(this, arg), 1000); }.bind(this, this.dataResponse.bind(this)) });
 
 		this.progressBarContainer = $(this.handlerMenu).up('div').down('.activeGrid_massActionProgress');
-		this.cancelLink = $(this.progressBarContainer).down('a.cancel');
-		this.cancelUrl = this.cancelLink.href;
-		this.cancelLink.onclick = this.cancel.bind(this);
 
-		this.progressBarContainer.show();
-		this.progressBar = new Backend.ProgressBar(this.progressBarContainer);
+		if (this.progressBarContainer)
+		{
+			this.cancelLink = $(this.progressBarContainer).down('a.cancel');
+			this.cancelUrl = this.cancelLink.href;
+			this.cancelLink.onclick = this.cancel.bind(this);
+
+			this.progressBarContainer.show();
+			this.progressBar = new Backend.ProgressBar(this.progressBarContainer);
+		}
 
 		this.grid.resetSelection();
 	},
@@ -1254,7 +1258,11 @@ ActiveGrid.MassActionHandler.prototype =
 			// progress
 			if (response.progress != undefined)
 			{
-				this.progressBar.update(response.progress, response.total);
+				if (this.progressBar)
+				{
+					this.progressBar.update(response.progress, response.total);
+				}
+
 				this.pid = response.pid;
 			}
 		}
@@ -1271,7 +1279,7 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		var resp = originalRequest.responseData;
 
-		if (resp.isCancelled)
+		if (resp.isCancelled && this.progressBar)
 		{
 			var progress = this.progressBar.getProgress();
 			this.cancelLink.hide();
@@ -1286,8 +1294,11 @@ ActiveGrid.MassActionHandler.prototype =
 			this.request.showConfirmation(responseData);
 		}
 
-		this.progressBarContainer.hide();
-		this.cancelLink.show();
+		if (this.progressBar)
+		{
+			this.progressBarContainer.hide();
+			this.cancelLink.show();
+		}
 
 		this.grid.reloadGrid();
 		this.blurButton();
@@ -2628,7 +2639,12 @@ var forEach = function(object, block, context) {
 			var t = tables[t],
 			i,
 			mw = 0;
-			t[removeClass](SIGNATURE);
+
+			if (t[removeClass])
+			{
+				t[removeClass](SIGNATURE);
+			}
+
 			if (t.w != t[width]()) {
 				t.w = t[width]();
 				for (i = 0; i < t.ln; i++)

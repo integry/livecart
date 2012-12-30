@@ -2016,7 +2016,7 @@ Backend.MultiInstanceEditor.prototype =
 				e.target = e.srcElement
 			}
 
-			var progressIndicator = e.target.up('td').down('.progressIndicator');
+			var progressIndicator = jQuery(e.target).closest('td').find('.progressIndicator');
 
 			progressIndicator.show();
 		}
@@ -2128,6 +2128,8 @@ Backend.MultiInstanceEditor.prototype =
 				width: 'auto',
 				autoResize: true,
 			}).dialog('open');
+
+		this.initContainer(container);
 
 		if (window.tinyMCE)
 		{

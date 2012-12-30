@@ -1238,7 +1238,7 @@ textarea, .disabledTextarea
    line-height: 10em;
 }
 
-input.radio, input.checkbox, input.submit, input.button, input.reset, input.file, input.upload
+input.radio, input.checkbox, input.submit, input.button, input.reset, input.file, input.upload, input[type=checkbox]
 {
     width: auto;
     vertical-align: middle;
