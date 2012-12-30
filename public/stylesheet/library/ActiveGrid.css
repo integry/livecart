@@ -86,9 +86,9 @@
 
 .activeGrid_viewport
 {
-    margin-right: -67px;
+    /* margin-right: -67px; */
     width: 100%;
-    max-height: 450px;
+    height: auto !important;
 }
 
 .activeGrid_viewport.loading
@@ -236,6 +236,9 @@
     font-weight: bold;
     float: left;
     border-width: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
 }
 
 .activeGrid th.cellt_numeric input
@@ -246,6 +249,7 @@
 .activeGrid th select
 {
 	width: 80%;
+	height: auto;
 }
 
 .activeGrid th
@@ -268,6 +272,12 @@
   	height: 28px;
   	padding: 0 2px;
   	white-space: nowrap;
+  	font-size: 12px;
+}
+
+.activeGrid td a
+{
+	text-decoration: underline;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
@@ -493,12 +503,6 @@
 	background-image: url('../../image/silk/table_add.png');
 }
 
-.activeGridColumns,
-.activeGridAdvancedSearch
-{
-	float: right;
-}
-
 .activeGridColumnsSelectControls
 {
     padding: 5px;
@@ -536,11 +540,14 @@
     float: left;
     text-align: right;
     font-size: smaller;
+    margin-top: 10px;
 }
 
 .activeGridMass select
 {
     width: 150px;
+    height: auto;
+    margin-bottom: 0;
 }
 
 .activeGridMass input.submit
@@ -631,4 +638,15 @@ th.cellt_date div.dateRange div
 .activeGridControls .ui-icon
 {
 	outline: 0;
+}
+
+.activeGridTopMenu
+{
+	text-align: right;
+}
+
+.gridCount
+{
+	line-height: 30px;
+	padding-left: 5px;
 }

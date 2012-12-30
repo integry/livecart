@@ -3,58 +3,64 @@
 <div class="activeGridOuterContainer">
 <div class="activeGridControls ui-widget-header ui-corner-top ui-helper-clearfix">
 
-	{if $addMenu}
-		<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
-			{include file=$addMenu}
+	<div class="row-fluid">
+		<div class="span8">
+			{if $addMenu}
+				<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
+					{include file=$addMenu}
+				</div>
+			{/if}
+
+			{if $count}
+				<span class="gridCount">
+					{include file="custom:`$count`"}
+				</span>
+			{/if}
+
+			<a class="ui-icon ui-icon-refresh" href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">&nbsp;</a>
 		</div>
-	{/if}
 
-	{if $count}
-		<span class="gridCount">
-			{include file="custom:`$count`"}
-		</span>
-	{/if}
+		<div class="span4 activeGridTopMenu">
 
-	<a class="ui-icon ui-icon-refresh" href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">&nbsp;</a>
-
-	<a href="#" class="fg-button activeGridColumns ui-state-default fg-button-icon-left ui-corner-all" onclick="window.activeGrids['{$prefix}_{$id}'].showColumnMenu(); return false;">
-		<span class="ui-icon ui-icon-circle-triangle-s"></span>
-		{t _columns}
-	</a>
-
-	<div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
-	  <form action="{link controller=$controller action=changeColumns}" onsubmit="window.activeGrids['{$prefix}_{$id}'].changeColumns('{$container}', event); return false;" method="post">
-
-		<input type="hidden" name="id" value="{$id}" />
-
-		<div class="activeGridColumnsSelect">
-			<div class="activeGridColumnsList">
-				{foreach from=$availableColumns item=item key=column}
-				<p class="activeGridcolumn_{$column|replace:'.':'_'}">
-					<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}_{uniqid}"{if $displayedColumns.$column}checked="checked"{/if} />
-					<label for="column_{$id}_{$column}_{uniqid last=true}" class="checkbox" id="column_{$id}_{uniqid last=true}_{$column}_label">
-						{$item.name}
-					</label>
-				</p>
-				{/foreach}
-			</div>
-		</div>
-	  </form>
-	</div>
-
-	{if $advancedSearch}
-		<span id="{$prefix}_{$id}_AdvancedSearch" class="activeGridAdvancedSearch">
-			<a href="javascript:void(0);" class="advancedSearchLink fg-button ui-state-default fg-button-icon-left ui-corner-all" href="#">
-				<span class="ui-icon ui-icon-search"></span>
-				{t _search}
+			<a href="#" class="fg-button activeGridColumns ui-state-default fg-button-icon-left ui-corner-all" onclick="window.activeGrids['{$prefix}_{$id}'].showColumnMenu(); return false;">
+				<span class="ui-icon ui-icon-circle-triangle-s"></span>
+				{t _columns}
 			</a>
-			<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer" style="display: none;">
-				<ul class="advancedQueryItems">
-				</ul>
-			</div>
-		</span>
-	{/if}
 
+			<div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
+			  <form action="{link controller=$controller action=changeColumns}" onsubmit="window.activeGrids['{$prefix}_{$id}'].changeColumns('{$container}', event); return false;" method="post">
+
+				<input type="hidden" name="id" value="{$id}" />
+
+				<div class="activeGridColumnsSelect">
+					<div class="activeGridColumnsList">
+						{foreach from=$availableColumns item=item key=column}
+						<p class="activeGridcolumn_{$column|replace:'.':'_'}">
+							<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}_{uniqid}"{if $displayedColumns.$column}checked="checked"{/if} />
+							<label for="column_{$id}_{$column}_{uniqid last=true}" class="checkbox" id="column_{$id}_{uniqid last=true}_{$column}_label">
+								{$item.name}
+							</label>
+						</p>
+						{/foreach}
+					</div>
+				</div>
+			  </form>
+			</div>
+
+			{if $advancedSearch}
+				<span id="{$prefix}_{$id}_AdvancedSearch" class="activeGridAdvancedSearch">
+					<a href="javascript:void(0);" class="advancedSearchLink fg-button ui-state-default fg-button-icon-left ui-corner-all" href="#">
+						<span class="ui-icon ui-icon-search"></span>
+						{t _search}
+					</a>
+					<div id="{$prefix}_{$id}_QueryContainer" class="advancedSearchQueryContainer" style="display: none;">
+						<ul class="advancedQueryItems">
+						</ul>
+					</div>
+				</span>
+			{/if}
+		</div>
+	</div>
 </div>
 
 <div style="position: relative;">
@@ -226,7 +232,7 @@
 <div class="ui-state-default ui-corner-bottom" >
 	<ul class="menu" style="float: left;">
 		{if $massAction}
-			{include file=$massAction}
+			{include file="custom:`$massAction`"}
 		{/if}
 	</ul>
 
