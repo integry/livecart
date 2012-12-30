@@ -1286,8 +1286,25 @@ Backend.UnitConventer.prototype =
 
 function slideForm(id, menuId)
 {
+	var element = $(id);
+	jQuery(container).data('originalParent', container.parentNode).dialog(
+		{
+			autoOpen: false,
+			modal: true,
+			title: title,
+			resizable: false,
+			width: 'auto',
+			autoResize: true,
+			beforeClose: function(event, ui){
+				//jQuery(container).html('').data('originalParent').appendChild(container);
+		   }.bind(this),
+		}).dialog('open');
+
 	Effect.Appear(id, {duration: 0.50});
 	Element.hide($(menuId));
+
+
+
 }
 
 function restoreMenu(blockId, menuId)
