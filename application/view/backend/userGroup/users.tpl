@@ -12,12 +12,12 @@
 	</ul>
 
 	<div id="newUserForm_{$userGroupID}" style="display: none;">
-		<ul class="menu" style="margin-left: 270px;">
+		<ul class="menu">
 			<li class="done">
 				<a class="cancel" href="#">{t _cancel_adding_new_user}</a>
 			</li>
 		</ul>
-		<fieldset  class="addForm treeManagerContainer newUserForm">
+		<fieldset  class="addForm newUserForm">
 			<legend>{t _add_new_user|capitalize}</legend>
 			{include file="backend/user/info.tpl" someUser=$newUser}
 		</fieldset>

@@ -779,7 +779,7 @@ Backend.User.Add.prototype =
 	showAddForm: function()
 	{
 		var menu = new ActiveForm.Slide(this.nodes.menu);
-		menu.show("addUser", this.nodes.menuForm, ['billingAddress_countryID', 'shippingAddress_countryID'], function(){ Element.hide("userGroupsManagerContainer") });
+		menu.show("addUser", this.nodes.menuForm, ['billingAddress_countryID', 'shippingAddress_countryID']);
 	},
 
 	hideAddForm: function()
@@ -788,7 +788,7 @@ Backend.User.Add.prototype =
 		{
 			var menu = new ActiveForm.Slide(this.nodes.menu);
 			this.nodes.menuForm.hide();
-			menu.hide("addUser", this.nodes.menuForm, function(){ Element.show("userGroupsManagerContainer") });
+			menu.hide("addUser", this.nodes.menuForm);
 		}
 	},
 
@@ -1023,7 +1023,7 @@ Backend.UserQuickEdit =
 				var
 					container = $(this.node).up("div"),
 					chekbox=container.getElementsByClassName("user_password_show")[0];
-					
+
 				container.getElementsByClassName("user_password")[0].value=transport.responseText;
 				chekbox.checked = true;
 				Backend.UserQuickEdit.togglePassword(chekbox);
