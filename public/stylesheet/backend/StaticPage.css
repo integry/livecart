@@ -33,3 +33,13 @@
 {
 	background-image: url('../../image/silk/page_white_code.png');
 }
+
+#editContainer div.textarea
+{
+	display: block;
+}
+
+.mceEditor
+{
+	width: 100%;
+}

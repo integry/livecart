@@ -20,7 +20,7 @@
 
 {form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post" role="page.update(edit),page.create(add)"}
 
-<fieldset class="container" id="editContainer">
+<div id="editContainer">
 
 	{input name="title"}
 		{label}{t _title}:{/label}
@@ -80,7 +80,7 @@
 
 	{/language}
 
-</fieldset>
+</div>
 
 <input type="hidden" name="id" value="{$page.ID}" />
 <fieldset class="controls">
