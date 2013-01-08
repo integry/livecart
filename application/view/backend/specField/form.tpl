@@ -42,21 +42,21 @@
 		</p>
 
 		<div>
-			<p class="required">
+			<div class="input">
 				<label class="specField_form_name_label">{tip _SpecField_title}</label>
 				<fieldset class="error">
 					<input type="text" name="name" class="specField_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
 				</fieldset>
-			</p>
+			</div>
 
-			<p class="specField_handle">
+			<div class="input specField_handle">
 				<label  class="specField_form_handle_label">{tip _SpecField_handle}</label>
 				<fieldset class="error">
 					<input type="text" name="handle" class="specField_form_handle" {denied role="category.update"}readonly="readonly"{/denied} />
 					<span class="errorText hidden"> </span>
 				</fieldset>
-			</p>
+			</div>
 
 			<p>
 				<label  class="specField_form_valuePrefix_label sufixAndPrefix">{tip _SpecField_valuePrefix}</label>

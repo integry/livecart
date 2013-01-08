@@ -61,17 +61,11 @@ class EavFieldController extends EavFieldControllerCommon
 		return new JSONResponse($specFieldList);
 	}
 
-	/**
-	 * @role update
-	 */
 	public function update()
 	{
 		return parent::update();
 	}
 
-	/**
-	 * @role update
-	 */
 	public function create()
 	{
 		return parent::create();
@@ -89,7 +83,6 @@ class EavFieldController extends EavFieldControllerCommon
 	/**
 	 * Delete specification field from database
 	 *
-	 * @role update
 	 * @return JSONResponse
 	 */
 	public function delete()
@@ -100,7 +93,6 @@ class EavFieldController extends EavFieldControllerCommon
 	/**
 	 * Sort specification fields
 	 *
-	 * @role update
 	 * @return JSONResponse
 	 */
 	public function sort()
