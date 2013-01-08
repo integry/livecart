@@ -871,7 +871,13 @@ ActiveGridFilter.prototype =
 	{
 		this.element = element;
 		this.activeGridInstance = activeGridInstance;
-		this.element.onclick = Event.stop.bindAsEventListener(this);
+
+		jQuery(this.element).click(function(e)
+		{
+			e.stopPropagation();
+			this.focus();
+		});
+
 		this.element.onfocus = this.filterFocus.bindAsEventListener(this);
 		this.element.onblur = this.filterBlur.bindAsEventListener(this);
 		// this.element.onchange = this.setFilterValue.bindAsEventListener(this);
