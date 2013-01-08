@@ -80,7 +80,7 @@ function smarty_function_calendar($params, $smarty)
 			$stamp = strtotime($value);
 			if ($stamp > 0)
 			{
-				$value = date('Y-m-d', $stamp);
+				$value = date('d-m-Y', $stamp);
 			}
 			else
 			{
@@ -98,7 +98,7 @@ function smarty_function_calendar($params, $smarty)
 
 	$output .= '<span class="add-on"><i class="icon-th"></i></span></div>';
 
-	$output .= "<script type='text/javascript'>jQuery('#" . $id . "').bootstrap_datepicker();</script>";
+	$output .= "<script type='text/javascript'>jQuery('#" . $id . "').bootstrap_datepicker({autoclose: true});</script>";
 
 	return $output;
 }
