@@ -1284,9 +1284,12 @@ Backend.UnitConventer.prototype =
 	...
 *************************************************/
 
-function slideForm(id, menuId)
+function slideForm(id)
 {
-	var element = $(id);
+	var container = $(id);
+
+	var title = jQuery(container).find('legend').html();
+
 	jQuery(container).data('originalParent', container.parentNode).dialog(
 		{
 			autoOpen: false,
@@ -1299,12 +1302,13 @@ function slideForm(id, menuId)
 				//jQuery(container).html('').data('originalParent').appendChild(container);
 		   }.bind(this),
 		}).dialog('open');
+}
 
-	Effect.Appear(id, {duration: 0.50});
-	Element.hide($(menuId));
+function hideForm(id)
+{
+	var container = $(id);
 
-
-
+	jQuery(container).dialog('close');
 }
 
 function restoreMenu(blockId, menuId)

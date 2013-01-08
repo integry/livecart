@@ -1463,19 +1463,12 @@ a.UnitConventer_SwitchUnits
 ***************************/
 fieldset.addForm
 {
-/*
-	background-color: #FFFFDD;
-	border: 1px solid #FFFF55;
-*/
-	padding: 10px;
+	padding: 0;
 }
 
 fieldset.addForm legend
 {
-	background-image: url(../../image/silk/bullet_add.png);
-	background-position: left center;
-	background-repeat: no-repeat;
-	padding-left: 22px;
+	display: none;
 }
 
 /***************************

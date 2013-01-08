@@ -276,30 +276,11 @@ ActiveForm.Slide.prototype = {
 
 			if(form)
 			{
-				Effect.BlindDown(form, {duration: 0.3});
-				Effect.Appear(form, {duration: 0.66});
-
-				setTimeout(function() {
-					form.style.display = 'block';
-					form.style.height = 'auto';
-				}, 700);
+				slideForm(form);
 			}
 
 			ignoreFields = ignoreFields || [];
 			var form = $(form);
-			var cancel = this.ul.down("." + className + 'Cancel');
-
-			this.ul.childElements().invoke("hide");
-			if(cancel)
-			{
-				Element.show(cancel);
-
-				Event.observe(cancel.down('a'), 'click', function(e)
-				{
-					Event.stop(e);
-					this.hide(className, form);
-				}.bind(this));
-			}
 
 			$A(form.getElementsByTagName("input")).each(function(input)
 			{
@@ -342,8 +323,7 @@ ActiveForm.Slide.prototype = {
 
 			if(form)
 			{
-				Effect.Fade(form, {duration: 0.2});
-				Effect.BlindUp(form, {duration: 0.3});
+				hideForm(form);
 				setTimeout(
 					function()
 					{
@@ -356,19 +336,6 @@ ActiveForm.Slide.prototype = {
 
 					}, 300);
 			}
-
-			this.ul.childElements().each(function(element)
-			{
-				if(!element.className.match(/Cancel/))
-				{
-					Element.show(element);
-				}
-				else
-				{
-					Element.hide(element);
-				}
-			});
-
 		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
 	}
 }
