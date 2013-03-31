@@ -14,14 +14,13 @@ function smarty_block_label($params, $content, Smarty_Internal_Template $smarty,
 	{
 		$class = $smarty->getTemplateVars('last_fieldType') . ' ' . $params['class'];
 
-		if ('checkbox' == $fieldType)
+		$for = $smarty->getTemplateVars('last_fieldID');
+		if (!empty($params['for']))
 		{
-			$label = '<label class="' . $class . '" for="' . $smarty->getTemplateVars('last_fieldID') . '">';
+			$for = $params['for'];
 		}
-		else
-		{
-			$label = '<label class="' . $class . '">';
-		}
+
+		$label = '<label class="' . $class . '" for="' . $for . '">';
 
 		$content = $label . $content . '</label>';
 
