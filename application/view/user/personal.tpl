@@ -1,12 +1,9 @@
+{pageTitle}{t _personal_info}{/pageTitle}
 {loadJs form=true}
 
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="personalMenu"}
-
 {include file="block/content-start.tpl"}
-
-	<h1>{t _personal_info}</h1>
 
 	{form action="controller=user action=savePersonal" method="POST" handle=$form}
 

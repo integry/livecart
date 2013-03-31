@@ -1,11 +1,7 @@
 {pageTitle}{t _contact_us}{/pageTitle}
-
 {loadJs form=true}
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-
-<h1>{t _contact_us}</h1>
+{include file="block/content-start.tpl"}
 
 {form action="controller=contactForm action=send" method="POST" id="contactForm" handle=$form style="float: left;"}
 	{input name="name"}
@@ -40,6 +36,5 @@
 
 {/form}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

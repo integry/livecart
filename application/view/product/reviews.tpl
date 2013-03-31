@@ -10,7 +10,7 @@
 
 {include file="product/layout.tpl"}
 
-<div id="content" class="left">
+{include file="block/content-start.tpl"}
 
 	<fieldset class="container">
 
@@ -42,8 +42,7 @@
 
 	</fieldset>
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
 
 </div>

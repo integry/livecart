@@ -1,5 +1,4 @@
 {loadJs form=true}
-
 {if 'PRODUCT_TABS'|config}
 	{includeJs file="library/tabber/tabber.js"}
 {/if}
@@ -12,8 +11,8 @@
 <div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
 
 {include file="product/layout.tpl"}
+{include file="block/content-start.tpl" title=$product.name_lang}
 
-<div id="content" class="left">
 	<fieldset class="container">
 
 		<div class="returnToCategory">
@@ -52,8 +51,8 @@
 		</div>
 
 	</fieldset>
-</div>
 
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
 
 </div>

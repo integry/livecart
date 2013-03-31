@@ -1,11 +1,7 @@
-<div class="userPay">
-
+{pageTitle}{t _pay} #{$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long}){/pageTitle}
 {loadJs form=true}
 {include file="checkout/layout.tpl"}
-
 {include file="block/content-start.tpl"}
-
-	<h1>{t _pay} #{$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
 
 	<div id="payTotal">
 		<div>

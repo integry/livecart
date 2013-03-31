@@ -1,13 +1,11 @@
-<div class="checkoutSelectAddress">
 {loadJs form=true}
-
+{pageTitle}{t _select_addresses}{/pageTitle}
 {include file="checkout/layout.tpl"}
 
-<div id="content" class="left right step-{$step}">
+<div class="step-{$step}">
+{include file="block/content-start.tpl"}
 
 	<div class="checkoutHeader">
-		<h1>{t _select_addresses}</h1>
-
 		{if 'shipping' == $step}
 			{include file="checkout/checkoutProgress.tpl" progress="progressShippingAddress"}
 		{else}
@@ -80,8 +78,5 @@
 
 	{/form}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

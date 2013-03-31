@@ -30,7 +30,7 @@
 {/if}
 {/function}
 
-<div id="content" class="left right">
+{include file="block/content-start.tpl"}
 
 	<div id="invoice">
 
@@ -137,7 +137,7 @@
 
 	</div>
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {* include file="layout/frontend/footer.tpl" *}
 

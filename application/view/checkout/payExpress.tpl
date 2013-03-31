@@ -1,12 +1,7 @@
-<div class="checkoutPay">
-
 {loadJs form=true}
-
+{pageTitle}{t _pay}{/pageTitle}
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left right">
-
-	<h1>{t _pay}</h1>
+{include file="block/content-start.tpl"}
 
 	<div id="payTotal">
 		<div>
@@ -26,8 +21,5 @@
 
 	{include file="checkout/orderOverview.tpl"}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

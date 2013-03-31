@@ -1,11 +1,6 @@
 {pageTitle}{t _news}{/pageTitle}
-{assign var="metaDescription" value=$category.description_lang}
-{assign var="metaKeywords" value=$category.keywords_lang}
-
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-	<h1>{t _news}</h1>
+{include file="block/content-start.tpl"}
 
 	<ul class="news">
 		{foreach from=$news item=entry}
@@ -15,6 +10,5 @@
 		{/foreach}
 	</ul>
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

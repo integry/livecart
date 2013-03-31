@@ -1,10 +1,6 @@
 {pageTitle}{t _order_completed}{/pageTitle}
-
 {include file="layout/frontend/layout.tpl" hideLeft=true}
-
 {include file="block/content-start.tpl"}
-
-	<h1>{t _order_completed}</h1>
 
 	{if $order.isPaid}
 		{t _completed_paid}
@@ -20,5 +16,4 @@
 	{include file="checkout/orderDownloads.tpl"}
 
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}

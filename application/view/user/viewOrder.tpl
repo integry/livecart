@@ -1,15 +1,9 @@
-{pageTitle}{t _view_order} #{$order.invoiceNumber}{/pageTitle}
+{pageTitle}{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long}){/pageTitle}
 {loadJs form=true}
-<div class="userViewOrder">
-
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="ordersMenu"}
+{include file="block/content-start.tpl"}
 
-<div id="content">
-
-	<h1>{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
-
-	{include file="block/message.tpl"}
 	<label class="title">{t _order_id}:</label>
 	<label class="text">{$order.invoiceNumber}</label>
 	<div class="clear"></div>
@@ -190,9 +184,5 @@
 		</p>
 	{/form}
 
-	</div>
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

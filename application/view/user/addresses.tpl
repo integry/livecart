@@ -1,13 +1,7 @@
-<div class="userAddresses">
-
+{pageTitle}{t _manage_addresses}{/pageTitle}
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="addressMenu"}
-<div id="content">
-
-	{include file="block/message.tpl"}
-
-	<h1>{t _manage_addresses}</h1>
+{include file="block/content-start.tpl"}
 
 	<h2 id="billingAddresses">{t _billing_addresses}</h2>
 
@@ -43,10 +37,5 @@
 		</div>
 	{/foreach}
 
-	</div>
-
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

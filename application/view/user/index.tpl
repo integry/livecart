@@ -1,11 +1,7 @@
-<div class="userIndex">
-
+{pageTitle}{t _your_account} ({$user.fullName}){/pageTitle}
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="homeMenu"}
 {include file="block/content-start.tpl"}
-
-	<h1>{t _your_account} ({$user.fullName})</h1>
 
 	{if $userConfirm}
 	<div class="confirmationMessage">
@@ -66,7 +62,4 @@
 	{/if}
 
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}
-
-</div>

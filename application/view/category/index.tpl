@@ -6,7 +6,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content" class="span9">
+{include file="block/content-start.tpl" hideTitle=true}
 
 	{include file="category/head.tpl"}
 
@@ -58,7 +58,7 @@
 		jQuery(document).ready(Frontend.initCategory);
 	</script>
 
-</div>
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
 
 </div>

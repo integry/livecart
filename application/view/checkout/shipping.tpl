@@ -1,13 +1,9 @@
-<div class="checkoutShipping">
-
 {loadJs form=true}
+{pageTitle}{t _shipping}{/pageTitle}
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left right checkoutShipping">
+{include file="block/content-start.tpl"}
 
 	<div class="checkoutHeader">
-		<h1>{t _shipping}</h1>
-
 		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}
 	</div>
 
@@ -47,8 +43,5 @@
 
 	</div>
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

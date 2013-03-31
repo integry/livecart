@@ -2,11 +2,9 @@
 {assign var="metaDescription" value=$page.metaDescription_lang|@strip_tags}
 
 <div class="staticPageView staticPage_{$page.ID}">
-
 {include file="layout/frontend/layout.tpl"}
-
 {include file="block/content-start.tpl"}
-	<h1>{$page.title_lang}</h1>
+
 	{if $subPages}
 		<div class="staticSubpages">
 			<h2>{t _subpages}</h2>
@@ -42,7 +40,5 @@
 	{/foreach}
 
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}
-
 </div>

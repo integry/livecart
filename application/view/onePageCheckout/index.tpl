@@ -1,4 +1,5 @@
 {loadJs form=true}
+{pagetitle}{t _checkout}{/pageTitle}
 
 <noscript>
 	<meta http-equiv="refresh" content="0;{link controller=onePageCheckout action=fallback}" />
@@ -12,9 +13,7 @@
 </script>
 
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left right orderIndex">
-	<h1>{t _checkout}</h1>
+{include file="block/content-start.tpl"}
 
 	<div id="checkout-right">
 		<div id="checkout-cart">
@@ -51,7 +50,9 @@
 
 	<div class="clear"></div>
 
-</div>
+{include file="block/content-stop.tpl"}
+{include file="layout/frontend/footer.tpl"}
+
 	<script type="text/javascript">
 		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: {'OPC_SHOW_CART'|config}{rdelim});
 		checkout.updateCompletedSteps({json array=$completedSteps});
@@ -62,5 +63,3 @@
 		new User.ShippingFormToggler($('sameAsShipping'), $('checkout-billing').down('.addressSelector'));
 	</script>
 {/literal}
-
-{include file="layout/frontend/footer.tpl"}

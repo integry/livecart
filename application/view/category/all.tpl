@@ -1,12 +1,6 @@
 {pageTitle}{t _all_categories}{/pageTitle}
-
-<div class="manufacturersIndex">
-
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-
-	<h1>{t _all_categories}</h1>
+{include file="block/content-start.tpl"}
 
 	{foreach from=$sorted item=categories key=letter}
 		<h2>{$letter|@capitalize}</h2>
@@ -27,8 +21,5 @@
 		{/foreach}
 	{/foreach}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

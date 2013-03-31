@@ -1,14 +1,9 @@
 {pageTitle}{t _form_sent}{/pageTitle}
-
 {loadJs form=true}
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-
-<h1>{t _form_sent}</h1>
+{include file="block/content-start.tpl"}
 
 <p>{t _form_thankyou}</p>
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

@@ -1,7 +1,7 @@
 {include file="layout/frontend/layout.tpl"}
+{include file="block/content-start.tpl"}
 
-<div id="content">
 {$description} [Error Code {$id}]
-</div>
 
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

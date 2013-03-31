@@ -1,13 +1,8 @@
 {loadJs form=true}
-
-<div class="userAddBillingAddress">
-
+{pageTitle}{t _add_billing_address}{/pageTitle}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="addressMenu"}
-
-<div id="content">
-
-	<h1>{t _add_billing_address}</h1>
+{include file="block/content-start.tpl"}
 
 	{form action="controller=user action=doAddBillingAddress" handle=$form}
 		{include file="user/addressForm.tpl"}
@@ -21,10 +16,5 @@
 		</p>
 	{/form}
 
-	</div>
-
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

@@ -1,10 +1,7 @@
-{pageTitle}{$category.pageTitle_lang|default:$category.name_lang}{/pageTitle}
+{pageTitle}{$results.meta.name|capitalize} &gt;&gt; "{$query}"{/pageTitle}
 
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-
-	<h1>{$results.meta.name|capitalize} &gt;&gt; "{$query}"</h1>
+{include file="block/content-start.tpl"}
 
 	<div class="modelSearchResults">
 		<div class="resultStats">{maketext text="_found_x" params=$results.meta.name} <span class="count">({$results.count})</span></div>
@@ -23,6 +20,5 @@
 		</div>
 	{/if}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

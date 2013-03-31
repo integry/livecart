@@ -1,19 +1,14 @@
 {assign var="fields" value='USER_FIELDS'|config}
 
 {loadJs form=true}
-{pageTitle}{t _order_checkout}{/pageTitle}
-
-<div class="userCheckout">
+{if $request.action == 'checkout'}
+	{pageTitle}{t _order_checkout}{/pageTitle}
+{else}
+	{pageTitle}{t _user_registration}{/pageTitle}
+{/if}
 
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left right">
-
-	{if $request.action == 'checkout'}
-		<h1>{t _order_checkout}</h1>
-	{else}
-		<h1>{t _user_registration}</h1>
-	{/if}
+{include file="block/content-start.tpl"}
 
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
@@ -67,7 +62,7 @@
 	</div>
 	<div class="clear"></div>
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {literal}
 <script type="text/javascript">
@@ -76,5 +71,3 @@
 {/literal}
 
 {include file="layout/frontend/footer.tpl"}
-
-</div>

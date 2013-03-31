@@ -1,18 +1,13 @@
 {loadJs form=true}
-
+{pageTitle}{t _select_shipping_addresses}{/pageTitle}
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left right orderIndex">
+{include file="block/content-start.tpl"}
 
 	<div class="checkoutHeader">
-		<h1>{t _select_shipping_addresses}</h1>
-
 		{if $cart.cartItems}
 			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
 		{/if}
 	</div>
-
-	{include file="block/message.tpl"}
 
 	{if !$cart.cartItems && !$cart.wishListItems}
 		<div style="clear: left;">
@@ -32,10 +27,9 @@
 
 	<div class="clear"></div>
 
-</div>
+{include file="block/content-stop.tpl"}
+{include file="layout/frontend/footer.tpl"}
 
 <script type="text/javascript">
 	new Order.OptionLoader($('cart'));
 </script>
-
-{include file="layout/frontend/footer.tpl"}

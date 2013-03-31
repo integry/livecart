@@ -1,11 +1,7 @@
-<div class="userItem">
-
+{pageTitle}{t _your_files}: {$item.Product.name_lang}{/pageTitle}
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="homeMenu"}
-<div id="content">
-
-	<h1>{t _your_files}: {$item.Product.name_lang}</h1>
+{include file="block/content-start.tpl"}
 
 	{if $files}
 		{foreach from=$files item="item"}
@@ -16,10 +12,5 @@
 		{/foreach}
 	{/if}
 
-	</div>
-
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-
-</div>

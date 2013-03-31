@@ -1,18 +1,14 @@
 {loadJs form=true}
-
+{pageTitle}{t _your_basket}{/pageTitle}
 {include file="checkout/layout.tpl"}
-
-<div id="content" class="left orderIndex">
+{include file="block/content-start.tpl"}
 
 	<div class="checkoutHeader">
-		<h1>{t _your_basket}</h1>
-
 		{if $cart.cartItems && !$isOnePageCheckout}
 			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
 		{/if}
 	</div>
 
-	{include file="block/message.tpl"}
 	{include file="order/changeMessages.tpl"}
 
 	{if !$cart.cartItems && !$cart.wishListItems}
@@ -35,10 +31,9 @@
 
 	<div class="clear"></div>
 
-</div>
+{include file="block/content-stop.tpl"}
+{include file="layout/frontend/footer.tpl"}
 
 <script type="text/javascript">
 	new Order.OptionLoader($('cart'));
 </script>
-
-{include file="layout/frontend/footer.tpl"}

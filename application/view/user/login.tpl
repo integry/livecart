@@ -1,12 +1,7 @@
 {loadJs form=true}
-
-<div class="userLogin">
-
+{pageTitle}{t _login}{/pageTitle}
 {include file="layout/frontend/layout.tpl" hideLeft=true}
-
-<div id="content" class="left">
-
-	<h1>{t _login}</h1>
+{include file="block/content-start.tpl"}
 
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
@@ -37,7 +32,7 @@
 
 	<div class="clear"></div>
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {literal}
 	<script type="text/javascript">
@@ -46,5 +41,3 @@
 {/literal}
 
 {include file="layout/frontend/footer.tpl"}
-
-</div>

@@ -1,13 +1,7 @@
 {loadJs form=true}
 {pageTitle}{t _remind_pass}{/pageTitle}
-
-<div class="userRemindPassword">
-
 {include file="layout/frontend/layout.tpl"}
-
 {include file="block/content-start.tpl"}
-
-	<h1>{t _remind_pass}</h1>
 
 	{form action="controller=user action=doRemindPassword" method="post" style="float: left; width: 100%;" handle=$form}
 		{input name="email"}
@@ -29,7 +23,4 @@
 	{/form}
 
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}
-
-</div>

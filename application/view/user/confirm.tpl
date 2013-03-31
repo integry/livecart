@@ -1,9 +1,6 @@
 {pageTitle}{t _reg_confirm}{/pageTitle}
 {include file="layout/frontend/layout.tpl"}
-
-<div id="content">
-
-	<h1>{t _reg_confirm}</h1>
+{include file="block/content-start.tpl"}
 
 	{if $success}
 		<p>{t _reg_confirm_success}</p>
@@ -16,6 +13,5 @@
 		<p>{t _reg_confirm_failure}</p>
 	{/if}
 
-</div>
-
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

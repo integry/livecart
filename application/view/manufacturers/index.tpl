@@ -1,8 +1,7 @@
 {pageTitle}{t _manufacturers}{/pageTitle}
-<div class="manufacturersIndex">
 {include file="layout/frontend/layout.tpl"}
-<div id="content">
-	<h1>{t _manufacturers}</h1>
+{include file="block/content-start.tpl"}
+
 	{if 'MANUFACTURER_PAGE_LIST_STYLE'|config == 'MANPAGE_STYLE_ALL_IN_ONE_PAGE'}
 		{include file="manufacturers/listAllInOnePage.tpl"}
 	{else} {* if MANPAGE_STYLE_GROUP_BY_FIRST_LETTER *}
@@ -14,6 +13,6 @@
 			<span>{t _pages}:</span> {paginate current=$currentPage count=$count perPage=$perPage url=$url}
 		</div>
 	{/if}
-</div>
+
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
-</div>

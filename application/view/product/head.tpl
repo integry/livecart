@@ -1,7 +1,3 @@
-{include file="block/message.tpl"}
-
-<h1>{$product.name_lang}</h1>
-
 {block PRODUCT-ATTRIBUTE-SUMMARY}		{* product/block/attributeSummary.tpl *}
 
 <div class="clear"></div>

@@ -1,10 +1,6 @@
 {pageTitle}{t _compare_products}{/pageTitle}
-
 {include file="layout/frontend/header.tpl"}
-
-<div id="content" class="left right">
-
-<h1>{t _compare_products}</h1>
+{include file="block/content-start.tpl"}
 
 <a href="{link route=$return}" class="return">{t _continue_shopping}</a>
 
@@ -59,5 +55,5 @@
 	</table>
 {/foreach}
 
-</div>
+{include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

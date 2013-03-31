@@ -1,10 +1,8 @@
 {loadJs form=true}
-
+{pageTitle}{t _change_email}{/pageTitle}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="emailMenu"}
 {include file="block/content-start.tpl"}
-
-	<h1>{t _change_email}</h1>
 
 	{form action="controller=user action=doChangeEmail" method="POST" handle=$form}
 
@@ -29,5 +27,4 @@
 	{/form}
 
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}

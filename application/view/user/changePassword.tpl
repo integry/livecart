@@ -1,13 +1,8 @@
 {loadJs form=true}
-
-<div class="userChangePassword">
-
+{pageTitle}{t _change_pass}{/pageTitle}
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="passwordMenu"}
 {include file="block/content-start.tpl"}
-
-	<h1>{t _change_pass}</h1>
 
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form}
 
@@ -36,10 +31,5 @@
 
 	{/form}
 
-	</div>
-
 {include file="block/content-stop.tpl"}
-
 {include file="layout/frontend/footer.tpl"}
-
-</div>
