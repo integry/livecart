@@ -95,7 +95,6 @@ class LiveCartTransaction extends TransactionDetails
 
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-
 			$product = $item->getProduct();
 			$variations = array();
 			foreach ($product->getRegisteredVariations() as $variation)
@@ -113,8 +112,10 @@ class LiveCartTransaction extends TransactionDetails
 				$ri = null;
 			}
 
+			$name = $product->getName() ? $product->getName() : $item->getValueByLang('name');
+
 			$this->addLineItem(
-				$product->getName() . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''),
+				$name . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''),
 				$item->getPrice(false),
 				$item->count->get(),
 				$product->sku->get(),
