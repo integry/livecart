@@ -88,7 +88,6 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 				$content = file_get_contents($cssFile);
 
 				$pre = array('..', 'http', '/');
-				$dirname = dirname($relPath) . '/';
 				foreach (array("'", '"', '') as $quote)
 				{
 					foreach ($pre as $i)
@@ -96,23 +95,19 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 						$content = str_ireplace('url(' . $quote . $i, 'url__(' . $quote . $i , $content);
 					}
 
-					$content = str_replace('url(' . $quote , 'url__(' . $quote . $dirname,  $content);
+					$content = str_replace('url(' . $quote , 'url(' . $quote . dirname($relPath) . '/', $content);
 
 					foreach ($pre as $i)
 					{
 						$content = str_replace('url__(' . $quote . $i, 'url(' . $quote . $i, $content);
 					}
-
-					if ($quote)
-					{
-						$content = str_replace('url(' . $dirname . $quote, 'url(' . $quote, $content);
-					}
 				}
 
-				$content = str_replace('url__(', 'url(', $content);
-				$content = str_replace('url(..', 'url(' . $dirname . '..', $content);
-				$content = str_replace('url(\'..', 'url(\'' . $dirname . '..', $content);
-				$content = str_replace('url("..', 'url("' . $dirname . '..', $content);
+				$content = str_replace('url(..', 'url(' . dirname($relPath) . '/..', $content);
+				$content = str_replace('url(\'..', 'url(\'' . dirname($relPath) . '/..', $content);
+				$content = str_replace('url("..', 'url("' . dirname($relPath) . '/..', $content);
+
+				$content = str_replace('upload/css/"../../', '"', $content);
 
 				$compiledFileContent .= $content;
 			}
