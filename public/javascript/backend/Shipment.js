@@ -1188,12 +1188,16 @@ Backend.Shipment.prototype =
 			Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ;
 		}.bind(this));
 
-		Event.observe("order" + orderID + "_openProductMiniform", 'click', function(orderID, e)
+		var miniForm = $("order" + orderID + "_openProductMiniform");
+		if (miniForm)
 		{
-			Event.stop(e);
-			$("order"+ orderID + "_productMiniform").show();
-			$("orderShipments_menu_" + orderID).hide();
-		}.bind(this,orderID));
+			Event.observe("order" + orderID + "_openProductMiniform", 'click', function(orderID, e)
+			{
+				Event.stop(e);
+				$("order"+ orderID + "_productMiniform").show();
+				$("orderShipments_menu_" + orderID).hide();
+			}.bind(this,orderID));
+		}
 
 		Event.observe($("ProductSearchQuery"), 'keyup', function(e,orderID)
 		{
@@ -1212,12 +1216,15 @@ Backend.Shipment.prototype =
 		 "order" + orderID + "_cancelProductMiniform2"]).each(
 			function(orderID, nodeID)
 			{
-				Event.observe($(nodeID), 'click', function(orderID, e)
+				if ($(nodeID))
 				{
-					Event.stop(e);
-					$("order"+ orderID + "_productMiniform").hide();
-					$("orderShipments_menu_" + orderID).show();
-				}.bind(this,orderID));
+					Event.observe($(nodeID), 'click', function(orderID, e)
+					{
+						Event.stop(e);
+						$("order"+ orderID + "_productMiniform").hide();
+						$("orderShipments_menu_" + orderID).show();
+					}.bind(this,orderID));
+				}
 			}.bind(this, orderID)
 		);
 
