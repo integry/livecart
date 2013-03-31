@@ -39,7 +39,7 @@ abstract class CronPlugin
 			mkdir($dir, octdec(777), true);
 		}
 
-		file_put_contents($file, '<?php return ' . time() . '; ?>');
+		file_put_contents($file, '<?php /* ' . $this->path . ' */ return ' . time() . '; ?>');
 	}
 
 	private function getExecutionTimeFile()
