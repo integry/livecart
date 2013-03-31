@@ -5,7 +5,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content">
+{include file="block/content-start.tpl"}
 	<h1>{$page.title_lang}</h1>
 	{if $subPages}
 		<div class="staticSubpages">
@@ -41,7 +41,7 @@
 		</div>
 	{/foreach}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
 

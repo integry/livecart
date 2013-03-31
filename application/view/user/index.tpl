@@ -3,8 +3,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="homeMenu"}
-
-<div id="content">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _your_account} ({$user.fullName})</h1>
 
@@ -66,7 +65,7 @@
 		}
 	{/if}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
 

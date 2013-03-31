@@ -1,10 +1,8 @@
-<div class="checkoutCompleted">
-
 {pageTitle}{t _order_completed}{/pageTitle}
 
-{include file="layout/frontend/layout.tpl"}
+{include file="layout/frontend/layout.tpl" hideLeft=true}
 
-<div id="content">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _order_completed}</h1>
 
@@ -21,8 +19,6 @@
 	{include file="checkout/completeOverview.tpl" nochanges=true}
 	{include file="checkout/orderDownloads.tpl"}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
-
-</div>

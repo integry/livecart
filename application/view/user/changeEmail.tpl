@@ -1,11 +1,8 @@
 {loadJs form=true}
 
-<div class="userChangeEmail">
-
 {include file="user/layout.tpl"}
-
 {include file="user/userMenu.tpl" current="emailMenu"}
-<div id="content" style="float: none;">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _change_email}</h1>
 
@@ -31,10 +28,6 @@
 
 	{/form}
 
-	</div>
-
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
-
-</div>

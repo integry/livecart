@@ -38,14 +38,14 @@
 		{if !$disableNewOptionValues}
 			{php}$field = $smarty->getTemplateVars('field'); $field['values']['other'] = $smarty->getApplication()->translate('_enter_other'); $smarty->assign('field', $field);{/php}
 		{/if}
-		{$field.valuePrefix_lang}{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}{$field.valueSuffix_lang}
+		<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}<span class="suffix">{$field.valueSuffix_lang}</span>
 		{if !$disableNewOptionValues}
 			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text"}
 		{/if}
 	{/if}
 
 {elseif $field.type == 2}
-	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number"}{$field.valueSuffix_lang}
+	<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number"}<span class="suffix">{$field.valueSuffix_lang}</span>
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}

@@ -123,11 +123,13 @@
 		</div>
 	{/if}
 
+	{if 'ENABLE_MULTIADDRESS'|@config}
 	<div class="{zebra} clearfix">
 		<label class="param" for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller="backend.customerOrder" action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</div>
+	{/if}
 
 	{if $order.isRecurring}
 		<div class="{zebra} clearfix">
@@ -178,7 +180,7 @@
 	{/if}
 {/foreach}
 
-<fieldset class="container" {denied role='order.update'}style="display: none"{/denied}>
+<fieldset {denied role='order.update'}style="display: none"{/denied}>
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
 		<li class="order_addProduct" id="order{$orderID}_addProduct_li">
 			<span {denied role='order.update'}style="display: none"{/denied}>

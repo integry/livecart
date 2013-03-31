@@ -4,7 +4,7 @@
 
 {include file="user/userMenu.tpl" current="personalMenu"}
 
-<div id="content" class="left right">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _personal_info}</h1>
 
@@ -37,6 +37,6 @@
 
 	{/form}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}

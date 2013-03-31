@@ -5,7 +5,7 @@
 
 {include file="layout/frontend/layout.tpl"}
 
-<div id="content">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _remind_pass}</h1>
 
@@ -28,7 +28,7 @@
 
 	{/form}
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
 

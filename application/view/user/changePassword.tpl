@@ -5,7 +5,7 @@
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="passwordMenu"}
-<div id="content">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _change_pass}</h1>
 
@@ -38,7 +38,7 @@
 
 	</div>
 
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
 

@@ -1,6 +1,6 @@
 <fieldset id="orderManagerContainer" class="treeManagerContainer maxHeight h--100" style="display: none;">
 
-	<fieldset class="container">
+	<fieldset>
 		<ul class="menu">
 			<li class="done">
 				<a href="#cancelEditing" id="cancel_order_edit" class="cancel">{t _cancel_editing_order_info}</a>

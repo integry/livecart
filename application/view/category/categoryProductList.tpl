@@ -1,6 +1,5 @@
 {if $products}
 	<div class="resultStats">
-		<fieldset class="container">
 		<div class="pagingInfo">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
@@ -16,8 +15,6 @@
 			{/if}
 			&nbsp;
 		</div>
-
-		</fieldset>
 	</div>
 
 	{if $products}

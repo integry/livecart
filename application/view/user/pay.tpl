@@ -3,7 +3,7 @@
 {loadJs form=true}
 {include file="checkout/layout.tpl"}
 
-<div id="content" class="left right">
+{include file="block/content-start.tpl"}
 
 	<h1>{t _pay} #{$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long})</h1>
 
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="clear"></div>
-</div>
+{include file="block/content-stop.tpl"}
 
 {include file="layout/frontend/footer.tpl"}
 
