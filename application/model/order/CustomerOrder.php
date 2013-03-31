@@ -554,9 +554,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$reserveProducts = self::getApplication()->isInventoryTracking();
 
 		$rebillsLeft = 0;
-		
+
 		$groupedRebillsLeft=array();
-		
+
 		$isFirstOrder = !$this->parentID->get();
 
 		foreach ($this->getShoppingCartItems() as $item)
@@ -591,7 +591,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			if ($isFirstOrder)
 			{
 				$ri = RecurringItem::getInstanceByOrderedItem($item);
-				if ($ri && $ri->isExistingRecord()) 
+				if ($ri && $ri->isExistingRecord())
 				{
 					$rebillCount = $ri->rebillCount->get();
 					// also here recurring item grouping
@@ -601,7 +601,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 							? 'NULL'
 							: $rebillCount
 					);
-					if ($rebillCount !== null) 
+					if ($rebillCount !== null)
 					{
 						$groupedRebillsLeft[$key] = $rebillCount;
 					}
@@ -703,11 +703,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$discount->save();
 		}
 
-		// @todo: remove the 0.99 multiplicator for currency conversion "tolerance" (a cent going missing when converting amounts between currencies back and forth)
-		if ((round($this->totalAmount->get(), 2)  * 0.99) <= round($this->getPaidAmount(), 2))
-		{
-			$this->isPaid->set(true);
-		}
+		$this->setPaidStatus();
 
 		$this->dateCompleted->set(new ARSerializableDateTime());
 
@@ -885,7 +881,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				{
 					if (count($items) > 1)
 					{
-						
+
 						$mainItem = array_shift($items);
 						$count = $mainItem->count->get();
 						foreach ($items as $item)
@@ -1923,7 +1919,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
 		}
-		
+
 		$array['isLocalPickup'] = $this->isLocalPickup();
 		$array['paymentMethod'] = $this->paymentMethod;
 		if ($array['paymentMethod'])
@@ -2428,6 +2424,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 	}
 
+	public function setPaidStatus()
+	{
+		// @todo: remove the 0.99 multiplicator for currency conversion "tolerance" (a cent going missing when converting amounts between currencies back and forth)
+		if ((round($this->totalAmount->get(), 2)  * 0.99) <= round($this->getPaidAmount(), 2))
+		{
+			$this->isPaid->set(true);
+		}
+	}
+
 	public function __clone()
 	{
 		parent::__clone();
@@ -2633,7 +2638,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				COALESCE(lastInvoiceOrder.startDate, co.startDate) as startDate,
 				IF(
 					lastInvoiceOrder.ID IS NULL,'.
-					/* main order does not have endDate, because with different recurring periods it has more than one ending date. calculate end date from period start + recurringlan period length - 1 day (end date is 'including') */ 
+					/* main order does not have endDate, because with different recurring periods it has more than one ending date. calculate end date from period start + recurringlan period length - 1 day (end date is 'including') */
 					self::sqlForEndDate() .',
 					lastInvoiceOrder.endDate
 				) as endDate,
@@ -2653,11 +2658,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				INNER JOIN CustomerOrder co ON oi.customerOrderID = co.ID
 				INNER JOIN RecurringProductPeriod rpp ON ri.recurringID = rpp.ID
 				LEFT JOIN CustomerOrder lastInvoiceOrder ON lastInvoiceOrder.ID = ri.lastInvoiceID
-			WHERE 
+			WHERE
 				(
-					co.ID = '.$this->getID().' 
+					co.ID = '.$this->getID().'
 						OR
-					co.parentID = '.$this->getID().' 
+					co.parentID = '.$this->getID().'
 				)
 				AND
 				(
@@ -2704,7 +2709,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				COALESCE(lastInvoiceOrder.startDate, co.startDate) as startDate,
 				IF(
 					lastInvoiceOrder.ID IS NULL,'.
-					/* main order does not have endDate, because with different recurring periods it has more than one ending date. calculate end date from period start + recurringlan period length - 1 day (end date is 'including') */ 
+					/* main order does not have endDate, because with different recurring periods it has more than one ending date. calculate end date from period start + recurringlan period length - 1 day (end date is 'including') */
 					self::sqlForEndDate() .',
 					lastInvoiceOrder.endDate
 				) as endDate,
@@ -2724,7 +2729,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				INNER JOIN CustomerOrder co ON oi.customerOrderID = co.ID
 				INNER JOIN RecurringProductPeriod rpp ON ri.recurringID = rpp.ID
 				LEFT JOIN CustomerOrder lastInvoiceOrder ON lastInvoiceOrder.ID = ri.lastInvoiceID
-			WHERE 
+			WHERE
 				(
 					ri.rebillCount IS NULL
 						OR
@@ -2791,7 +2796,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$config = self::getApplication()->getConfig();
 		$daysDue = $config->get('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS');
 		$daysBefore = $config->get('RECURRING_BILLING_GENERATE_INVOICE');
-		
+
 		foreach($orders as $order)
 		{
 			$mainOrder = $order;
@@ -2902,7 +2907,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		// echo "\n--------------------------\n";
 		foreach ($recurringItems as $recurringItem)
 		{
-			
+
 			$recurringItemID = $recurringItem->getID(); // anyone should work, because $recurringItems should be grouped by type and length. ID is required for getting period length in calendar days (done with sql).
 
 			break;
@@ -2932,7 +2937,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				co.ID = '.$previousOrder->getID()
 		);
 
-		// 
+		//
 
 		if ($data && count($data) == 1)
 		{
@@ -2988,7 +2993,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$chunks = array('CASE');
 		foreach ($mapping as $value => $intervalConst)
 		{
-			$chunks[] = 'WHEN ri.periodType = '.$value .' THEN 
+			$chunks[] = 'WHEN ri.periodType = '.$value .' THEN
 				SUBDATE(ADDDATE('.$field.', INTERVAL ri.periodLength '.$intervalConst.'), INTERVAL '.$generateInvoiceDays.' DAY)';
 		}
 		$chunks[] = 'END';
@@ -3003,7 +3008,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$chunks = array('CASE');
 		foreach ($mapping as $value => $intervalConst)
 		{
-			$chunks[] = 'WHEN ri.periodType = '.$value .' THEN 
+			$chunks[] = 'WHEN ri.periodType = '.$value .' THEN
 				ADDTIME(TIMESTAMP(DATE(
 					SUBDATE(ADDDATE('.$field.', INTERVAL ri.periodLength * '.$periodCount.' '.$intervalConst.'), INTERVAL 1 DAY)
 				)), \'23:59:59\')';
@@ -3025,7 +3030,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function cancelFurtherRebills()
 	{
-		
+
 		return ;
 		$id = $this->getID();
 		$userID = $this->userID->get()->getID();

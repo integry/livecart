@@ -982,7 +982,7 @@ class CheckoutController extends FrontendController
 	{
 		if (is_numeric($this->request->get('id')))
 		{
-			return new ActionRedirectResponse('user', 'pay', array('id' => $id));
+			return new ActionRedirectResponse('user', 'pay', array('id' => $this->request->get('id')));
 		}
 		else
 		{
@@ -1280,7 +1280,7 @@ class CheckoutController extends FrontendController
 			{
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('order')));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+				//$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), false));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
 
@@ -1314,10 +1314,16 @@ class CheckoutController extends FrontendController
 		$transaction->setHandler($handler);
 		$transaction->save();
 
+		$this->order->setPaidStatus();
+		if ($this->order->isPaid->get())
+		{
+			$this->order->save();
+		}
+
 		return $this->finalizeOrder();
 	}
 
-	protected function finalizeOrder()
+	protected function finalizeOrder($options = array())
 	{
 		if (!count($this->order->getShipments()))
 		{
@@ -1326,7 +1332,7 @@ class CheckoutController extends FrontendController
 
 		$user = $this->order->user->get();
 		$user->load();
-		$newOrder = $this->order->finalize();
+		$newOrder = $this->order->finalize($options);
 
 		$orderArray = $this->order->toArray(array('payments' => true));
 
@@ -1403,7 +1409,6 @@ class CheckoutController extends FrontendController
 
 		// order is not orderable (too few/many items, etc.)
 		$isOrderable = $order->isOrderable(true, false);
-
 		if (!$isOrderable || $isOrderable instanceof OrderException)
 		{
 			return new ActionRedirectResponse('order', 'index');
