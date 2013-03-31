@@ -9,7 +9,7 @@
  * @package application.model.eav
  * @author Integry Systems <http://integry.com>
  */
-abstract class EavSpecificationManagerCommon implements Serializable
+abstract class EavSpecificationManagerCommon
 {
 	/**
 	 * Owner object instance
@@ -761,11 +761,11 @@ abstract class EavSpecificationManagerCommon implements Serializable
 		$group = $groupClass . '.position AS SpecFieldGroupPosition, ' . $groupClass . '.name AS SpecFieldGroupName, ';
 
 		$query = '
-		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
+		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $dateClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $stringClass . ' ' . $cond . '
+		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $stringClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $numericClass . ' ' . $cond . '
+		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $numericClass . ' ' . $cond . '
 		UNION
 		SELECT ' . $valueItemClass . '.' . $objectColumn . ', ' . $valueItemClass . '.' . $fieldColumn . ', ' . $valueClass . '.value, ' . $valueClass . '.ID, ' . $valueClass . '.position, ' . $group . $fieldClass . '.*
 				 FROM ' . $valueItemClass . '
@@ -902,16 +902,6 @@ abstract class EavSpecificationManagerCommon implements Serializable
 		}
 
 		unset($this->owner);
-	}
-
-	public function serialize()
-	{
-		return serialize($this);
-	}
-
-	public function unserialize($serialized)
-	{
-		return unserialize($serialized);
 	}
 }
 
