@@ -15,9 +15,7 @@
 	</div>
 
 	{if $results.count > $perPage}
-		<div class="resultPages">
-			<span>{t _pages}:</span> {paginate current=$page count=$results.count perPage=$perPage url=$url}
-		</div>
+		{paginate current=$page count=$results.count perPage=$perPage url=$url}
 	{/if}
 
 {include file="block/content-stop.tpl"}

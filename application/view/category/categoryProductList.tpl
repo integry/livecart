@@ -24,8 +24,6 @@
 	{/if}
 
 	{if $count > $perPage}
-		<div class="resultPages">
-			<span>{t _pages}:</span> {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-		</div>
+		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{/if}
 {/if}

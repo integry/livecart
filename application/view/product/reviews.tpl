@@ -33,9 +33,7 @@
 		{include file="product/reviewList.tpl"}
 
 		{if $product.reviewCount > $perPage}
-			<div class="resultPages">
-				{t _pages}: {paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
-			</div>
+			{paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
 		{/if}
 
 		{include file="product/ratingForm.tpl"}

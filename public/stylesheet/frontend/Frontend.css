@@ -317,7 +317,6 @@ div.review .ratingBreakdown,
 }
 
 /* links/menus with background images */
-.resultPages .previous,
 a.addToCart,
 ul.attributeList li,
 .continueShopping,
@@ -331,7 +330,6 @@ ul.downloadFile li,
 
 /* right side background images */
 #smallCart a.checkout,
-.resultPages .next,
 .proceedToCheckout,
 .websiteUrl a
 {
@@ -789,37 +787,6 @@ ul.subSubCats
 {
 	margin-bottom: 1em;
 	margin-left: 1em;
-}
-
-.page
-{
-    border: 1px solid #143788;
-    text-decoration: none;
-    margin: 0 2px;
-    padding: 2px 6px;
-
-}
-
-.currentPage
-{
-    background: #143788;
-    color: white;
-}
-
-.resultPages .next
-{
-    background-image: url(../../image/silk/gif/resultset_next.gif);
-}
-
-.resultPages .previous
-{
-    background-image: url(../../image/silk/gif/resultset_previous.gif);
-}
-
-.resultPages
-{
-    border-top-width: 1px;
-    padding-top: 10px;
 }
 
 .resultStats

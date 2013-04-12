@@ -57,7 +57,5 @@
 
 {if $count > $perPage}
 	{capture assign="url"}{link controller=user action=$paginateAction id=$id query=$query}{/capture}
-	<div class="resultPages">
-		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-	</div>
+	{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 {/if}

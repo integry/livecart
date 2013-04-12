@@ -4,6 +4,11 @@ var jQ = jQuery;
  *	@author Integry Systems
  */
 
+jQuery(function()
+{
+	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); }); 
+});
+
 ConfirmationMessage = Class.create();
 ConfirmationMessage.prototype =
 {

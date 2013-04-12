@@ -9,9 +9,7 @@
 	{/if}
 	<div style="clear:both;"></div>
 	{if $count > $perPage && $perPage > 0}
-		<div class="resultPages">
-			<span>{t _pages}:</span> {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-		</div>
+		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{/if}
 
 {include file="block/content-stop.tpl"}

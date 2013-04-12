@@ -21,9 +21,7 @@
 
 	{if $count > $perPage}
 		{capture assign="url"}{link controller=user action=orders id=0}{/capture}
-		<div class="resultPages">
-			Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-		</div>
+		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{/if}
 
 {include file="block/content-stop.tpl"}

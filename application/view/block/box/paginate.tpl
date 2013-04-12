@@ -1,21 +1,22 @@
-{if $urls.previous}
-	<a class="previous" href="{$urls.previous}">{t _previous}</a>
-{/if}
+<ul class="pagination">
+	<li {if !$urls.previous}class="disabled"{/if}><a href="{$urls.previous|default:'#'}">
+		<span class="pagination-sign">&laquo;</span>
+		<span class="pagination-descr">{t _previous}</span>
+	</a></li>
 
-{foreach $pages as $page}
-	{if $last < $page - 1}
-		<span>...</span>
-	{/if}
+	{foreach $pages as $page}
+		{if $last < $page - 1}
+			<li class="disabled pagination-space"><a href="#">...</a></li>
+		{/if}
+	
+		<li {if $page == $current}class="active"{/if}><a href="{$urls.$page}">{$page}</a></li>
+	
+		{assign var="last" value=$page}
+	{/foreach}
 
-	{if $page == $current}
-		<span class="page currentPage">{$page}</span>
-	{else}
-		<a class="page" href="{$urls.$page}">{$page}</a>
-	{/if}
+	<li {if !$urls.next}class="disabled"{/if}><a href="{$urls.next|default:'#'}">
+		<span class="pagination-descr">{t _next}</span>
+		<span class="pagination-sign">&raquo;</span>
+	</a></li>
 
-	{assign var="last" value=$page}
-{/foreach}
-
-{if $urls.next}
-	<a class="next" href="{$urls.next}">{t _next}</a>
-{/if}
+</ul>
