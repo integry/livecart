@@ -96,8 +96,6 @@ label.cancel,
 
 /* bold things */
 h4,
-#breadCrumbCaption,
-div.box .title,
 .price,
 #addToCart,
 .required label,
@@ -187,14 +185,12 @@ a.addToCart,
 .fieldDescription,
 .progressOrder,
 a.cvv,
-.multiAddress .shipmentAddress,
-.box.compare li a
+.multiAddress .shipmentAddress
 {
 	font-size: smaller;
 }
 
 /* centered text */
-div.box .title,
 .subCategories td.subCatImage,
 .productGrid td,
 ul.productList .image,
@@ -339,7 +335,6 @@ ul.downloadFile li,
 
 /* background color 1: light grey */
 tr.odd,
-div.box .content,
 #userMenuContainer,
 fieldset,
 div.addressBlock,
@@ -361,7 +356,6 @@ tr.heading td,
 }
 
 tr.even td,
-div.box .title,
 #background-color2-var
 {
     background-color: #eee;
@@ -470,30 +464,6 @@ body.threeColumn #content
 #logoContainer
 {
 	padding: 8px;
-}
-
-/*****************************
-	Boxes
-*****************************/
-div.box
-{
-	margin-bottom: 5px;
-	overflow: visible;
-	position: relative;
-}
-
-div.box .title
-{
-  	border-bottom-width: 1px;
-  	border-top-width: 1px;
-  	padding: 3px;
-  	color: #143788;
-}
-
-div.box .content
-{
-  	padding: 5px;
-  	overflow: visible;
 }
 
 fieldset.container
