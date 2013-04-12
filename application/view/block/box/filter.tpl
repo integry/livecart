@@ -8,8 +8,8 @@
 {/if}
 
 {if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS'}
-	<div class="well sidebar-nav expandResults">
-		<div class="nav-header">{t _expand}</div>
+	<div class="panel expandResults">
+		<div class="panel-heading">{t _expand}</div>
 
 		<div class="content filterGroup">
 			<h4>{t _remove_filter}:</h4>
@@ -23,8 +23,8 @@
 {/if}
 
 {sect}{header}
-<div class="well sidebar-nav narrowResults">
-	<div class="nav-header">{t _narrow_results}</div>
+<div class="panel narrowResults">
+	<div class="panel-heading">{t _narrow_results}</div>
 
 	<div class="content">
 {/header}{content}

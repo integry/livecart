@@ -1,4 +1,4 @@
-<div id="rightSide" class="span3">
+<div id="rightSide" class="col-span-3">
 	<div id="contentWrapperRight"></div>
 	{block RIGHT_SIDE}
 	{block MINI_CART}

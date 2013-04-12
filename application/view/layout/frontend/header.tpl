@@ -1,4 +1,4 @@
-<div class="span12" id="header">
+<div class="col-span-12" id="header">
 
 	<div id="logoContainer">
 		<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
@@ -16,7 +16,7 @@
 
 </div>
 
-<div class="span12">
+<div class="col-span-12">
 	{block ROOT_CATEGORIES}
 	{block BREADCRUMB}
 </div>

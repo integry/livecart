@@ -1,9 +1,7 @@
 {cache var=url value=$request.route final=true}
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -48,9 +46,9 @@
 		{includeCss file="frontend/FrontendRTL.css"}
 	{/if}
 
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link href="/livecart/public/bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-	<link href="http://bootswatch.com/united/bootstrap.min.css" rel="stylesheet">
+	{* <link href="http://bootswatch.com/united/bootstrap.min.css" rel="stylesheet"> *}
 
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if lt IE 8]>
@@ -65,7 +63,7 @@
 	{includeJs file="library/jquery/jquery-ui.js"}
 
 	{compiledJs glue=true nameMethod=hash}
-	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+	<script src="/livecart/public/bootstrap/bootstrap/js/bootstrap.js"></script>
 
 	{*
 	<!--[if lt IE 7]>

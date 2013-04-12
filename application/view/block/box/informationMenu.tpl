@@ -1,6 +1,6 @@
 {if $pages}
-<div class="well sidebar-nav informationMenu">
-	<div class="nav-header">{t _information}</div>
+<div class="panel informationMenu">
+	<div class="panel-heading">{t _information}</div>
 
 	<div class="content">
 		<ul class="nav nav-list">

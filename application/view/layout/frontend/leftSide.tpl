@@ -1,4 +1,4 @@
-<div class="span3" id="leftSide">
+<div class="col-span-3" id="leftSide">
 	<div id="contentWrapperLeft"></div>
 
 	{block LEFT_SIDE}

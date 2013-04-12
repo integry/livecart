@@ -1,1 +1,1 @@
-<div id="content" class="span6">
+<div id="content" class="col-span-6">

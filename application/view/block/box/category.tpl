@@ -21,8 +21,8 @@
 	{/if}
 {/function}
 
-<div class="well sidebar-nav categories">
-	<div class="nav-header">{t _categories}</div>
+<div class="panel categories">
+	<div class="panel-heading">{t _categories}</div>
 
 	<div class="content">
 		{categoryTree node=$categories}

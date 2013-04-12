@@ -1,4 +1,4 @@
-<div id="content" class="span9">
+<div id="content" class="col-span-9">
 
 {assign var=title value=$title|default:$PAGE_TITLE}
 {if $title && !$hideTitle}

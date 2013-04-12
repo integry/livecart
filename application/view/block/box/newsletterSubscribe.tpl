@@ -1,6 +1,6 @@
 {loadJs form=true}
-<div class="well sidebar-nav newsletter">
-	<div class="nav-header">{t _subscribe_to_newsletter}</div>
+<div class="panel newsletter">
+	<div class="panel-heading">{t _subscribe_to_newsletter}</div>
 
 	<div class="content">
 

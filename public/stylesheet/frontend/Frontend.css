@@ -14,16 +14,6 @@
 	padding: 9px 0;
 }
 
-.row-fluid .firstPanel
-{
-	margin-left: 0;
-}
-
-.row-fluid .thumbnail
-{
-	margin-bottom: 18px;
-}
-
 div.btn-group:hover ul.dropdown-menu{
     display: block;
 }
@@ -2585,11 +2575,6 @@ fieldset.eavGroup
 .dynamicMenu li
 {
 	border-collapse: collapse;
-}
-
-.dynamicMenu .content
-{
-	padding: 0 !important;
 }
 
 .dynamicMenu, .dynamicMenu ul { /* all lists */

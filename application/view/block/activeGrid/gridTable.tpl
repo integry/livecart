@@ -4,7 +4,7 @@
 <div class="activeGridControls ui-widget-header ui-corner-top ui-helper-clearfix">
 
 	<div class="row-fluid">
-		<div class="span8">
+		<div class="col-span-8">
 			{if $addMenu}
 				<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
 					{include file=$addMenu}
@@ -20,7 +20,7 @@
 			<a class="ui-icon ui-icon-refresh" href="#" onclick="window.activeGrids['{$prefix}_{$id}'].reloadGrid(); return false;">&nbsp;</a>
 		</div>
 
-		<div class="span4 activeGridTopMenu">
+		<div class="col-span-4 activeGridTopMenu">
 
 			<a href="#" class="fg-button activeGridColumns ui-state-default fg-button-icon-left ui-corner-all" onclick="window.activeGrids['{$prefix}_{$id}'].showColumnMenu(); return false;">
 				<span class="ui-icon ui-icon-circle-triangle-s"></span>

@@ -10,8 +10,8 @@
 {/function}
 
 {if $manufacturers || $categories}
-<div class="well sidebar-nav quickNav">
-	<div class="nav-header">{t _quick_nav}</div>
+<div class="panel quickNav">
+	<div class="panel-heading">{t _quick_nav}</div>
 
 	<div class="content">
 
