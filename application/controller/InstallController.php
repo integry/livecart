@@ -26,6 +26,12 @@ class InstallController extends FrontendController
 			}
 
 			echo '</ul> <p>Please reload this page when the directory write permissions are fixed. Please <a href="http://support.livecart.com">contact the LiveCart support team</a> if any assistance is required.</p>';
+			
+			if (!file_exists(reset($writeFail)))
+			{
+				echo '<p style="color: red;">It looks like some directories are missing (installation fetched from Github?). Please create the directories manually or by using this command first:<br />
+						<div style="margin: 1em; font-family: monospace;">% <span style="font-weight: bold;">mkdir -p ' . implode(' ', $writeFail) . '</span></div></p>';			
+			}
 
 			echo '<p>You can also execute this command from shell to fix the write permissions: <br />
 					<div style="margin: 1em; font-family: monospace;">% <span style="font-weight: bold;">chmod -R 0777 ' . implode(' ', $writeFail) . '</span></div></p>';

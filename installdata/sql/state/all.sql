@@ -1,4 +1,4 @@
-TRUNCATE TABLE `State`;
+DELETE FROM `State`;
 
 INSERT INTO `State` (`ID`, `countryID`, `code`, `name`, `subdivisionType`) VALUES
 (1, 'AF', 'BDS', 'بد خشان', NULL),

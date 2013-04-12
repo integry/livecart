@@ -22,6 +22,9 @@ class ModuleRepo
 
 	public function getHandshake()
 	{
+		// temporarily disable repos
+		return;
+		
 		$fetch = new NetworkFetch($this->url . '/handshake?domain=' . $this->domain);
 		$fetch->fetch();
 		$res = json_decode(file_get_contents($fetch->getTmpFile()), true);

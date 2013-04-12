@@ -1021,6 +1021,7 @@ CREATE TABLE ProductOptionChoice (
     hasImage BOOL,
     position INTEGER UNSIGNED DEFAULT 0,
     name MEDIUMTEXT,
+    config TEXT,
     CONSTRAINT PK_ProductOptionChoice PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1375,6 +1376,7 @@ CREATE TABLE DiscountCondition (
     isAllSubconditions BOOL NOT NULL,
     isActionCondition BOOL NOT NULL,
     isFinal BOOL NOT NULL,
+    isReverse BOOL NOT NULL,
     recordCount INTEGER NOT NULL,
     validFrom TIMESTAMP DEFAULT '0000-00-00',
     validTo TIMESTAMP DEFAULT '0000-00-00',

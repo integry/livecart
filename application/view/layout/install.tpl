@@ -59,7 +59,7 @@
 			<div class="clear"></div>
 		</div>
 		<div id="installFooter">
-		  &copy; <a href="http://livecart.com" target="_blank">UAB Integry Systems</a>, 2007-2010
+		  &copy; <a href="http://livecart.com" target="_blank">UAB Integry Systems</a>, 2007-2013
 		</div>
 	</div>
 </body>

@@ -14,3 +14,18 @@ checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> extension must 
 
 checkSession=PHP session configuration
 checkSession_error=PHP sessions are not being saved. Please make sure that the <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> PHP configuration value is set correctly.
+
+_db_server=Database server
+_db_name=Database name
+_db_username=Database username
+_db_pass=Database password
+
+_first_name=First name
+_last_name=Last name
+_email=E-mail
+_password=Password
+_confirm_password=Confirm password
+
+_store_name=Store name
+_base_language=Base language
+_base_currency=Base currency

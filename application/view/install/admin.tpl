@@ -21,12 +21,12 @@
 
 		{input name="password"}
 			{label}{t _password}:{/label}
-			{textfield class="password"}
+			{textfield type="password"}
 		{/input}
 
 		{input name="confirmPassword"}
 			{label}{t _confirm_password}:{/label}
-			{textfield class="password"}
+			{textfield type="password"}
 		{/input}
 
 		<div class="clear"></div>
