@@ -38,6 +38,6 @@ else
 
 $_SERVER['baseDir'] = dirname($_SERVER['SCRIPT_NAME']) . '/public/';
 
-include 'public/index.php';
+include dirname(__file__) . '/public/index.php';
 
 ?>
