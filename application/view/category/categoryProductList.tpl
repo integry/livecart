@@ -1,19 +1,21 @@
 {if $products}
-	<div class="resultStats">
-		<div class="pagingInfo">
+	<div class="row resultStats">
+		<div class="col-span-6 pagingInfo todo">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
 
-		{include file="category/block/switchListLayout.tpl"}
+		<div class="col-span-6">
+			{include file="category/block/switchListLayout.tpl"}
 
-		<div class="sortOptions">
-			{if $sortOptions && ($sortOptions|@count > 1)}
-				{t _sort_by}
-				{form handle=$sortForm action="self" method="get"}
-				{selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
-				{/form}
-			{/if}
-			&nbsp;
+			<div class="sortOptions">
+				{if $sortOptions && ($sortOptions|@count > 1)}
+					{t _sort_by}
+					{form handle=$sortForm action="self" method="get"}
+					{selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
+					{/form}
+				{/if}
+				&nbsp;
+			</div>
 		</div>
 	</div>
 

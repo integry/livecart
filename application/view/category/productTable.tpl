@@ -11,7 +11,7 @@
 {/function}
 {assign var="columns" value='TABLE_VIEW_COLUMNS'|config}
 
-<table class="table productTable">
+<table class="table table-striped productTable">
 	<thead>
 		<tr>
 			{if $columns.IMAGE}

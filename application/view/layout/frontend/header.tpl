@@ -18,5 +18,4 @@
 
 <div class="col-span-12">
 	{block ROOT_CATEGORIES}
-	{block BREADCRUMB}
 </div>

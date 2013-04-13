@@ -1,3 +1,5 @@
+.todo { border: 1px dashed red; }
+
 #topMenu ul.nav li.dropdown:hover ul.dropdown-menu
 {
     display: block;
@@ -34,7 +36,6 @@ caption, th, td
 }
 
 .descr li,
-.newsEntry li,
 #productDescription li,
 .message li,
 .staticPageText li
@@ -44,7 +45,6 @@ caption, th, td
 }
 
 .descr ol li,
-.newsEntry ol li,
 #productDescription ol li,
 .message ol li,
 .staticPageText ol li
@@ -168,10 +168,8 @@ a.cancel,
 .logout,
 .latestNewsSide .date,
 #currency, #language,
-.newsReadMore,
 .count,
 li.moreSubCats,
-a.layoutSetList, a.layoutSetGrid,
 .spec,
 a.addToCart,
 .listPrice,
@@ -258,7 +256,7 @@ img.calendar_button
 /* left floats */
 #logoContainer,
 .allFilters .filterGroup,
-.resultStats .pagingInfo, .categoryLayoutSwitch,
+.resultStats .pagingInfo,
 ul.productList .image,
 #productSummaryContainer,
 #ratingSummary,
@@ -370,7 +368,6 @@ span.templateLocator span.templateName,
 #payTotal div,
 #testHandlerWarning,
 #checkoutProgress a.active,
-.categoryLayoutSwitch a.active,
 .specSummary
 {
 	background-color: #fffccc;
@@ -605,25 +602,6 @@ fieldset.container
 }
 
 /*****************************
-	Home (index) page
-*****************************/
-.newsDate
-{
-    font-style: italic;
-}
-
-.newsArchive
-{
-    padding-top: 1em;
-}
-
-ul.news li.newsEntry
-{
-    padding: 0.5em 0;
-    border-bottom-width: 1px;
-}
-
-/*****************************
 	Sub-category list
 *****************************/
 .count
@@ -772,33 +750,6 @@ ul.subSubCats
 {
 	font-size: 12px;
 	width: 130px;
-}
-
-.categoryLayoutSwitch a
-{
-	width: 16px;
-	height: 16px;
-	padding: 2px;
-	border-width: 2px;
-	background-position: center center;
-	display: block;
-	float: left;
-	margin-left: 4px;
-}
-
-a.layoutSetList
-{
-	background-image: url(../../image/silk/gif/application_view_list.gif);
-}
-
-a.layoutSetGrid
-{
-	background-image: url(../../image/silk/gif/application_view_tile.gif);
-}
-
-a.layoutSetTable
-{
-	background-image: url(../../image/silk/gif/table.gif);
 }
 
 .categoryLayoutSwitch

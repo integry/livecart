@@ -46,7 +46,7 @@
 		{includeCss file="frontend/FrontendRTL.css"}
 	{/if}
 
-	<link href="/livecart/public/bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
 
 	{* <link href="http://bootswatch.com/united/bootstrap.min.css" rel="stylesheet"> *}
 
@@ -63,7 +63,7 @@
 	{includeJs file="library/jquery/jquery-ui.js"}
 
 	{compiledJs glue=true nameMethod=hash}
-	<script src="/livecart/public/bootstrap/bootstrap/js/bootstrap.js"></script>
+	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 
 	{*
 	<!--[if lt IE 7]>

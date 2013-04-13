@@ -1,8 +1,10 @@
 {capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
 {form action="controller=category" class="form-search navbar-search pull-right" handle=$form}
-    <div class="input-append">
+    <div class="input-group">
 		{textfield type="text" class="col-span-2 search-query" name="q"}
-		<button type="submit" class="btn">{tn _search}</button>
+		<span class="input-group-btn">
+			<button type="submit" class="btn">{tn _search}</button>
+		</span>
     </div>
 
 	{if 'HIDE_SEARCH_CATS'|config}

@@ -1,8 +1,8 @@
-<h3><a href="{newsUrl news=$entry}">{$entry.title_lang}</a></h3>
-<div class="newsDate">{$entry.formatted_time.date_medium}</div>
-<div>{$entry.text_lang}</div>
-{if $entry.moreText_lang}
-	<div class="newsReadMore">
+<div class="newsEntry">
+	<h3><a href="{newsUrl news=$entry}">{$entry.title_lang}</a></h3>
+	<p class="newsEntryPreview">{$entry.text_lang}</p>
+	<p class="newsEntryProperties">
 		<a href="{newsUrl news=$entry}">{t _read_more}</a>
-	</div>
-{/if}
+		| <i class="glyphicon glyphicon-calendar"></i> {$entry.formatted_time.date_medium}
+	</p>
+</div>

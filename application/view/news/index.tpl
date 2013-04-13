@@ -2,13 +2,9 @@
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}
 
-	<ul class="news">
-		{foreach from=$news item=entry}
-			<li class="newsEntry">
-				{include file="news/newsEntry.tpl" entry=$entry}
-			</li>
-		{/foreach}
-	</ul>
+{foreach from=$news item=entry}
+	{include file="news/newsEntry.tpl" entry=$entry}
+{/foreach}
 
 {include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
