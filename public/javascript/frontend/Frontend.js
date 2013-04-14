@@ -4,9 +4,30 @@ var jQ = jQuery;
  *	@author Integry Systems
  */
 
+(function($) {
+	$.fn.maxHeight = function()
+	{
+		var max = 0;
+
+		this.each(function()
+		{
+			max = Math.max(max, $(this).height());
+		});
+
+		this.height(max);
+	};
+})(jQuery);
+
 jQuery(function()
 {
-	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); }); 
+	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
+
+	// make product grid items even height
+	jQuery('table.productGrid tr').each(function()
+	{
+		jQuery('.image', this).maxHeight();
+		jQuery('.thumbnail', this).maxHeight();
+	});
 });
 
 ConfirmationMessage = Class.create();

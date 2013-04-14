@@ -97,7 +97,6 @@ label.cancel,
 /* bold things */
 h4,
 .price,
-#addToCart,
 .required label,
 .errorText,
 .eavAttributes .attrName,
@@ -171,7 +170,6 @@ a.cancel,
 .count,
 li.moreSubCats,
 .spec,
-a.addToCart,
 .listPrice,
 .productListRating a,
 .overallRating a,
@@ -240,7 +238,6 @@ div.addressControl,
 /* vertical centering */
 .subCatImage,
 .subCategories td.details,
-.orderingControls *,
 .overallRating *,
 #mainInfo td,
 .ratingCategoryName,
@@ -293,9 +290,7 @@ input.radio, input.checkbox,
 #topMenuContainer,
 #currency, #language,
 .resultStats .sortOptions,
-ul.productList a.addToCart, .productGrid a.addToCart,
 ul.productList .pricingInfo,
-ul.productList .orderingControls,
 .specSummary,
 div.review .ratingBreakdown,
 .checkoutButtons,
@@ -311,7 +306,6 @@ div.review .ratingBreakdown,
 }
 
 /* links/menus with background images */
-a.addToCart,
 ul.attributeList li,
 .continueShopping,
 #userMenu li,
@@ -763,40 +757,20 @@ ul.subSubCats
 	display: none;
 }
 
-table.productGrid
-{
-	width: 99%;
-	margin-bottom: 1em;
-	table-layout: fixed;
-}
-
 .productGrid td
 {
-	padding: 1em;
-	position: relative;
+	padding: 0.5em;
 	vertical-align: bottom;
-	overflow: hidden;
-	border-width: 1px;
-}
-
-.productGrid tr.first td
-{
-	border-top-width: 0;
-}
-
-.productGrid tr.last td
-{
-	border-bottom-width: 0;
 }
 
 .productGrid td.first
 {
-	border-left-width: 0;
+	padding-left: 0;
 }
 
 .productGrid td.last
 {
-	border-right-width: 0;
+	padding-right: 0;
 }
 
 ul.productList li
@@ -807,12 +781,6 @@ ul.productList li
 ul.productList .title
 {
 	font-size: 100%;
-}
-
-.productGrid .title
-{
-	font-size: 100%;
-	margin: 1em 0;
 }
 
 ul.productList .spec
@@ -840,12 +808,6 @@ ul.productList .order
 	margin-top: 9px;
 }
 
-a.addToCart
-{
-    background-image:url(../../image/silk/gif/cart_add.gif);
-    white-space: nowrap;
-}
-
 .listPrice
 {
 	text-decoration: line-through;
@@ -858,11 +820,6 @@ ul.productList .pricingInfo
     width: 250px;
     line-height: 1.2em;
     margin-left: 1em;
-}
-
-.productGrid .pricingInfo
-{
-    line-height: 1.2em;
 }
 
 .productTable
@@ -925,6 +882,25 @@ ul.productList .pricingInfo
 .productListMenu
 {
 	margin-bottom: 1em;
+}
+
+.productAction
+{
+	font-size: smaller;
+}
+
+.productAction > .actionItem:after
+{
+	color: #CCCCCC;
+	content: " | ";
+	display: inline-block;
+	padding: 0 2px 0 5px;
+}
+
+.productAction > .actionItem:last-child:after
+{
+	content: '';
+	padding: 0;
 }
 
 .compare

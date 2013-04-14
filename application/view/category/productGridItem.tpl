@@ -1,32 +1,30 @@
+<div class="thumbnail">
+
 {include file="product/block/smallImage.tpl"}
 
-<div class="title">
-	<a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a>
-</div>
+<div class="caption">
+	<h4>
+		<a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a>
+	</h4>
 
-<div class="pricingInfo"><div><div><div>
-	{include file="product/block/cartButton.tpl"}
-	{include file="product/block/productPrice.tpl"}
-	<div class="clear"></div>
-</div></div></div></div>
+	<p class="pricingInfo">
+		{include file="product/block/productPrice.tpl"}
+		{include file="product/block/cartButton.tpl"}
+	</p>
 
-<div class="order">
-	<div class="orderingControls">
+	<p class="productAction">
 		{if $product.rating && 'ENABLE_RATINGS'|config}
-			{include file="category/productListRating.tpl"}
-			{if 'ENABLE_WISHLISTS'|config}
-				<span class="listItemSeparator">|</span>
-			{/if}
+			<span class="actionItem ratingItem">{include file="category/productListRating.tpl"}</span>
 		{/if}
 
 		{if 'ENABLE_WISHLISTS'|config}
-			<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a>
+			<span class="actionItem wishListItem"><span class="glyphicon glyphicon-heart-empty"></span> <a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a></span>
 		{/if}
-	</div>
+
+		{if 'ENABLE_PRODUCT_COMPARE'|config}
+			<span class="actionItem compareItem"><span class="glyphicon glyphicon-eye-close"></span> {include file="compare/block/compareLink.tpl"}</span>
+		{/if}
+	</p>
 </div>
 
-{if 'ENABLE_PRODUCT_COMPARE'|config}
-<div class="compare">
-	{include file="compare/block/compareLink.tpl"}
 </div>
-{/if}
