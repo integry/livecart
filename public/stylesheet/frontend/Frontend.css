@@ -382,37 +382,11 @@ tr.odd td, tr.even td
 {
 	overflow: visible;
 	position: relative;
-	margin-bottom: 120px;
 }
 
 #rightSide
 {
-	width: 210px;
 	display: none;
-	padding-right: 10px;
-}
-
-#content
-{
-	padding: 0 10px;
-	padding-bottom: 10px;
-}
-
-#content.left
-{
-	margin-left: 0;
-}
-
-#content.right,
-body.threeColumn #content.right
-{
-	margin-right: 0;
-	padding-right: 0;
-}
-
-body.threeColumn #content
-{
-	padding-right: 240px;
 }
 
 #content,
@@ -446,29 +420,6 @@ body.threeColumn #content
 #logoContainer
 {
 	padding: 8px;
-}
-
-fieldset.container
-{
-    border: 0;
-}
-
-/*****************************
-    Tables
-*****************************/
-.table
-{
-    border-width: 1px;
-}
-
-.table th
-{
-    padding: 3px;
-}
-
-.table td
-{
-    padding: 4px;
 }
 
 /*****************************
@@ -565,25 +516,6 @@ fieldset.container
 #currency a, #language a
 {
 	margin-left: 3px;
-}
-
-/*****************************
-	Breadcrumb
-*****************************/
-#breadCrumb
-{
-	padding: 5px;
-}
-
-#breadCrumb *
-{
-	display: inline;
-}
-
-#breadCrumb a,
-#breadCrumb li.last
-{
-	margin: 0 7px;
 }
 
 /*****************************
@@ -812,11 +744,6 @@ a.progressIndicator
 /*****************************
 	Product page
 *****************************/
-.productIndex h1
-{
-	width: 600px;
-}
-
 .returnToCategory
 {
     background-image: url(../../image/silk/gif/resultset_previous.gif);
@@ -1098,16 +1025,6 @@ div.review .ratingBreakdown
 .bundlePrice
 {
 	font-size: larger;
-}
-
-.tabberlive h2
-{
-	display: none;
-}
-
-.tabberlive .productSection
-{
-	padding: 1em 0;
 }
 
 /*****************************

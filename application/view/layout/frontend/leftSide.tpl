@@ -1,4 +1,6 @@
-<div class="col-span-3" id="leftSide">
+{assign var="layoutspanLeft" value=3 scope="global"}
+
+<div class="col-span-{$layoutspanLeft}" id="leftSide">
 	<div id="contentWrapperLeft"></div>
 
 	{block LEFT_SIDE}
@@ -14,6 +16,4 @@
 	{block INFORMATION}
 	{block NEWSLETTER}
 	{block QUICKNAV}
-
-	<div class="clear"></div>
 </div>

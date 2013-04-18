@@ -14,6 +14,7 @@ jQuery(function()
 			
 			tabs.append(jQuery('<li><a id="tab_' + id + '" href="#' + id +'">' + displayTitle + '</a></li>'));
 			section.addClass('tab-pane');
+			title.hide();
 		});
 		
 		tabs.find('a').tab().click(function (e) { e.preventDefault(); jQuery(this).tab('show');}).first().tab('show');
