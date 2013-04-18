@@ -92,7 +92,7 @@ label.cancel,
 /* bold things */
 .price,
 .required label,
-.errorText,
+.text-error,
 .eavAttributes .attrName,
 .featured .title a,
 .currentName,
@@ -101,7 +101,6 @@ label.cancel,
 .notFoundMain,
 .currentPage,
 .spec,
-.returnToCategory,
 tr.specificationGroup,
 .overallRating,
 .ratingCategoryName,
@@ -133,7 +132,7 @@ a.messages,
 .cancelled,
 a.cancel,
 .errorMsg,
-.errorText,
+.text-error,
 .discount .actualPrice
 {
 	color: red;
@@ -282,7 +281,6 @@ input.radio, input.checkbox,
 #topMenuContainer,
 #currency, #language,
 .resultStats .sortOptions,
-.specSummary,
 div.review .ratingBreakdown,
 .checkoutButtons,
 .proceedToCheckout,
@@ -302,7 +300,7 @@ ul.attributeList li,
 #userMenu li,
 a.invoice, a.viewOrder, a.reorder, a.messages,
 ul.downloadFile li,
-.errorText
+.text-error
 {
 	padding-left: 22px;
 }
@@ -352,8 +350,7 @@ span.templateLocator span.templateName,
 #couponCodes .container,
 #payTotal div,
 #testHandlerWarning,
-#checkoutProgress a.active,
-.specSummary
+#checkoutProgress a.active
 {
 	background-color: #fffccc;
 }
@@ -744,21 +741,6 @@ a.progressIndicator
 /*****************************
 	Product page
 *****************************/
-.returnToCategory
-{
-    background-image: url(../../image/silk/gif/resultset_previous.gif);
-    padding-left: 18px;
-    margin-bottom: 12px;
-}
-
-.specSummary
-{
-    padding: 10px;
-    max-width: 300px;
-    margin-top: -40px;
-    z-index: 10;
-}
-
 #productSummaryContainer
 {
 	margin-top: 1em;
@@ -965,7 +947,7 @@ ul.attributeList.singleValue li
 	padding: 4px;
 }
 
-#rateProduct table .errorText
+#rateProduct table .text-error
 {
 	position: relative;
 	white-space: nowrap;
@@ -1997,22 +1979,6 @@ label.cancel
     display: inline;
 }
 
-select
-{
-	padding: 0;
-}
-
-textarea
-{
-    padding: 2px;
-    width: 40em;
-    min-width: 40em;
-    height: 10em;
-    font-size: 14px;
-    color: #333;
-    max-width: 100%;
-}
-
 input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
@@ -2025,11 +1991,6 @@ input.radio, input.checkbox
     vertical-align: middle;
 }
 
-input:focus, textarea:focus, select:focus
-{
-    background: #ffc;
-}
-
 fieldset.error, div.error, fieldset.container
 {
 	padding: 0;
@@ -2037,12 +1998,6 @@ fieldset.error, div.error, fieldset.container
 	position: static;
 	border: 0;
 	background: none;
-}
-
-.errorText
-{
-	background-image: url(../../image/silk/gif/bullet_error.gif);
-	margin-bottom: 4px;
 }
 
 .hasError

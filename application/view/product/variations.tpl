@@ -7,8 +7,8 @@
 				<option value="{$id}">{$name}</option>
 			{/foreach}
 		</select>
-		<div class="errorText hidden"></div>
-		{error for="variation_`$variationType.ID`"}<div class="errorText">{$msg}</div>{/error}
+		<div class="text-error hidden"></div>
+		{error for="variation_`$variationType.ID`"}<div class="text-error">{$msg}</div>{/error}
 	</div>
 {/foreach}
 

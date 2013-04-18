@@ -26,13 +26,13 @@
 							<label class="wide">{t _css_rule_sel}:</label>
 							<input type="text" class="text wide" id="cssNewRuleName" />
 							<span class="cssExample">{t _css_example}: <strong>.product-index h1</strong></span>
-							<span class="errorText hidden"></span>
+							<span class="text-error hidden"></span>
 						</p>
 						<p>
 							<label class="wide">{t _css_rule_text}:</label>
 							<textarea id="cssNewRuleText"></textarea>
 							<span class="cssExample">{t _css_example}: <strong>color: green</strong></span>
-							<span class="errorText hidden"></span>
+							<span class="text-error hidden"></span>
 						</p>
 						<p>
 							<input type="button" class="button" id="cssNewRuleSave" value="{tn _css_add_rule}" />

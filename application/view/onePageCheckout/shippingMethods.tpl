@@ -19,7 +19,7 @@
 				{if $rates.$key}
 					{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
 				{else}
-					<span class="errorText">{t _err_no_rates_for_address}</span>
+					<span class="text-error">{t _err_no_rates_for_address}</span>
 				{/if}
 			{/if}
 		{/foreach}
@@ -27,7 +27,7 @@
 		{include file="onePageCheckout/block/continueButton.tpl"}
 	{/form}
 	{if !$shipments}
-		<div class="errorText">{t _err_no_rates_for_address}</div>
+		<div class="text-error">{t _err_no_rates_for_address}</div>
 	{/if}
 </div>
 

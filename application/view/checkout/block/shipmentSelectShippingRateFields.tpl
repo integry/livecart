@@ -42,6 +42,6 @@
 	</p>
 {/foreach}
 
-<div class="errorText hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
+<div class="text-error hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
 	<div>{error for="shipping_`$key`"}{$msg}{/error}</div>
 </div>

@@ -10,7 +10,7 @@
 	{/literal}
 			{checkbox name=accept id=accept class="checbox" style="float: left; margin-right: 5px;"}
 			<label class="checkbox">I accept the license agreement</label>
-			<span class="errorText hidden"></span>
+			<span class="text-error hidden"></span>
 			<br class="clear" />
 		</p>
 	</fieldset>
