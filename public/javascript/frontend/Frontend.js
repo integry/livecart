@@ -27,10 +27,12 @@ jQuery(function()
 	{
 		jQuery('.thumbnail', this).maxHeight();
 		jQuery('.image', this).maxHeight();
-		jQuery('h4', this).maxHeight();
+		jQuery('h3', this).maxHeight();
 	});
 
+	// pagination elements
 	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
+	
 });
 
 ConfirmationMessage = Class.create();

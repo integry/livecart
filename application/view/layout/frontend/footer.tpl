@@ -1,6 +1,4 @@
-<div class="clear"></div>
-
-<div id="footer">
+<div id="footer" class="col-span-12">
 
 	{block FOOTER}
 

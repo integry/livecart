@@ -1,7 +1,5 @@
 {loadJs form=true}
-{if 'PRODUCT_TABS'|config}
-	{includeJs file="library/tabber/tabber.js"}
-{/if}
+{includeJs file="frontend/Product.js"}
 
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
 {assign var="metaKeywords" value=$product.keywords}
@@ -20,6 +18,10 @@
 		</div>
 
 		{include file="product/head.tpl"}
+
+		{if 'PRODUCT_TABS'|config}
+			<ul class="nav nav-tabs" id="productTabs"></ul>
+		{/if}
 
 		<div id="productContent" class="productContent">
 			{if $product.type == 2}
