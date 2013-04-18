@@ -188,7 +188,6 @@ a.cvv,
 
 /* centered text */
 .subCategories td.subCatImage,
-.productGrid td,
 ul.productList .image,
 .overallRating,
 .noStock, .lowStock,
@@ -757,20 +756,10 @@ ul.subSubCats
 	display: none;
 }
 
-.productGrid td
+.productGridItem
 {
-	padding: 0.5em;
-	vertical-align: bottom;
-}
-
-.productGrid td.first
-{
-	padding-left: 0;
-}
-
-.productGrid td.last
-{
-	padding-right: 0;
+	text-align: center;
+	margin-bottom: 1em;
 }
 
 ul.productList li

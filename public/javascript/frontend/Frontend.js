@@ -20,14 +20,15 @@ var jQ = jQuery;
 
 jQuery(function()
 {
-	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
-
 	// make product grid items even height
-	jQuery('table.productGrid tr').each(function()
+	jQuery('.productGrid').each(function()
 	{
-		jQuery('.image', this).maxHeight();
 		jQuery('.thumbnail', this).maxHeight();
+		jQuery('.image', this).maxHeight();
+		jQuery('h4', this).maxHeight();
 	});
+
+	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
 });
 
 ConfirmationMessage = Class.create();
