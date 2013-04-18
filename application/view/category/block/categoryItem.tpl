@@ -1,6 +1,7 @@
+<div class="row">
 {sect}
 	{head}
-		<div class="subCatImage">
+		<div class="subCatImage col-span-4">
 	{cont}
 		{if $sub.featuredProduct.ID}
 			<div class="categoryFeaturedProduct">
@@ -20,38 +21,35 @@
 	{foot}
 		</div>
 {/sect}
-<div class="details{if $smarty.foreach.subcats.index < ($smarty.foreach.subcats.total / 2)} verticalSep{/if}{if !$sub.subCategories} noSubCats{/if}">
+<div class="details col-span-8 {if !$sub.subCategories} noSubCats{/if}">
 	<div class="subCatContainer">
-		<div class="subCatContainer">
-			<div class="subCatContainer">
-				<div class="subCatName">
-					<a href="{categoryUrl data=$sub filters=$filters}">{$sub.name_lang}</a>
-					<span class="count">(&rlm;{$sub.searchCount|default:$sub.count})</span>
-				</div>
-
-				{if $sub.subCategories}
-				<ul class="subSubCats">
-					{foreach from=$sub.subCategories item="subSub" name="subSub"}
-						{if $smarty.foreach.subSub.iteration > 'CAT_MENU_SUBS'|config}
-							<li class="moreSubCats">
-								<a href="{categoryUrl data=$sub filters=$filters}">{t _more_subcats}</a>
-							</li>
-							{break}
-						{/if}
-						<li>
-							<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
-							<span class="count">(&rlm;{$subSub.count})</span>
-						</li>
-					{/foreach}
-				</ul>
-				{/if}
-
-				{if 'CAT_MENU_DESCR'|config}
-					<div class="subCatDescr">
-						{$sub.description_lang}
-					</div>
-				{/if}
-			</div>
+		<div class="subCatName">
+			<a href="{categoryUrl data=$sub filters=$filters}">{$sub.name_lang}</a>
+			<span class="count">(&rlm;{$sub.searchCount|default:$sub.count})</span>
 		</div>
+
+		{if $sub.subCategories}
+		<ul class="subSubCats">
+			{foreach from=$sub.subCategories item="subSub" name="subSub"}
+				{if $smarty.foreach.subSub.iteration > 'CAT_MENU_SUBS'|config}
+					<li class="moreSubCats">
+						<a href="{categoryUrl data=$sub filters=$filters}">{t _more_subcats}</a>
+					</li>
+					{break}
+				{/if}
+				<li>
+					<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
+					<span class="count">(&rlm;{$subSub.count})</span>
+				</li>
+			{/foreach}
+		</ul>
+		{/if}
+
+		{if 'CAT_MENU_DESCR'|config}
+			<div class="subCatDescr">
+				{$sub.description_lang}
+			</div>
+		{/if}
 	</div>
+</div>
 </div>

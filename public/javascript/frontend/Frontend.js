@@ -20,6 +20,8 @@ var jQ = jQuery;
 
 jQuery(function()
 {
+	jQuery('.subCategories .thumbnail').maxHeight();
+	
 	// make product grid items even height
 	jQuery('.productGrid').each(function()
 	{

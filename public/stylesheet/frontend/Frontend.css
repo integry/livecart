@@ -63,11 +63,6 @@ td
 	vertical-align: top;
 }
 
-p
-{
-	margin: 10px 0;
-}
-
 .clear
 {
     clear: both;
@@ -95,7 +90,6 @@ label.cancel,
 }
 
 /* bold things */
-h4,
 .price,
 .required label,
 .errorText,
@@ -253,7 +247,6 @@ img.calendar_button
 #logoContainer,
 .allFilters .filterGroup,
 .resultStats .pagingInfo,
-ul.productList .image,
 #productSummaryContainer,
 #ratingSummary,
 .ratingBreakdown,
@@ -289,7 +282,6 @@ input.radio, input.checkbox,
 #topMenuContainer,
 #currency, #language,
 .resultStats .sortOptions,
-ul.productList .pricingInfo,
 .specSummary,
 div.review .ratingBreakdown,
 .checkoutButtons,
@@ -608,77 +600,13 @@ fieldset.container
     font-size: larger;
 }
 
-.subCategories
-{
-    display: table;
-    margin-top: 10px;
-    border-collapse: collapse;
-    margin: 0 auto;
-}
-
-.subCategoryRow
-{
-	display: table-row;
-}
-
 .subCategoryItem
 {
-	display: table-cell;
-	border-width: 1px;
-	border-style: dotted;
-	vertical-align: middle;
-	padding: 5px;
-}
-
-.subCategoryItem.first
-{
-	border-left-width: 0;
-}
-
-.subCategoryItem.last
-{
-	border-right-width: 0;
-}
-
-.subCategoryRow.first td
-{
-	border-top-width: 0;
-}
-
-.subCategoryRow.last td
-{
-	border-bottom-width: 0;
-}
-
-.subCategories .subCatImage
-{
-	width: 85px;
-	padding: 5px;
-	padding-right: 10px;
-	display: table-cell;
-	vertical-align: middle;
-	*float: left;
-}
-
-.subCategories .details
-{
-    padding-left: 20px;
-    padding-right: 10px;
-    display: table-cell;
-    vertical-align: middle;
-	*margin-left: 85px;
-	*padding-top: 2em;
-	*padding-bottom: 1em;
-}
-
-.subCategories td.details .count
-{
-    font-weight: normal;
+	margin-bottom: 1em;
 }
 
 ul.subSubCats
 {
-    margin: 6px;
     margin-top: 12px;
 }
 
@@ -762,53 +690,15 @@ ul.subSubCats
 	margin-bottom: 1em;
 }
 
-ul.productList li
+h3.productTitle
 {
-	margin-bottom: 30px;
-}
-
-ul.productList .title
-{
-	font-size: 100%;
-}
-
-ul.productList .spec
-{
-	margin-top: 2px;
-}
-
-ul.productList .descr
-{
-    margin-left: 120px;
-}
-
-ul.productList .shortDescr
-{
-	margin-top: 0.5em;
-}
-
-ul.productList .image
-{
-    width: 110px;
-}
-
-ul.productList .order
-{
-	margin-top: 9px;
+	margin-top: 0;
 }
 
 .listPrice
 {
 	text-decoration: line-through;
 	font-weight: normal;
-}
-
-ul.productList .pricingInfo
-{
-    white-space: nowrap;
-    width: 250px;
-    line-height: 1.2em;
-    margin-left: 1em;
 }
 
 .productTable a.direction_asc,
@@ -838,16 +728,6 @@ ul.productList .pricingInfo
 {
     border-bottom-width: 1px;
     margin: 15px auto -7px 120px;
-}
-
-.listItemSeparator
-{
-	color: #ccc;
-}
-
-.productListMenu
-{
-	margin-bottom: 1em;
 }
 
 .productAction
@@ -2139,12 +2019,6 @@ span.templateLocator.activeTpl:hover > span.templateName:first-child
 form
 {
      display: inline;
-}
-
-form p
-{
-    position: relative;
-    clear: both;
 }
 
 fieldset
