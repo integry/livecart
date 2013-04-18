@@ -347,13 +347,13 @@ Backend.ObjectImage.prototype =
 
 	postUpload: function(result)
 	{
-		var errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
+		var errorElement = document.getElementsByClassName('text-error', this.addForm)[0];
 
 		if (result['error'])
 		{
 			errorElement.innerHTML = result['error'];
 			Element.removeClassName(errorElement, 'hidden');
-			Effect.Appear(errorElement, {duration: 0.4});
+			new Effect.Appear(errorElement, {duration: 0.4});
 		}
 		else
 		{

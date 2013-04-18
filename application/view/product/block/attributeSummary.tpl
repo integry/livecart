@@ -1,5 +1,5 @@
 {if $product.listAttributes}
-	<div class="specSummary spec">
+	<p class="specSummary spec">
 		{foreach from=$product.listAttributes item="attr" name="attr"}
 			{if $attr.values}
 				{foreach from=$attr.values item="value" name="values"}
@@ -18,8 +18,5 @@
 			/
 			{/if}
 		{/foreach}
-	</div>
-
-	<div style="clear: right;"></div>
-
+	</p>
 {/if}

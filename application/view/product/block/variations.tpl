@@ -1,7 +1,5 @@
 {if $variations.products}
-	<tr id="variations">
-		<td colspan="2" class="productVariations">
-			{include file="product/variations.tpl"}
-		</td>
-	</tr>
+	<div id="variations" class="productVariations">
+		{include file="product/variations.tpl"}
+	</div>
 {/if}

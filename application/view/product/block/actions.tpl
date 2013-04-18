@@ -1,14 +1,21 @@
-<tr id="productToWishList">
-	<td class="param"></td>
-	<td class="value cartLinks addToWishList">
-		{if 'ENABLE_WISHLISTS'|config}
-			<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a>
-		{/if}
+{if $quantityPricing}
+	<div class="row" id="quantityPrices">
+		<div class="col-span-12">
+			{include file="product/block/quantityPrice.tpl"}
+		</div>
+	</div>
+{/if}
 
-		{if 'ENABLE_PRODUCT_COMPARE'|config}
-			<div class="compare">
-				{include file="compare/block/compareLink.tpl"}
-			</div>
-		{/if}
-	</td>
-</tr>
+<div id="actionButtons">
+{if 'ENABLE_WISHLISTS'|config}
+	<p>
+		<a class="btn btn-small" href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" rel="nofollow" class="addToWishList"><span class="glyphicon glyphicon-heart-empty"></span> {t _add_to_wishlist}</a>
+	</p>
+{/if}
+
+{if 'ENABLE_PRODUCT_COMPARE'|config}
+	<p>
+		<a class="btn btn-small" href="{link compare/add id=$product.ID returnPath=true}" onclick="Compare.add(event)" class="addToCompare"><span class="glyphicon glyphicon-eye-close"></span> {t _add_compare}</a>
+	</p>
+{/if}
+</div>

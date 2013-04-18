@@ -39,7 +39,7 @@
 	<fieldset class="addForm">
 		<legend>{t _add_new_title}</legend>
 
-		{input name="title"}
+		{input name="image"}
 			{label}{t _image_file}:{/label}
 			{filefield}
 			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>

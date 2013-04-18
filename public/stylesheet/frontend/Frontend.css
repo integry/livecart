@@ -246,7 +246,6 @@ img.calendar_button
 #logoContainer,
 .allFilters .filterGroup,
 .resultStats .pagingInfo,
-#productSummaryContainer,
 #ratingSummary,
 .ratingBreakdown,
 #imageContainer,
@@ -320,7 +319,6 @@ tr.odd,
 fieldset,
 div.addressBlock,
 .orderDetails,
-#productSummaryContainer,
 .noteText,
 #checkoutProgress a,
 .dynamicMenu ul,
@@ -678,6 +676,11 @@ h3.productTitle
 	padding: 0;
 }
 
+#actionButtons
+{
+	text-align: center;
+}
+
 .compare
 {
 	padding-top: 0.5em;
@@ -741,36 +744,9 @@ a.progressIndicator
 /*****************************
 	Product page
 *****************************/
-#productSummaryContainer
-{
-	margin-top: 1em;
-}
-
-#mainInfo
-{
-    clear: right;
-    margin: 1em;
-}
-
-#productToCart input.number
-{
-	width: 3em;
-}
-
 #ratingSummary
 {
 	width: 250px;
-}
-
-#mainInfo td
-{
-	padding: 5px;
-	white-space: nowrap;
-}
-
-#mainInfo td.websiteUrl
-{
-    border-top: 1px dotted black;
 }
 
 .websiteUrl a
@@ -804,13 +780,6 @@ a.progressIndicator
 #mainInfo .price
 {
 	font-size: larger;
-}
-
-table.quantityPrice
-{
-	border-width: 1px;
-	margin: 1em auto;
-	clear: both;
 }
 
 .price.quantityPrice
@@ -1965,13 +1934,6 @@ p.radio label, p.checkbox label
 label.checkbox, label.radio
 {
   	line-height: 1em;
-}
-
-input.text, select, file, form.other
-{
-    width: 15em;
-    font-size: 16px;
-    padding: 2px;
 }
 
 label.cancel

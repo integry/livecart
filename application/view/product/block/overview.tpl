@@ -1,61 +1,37 @@
-<table id="productMainDetails">
+<dl class="dl-horizontal" id="productMainDetails">
 
 	{block PRODUCT-OVERVIEW-BEFORE}
 
 	{if $product.Manufacturer.name}
-	<tr>
-		<td class="param">{t _manufacturer}:</td>
-		<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
-	</tr>
+		<dt class="manufacturer">{t _manufacturer}</dt>
+		<dd><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></dd>
 	{/if}
 
 	{if 'SHOW_PRODUCT_WEIGHT'|config && $product.shippingWeight}
-	<tr>
-		<td class="param">{t _weight}:</td>
-		<td class="value">
+		<dt class="weight">{t _weight}</td>
+		<dd>
 			{if 'METRIC' == 'UNIT_SYSTEM'|config}
 				{$product.shippingWeight} {t _kg}
 			{else}
 				{$product.shippingWeight_english}
 			{/if}
-		</td>
-	</tr>
+		</dd>
 	{/if}
 
 	{if $product.sku}
-	<tr>
-		<td class="param">{t _sku}:</td>
-		<td class="value">{$product.sku}</td>
-	</tr>
+		<dt class="sku">{t _sku}</dt>
+		<dd>{$product.sku}</dd>
 	{/if}
 
 	{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
-	<tr>
-		<td class="param">{t _in_stock}:</td>
-		<td class="value">{$product.stockCount}</td>
-	</tr>
-	{/if}
-
-	{if !$product.isDownloadable || 'INVENTORY_TRACKING_DOWNLOADABLE'|config}
-		{if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
-		<tr>
-			<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
-		</tr>
-		{/if}
-
-		{if ($product.stockCount <= 'LOW_STOCK'|config) && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
-		<tr>
-			<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
-		</tr>
-		{/if}
+		<dt class="stockCount">{t _in_stock}</dt>
+		<dd>{$product.stockCount}</dd>
 	{/if}
 
 	{if $product.URL}
-	<tr>
-		<td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>
-	</tr>
+		<dt class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></dt>
 	{/if}
 
 	{block PRODUCT-OVERVIEW-AFTER}
 
-</table>
+</dl>

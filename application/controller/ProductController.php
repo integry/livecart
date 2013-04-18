@@ -26,8 +26,7 @@ class ProductController extends CatalogController
 			$this->addBlock('PRODUCT-OPTIONS', 'options', 'product/block/options');
 			$this->addBlock('PRODUCT-VARIATIONS', 'variations', 'product/block/variations');
 			$this->addBlock('PRODUCT-TO-CART', 'addToCart', 'product/block/toCart');
-			$this->addBlock('PRODUCT-ACTIONS', 'actions', 'product/block/actions');
-
+			
 		$this->addBlock('PRODUCT-IMAGES', 'images', 'product/block/images');
 		$this->addBlock('PRODUCT-NAVIGATION', 'navigation', 'product/block/navigation');
 
@@ -368,11 +367,6 @@ class ProductController extends CatalogController
 	}
 
 	public function overviewBlock()
-	{
-		return new BlockResponse();
-	}
-
-	public function actionsBlock()
 	{
 		return new BlockResponse();
 	}

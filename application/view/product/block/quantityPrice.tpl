@@ -1,6 +1,6 @@
-<table class="quantityPrice">
+<table class="quantityPrice table table-striped table-condensed table-hover table-bordered">
 	{foreach from=$quantityPricing item=quantityPrice key=quant name=quant}
-		<tr class="{zebra loop=quant}">
+		<tr>
 			<td class="quantityAmount">
 				{if $quantityPrice.to}
 					{$quantityPrice.from} - {$quantityPrice.to}

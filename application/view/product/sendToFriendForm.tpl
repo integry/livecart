@@ -4,7 +4,7 @@
 }
 
 	<div id="sharingSection" class="productSection sharingSection">
-		<h2>{maketext text="_share_product_name" params=$product.name_lang}</h2>
+		<h2>{maketext text="_share_product_name"}</h2>
 
 		<div id="sendToFriendRepsonse"></div>
 

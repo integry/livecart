@@ -1,11 +1,7 @@
 {form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm method="POST"}
-
-	<table id="productPurchaseLinks">
 	{blocks id="PRODUCT-PURCHASE-CONTAINER" blocks="
-		PRODUCT-PRICE
+		PRODUCT-PRICE  		// product/block/price.tpl
 		PRODUCT-RECURRING
 		PRODUCT-UP-SELL
-		PRODUCT-TO-CART
-		PRODUCT-ACTIONS"}
-	</table>
+		PRODUCT-TO-CART"}
 {/form}
