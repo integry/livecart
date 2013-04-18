@@ -822,29 +822,6 @@ ul.productList .pricingInfo
     margin-left: 1em;
 }
 
-.productTable
-{
-	width: 100%;
-	margin-bottom: 2em;
-}
-
-.productTable td,
-.productTable th
-{
-	padding: 5px;
-	vertical-align: middle;
-}
-
-.productTable td
-{
-	text-align: center;
-}
-
-.productTable td.text
-{
-	text-align: left;
-}
-
 .productTable a.direction_asc,
 .productTable a.direction_desc
 {
