@@ -1,5 +1,7 @@
 .todo { border: 1px dashed red; }
 
+.valign * { vertical-align: middle; }
+
 #topMenu ul.nav li.dropdown:hover ul.dropdown-menu
 {
     display: block;
