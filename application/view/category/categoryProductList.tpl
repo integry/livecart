@@ -1,23 +1,24 @@
 {if $products}
 	<div class="row resultStats">
-		<div class="col-span-6 pagingInfo todo">
+		<div class="col-span-6 pagingInfo text-muted">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
 
-		<div class="col-span-6">
-			{include file="category/block/switchListLayout.tpl"}
-
-			<div class="sortOptions">
-				{if $sortOptions && ($sortOptions|@count > 1)}
+		<div class="col-span-6 listOptions">
+			{if $sortOptions && ($sortOptions|@count > 1)}
+			<span class="sortOptions">
 					{t _sort_by}
 					{form handle=$sortForm action="self" method="get"}
 					{selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
 					{/form}
-				{/if}
-				&nbsp;
-			</div>
+			</span>
+			{/if}
+			
+			{include file="category/block/switchListLayout.tpl"}
 		</div>
 	</div>
+	
+	<hr />
 
 	{if $products}
 		<form action="{link controller=category action=listAction returnPath=true}" method="post">

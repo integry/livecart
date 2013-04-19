@@ -140,19 +140,9 @@ a.cancel,
 	color: red;
 }
 
-/* auto-width select boxes */
-#language select,
-#productSort,
-.cartLinks select, select.quantity,
-#ccExpiryMonth, #ccExpiryYear, #ccType
-{
-	width: auto;
-}
-
 /* smaller input fields */
 #language select,
 .cartName small
-#productSort
 {
 	font-size: 0.85em;
 	padding: 0;
@@ -246,7 +236,6 @@ img.calendar_button
 /* left floats */
 #logoContainer,
 .allFilters .filterGroup,
-.resultStats .pagingInfo,
 #ratingSummary,
 .ratingBreakdown,
 #imageContainer,
@@ -278,7 +267,6 @@ div.addressBlock,
 /* right floats */
 #topMenuContainer,
 #currency, #language,
-.resultStats .sortOptions,
 div.review .ratingBreakdown,
 .checkoutButtons,
 .proceedToCheckout,
@@ -601,10 +589,9 @@ ul.subSubCats
 	width: 130px;
 }
 
-.categoryLayoutSwitch
+.listOptions
 {
-	float: right;
-	margin-top: -7px;
+	text-align: right;
 }
 
 .category-allProducts .categoryLayoutSwitch
