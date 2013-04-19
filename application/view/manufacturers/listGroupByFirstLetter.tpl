@@ -34,7 +34,8 @@
 			{assign var=columns value=$columns+1}
 		{/if}
 	<ul>
-		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a> <span class="count">(&rlm;{$counts[$manufacturer.ID]})</span></li>
+		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a>
+		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 {/foreach}
 

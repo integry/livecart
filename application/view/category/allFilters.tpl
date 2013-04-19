@@ -16,7 +16,7 @@
 		{/if}
 
 		<li>
-			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">{$filter.name_lang}</a>&nbsp;<span class="count">(&rlm;{$filter.count})</span>
+			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">{$filter.name_lang}</a>&nbsp;{include file="block/count.tpl" count=$filter.count}
 		</li>
 
 		{if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last}

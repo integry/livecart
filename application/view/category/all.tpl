@@ -15,7 +15,8 @@
 			{/if}
 
 			<ul>
-				<li><a href="{categoryUrl data=$category}">{$category.name}</a> <span class="count">(&rlm;{$category.count})</span></li>
+				<li><a href="{categoryUrl data=$category}">{$category.name}</a>
+				{include file="block/count.tpl" count=$category.count}
 			</ul>
 			{assign var=index value=$index+1}
 		{/foreach}

@@ -162,7 +162,6 @@ a.cancel,
 .logout,
 .latestNewsSide .date,
 #currency, #language,
-.count,
 li.moreSubCats,
 .spec,
 .listPrice,
@@ -269,8 +268,6 @@ div.addressBlock,
 .responseUser,
 .manufacturerColumn,
 .manufacturerAttributes,
-label,
-input.radio, input.checkbox,
 #cvvHelp,
 .paymentMethods,
 .compactProductList div
@@ -420,6 +417,14 @@ tr.odd td, tr.even td
 }
 
 /*****************************
+	Category box
+*****************************/
+.categories .nav .nav
+{
+	margin-left: 20px;
+}
+
+/*****************************
 	Filters
 *****************************/
 .filterGroup ul
@@ -518,12 +523,6 @@ tr.odd td, tr.even td
 /*****************************
 	Sub-category list
 *****************************/
-.count
-{
-    color: #666;
-    white-space: nowrap;
-}
-
 .subCatName
 {
     font-size: larger;
@@ -681,11 +680,6 @@ h3.productTitle
 #actionButtons
 {
 	text-align: center;
-}
-
-.compare
-{
-	padding-top: 0.5em;
 }
 
 .compare .checkbox

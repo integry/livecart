@@ -1,25 +1,21 @@
 {if $sectionFilters.filters}
 	<div class="filterGroup filterTypeCheckbox" id="filterGroup_{$sectionFilters.ID}">
-		<h4>{translate text=$title}</h4>
-		<ul>
-			{foreach from=$sectionFilters.filters item="filter" name="filters"}
-				<li>
-					<div>
-						<input
-							class="checkbox" type="checkbox"
-							id="{$filter.ID}" name="{$filter.handle}-{$filter.ID}"
-							{if in_array($filter.ID, $filtersIDs)}checked="checked"{/if}
-						/>
-						<label class="checkbox" for="{$filter.ID}">
-							{$filter.name_lang}
-							{if 'DISPLAY_NUM_FILTER'|config}
-								<span class="count">(&rlm;{$filter.count})</span>
-							{/if}
-						</label>
-					</div>
-				</li>
-			{/foreach}
-		</ul>
+		<div class="nav-header">{translate text=$title}</div>
+		{foreach from=$sectionFilters.filters item="filter" name="filters"}
+			<div class="checkbox">
+				<label>
+					<input
+						class="checkbox" type="checkbox"
+						name="{$filter.handle}-{$filter.ID}"
+						{if in_array($filter.ID, $filtersIDs)}checked="checked"{/if}
+					/>
+					{$filter.name_lang}
+					{if 'DISPLAY_NUM_FILTER'|config}
+						{include file="block/count.tpl" count=$filter.count}
+					{/if}
+				</label>
+			</div>
+		{/foreach}
 	</div>
 	{literal}
 		<script type="text/javascript">

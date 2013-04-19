@@ -16,19 +16,23 @@
 	<div class="content">
 
 		{if $manufacturers}
-			<select onchange="window.location.href = this.value;" style="width: 100%;">
+			<p>
+			<select onchange="window.location.href = this.value;">
 				<option>{t _manufacturers}</option>
 				{foreach $manufacturers as $man}
 					<option value="{$man.url}">{$man.name}</option>
 				{/foreach}
 			</select>
+			</p>
 		{/if}
 
 		{if $categories}
-			<select onchange="window.location.href = this.value;" style="width: 100%;">
+			<p>
+			<select onchange="window.location.href = this.value;">
 				<option>{t _categories}</option>
 				{dynamicCategoryTree node=$categories}
 			</select>
+			</p>
 		{/if}
 
 	</div>

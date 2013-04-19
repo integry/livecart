@@ -1,12 +1,10 @@
 {loadJs}
 {if $products}
-	<div class="box compare" id="compareMenu">
-		<div class="title">
-			<div>{t _compared_products}</div>
-		</div>
+	<div class="panel compare" id="compareMenu">
+		<div class="panel-heading">{t _compared_products}</div>
 
 		<div class="content">
-			<ul>
+			<ul class="list-unstyled">
 			{foreach from=$products item=product}
 				{include file="compare/block/item.tpl"}
 			{/foreach}

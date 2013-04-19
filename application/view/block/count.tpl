@@ -1,0 +1,1 @@
+<span class="count text-muted"><small>(&rlm;{$count})</small></span>

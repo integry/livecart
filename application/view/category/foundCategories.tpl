@@ -6,7 +6,7 @@
 	{/if}
 {/function}
 
-<div class="resultStats">{t _found_cats} <span class="count">({$foundCategories|@count})</span></div>
+<div class="resultStats">{t _found_cats} {include file="block/count.tpl" count=$foundCategories|@count}</div>
 <ul class="foundCategories">
 	{foreach from=$foundCategories item=category}
 		<li>{categoryNode node=$category}</li>

@@ -20,7 +20,8 @@
 		<h2>{$manufacturer.name.0}</h2>
 	{/if}
 	<ul>
-		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a> <span class="count">(&rlm;{$counts[$manufacturer.ID]})</span></li>
+		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a>
+		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 	{assign var=lastLetter value=$manufacturer.name.0|@capitalize}
 {/foreach}

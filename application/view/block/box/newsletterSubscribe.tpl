@@ -8,12 +8,13 @@
 
 		{form handle=$form action="controller=newsletter action=subscribe" method="POST"}
 			{input name="email"}
-				{textfield}
+				<div class="input-group">
+					{textfield}
+					<span class="input-group-btn">
+						<button class="btn" type="button">OK</button>
+					</span>
+				</div>
 			{/input}
-
-			<input type="submit" class="submit" value="OK" style="width: 20%;" />
 		{/form}
-
 	</div>
-
 </div>

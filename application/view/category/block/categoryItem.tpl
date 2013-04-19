@@ -25,7 +25,7 @@
 	<div class="subCatContainer">
 		<div class="subCatName">
 			<a href="{categoryUrl data=$sub filters=$filters}">{$sub.name_lang}</a>
-			<span class="count">(&rlm;{$sub.searchCount|default:$sub.count})</span>
+			{include file="block/count.tpl" count=$sub.searchCount|default:$sub.count}
 		</div>
 
 		{if $sub.subCategories}
@@ -39,7 +39,7 @@
 				{/if}
 				<li>
 					<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
-					<span class="count">(&rlm;{$subSub.count})</span>
+					{include file="block/count.tpl" count=$subSub.count}
 				</li>
 			{/foreach}
 		</ul>

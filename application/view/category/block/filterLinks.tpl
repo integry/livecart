@@ -9,7 +9,7 @@
 						<div>
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">{$filter.name_lang}</a>
 							{if 'DISPLAY_NUM_FILTER'|config}
-								 <span class="count">(&rlm;{$filter.count})</span>
+								 {include file="block/count.tpl" count=$filter.count}
 							{/if}
 						</div>
 					</li>
