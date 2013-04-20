@@ -21,7 +21,7 @@
 	{/if}
 {/function}
 
-<div class="panel categories">
+<div class="panel panel-primary categories">
 	<div class="panel-heading">{t _categories}</div>
 
 	<div class="content">

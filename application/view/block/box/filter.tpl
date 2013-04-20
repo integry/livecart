@@ -8,7 +8,7 @@
 {/if}
 
 {if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS'}
-	<div class="panel expandResults">
+	<div class="panel panel-danger expandResults">
 		<div class="panel-heading">{t _expand}</div>
 
 		<div class="content filterGroup">
@@ -23,7 +23,7 @@
 {/if}
 
 {sect}{header}
-<div class="panel narrowResults">
+<div class="panel panel-warning narrowResults">
 	<div class="panel-heading">{t _narrow_results}</div>
 
 	<div class="content">

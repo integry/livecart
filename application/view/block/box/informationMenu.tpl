@@ -1,5 +1,5 @@
 {if $pages}
-<div class="panel informationMenu">
+<div class="panel panel-info informationMenu">
 	<div class="panel-heading">{t _information}</div>
 
 	<div class="content">
