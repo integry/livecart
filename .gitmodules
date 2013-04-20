@@ -40,6 +40,3 @@
 [submodule "library/shipping"]
 	path = library/shipping
 	url = git://github.com/integry/integry-shipping.git
-[submodule "public/bootstrap/bootstrap"]
-	path = public/bootstrap/bootstrap
-	url = git@github.com:integry/bootstrap-3-copy.git
