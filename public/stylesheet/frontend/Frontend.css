@@ -145,7 +145,6 @@ a.cancel,
 /* smaller text */
 .logout,
 .latestNewsSide .date,
-#currency, #language,
 li.moreSubCats,
 .spec,
 .listPrice,
@@ -228,7 +227,6 @@ img.calendar_button
 }
 
 /* left floats */
-#logoContainer,
 .allFilters .filterGroup,
 #ratingSummary,
 .ratingBreakdown,
@@ -259,8 +257,6 @@ div.addressBlock,
 }
 
 /* right floats */
-#topMenuContainer,
-#currency, #language,
 div.review .ratingBreakdown,
 .checkoutButtons,
 .proceedToCheckout,
@@ -383,11 +379,6 @@ tr.odd td, tr.even td
 	width: 100%;
 }
 
-#topMenuContainer
-{
-	margin-right: 1em;
-}
-
 #smallCart a.checkout
 {
 	background: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
@@ -396,6 +387,22 @@ tr.odd td, tr.even td
 #logoContainer
 {
 	padding: 8px;
+}
+
+#topMenuContainer
+{
+	text-align: right;
+	padding-bottom: 10px;
+}
+
+#topMenuContainer .dropdown-menu
+{
+	text-align: left;
+}
+
+#currency, #language
+{
+	margin: 5px 0 10px 10px;
 }
 
 /*****************************
@@ -487,14 +494,6 @@ tr.odd td, tr.even td
 {
 	display: block;
 	margin-bottom: 0.5em;
-}
-
-/*****************************
-	Currency switch
-*****************************/
-#currency, #language
-{
-	margin: 0 0 10px 10px;
 }
 
 /*****************************

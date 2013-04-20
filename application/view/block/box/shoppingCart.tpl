@@ -1,6 +1,6 @@
 <div id="smallCart">
 
-	<div class="btn-toolbar">
+	<div class="btn-toolbar pull-right">
 
 	<div class="btn-group">
 		<a class="btn dropdown-toggle" data-toggle="dropdown" href="{link controller=user action=index}">
