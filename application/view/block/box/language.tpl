@@ -1,15 +1,18 @@
 {if $allLanguages|@count > 1}
-<div id="language">
+<div id="language" class="btn-group">
 	{if 'LANG_SELECTION'|config == 'LANG_DROPDOWN'}
-		<select onchange="window.location.href=this.value;">
+		<button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+			{$current.originalName} <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
 			{foreach from=$allLanguages item="language"}
-				<option value="{$language.url}"{if $language.ID == $current.ID} selected="selected"{/if}>{$language.originalName}</option>
+				<li><a href="{$language.url}">{$language.originalName}</a></li>
 			{/foreach}
-		</select>
+		</ul>
 	{else}
-		{foreach from=$languages item="language"}
+		{foreach from=$allLanguages item="language"}
 			{if 'LANG_SELECTION'|config == 'LANG_NAMES' || !$language.image}
-				<a href="{$language.url}" class="lang-sel-{$language.ID}">{$language.originalName}</a>
+				<a href="{$language.url}" class="btn btn-mini {if $language.ID == $current.ID}btn-primary{/if} lang-sel-{$language.ID}">{$language.originalName}</a>
 			{else}
 				<a href="{$language.url}" class="lang-sel-{$language.ID}"><img src="{static url=$language.image}" alt="{$language.originalName}" title="{$language.originalName}" /></a>
 			{/if}

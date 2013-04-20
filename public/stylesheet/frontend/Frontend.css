@@ -54,12 +54,6 @@ caption, th, td
 	list-style-type: decimal;
 }
 
-body, h4
-{
-    font-family: Verdana;
-    font-size: small;
-}
-
 td
 {
 	vertical-align: top;
@@ -500,12 +494,7 @@ tr.odd td, tr.even td
 *****************************/
 #currency, #language
 {
-	margin: 3px 3px 0;
-}
-
-#currency a, #language a
-{
-	margin-left: 3px;
+	margin: 0 0 10px 10px;
 }
 
 /*****************************

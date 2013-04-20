@@ -1,5 +1,5 @@
 {capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
-{form action="controller=category" class="form-search navbar-search pull-right" handle=$form}
+{form action="controller=category" class="form-search navbar-form pull-right" handle=$form}
     <div class="input-group">
 		{textfield type="text" class="col-span-2 search-query" name="q"}
 		<span class="input-group-btn">

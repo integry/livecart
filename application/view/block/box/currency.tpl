@@ -1,7 +1,7 @@
 {if $currencies}
-	<div id="currency">
-		{foreach from=$currencies item="currency"}
-			<a href="{$currency.url}">{$currency.ID}</a>
+	<div id="currency" class="btn-group">
+		{foreach from=$allCurrencies item="currency"}
+			<a class="btn btn-mini {if $currency.ID == $current}btn-primary{/if}" href="{$currency.url}">{$currency.ID}</a>
 		{/foreach}
 	</div>
 {/if}

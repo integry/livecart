@@ -1,8 +1,9 @@
+<div class="media {if $product.isFeatured}featured{/if}">
 <div class="row">
 	<div class="col-span-2">
 		{include file="product/block/smallImage.tpl"}
 	</div>
-	
+
 	<div class="col-span-8">
 		{include file="category/block/productTitle.tpl"}
 
@@ -25,4 +26,5 @@
 			{include file="product/block/productPrice.tpl"}
 		</div>
 	</div>
+</div>
 </div>

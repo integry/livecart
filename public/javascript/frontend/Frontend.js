@@ -21,18 +21,19 @@ var jQ = jQuery;
 jQuery(function()
 {
 	jQuery('.subCategories .thumbnail').maxHeight();
-	
+	jQuery('.subCategories .subCategoryItem').maxHeight();
+
 	// make product grid items even height
 	jQuery('.productGrid').each(function()
 	{
 		jQuery('.thumbnail', this).maxHeight();
 		jQuery('.image', this).maxHeight();
-		jQuery('h3', this).maxHeight();
+		jQuery('h4', this).maxHeight();
 	});
 
 	// pagination elements
 	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
-	
+
 });
 
 ConfirmationMessage = Class.create();

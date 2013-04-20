@@ -5,9 +5,12 @@
 	</div>
 
 	<div id="topMenuContainer">
+		<div class="row">
+			{block CURRENCY}
+			{block LANGUAGE}
+		</div>
+
 		{block CART}
-		{block CURRENCY}
-		{block LANGUAGE}
 	</div>
 
 	<div class="clear"></div>
