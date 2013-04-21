@@ -113,7 +113,7 @@ div.checkout a,
 #invoicePaymentInfo .grandTotal td.amount,
 #invoicePaymentInfo .amountDue td.amount,
 .multiAddress .shipmentAddress,
-#userMenu li.selected,
+#userMenu li.active,
 .cancelled,
 #checkoutProgress a.active,
 ul.downloadFile li.fileGroup,
@@ -241,9 +241,7 @@ img.calendar_button
 .addressContainer,
 #cvvExample,
 .newCustomer,
-#userMenuContainer,
 div.addressBlock,
-.orderDetails,
 .orderDetails .orderMenu,
 .responseUser,
 .manufacturerColumn,
@@ -291,7 +289,6 @@ ul.downloadFile li,
 
 /* background color 1: light grey */
 tr.odd,
-#userMenuContainer,
 fieldset,
 div.addressBlock,
 .orderDetails,
@@ -362,7 +359,8 @@ tr.odd td, tr.even td
 
 #content,
 #leftSide,
-#rightSide
+#rightSide,
+#userMenuContainer
 {
 	padding-top: 10px;
 }
@@ -1425,76 +1423,6 @@ tr.topLine td
 .userLogin .failed
 {
     margin: 0;
-}
-
-#userMenu li
-{
-    margin-bottom: 10px;
-    background-position: bottom left;
-}
-
-#userMenu li#homeMenu
-{
-    background-image: url(../../image/silk/gif/house.gif);
-}
-
-#userMenu li#orderMenu
-{
-    background-image: url(../../image/silk/gif/package.gif);
-}
-
-#userMenu li#pendingInvoicesMenu
-{
-	background-image: url(../../image/silk/gif/money.gif);
-}
-
-#userMenu li#invoicesMenu
-{
-	background-image: url(../../image/silk/gif/money.gif);
-}
-
-#userMenu li#addressMenu
-{
-    background-image: url(../../image/silk/gif/book_addresses.gif);
-}
-
-#userMenu li#personalMenu
-{
-    background-image: url(../../image/silk/gif/user.gif);
-}
-
-#userMenu li#emailMenu
-{
-    background-image: url(../../image/silk/gif/email_edit.gif);
-}
-
-#userMenu li#fileMenu
-{
-    background-image: url(../../image/silk/gif/disk.gif);
-}
-
-#userMenu li#passwordMenu
-{
-    background-image: url(../../image/silk/gif/key.gif);
-}
-
-#userMenu li#signOutMenu
-{
-    background-image: url(../../image/silk/gif/door_out.gif);
-}
-
-#userMenu li#signOutMenu, #userMenu li#personalMenu, #userMenu li#orderMenu
-{
-	border-top-width: 1px;
-    padding-top: 10px;
-}
-
-#userMenuContainer
-{
-    padding: 10px;
-    border-width: 1px;
-    margin-bottom: 30px;
-    width: 170px;
 }
 
 .quickLogin input.text
