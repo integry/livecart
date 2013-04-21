@@ -12,10 +12,7 @@
 		</a>
 	{/input}
 
-   	<p class="submit">
-		<label></label>
-		<input type="submit" class="submit" value="{tn _login}" />
-	</p>
+	{include file="block/submit.tpl" caption="_login" cancelRoute=$return}
 
 	<input type="hidden" name="return" value="{$return}" />
 

@@ -13,7 +13,7 @@
 
 	<form action="{link controller=checkout action=payExpressComplete}" method="post" id="expressComplete">
 
-		<input type="submit" class="submit" value="{tn Complete Your Order}" />
+		{include file="block/submit.tpl" caption="_complete_now"}
 
 	</form>
 

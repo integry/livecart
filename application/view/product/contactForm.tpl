@@ -26,11 +26,7 @@
 		{textarea}
 	{/input}
 
-	<p>
-		<label>&nbsp;</label>
-		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{t _form_submit}" />
-	</p>
+	{include file="block/submit.tpl" caption="_form_submit"}
 
 	<input type="hidden" name="id" value="{$product.ID}" />
 

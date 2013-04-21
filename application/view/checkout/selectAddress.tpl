@@ -69,12 +69,9 @@
 	</script>
 	{/literal}
 
-	<div class="clear"></div>
+	{include file="block/submit.tpl" caption="_continue"}
 
-	<p>
-		<input type="hidden" name="step" value="{$step}" />
-		<input type="submit" class="submit" value="{tn _continue}" />
-	</p>
+	<input type="hidden" name="step" value="{$step}" />
 
 	{/form}
 

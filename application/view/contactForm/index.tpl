@@ -29,10 +29,7 @@
 
 	{block FORM-SUBMIT-CONTACT}
 
-	<p>
-		<label></label>
-		<input type="submit" class="submit" value="{t _form_submit}" />
-	</p>
+	{include file="block/submit.tpl" caption="_form_submit"}
 
 {/form}
 

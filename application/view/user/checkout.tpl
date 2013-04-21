@@ -53,11 +53,7 @@
 			{hidden name="return"}
 			{hidden name="regType"}
 
-			<p>
-				<label class="submit"></label>
-				<input type="submit" class="submit" value="{tn _continue}" />
-			</p>
-
+			{include file="block/submit.tpl" caption="_continue"}
 		{/form}
 	</div>
 	<div class="clear"></div>

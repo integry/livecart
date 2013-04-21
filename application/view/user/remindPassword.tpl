@@ -9,14 +9,7 @@
 			{textfield}
 		{/input}
 
-		<p>
-			<label></label>
-			<input type="submit" class="submit" value="{tn _continue}" />
-		   	<label class="cancel">
-				{t _or}
-				<a class="cancel" href="{link route=$return controller=user}">{t _cancel}</a>
-			</label>
-		</p>
+		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return cancel=user}
 
 		<input type="hidden" name="return" value="{$return}" />
 

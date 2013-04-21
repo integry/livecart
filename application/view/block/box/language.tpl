@@ -4,7 +4,7 @@
 		<button class="btn btn-mini btn-info dropdown-toggle" data-toggle="dropdown">
 			{$current.originalName} <span class="caret"></span>
 		</button>
-		<ul class="dropdown-menu">
+		<ul class="dropdown-menu btn-mini">
 			{foreach from=$allLanguages item="language"}
 				<li><a href="{$language.url}">{$language.originalName}</a></li>
 			{/foreach}

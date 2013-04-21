@@ -35,9 +35,7 @@
 			{include file="checkout/orderFields.tpl"}
 		{/if}
 
-		<p>
-			<input type="submit" class="submit" value="{tn _continue}" />
-		</p>
+		{include file="block/submit.tpl" caption="_continue"}
 
 		{/form}
 

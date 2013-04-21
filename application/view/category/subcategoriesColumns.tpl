@@ -1,7 +1,7 @@
 {assign var="columns" value='CATEGORY_COLUMNS'|config}
 {if $subCategories}
 {math count=$subCategories|@count equation="max(1, ceil(count / $columns))" assign="rows"}
-{math count=$subCategories|@count equation="min(12, ceil(12 / ceil(count / $columns)))" assign="width"}
+{math count=$subCategories|@count equation="min(12, ceil(12 / $columns))" assign="width"}
 {/if}
 
 <div class="subCategories row">

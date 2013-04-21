@@ -28,12 +28,8 @@
 
 	{block FORM-SUBMIT-REGISTER}
 
-	<p class="submit">
-		<label>&nbsp;</label>
-		<input type="submit" class="submit" value="{tn _complete_reg}" />
-		{if $request.return}
-			<input type="hidden" name="return" value="{$request.return|escape}" />
-		{/if}
-	</p>
+	{include file="block/submit.tpl" caption="_complete_reg" cancelHref=$request.return}
+
+	<input type="hidden" name="return" value="{$request.return|escape}" />
 
 {/form}

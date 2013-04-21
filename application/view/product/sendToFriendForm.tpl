@@ -32,10 +32,7 @@
 
 				{block SEND-TO-FRIEND-SUBMIT}
 
-				<p>
-					<input class="submit" type="submit" value="{tn _send_to_friend}" /> <span class="pi" style="display: none;"></span>
-				</p>
-
+				{include file="block/submit.tpl" caption="_send_to_friend"}
 			{/form}
 		</div>
 	</div>

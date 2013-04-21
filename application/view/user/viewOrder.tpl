@@ -178,10 +178,7 @@
 			{textarea}
 		{/input}
 
-		<p class="submit">
-			<label></label>
-			<input type="submit" class="submit" value="{tn _submit_response}" />
-		</p>
+		{include file="block/submit.tpl" caption="_submit_response"}
 	{/form}
 
 {include file="block/content-stop.tpl"}

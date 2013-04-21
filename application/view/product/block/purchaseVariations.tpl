@@ -36,8 +36,7 @@
 	{/foreach}
 
 	<div id="productToCart" class="cartLinks">
-		<label></label>
-		<input type="submit" class="submit" value="{tn _add_to_cart}" />
+		{include file="block/submit.tpl" caption="_add_to_cart"}
 		{hidden name="return" value=$catRoute}
 	</div>
 

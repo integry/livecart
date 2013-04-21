@@ -54,9 +54,8 @@
 			{textarea}
 		{/input}
 	</div>
-	<p>
-		<input class="submit" type="submit" value="{tn _submit_review}" /> <span class="progressIndicator" style="display: none;"></span>
-	</p>
+
+	{include file="block/submit.tpl" caption="_submit_review"}
 {/if}
 
 {/form}

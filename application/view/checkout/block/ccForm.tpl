@@ -49,10 +49,7 @@
 			{include file="block/eav/fields.tpl" fieldList=$ccVars.specFieldList}
 		{/if}
 
-		<p class="submit">
-			<label></label>
-			<input type="submit" class="submit" value="{tn _complete_now}" />
-		</p>
+		{include file="block/submit.tpl" caption="_complete_now"}
 
 		</div>
 	{/form}
