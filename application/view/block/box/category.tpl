@@ -1,5 +1,6 @@
 {function name="categoryTree" node=false filters=false}
 	{if $node}
+		{$level=$level+1}
 		<ul class="nav nav-pills nav-stacked">
 		{foreach from=$node item=category}
 			{if $category.ID == $currentId}
@@ -17,6 +18,11 @@
 					{/if}
 				</li>
 		{/foreach}
+
+		{if 2 == $level}
+		<div class="divider"></div>
+		{/if}
+
 		</ul>
 	{/if}
 {/function}
@@ -25,6 +31,6 @@
 	<div class="panel-heading">{t _categories}</div>
 
 	<div class="content">
-		{categoryTree node=$categories}
+		{categoryTree node=$categories level=0}
 	</div>
 </div>
