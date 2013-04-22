@@ -1,7 +1,5 @@
 {math count=$categoryNarrow|@count equation="max(1, ceil(count / 2))" assign="perColumn"}
 
-<fieldset class="container">
-
 <div class="narrowByCat">
 	<div class="resultStats">
 		{t _narrow_by_cat}
@@ -10,5 +8,3 @@
 	{include file="category/subcategoriesColumns.tpl" subCategories=$categoryNarrow filters=$appliedFilters}
 
 </div>
-
-</fieldset>

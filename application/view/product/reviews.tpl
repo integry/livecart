@@ -12,33 +12,29 @@
 
 {include file="block/content-start.tpl"}
 
-	<fieldset class="container">
+	<div class="returnToCategory">
+		<a href="{productUrl product=$product}" class="returnToCategory">{$product.name_lang}</a>
+	</div>
 
-		<div class="returnToCategory">
-			<a href="{productUrl product=$product}" class="returnToCategory">{$product.name_lang}</a>
+	<h1>{maketext text="_reviews_for" params=$product.name_lang}</h1>
+
+	<div class="resultStats">
+		{include file="product/ratingSummary.tpl"}
+		<div class="pagingInfo">
+			{maketext text=_showing_reviews params="`$offsetStart`,`$offsetEnd`,`$product.reviewCount`"}
 		</div>
-
-		<h1>{maketext text="_reviews_for" params=$product.name_lang}</h1>
-
-		<div class="resultStats">
-			{include file="product/ratingSummary.tpl"}
-			<div class="pagingInfo">
-				{maketext text=_showing_reviews params="`$offsetStart`,`$offsetEnd`,`$product.reviewCount`"}
-			</div>
-			<div class="clear"></div>
-		</div>
-
 		<div class="clear"></div>
+	</div>
 
-		{include file="product/reviewList.tpl"}
+	<div class="clear"></div>
 
-		{if $product.reviewCount > $perPage}
-			{paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
-		{/if}
+	{include file="product/reviewList.tpl"}
 
-		{include file="product/ratingForm.tpl"}
+	{if $product.reviewCount > $perPage}
+		{paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
+	{/if}
 
-	</fieldset>
+	{include file="product/ratingForm.tpl"}
 
 {include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}

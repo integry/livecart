@@ -312,10 +312,8 @@ tr.even td,
 
 /* light yellow background */
 .highlight,
-#cartFields .container, #couponCodes .container,
 span.templateLocator span.templateName,
 .proceedToCheckout,
-#couponCodes .container,
 #payTotal div,
 #testHandlerWarning,
 #checkoutProgress a.active
@@ -331,11 +329,6 @@ tr.odd td, tr.even td
 /*****************************
 	Layout
 *****************************/
-#container
-{
-  	margin: 0 auto;
-}
-
 #footer
 {
 	border-top-width: 1px;
@@ -1082,18 +1075,6 @@ select.multiAddress
 	vertical-align: top;
 }
 
-#cartFields .container, #couponCodes .container
-{
-	padding: 0 1em 0.5em 0.5em;
-	border-width: 1px;
-	margin: 0.5em 0;
-}
-
-#couponCodes .container
-{
-	padding: 1em;
-}
-
 .text.coupon
 {
 	width: 160px;
@@ -1827,21 +1808,6 @@ input.radio, input.checkbox
     margin: 0 0.5em 0 0;
     cursor: pointer;
     vertical-align: middle;
-}
-
-fieldset.error, div.error, fieldset.container
-{
-	padding: 0;
-	margin: 0;
-	position: static;
-	border: 0;
-	background: none;
-}
-
-.hasError
-{
-	background-color: #FFFAFA;
-	border-color: red !important;
 }
 
 .highlight

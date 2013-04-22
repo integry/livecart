@@ -1,5 +1,5 @@
 <h2>{t _wish_list_items}</h2>
-<fieldset class="container" id="wishList">
+<div id="wishList">
 <table>
 	<thead>
 		<tr>
@@ -32,4 +32,4 @@
 	</tbody>
 </table>
 <a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
-</fieldset>
+</div>

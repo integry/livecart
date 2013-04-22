@@ -71,15 +71,13 @@
 	</div>
 
 	<div class="activeGrid_massActionProgress" id="{$prefix}MassActionProgress_{$id}" style="display: none;">
-		<fieldset class="container">
-			<div class="progressBarIndicator"></div>
-			<div class="progressBar">
-				<span class="progressCount"></span>
-				<span class="progressSeparator"> / </span>
-				<span class="progressTotal"></span>
-			</div>
-			<a class="cancel" href="{link controller=$controller action=isMassCancelled}">{t _cancel}</a>
-		</fieldset>
+		<div class="progressBarIndicator"></div>
+		<div class="progressBar">
+			<span class="progressCount"></span>
+			<span class="progressSeparator"> / </span>
+			<span class="progressTotal"></span>
+		</div>
+		<a class="cancel" href="{link controller=$controller action=isMassCancelled}">{t _cancel}</a>
 	</div>
 </div>
 

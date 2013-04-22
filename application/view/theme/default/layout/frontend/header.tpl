@@ -23,6 +23,6 @@
 
 <div class="page_content_bg">
 
-	<fieldset class="container">{block BREADCRUMB}</fieldset>
+	{block BREADCRUMB}
 
 	<div class="sep_hor" id="headerSeparator">&nbsp;</div>

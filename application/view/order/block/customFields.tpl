@@ -3,7 +3,6 @@
 	{header}
 		<tr id="cartFields">
 			<td colspan="{math equation="$extraColspanSize + 5"}">
-				<div class="container">
 	{/header}
 	{content}
 			{include file="block/eav/fields.tpl" item=$cart filter="isDisplayed"}
@@ -13,7 +12,6 @@
 					<label></label>
 					<input type="submit" class="submit" value="{tn _update}" name="saveFields" />
 				</p>
-				</div>
 			</td>
 		</tr>
 	{/footer}
