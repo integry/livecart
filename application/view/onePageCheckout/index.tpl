@@ -1,5 +1,5 @@
 {loadJs form=true}
-{pagetitle}{t _checkout}{/pageTitle}
+{pageTitle}{t _checkout}{/pageTitle}
 
 <noscript>
 	<meta http-equiv="refresh" content="0;{link controller=onePageCheckout action=fallback}" />

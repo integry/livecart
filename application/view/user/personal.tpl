@@ -5,7 +5,7 @@
 {include file="user/userMenu.tpl" current="personalMenu"}
 {include file="block/content-start.tpl"}
 
-	{form action="controller=user action=savePersonal" method="POST" handle=$form}
+	{form class="form-horizontal" action="controller=user action=savePersonal" method="POST" handle=$form class="form-horizontal"}
 
 		{input name="firstName"}
 			{label}{t _your_first_name}:{/label}

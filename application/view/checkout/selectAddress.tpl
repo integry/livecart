@@ -13,9 +13,9 @@
 		{/if}
 	</div>
 
-	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form style="display: block; width: 100%;"}
+	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form  class="form-horizontal"}
 
-	{error for="selectedAddress"}<div><span class="text-error">{$msg}</span></div><div class="clear"></div>{/error}
+	{error for="selectedAddress"}<div><span class="text-danger">{$msg}</span></div><div class="clear"></div>{/error}
 
 	{if !$step || ('billing' == $step)}
 		<fieldset class="container" id="billingAddressColumn">

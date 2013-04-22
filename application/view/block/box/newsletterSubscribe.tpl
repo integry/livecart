@@ -6,7 +6,7 @@
 
 		<p>{t _enter_your_email_to_subscribe}</p>
 
-		{form handle=$form action="controller=newsletter action=subscribe" method="POST"}
+		{form handle=$form action="controller=newsletter action=subscribe" method="POST" class="form-horizontal"}
 			{input name="email"}
 				<div class="input-group">
 					{textfield}

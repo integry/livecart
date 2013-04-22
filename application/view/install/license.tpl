@@ -3,14 +3,14 @@
 <div id="license">{$license|nl2br}</div>
 
 <div>
-	{form action="controller=install action=acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;"}
+	{form action="controller=install action=acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
 {literal}
 	<fieldset class="error">
 		<p id="agreeContainer" onclick="if (Event.element(event) != $('accept')) { $('accept').click(); }">
 	{/literal}
 			{checkbox name=accept id=accept class="checbox" style="float: left; margin-right: 5px;"}
 			<label class="checkbox">I accept the license agreement</label>
-			<span class="text-error hidden"></span>
+			<span class="text-danger hidden"></span>
 			<br class="clear" />
 		</p>
 	</fieldset>

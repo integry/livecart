@@ -32,12 +32,12 @@ function smarty_function_textarea($params, $smarty)
 		$params['readonly'] = 'readonly';
 	}
 
-	$content = '<textarea';
+	$content = '<div class="controls"><textarea';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
 	}
 
-	$content .= '>' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '</textarea>';
+	$content .= '>' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '</textarea></div>';
 
 	return $content;
 }

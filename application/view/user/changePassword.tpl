@@ -4,7 +4,7 @@
 {include file="user/userMenu.tpl" current="passwordMenu"}
 {include file="block/content-start.tpl"}
 
-	{form action="controller=user action=doChangePassword" method="POST" handle=$form}
+	{form action="controller=user action=doChangePassword" method="POST" handle=$form class="form-horizontal"}
 
 		{input name="currentpassword"}
 			{label}{t _current_pass}:{/label}

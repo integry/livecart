@@ -18,15 +18,13 @@
 				{content}
 					{foreach from=$fieldList item=field}
 						{if !$filter || ($filter && ($field[$filter] || ($field.handle == $filter)))}
-							<div class="eavField field_{$field.fieldName} eavHandle_{$field.handle}">
+							<div class="eavField field_{$field.fieldName} eavHandle_{$field.handle} {if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
 								{input name=$field.fieldName}
-									<div class="{if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}">
-										{label}{$field.name_lang}:{/label}
-										{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat autocompleteController="backend.eavFieldValue"}
-										{if $field.description}
-											<div class="fieldDescription">{$field.description_lang}</div>
-										{/if}
-									</div>
+									{label}{$field.name_lang}:{/label}
+									{include file="backend/eav/specFieldFactory.tpl" field=$field cat=$cat autocompleteController="backend.eavFieldValue"}
+									{if $field.description}
+										<div class="fieldDescription">{$field.description_lang}</div>
+									{/if}
 								{/input}
 							</div>
 						{/if}

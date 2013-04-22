@@ -9,7 +9,7 @@
 	</div>
 {/if}
 
-<form method="POST" action="{link controller=onePageCheckout action=doProceedRegistration}" id="checkout-options">
+<form method="POST" action="{link controller=onePageCheckout action=doProceedRegistration}" id="checkout-options" class="form-horizontal">
 	<h3>{t _new_customer}</h3>
 	<p>
 		Shopping here for the first time? The next step would be to enter your address and contact information.
@@ -18,7 +18,7 @@
 	{include file="onePageCheckout/block/continueButton.tpl"}
 </form>
 
-<form method="POST" action="{link controller=onePageCheckout action=doLogin}" id="checkoutLogin">
+<form method="POST" action="{link controller=onePageCheckout action=doLogin}" id="checkoutLogin" class="form-horizontal">
 	<h3>Returning Customer</h3>
 	<p id="login-msg">
 		{t _opc_login_msg}

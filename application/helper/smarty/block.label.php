@@ -20,7 +20,7 @@ function smarty_block_label($params, $content, Smarty_Internal_Template $smarty,
 			$for = $params['for'];
 		}
 
-		$label = '<label class="' . $class . '" for="' . $for . '">';
+		$label = '<label class="control-label ' . $class . '" for="' . $for . '">';
 
 		$content = $label . $content . '</label>';
 

@@ -66,7 +66,7 @@
 				{uniqid assign=uniq noecho=true}
 				{filefield name="upload_`$fieldName`" id=$uniq}
 				{hidden name=$fieldName}
-				{error for="upload_`$fieldName`"}<div class="text-error">{$msg}</div>{/error}
+				{error for="upload_`$fieldName`"}<div class="text-danger">{$msg}</div>{/error}
 				<div class="optionFileInfo" style="display: none;">
 					<div class="optionFileName"></div>
 					<div class="optionFileImage">

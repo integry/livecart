@@ -3,7 +3,7 @@
 	<h2><span class="step">{$steps.shippingAddress}</span>{t _shipping_address}</h2>
 </div>
 
-{form action="controller=onePageCheckout action=doSelectShippingAddress" method="POST" handle=$form}
+{form action="controller=onePageCheckout action=doSelectShippingAddress" method="POST" handle=$form class="form-horizontal"}
 
 	{if !$order.isMultiAddress}
 		<p>

@@ -26,7 +26,7 @@
 	<div class="newCustomer">
 		<h2>{t _new_cust}</h2>
 
-		{form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
+		{form handle=$form action="controller=user action=processCheckoutRegistration" method="POST" class="form-horizontal"}
 
 			{if !'REQUIRE_SAME_ADDRESS'|config}
 				<h3>{t _contact_info}</h3>

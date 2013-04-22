@@ -5,7 +5,7 @@
 
 	{if $id}{assign var=ccId value=" id=`$id`"}{/if}
 	{assign var=controller value=$controller|default:'checkout'}
-	{form action="controller=`$controller` action=payCreditCard`$ccId`" handle=$ccForm method="POST"}
+	{form action="controller=`$controller` action=payCreditCard`$ccId`" handle=$ccForm method="POST" class="form-horizontal"}
 
 		<div id="ccForm">
 
@@ -60,7 +60,7 @@
 
 	<div class="clear"></div>
 {else}
-	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" id="paymentError"}
+	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" id="paymentError" class="form-horizontal"}
 		{error for="creditCardError"}
 			<div class="clear"></div>
 			<div class="errorMsg ccPayment">

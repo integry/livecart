@@ -4,7 +4,7 @@
 	This step allows you to configure the most important aspects of your store. <Br />More configuration options will be available after the installation is completed.
 </p>
 
-{form action="controller=install action=setConfig" method="POST" handle=$form}
+{form action="controller=install action=setConfig" method="POST" handle=$form class="form-horizontal"}
 	{input name="name"}
 		{label}{t _store_name}:{/label}
 		{textfield}

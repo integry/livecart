@@ -3,7 +3,7 @@
 	<h2><span class="step">{$steps.payment}</span>{t _payment_info}</h2>
 </div>
 
-{form action="controller=onePageCheckout action=setPaymentMethod" method="POST" handle=$form id="checkout-select-payment-method"}
+{form action="controller=onePageCheckout action=setPaymentMethod" method="POST" handle=$form id="checkout-select-payment-method" class="form-horizontal"}
 	<p class="selectMethodMsg">
 		{t _select_payment_method}
 	</p>
@@ -72,7 +72,7 @@
 
 	{foreach from=$offlineMethods key="key" item="method"}
 		<div id="payForm_{$method}">
-			{form action="controller=onePageCheckout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST"}
+			{form action="controller=onePageCheckout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST" class="form-horizontal"}
 				{sect}
 					{header}
 						<h2>{"OFFLINE_NAME_`$key`"|config}</h2>

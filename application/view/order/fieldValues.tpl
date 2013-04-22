@@ -1,6 +1,6 @@
 {sect}
 	{header}
-		<form class="eavAttributes">
+		<form class="eavAttributes" class="form-horizontal">
 	{/header}
 	{content}
 		{foreach $order.attributes as $attr}

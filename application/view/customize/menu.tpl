@@ -4,7 +4,7 @@
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>
 			<li class="modeTheme">
-				<form action="{link controller="backend.Customize" action=changeTheme}">
+				<form action="{link controller="backend.Customize" action=changeTheme}" class="form-horizontal">
 					{t _theme}
 					<select id="themeMenu" name="theme">
 						{foreach $themes as $thm}
@@ -20,19 +20,19 @@
 				<input type="button" class="button" id="cssNewRule" value="{t _css_add}" />
 				<input type="button" class="button" id="cssSave" value="{t _css_save}" />
 				<span class="progressIndicator" id="cssSaveIndicator" style="display: none;"></span>
-				<div id="newRuleMenu" style="display: none;">
+				<div id="newRuleMenu" style="display: none;" class="form-horizontal">
 					<form>
 						<p>
 							<label class="wide">{t _css_rule_sel}:</label>
 							<input type="text" class="text wide" id="cssNewRuleName" />
 							<span class="cssExample">{t _css_example}: <strong>.product-index h1</strong></span>
-							<span class="text-error hidden"></span>
+							<span class="text-danger hidden"></span>
 						</p>
 						<p>
 							<label class="wide">{t _css_rule_text}:</label>
 							<textarea id="cssNewRuleText"></textarea>
 							<span class="cssExample">{t _css_example}: <strong>color: green</strong></span>
-							<span class="text-error hidden"></span>
+							<span class="text-danger hidden"></span>
 						</p>
 						<p>
 							<input type="button" class="button" id="cssNewRuleSave" value="{tn _css_add_rule}" />

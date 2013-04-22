@@ -13,15 +13,15 @@
 					{/form}
 			</span>
 			{/if}
-			
+
 			{include file="category/block/switchListLayout.tpl"}
 		</div>
 	</div>
-	
+
 	<hr />
 
 	{if $products}
-		<form action="{link controller=category action=listAction returnPath=true}" method="post">
+		<form action="{link controller=category action=listAction returnPath=true}" method="post" class="form-horizontal">
 			{include file="category/productListLayout.tpl" products=$products}
 		</form>
 	{/if}

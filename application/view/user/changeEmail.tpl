@@ -4,11 +4,11 @@
 {include file="user/userMenu.tpl" current="emailMenu"}
 {include file="block/content-start.tpl"}
 
-	{form action="controller=user action=doChangeEmail" method="POST" handle=$form}
+	{form action="controller=user action=doChangeEmail" method="POST" handle=$form class="form-horizontal"}
 
 		{input}
 			{label}{t _current_email}:{/label}
-			<label class="currentEmail">{$user.email}</label>
+			<div class="controls">{$user.email}</div>
 		{/input}
 
 		{input name="email"}

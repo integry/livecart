@@ -12,8 +12,7 @@
 					{t _login_failed}
 				</div>
 			{else}
-				<label></label>
-				{t _please_sign_in}
+				<p class="text-muted">{t _please_sign_in}</p>
 			{/if}
 		</p>
 
@@ -24,8 +23,7 @@
 	<div class="newCustomer">
 		<h2>{t _new_cust}</h2>
 
-			<label></label>
-			{t _not_registered}
+		<p class="text-muted">{t _not_registered}</p>
 
 		{include file="user/regForm.tpl"}
 	</div>

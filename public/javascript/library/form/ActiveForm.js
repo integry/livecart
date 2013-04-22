@@ -66,19 +66,25 @@ ActiveForm.prototype = {
 
 	resetErrorMessage: function(formElement)
 	{
-		jQuery(formElement).removeClass('hasError');
+		jQuery(formElement).closest('.control-group').removeClass('has-error');
 		this.getErrorContainer(formElement).html('').hide().addClass('hidden');
 	},
 
 	getErrorContainer: function(formElement)
 	{
-		var parent = jQuery(formElement).closest('div.input');
+		var parent = jQuery(formElement).closest('div.control-group');
 		if (!parent.length)
 		{
-			parent = jQuery(formElement).parent();
+			//parent = jQuery(formElement).parent();
 		}
 
-		return parent.find(".errorText, .text-error");
+		var el = parent.find('.errorText, .text-danger');
+		if (!el.parent().hasClass('controls'))
+		{
+			parent.find('.controls').append(el);
+		}
+
+		return el;
 	},
 
 	setErrorMessages: function(form, errorMessages)
@@ -106,7 +112,7 @@ ActiveForm.prototype = {
 			Element.focus(formElement);
 		}
 
-		jQuery(formElement).addClass('hasError');
+		jQuery(formElement).closest('.control-group').addClass('has-error');
 		var errorContainer = this.getErrorContainer(formElement);
 
 		if (errorContainer.length > 0)

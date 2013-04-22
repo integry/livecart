@@ -22,7 +22,7 @@
 					</label>
 				</p>
 			{/foreach}
-				
+
 			<p class="fieldDescription">
 				{if $rate.ShippingService.description_lang}
 					{$rate.ShippingService.description_lang|escape}<br />
@@ -42,6 +42,6 @@
 	</p>
 {/foreach}
 
-<div class="text-error hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
+<div class="text-danger hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
 	<div>{error for="shipping_`$key`"}{$msg}{/error}</div>
 </div>

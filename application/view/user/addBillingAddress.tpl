@@ -4,10 +4,10 @@
 {include file="user/userMenu.tpl" current="addressMenu"}
 {include file="block/content-start.tpl"}
 
-	{form action="controller=user action=doAddBillingAddress" handle=$form}
+	{form action="controller=user action=doAddBillingAddress" handle=$form class="form-horizontal"}
 		{include file="user/addressForm.tpl"}
 
-		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return}
+		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return class="form-horizontal"}
 	{/form}
 
 {include file="block/content-stop.tpl"}

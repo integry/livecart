@@ -172,7 +172,7 @@
 		   {/foreach}
 	   </ul>
 	{/if}
-	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm}
+	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm class="form-horizontal"}
 		{input name="text"}
 			{label}{t _enter_question}:{/label}
 			{textarea}

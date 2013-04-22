@@ -4,7 +4,7 @@
 </div>
 
 <div class="form">
-	{form action="controller=onePageCheckout action=doSelectShippingMethod" method="POST" handle=$form}
+	{form action="controller=onePageCheckout action=doSelectShippingMethod" method="POST" handle=$form class="form-horizontal"}
 		{foreach from=$shipments key="key" item="shipment"}
 
 			{if $shipment.isShippable}
@@ -19,7 +19,7 @@
 				{if $rates.$key}
 					{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
 				{else}
-					<span class="text-error">{t _err_no_rates_for_address}</span>
+					<span class="text-danger">{t _err_no_rates_for_address}</span>
 				{/if}
 			{/if}
 		{/foreach}
@@ -27,7 +27,7 @@
 		{include file="onePageCheckout/block/continueButton.tpl"}
 	{/form}
 	{if !$shipments}
-		<div class="text-error">{t _err_no_rates_for_address}</div>
+		<div class="text-danger">{t _err_no_rates_for_address}</div>
 	{/if}
 </div>
 

@@ -3,7 +3,7 @@
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}
 
-	{form action="controller=user action=doRemindPassword" method="post" style="float: left; width: 100%;" handle=$form}
+	{form action="controller=user action=doRemindPassword" method="post"  class="form-horizontal" handle=$form}
 		{input name="email"}
 			{label}{t _your_email}:{/label}
 			{textfield}

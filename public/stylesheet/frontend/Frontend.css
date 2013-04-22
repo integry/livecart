@@ -88,7 +88,6 @@ label.cancel,
 /* bold things */
 .price,
 .required label,
-.text-error,
 .eavAttributes .attrName,
 .featured .title a,
 .currentName,
@@ -127,7 +126,6 @@ ul.downloadFile li.fileGroup,
 a.messages,
 .cancelled,
 .errorMsg,
-.text-error,
 .discount .actualPrice
 {
 	color: red;
@@ -272,8 +270,7 @@ ul.attributeList li,
 .continueShopping,
 #userMenu li,
 a.invoice, a.viewOrder, a.reorder, a.messages,
-ul.downloadFile li,
-.text-error
+ul.downloadFile li
 {
 	padding-left: 22px;
 }
@@ -884,7 +881,7 @@ ul.attributeList.singleValue li
 	padding: 4px;
 }
 
-#rateProduct table .text-error
+#rateProduct table .text-danger
 {
 	position: relative;
 	white-space: nowrap;
@@ -1415,19 +1412,9 @@ tr.topLine td
 	width: 43%;
 }
 
-.returningCustomer input.text
-{
-	width: 10em;
-}
-
 .userLogin .failed
 {
     margin: 0;
-}
-
-.quickLogin input.text
-{
-	width: 100%;
 }
 
 /***************************
@@ -1802,15 +1789,6 @@ legend
 	color: #30A0F9;
 	padding: 10px 0;
 	top: -22px;
-}
-
-label
-{
-	display: block;
-    width: 156px;
-    cursor: pointer;
-    padding-right: 6px;
-    padding-bottom: 1px;
 }
 
 .required label span.label

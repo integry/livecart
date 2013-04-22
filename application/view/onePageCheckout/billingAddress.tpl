@@ -4,7 +4,7 @@
 </div>
 
 {if $user.ID > 0}
-	{form action="controller=onePageCheckout action=doSelectBillingAddress" method="POST" handle=$form}
+	{form action="controller=onePageCheckout action=doSelectBillingAddress" method="POST" handle=$form class="form-horizontal"}
 		{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 		{include file="checkout/orderFields.tpl"}
 		{include file="onePageCheckout/block/continueButton.tpl"}

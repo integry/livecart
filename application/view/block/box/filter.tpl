@@ -30,7 +30,7 @@
 {/header}{content}
 
 	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
-		<form id='multipleChoiceFilterForm' action="{categoryUrl data=$category}" method="post">
+		<form id='multipleChoiceFilterForm' action="{categoryUrl data=$category}" method="post" class="form-horizontal">
 
 		<div id="multipleChoiceFilter_top" class="hidden">
 			<input type="submit" value="{t _filter}" />

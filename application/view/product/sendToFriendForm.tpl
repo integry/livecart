@@ -10,7 +10,7 @@
 
 		<div id="shareProduct">
 			{form action="controller=product action=sendToFriend id=`$product.ID`" handle=$sharingForm method="POST"
-				onsubmit="new Product.Share(this); return false;" }
+				onsubmit="new Product.Share(this); return false;" class="form-horizontal"}
 				<div class="producSharingForm">
 					{input name="friendemail"}
 						{label}{t _friend_email}:{/label}

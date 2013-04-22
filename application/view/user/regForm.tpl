@@ -1,4 +1,4 @@
-{form action="controller=user action=doRegister" method="POST" handle=$regForm}
+{form action="controller=user action=doRegister" method="POST" handle=$regForm class="form-horizontal"}
 
 	{* field name="firstName" label=_your_first_name type=textfield *}
 

@@ -28,9 +28,9 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 			$msg = '';
 		}
 
-		$content = '<div class="input name_' . $params['name'] . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . (!empty($params['class']) ? ' ' . $params['class'] : '' ) . '">' .
+		$content = '<div class="control-group ' . ($msg ? 'has-error' : '') .  ' name_' . $params['name'] . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . (!empty($params['class']) ? ' ' . $params['class'] : '' ) . '">' .
 						$content .
-						'<div class="text-error' . ($msg ? '' : ' hidden') . '">' . $msg . '</div>
+						'<div class="text-danger' . ($msg ? '' : ' hidden') . '">' . $msg . '</div>
 					</div>';
 
 		$smarty->assign('last_fieldType', '');

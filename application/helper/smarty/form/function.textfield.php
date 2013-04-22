@@ -55,13 +55,14 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 		$params['id'] = uniqid();
 	}
 
-	$content = '<input';
+	$content = '<div class="controls"><input';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
 	}
 
 	$content .= ' value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '"';
-	$content .= '/>';
+	$content .= '/></div>';
+
 	if (isset($params['autocomplete']) && $params['autocomplete'] != 'off')
 	{
 	  	$acparams = array();

@@ -50,7 +50,7 @@ function smarty_function_selectfield($params, $smarty)
 		$params['initialValue'] = $fieldValue;
 	}
 
-	$content = '<select';
+	$content = '<div class="controls"><select';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
 	}
@@ -83,7 +83,7 @@ function smarty_function_selectfield($params, $smarty)
 	}
 
 	$content .= $after;
-	$content .= "</select>";
+	$content .= "</select></div>";
 
 	return $content;
 }

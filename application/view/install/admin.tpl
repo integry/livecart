@@ -2,7 +2,7 @@
 
 <div>
 
-	{form action="controller=install action=setAdmin" method="POST" handle=$form}
+	{form action="controller=install action=setAdmin" method="POST" handle=$form class="form-horizontal"}
 
 		{input name="firstName"}
 			{label}{t _first_name}:{/label}
