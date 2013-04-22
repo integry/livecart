@@ -10,12 +10,12 @@
 	{form action="controller=backend.taxRate action=save id=`$deliveryZone.ID`" method="post" onsubmit="new LiveCart.AjaxRequest(this); return false;" handle=$form}
 	<table class="taxes">
 		{foreach from=$taxes item=tax name="taxes"}
-			<tr class="{zebra loop=taxes}">
+			<tr>
 				<td class="taxName">{$tax.name_lang}:</td>
 				<td>{textfield class="text number" name="tax_`$tax.ID`_"}%</td>
 			</tr>
 			{foreach from=$classes item=class name="classes"}
-				<tr class="classes {zebra loop=classes}">
+				<tr class="classes">
 					<td class="taxClassName">{$class.name_lang}:</td>
 					<td>{textfield class="text number" name="tax_`$tax.ID`_`$class.ID`"}%</td>
 				</tr>

@@ -8,7 +8,7 @@
 	</thead>
 	<tbody>
 		{foreach from=$reportData key=id item=row name="report"}
-			<tr class="{zebra loop="report"}">
+			<tr>
 			{foreach from=$row item=value key=key}
 				<td class="{$key}">
 					{if $key == $format}

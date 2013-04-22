@@ -1,7 +1,7 @@
 {assign var="colspan" value=$colspan|@or:4}
 
 {foreach from=$shipment.items item="item" name="shipment"}
-	<tr class="{zebra loop="shipment"}{if $productsInSeparateLine} topLine{/if}">
+	<tr class="{if $productsInSeparateLine} topLine{/if}">
 
 		{if !$hideSku}
 		<td class="sku">
@@ -32,7 +32,7 @@
 		<td class="amount">{$item.formattedDisplaySubTotal}</td>
 	</tr>
 	{if $productsInSeparateLine}
-		<tr class="{zebra loop="shipment"}">
+		<tr>
 			<td class="productName productNameRow" colspan="{$colspan+1}">
 				{include file="order/itemProductInfo.tpl"}
 			</td>

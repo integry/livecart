@@ -88,7 +88,7 @@
 
 		<table class="discounts">
 			{foreach from=$order.discounts item=discount name=discounts}
-				<tr class="{zebra loop="discounts"}">
+				<tr>
 					<td>{$discount.description}</td>
 					<td class="amount">{$discount.formatted_amount}</td>
 				</tr>

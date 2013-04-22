@@ -6,7 +6,7 @@
 
 {foreach from=$products item=category}
 	<h2>{$category.category.name_lang}</h2>
-	<table class="compareData">
+	<table class="compareData table table-striped">
 		<thead>
 			<tr>
 				<th></th>
@@ -40,7 +40,7 @@
 
 				{foreach from=$group.attributes item=attr name="attributes"}
 					{if $attr.isDisplayed}
-					<tr class="{zebra loop="attributes"}">
+					<tr>
 						<td class="param">{$attr.name_lang}</td>
 						{foreach from=$category.products item="product"}
 							<td class="value">

@@ -9,7 +9,7 @@
 		<td class="ratingPreview"></td>
 	</tr>
 {foreach from=$ratingTypes item=type name=types}
-	<tr class="{zebra loop="types"}{if $smarty.foreach.types.last} last{/if}">
+	<tr>
 		<td class="param ratingCategoryName">
 			{$type.name_lang|@or:{t _default_rating_category}}
 		</td>

@@ -13,7 +13,7 @@
 {/if}
 
 {if $itemList}
-	<table class="invoiceTable table">
+	<table class="invoiceTable table table-striped">
 		<thead>
 			<tr>
 				<th class="number">{t _invoice_number}</th>
@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
 		{foreach from=$itemList item="invoice" name="invoices"}
-			<tr class="{zebra loop="invoices"}">
+			<tr>
 				<td class="number">{$invoice.invoiceNumber|escape}</td>
 				<td class="amount">{$invoice.formatted_totalAmount|escape}</td>
 				<td class="date">{$invoice.formatted_dateDue.date_medium|escape}</td>

@@ -266,7 +266,6 @@ div.review .ratingBreakdown,
 }
 
 /* links/menus with background images */
-ul.attributeList li,
 .continueShopping,
 #userMenu li,
 a.invoice, a.viewOrder, a.reorder, a.messages,
@@ -800,20 +799,9 @@ tr.specificationGroup td.value
 	border-left: 0 !important;
 }
 
-ul.attributeList
-{
-    padding: 0;
-}
-
-ul.attributeList li
-{
-    background-image: url(../../image/silk/gif/tick.gif);
-}
-
 ul.attributeList.singleValue li
 {
-    background-image: none;
-    padding: 0;
+    list-style: none;
 }
 
 #imageContainer

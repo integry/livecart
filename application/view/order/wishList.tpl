@@ -9,7 +9,7 @@
 	</thead>
 	<tbody>
 	{foreach from=$cart.wishListItems item="item" name="wishList"}
-		<tr class="{zebra loop="wishList"}">
+		<tr>
 			<td class="cartControl">
 				<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t _move_to_cart}</a>
 				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>

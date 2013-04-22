@@ -6,7 +6,7 @@
 			<td class="value"></td>
 		</tr>
 	{/if}
-	<tr class="{zebra loop="attributes"}">
+	<tr>
 		<td class="param">{$attr.$field.name_lang}</td>
 		<td class="value">
 			{include file="product/attributeValue.tpl"}

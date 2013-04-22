@@ -9,7 +9,7 @@
 	</thead>
 	<tbody>
 		{foreach from=$shipment.items item="item" name="shipment"}
-			<tr class="{zebra loop="shipment"}">
+			<tr>
 				<td class="productName">
 					{if $item.Product.ID}
 						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
@@ -20,7 +20,7 @@
 					{if $item.recurringID && $recurringPlans[$item.recurringID]}
 						{assign var="period" value=$recurringPlans[$item.recurringID]}
 						{$period.name_lang|escape}
-						
+
 						<span class="recurringPlan">
 						({$period.ProductPrice_period.formated_price.$currency}
 							{t _every}
@@ -31,7 +31,7 @@
 							{/if}
 							{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}
 							{if $x > 0}
-								{t _for} 
+								{t _for}
 								{$x}
 								{t `$periodTypesPlural[$period.periodType]`}, {$period.rebillCount} {t _rebill_times}{*
 									{if $period.ProductPrice_setup}

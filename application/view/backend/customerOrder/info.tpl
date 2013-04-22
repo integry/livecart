@@ -75,13 +75,13 @@
 </div>
 
 <fieldset class="order_info">
-	<div class="{zebra} clearfix invoiceNumber">
+	<div class="clearfix invoiceNumber">
 		<label class="param">{t _order_id}</label>
 		<label class="value" id="invoiceNumber{$order.ID}">{$order.invoiceNumber|default:$order.ID}</label>
 	</div>
 
 	{if $order.User}
-	<div class="{zebra} clearfix">
+	<div class="clearfix">
 		<label class="param">{t _user}</label>
 		<label class="value">
 			<a href="{backendUserUrl user=$order.User}">
@@ -91,7 +91,7 @@
 	</div>
 	{/if}
 
-	<div class="{zebra} clearfix orderAmount {if !$order.isPaid}unpaid{/if}">
+	<div class="clearfix orderAmount {if !$order.isPaid}unpaid{/if}">
 		<label class="param">{t _amount}</label>
 		<label class="value">
 			{$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>{$order.Currency.priceSuffix}
@@ -103,7 +103,7 @@
 	</div>
 
 	{if $order.dateCompleted}
-		<div class="{zebra} clearfix">
+		<div class="clearfix">
 			<label class="param" for="order_{$order.ID}_dateCreated">{t _date_created}</label>
 			<label id="dateCreatedLabel">
 				<a class="menu order_editFields orderDate" href="#edit" id="editDateCompleted"></a>
@@ -124,7 +124,7 @@
 	{/if}
 
 	{if 'ENABLE_MULTIADDRESS'|@config}
-	<div class="{zebra} clearfix">
+	<div class="clearfix">
 		<label class="param" for="order_{$order.ID})_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
 		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller="backend.customerOrder" action=setMultiAddress id=$order.ID query='status=_stat_'}', {$order.ID});"><option value=0>{t _no}</option><option value=1{if $order.isMultiAddress} selected="selected"{/if}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
@@ -132,7 +132,7 @@
 	{/if}
 
 	{if $order.isRecurring}
-		<div class="{zebra} clearfix">
+		<div class="clearfix">
 			<label class="param">{t _recurring_status}:</label>
 			<label class="value" id="recurringStatus{$order.ID}">
 				{if $order.rebillsLeft > 0}
@@ -143,7 +143,7 @@
 			</label>
 		</div>
 
-		<div class="{zebra} clearfix">
+		<div class="clearfix">
 			<label class="param">{t _remaining_rebills}:</label>
 			<label class="value" id="remainingRebillsValue{$order.ID}">
 				{if is_numeric($order.rebillsLeft)}
@@ -263,7 +263,7 @@
 
 		<table class="discounts">
 			{foreach from=$order.discounts item=discount name=discounts}
-				<tr class="{zebra loop="discounts"}">
+				<tr>
 					<td>{$discount.description}</td>
 					<td class="amount">{$discount.formatted_amount}</td>
 				</tr>

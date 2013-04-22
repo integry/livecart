@@ -15,7 +15,7 @@
 <div id="specificationSection" class="productSection specification">
 <h2>{t _spec}<small>{t _tab_specification}</small></h2>
 <div id="productSpecification">
-	<table class="productDetailsTable">
+	<table class="productDetailsTable table table-striped">
 		{include file="product/specificationTableBody.tpl" attributes=$product.attributes field=SpecField group=SpecFieldGroup}
 	</table>
 </div>

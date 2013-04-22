@@ -55,7 +55,7 @@
 				</thead>
 				<tbody>
 					{foreach from=$lastOrders item=order name=lastOrders}
-						<tr class="{zebra loop=lastOrders}">
+						<tr>
 							<td><a href="{backendOrderUrl order=$order}">{$order.invoiceNumber|escape}</a></td>
 							<td title="{$order.formatted_dateCreated.date_medium|escape} {$order.formatted_dateCreated.time_short|escape}">{$order.formatted_dateCreated.date_short|escape}</td>
 							<td>{$order.formatted_totalAmount|escape}</td>

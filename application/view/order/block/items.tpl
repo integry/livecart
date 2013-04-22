@@ -1,5 +1,5 @@
 {foreach from=$cart.cartItems item="item" name="cart"}
-	<tr class="{zebra loop="cart"}">
+	<tr>
 		<td class="cartControl">
 			{if 'ENABLE_WISHLISTS'|config}
 				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
@@ -31,7 +31,7 @@
 
 			{include file="order/itemVariations.tpl"}
 			{include file="order/block/itemOptions.tpl"}
-			
+
 			{include file="order/block/recurringItem.tpl"}
 
 			{if $multi}

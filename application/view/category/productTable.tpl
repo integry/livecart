@@ -41,7 +41,7 @@
 	</thead>
 	<tbody>
 		{foreach from=$products item=product name="productList"}
-			<tr class="{zebra loop="productList"} {if !$smarty.foreach.productList.last}last{/if}">
+			<tr class="{if !$smarty.foreach.productList.last}last{/if}">
 
 				{if $columns.IMAGE}
 					<td class="productImage">

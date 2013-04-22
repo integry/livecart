@@ -4,7 +4,7 @@
 	{if $products.0.Manufacturer.attributes || $products.0.Manufacturer.DefaultImage.ID}
 		{if $products.0.Manufacturer.attributes}
 			<div id="productSpecification" class="manufacturerAttributes">
-				<table class="productTable">
+				<table class="productTable table table-striped">
 					{include file="product/specificationTableBody.tpl" attributes=$products.0.Manufacturer.attributes field=EavField group=EavFieldGroup}
 				</table>
 			</div>
@@ -20,7 +20,7 @@
 
 {if 'DISPLAY_CATEGORY_DESC'|config && $category.description_lang}
 	<div class="descr categoryDescr">
-		{$category.description_lang}
+		<p>{$category.description_lang}</p>
 	</div>
 {/if}
 

@@ -19,7 +19,7 @@
 					<{$cell} class="value"></{$cell}>
 				</{$row}>
 			{/if}
-			<{$row} class="{zebra loop="attributes"}">
+			<{$row}>
 				<{$cell} class="param">{$attr.EavField.name_lang}</{$cell}>
 				<{$cell} class="value">
 					{if $attr.values}
