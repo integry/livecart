@@ -63,7 +63,7 @@ Backend.OrderNote.AddResponse.prototype =
 
 		var ul = cont.down('ul.notes');
 		ul.innerHTML += originalRequest.responseText;
-		new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+		jQuery(ul.lastChild).effect('highlight');
 
 		cont.down('textarea').value = '';
 	}

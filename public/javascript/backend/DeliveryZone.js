@@ -1587,7 +1587,7 @@ Backend.DeliveryZone.lookupAddress = function(form, e)
 		}
 
 		cont.parentNode.show();
-		new Effect.Highlight(cont);
+		jQuery(cont).effect('highlight');
 	});
 };
 

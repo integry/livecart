@@ -117,7 +117,7 @@ Backend.Payment.AddOffline.prototype =
 
 		var ul = cont.down('ul.transactions');
 		ul.innerHTML += originalRequest.responseData.transaction;
-		new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+		jQuery(ul.lastChild).effect('highlight');
 	}
 }
 
@@ -149,7 +149,7 @@ Backend.Payment.AddCreditCard.prototype =
 
 		var ul = cont.down('ul.transactions');
 		ul.innerHTML += originalRequest.responseData.transaction;
-		new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+		jQuery(ul.lastChild).effect('highlight');
 
 		this.window.close();
 	}
@@ -206,7 +206,7 @@ Backend.Payment.TransactionAction.prototype =
 		var newChild = newli.firstChild;
 
 		li.parentNode.replaceChild(newChild, li);
-		new Effect.Highlight(newChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+		jQuery(newChild).effect('highlight');
 	}
 }
 
@@ -244,7 +244,7 @@ Backend.Payment.OfflinePaymentMethodEditor =
 					if(transport.responseData.status == "saved")
 					{
 						this.highlightNode.down("span").down("span").innerHTML = transport.responseData.name;
-						new Effect.Highlight(this.highlightNode);
+						jQuery(this.highlightNode).effect('highlight');
 					}
 					if(transport.responseData.handlerID)
 					{

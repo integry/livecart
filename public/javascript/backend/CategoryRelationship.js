@@ -74,7 +74,7 @@ Backend.CategoryRelationship.prototype =
 				if (originalRequest.responseData.data)
 				{
 					var el = this.addCategory(categoryID, pathAsText);
-					new Effect.Highlight(el);
+					jQuery(el).effect('highlight');
 					this.updateTabCount();
 					this.createActiveList();
 				}

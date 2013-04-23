@@ -273,8 +273,8 @@ Backend.CustomerOrder.prototype =
 		rsNode.innerHTML = transport.responseData.recurringStatus;
 		rrNode = $("remainingRebillsValue" + orderID);
 		rrNode.innerHTML = transport.responseData.rebillCount;
-		new Effect.Highlight(rrNode.up("div"));
-		new Effect.Highlight(rsNode.up("div"));
+		jQuery(rrNode.up("div")).effect('highlight');;
+		jQuery(rsNode.up("div")).effect('highlight');
 		// Event.stopObserving(node, "click"); // ~ will work in 1.6
 		node.hide();
 	},
@@ -1268,7 +1268,7 @@ Backend.CustomerOrder.DateCompletedEditor.prototype =
 				var dateField = $("dateCreatedVisible");
 				dateField.innerHTML = transport.responseData.date;
 				this.toggle(this.VIEW);
-				new Effect.Highlight($(dateField.parentNode) );
+				jQuery($(dateField.parentNode)).effect('highlight');
 				return;
 			}
 			throw "err";

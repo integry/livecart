@@ -73,7 +73,7 @@ Backend.ProductCategory.prototype =
 				function()
 				{
 					selector.window.close();
-					new Effect.Highlight(this.mainCategoryName);
+					jQuery(this.mainCategoryName).effect('highlight');
 				}.bind(this));
 	},
 
@@ -95,7 +95,7 @@ Backend.ProductCategory.prototype =
 				if (originalRequest.responseData.data)
 				{
 					var el = this.addCategory(categoryID, pathAsText);
-					new Effect.Highlight(el);
+					jQuery(el).effect('highlight');
 					this.updateTabCount();
 				}
 			}.bind(this));

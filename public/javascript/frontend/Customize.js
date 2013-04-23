@@ -196,7 +196,7 @@ Customize.prototype = {
 		for (k = 0; k < elements.length; k++)
 	  	{
 			elements[k].innerHTML = translation;
-			new Effect.Highlight(elements[k], {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
+			jQuery(elements[k]).effect('highlight');
 		}
 	},
 

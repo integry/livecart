@@ -153,7 +153,7 @@ Backend.Module.prototype =
 			Backend.SaveConfirmationMessage.prototype.showMessage(resp.status.status);
 		}
 
-		new Effect.Highlight(newNode);
+		jQuery(newNode).effect('highlight');
 	},
 
 	reloadNode: function(node)
@@ -195,7 +195,7 @@ Backend.Module.downloadManager = function(repos)
 							var node = nodeCont.down('li');
 							window.moduleManager.initNode(node);
 							cont.show();
-							new Effect.Highlight(node);
+							jQuery(node).effect('highlight');
 						}
 					});
 				});

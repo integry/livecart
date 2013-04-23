@@ -618,7 +618,7 @@ Backend.Discount.Condition.prototype =
 	completeAddRecord: function(originalRequest, onComplete)
 	{
 		var el = this.createRecord(originalRequest.responseData.data);
-		new Effect.Highlight(el, { duration: 0.4 });
+		jQuery(el).effect('highlight');
 		if (onComplete)
 		{
 			onComplete();

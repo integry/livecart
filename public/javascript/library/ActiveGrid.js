@@ -417,7 +417,7 @@ ActiveGrid.prototype =
 		this.ricoGrid.viewPort.refreshContents(this.ricoGrid.viewPort.lastRowPos);
 
 		$A(document.getElementsByName("item["+row.id+"]")).each(function(input) {
-			new Effect.Highlight($(input).up("tr"));
+			jQuery($(input).up("tr")).effect('highlight');
 		});
 	},
 

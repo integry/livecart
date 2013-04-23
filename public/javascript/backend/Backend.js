@@ -1101,7 +1101,7 @@ Backend.SaveConfirmationMessage.prototype =
 	highlight: function()
 	{
 		//this.innerElement.focus();
-		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = new Effect.Highlight(this.innerElement, { duration: 0.4 });
+		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = jQUery(this.innerElement).effect('highlight');
 
 		// do not hide error or permanent confirmation messages
 		if (!this.element.hasClassName('redMessage') && !this.element.hasClassName('bugMessage') && !this.element.hasClassName('stick'))

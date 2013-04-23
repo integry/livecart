@@ -583,14 +583,14 @@ ActiveList.prototype = {
 		switch(color)
 		{
 			case 'red':
-				new Effect.Highlight(li, {startcolor:'#FFF1F1', endcolor:'#F5F5F5'});
+				jQuery(li).effect('highlight', {color: '#F5F5F5'});
 				break;
 			case 'pink':
-				new Effect.Highlight(li, {startcolor:'#FFF7F7', endcolor:'#FBFBFB'});
+				jQuery(li).effect('highlight', {color:'#FBFBFB'});
 				break;
 			case 'yellow':
 			default:
-				new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#F5F5F5'});
+				jQuery(li).effect('highlight', {color:'#F5F5F5'});
 				break;
 		}
 

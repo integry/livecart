@@ -330,7 +330,7 @@ Backend.CsvImport =
 		cells[0].scrollIntoView();
 		for (k = 0; k < cells.length; k++)
 		{
-			new Effect.Highlight(cells[k], {endcolor: '#F8F8F8'});
+			jQuery(cells[k]).effect('highlight');
 		}
 	},
 
@@ -340,7 +340,7 @@ Backend.CsvImport =
 		if (element)
 		{
 			element.scrollIntoView();
-			new Effect.Highlight(element, {endcolor: '#F8F8F8'});
+			jQuery(element).effect('highlight');
 		}
 	},
 

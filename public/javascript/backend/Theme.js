@@ -234,7 +234,7 @@ Backend.Theme.prototype =
 				var z = this.treeBrowser.insertNewItem(0, responseData.id, responseData.id, null, 0, 0, 0, '', 1);
 				if(z != -1)
 				{
-					new Effect.Highlight($(z.tr));
+					jQuery($(z.tr)).effect('highlight');
 					this.treeBrowser.selectItem(z.id);
 				}
 			}

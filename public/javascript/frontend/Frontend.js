@@ -64,7 +64,7 @@ DomMessage.prototype =
 		div.innerHTML = message;
 
 		parent.appendChild(div);
-		new Effect.Highlight(div, { duration: 0.4 });
+		jQuery(div).effect('highlight');
 
 		return div;
 	}
@@ -715,7 +715,7 @@ Compare.add = function(e)
 Compare.addComplete = function(origReq, el)
 {
 	el.blur();
-	new Effect.Highlight(el, { duration: 0.4 });
+	jQuery(el).effect('highlight');
 	el.removeClassName('progressIndicator');
 	var menu = $('compareMenu');
 
@@ -1801,7 +1801,7 @@ Frontend.OnePageCheckout.prototype =
 		{
 			if (!element.style.backgroundColor || ('transparent' == element.style.backgroundColor))
 			{
-				new Effect.Highlight(element);
+				jQuery(element).effect('highlight');
 			}
 		}
 
@@ -1845,7 +1845,7 @@ Frontend.MiniCart = function(value, params)
 	$(params).update(value);
 	var fc = $(params).down('#miniCart');
 	$(params).parentNode.replaceChild(fc, $(params));
-	new Effect.Highlight(fc);
+	jQuery(fc).effect('highlight');
 }
 
 Frontend.Message = function(value, params)
@@ -1936,7 +1936,7 @@ Frontend.Ajax.AddToWishList = function(container)
 	{
 		e.preventDefault();
 		var a = Event.element(e);
-		new LiveCart.AjaxRequest(a.href, a, function () { new Effect.Highlight(a); });
+		new LiveCart.AjaxRequest(a.href, a, function () { jQuery(a).effect('highlight'); });
 	}
 
 	$A($(container).getElementsBySelector('a.addToWishList')).each(function(button)

@@ -120,7 +120,7 @@ Backend.LanguageIndex.prototype =
 		list.decorateItems();
 		list.createSortable(true);
 
-		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+		jQuery(cl).effect('highlight');
 	},
 
 	showAddForm: function()
@@ -163,8 +163,7 @@ Backend.LanguageIndex.prototype =
 
 		Element.hide('addLangFeedback');
 
-
-		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+		jQuery(node).effect('highlight');
 	},
 
 	setEnabled: function(node)
