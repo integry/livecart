@@ -26,15 +26,15 @@ div.btn-group ul.dropdown-menu{
     margin-top: 0px;
 }
 
+.tab-content
+{
+	padding-top: 1em;
+}
+
 /* resets */
 ol
 {
 	margin-left: 2em;
-}
-
-caption, th, td
-{
-	font-weight: normal;
 }
 
 .descr li,
@@ -52,11 +52,6 @@ caption, th, td
 .staticPageText ol li
 {
 	list-style-type: decimal;
-}
-
-td
-{
-	vertical-align: top;
 }
 
 .clear
@@ -96,7 +91,6 @@ label.cancel,
 .notFoundMain,
 .currentPage,
 .spec,
-tr.specificationGroup,
 .overallRating,
 .ratingCategoryName,
 .reviewTitle,
@@ -115,9 +109,7 @@ div.checkout a,
 #userMenu li.active,
 .cancelled,
 #checkoutProgress a.active,
-ul.downloadFile li.fileGroup,
-.compareData td.param,
-.compareData th a
+ul.downloadFile li.fileGroup
 {
 	font-weight: bold;
 }
@@ -653,28 +645,9 @@ h3.productTitle
 	display: inline;
 }
 
-.compareData .priceRow td.price
+ul.attributeList
 {
-	text-align: center;
-	font-size: larger;
-}
-
-.compareData div.image
-{
-	padding: 1em;
-}
-
-.compareData td, .compareData th
-{
-	padding: 3px;
-	border-width: 2px;
-}
-
-.compareBoxMenu
-{
-	padding-top: 0.5em;
-	font-weight: bold;
-	font-size: 0.85em;
+	margin-bottom: 0;
 }
 
 a.progressIndicator
@@ -687,13 +660,13 @@ a.progressIndicator
 .delete:hover
 {
 	opacity: 1;
+	text-decoration: none;
 }
 
 .delete
 {
+	color: red;
 	opacity: 0.5;
-	background-image: url(../../image/silk/gif/cancel.gif);
-	padding: 8px;
 	margin-right: 4px;
 	vertical-align: middle;
 }
@@ -704,6 +677,12 @@ a.progressIndicator
 #ratingSummary
 {
 	width: 250px;
+}
+
+table.productDetailsTable
+{
+	width: auto;
+	min-width: 25%;
 }
 
 .websiteUrl a
@@ -784,11 +763,6 @@ a.progressIndicator
     padding: 5px 10px;
 }
 
-tr.specificationGroup
-{
-	font-size: larger;
-}
-
 tr.specificationGroup td.param
 {
 	border-right: 0 !important;
@@ -799,9 +773,10 @@ tr.specificationGroup td.value
 	border-left: 0 !important;
 }
 
-ul.attributeList.singleValue li
+ul.attributeList.singleValue
 {
-    list-style: none;
+	list-style: none;
+	margin-left: 0;
 }
 
 #imageContainer

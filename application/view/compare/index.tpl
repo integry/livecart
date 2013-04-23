@@ -2,11 +2,11 @@
 {include file="layout/frontend/header.tpl"}
 {include file="block/content-start.tpl"}
 
-<a href="{link route=$return}" class="return">{t _continue_shopping}</a>
+<a href="{link route=$return}" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
 
 {foreach from=$products item=category}
 	<h2>{$category.category.name_lang}</h2>
-	<table class="compareData table table-striped">
+	<table class="compareData table table-striped table-hover">
 		<thead>
 			<tr>
 				<th></th>
@@ -34,7 +34,7 @@
 				{if $group.group}
 					<tr class="specificationGroup heading{if $smarty.foreach.groups.first} first{/if}">
 						{assign var="cnt" value=$category.products|@count}
-						<td colspan="{$cnt+1}">{$group.group.name_lang}</td>
+						<th colspan="{$cnt+1}">{$group.group.name_lang}</th>
 					</tr>
 				{/if}
 
