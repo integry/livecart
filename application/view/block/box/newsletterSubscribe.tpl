@@ -1,17 +1,20 @@
 {loadJs form=true}
 <div class="panel newsletter">
-	<div class="panel-heading">{t _subscribe_to_newsletter}</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-envelope"></span>
+		{t _subscribe_to_newsletter}
+	</div>
 
 	<div class="content">
 
-		<p>{t _enter_your_email_to_subscribe}</p>
+		<p class="subscribeInfo">{t _subscribe_info}</p>
 
 		{form handle=$form action="controller=newsletter action=subscribe" method="POST" class="form-horizontal"}
 			{input name="email"}
 				<div class="input-group">
-					{textfield}
+					{textfield placeholder="_email_placeholder" noFormat=true}
 					<span class="input-group-btn">
-						<button class="btn" type="button">OK</button>
+						<button class="btn" type="submit">OK</button>
 					</span>
 				</div>
 			{/input}

@@ -48,20 +48,31 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 
 	$value = array_pop(array_filter(array(isset($params['value']) ? $params['value'] : '', isset($params['default']) ? $params['default'] : '', $formHandler->get($fieldName))));
 
-	unset($params['value'], $params['default']);
+	$noFormat = $params['noFormat'];
+	unset($params['value'], $params['default'], $params['noFormat']);
 
 	if (isset($params['autocomplete']) && ($params['autocomplete'] != 'off') && empty($params['id']))
 	{
 		$params['id'] = uniqid();
 	}
 
-	$content = '<div class="controls"><input';
+	if (!empty($params['placeholder']))
+	{
+		$params['placeholder'] = $smarty->getApplication()->translate($params['placeholder']);
+	}
+
+	$content = '<input';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
 	}
 
 	$content .= ' value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '"';
-	$content .= '/></div>';
+	$content .= '/>';
+
+	if (!$noFormat)
+	{
+		$content = '<div class="controls">' . $content . '</div>';
+	}
 
 	if (isset($params['autocomplete']) && $params['autocomplete'] != 'off')
 	{

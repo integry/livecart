@@ -1,5 +1,6 @@
 _subscribe_to_newsletter=Our Newsletter
-_enter_your_email_to_subscribe=Please enter your e-mail address to subscribe to our newsletter
+_subscribe_info=Subscribe to our newsletter
+_email_placeholder=Your e-mail address
 _err_email_empty=Please enter your e-mail address
 _err_invalid_email=This is not a valid e-mail address
 
