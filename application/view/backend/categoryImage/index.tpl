@@ -20,14 +20,14 @@
 <script type="text/javascript">
 	Event.observe("{/literal}catImgMenu_{$ownerId}_add{literal}", "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
 		form.show("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
 	});
 
 	Event.observe("{/literal}catImgMenu_{$ownerId}_cancel{literal}", "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
 		form.hide("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
 	});
@@ -73,7 +73,7 @@
 	<script type="text/javascript">
 		Element.observe($('{/literal}catImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			var form = ('{/literal}catImgAdd_{$ownerId}{literal}');
 
 			$("{/literal}catImageList_{$ownerId}{literal}").handler.cancelAdd();

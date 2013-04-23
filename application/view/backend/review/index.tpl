@@ -24,7 +24,7 @@
 
 	<script type="text/javascript">
 		Event.observe("cancelReviewEdit_{$id}"	{literal}, "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			var editor = Backend.Review.Editor.prototype.getInstance(Backend.Review.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
 		});

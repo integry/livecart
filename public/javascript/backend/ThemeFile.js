@@ -12,12 +12,12 @@ Backend.ThemeFile.prototype =
 		{
 			Element.observe("uploadNewFile_"+theme+"_upload", "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				Backend.ThemeFile.prototype.showAddForm(container, theme);
 			});
 			Element.observe("uploadNewFile_"+theme+"_cancel", "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				Backend.ThemeFile.prototype.hideAddForm(container, theme);
 			});
 		}
@@ -81,7 +81,7 @@ Backend.ThemeFile.prototype =
 		form.down("form").reset();
 		form.down('a.cancel').onclick = function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				this.hideAddForm(container, theme);
 			}.bindAsEventListener(this);
 	},
@@ -93,7 +93,7 @@ Backend.ThemeFile.prototype =
 			menu = new ActiveForm.Slide("uploadMenu_"+theme);
 		menu.hide("fileUpload", form);
 	},
-	
+
 	cancelOpened: function(container, theme)
 	{
 		$H($(container).getElementsByTagName('li')).each(function(li)
@@ -170,7 +170,7 @@ Backend.ThemeFile.FileEntry.prototype =
 		formContainer.innerHTML = '';
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 	},
 

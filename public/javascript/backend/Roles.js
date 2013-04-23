@@ -1,9 +1,9 @@
 /**
  *	@author Integry Systems
  */
- 
+
 Backend.Roles = Class.create();
-Backend.Roles.prototype = 
+Backend.Roles.prototype =
 {
 	Messages: {},
 
@@ -21,7 +21,7 @@ Backend.Roles.prototype =
 	initTree: function(roles, activeRoles, disabledRoles)
 	{
 		var self = this;
-		
+
 		this.rolesTree = new dhtmlXTreeObject(this.nodes.rolesTree.id, "", "", 0);
 		this.rolesTree.setOnClickHandler(function(id) { this.enableRole(id); }.bind(this));
 		this.rolesTree.def_img_x = 'auto';
@@ -43,7 +43,7 @@ Backend.Roles.prototype =
 			self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
 			self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
 		});
-		
+
 		this.backedUpRoles = this.roles;
 		this.restoreTree();
 
@@ -59,7 +59,7 @@ Backend.Roles.prototype =
 	{
 		this.rolesTree.setCheck(id, !this.rolesTree.isItemChecked(id));
 	},
-	
+
 	restoreTree: function()
 	{
 		var self = this;
@@ -68,11 +68,11 @@ Backend.Roles.prototype =
 		{
 			self.rolesTree.setCheck(parseInt(id), self.backedUpRoles[parseInt(id)]);
 		});
-		
+
 		self.nodes.setAllPermissions.checked = (self.rolesTree.getAllUnchecked() == '');
 		this.roles = this.backedUpRoles;
 	},
-	
+
 	backupTree: function()
 	{
 		var self = this;
@@ -80,31 +80,31 @@ Backend.Roles.prototype =
 		$A(this.rolesTree.getAllChecked().split(/,/)).each(function(id) { self.roles[id] = true; });
 		this.backedUpRoles = this.roles;
 	},
-	
+
 	findUsedNodes: function(root)
 	{
 		this.nodes = {};
-		
+
 		this.nodes.root = $(root);
-		this.nodes.form = this.nodes.root.nodeName == 'FORM' ? this.nodes.root : this.nodes.root.down('form'); 
-		
+		this.nodes.form = this.nodes.root.nodeName == 'FORM' ? this.nodes.root : this.nodes.root.down('form');
+
 		this.nodes.rolesTree = this.nodes.root.down('.treeBrowser');
-		
+
 		this.nodes.controls = this.nodes.root.down('.roles_controls');
 		this.nodes.save = this.nodes.controls.down('.roles_save');
 		this.nodes.cancel = this.nodes.controls.down('.roles_cancel');
-		
+
 		this.nodes.setAllPermissions = this.nodes.root.down('.setAllPermissions');
 	},
-	
+
 	bindEvents: function()
 	{
 		var self = this;
-		
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancel(); });
 		Event.observe(this.nodes.setAllPermissions,  'change', function(e){ self.checkAll(); });
 	},
-	
+
 	checkAll: function()
 	{
 		try
@@ -116,31 +116,31 @@ Backend.Roles.prototype =
 			// ok
 		}
 	},
-	
+
 	getInstance: function(root, roles, activeRoles, disabledRoles)
 	{
 		if(!Backend.Roles.prototype.Instances[$(root).id])
 		{
 			Backend.Roles.prototype.Instances[$(root).id] = new Backend.Roles(root, roles, activeRoles, disabledRoles);
 		}
-		
+
 		return Backend.Roles.prototype.Instances[$(root).id];
 	},
-	
+
 	getTabUrl: function(url)
 	{
 		return url;
 	},
-	
+
 	getContentTabId: function(id)
-	{		
+	{
 		return id + 'Content';
 	},
-	
+
 	save: function(event)
 	{
-		Event.stop(event);
-		
+		event.preventDefault();
+
 		var self = this;
 		new LiveCart.AjaxRequest(
 			this.nodes.form.action + '?checked=' + this.rolesTree.getAllChecked() + '&unchecked=' + this.rolesTree.getAllUnchecked(),
@@ -152,20 +152,20 @@ Backend.Roles.prototype =
 			}
 		);
 	},
-	
+
 	afterSave: function(response)
 	{
 		if(response.status == 'success')
 		{
 			this.backupTree();
-			new Backend.SaveConfirmationMessage($('rolesConfirmation'));	
+			new Backend.SaveConfirmationMessage($('rolesConfirmation'));
 		}
 		else
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
 		}
 	},
- 
+
 	cancel: function()
 	{
 		this.restoreTree();

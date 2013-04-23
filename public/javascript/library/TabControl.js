@@ -78,11 +78,11 @@ TabControl.prototype = {
 			});
 
 			Event.observe(li, 'mouseover', function(e) {
-				if(e) Event.stop(e);
+				if(e) e.preventDefault();
 				self.handleTabMouseOver({'target': li})
 			});
 			Event.observe(li, 'mouseout', function(e) {
-				if(e) Event.stop(e);
+				if(e) e.preventDefault();
 				self.handleTabMouseOut({'target': li})
 			});
 		});

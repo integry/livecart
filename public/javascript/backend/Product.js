@@ -236,7 +236,7 @@ Backend.Product =
 
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 	 },
 
@@ -502,7 +502,7 @@ Backend.Product.Editor.prototype =
 	__bind__: function(args)
 	{
 		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancelForm()});
 	},
 
 	__init__: function(tabs)
@@ -804,7 +804,7 @@ Backend.Product.Prices.prototype =
 	{
 		var self = this;
 		Event.observe(this.nodes.cancel, "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			self.resetForm();
 		});
 	},
@@ -917,7 +917,7 @@ Backend.Product.QuantityPrice.prototype =
 {
 	showForm: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		this.menuLink.hide();
 		this.container.parentNode.show();
 	},

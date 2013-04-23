@@ -100,7 +100,7 @@ Backend.UserGroup.prototype =
 		if($("userGroups_add"))
 		{
 			Event.observe($("userGroups_add"), "click", function(e) {
-				Event.stop(e);
+				e.preventDefault();
 				self.createNewGroup();
 			});
 		}
@@ -108,7 +108,7 @@ Backend.UserGroup.prototype =
 		if($("userGroups_delete"))
 		{
 			Event.observe($("userGroups_delete"), "click", function(e) {
-				Event.stop(e);
+				e.preventDefault();
 				self.deleteGroup();
 			});
 		}
@@ -287,7 +287,7 @@ Backend.UserGroup.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 
 			if(!e.target)
 			{
@@ -425,7 +425,7 @@ Backend.User.Group.prototype =
 
 	bindEvents: function()
 	{
-		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); this.cancel() }.bind(this));
+		Event.observe(this.nodes.cancel, "click", function(e) { e.preventDefault(); this.cancel() }.bind(this));
 	},
 
 	save: function()
@@ -553,7 +553,7 @@ Backend.User.Editor.prototype =
 	bindEvents: function(args)
 	{
 		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancelForm()});
 		Event.observe(this.nodes.sameAddress, "click", function(e) {
 			Backend.User.Editor.prototype.showShippingAddress.apply(this);
 		}.bind(this));
@@ -562,7 +562,7 @@ Backend.User.Editor.prototype =
 			Backend.User.Add.prototype.togglePassword.apply(this, [this.nodes.showPassword.checked]) }.bind(this)
 		);
 		Event.observe(this.nodes.generatePassword, "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			Backend.User.Add.prototype.generatePassword.apply(this)
 		}.bind(this));
 
@@ -794,13 +794,13 @@ Backend.User.Add.prototype =
 
 	bindEvents: function(args)
 	{
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
-		Event.observe(this.nodes.cancel2, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
-		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); this.submitForm()}.bind(this));
-		Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancelForm();}.bind(this));
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); this.cancelForm()}.bind(this));
+		Event.observe(this.nodes.cancel2, 'click', function(e) { e.preventDefault(); this.cancelForm()}.bind(this));
+		Event.observe(this.nodes.submit, 'click', function(e) { e.preventDefault(); this.submitForm()}.bind(this));
+		Event.observe(this.nodes.menuCancelLink, 'click', function(e) { e.preventDefault(); this.cancelForm();}.bind(this));
 		Event.observe(this.nodes.sameAddress, "click", function(e) { Backend.User.Editor.prototype.showShippingAddress.apply(this) }.bind(this));
 		Event.observe(this.nodes.showPassword, "click", function(e) { this.togglePassword(this.nodes.showPassword.checked) }.bind(this));
-		Event.observe(this.nodes.generatePassword, "click", function(e) { Event.stop(e); this.generatePassword() }.bind(this));
+		Event.observe(this.nodes.generatePassword, "click", function(e) { e.preventDefault(); this.generatePassword() }.bind(this));
 		Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
 		Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
 		Event.observe(this.nodes.form.elements.namedItem("shippingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));

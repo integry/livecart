@@ -61,7 +61,7 @@ Backend.Template.prototype =
 			Event.observe(createTemplate, 'click', function(e)
 				{
 					var el = Event.element(e);
-					Event.stop(e);
+					e.preventDefault();
 					this.openInTab('_new', this.translations['_tab_title_new'], el.editUrl);
 				}.bindAsEventListener(this));
 			var deleteTemplate = $('deleteTemplate').down('a');
@@ -69,7 +69,7 @@ Backend.Template.prototype =
 			deleteTemplate.href = '#delete';
 			Event.observe(deleteTemplate, 'click', function(e)
 				{
-					Event.stop(e);
+					e.preventDefault();
 					if (!confirm(Backend.getTranslation('_confirm_template_delete')))
 					{
 						return false;
@@ -207,7 +207,7 @@ Backend.Template.prototype =
 	{
 		if (event)
 		{
-			Event.stop(event);
+			event.preventDefault();
 		}
 		this._removeTab(tabid);
 	},
@@ -233,7 +233,7 @@ Backend.Template.prototype =
 	{
 		if (event)
 		{
-			Event.stop(event);
+			event.preventDefault();
 		}
 		var
 			element = Event.element(event),
@@ -423,7 +423,7 @@ Backend.TemplateHandler.prototype =
 
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 
-		Event.stop(e);
+		e.preventDefault();
 		return false;
 	},
 

@@ -65,7 +65,7 @@
 
 		 Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e)
 		 {
-			 Event.stop(e);
+			 e.preventDefault();
 			 Backend.Filter.prototype.createNewAction('{/literal}{$categoryID}{literal}')
 		 });
 		 ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);

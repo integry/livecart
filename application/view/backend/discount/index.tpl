@@ -62,7 +62,7 @@
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
 		Backend.Discount.Action.prototype.itemActions = {/literal}{json array=$itemActions}{literal};
 		Event.observe($("cancel_user_edit"), "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
 		});

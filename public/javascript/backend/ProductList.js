@@ -113,7 +113,7 @@ Backend.ProductList.Group.View.methods =
 
 		Event.observe(addProduct.down('a'), 'click', function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			var self = this;
 			new Backend.SelectPopup(
 				this.namespace.links.selectProduct,

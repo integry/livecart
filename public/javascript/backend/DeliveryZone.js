@@ -24,7 +24,7 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone.bind(this));
 
-		Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); this.addNewZone(); }.bind(this));
+		Event.observe($("newZoneInputButton"), 'click', function(e){ e.preventDefault(); this.addNewZone(); }.bind(this));
 
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback =
 			function(itemId)
@@ -73,7 +73,7 @@ Backend.DeliveryZone.prototype =
 	{
 		Event.observe($("deliveryZone_delete"), 'click', function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			this.deleteZone();
 		}.bind(this));
 	},
@@ -530,13 +530,13 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		li = $(li);
 		Event.observe(li.down(".countriesAndStates_saveMaskButton"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li)
 		}.bind(this));
 
 		Event.observe(li.down(".countriesAndStates_cancelMask"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li, true);
 		}.bind(this));
 	},
@@ -609,28 +609,28 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
 	bindEvents: function()
 	{
-		Event.observe(this.nodes.type, 'change', function(e) { Event.stop(e); this.changeType(); }.bind(this));
-		Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); this.addCountry(); }.bind(this));
-		Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); this.removeCountry(); }.bind(this));
-		Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); this.addState(); }.bind(this));
-		Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); this.save(); }.bind(this));
-		Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); this.removeState(); }.bind(this));
-		Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewCityMask(this.nodes.cityMaskNew); }.bind(this));
-		Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewZipMask(this.nodes.zipMaskNew); }.bind(this));
-		Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewAddressMask(this.nodes.addressMaskNew); }.bind(this));
+		Event.observe(this.nodes.type, 'change', function(e) { e.preventDefault(); this.changeType(); }.bind(this));
+		Event.observe(this.nodes.addCountryButton, 'click', function(e) { e.preventDefault(); this.addCountry(); }.bind(this));
+		Event.observe(this.nodes.removeCountryButton, 'click', function(e) { e.preventDefault(); this.removeCountry(); }.bind(this));
+		Event.observe(this.nodes.addStateButton, 'click', function(e) { e.preventDefault(); this.addState(); }.bind(this));
+		Event.observe(this.nodes.form, 'submit', function(e) { e.preventDefault(); this.save(); }.bind(this));
+		Event.observe(this.nodes.removeStateButton, 'click', function(e) { e.preventDefault(); this.removeState(); }.bind(this));
+		Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { e.preventDefault(); this.addNewCityMask(this.nodes.cityMaskNew); }.bind(this));
+		Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { e.preventDefault(); this.addNewZipMask(this.nodes.zipMaskNew); }.bind(this));
+		Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { e.preventDefault(); this.addNewAddressMask(this.nodes.addressMaskNew); }.bind(this));
 
-		Event.observe(this.nodes.cityMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.cityMaskNewCancelButton.up("fieldset")); }.bind(this));
-		Event.observe(this.nodes.zipMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.zipMaskNewCancelButton.up("fieldset")); }.bind(this));
-		Event.observe(this.nodes.addressMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.addressMaskNewCancelButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.cityMaskNewCancelButton, 'click', function(e) { e.preventDefault(); this.cancelNewMaskForm(this.nodes.cityMaskNewCancelButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.zipMaskNewCancelButton, 'click', function(e) { e.preventDefault(); this.cancelNewMaskForm(this.nodes.zipMaskNewCancelButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.addressMaskNewCancelButton, 'click', function(e) { e.preventDefault(); this.cancelNewMaskForm(this.nodes.addressMaskNewCancelButton.up("fieldset")); }.bind(this));
 
-		Event.observe(this.nodes.cityMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.cityMaskNewShowButton.up("fieldset")); }.bind(this));
-		Event.observe(this.nodes.zipMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.zipMaskNewShowButton.up("fieldset")); }.bind(this));
-		Event.observe(this.nodes.addressMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.addressMaskNewShowButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.cityMaskNewShowButton, 'click', function(e) { e.preventDefault(); this.showNewMaskForm(this.nodes.cityMaskNewShowButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.zipMaskNewShowButton, 'click', function(e) { e.preventDefault(); this.showNewMaskForm(this.nodes.zipMaskNewShowButton.up("fieldset")); }.bind(this));
+		Event.observe(this.nodes.addressMaskNewShowButton, 'click', function(e) { e.preventDefault(); this.showNewMaskForm(this.nodes.addressMaskNewShowButton.up("fieldset")); }.bind(this));
 
 		Event.observe(this.nodes.countrySelector, 'change', this.reloadStateList.bind(this));
 
 		$A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
-			Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(zoneOrUnion.hash.substring(0,1) == '#' ? zoneOrUnion.hash.substring(1) : zoneOrUnion.hash); }.bind(this));
+			Event.observe(zoneOrUnion, 'click', function(e) { e.preventDefault(); this.selectZoneOrUnion(zoneOrUnion.hash.substring(0,1) == '#' ? zoneOrUnion.hash.substring(1) : zoneOrUnion.hash); }.bind(this));
 		}.bind(this));
 
 		$A(this.nodes.observedElements).each(function(element) {
@@ -1062,11 +1062,11 @@ Backend.DeliveryZone.ShippingService.prototype =
 
 	bindEvents: function()
 	{
-	   Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(); }.bind(this));
-	   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
+	   Event.observe(this.nodes.save, 'click', function(e) { e.preventDefault(); this.save(); }.bind(this));
+	   Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); this.cancel(); }.bind(this));
 	   if(!this.service.ID)
 	   {
-		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
+		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { e.preventDefault(); this.cancel(); }.bind(this));
 	   }
 
 	   $A(this.nodes.rangeTypes).each(function(radio)
@@ -1082,7 +1082,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 
 		Event.observe(this.nodes.form, 'submit', function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			this.save();
 		}.bind(this), false);
 
@@ -1435,15 +1435,15 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			   Event.observe(input, 'keypress', function(e) {
 				  if(e.keyCode == 13)
 				  {
-					  Event.stop(e);
+					  e.preventDefault();
 					  this.save(e);
 				  }
 			   }.bind(this), false)
 		   }.bind(this));
 
-//		   Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
-//		   Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
-		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
+//		   Event.observe(this.nodes.save, 'click', function(e) { e.preventDefault(); this.save(e); }.bind(this));
+//		   Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); this.cancel();}.bind(this));
+		   Event.observe(this.nodes.menuCancelLink, 'click', function(e) { e.preventDefault(); this.cancel(); }.bind(this));
 	   }
 
 	   Event.observe(this.switchMetricsEnd.nodes.switchUnits, 'click', function(e) { this.switchMetricsStart.switchUnitTypes(); }.bind(this));
@@ -1486,7 +1486,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			$A(document.getElementsByClassName(this.prefix + 'rateFloatValue', li)).each(function(input) {
 				Event.observe(input, "keyup", function(e){ NumericFilter(this) });
 				input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
-				Event.observe(input.up('fieldset.error').down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
+				Event.observe(input.up('fieldset.error').down('label'), 'click', function(e) { e.preventDefault(); input.focus(); });
 			}.bind(this));
 
 			document.getElementsByClassName('UnitConventer_Root', li).each(function(el) {
@@ -1499,7 +1499,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			var endLo = li.down('.weightRangeEnd').down('.UnitConventer_LoValue');
 
 			startHi.id = startHi.id.replace(idStartRegexp, idStart + 'new' + newId);
-			Event.observe(startHi.up('.shippingService_weightRange').down('label'), 'click', function(e) { Event.stop(e); startHi.focus(); });
+			Event.observe(startHi.up('.shippingService_weightRange').down('label'), 'click', function(e) { e.preventDefault(); startHi.focus(); });
 			startLo.id = startLo.id.replace(idStartRegexp, idStart + 'new' + newId);
 
 			endHi.id = endHi.id.replace(idStartRegexp, idStart + 'new' + newId);
@@ -1572,7 +1572,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 
 Backend.DeliveryZone.lookupAddress = function(form, e)
 {
-	Event.stop(e);
+	e.preventDefault();
 	new LiveCart.AjaxRequest(form, null, function(req)
 	{
 		var zone = req.responseData;

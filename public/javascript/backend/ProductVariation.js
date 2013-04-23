@@ -264,7 +264,7 @@ Backend.ProductVariation.Editor.prototype =
 
 	createType: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var type = new Backend.ProductVariationType({}, this);
 		var defVariation = new Backend.ProductVariationVar({}, type);
@@ -479,7 +479,7 @@ Backend.ProductVariation.Editor.prototype =
 
 			if (!type.isValid())
 			{
-				Event.stop(e);
+				e.preventDefault();
 				return false;
 			}
 
@@ -496,7 +496,7 @@ Backend.ProductVariation.Editor.prototype =
 			{
 				if (!variation.isValid())
 				{
-					Event.stop(e);
+					e.preventDefault();
 					return false;
 				}
 
@@ -680,7 +680,7 @@ Backend.ProductVariationType.prototype =
 
 	remove: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var editor = this.getEditor();
 
@@ -713,7 +713,7 @@ Backend.ProductVariationType.prototype =
 
 	createNewVariation: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var value = new Backend.ProductVariationVar({}, this);
 		value.createItems();
@@ -951,7 +951,7 @@ Backend.ProductVariationVar.prototype =
 
 	remove: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		this.getItems().each(function(item)
 		{

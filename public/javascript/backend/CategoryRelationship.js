@@ -58,7 +58,7 @@ Backend.CategoryRelationship.prototype =
 
 	initAddCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var selector = new Backend.Category.PopupSelector(
 			this.saveAddCategory.bind(this),
 			null,
@@ -100,7 +100,7 @@ Backend.CategoryRelationship.prototype =
 
 	initDeleteCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var node = Event.element(e).up('li');
 		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.categoryRelationship', 'delete', {id: this.category.ID, categoryId: node.categoryID}), node.down('.progressIndicator'), function() { node.parentNode.removeChild(node); this.updateTabCount(); }.bind(this));
 	},

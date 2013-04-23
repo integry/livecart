@@ -78,7 +78,7 @@ Backend.Report.Controller.prototype =
 		{
 			a.onclick = function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				this.setOption(option, a.id);
 			}.bind(this);
 		}.bind(this));
@@ -171,7 +171,7 @@ Backend.Report.TypeSelector.prototype =
 
 	typeChanged: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var el = Event.element(e);
 		if (el.tagName != 'LI')

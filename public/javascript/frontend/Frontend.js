@@ -612,7 +612,7 @@ Order.OptionLoader.prototype =
 		var a = Event.element(e);
 		a.addClassName('ajaxIndicator');
 		new LiveCart.AjaxUpdater(a.attributes.getNamedItem('ajax').nodeValue, a.up('.productOptions'));
-		Event.stop(e);
+		e.preventDefault();
 	}
 }
 
@@ -706,7 +706,7 @@ Compare = {}
 
 Compare.add = function(e)
 {
-	Event.stop(e);
+	e.preventDefault();
 	var el = Event.element(e);
 	el.addClassName('progressIndicator');
 	new LiveCart.AjaxRequest(el.href, null, function(oR) { Compare.addComplete(oR, el); });
@@ -750,7 +750,7 @@ Compare.Menu.prototype =
 
 	removeProduct: function(e, el)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var li = el.up('li');
 		el.addClassName('progressIndicator');
 		new LiveCart.AjaxRequest(el.href, null, function() { this.removeComplete(li) }.bind(this));
@@ -1214,7 +1214,7 @@ Frontend.OnePageCheckout.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		var el = e ? Event.element(e) : null;
@@ -1250,7 +1250,7 @@ Frontend.OnePageCheckout.prototype =
 
 	submitOrder: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var button = Event.element(e);
 
@@ -1348,7 +1348,7 @@ Frontend.OnePageCheckout.prototype =
 	initPaymentForm: function()
 	{
 		var form = this.nodes.payment.down('form');
-		Event.observe(form, 'submit', Event.stop);
+		jQuery(form).submit(function(e) { e.preventDefault(); });
 
 		this.nodes.paymentMethodForm = form;
 		this.nodes.paymentDetailsForm = $('paymentForm');
@@ -1384,7 +1384,7 @@ Frontend.OnePageCheckout.prototype =
 				}
 			}
 
-			//el.onclick = function(e) { if (e) { Event.stop(e); } el.onchange() };
+			//el.onclick = function(e) { if (e) { e.preventDefault(); } el.onchange() };
 
 			var tr = $(el).up('tr');
 			if (tr)
@@ -1434,7 +1434,7 @@ Frontend.OnePageCheckout.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		if (this.nodes.cart)
@@ -1452,7 +1452,7 @@ Frontend.OnePageCheckout.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		if (!this.options['OPC_SHOW_CART'] && this.nodes.cart)
@@ -1680,7 +1680,7 @@ Frontend.OnePageCheckout.prototype =
 				// change event doesn't fire on radio buttons at IE until they're blurred
 				if (('radio' == el.getAttribute('type')) || ('checkbox' == el.getAttribute('type')))
 				{
-					Event.observe(el, 'click', function(e) { Event.stop(e); this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
+					Event.observe(el, 'click', function(e) { e.preventDefault(); this.fieldOnChangeCommon(form, func.bindAsEventListener(this))(e);}.bind(this));
 				}
 				else
 				{
@@ -1934,7 +1934,7 @@ Frontend.Ajax.AddToWishList = function(container)
 {
 	var handleClick = function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var a = Event.element(e);
 		new LiveCart.AjaxRequest(a.href, a, function () { new Effect.Highlight(a); });
 	}

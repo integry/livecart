@@ -98,7 +98,7 @@ Backend.CssEditor.prototype =
 	{
 		if (event)
 		{
-			Event.stop(event);
+			event.preventDefault();
 		}
 		this._removeTab(tabid);
 		this.openedFiles.splice(i,1);
@@ -224,7 +224,7 @@ Backend.CssEditor.prototype =
 	{
 		if (event)
 		{
-			Event.stop(event);
+			event.preventDefault();
 		}
 		var
 			element = Event.element(event),
@@ -295,7 +295,7 @@ Backend.CssEditorHandler.prototype =
 	{
 		$('code_'+this.tabid).value = editAreaLoader.getValue('code_'+this.tabid);
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
-		Event.stop(e);
+		e.preventDefault();
 		return false;
 	},
 

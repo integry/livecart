@@ -42,7 +42,7 @@
 	{literal}
 	<script type="text/javascript">
 		Event.observe($("cancel_order_edit"), "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			var order = Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId(), false);
 			order.cancelForm();
 		});

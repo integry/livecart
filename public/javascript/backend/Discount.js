@@ -69,7 +69,7 @@ Backend.Discount.Editor.methods =
 		$('cancel_discount_add').onclick = function(e)
 		{
 			this.hideAddForm();
-			Event.stop(e);
+			e.preventDefault();
 		}.bind(this);
 
 		$('discountAddForm').onsubmit = this.beforeSaveAdd.bind(this);
@@ -333,7 +333,7 @@ Backend.Discount.Condition.prototype =
 	createSubCondition: function(e)
 	{
 		var element = Event.element(e);
-		Event.stop(e);
+		e.preventDefault();
 		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addCondition', {id: this.condition.ID}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
 	},
 
@@ -702,7 +702,7 @@ Backend.Discount.Condition.prototype =
 
 	addCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		new Backend.Category.PopupSelector(
 			function(categoryID, pathAsText, path)
 			{
@@ -715,7 +715,7 @@ Backend.Discount.Condition.prototype =
 
 	addProduct: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var w = new Backend.SelectPopup( Backend.Router.createUrl('backend.category', 'productSelectPopup'), '',
 		{
 			onObjectSelect: function(id)
@@ -733,7 +733,7 @@ Backend.Discount.Condition.prototype =
 
 	addManufacturer: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var w = new Backend.SelectPopup( Backend.Router.createUrl('backend.manufacturer', 'selectPopup'), '',
 		{
 			onObjectSelect: function(id)
@@ -751,7 +751,7 @@ Backend.Discount.Condition.prototype =
 
 	addUser: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var w = new Backend.SelectPopup( Backend.Router.createUrl('backend.user', 'selectPopup'), '',
 		{
 			onObjectSelect: function(id)
@@ -958,7 +958,7 @@ Backend.Discount.Action.prototype =
 	addAction: function(e, id)
 	{
 		var element = Event.element(e);
-		Event.stop(e);
+		e.preventDefault();
 		new LiveCart.AjaxRequest(Backend.Router.createUrl(this.controller, 'addAction', {id: id}), element.parentNode.down('.progressIndicator'), this.completeAdd.bind(this));
 	},
 

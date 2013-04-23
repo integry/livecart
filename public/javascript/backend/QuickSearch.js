@@ -170,7 +170,7 @@ Backend.QuickSearch.prototype = {
 					var element = Event.element(event);
 					if(element.tagName.toLowerCase() != "a" || element.hasClassName("qsNext") || element.hasClassName("qsPrevious"))
 					{
-						Event.stop(event);
+						event.preventDefault();
 					}
 				}
 			);

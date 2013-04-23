@@ -13,7 +13,7 @@ Backend.Payment =
 
 	showOfflinePaymentForm: function(e)
 	{
-	 	Event.stop(e);
+	 	e.preventDefault();
 		var element = Event.element(e);
 
 		var menu = new ActiveForm.Slide(element.up(".menuContainer").down('ul.paymentMenu'));
@@ -22,7 +22,7 @@ Backend.Payment =
 
 	hideOfflinePaymentForm: function(e)
 	{
-	 	Event.stop(e);
+	 	e.preventDefault();
 		var element = Event.element(e);
 
 		var menu = new ActiveForm.Slide(element.up(".menuContainer").down('ul.paymentMenu'));
@@ -31,13 +31,13 @@ Backend.Payment =
 
 	submitOfflinePaymentForm: function(e)
 	{
-	 	Event.stop(e);
+	 	e.preventDefault();
 		new Backend.Payment.AddOffline(e);
 	},
 
 	showVoidForm: function(transactionID, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		var cont = $('transaction_' + transactionID);
 
 		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
@@ -46,7 +46,7 @@ Backend.Payment =
 
 	hideVoidForm: function(transactionID, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		var cont = $('transaction_' + transactionID);
 
 		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
@@ -55,13 +55,13 @@ Backend.Payment =
 
 	voidTransaction: function(transactionID, form, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		new Backend.Payment.TransactionAction(transactionID, form);
 	},
 
 	showCaptureForm: function(transactionID, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		var cont = $('transaction_' + transactionID);
 
 		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
@@ -70,7 +70,7 @@ Backend.Payment =
 
 	hideCaptureForm: function(transactionID, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		var cont = $('transaction_' + transactionID);
 
 		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
@@ -79,13 +79,13 @@ Backend.Payment =
 
 	captureTransaction: function(transactionID, form, event)
 	{
-	 	Event.stop(event);
+	 	event.preventDefault();
 		new Backend.Payment.TransactionAction(transactionID, form);
 	},
 
 	deleteCcNum: function(transactionID, event)
 	{
-		Event.stop(event);
+		event.preventDefault();
 		var el = Event.element(event);
 		el.parentNode.down('.progressIndicator').show();
 		new Backend.Payment.TransactionAction(transactionID, el);
@@ -222,7 +222,7 @@ Backend.Payment.OfflinePaymentMethodEditor =
 		node.down("select").focus();
 		return false;
 	},
-	
+
 	toggleViewMode: function(node /*is dropdown*/)
 	{
 		node = $(node);
@@ -259,6 +259,6 @@ Backend.Payment.OfflinePaymentMethodEditor =
 			}.bind(this),
 			{parameters:$H({handlerID:node.value}).toQueryString()}
 		);
-		
+
 	}
 }

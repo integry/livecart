@@ -15,13 +15,13 @@ Backend.RatingType.prototype =
 
 		Element.observe(container.down(".addRatingTypeLink"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			this.showAddForm();
 		}.bind(this));
 
 		Element.observe(container.down(".addRatingTypeCancelLink"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			this.hideAddForm();
 		}.bind(this));
 
@@ -172,7 +172,7 @@ Backend.RatingType.PostEntry.prototype =
 
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 	},
 
@@ -182,7 +182,7 @@ Backend.RatingType.PostEntry.prototype =
 		var form = this.node.down('form');
 		form.action = this.container.down('.saveUrl').innerHTML;
 		new LiveCart.AjaxRequest(form, null, this.update.bind(this));
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	update: function(originalRequest)

@@ -758,7 +758,7 @@ ActiveList.prototype = {
 			iconImage.setOpacity(this.hiddenMenuOpacity);
 			li[icon.action] = iconImage;
 
-			Event.observe(iconImage, "mousedown", function(e) { Event.stop(e) }.bind(this));
+			Event.observe(iconImage, "mousedown", function(e) { e.preventDefault() }.bind(this));
 			Event.observe(iconImage, "click", function() { this.bindAction(li, icon.action) }.bind(this));
 
 			// Append content container

@@ -106,7 +106,7 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 
 	selectAll: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		this.toggleAll(true);
 	},
@@ -123,7 +123,7 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 
 	sort: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var labels = $A(this.checkBoxContainer.getElementsByTagName('label')).sort(
 			function(a, b)
@@ -212,7 +212,7 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 
 	reset: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		if (this.container)
 		{

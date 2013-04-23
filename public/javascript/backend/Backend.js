@@ -447,7 +447,7 @@ Backend.Breadcrumb =
 			link.catId = parentId;
 			link.href = "#cat_" + parentId;
 			Event.observe(link, "click", function(e) {
-				Event.stop(e);
+				e.preventDefault();
 				Backend.hideContainer();
 
 				if(!Backend.Category.getNode(this.catId).length)
@@ -1200,7 +1200,7 @@ Backend.UnitConventer.prototype =
 
 		Event.observe(this.nodes.hiValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
 		Event.observe(this.nodes.loValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
-		Event.observe(this.nodes.switchUnits, 'click', function(e) { Event.stop(e); this.switchUnitTypes() }.bind(this));
+		Event.observe(this.nodes.switchUnits, 'click', function(e) { e.preventDefault(); this.switchUnitTypes() }.bind(this));
 
 		this.switchUnitTypes();
 		this.switchUnitTypes();
@@ -2013,7 +2013,7 @@ Backend.MultiInstanceEditor.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 
 			if(!e.target)
 			{
@@ -2149,7 +2149,7 @@ Backend.MultiInstanceEditor.prototype =
 		var cancel = container.down('a.cancel');
 		if (cancel)
 		{
-			Event.observe(cancel, 'click', function(e) { this.cancelAdd(); Event.stop(e); }.bind(this));
+			Event.observe(cancel, 'click', function(e) { this.cancelAdd(); e.preventDefault(); }.bind(this));
 		}
 	},
 
@@ -2168,7 +2168,7 @@ Backend.MultiInstanceEditor.prototype =
 
 	saveAdd: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var instance = this.getAddInstance();
 		instance.submitForm();
 		return instance;
@@ -2229,7 +2229,7 @@ TabCustomize.prototype =
 
 	toggleMenu: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		this.moreTabsMenu.innerHTML = '';
 		var cloned = this.tabList.cloneNode(true);
@@ -2265,7 +2265,7 @@ TabCustomize.prototype =
 
 	toggleVisibility: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var li = Event.element(e);
 		if ('LI' != li.tagName)

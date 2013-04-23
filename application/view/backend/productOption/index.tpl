@@ -76,7 +76,7 @@
 
 	 Event.observe($("productOption_item_new_"+parentID+"_show"), "click", function(e)
 	 {ldelim}
-		 Event.stop(e);
+		 e.preventDefault();
 		 Backend.ProductOption.prototype.createNewAction(parentID)
 	 {rdelim});
 

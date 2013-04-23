@@ -130,7 +130,7 @@
 
 						<div class="filterMenuContainer">
 
-							{img src="image/silk/zoom.png" class="filterIcon" onclick="Event.stop(event);"}
+							{img src="image/silk/zoom.png" class="filterIcon" onclick="event.preventDefault();"}
 
 							<div class="filterMenu">
 

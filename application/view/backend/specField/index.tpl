@@ -121,13 +121,13 @@
 
 	 Event.observe($("specField_item_new_"+categoryID+"_show"), "click", function(e)
 	 {ldelim}
-		 Event.stop(e);
+		 e.preventDefault();
 		 Backend.SpecField.prototype.createNewAction(categoryID)
 	 {rdelim});
 
 	 Event.observe($("specField_group_new_"+categoryID+"_show"), "click", function(e)
 	 {ldelim}
-		 Event.stop(e);
+		 e.preventDefault();
 		 Backend.SpecFieldGroup.prototype.createNewAction(categoryID);
 	 {rdelim});
 

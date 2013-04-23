@@ -378,7 +378,7 @@ Backend.Settings.Editor.prototype =
 				var select =
 					function(e)
 					{
-						Event.stop(e);
+						e.preventDefault();
 
 						var state = Event.element(e).hasClassName('countrySelect');
 
@@ -520,7 +520,7 @@ Backend.Settings.Editor.prototype =
 				var siteMapSubmit =
 					function(e)
 					{
-						Event.stop(e);
+						e.preventDefault();
 
 						new LiveCart.AjaxUpdater(Event.element(e).href, $('siteMapSubmissionResult'), $('siteMapFeedback'));
 					}
@@ -537,7 +537,7 @@ Backend.Settings.Editor.prototype =
 				var disablePrivateLabel =
 					function(e)
 					{
-						Event.stop(e);
+						e.preventDefault();
 
 						var link = Event.element(e);
 						new LiveCart.AjaxRequest(link.href, link.parentNode.down('.progressIndicator'), function()
@@ -580,7 +580,7 @@ Backend.Settings.Editor.prototype =
 							{
 								var prefix = prefixes[k];
 								new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.' + {P: 'product', C: 'category', M: 'manufacturer'}[prefix] + 'Image', 'resizeImages', {id: prefix}), a, function(oReq) { this.resizeImages(oReq, a); }.bind(this));
-								Event.stop(e);
+								e.preventDefault();
 							}.bind(this);
 						}.bind(this)(k, a);
 					}
@@ -631,7 +631,7 @@ Backend.Settings.Editor.prototype =
 				var a = menu.down('a');
 				Event.observe(a, 'click', function(e)
 				{
-					Event.stop(e);
+					e.preventDefault();
 					new LiveCart.AjaxRequest(a.href, a.parentNode.down('.progressIndicator'), function(oR)
 					{
 					});

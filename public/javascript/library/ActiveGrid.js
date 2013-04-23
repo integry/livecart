@@ -96,7 +96,7 @@ ActiveGrid.prototype =
 		var headerRow = this._getHeaderRow();
 		this.selectAllInstance = $(headerRow).down('input');
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this);
-		this.selectAllInstance.parentNode.onclick = function(e){Event.stop(e);}.bindAsEventListener(this);
+		this.selectAllInstance.parentNode.onclick = function(e){e.preventDefault();}.bindAsEventListener(this);
 
 		this.ricoGrid.onUpdate = this.onUpdate.bind(this);
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);
@@ -938,7 +938,7 @@ ActiveGridFilter.prototype =
 
 		Element.addClassName(this.element.up('th'), 'activeGrid_filter_select');
 
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	filterBlur: function()
@@ -1016,7 +1016,7 @@ ActiveGridFilter.prototype =
 
 	initFilter: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var element = Event.element(e);
 		if ('LI' != element.tagName && element.up('li'))
@@ -1181,7 +1181,7 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		if ('delete' == this.actionSelector.value)
@@ -1278,7 +1278,7 @@ ActiveGrid.MassActionHandler.prototype =
 	{
 		this.request.request.transport.abort();
 		new LiveCart.AjaxRequest(Backend.Router.setUrlQueryParam(this.cancelUrl, 'pid', this.pid), null, this.completeCancel.bind(this));
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	completeCancel: function(originalRequest)

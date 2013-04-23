@@ -225,7 +225,7 @@ Backend.CustomerOrder.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			$('orderIndicator_' + id).style.visibility = 'visible';
 		}
 
@@ -290,7 +290,7 @@ Backend.CustomerOrder.prototype =
 
 	stopRebills: function(event, orderID)
 	{
-		Event.stop(event);
+		event.preventDefault();
 		if (confirm(Backend.getTranslation("_cancel_subscription_question").replace("[_1]", $("invoiceNumber"+orderID).innerHTML)))
 		{
 			new LiveCart.AjaxRequest($('cancelSubscriptionURL'+orderID).value, $('stopRebillsURL'+orderID).up(".stopRebillsLinkContainer").down("span"),
@@ -631,14 +631,14 @@ Backend.CustomerOrder.Editor.prototype =
 
 	bindEvents: function(args)
 	{
-		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
-		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
+		Event.observe(this.nodes.isCanceled, 'click', function(e) { e.preventDefault(); this.switchCancelled(); }.bind(this));
+		Event.observe(this.nodes.status, 'change', function(e) { e.preventDefault(); this.submitForm(); }.bind(this));
 		Event.observe(this.nodes.addCoupon, 'click', this.addCoupon.bindAsEventListener(this));
 	},
 
 	addCoupon: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var
 			node = Event.element(e),
 			code = prompt(Backend.Shipment.Messages.addCouponCode),
@@ -740,7 +740,7 @@ Backend.CustomerOrder.Editor.prototype =
 				[
 					[currentUser.nodes.form.elements.namedItem("email").value, function(e)
 					{
-					   Event.stop(e);
+					   e.preventDefault();
 					   Backend.hideContainer();
 					   setTimeout(function()
 					   {
@@ -1042,10 +1042,10 @@ Backend.CustomerOrder.Address.prototype =
 
 	bindEvents: function(args)
 	{
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); this.cancelForm()}.bind(this));
 		Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { this.useExistingAddress()}.bind(this));
-		Element.observe(this.nodes.showEdit, 'click', function(e) { Event.stop(e); this.showForm(); }.bind(this));
-		Element.observe(this.nodes.cancelEdit, 'click', function(e) { Event.stop(e); this.hideForm(); }.bind(this));
+		Element.observe(this.nodes.showEdit, 'click', function(e) { e.preventDefault(); this.showForm(); }.bind(this));
+		Element.observe(this.nodes.cancelEdit, 'click', function(e) { e.preventDefault(); this.hideForm(); }.bind(this));
 	},
 
 	showForm: function()
@@ -1199,13 +1199,13 @@ Backend.CustomerOrder.CustomFields.prototype =
 
 	showEditForm: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		this.container.addClassName('editing');
 	},
 
 	hideEditForm: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		this.container.removeClassName('editing');
 		this.form.reset();
 		ActiveForm.prototype.resetErrorMessages(this.form);
@@ -1213,7 +1213,7 @@ Backend.CustomerOrder.CustomFields.prototype =
 
 	submitForm: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		if (!validateForm(this.form))
 		{
 			return false;
@@ -1240,17 +1240,17 @@ Backend.CustomerOrder.DateCompletedEditor.prototype =
 		this.editContainer = $("calendarForm");
 
 		Event.observe($('editDateCompleted'), "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			this.toggle(this.EDIT);
 		}.bind(this));
 
 		Event.observe($('cancelDateCompleted'), "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			this.toggle(this.VIEW);
 		}.bind(this));
 
 		Event.observe($('saveDateCompleted'), "click", function(e) {
-			Event.stop(e);
+			e.preventDefault();
 			new LiveCart.AjaxRequest(
 				this.editContainer.action,
 				$("indicatorDateCompleted"),

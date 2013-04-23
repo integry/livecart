@@ -27,7 +27,7 @@
 <script type="text/javascript">
 	Event.observe($("class_new_show"), "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var newForm = Backend.ShippingClass.prototype.getInstance( $("class_new_form").down('form') );
 		newForm.showNewForm();
 	});

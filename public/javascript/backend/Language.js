@@ -580,7 +580,7 @@ Backend.LangEdit.prototype =
 
 	showAddPhraseForm: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var form = $('addPhraseForm');
 
 		form.down('.cancel').onclick = this.cancelSaveAddPhrase.bind(this);
@@ -589,7 +589,7 @@ Backend.LangEdit.prototype =
 		{
 			form.onsubmit = function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 
 				if (validateForm(form))
 				{
@@ -632,7 +632,7 @@ Backend.LangEdit.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		var form = $('addPhraseForm');

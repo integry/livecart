@@ -868,7 +868,7 @@ Backend.Category.PopupSelector.prototype =
 							w.close();
 						}
 
-						Event.stop(e);
+						e.preventDefault();
 					}.bindAsEventListener(this) );
 			}.bind(this);
 

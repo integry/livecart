@@ -106,11 +106,11 @@ Backend.Newsletter =
 		this.nodes.shortdes = $($A(this.nodes.form.getElementsByClassName("textarea")).pop()).down("textarea");
 
 		self = this;
-		Event.observe(this.nodes.format, 'change', function(e) { Event.stop(e); self.formatChanged();});
-		Event.observe(this.nodes.shortdes, 'change', function(e) { 
+		Event.observe(this.nodes.format, 'change', function(e) { e.preventDefault(); self.formatChanged();});
+		Event.observe(this.nodes.shortdes, 'change', function(e) {
 			if(self.nodes.format.value==1)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				self.nodes.format.value=2;
 				self.formatChanged();
 			}
@@ -130,7 +130,7 @@ Backend.Newsletter =
 			tinyMCEChanged:this.tinyMCEChanged,
 			id:this.id
 		});
-		
+
 		Backend.Newsletter.Commons.reconfigureTinyMCE(this);
 	},
 
@@ -178,7 +178,7 @@ Backend.Newsletter =
 
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 	 },
 
@@ -401,12 +401,12 @@ Backend.Newsletter.Editor.prototype =
 	{
 		var self = this;
 
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-		Event.observe(this.nodes.format, 'change', function(e) { Event.stop(e); self.formatChanged();});
-		Event.observe(this.nodes.shortdes, 'change', function(e) { 
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancelForm()});
+		Event.observe(this.nodes.format, 'change', function(e) { e.preventDefault(); self.formatChanged();});
+		Event.observe(this.nodes.shortdes, 'change', function(e) {
 			if(self.nodes.format.value==1)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				self.nodes.format.value=2;
 				self.formatChanged();
 			}
@@ -620,7 +620,7 @@ Backend.Newsletter.Commons =
 				toggleFieldAndLabel(blocks[TEXT], "show");
 				this.tinyMCEChanged({}, {content: tinyMCE.getInstanceById("newsletter__"+this.id+"_html").getContent()}); 				// trigger change event with fake arguments
 				break;
-				
+
 			case 2:
 				toggleFieldAndLabel(blocks[HTML], "show");
 				toggleFieldAndLabel(blocks[TEXT], "show");
@@ -672,7 +672,7 @@ Backend.Newsletter.Commons =
 				window.setTimeout(addOnchangeEvent.bind(this), 1000);
 			}
 		}.bind(obj);
-		
+
 		addOnchangeEvent();
 	}
 }

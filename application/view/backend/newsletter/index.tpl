@@ -95,7 +95,7 @@
 {literal}
 <script type="text/javascript">
 	Event.observe($("cancel_newsletter_edit"), "click", function(e) {
-		Event.stop(e);
+		e.preventDefault();
 		var message = Backend.Newsletter.Editor.prototype.getInstance(Backend.Newsletter.Editor.prototype.getCurrentId(), false);
 		message.removeTinyMce();
 		message.cancelForm();

@@ -16,14 +16,14 @@
 <script type="text/javascript">
 	Event.observe("{/literal}manImageAdd_{$ownerId}_add{literal}", "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
 		form.show("manImageAdd", "{/literal}manImgAdd_{$ownerId}{literal}");
 	});
 
 	Event.observe("{/literal}manImageAdd_{$ownerId}_cancel{literal}", "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
 		form.hide("manImageAdd", "{/literal}manImgAdd_{$ownerId}{literal}");
 	});
@@ -69,7 +69,7 @@
 	<script type="text/javascript">
 		Element.observe($('{/literal}manImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			var form = ('{/literal}manImgAdd_{$ownerId}{literal}');
 
 			$("{/literal}manImageList_{$ownerId}{literal}").handler.cancelAdd();

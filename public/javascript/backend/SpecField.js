@@ -331,17 +331,17 @@ Backend.SpecField.prototype = {
 		}
 
 		Event.observe(this.nodes.name, "keyup", function(e) { self.generateHandleAndTitleAction(e) } );
-		Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { Event.stop(e); self.addValueFieldAction(); } );
+		Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { e.preventDefault(); self.addValueFieldAction(); } );
 		Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
 		Event.observe(this.nodes.type, "focus", function(e) { self.fucusType(e) } );
-		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
-		if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
+		Event.observe(this.nodes.cancel, "click", function(e) { e.preventDefault(); self.cancelAction() } );
+		if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { e.preventDefault(); self.cancelAction() } );
 		Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
 
-		Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
-		Event.observe(this.nodes.mergeValuesCancelLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
-		Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { Event.stop(e); self.mergeValues(); });
-		Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
+		Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { e.preventDefault(); self.toggleValuesMerging(); });
+		Event.observe(this.nodes.mergeValuesCancelLink, 'click', function(e) { e.preventDefault(); self.toggleValuesMerging(); });
+		Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { e.preventDefault(); self.mergeValues(); });
+		Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { e.preventDefault(); self.toggleValuesMerging(); });
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadSpecFieldAction();
@@ -751,7 +751,7 @@ Backend.SpecField.prototype = {
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		var currentStep = this.cssPrefix + e.target.hash.substring(1);
 		this.showState(currentStep);
@@ -811,7 +811,7 @@ Backend.SpecField.prototype = {
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		var splitedHref = e.target.parentNode.id.split("_");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
@@ -857,7 +857,7 @@ Backend.SpecField.prototype = {
 				([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
 			)
 		){
-			Event.stop(e);
+			e.preventDefault();
 		}
 	},
 
@@ -1032,7 +1032,7 @@ Backend.SpecField.prototype = {
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		this.saveSpecField();
 	},
@@ -1518,9 +1518,9 @@ Backend.SpecFieldGroup.prototype = {
 	 {
 		 var self = this;
 		 if(this.nodes.mainTitle) Event.observe(self.nodes.name, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.name.value });
-		 Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
-		 Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
-		 Event.observe(self.nodes.topCancel, 'click', function(e) { Event.stop(e); self.cancel() });
+		 Event.observe(self.nodes.save, 'click', function(e) { e.preventDefault(); self.beforeSave() });
+		 Event.observe(self.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancel() });
+		 Event.observe(self.nodes.topCancel, 'click', function(e) { e.preventDefault(); self.cancel() });
 	 },
 
 	/**

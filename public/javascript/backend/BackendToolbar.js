@@ -83,7 +83,7 @@ BackendToolbar.prototype = {
 		);
 		Event.observe(document.body, "click",this.hideLastViewedMenu.bind(this));
 		Event.observe(this.nodes.lastviewed.down("a"), "click", function(event) {
-			Event.stop(event);
+			event.preventDefault();
 			this[["hideLastViewedMenu", "openLastViewedMenu"][this.nodes.lastviewed.down("a").hasClassName("active")?0:1]]();
 		}.bindAsEventListener(this));
 
@@ -96,7 +96,7 @@ BackendToolbar.prototype = {
 
 	openLastViewedMenu: function()
 	{
-		
+
 		this.nodes.quickSearchResult.hide();
 		if (this.nodes.lastviewed.hasClassName("invalid"))
 		{
@@ -104,8 +104,8 @@ BackendToolbar.prototype = {
 			this.adjustPanel(this.nodes.lastviewed);
 			this.nodes.lastViewedIndicator.show();
 			this.nodes.lastViewedIndicator.addClassName("progressIndicator");
-			
-			
+
+
 			new LiveCart.AjaxUpdater(
 				this.getPorperty("lastViewed").replace("__where__", this.whereAmI()),
 				this.nodes.lastviewed.down("ul"),
@@ -348,7 +348,7 @@ BackendToolbar.prototype = {
 	tryToOpenItemWithoutReload: function(id, type)
 	{
 		var sectionName = this.whereAmI();
-		
+
 		if (type != sectionName)
 		{
 			return true; // can't open without reload.
@@ -375,7 +375,7 @@ BackendToolbar.prototype = {
 				Element.hide($('loadingUser'));
 			});
 		}
-		else 
+		else
 		{
 			return true;
 		}

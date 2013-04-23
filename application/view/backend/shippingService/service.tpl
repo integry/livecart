@@ -69,7 +69,7 @@
 
 				Event.observe($("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_show"), "click", function(e)
 				{
-					Event.stop(e);
+					e.preventDefault();
 					var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
 						$("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate

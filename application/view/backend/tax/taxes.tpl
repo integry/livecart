@@ -24,7 +24,7 @@
 <script type="text/javascript">
 	Event.observe($("tax_new_show"), "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var newForm = Backend.Tax.prototype.getInstance( $("tax_new_form").down('form') );
 		newForm.showNewForm();
 	});

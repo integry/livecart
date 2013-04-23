@@ -284,11 +284,11 @@ Backend.ProductOption.prototype =
 			Event.observe(this.nodes.stateLinks[i], "click", function(e) { self.changeStateAction(e) } );
 		}
 
-		Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { Event.stop(e); self.addValueFieldAction(); } );
+		Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { e.preventDefault(); self.addValueFieldAction(); } );
 		Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
 		Event.observe(this.nodes.type, "focus", function(e) { self.fucusType(e) } );
-		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
-		if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
+		Event.observe(this.nodes.cancel, "click", function(e) { e.preventDefault(); self.cancelAction() } );
+		if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { e.preventDefault(); self.cancelAction() } );
 		Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
@@ -657,7 +657,7 @@ Backend.ProductOption.prototype =
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		var currentStep = this.cssPrefix + e.target.hash.substring(1);
 		this.showState(currentStep);
@@ -717,7 +717,7 @@ Backend.ProductOption.prototype =
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		var splitedHref = e.target.id.split("_"); /* parentNode. */
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
@@ -852,7 +852,7 @@ Backend.ProductOption.prototype =
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+		e.preventDefault();
 
 		this.saveProductOption();
 	},

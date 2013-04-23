@@ -33,7 +33,7 @@
 
 	Event.observe($("rpp_new_show_{$product.ID}"), "click", function(e)
 	{literal}{{/literal}
-		Event.stop(e);
+		e.preventDefault();
 		var newForm = Backend.RecurringProductPeriod.prototype.getInstance( $("rpp_new_form_{$product.ID}").down('form') );
 		newForm.showNewForm();
 	{literal}}{/literal});

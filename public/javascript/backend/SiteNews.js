@@ -11,13 +11,13 @@ Backend.SiteNews.prototype =
 		{
 			Element.observe("addNewsLink", "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				Backend.SiteNews.prototype.showAddForm();
 			});
 
 			Element.observe("addNewsCancelLink", "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				Backend.SiteNews.prototype.hideAddForm();
 			});
 		}
@@ -216,7 +216,7 @@ Backend.SiteNews.PostEntry.prototype =
 
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 	},
 
@@ -226,7 +226,7 @@ Backend.SiteNews.PostEntry.prototype =
 		var form = this.node.down('form');
 		form.action = $('saveUrl').innerHTML;
 		new LiveCart.AjaxRequest(form, null, this.update.bind(this));
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	update: function(originalRequest)

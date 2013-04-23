@@ -57,7 +57,7 @@ Backend.ProductCategory.prototype =
 
 	initChangeCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var selector = new Backend.Category.PopupSelector(
 			function(categoryID, pathAsText, path) { this.saveChangeCategory(categoryID, pathAsText, path, selector); }.bind(this),
 			null,
@@ -79,7 +79,7 @@ Backend.ProductCategory.prototype =
 
 	initAddCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var selector = new Backend.Category.PopupSelector(
 			this.saveAddCategory.bind(this),
 			null,
@@ -119,7 +119,7 @@ Backend.ProductCategory.prototype =
 
 	initDeleteCategory: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		var node = Event.element(e).up('li');
 		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.productCategory', 'delete', {id: this.product.ID, categoryId: node.categoryID}), node.down('.progressIndicator'), function() { node.parentNode.removeChild(node); this.updateTabCount(); }.bind(this));
 	},

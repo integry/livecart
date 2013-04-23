@@ -76,7 +76,7 @@ FooterToolbar.prototype = {
 		{
 			// drag fires only one click event, setting flag to false will allow next clicks on menu to operate normally
 			this.draggingItem = false;
-			Event.stop(event);
+			event.preventDefault();
 		}
 	}
 }

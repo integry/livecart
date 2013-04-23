@@ -226,7 +226,7 @@ Backend.OrderedItem = {
 
 		new LiveCart.AjaxUpdater(link.href, container, link.next('.progressIndicator'));
 
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	saveOptions: function(e)
@@ -239,7 +239,7 @@ Backend.OrderedItem = {
 				Backend.OrderedItem.changeProductCount($('orderShipmentsItem_count_' + id), target.elements.namedItem('orderID').value, id, target.elements.namedItem('shipmentID').value, true);
 			}
 		);
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	reloadItem: function(e)
@@ -247,7 +247,7 @@ Backend.OrderedItem = {
 		var container = Event.element(e).up('.productOptions');
 		container.innerHTML = container.itemHtml;
 
-		Event.stop(e);
+		e.preventDefault();
 	}
 };
 
@@ -360,10 +360,10 @@ Backend.Shipment.prototype =
 			var fld = this.nodes.form.down("#orderShipment_change_usps_" + this.ID)
 			if (fld)
 			{
-				Event.observe(fld, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
-				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_submit"), 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
-				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_cancel"), 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
-				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_select"), 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
+				Event.observe(fld, 'click', function(e) { e.preventDefault(); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_submit"), 'click', function(e) { e.preventDefault(); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_cancel"), 'click', function(e) { e.preventDefault(); Backend.Shipment.prototype.getInstance(e.target.up("li")).toggleUSPS(true); }.bind(this));
+				Event.observe(this.nodes.form.down("#orderShipment_USPS_" + this.ID + "_select"), 'change', function(e) { e.preventDefault(); Backend.Shipment.prototype.getInstance(e.target.up("li")).USPSChanged(); }.bind(this));
 
 				var shippingAmount = this.nodes.form.down('input.shippingAmount');
 				if (shippingAmount)
@@ -375,7 +375,7 @@ Backend.Shipment.prototype =
 				var status = this.nodes.form.down("#orderShipment_status_" + this.ID);
 				if (status)
 				{
-					Event.observe(status, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
+					Event.observe(status, 'change', function(e) { e.preventDefault(); Backend.Shipment.prototype.getInstance(e.target.up("li")).changeStatus(); }.bind(this));
 				}
 			}
 
@@ -1086,7 +1086,7 @@ Backend.Shipment.prototype =
 
 		Event.observe("order" + orderID + "_addProduct", 'click', function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 
 			var ulList = $("orderShipments_list_" + orderID).childElements();
 
@@ -1167,7 +1167,7 @@ Backend.Shipment.prototype =
 
 		Event.observe("orderShipments_new_" + orderID + "_show", "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 
 			var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
 			menu.show(null, "orderShipments_new_" + orderID + "_controls");
@@ -1175,14 +1175,14 @@ Backend.Shipment.prototype =
 
 		Event.observe("orderShipments_new_" + orderID + "_cancel", "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
 			menu.hide(null, "orderShipments_new_" + orderID + "_controls");
 		}.bind(this));
 
 		Event.observe("orderShipments_new_" + orderID + "_submit", "click", function(e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
 			menu.hide(null, "orderShipments_new_" + orderID + "_controls");
 			Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ;
@@ -1193,7 +1193,7 @@ Backend.Shipment.prototype =
 		{
 			Event.observe("order" + orderID + "_openProductMiniform", 'click', function(orderID, e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				$("order"+ orderID + "_productMiniform").show();
 				$("orderShipments_menu_" + orderID).hide();
 			}.bind(this,orderID));
@@ -1220,7 +1220,7 @@ Backend.Shipment.prototype =
 				{
 					Event.observe($(nodeID), 'click', function(orderID, e)
 					{
-						Event.stop(e);
+						e.preventDefault();
 						$("order"+ orderID + "_productMiniform").hide();
 						$("orderShipments_menu_" + orderID).show();
 					}.bind(this,orderID));
@@ -1234,14 +1234,14 @@ Backend.Shipment.prototype =
 			var id = element.down(".id");
 			if (id)
 			{
-				Event.stop(event);
+				event.preventDefault();
 				Backend.Shipment.Callbacks.addProduct(id.value, $("order" + orderID + "_addToShipment").value, orderID);
 			}
 		}.bindAsEventListener(this, orderID));
 
 		Event.observe($("order" + orderID + "_addSearchResultToOrder"), 'click', function(orderID, e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 
 			var
 				input = $("ProductSearchQuery"),
@@ -1300,7 +1300,7 @@ Backend.Shipment.prototype =
 
 		Event.observe(this.nodes.addressForm, 'submit', function (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 			if (validateForm(Event.element(e)))
 			{
 				this.saveShipmentAddress();
@@ -1344,7 +1344,7 @@ Backend.Shipment.prototype =
 	{
 		if (e)
 		{
-			Event.stop(e);
+			e.preventDefault();
 		}
 
 		this.nodes.shipmentAddressView.show();

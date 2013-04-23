@@ -120,10 +120,10 @@ Backend.ShippingClass.prototype =
 	{
 		var self = this;
 
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+		Event.observe(this.nodes.cancel, 'click', function(e) { e.preventDefault(); self.cancel(); });
 		if(!this.nodes.form.elements.namedItem('ID').value)
 		{
-			Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+			Event.observe(this.nodes.menuCancelLink, 'click', function(e) { e.preventDefault(); self.cancel(); });
 		}
 	},
 

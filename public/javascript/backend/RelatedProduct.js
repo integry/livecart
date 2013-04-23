@@ -251,7 +251,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 		{
 			Event.observe(addGroup.down('a'), "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				newForm.showNewForm();
 			});
 		}
@@ -262,7 +262,7 @@ Backend.RelatedProduct.Group.Controller.prototype =
 			var controller = this;
 			Event.observe(addProduct.down('a'), 'click', function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 				var self = this;
 				new Backend.SelectPopup(
 					this.namespace.links.selectProduct,
@@ -324,12 +324,12 @@ Backend.RelatedProduct.Group.Controller.prototype =
 	{
 		var self = this;
 
-		Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
-		Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
+		Event.observe(this.view.nodes.save, 'click', function(e) { e.preventDefault(); self.onSave(); });
+		Event.observe(this.view.nodes.cancel, 'click', function(e) { e.preventDefault(); self.onCancel(); });
 
 		if (this.view.nodes.newGroupCancelLink)
 		{
-			Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+			Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { e.preventDefault(); self.onCancel(); });
 		}
 	},
 

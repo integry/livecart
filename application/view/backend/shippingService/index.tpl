@@ -29,7 +29,7 @@
 
 	Event.observe($("shippingService_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 
 		var newForm = Backend.DeliveryZone.ShippingService.prototype.getInstance(
 			$("shippingService_new_service_{/literal}{$deliveryZone.ID}{literal}_form").down('form'),

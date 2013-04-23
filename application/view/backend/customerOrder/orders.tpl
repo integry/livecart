@@ -13,14 +13,14 @@
 			{
 				Backend.CustomerOrder.prototype.createUserOrder('{/literal}{$userID}{literal}', $("{/literal}createNewOrderLink_{$orderGroupID}"), '{link controller="backend.customerOrder"}');
 				{literal}
-				Event.stop(e);
+				e.preventDefault();
 			});
 		}
 		else
 		{
 			Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e)
 			{
-				Event.stop(e);
+				e.preventDefault();
 
 				Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
 					Backend.CustomerOrder.Links.selectCustomer,

@@ -92,7 +92,7 @@ Customize.prototype = {
 		e.stopPropagation();
 		this.showTranslationDialog(this.currentElement, e);
 		this.hideTranslationMenu();
-		Event.stop(e);
+		e.preventDefault();
 	},
 
 	showTranslationDialog: function(element, e)
@@ -217,7 +217,7 @@ Customize.prototype = {
 
 	stopTransCancel: function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 	}
 }
 
@@ -272,7 +272,7 @@ CssCustomize.prototype =
 	{
 		this.saveButton.onclick = this.saveChanges.bind(this);
 		this.newRuleButton.onclick = function() { this.newRuleForm.show(); }.bind(this);
-		this.newRuleCancel.onclick = function(e) { Event.stop(e); this.newRuleForm.hide(); }.bind(this);
+		this.newRuleCancel.onclick = function(e) { e.preventDefault(); this.newRuleForm.hide(); }.bind(this);
 		this.newRuleSave.onclick = this.addRule.bind(this);
 	},
 

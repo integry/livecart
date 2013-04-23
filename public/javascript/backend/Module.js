@@ -19,13 +19,13 @@ Backend.Module.prototype =
 		node.cb.onchange = function(e) { this.setStatus(node); }.bind(this);
 
 		node.installAction = node.down('a.installAction');
-		node.installAction.onclick = function(e) { Event.stop(e); this.setInstall(node); }.bind(this);
+		node.installAction.onclick = function(e) { e.preventDefault(); this.setInstall(node); }.bind(this);
 
 		node.updateAction = node.down('a.updateAction');
 
 		if (node.updateAction)
 		{
-			node.updateAction.onclick = function(e) { Event.stop(e); this.loadUpdateMenu(node); }.bind(this);
+			node.updateAction.onclick = function(e) { e.preventDefault(); this.loadUpdateMenu(node); }.bind(this);
 		}
 	},
 
@@ -49,7 +49,7 @@ Backend.Module.prototype =
 
 				Event.observe(node, 'submit', function(e)
 				{
-					Event.stop(e);
+					e.preventDefault();
 					this.update(node);
 				}.bind(this));
 			}.bind(this));
@@ -57,7 +57,7 @@ Backend.Module.prototype =
 
 	hideUpdateMenu: function(e, node)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		node.actionMenu.show();
 		node.updateMenu.update('');
 		node.removeClassName('updateMenuLoaded');
@@ -167,7 +167,7 @@ Backend.Module.downloadManager = function(repos)
 	var a = $('download-modules').down('a');
 	Event.observe(a, 'click', function(e)
 	{
-		Event.stop(e);
+		e.preventDefault();
 		new LiveCart.AjaxUpdater(Router.createUrl('backend.module', 'packageList'), $('download-modules-container'), ('download-modules'), null, function(oR)
 		{
 			var menu = new ActiveForm.Slide($('module-menu'));
@@ -178,7 +178,7 @@ Backend.Module.downloadManager = function(repos)
 			{
 				Event.observe(form, 'submit', function(e)
 				{
-					Event.stop(e);
+					e.preventDefault();
 					new LiveCart.AjaxRequest(form, form.down('.submit'), function(oR)
 					{
 						menu.hide("download-modules", $('download-modules-container'));

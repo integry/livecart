@@ -317,16 +317,16 @@ Backend.Filter.prototype = {
 		var self = this;
 
 		Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
-		Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction(true); });
+		Event.observe(this.nodes.addFilterLink, "click", function(e) { e.preventDefault(); self.addFilterFieldAction(true); });
 
-		Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.specFieldIDWasChangedAction() });
-		Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.generateTitleFromSpecField() });
+		Event.observe(this.nodes.specFieldID, "change", function(e) { e.preventDefault(); self.specFieldIDWasChangedAction() });
+		Event.observe(this.nodes.specFieldID, "change", function(e) { e.preventDefault(); self.generateTitleFromSpecField() });
 		Event.observe(this.nodes.specFieldID, "change", function(e) { self.toggleFilters(); } );
 
-		Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() });
-		Event.observe(this.nodes.cancelNewItemLink, "click", function(e) { Event.stop(e); self.cancelAction(); });
+		Event.observe(this.nodes.cancel, "click", function(e) { e.preventDefault(); self.cancelAction() });
+		Event.observe(this.nodes.cancelNewItemLink, "click", function(e) { e.preventDefault(); self.cancelAction(); });
 
-		Event.observe(this.nodes.save, "click", function(e) { Event.stop(e); self.saveAction() });
+		Event.observe(this.nodes.save, "click", function(e) { e.preventDefault(); self.saveAction() });
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.fillSpecFieldsSelect();
@@ -689,7 +689,7 @@ Backend.Filter.prototype = {
 	{
 		if(!e.target) e.target = e.srcElement;
 
-		Event.stop(e);
+		e.preventDefault();
 
 		var li = e.target.up('li');
 		var splitedHref  = li.id.match(/(new)*(\d+)$/); //	splitedHref[splitedHref.length - 2] == 'new' ? true : false;

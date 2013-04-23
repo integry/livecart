@@ -238,8 +238,8 @@ Backend.ProductFile.Controller.prototype = {
 			Event.observe(this.view.nodes.title, 'keyup', function(e) { self.onTitleChange(); });
 		}
 		Event.observe(this.view.nodes.form, 'submit', function(e) { ActiveForm.prototype.resetErrorMessages(self.view.nodes.root); });
-		Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
-		Event.observe(this.view.nodes.newFileCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+		Event.observe(this.view.nodes.cancel, 'click', function(e) { e.preventDefault(); self.onCancel(); });
+		Event.observe(this.view.nodes.newFileCancelLink, 'click', function(e) { e.preventDefault(); self.onCancel(); });
 		Event.observe(this.view.nodes.save, 'click', function(e) { self.onSave(); });
 	},
 
@@ -690,10 +690,10 @@ Backend.ProductFile.Group.Controller.prototype = {
 	{
 		var self = this;
 
-		Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
-		Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
-		Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
-		Event.observe(this.view.nodes.name, 'keyup', function(e) { Event.stop(e); self.onNameChange(); });
+		Event.observe(this.view.nodes.save, 'click', function(e) { e.preventDefault(); self.onSave(); });
+		Event.observe(this.view.nodes.cancel, 'click', function(e) { e.preventDefault(); self.onCancel(); });
+		Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { e.preventDefault(); self.onCancel(); });
+		Event.observe(this.view.nodes.name, 'keyup', function(e) { e.preventDefault(); self.onNameChange(); });
 
 	},
 
