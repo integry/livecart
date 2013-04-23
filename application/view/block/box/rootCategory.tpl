@@ -3,7 +3,7 @@
 		<ul class="nav">
 			<li class="active"><a href="#">Home</a></li>
 			{foreach from=$categories item=category name=categories}
-				<li class="top dropdown"><a href="{categoryUrl data=$category}" class="dropdown-toggle" data-toggle="dropdown">{$category.name_lang}</a>
+				<li class="top dropdown"><a href="{categoryUrl data=$category}" class="dropdown-toggle" data-toggle="dropdown disabled">{$category.name_lang}</a>
 				{if $subCategories[$category.ID]}
 					<ul class="dropdown-menu">
 						{foreach from=$subCategories[$category.ID] item=sub}
@@ -15,7 +15,7 @@
 			{/foreach}
 
 			{foreach from=$pages item=page name=pages}
-				<li class="top dropdown"><a href="{categoryUrl data=$category}" {if $subPages[$page.ID]}class="dropdown-toggle" data-toggle="dropdown"{/if}>{$page.title_lang}</a>
+				<li class="top dropdown"><a href="{categoryUrl data=$category}" {if $subPages[$page.ID]}class="dropdown-toggle" data-toggle="dropdown disabled"{/if}>{$page.title_lang}</a>
 				{if $subPages[$page.ID]}
 					<ul class="dropdown-menu">
 						{foreach from=$subPages[$page.ID] item=subpage}

@@ -11,7 +11,10 @@
 
 {if $manufacturers || $categories}
 <div class="panel quickNav">
-	<div class="panel-heading">{t _quick_nav}</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-link"></span>
+		{t _quick_nav}
+	</div>
 
 	<div class="content">
 

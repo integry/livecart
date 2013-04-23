@@ -24,7 +24,10 @@
 
 {sect}{header}
 <div class="panel panel-warning narrowResults">
-	<div class="panel-heading">{t _narrow_results}</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-filter"></span>
+		{t _narrow_results}
+	</div>
 
 	<div class="content">
 {/header}{content}

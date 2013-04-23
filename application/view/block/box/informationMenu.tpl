@@ -1,6 +1,9 @@
 {if $pages}
 <div class="panel panel-info informationMenu">
-	<div class="panel-heading">{t _information}</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-info-sign"></span>
+		{t _information}
+	</div>
 
 	<div class="content">
 		<ul class="nav nav-list">

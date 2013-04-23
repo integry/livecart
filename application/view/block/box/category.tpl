@@ -22,13 +22,15 @@
 		{if 2 == $level}
 		<div class="divider"></div>
 		{/if}
-
 		</ul>
 	{/if}
 {/function}
 
 <div class="panel panel-primary categories">
-	<div class="panel-heading">{t _categories}</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-search"></span>
+		<span>{t _categories}</span>
+	</div>
 
 	<div class="content">
 		{categoryTree node=$categories level=0}
