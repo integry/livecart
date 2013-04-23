@@ -1863,8 +1863,8 @@ Frontend.Ajax.Message = function(container)
 	var showMessage = function(value, container)
 	{
 		container.update(value);
-		new Effect.Appear(msgContainer);
-		window.setTimeout(function() { new Effect.Fade(msgContainer); }, 5000);
+		jQuery(msgContainer).show({});
+		window.setTimeout(function() { new jQuery(msgContainer).hide('fade'); }, 5000);
 	}
 
 	var msgContainer = $(document.createElement('div'));

@@ -27,7 +27,6 @@ function smarty_function_loadJs($params, Smarty_Internal_Template $smarty)
 	$files[] = "library/lightbox/lightbox.js";
 	$files[] = "library/scriptaculous/scriptaculous.js";
 	$files[] = "library/scriptaculous/builder.js";
-	$files[] = "library/scriptaculous/effects.js";
 	$files[] = "library/scriptaculous/dragdrop.js";
 	$files[] = "library/scriptaculous/controls.js";
 	$files[] = "library/scriptaculous/slider.js";

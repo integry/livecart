@@ -35,7 +35,6 @@
 	{includeJs file="library/livecart.js"}
 	{includeJs file="library/form/Validator.js"}
 	{includeJs file="library/form/ActiveForm.js"}
-	{includeJs file="library/scriptaculous/effects.js"}
 	{compiledJs glue=false}
 
 </head>

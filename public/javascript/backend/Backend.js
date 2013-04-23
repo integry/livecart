@@ -1095,7 +1095,7 @@ Backend.SaveConfirmationMessage.prototype =
 		this.displaying = true;
 
 		//Backend.SaveConfirmationMessage.prototype.timers[this.element.id].scrollEffect = new Effect.ScrollTo(this.element, {offset: -24});
-		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect = new Effect.Appear(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
+		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect = jQuery(this.element).show({complete: this.highlight.bind(this)});
 	},
 
 	highlight: function()

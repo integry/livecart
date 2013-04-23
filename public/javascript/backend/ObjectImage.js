@@ -143,7 +143,7 @@ Backend.ObjectImage.prototype =
 
 				if (cancel)
 				{
-					cancel.onclick = 
+					cancel.onclick =
 						function()
 						{
 							var formNode = this.parentNode;
@@ -353,7 +353,7 @@ Backend.ObjectImage.prototype =
 		{
 			errorElement.innerHTML = result['error'];
 			Element.removeClassName(errorElement, 'hidden');
-			new Effect.Appear(errorElement, {duration: 0.4});
+			jQuery(errorElement).show({});
 		}
 		else
 		{
