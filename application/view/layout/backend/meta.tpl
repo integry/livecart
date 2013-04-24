@@ -31,15 +31,10 @@
 	{includeJs file="library/FooterToolbar.js" front=true}
 	{includeJs file="library/livecart.js" front=true}
 	{includeJs file="library/dhtmlHistory/dhtmlHistory.js"}
-	{includeJs file="library/scriptaculous/dragdrop.js" front=true}
-	{includeJs file="library/scriptaculous/slider.js" front=true}
-	{includeJs file="library/scriptaculous/controls.js" front=true}
-	{includeJs file="library/scriptaculous/builder.js" front=true}
 	{includeJs file="library/jquery/plugins.js" front=true}
 	{includeJs file="library/jquery/jquery-ui.js" front=true}
 	{includeJs file="library/jquery/jquery-min.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
-
 	{includeJs file="backend/BackendToolbar.js"}
 
 	{compiledJs glue=true nameMethod=hash}

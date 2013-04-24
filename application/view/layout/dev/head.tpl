@@ -5,7 +5,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{$TITLE}</title>
-	<base href="{baseUrl}" /> 
+	<base href="{baseUrl}" />
 
 	<!-- Css includes -->
 	{includeCss file="backend/stat.css" force=true}
@@ -13,21 +13,19 @@
 
 	{compiledCss}
 
-	
 	{includeJs file="backend/Backend.js" force=true}
-	{includeJs file="library/scriptaculous/scriptaculous.js" force=true}
 	{includeJs file="library/prototype/prototype.js" force=true}
 	{includeJs file="library/tinymce/tiny_mce.js" force=true}
-	
+
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
 	{includeJs file=library/livecart.js}
 	{includeJs file=library/Debug.js}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
-	
+
 	{includeJs file=backend/Customize.js}
-	
+
 	{compiledJs}
 
 	{literal}
@@ -47,7 +45,7 @@
 			});
 	</script>
 	{/literal}
-	
+
 	{literal}
 	<script type="text/javascript">
 
