@@ -1101,7 +1101,7 @@ Backend.SaveConfirmationMessage.prototype =
 	highlight: function()
 	{
 		//this.innerElement.focus();
-		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = jQUery(this.innerElement).effect('highlight');
+		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = jQuery(this.innerElement).effect('highlight');
 
 		// do not hide error or permanent confirmation messages
 		if (!this.element.hasClassName('redMessage') && !this.element.hasClassName('bugMessage') && !this.element.hasClassName('stick'))
@@ -1112,7 +1112,7 @@ Backend.SaveConfirmationMessage.prototype =
 
 	hide: function()
 	{
-		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect = Effect.Fade(this.element, {duration: 0.4});
+		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect = jQuery(this.element).hide({});
 		Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout = setTimeout(function() { this.displaying = false; }.bind(this), 4000);
 
 		if (this.options && this.options.del/* && this.options.delete !KONQUEROR */)

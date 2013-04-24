@@ -14,13 +14,11 @@ BackendToolbar.prototype = {
 	afterInit: function()
 	{
 		// remove button from toolbar, if it is droped outside any droppable area
-		Droppables.add($(document.body), {
-			onDrop: function(from, to, event) {
-				from = $(from);
-				if (from.hasClassName("dropButton"))
-				{
-					this.removeIcon(from);
-				}
+		jQuery(document.body).droppable({
+			accept: '.dropButton',
+			drop: function(event, ui)
+			{
+				this.removeIcon(ui.helper[0]);
 			}.bind(this)
 		});
 		// --
@@ -179,11 +177,11 @@ BackendToolbar.prototype = {
 				return;
 			}
 
-			Droppables.add(
-				element,
+			jQuery(element).draggable(
 				{
-					onDrop: function(from, to, event)
+					drop: function(event, ui)
 					{
+						/*
 						from = $(from);
 						if (from.hasClassName("dropButton"))
 						{
@@ -194,10 +192,12 @@ BackendToolbar.prototype = {
 						{
 							this.addIcon(from, to);
 						}
+						*/
+						console.log(event, ui);
 					}.bind(this)
 				}
 			);
-			element.addClassName("droppable");
+			//element.addClassName("droppable");
 		}.bind(this));
 	},
 
