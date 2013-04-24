@@ -1356,7 +1356,7 @@ Frontend.OnePageCheckout.prototype =
 
 		this.formOnChange(form, this.setPaymentMethod.bind(this), [$('tos')]);
 
-		var paymentMethods = form.getElementsBySelector('input.radio');
+		var paymentMethods = jQuery('input[type=radio]',form);
 		$A(paymentMethods).each(function(el)
 		{
 			if ((el.value.substr(0, 1) == '/') || (el.value.substr(0, 4) == 'http'))

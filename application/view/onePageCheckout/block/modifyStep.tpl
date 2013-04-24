@@ -1,1 +1,1 @@
-<div class="modifyStep"><a href="#">{t _modify}</a></div>
+<div class="modifyStep"><a href="#" class="accordion-toggle">{t _modify}</a></div>

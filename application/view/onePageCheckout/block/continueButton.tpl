@@ -1,2 +1,2 @@
-<input type="submit" class="submit" value="Continue" />
+<button type="submit" class="btn btn-primary">{t _continue}</button>
 <span class="progressIndicator" style="display: none;"></span>

@@ -34,15 +34,19 @@
 
 		{input name="ccExpiryYear"}
 			{label}{t _card_exp}:{/label}
-			{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
-			/
-			{selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
+			<div class="controls">
+				{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months noFormat=true}
+				/
+				{selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years noFormat=true}
+			</div>
 		{/input}
 
 		{input name="ccCVV"}
 			{label}{t _cvv_descr}:{/label}
-			{textfield maxlength="4" id="ccCVV"}
-			<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+			<div class="controls">
+				{textfield maxlength="4" id="ccCVV" noFormat=true}
+				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+			</div>
 		{/input}
 
 		{if $ccVars}

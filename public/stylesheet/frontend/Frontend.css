@@ -31,6 +31,11 @@ div.btn-group ul.dropdown-menu{
 	padding-top: 1em;
 }
 
+.form-vertical .control-group
+{
+	margin-bottom: 10px;
+}
+
 /* resets */
 ol
 {
@@ -68,7 +73,6 @@ ol
 *****************************/
 
 /* 100% width labels */
-label.checkbox, label.radio,
 .productOptions label.field,
 .productVariations label,
 .reviewForm label,
@@ -167,7 +171,6 @@ ul.productList .image,
 #couponCodes .container,
 #checkoutProgress,
 .addressSelector .selector,
-.shipment td,
 .shipment .subTotal, #cart .subTotal,
 #invoiceHeader,
 td.amount,
@@ -227,7 +230,6 @@ img.calendar_button
 .checkoutHeader h1,
 #billingAddressColumn,
 #shippingSelector,
-#ccForm,
 .addressContainer,
 #cvvExample,
 .newCustomer,
@@ -247,7 +249,6 @@ div.addressBlock,
 div.review .ratingBreakdown,
 .checkoutButtons,
 .proceedToCheckout,
-.completeOrderButton,
 #checkoutProgress,
 .returningCustomer,
 .noteDate,
@@ -277,7 +278,6 @@ ul.downloadFile li
 
 /* background color 1: light grey */
 tr.odd,
-fieldset,
 div.addressBlock,
 .orderDetails,
 .noteText,
@@ -1209,9 +1209,9 @@ td.productNameRow
 }
 
 /* Payments */
-#ccForm
+.name_ccExpiryYear select
 {
-	width: 100%;
+	width: auto;
 }
 
 #ccCVV
@@ -1718,42 +1718,10 @@ form
      display: inline;
 }
 
-fieldset
-{
-    margin: 1em 0;
-    padding: 1em;
-    margin: auto 0;
-    margin-bottom: 10px;
-    border-width: 1px;
-}
-
-legend
-{
-	font-size: 18px;
-	color: #30A0F9;
-	padding: 10px 0;
-	top: -22px;
-}
-
 .required label span.label
 {
 	background: url(../../image/required.gif) right center no-repeat;
 	padding-right: 9px;
-}
-
-p.radio, p.checkbox
-{
-	padding-left: 11em;
-}
-
-p.radio label, p.checkbox label
-{
-    white-space: nowrap;
-}
-
-label.checkbox, label.radio
-{
-  	line-height: 1em;
 }
 
 label.cancel
@@ -1761,16 +1729,9 @@ label.cancel
     display: inline;
 }
 
-input.radio, input.checkbox, input.submit, input.button, input.reset
+input.submit, input.button, input.reset
 {
     width: auto;
-}
-
-input.radio, input.checkbox
-{
-    margin: 0 0.5em 0 0;
-    cursor: pointer;
-    vertical-align: middle;
 }
 
 .highlight
@@ -2003,22 +1964,6 @@ fieldset.eavGroup
 	width: auto;
 }
 
-#checkout-login,
-#checkout-shipping,
-#checkout-billing,
-#checkout-payment
-{
-	float: left;
-	width: 77%;
-}
-
-#checkout-right
-{
-	float: right;
-	width: 22%;
-	padding-left: 1%;
-}
-
 #checkout-cart #cart
 {
 	width: 100%;
@@ -2075,7 +2020,7 @@ fieldset.eavGroup
 }
 
 .onePageCheckout-index #checkout-payment form .submit,
-.onePageCheckout-index #ccForm .submit
+.onePageCheckout-index #ccForm .form-actions
 {
 	display: none !important;
 }
@@ -2098,9 +2043,7 @@ fieldset.eavGroup
 
 #checkout-place-order
 {
-	border-top-width: 1px;
 	margin: 1em 0;
-	padding-top: 1em;
 }
 
 .onePageCheckout-index .showCart #checkout-overview h2,
@@ -2110,7 +2053,6 @@ fieldset.eavGroup
 {
 	display: none;
 }
-
 
 #upsellProducts .checkProduct
 {
