@@ -37,12 +37,12 @@ BackendToolbar.prototype = {
 					return; // menu items without url are not draggable!
 				}
 				Event.observe(a, "click", this.cancelClickEventOnDrag.bindAsEventListener(this));
-				new Draggable(element,
+				jQuery(element).draggable(
 					{
-						onStart: function(inst)
+						start: function(event, ui)
 						{
 							var
-								element = $(inst.element),
+								element = $(ui.helper[0]),
 								ul = element.up("ul");
 							this.draggingItem = true;
 							if (ul)
@@ -51,19 +51,19 @@ BackendToolbar.prototype = {
 							}
 						}.bind(this),
 
-						onEnd: function(inst, event)
+						end: function(event, ui)
 						{
 							var
-								element = $(inst.element),
+								element = $(ui.helper[0]),
 								ul = element.up("ul");
 							if (ul)
 							{
 								ul.removeClassName("importantVisible");
 							}
 						},
-						ghosting:true,
-						revert:true,
-						zindex:9999
+						revert: true,
+						opacity: 0.35,
+						zIndex: 9999
 					}
 				);
 			}.bind(this)
@@ -157,10 +157,10 @@ BackendToolbar.prototype = {
 		node.addClassName("dropButton");
 
 		Event.observe(node.down("a"), "click", this.cancelClickEventOnDrag.bindAsEventListener(this));
-		new Draggable(node, {
+		jQuery(node).draggable({
 			ghosting:true,
 			revert:true,
-			onStart: function(inst)
+			start: function(event, ui)
 			{
 				this.draggingItem = true;
 			}.bind(this)

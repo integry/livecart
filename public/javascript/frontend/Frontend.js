@@ -1159,7 +1159,7 @@ Frontend.OnePageCheckout.prototype =
 	bindModifyLinks: function()
 	{
 		var self = this;
-		jQuery('.modifyStep a').click(function(e)
+		jQuery('.modifyStep a, .stepTitle a').click(function(e)
 		{
 			e.preventDefault();
 			self.reopenStep(jQuery(this).closest('div.step'));

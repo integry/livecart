@@ -11,7 +11,7 @@
 		var cust = new Customize();
 		cust.setActionUrl('{link controller="backend.language" action=translationDialog}');
 		cust.initLang();
-		new Draggable('transDialogBox');
+		jQuery('#transDialogBox').draggable();
 		Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel.bind(cust), false);
 		Event.observe('transLink', 'click', cust.translationMenuClick.bindAsEventListener(cust), true);
 	</script>
