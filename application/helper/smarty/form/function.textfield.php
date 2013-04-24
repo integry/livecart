@@ -61,6 +61,12 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 		$params['placeholder'] = $smarty->getApplication()->translate($params['placeholder']);
 	}
 
+	if (isset($params['autocomplete']) && $params['autocomplete'] != 'off')
+	{
+		$autocomplete = $params['autocomplete'];
+		$params['autocomplete'] = 'off';
+	}
+
 	$content = '<input';
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"';
@@ -74,7 +80,7 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 		$content = '<div class="controls">' . $content . '</div>';
 	}
 
-	if (isset($params['autocomplete']) && $params['autocomplete'] != 'off')
+	if (!empty($autocomplete))
 	{
 	  	$acparams = array();
 		foreach (explode(' ', $params['autocomplete']) as $param)
@@ -89,8 +95,14 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 
 		$content .= '<span id="autocomplete_indicator_' . $params['id'] . '" class="progressIndicator" style="display: none;"></span>';
 		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
+
 		$content .= '<script type="text/javascript">
-						new Ajax.Autocompleter("' . $params['id'] . '", "autocomplete_' . $params['id'] . '", "' . $url . '", {frequency: 0.5, paramName: "' . $acparams['field'] . '", indicator: "autocomplete_indicator_' . $params['id'] . '"});
+						jQuery("#' . $params['id'] . '").typeahead({
+								source: function (query, process) {
+									return jQuery.get("' . $url . '", { ' . $acparams['field'] . ': query }, function (data) {
+										return process(jQuery.parseJSON(data));
+									});
+								}});
 					</script>';
 	}
 
