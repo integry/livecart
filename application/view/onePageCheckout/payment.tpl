@@ -1,6 +1,6 @@
 <div class="accordion-group">
 	<div class="stepTitle accordion-heading">
-		<a href="#" class="accordion-toggle">{t _payment_info}</a>
+		{include file="onePageCheckout/block/title.tpl" title="_payment_info"}
 	</div>
 
 	<div class="accordion-body">

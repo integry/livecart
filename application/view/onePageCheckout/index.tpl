@@ -1,4 +1,5 @@
 {loadJs form=true}
+{includeJs file="frontend/OnePageCheckout.js"}
 {pageTitle}{t _checkout}{/pageTitle}
 
 <noscript>
@@ -49,12 +50,14 @@
 	</div>
 
 	<div class="col-span-4" id="checkout-right">
-		<div id="checkout-cart">
-			{$cart}
-		</div>
+		<div id="checkout-right-inner">
+			<div id="checkout-cart">
+				{$cart}
+			</div>
 
-		<div id="checkout-overview">
-			{$overview}
+			<div id="checkout-overview">
+				{$overview}
+			</div>
 		</div>
 	</div>
 

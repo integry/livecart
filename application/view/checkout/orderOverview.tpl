@@ -1,11 +1,4 @@
-{assign var="colspan" value="4"}
-{if $productsInSeparateLine}
-	{assign var="colspan" value=$colspan-1}
-{/if}
-
-{if $hideSku}
-	{assign var="colspan" value=$colspan-1}
-{/if}
+{assign var="colspan" value=2-$hideSku}
 
 {if !$nochanges}
 	<div class="orderOverviewControls">
@@ -13,15 +6,11 @@
 	</div>
 {/if}
 
-<table class="table shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
+<table class="table table-striped shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
 	<thead>
 		<tr>
 			{if !$hideSku}<th class="sku">{t _sku}</th>{/if}
-			{if !$productsInSeparateLine}
-				<th class="productName">{t _product}</th>
-			{/if}
-			<th>{t _price}</th>
-			<th>{t _quantity}</th>
+			<th class="productName">{t _product}</th>
 			<th>{t _subtotal}</th>
 		</tr>
 	</thead>
@@ -30,12 +19,12 @@
 	{foreach from=$order.shipments key="key" item="shipment"}
 		{if $order.isMultiAddress}
 			<tr>
-				<td colspan="{$colspan}" class="shipmentAddress">
+				<td colspan="{$colspan+1}" class="shipmentAddress">
 					{$shipment.ShippingAddress.compact}
 				</td>
 			</tr>
 		{/if}
-		{include file="order/orderTableDetails.tpl" hideTaxes=true}
+		{include file="order/compactOrderTableDetails.tpl" hideTaxes=true}
 	{/foreach}
 
 	{foreach from=$order.discounts item=discount}

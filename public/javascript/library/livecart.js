@@ -169,9 +169,8 @@ LiveCart.AjaxRequest.prototype = {
 						response = response.substr(0, response.length - 6);
 					}
 
-					console.log(response);
 					var contentType = jQuery(cloned).data('contentType');
-					cloned.parentNode.removeChild(cloned);
+					jQuery(cloned).remove();
 					var r = {};
 					r.responseText = response;
 					r.getResponseHeader = function()

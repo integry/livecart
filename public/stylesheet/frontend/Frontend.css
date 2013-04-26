@@ -171,21 +171,12 @@ ul.productList .image,
 #couponCodes .container,
 #checkoutProgress,
 .addressSelector .selector,
-.shipment .subTotal, #cart .subTotal,
 #invoiceHeader,
-td.amount,
 .compactProductList .image,
 .compactProductList .pricingInfo,
 .compareBoxMenu
 {
 	text-align: center;
-}
-
-/* left aligned text that needs to be overriden from right/center */
-.shipment .productName,
-.multiAddress .shipmentAddress
-{
-	text-align: justify;
 }
 
 /* right aligned text */
@@ -1997,8 +1988,7 @@ fieldset.eavGroup
 	margin: 0 7px;
 }
 
-.onePageCheckout-index .step-disabled form,
-.onePageCheckout-index .step-disabled .form,
+/* .onePageCheckout-index .step-disabled .accordion-inner, */
 .onePageCheckout-index .notAvailable
 {
 	display: none;
@@ -2094,46 +2084,18 @@ fieldset.eavGroup
 }
 
 .step-incomplete .modifyStep,
-.step.opened .modifyStep
+.step.opened .modifyStep,
+.step.closed .closed,
+.step.closed .accordion-inner,
+.step.opened .open,
+.step-disabled .modifyLink
 {
 	display: none;
 }
 
-.step.closed form,
-.step.closed div.form
+.step-disabled
 {
-	display: none !important;
-}
-
-.registerColumn input.text,
-.registerColumn select
-{
-	width: 170px;
-}
-
-.registerColumn div.input
-{
-	margin: 10px 0;
-}
-
-.step .stepTitle
-{
-	border-width: 1px;
-	border-radius: 5px;
-	line-height: 30px;
-	border-color: lightgreen;
-}
-
-.step.step-incomplete .stepTitle
-{
-	border-color: inherit;
-}
-
-.step .stepTitle h2
-{
-	margin: 0;
-	padding: 0;
-	border: 0;
+	opacity: 0.6;
 }
 
 .onePageCheckout-index .step
@@ -2156,10 +2118,15 @@ fieldset.eavGroup
 	margin-right: 1em;
 }
 
-.onePageCheckout-index .completeOverview h2
+.onePageCheckout-index #checkout-right h2
 {
 	margin-top: 0;
 	padding-top: 0;
+}
+
+.amountCalculcation
+{
+	white-space: nowrap;
 }
 
 /******* tabs *********/
