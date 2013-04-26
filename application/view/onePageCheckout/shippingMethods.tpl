@@ -36,17 +36,17 @@
 			<div class="notAvailable">
 				<p>{t _no_shipping_address_provided}</p>
 			</div>
-
-			{if $preview_shipping_methods}
-				<div class="stepPreview">
-				{foreach from=$preview_shipping_methods item=method}
-					<div class="shippingPreview">
-						{$method.ShippingService.name_lang}
-						({$method.formattedPrice[$method.costCurrency]})
-					</div>
-				{/foreach}
-				</div>
-			{/if}
 		</div>
+
+		{if $preview_shipping_methods}
+			<div class="stepPreview">
+			{foreach from=$preview_shipping_methods item=method}
+				<div class="shippingPreview">
+					{$method.ShippingService.name_lang}
+					({$method.formattedPrice[$method.costCurrency]})
+				</div>
+			{/foreach}
+			</div>
+		{/if}
 	</div>
 </div>
