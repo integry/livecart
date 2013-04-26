@@ -12,7 +12,13 @@
  */
 function smarty_function_renderBlock($params, Smarty_Internal_Template $smarty)
 {
-	return $smarty->getApplication()->getBlockContent($params['block']);
+	$block = $params['block'];
+	if (substr($block, -1) == '}')
+	{
+		$block = substr($block, 0, -1);
+	}
+
+	return $smarty->getApplication()->getBlockContent($block);
 }
 
 ?>

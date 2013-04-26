@@ -890,6 +890,11 @@ div.review .ratingBreakdown
 	font-size: larger;
 }
 
+select.quantity
+{
+	width: auto;
+}
+
 /*****************************
 	Review page
 *****************************/
