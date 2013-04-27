@@ -32,6 +32,30 @@ jQuery(function()
 	// pagination elements
 	jQuery('ul.pagination li.disabled a').click(function(e) { e.preventDefault(); });
 
+	// shopping cart drop down
+	jQuery('#topCart a.dropdown-toggle').mouseover(function(e)
+	{
+		var menu = jQuery(this).closest('.btn-group').find('.dropdown-menu');
+
+		if (menu.is(':visible') && menu.text())
+		{
+			return;
+		}
+
+		menu.hide();
+		new LiveCart.AjaxUpdater(Router.createUrl('order', 'ajaxCart'), menu, this, null, function()
+		{
+			menu.show();
+		});
+	});
+
+	jQuery('#topCart').mouseleave(function(e)
+	{
+		console.log(this);
+		jQuery(this).find('.dropdown-menu').hide();
+	});
+
+
 });
 
 ConfirmationMessage = Class.create();
@@ -1287,7 +1311,6 @@ function evenHeights(selector)
 
 			if (!el.hasClass('progressIndicator'))
 			{
-				console.log(el.attr('class'));
 				return;
 			}
 

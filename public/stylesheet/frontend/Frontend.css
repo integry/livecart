@@ -259,7 +259,6 @@ ul.downloadFile li
 }
 
 /* right side background images */
-#smallCart a.checkout,
 .proceedToCheckout,
 .websiteUrl a
 {
@@ -346,11 +345,6 @@ tr.odd td, tr.even td
 	z-index: 50;
 	position: relative;
 	width: 100%;
-}
-
-#smallCart a.checkout
-{
-	background: url(../../image/silk/gif/cart_go.gif) center right no-repeat;
 }
 
 #logoContainer
@@ -1322,7 +1316,7 @@ tr.topLine td
 
 #miniCartContents
 {
-	padding-bottom: 0.5em;
+	padding: 10px;
 	font-size: 85%;
 }
 
@@ -1334,9 +1328,7 @@ tr.topLine td
 
 .miniCartTotal
 {
-	border-top-width: 1px;
 	text-align: center;
-	padding: 0.5em;
 }
 
 /***************************

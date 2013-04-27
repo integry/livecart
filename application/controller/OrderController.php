@@ -675,6 +675,14 @@ class OrderController extends FrontendController
 		return new BlockResponse('order', $this->order->toArray());
 	}
 
+	public function ajaxCart()
+	{
+		$this->loadLanguageFile('Order');
+		$this->order->loadAll();
+		$this->order->getTotal(true);
+		return new BlockResponse('order', $this->order->toArray());
+	}
+
 	private function addProductToCart($id, $prefix = '')
 	{
 		if ($prefix && !$this->request->get($prefix . 'count'))

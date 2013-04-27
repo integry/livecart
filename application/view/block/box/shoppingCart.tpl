@@ -2,7 +2,7 @@
 
 	<div class="btn-toolbar pull-right">
 
-	<div class="btn-group">
+	<div class="btn-group" id="topAccount">
 		<a class="btn dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=user action=index}">
 			<span class="glyphicon glyphicon-user"></span>
 			{t _your_account}
@@ -21,7 +21,7 @@
 	{if 'ENABLE_CART'|config}
 		{if ($request.controller == 'product') || ($request.controller == 'category')}{assign var="returnPath" value=true}{/if}
 
-		<div class="btn-group">
+		<div class="btn-group" id="topCart">
 			<a class="btn dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=order returnPath=$returnPath}">
 				<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
 				{t _shopping_cart}
@@ -29,11 +29,7 @@
 				<span class="caret"></span>
 			</a>
 
-			<ul class="dropdown-menu">
-				<li class="checkout">
-					<a href="{link controller=checkout returnPath=true}" class="checkout">{t _checkout}</a>
-				</li>
-			</ul>
+			<ul class="dropdown-menu"></ul>
 		</div>
 	{/if}
 	</div>

@@ -7,7 +7,6 @@
 
 {if $fields.ADDRESS2}
 	{input name="`$prefix`address2"}
-		{label}{/label}
 		{textfield}
 	{/input}
 {/if}

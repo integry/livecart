@@ -1,0 +1,1 @@
+<li>{include file="order/miniCartBlock.tpl" hidePanel=true}</li>

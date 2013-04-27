@@ -208,8 +208,6 @@ LiveCart.AjaxRequest.prototype = {
 		{
 			this.adjustIndicatorVisibility = !jQuery(indicatorId).is(':visible');
 
-			console.log(indicatorId, jQuery(indicatorId).is(':visible'));
-
 			if (('SELECT' == indicatorId.tagName) || (('INPUT' == indicatorId.tagName) && (('submit' == indicatorId.type))))
 			{
 				var selectIndicator = document.createElement('span');
@@ -612,6 +610,8 @@ LiveCart.AjaxUpdater.prototype = {
 		}
 
 		document.body.style.cursor = 'progress';
+
+		var containerId = jQuery(containerId)[0];
 
 		var ajax = new Ajax.Updater({success: containerId},
 						 url,
