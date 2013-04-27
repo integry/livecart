@@ -1,5 +1,3 @@
-var jQ = jQuery;
-
 /**
  *	@author Integry Systems
  */
@@ -933,7 +931,7 @@ Frontend = {}
 /* Create or get popup container */
 Frontend.getPopup = function(containerID)
 {
-	var $ = jQ;
+	var $ = jQuery;
 
 	return $('#' + containerID)[0] ||
 			(function()
@@ -942,8 +940,6 @@ Frontend.getPopup = function(containerID)
 				document.body.appendChild(d);
 				d.id = containerID;
 
-				$(d).jqm({modal: true, closeClass: 'cancel'});
-
 				return d;
 			}
 			)();
@@ -951,7 +947,7 @@ Frontend.getPopup = function(containerID)
 
 Frontend.initColorOptions = function(containerID)
 {
-	var $ = jQ;
+	var $ = jQuery;
 
 	var c = $('#' + containerID);
 	c.addClass('colorOptionsWidget');
@@ -1021,7 +1017,7 @@ function hexToRGBArray(color)
 
 Frontend.initCategory = function()
 {
-	var $ = jQ;
+	var $ = jQuery;
 	$('.quickShopMenu').each(function(index, node)
 	{
 		$(node.parentNode).mouseenter(function()
@@ -1049,25 +1045,18 @@ Frontend.initCategory = function()
 			new LiveCart.AjaxRequest(e.target.href, e.target,
 				function(oR)
 				{
-					$(el).html(oR.responseText)
-						 .addClass('jqmWindow')
-						 .jqmShow()
-						 .center();
+					$(el).html(oR.responseText).find('.modal').modal();
 
 					Frontend.AjaxInit(el);
 
+					/*
 					$('img', el).load(function()
 					{
 						$(el).center();
 					});
+					*/
 
 					$(el).find('.productPrev, .productNext').click(loadQuickShop);
-
-					$('.jqmOverlay, #quickShopContainer .popupClose').click(function(e)
-					{
-						e.preventDefault();
-						$('#quickShopContainer').jqmHide();
-					});
 				});
 		}
 
@@ -1089,7 +1078,6 @@ Frontend.initCategory = function()
 		}
 	}
 }
-
 
 Frontend.SmallCart = function(value, params)
 {
@@ -1159,34 +1147,30 @@ Frontend.Ajax.Message = function(container)
 
 Frontend.ShowCartPopup = function(req)
 {
-	var $ = jQ;
+	var $ = jQuery;
 
 	var el = Frontend.getPopup('shoppingCartContainer');
-	$(el).html(req.popupCart)
-		 .addClass('jqmWindow')
-		 .jqmShow();
+	$(el).html(req.popupCart).find('.modal').modal();
 
 	$('#cart', el).tableScroll({height: 400});
 
-	$(el).center();
-
-	$('.jqmOverlay, #shoppingCartContainer .continueShopping').click(function(e)
+	$('#shoppingCartContainer .continueShopping, .modal-backdrop').click(function(e)
 	{
 		e.preventDefault();
-		$('#shoppingCartContainer').jqmHide();
+		$('#shoppingCartContainer').find('.modal').modal('hide');
 	});
 }
 
 Frontend.Ajax.AddToCart = function(container)
 {
-	var $ = jQ;
+	var $ = jQuery;
 
 	$(container).find('a.addToCart').click(
 		function(e)
 		{
 			e.preventDefault();
 
-			new LiveCart.AjaxRequest(this.href, $(this.parentNode).find('.price')[0], function(oR)
+			new LiveCart.AjaxRequest(this.href, $(this.parentNode).find('.glyphicon')[0], function(oR)
 			{
 				Frontend.ShowCartPopup(oR.responseData);
 			});
@@ -1196,7 +1180,7 @@ Frontend.Ajax.AddToCart = function(container)
 
 Frontend.Ajax.AddToCartFromProductPage = function(container)
 {
-	var $ = jQ;
+	var $ = jQuery;
 
 	$('#mainInfo form', container).iframePostForm({complete: function(req)
 	{
@@ -1214,30 +1198,17 @@ Frontend.Ajax.AddToCartFromProductPage = function(container)
 
 Frontend.Ajax.AddToWishList = function(container)
 {
-	var handleClick = function(e)
+	jQuery('td.addToWishList, a.addToWishList', container).click(function(e)
 	{
 		e.preventDefault();
 		var a = Event.element(e);
 		new LiveCart.AjaxRequest(a.href, a, function () { jQuery(a).effect('highlight'); });
-	}
-
-	$A($(container).getElementsBySelector('a.addToWishList')).each(function(button)
-	{
-		Event.observe(button, 'click', handleClick);
-	});
-
-	$A($(container).getElementsBySelector('td.addToWishList a')).each(function(button)
-	{
-		Event.observe(button, 'click', handleClick);
 	});
 }
 
 Frontend.Ajax.AddToCompare = function(container)
 {
-	$A($(container).getElementsBySelector('a.addToCompare')).each(function(button)
-	{
-		button.onclick = Compare.add;
-	});
+	jQuery('a.addToCompare', container).click(Compare.add);
 }
 
 Frontend.AjaxInit = function(container)
@@ -1248,15 +1219,6 @@ Frontend.AjaxInit = function(container)
 	});
 }
 
-var FrontendToolbar = Class.create();
-FrontendToolbar.prototype = {
-	isBackend: false
-}
-
-if (window.FooterToolbar)
-{
-	FrontendToolbar.prototype = Object.extend(FooterToolbar.prototype, FrontendToolbar.prototype);
-};
 function evenHeights(selector)
 {
 	var currentTallest = 0,
@@ -1265,7 +1227,7 @@ function evenHeights(selector)
 		$el,
 		topPosition = 0;
 
-	var $ = jQ;
+	var $ = jQuery;
 
 	$(selector).addClass('firstPanel');
 
@@ -1302,3 +1264,44 @@ function evenHeights(selector)
 		}
 	});
 }
+
+(function($) {
+	$.fn.progressIndicator = function()
+	{
+		var el = $(this);
+
+		var classes = ['glyphicon-circle-arrow-right', 'glyphicon-circle-arrow-left', 'glyphicon-circle-arrow-up', 'glyphicon-circle-arrow-down'];
+
+		var switchClass = function()
+		{
+			var index = el.data('progress-index');
+			if (!index)
+			{
+				index = 0;
+			}
+
+			if (classes[index])
+			{
+				el.removeClass(classes[index]);
+			}
+
+			if (!el.hasClass('progressIndicator'))
+			{
+				console.log(el.attr('class'));
+				return;
+			}
+
+			index++;
+			if (index > classes.length - 1)
+			{
+				index = 0;
+			}
+			el.addClass(classes[index]);
+
+			el.data('progress-index', index);
+			window.setTimeout(switchClass, 50);
+		};
+
+		switchClass();
+	};
+})(jQuery);

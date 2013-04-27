@@ -251,6 +251,16 @@ abstract class ActiveRecordModel extends ActiveRecord
 	{
 		if (is_object($recordID))
 		{
+			if (!($recordID instanceof ActiveRecord))
+			{
+				return;
+			}
+
+			if ($recordID instanceof ARSerializableDateTime)
+			{
+				debug_zval_dump($recordID);
+			}
+
 			$recordID = $recordID->getID();
 		}
 

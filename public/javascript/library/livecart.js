@@ -195,20 +195,20 @@ LiveCart.AjaxRequest.prototype = {
 	{
 		if (!indicatorId && form)
 		{
-			var controls = form.down('fieldset.controls');
-			if (controls)
-			{
-				indicatorId = controls.down('.progressIndicator');
-			}
-			else
-			{
-				indicatorId = form.down('.progressIndicator');
-			}
+			var indicatorId = form.down('.btn');
+		}
+
+		var icon = jQuery(indicatorId).find('.glyphicon');
+		if (icon)
+		{
+			indicatorId = icon[0];
 		}
 
 		if (indicatorId && $(indicatorId))
 		{
-			this.adjustIndicatorVisibility = ($(indicatorId).style.visibility == 'hidden');
+			this.adjustIndicatorVisibility = !jQuery(indicatorId).is(':visible');
+
+			console.log(indicatorId, jQuery(indicatorId).is(':visible'));
 
 			if (('SELECT' == indicatorId.tagName) || (('INPUT' == indicatorId.tagName) && (('submit' == indicatorId.type))))
 			{
@@ -328,7 +328,7 @@ LiveCart.AjaxRequest.prototype = {
 		}
 		else
 		{
-			Element.hide(this.indicatorContainerId);
+			Element.show(this.indicatorContainerId);
 		}
 
 		$(this.indicatorContainerId).removeClassName('progressIndicator');
@@ -339,6 +339,7 @@ LiveCart.AjaxRequest.prototype = {
 		if (this.indicatorContainerId)
 		{
 			$(this.indicatorContainerId).addClassName('progressIndicator');
+			jQuery($(this.indicatorContainerId)).progressIndicator();
 			Element.show(this.indicatorContainerId);
 		}
 	},

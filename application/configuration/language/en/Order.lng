@@ -11,6 +11,7 @@ _empty_basket=Your shopping basket is empty
 _your_basket=Your Shopping Basket
 _item_count=There are [quant,_1,item,items,no items] in your shopping basket.
 _estimated_shipping=Estimated Shipping Cost
+_item_added_title=Shopping Basket
 
 _ship_to_multiple=Ship to multiple addresses
 _ship_to_single=Ship to a single address

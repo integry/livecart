@@ -83,9 +83,11 @@
 {literal}
 <script type="text/javascript">
 
+/*
 	var detailedExport = $('detailedExportContainer_{/literal}{$orderGroupID}{literal}');
 	var menu = detailedExport.up('.tabPageContainer').down('.activeGridColumns').down('.menu', 1);
 	menu.insertBefore(detailedExport, menu.firstChild);
+*/
 
 	var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'),
 													   window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'],

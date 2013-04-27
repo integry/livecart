@@ -1759,6 +1759,12 @@ span.progressIndicator
 	padding: 8px;
 }
 
+.glyphicon.progressIndicator
+{
+	padding: 0;
+	background-image: none;
+}
+
 input.progressIndicator.text
 {
 	background-position: right center;
@@ -2110,7 +2116,7 @@ fieldset.eavGroup
 
 .stepPreview
 {
-	padding-top: 4px;
+	padding: 0 0 7px 15px;
 }
 
 .onePageCheckout-index .step.opened .stepPreview
@@ -2138,122 +2144,6 @@ fieldset.eavGroup
 h2 small
 {
 	display: none;
-}
-
-/***************************
-	Footer panel
-***************************/
-
-#footpanel
-{
-	position: fixed;
-	bottom: 0; left: 0;
-	z-index: 1000; /*--Keeps the panel on top of all other elements--*/
-	background: #e3e2e2;
-	border: 1px solid #c3c3c3;
-	border-bottom: none;
-	width: 50%;
-	margin: 0 25%;
-	-moz-border-radius: 5px 5px 0 0;
-	display: none;
-}
-
-#mainpanel
-{
-	padding: 0; margin: 0;
-	float: left;
-	width: 100%;
-	list-style: none;
-	border-top: 1px solid #fff; /*--Gives the bevel feel on the panel--*/
-	font-size: 1.1em;
-	-moz-border-radius: 5px 5px 0 0;
-}
-
-#mainpanel > li > a
-{
-	padding: 5px;
-	float: left;
-	text-indent: -9999px; /*--For text replacement - Shove text off of the page--*/
-	height: 16px; width: 16px;
-	text-decoration: none;
-	color: #333;
-	position: relative;
-}
-
-#mainpanel > li > a:hover
-{
-	background-color: #fff !important;
-}
-
-html #footpanel .subpanel ul li a.active
-{ /*--Active state when sub-panel is open--*/
-	background-color: #fff;
-	height: 17px;
-	margin-top: -2px; /*--Push it up 2px to attach the active button to sub-panel--*/
-	border: 1px solid #555;
-	border-top: none;
-	z-index: 200; /*--Keeps the active link on top of the sub-panel--*/
-	position: relative;
-}
-
-#footpanel .subpanel ul li div a { /*--Reset link style for sub-panel links--*/
-	text-indent: 0;
-	width: auto;
-	height: auto;
-	padding: 0;
-	float: none;
-	color: #00629a;
-	position: static;
-}
-
-#footpanel .subpanel ul li div a:hover
-{
-	text-decoration: underline;
-}
-
-#footpanel .subpanel
-{
-	position: absolute;
-	left: 0; bottom: 27px;
-	display: none;	/*--Hide by default--*/
-	width: 160px;
-	border: 1px solid #555;
-	background: #fff;
-	overflow: hidden;
-	z-index:60000;
-}
-
-#footpanel .subpanel h3 {
-	background: #4C5D97;
-	padding: 5px 10px;
-	color: #fff;
-	font-size: 14px;
-	cursor: pointer;
-}
-
-#footpanel .subpanel h3 span { /*--Right aligned "-" icon--*/
-	font-size: 1.5em;
-	float: right;
-	line-height: 0.6em;
-	font-weight: normal;
-}
-
-#footpanel .subpanel ul{
-	padding: 0; margin: 0;
-	background: #fff;
-	width: 100%;
-	overflow: auto;
-	padding-bottom: 2px;
-}
-
-#footpanel .subpanel li{
-	float: none; /*--Reset float--*/
-	display: block;
-	padding: 0; margin: 0;
-	overflow: hidden;
-	clear: both;
-	background: #fff;
-	position: static;  /*--Reset relative positioning--*/
 }
 
 .productRecurring td.withRadio
@@ -2401,57 +2291,4 @@ html #footpanel .subpanel ul li a.active
 #shoppingCartContainer .tablescroll_head
 {
 	margin-right: 15px;
-}
-
-/**** modal dialogs ****/
-
-.modalTitle
-{
-	font-size: 2em;
-	font-weight: bold;
- 	border-bottom-width: 1px;
-    margin-bottom: 0.5em;
-    padding-bottom: 4px;
-}
-
-.modalClose
-{
-	width: 16px;
-	height: 16px;
-	position: absolute;
-	right: 10px;
-	top: 10px;
-	background-image: url(../../../../image/silk/cancel.png);
-	cursor: pointer;
-}
-
-.jqmWindow {
-    display: none;
-
-    position: fixed;
-    top: 17%;
-    left: 50%;
-
-    min-width: 450px;
-
-    background-color: #EEE;
-    color: #333;
-    border: 1px solid black;
-    padding: 12px;
-}
-
-.jqmOverlay { background-color: #000; }
-
-/* Background iframe styling for IE6. Prevents ActiveX bleed-through (<select> form elements, etc.) */
-* iframe.jqm {position:absolute;top:0;left:0;z-index:-1;
-        width: expression(this.parentNode.offsetWidth+'px');
-        height: expression(this.parentNode.offsetHeight+'px');
-}
-
-/* Fixed posistioning emulation for IE6
-     Star selector used to hide definition from browsers other than IE6
-     For valid CSS, use a conditional include instead */
-* html .jqmWindow {
-     position: absolute;
-     top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
 }

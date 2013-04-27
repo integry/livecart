@@ -6,7 +6,7 @@
 	</div>
 {/if}
 
-<table class="table table-striped shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
+<table class="table table-striped table-condensed shipment{if $order.isMultiAddress} multiAddress{/if}" id="payItems">
 	<thead>
 		<tr>
 			{if !$hideSku}<th class="sku">{t _sku}</th>{/if}

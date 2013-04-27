@@ -121,7 +121,7 @@ Frontend.OnePageCheckout.prototype =
 		}
 
 		var el = e ? Event.element(e) : form.down('button[type=submit]');
-		new LiveCart.AjaxRequest(form, jQuery(el).parent().find('.progressIndicator')[0], this.handleFormRequest(form));
+		new LiveCart.AjaxRequest(form, el, this.handleFormRequest(form));
 	},
 
 	updateCart: function(e)
