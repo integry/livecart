@@ -17,9 +17,9 @@
 	{includeCss file="backend/Backend.css" front=true}
 	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
 	{includeCss file="library/jquery/jquery-plugins.css" front=true}
-	{compiledCss glue=true nameMethod=hash}
 
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
+	{compiledCss glue=true nameMethod=hash}
 
 	{if !'DISABLE_WYSIWYG'|config}
 		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
@@ -38,7 +38,7 @@
 	{includeJs file="backend/BackendToolbar.js"}
 
 	{compiledJs glue=true nameMethod=hash}
-	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 
 	{literal}
 	<script language="javascript" type="text/javascript">

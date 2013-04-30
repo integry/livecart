@@ -70,26 +70,26 @@
 
 	<span class="bulkValues" style="display: none;">
 		<span class="addRelated">
-			{t _enter_sku}: {textfield class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
+			{t _enter_sku}: {textfield noFormat=true class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
 		</span>
 		<span class="move">
 			<input type="hidden" name="categoryID" />
 		</span>
 
 		<span class="inc_price">
-			{textfield id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
+			{textfield noFormat=true id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
 			{checkbox id="inc_quant_price_`$categoryID`" name="inc_quant_price"}
 			<label for="inc_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
 		<span class="multi_price">
-			* {textfield id="multi_price_`$categoryID`" class="text number" name="multi_price_value"}
+			* {textfield noFormat=true id="multi_price_`$categoryID`" class="text number" name="multi_price_value"}
 			{checkbox id="multi_quant_price_`$categoryID`" name="multi_quant_price"}
 			<label for="multi_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
 		<span class="div_price">
-			/ {textfield id="multi_price_`$categoryID`" class="text number" name="div_price_value"}
+			/ {textfield noFormat=true id="multi_price_`$categoryID`" class="text number" name="div_price_value"}
 			{checkbox id="multi_quant_price_`$categoryID`" name="div_quant_price"}
 			<label for="multi_quant_price_{$categoryID}" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
@@ -103,18 +103,18 @@
 
 		<span class="specFieldValueContainer"></span>
 
-		{textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
-		{textfield id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
-		{textfield id="massForm_price_`$categoryID`" class="text number" name="price"}
-		{textfield id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
-		{textfield id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
-		{textfield id="massForm_shippingWeight_`$categoryID`" class="text number" name="set_shippingWeight"}
-		{textfield id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
-		{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
-		{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
-		{selectfield id="massForm_theme_`$categoryID`" name="theme" options=$themes}
-		{selectfield id="massForm_shippingClass_`$categoryID`" name="shippingClass" options=$shippingClasses}
-		{selectfield id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
+		{textfield noFormat=true id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
+		{textfield noFormat=true id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
+		{textfield noFormat=true id="massForm_price_`$categoryID`" class="text number" name="price"}
+		{textfield noFormat=true id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
+		{textfield noFormat=true id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
+		{textfield noFormat=true id="massForm_shippingWeight_`$categoryID`" class="text number" name="set_shippingWeight"}
+		{textfield noFormat=true id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
+		{textfield noFormat=true id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
+		{textfield noFormat=true id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
+		{selectfield noFormat=true id="massForm_theme_`$categoryID`" name="theme" options=$themes}
+		{selectfield noFormat=true id="massForm_shippingClass_`$categoryID`" name="shippingClass" options=$shippingClasses}
+		{selectfield noFormat=true id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
 	</span>
 
 	<input type="submit" value="{tn _process}" class="submit" />

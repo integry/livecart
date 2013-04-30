@@ -93,8 +93,10 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 													  'action' => 'autoComplete',
 													  'query' => 'field=' . $acparams['field']), true);
 
-		$content .= '<span id="autocomplete_indicator_' . $params['id'] . '" class="progressIndicator" style="display: none;"></span>';
-		$content .= '<div id="autocomplete_' . $params['id'] . '" class="autocomplete"></div>';
+		if (empty($acparams['field']))
+		{
+			$acparams['field'] = 'query';
+		}
 
 		$content .= '<script type="text/javascript">
 						jQuery("#' . $params['id'] . '").typeahead({
