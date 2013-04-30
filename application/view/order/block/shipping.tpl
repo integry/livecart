@@ -8,6 +8,6 @@
 			{/if}
 		</td>
 		<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
-		{$GLOBALS.cartUpdate|@array_shift}
+		{include file="order/block/cartUpdate.tpl"}
 	</tr>
 {/if}

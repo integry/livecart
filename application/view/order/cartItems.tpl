@@ -3,15 +3,13 @@
 	{assign var="extraColspanSize" value=1+$extraColspanSize}
 {/if}
 
-{capture assign="cartUpdate"}
-	<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
-{/capture}
-{assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
-{php}$GLOBALS['cartUpdate'] = $smarty->getTemplateVars('cartUpdate'); $smarty->assignByRef('GLOBALS', $GLOBALS);{/php}
-
 {form action="controller=order action=update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
-<h2>{t _cart_items}</h2>
-<table id="cart">
+
+{if $cart.wishListItems}
+	<h2>{t _cart_items}</h2>
+{/if}
+
+<table id="cart" class="table table-striped">
 	<thead>
 		<tr>
 			{section name="colspan" start=0 loop=$extraColspanSize+3}
@@ -21,9 +19,13 @@
 			<th class="cartQuant">{t _quantity}</th>
 		</tr>
 	</thead>
+	
+	{if !$hideNav}
 	<tfoot>
 		{include file="order/block/navigation.tpl"}
 	</tfoot>
+	{/if}
+	
 	<tbody>
 		{include file="order/block/items.tpl"}
 		{include file="order/block/discounts.tpl"}

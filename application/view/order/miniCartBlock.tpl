@@ -20,8 +20,7 @@
 				<div>{t _total}: <span class="miniCartTotalAmount">{$order.formattedTotal[$order.Currency.ID]}</span></div>
 				<a href="{link controller=checkout}" class="btn btn-danger checkout">
 					{t _checkout}
-
-					</a>
+				</a>
 			</div>
 		</div>
 

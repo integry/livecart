@@ -1,17 +1,17 @@
-<a class="cancel cartPopupClose popupClose" href="#">{t _close}</a>
-<h1>{t _your_basket}</h1>
+{capture assign="body"}
+	{include file="order/changeMessages.tpl"}
 
-{include file="order/changeMessages.tpl"}
+	{if !$cart.cartItems}
+		<div class="emptyBasket">
+			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
+		</div>
+	{else}
+		{include file="order/cartItems.tpl" hideNav=true}
+	{/if}
+{/capture}
 
-{if !$cart.cartItems}
-	<div class="emptyBasket">
-		{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
-	</div>
-{else}
-	{include file="order/cartItems.tpl"}
-{/if}
+{capture assign="footer"}
+	{include file="order/block/navigationButtons.tpl" hideTos=true}
+{/capture}
 
-<script type="text/javascript">
-	new Order.OptionLoader($('cart'));
-</script>
-
+{include file="block/modal.tpl" title="_your_basket" body=$body footer=$footer}

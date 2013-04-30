@@ -102,8 +102,6 @@ label.cancel,
 .readAllReviews,
 div.checkout a,
 .subTotalCalc,
-.continueShopping,
-.proceedToCheckout,
 .shipment .subTotal,
 #cart .subTotal,
 #payTotal .subTotal,
@@ -165,7 +163,6 @@ ul.productList .image,
 #moreImages,
 #rateProduct table td,
 .cartQuant,
-.cartPrice,
 .cartImage,
 #cartUpdate,
 #couponCodes .container,
@@ -217,7 +214,6 @@ img.calendar_button
 #bundle .pricingInfo,
 .bundleList, .bundleInfo,
 .reviewIndex #ratingSummary,
-.continueShopping,
 .checkoutHeader h1,
 #billingAddressColumn,
 #shippingSelector,
@@ -239,7 +235,6 @@ div.addressBlock,
 /* right floats */
 div.review .ratingBreakdown,
 .checkoutButtons,
-.proceedToCheckout,
 #checkoutProgress,
 .returningCustomer,
 .noteDate,
@@ -250,20 +245,11 @@ div.review .ratingBreakdown,
 }
 
 /* links/menus with background images */
-.continueShopping,
 #userMenu li,
 a.invoice, a.viewOrder, a.reorder, a.messages,
 ul.downloadFile li
 {
 	padding-left: 22px;
-}
-
-/* right side background images */
-.proceedToCheckout,
-.websiteUrl a
-{
-	padding-right: 22px;
-    background-position: center right;
 }
 
 /* background color 1: light grey */
@@ -294,7 +280,6 @@ tr.even td,
 /* light yellow background */
 .highlight,
 span.templateLocator span.templateName,
-.proceedToCheckout,
 #payTotal div,
 #testHandlerWarning,
 #checkoutProgress a.active
@@ -979,11 +964,6 @@ select.quantity
 	width: 50px;
 }
 
-.continueShopping
-{
-    background-image: url(../../image/silk/gif/resultset_previous.gif);
-}
-
 .checkoutButtons
 {
     width: 300px;
@@ -999,18 +979,8 @@ select.quantity
 
 .multiAddressCheckout
 {
-	clear: right;
 	display: block;
 	padding-top: 1em;
-}
-
-.proceedToCheckout
-{
-    background-image: url(../../image/silk/gif/cart_go.gif);
-	background-position: 97% center;
-    border-width: 1px;
-    padding: 5px;
-    padding-right: 27px;
 }
 
 select.multiAddress
@@ -1179,6 +1149,7 @@ td.productNameRow
 .shipment .subTotal, #cart .subTotal
 {
 	white-space: nowrap;
+	font-size: larger;
 }
 
 .subTotalCaption, .shipment td.tax

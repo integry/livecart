@@ -1,7 +1,7 @@
-<a href="{link route=$return}" class="continueShopping"><span><span><span><span>{t _continue_shopping}</span></span></span></span></a>
+<a href="{link route=$return}" class="btn btn-primary pull-left continueShopping"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
 {if $cart.isOrderable}
 	<div class="checkoutButtons">
-		<a href="{link controller=checkout}" class="proceedToCheckout" onclick="return Order.submitCartForm(this);"><span><span><span><span>{t _proceed_checkout}</span></span></span></span></a>
+		<a href="{link controller=checkout}" class="btn btn-danger pull-right proceedToCheckout" onclick="return Order.submitCartForm(this);">{t _proceed_checkout} <span class="glyphicon glyphicon-arrow-right"></span></a>
 
 		<div class="clear"></div>
 
