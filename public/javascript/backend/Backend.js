@@ -2321,8 +2321,8 @@ TabCustomize.prototype =
 
 Backend.initWidgets = function()
 {
-	jQuery('.fg-button').live('mouseover', function() { jQuery(this).data('isActive', jQuery(this).hasClass('ui-state-active')).addClass('ui-state-hover').removeClass('ui-state-active'); })
-	jQuery('.fg-button').live('mouseout', function()
+	jQuery(document).on('mouseover', '.fg-button', function() { jQuery(this).data('isActive', jQuery(this).hasClass('ui-state-active')).addClass('ui-state-hover').removeClass('ui-state-active'); })
+	jQuery(document).on('mouseout', '.fg-button', function()
 		{
 			jQuery(this).removeClass('ui-state-hover');
 			if (jQuery(this).data('isActive'))

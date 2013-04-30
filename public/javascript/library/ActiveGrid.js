@@ -2419,7 +2419,7 @@ var forEach = function(object, block, context) {
 	SIGNATURE = "CRZ",
 	I = parseInt,
 	M = Math,
-	ie = $.browser.msie,
+	ie = false,
 	width = "width",
 	attr = "attr",
 	divClass='<div class="',

@@ -19,12 +19,12 @@ function smarty_function_loadJs($params, Smarty_Internal_Template $smarty)
 	$files = array();
 
 	$files[] = "library/jquery/jquery-min.js";
+	$files[] = "library/jquery/jquery.ui.core.min.js";
+	$files[] = "library/jquery/jquery.ui.effect.min.js";
 	$files[] = "library/jquery/plugins.js";
 	$files[] = "library/prototype/prototype.js";
 	$files[] = "library/livecart.js";
-	$files[] = "library/FooterToolbar.js"; // need to be before Frontend.js
 	$files[] = "frontend/Frontend.js";
-	$files[] = "library/lightbox/lightbox.js";
 
 	if (isset($params['form']))
 	{

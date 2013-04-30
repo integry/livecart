@@ -40,7 +40,6 @@
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}
-	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
 
 	{if {isRTL}}
 		{includeCss file="frontend/FrontendRTL.css"}
@@ -60,7 +59,6 @@
 
 	<!-- JavaScript includes -->
 	{loadJs form=true}
-	{includeJs file="library/jquery/jquery-ui.js"}
 
 	{compiledJs glue=true nameMethod=hash}
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>

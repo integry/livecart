@@ -15,7 +15,10 @@
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
-	{includeCss file="backend/theme/redmond/jquery-ui.css" front=true}
+	
+	{* includeCss file="backend/theme/redmond/jquery-ui.css" front=true *}
+	
+	{includeCss file="library/jquery/jquery-ui.css" front=true}
 	{includeCss file="library/jquery/jquery-plugins.css" front=true}
 
 	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
