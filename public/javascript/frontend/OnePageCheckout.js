@@ -210,7 +210,7 @@ Frontend.OnePageCheckout.prototype =
 	{
 		jQuery('#sameAsBilling').change(function()
 		{
-			jQuery('#shippingAddressForm').toggle(jQuery(this).attr('checked') != 'checked');
+			jQuery('#shippingAddressForm').toggle(jQuery(this).is(':checked'));
 		});
 
 		jQuery('#sameAsBilling').change();
