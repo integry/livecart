@@ -12,29 +12,26 @@
 	<fieldset>
 		<legend>{t _presentation}</legend>
 
-		<div style="float: left; width: 550px;">
-			<p>
-				<label for="productTheme_{$product.ID}">{tip _theme}:</label>
-				{selectfield name="theme" id="productTheme_`$product.ID`" options=$themes}
-			</p>
-		</div>
+		{input name="isVariationImages"}
+			{label}{tip _theme}:{/label}
+			{selectfield id="productTheme_`$product.ID`" options=$themes}
+		{/input}
 
-		<div style="float: left;" id="productThemePreview_{$product.ID}"></div>
-		<div class="clear"></div>
+		<div id="productThemePreview_{$product.ID}"></div>
 
-		<p>
-			<label></label>
-			{checkbox name="isVariationImages" class="checkbox" id="product_`$cat`_`$product.ID`_isVariationImages"}
-			<label for="product_{$cat}_{$product.ID}_isVariationImages" class="checkbox">{tip _show_variation_images}</label>
-		</p>
+		{input name="isVariationImages"}
+			{checkbox}
+			{label}{tip _show_variation_images}{/label}
+		{/input}
 
-		<p>
-			<label></label>
-			{checkbox name="isAllVariations" class="checkbox" id="product_`$cat`_`$product.ID`_isAllVariations"}
-			<label for="product_{$cat}_{$product.ID}_isAllVariations" class="checkbox">{tip _allow_all_variations}</label>
-		</p>
+		{input name="isAllVariations"}
+			{checkbox}
+			{label}{tip _allow_all_variations}{/label}
+		{/input}
 	</fieldset>
+
 	</td><td>
+
 	<div class="productForm {if 1 == $product.type}intangible{/if}">
 		{include file="backend/product/form/inventory.tpl" product=$product cat=$product.categoryID baseCurrency=$baseCurrency form=$productForm}
 		{include file="backend/product/form/pricing.tpl" product=$product cat=$product.categoryID baseCurrency=$baseCurrency}

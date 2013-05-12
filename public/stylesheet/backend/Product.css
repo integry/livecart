@@ -216,8 +216,9 @@ div.quantityPricing .groupLabel
 
 .quantityPricing .number
 {
-	width: 30px;
+	width: 50px;
 	font-size: smaller;
+	padding: 4px;
 }
 
 .quantityRow, .groupColumn

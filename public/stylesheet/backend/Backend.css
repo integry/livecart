@@ -217,7 +217,7 @@ html, body{
 #pageHeader
 {
     position: relative;
-    z-index: 1000;
+    z-index: 50;
     background: url(../../image/backend/layout/header_shade.png) repeat-x left bottom;
     margin-right: 1px;
 }
@@ -322,7 +322,7 @@ html, body{
 	position: absolute;
 	bottom: 3px;
 	left: 210px;
-	z-index: 1;
+	z-index: 51;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -745,7 +745,7 @@ br.clear, div.clear
 	border-bottom: none;
 	width: 94%;
 	margin: 0 3%;
-	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
 }
 
 #mainpanel
@@ -756,7 +756,7 @@ br.clear, div.clear
 	list-style: none;
 	border-top: 1px solid #fff; /*--Gives the bevel feel on the panel--*/
 	font-size: 1.1em;
-	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
 }
 
 #footpanel ul li.dropButton
@@ -1088,7 +1088,7 @@ form fieldset.group div
 fieldset
 {
     margin: 1em 0;
-    padding: 1em;
+    padding-right: 1em;
     background: #fbfbfb;
     margin: auto 0;
     margin-bottom: 10px;
@@ -1105,15 +1105,7 @@ legend
 	background-color: #fff;
 	border: 1px solid #ddd;
 	font-family: "Trebuchet MS";
-}
-
-label
-{
-    float: left;
-    width: 170px;
-    font-size: 14px;
-    overflow: hidden;
-    padding-bottom: 1px;
+	line-height: 30px;
 }
 
 div.input.checkbox input.checkbox
@@ -1142,27 +1134,6 @@ label.cancel
     padding-left: 0px;
 }
 
-.clearfix:after {
-	content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-	line-height: 0;
-	height: 0;
-}
-
-.clearfix {
-	display: inline-block;
-}
-
-html[xmlns] .clearfix {
-	display: block;
-}
-
-* html .clearfix {
-	height: 1%;
-}
-
 p.required label, fieldset.required label, label.required
 {
   	font-weight: bold;
@@ -1182,7 +1153,6 @@ p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
 
 input, select, file, form.other
 {
-    width: 15em;
     font-size: 16px;
     padding: 2px;
     vertical-align: middle;
@@ -1192,11 +1162,6 @@ input, select, file, form.other
 option
 {
 	padding-right: 1em;
-}
-
-select
-{
-    width: 15.5em;
 }
 
 select.country option, select.state option
@@ -1227,7 +1192,6 @@ optgroup
 textarea, .disabledTextarea
 {
     padding: 2px;
-    width: 40em;
     height: 10em;
     font-size: 14px;
     font-family: arial, verdana;
@@ -1249,7 +1213,7 @@ input.submit, input.reset
 	font-size: 10px;
 	padding: 3px;
 	font-weight: bold;
-	-moz-border-radius: 5px;
+	border-radius: 5px;
 	border-width: 0;
 }
 
@@ -1310,11 +1274,6 @@ label, input, select, form .other, textarea, .disabledTextarea
     margin-bottom: 5px;
 }
 
-select
-{
-    padding: 0 !important;
-}
-
 a.cancel, a.menu
 {
  	color: red;
@@ -1366,23 +1325,12 @@ a.progressIndicator
 
 /* textarea container */
 div.textarea,
-.multiValueSelect,
 .input-append.date,
 span.mceEditor
 {
  	margin-bottom: 7px;
  	display: inline-block;
  	vertical-align: top;
-}
-
-input.wide
-{
-  	width: 35em;
-}
-
-.wider
-{
-	width: 50em;
 }
 
 input.money, input.number
@@ -1405,6 +1353,11 @@ label.wide
 select.narrow
 {
     width: 5em;
+}
+
+.form-horizontal .control-group.checkbox
+{
+	margin-left: 180px;
 }
 
 label.param,
@@ -1436,7 +1389,8 @@ td.param
 
 .UnitConventer_Root input
 {
-	width: 2em;
+	width: 4em;
+	margin-right: 0.5em;
 }
 
 a.UnitConventer_SwitchUnits
@@ -1611,7 +1565,7 @@ fieldset.group p
 .tabContainer
 {
 	position: relative;
-	z-index: 200;
+	z-index: 49;
 }
 
 .tabs li *
@@ -1711,7 +1665,7 @@ fieldset.group p
 
 ul.languageFormTabs
 {
-    height: 21px;
+    height: 31px;
     width: 100%;
     display: block;
 	position: absolute;
@@ -2107,7 +2061,7 @@ legend,
 .activeGrid_massActionProgress .container,
 .wizardProgress li
 {
-	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 li.activeList_even, li.activeList_odd,
@@ -2118,25 +2072,25 @@ div.yellowMessage div, div.redMessage div, div.bugMessage div,
 .activeGrid .filterMenu,
 #langMenu
 {
-	-moz-border-radius: 7px;
+	border-radius: 7px;
 }
 
 ul.languageFormTabs li, .tabList li, .tabs li
 {
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
+	border-radius-topleft: 4px;
+	border-radius-topright: 4px;
 }
 
 #nav li ul
 {
-	-moz-border-radius-bottomleft: 6px;
-	-moz-border-radius-bottomright: 6px;
+	border-radius-bottomleft: 6px;
+	border-radius-bottomright: 6px;
 }
 
 #loginContainer,
 #pageContainer
 {
-	-moz-border-radius: 1em;
+	border-radius: 1em;
 }
 
 /***************************
@@ -2180,14 +2134,14 @@ a.external
 	right: 1em;
 	top: 1em;
 	background: url(../../image/backend/confirmationBackground.png);
-	-moz-border-radius: 6px;
+	border-radius: 6px;
 	z-index: 10000;
 }
 
 .quickEditOuterContainer
 {
 	background-color: #eff;
-	-moz-border-radius: 0 0 10px 10px;
+	border-radius: 0 0 10px 10px;
 	border-top-width: 0;
 	padding: 0.5em;
 }
@@ -2324,7 +2278,7 @@ table.qeProducts td{
 	width: 224px;
 	border-width: 1px;
 	border: 1px solid #ccc;
-	-moz-border-radius: 10px;
+	border-radius: 10px;
 	z-index:200 !important;
 	text-align: left;
 	padding: 7px;
@@ -2414,7 +2368,7 @@ a.deleteCross
  margin-left:5px;
  background:#666;
  color:#fff;
- -moz-border-radius: 10px;
+ border-radius: 10px;
  }
 #ttbot {
 display:block;

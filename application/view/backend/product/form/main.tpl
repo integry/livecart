@@ -25,16 +25,12 @@
 
 	{input name="shortDescription"}
 		{label}{tip _short_description _hint_shortdescr}:{/label}
-		<div class="textarea">
-			{textarea class="shortDescr tinyMCE"}
-		</div>
+		{textarea class="shortDescr tinyMCE"}
 	{/input}
 
 	{input name="longDescription"}
 		{label}{tip _long_description _hint_longdescr}:{/label}
-		<div class="textarea">
-			{textarea class="longDescr tinyMCE"}
-		</div>
+		{textarea class="longDescr tinyMCE"}
 	{/input}
 
 	{input name="type"}

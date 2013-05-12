@@ -1,15 +1,15 @@
 .tabOrderProductsContent .activeList li
 {
-    width: auto;
+	width: auto;
 }
 
 .tabOrderProductsContent .orderShipment .activeList li
 {
-    padding-bottom: 4px;
-    padding-top: 8px;
-    -moz-border-radius: 0;
-    border: 0;
-    background-color: #fff !important;
+	padding-bottom: 4px;
+	padding-top: 8px;
+	border-radius: 0;
+	border: 0;
+	background-color: #fff !important;
 }
 
 .tabOrderProductsContent .orderShipment .activeList li.activeList_odd

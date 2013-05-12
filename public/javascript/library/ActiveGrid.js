@@ -451,7 +451,11 @@ ActiveGrid.prototype =
 			jQuery(this.tableInstance).data('columnContainer', container);
 		}
 
-		jQuery(container).dialog('close');
+		if (jQuery(container).dialog('isOpen'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).dialog(
 			{
 				autoOpen: false,
@@ -1455,7 +1459,11 @@ ActiveGridAdvancedSearch.prototype =
 	linkClicked: function()
 	{
 		var container = this.nodes.queryContainer;
-		jQuery(container).dialog('close');
+		if (jQuery(container).dialog('isOpen'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).data('originalParent', container.parentNode).dialog(
 			{
 				autoOpen: false,
@@ -2651,14 +2659,17 @@ var forEach = function(object, block, context) {
 				t[removeClass](SIGNATURE);
 			}
 
-			if (t.w != t[width]()) {
-				t.w = t[width]();
-				for (i = 0; i < t.ln; i++)
-					mw += t.c[i].w;
-				for (i = 0; i < t.ln; i++)
-					t.c[i].css(width, M.round(1000 * t.c[i].w / mw) / 10 + "%").l = 1;
+			if (t[width])
+			{
+				if (t.w != t[width]()) {
+					t.w = t[width]();
+					for (i = 0; i < t.ln; i++)
+						mw += t.c[i].w;
+					for (i = 0; i < t.ln; i++)
+						t.c[i].css(width, M.round(1000 * t.c[i].w / mw) / 10 + "%").l = 1;
+				}
+				syncGrips(t[addClass](SIGNATURE));
 			}
-			syncGrips(t[addClass](SIGNATURE));
 		}
 	}
 

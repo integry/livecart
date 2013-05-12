@@ -1308,7 +1308,10 @@ function hideForm(id)
 {
 	var container = $(id);
 
-	jQuery(container).dialog('close');
+	if (jQuery(container).data('dialog'))
+	{
+		jQuery(container).dialog('close');
+	}
 }
 
 function restoreMenu(blockId, menuId)
@@ -1943,7 +1946,12 @@ Backend.MultiInstanceEditor.prototype =
 
 	showContainer: function(container)
 	{
-		jQuery(container).dialog('close');
+		console.log('test');
+		if (jQuery(container).dialog('isOpen'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).dialog(
 			{
 				autoOpen: false,
@@ -1971,7 +1979,12 @@ Backend.MultiInstanceEditor.prototype =
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		//Form.restore(this.nodes.form, false, false);
 
-		jQuery($(this.getMainContainerId())).dialog('close');
+		var container = jQuery($(this.getMainContainerId()));
+		if (container.dialog('isOpen'))
+		{
+			container.dialog('close');
+		}
+
 		//Backend.hideContainer(this.getMainContainerId());
 		//this.getListContainer(this.owner).show();
 
