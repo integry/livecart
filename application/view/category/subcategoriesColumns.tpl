@@ -20,7 +20,7 @@
 		{assign var=cat value=$subCategories[$index]}
 
 		{if $cat}
-		<div class="col-span-{$width} subCategoryItem">
+		<div class="col col-lg-{$width} subCategoryItem">
 			<div class="thumbnail">
 				{include file="category/block/categoryItem.tpl" sub=$cat}
 			</div>

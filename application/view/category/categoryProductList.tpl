@@ -1,10 +1,10 @@
 {if $products}
 	<div class="row resultStats">
-		<div class="col-span-6 pagingInfo text-muted">
+		<div class="col col-lg-6 pagingInfo text-muted">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
 
-		<div class="col-span-6 listOptions">
+		<div class="col col-lg-6 listOptions">
 			{if $sortOptions && ($sortOptions|@count > 1)}
 			<span class="sortOptions">
 					{t _sort_by}

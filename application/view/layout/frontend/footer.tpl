@@ -1,4 +1,4 @@
-<div id="footer" class="col-span-12">
+<div id="footer" class="col col-lg-12">
 
 	{block FOOTER}
 

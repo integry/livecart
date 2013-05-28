@@ -3,7 +3,7 @@
 	<div class="btn-toolbar pull-right">
 
 	<div class="btn-group" id="topAccount">
-		<a class="btn dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=user action=index}">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=user action=index}">
 			<span class="glyphicon glyphicon-user"></span>
 			{t _your_account}
 			<span class="caret"></span>
@@ -22,7 +22,7 @@
 		{if ($request.controller == 'product') || ($request.controller == 'category')}{assign var="returnPath" value=true}{/if}
 
 		<div class="btn-group" id="topCart">
-			<a class="btn dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=order returnPath=$returnPath}">
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=order returnPath=$returnPath}">
 				<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
 				{t _shopping_cart}
 				<span class="badge menu_cartItemCount" style="{if !$order.basketCount}display: none;{/if}">{maketext text="_cart_item_count" params=$order.basketCount}</span>

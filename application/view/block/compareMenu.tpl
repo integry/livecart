@@ -14,7 +14,7 @@
 			</ul>
 
 			<div class="compareBoxMenu">
-				<a class="btn btn-small" href="{link compare/index returnPath=true query="return=$return"}">{t _view_comparison}</a>
+				<a class="btn btn-default btn-small" href="{link compare/index returnPath=true query="return=$return"}">{t _view_comparison}</a>
 			</div>
 		</div>
 	</div>

@@ -14,7 +14,7 @@
 				<div class="input-group">
 					{textfield placeholder="_email_placeholder" noFormat=true}
 					<span class="input-group-btn">
-						<button class="btn" type="submit">OK</button>
+						<button class="btn btn-default" type="submit">OK</button>
 					</span>
 				</div>
 			{/input}

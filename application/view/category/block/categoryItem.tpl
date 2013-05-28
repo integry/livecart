@@ -1,7 +1,7 @@
 <div class="row">
 {sect}
 	{head}
-		<div class="subCatImage col-span-4">
+		<div class="subCatImage col col-lg-4">
 	{cont}
 		{if $sub.featuredProduct.ID}
 			<div class="categoryFeaturedProduct">
@@ -21,7 +21,7 @@
 	{foot}
 		</div>
 {/sect}
-<div class="details col-span-8 {if !$sub.subCategories} noSubCats{/if}">
+<div class="details col col-lg-8 {if !$sub.subCategories} noSubCats{/if}">
 	<div class="subCatContainer">
 		<div class="subCatName">
 			<a href="{categoryUrl data=$sub filters=$filters}">{$sub.name_lang}</a>
