@@ -1272,17 +1272,6 @@ input.text.progressIndicator
 	background-position: center right;
 }
 
-input.radio, input.checkbox, .progressIndicator.checkbox
-{
-    float: left;
-    margin-right: 0.5em;
-}
-
-input:focus, textarea:focus, select:focus
-{
-    background: #ffc;
-}
-
 input.submit:focus
 {
 	color: #008cff;
@@ -1611,7 +1600,7 @@ fieldset.group p
 .tabContainer
 {
 	position: relative;
-	z-index: 200;
+	z-index: 50;
 }
 
 .tabs li *
