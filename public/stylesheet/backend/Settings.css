@@ -172,3 +172,8 @@ label.repoDown
 	margin-bottom: 0.5em;
 	margin-top: -0.2em;
 }
+
+fieldset.settings
+{
+	padding-left: 1em;
+}

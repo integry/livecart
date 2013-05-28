@@ -1,7 +1,7 @@
 <div class="image">
 	{block LIST-IMAGE}
-	{block QUICK-SHOP}
-	<span style="font-size: 1px;">&nbsp;</span>
+	{block QUICK-SHOP product=$product}
+
 	<a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">
 	{if $product.DefaultImage.ID}
 		{img src=$product.DefaultImage.urls.2 alt=$product.name_lang|escape}

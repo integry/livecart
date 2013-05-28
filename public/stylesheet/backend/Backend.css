@@ -217,7 +217,7 @@ html, body{
 #pageHeader
 {
     position: relative;
-    z-index: 1000;
+    z-index: 50;
     background: url(../../image/backend/layout/header_shade.png) repeat-x left bottom;
     margin-right: 1px;
 }
@@ -1272,6 +1272,17 @@ input.text.progressIndicator
 	background-position: center right;
 }
 
+input.radio, input.checkbox, .progressIndicator.checkbox
+{
+    float: left;
+    margin-right: 0.5em;
+}
+
+input:focus, textarea:focus, select:focus
+{
+    background: #ffc;
+}
+
 input.submit:focus
 {
 	color: #008cff;
@@ -1600,7 +1611,7 @@ fieldset.group p
 .tabContainer
 {
 	position: relative;
-	z-index: 50;
+	z-index: 200;
 }
 
 .tabs li *

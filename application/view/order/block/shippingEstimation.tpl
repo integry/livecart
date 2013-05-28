@@ -32,7 +32,7 @@
 
 		<div class="control-group">
 			<div class="controls">
-				<button type="submit" class="btn" name="updateEstimateAddress">{tn _update_address}</button>
+				<button type="submit" class="btn btn-default" name="updateEstimateAddress">{tn _update_address}</button>
 			</div>
 		</div>
 	</td>

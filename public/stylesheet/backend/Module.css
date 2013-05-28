@@ -94,7 +94,7 @@ a.updateAction
 	padding: 1em;
 	margin-top: 1em;
 	margin-right: 1em;
-	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 
 fieldset.type_needUpdate legend

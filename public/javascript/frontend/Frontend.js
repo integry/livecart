@@ -1059,8 +1059,8 @@ Frontend.initCategory = function()
 	{
 		e.preventDefault();
 
-		var el = Frontend.getPopup('quickShopContainer');
-		$(el).html('');
+		var el = $(Frontend.getPopup('quickShopContainer'));
+		el.html('');
 
 		var loadQuickShop = function(e)
 		{
@@ -1069,9 +1069,16 @@ Frontend.initCategory = function()
 			new LiveCart.AjaxRequest(e.target.href, e.target,
 				function(oR)
 				{
-					$(el).html(oR.responseText).find('.modal').modal();
+					var isOpen = el.find('.modal.in').length;
+					if (isOpen)
+					{
+						el.find('.modal').removeClass('fade').modal('hide');
+					}
 
-					Frontend.AjaxInit(el);
+					el.html(oR.responseText);
+					el.find('.modal').modal('show');
+
+					Frontend.AjaxInit(el[0]);
 
 					/*
 					$('img', el).load(function()
@@ -1080,7 +1087,8 @@ Frontend.initCategory = function()
 					});
 					*/
 
-					$(el).find('.productPrev, .productNext').click(loadQuickShop);
+					el.find('.pager a').unbind('click').click(loadQuickShop);
+					el.find('button.addToCart').removeClass('btn-large');
 				});
 		}
 

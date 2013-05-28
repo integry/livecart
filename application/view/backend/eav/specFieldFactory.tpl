@@ -6,7 +6,7 @@
 
 {if $field.type == 1 || $field.type == 5}
 	{if $field.isMultiValue}
-		<div class="multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
+		<div class="controls multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 
 			<div class="eavCheckboxes">
 				{foreach from=$field.values key="id" item="value"}
@@ -45,7 +45,9 @@
 	{/if}
 
 {elseif $field.type == 2}
-	<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number"}<span class="suffix">{$field.valueSuffix_lang}</span>
+	<div class="controls">
+		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number" noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+	</div>
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}
@@ -55,10 +57,8 @@
 	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text {$textFieldClass}" autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
-	<div class="textarea" style="margin-left: 0;">
-		{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE"}
-		<div class="errorText hidden"></div>
-	</div>
+	{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE"}
+	<div class="text-error hidden"></div>
 
 {elseif $field.type == 6}
 	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`"}

@@ -1,11 +1,11 @@
 <div class="row">
-<div class="col-span-12" id="header">
+<div class="col col-lg-12" id="header">
 
-	<div class="col-span-6" id="logoContainer">
+	<div class="col col-lg-6" id="logoContainer">
 		<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
 	</div>
 
-	<div class="col-span-6" id="topMenuContainer">
+	<div class="col col-lg-6" id="topMenuContainer">
 		<div class="clearfix">
 			{block CURRENCY}
 			{block LANGUAGE}
@@ -19,6 +19,6 @@
 </div>
 </div>
 
-<div class="col-span-12">
+<div class="col col-lg-12">
 	{block ROOT_CATEGORIES}
 </div>

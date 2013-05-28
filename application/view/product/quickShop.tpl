@@ -1,7 +1,9 @@
-<div class="quickShopContent productCategory_{$product.Category.ID} product_{$product.ID}">
-
-	<a class="cancel quickShopClose popupClose" href="#">{t _close}</a>
-
+{capture assign="body"}
 	{include file="product/head.tpl"}
+{/capture}
 
-</div>
+{capture assign="footer"}
+	{block PRODUCT-NAVIGATION}
+{/capture}
+
+{include file="block/modal.tpl" title=$product.name_lang body=$body footer=$footer}

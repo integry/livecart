@@ -451,7 +451,11 @@ ActiveGrid.prototype =
 			jQuery(this.tableInstance).data('columnContainer', container);
 		}
 
-		jQuery(container).dialog('close');
+		if (jQuery(container).data('dialog'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).dialog(
 			{
 				autoOpen: false,
@@ -459,6 +463,7 @@ ActiveGrid.prototype =
 				resizable: false,
 				width: 'auto',
 				autoResize: true,
+				modal: true
 			}).dialog('open');
 
 		jQuery('input.checkbox', container).click(function(e)
@@ -1455,12 +1460,17 @@ ActiveGridAdvancedSearch.prototype =
 	linkClicked: function()
 	{
 		var container = this.nodes.queryContainer;
-		jQuery(container).dialog('close');
+		if (jQuery(container).data('dialog'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).data('originalParent', container.parentNode).dialog(
 			{
 				autoOpen: false,
 				title: Backend.getTranslation('_advanced_search'),
 				resizable: false,
+				modal: true,
 				width: 'auto',
 				height: 'auto',
 				minHeight: 20,
@@ -2651,14 +2661,17 @@ var forEach = function(object, block, context) {
 				t[removeClass](SIGNATURE);
 			}
 
-			if (t.w != t[width]()) {
-				t.w = t[width]();
-				for (i = 0; i < t.ln; i++)
-					mw += t.c[i].w;
-				for (i = 0; i < t.ln; i++)
-					t.c[i].css(width, M.round(1000 * t.c[i].w / mw) / 10 + "%").l = 1;
+			if (t[width])
+			{
+				if (t.w != t[width]()) {
+					t.w = t[width]();
+					for (i = 0; i < t.ln; i++)
+						mw += t.c[i].w;
+					for (i = 0; i < t.ln; i++)
+						t.c[i].css(width, M.round(1000 * t.c[i].w / mw) / 10 + "%").l = 1;
+				}
+				syncGrips(t[addClass](SIGNATURE));
 			}
-			syncGrips(t[addClass](SIGNATURE));
 		}
 	}
 

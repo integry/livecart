@@ -1,6 +1,6 @@
 {assign var="layoutspanLeft" value=3 scope="global"}
 
-<div class="col-span-{$layoutspanLeft}">
+<div class="col col-lg-{$layoutspanLeft}">
 
 <div id="userMenuContainer">
 	<ul id="userMenu" class="list-group">

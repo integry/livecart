@@ -170,7 +170,9 @@
 	if (!isset($classLoaderCache) || ClassLoader::isCacheChanged())
 	{
 		$classLoaderCache = array('realPath' => ClassLoader::getRealPathCache(), 'mountPoint' => ClassLoader::getMountPointCache());
-		file_put_contents($classLoaderCacheFile, '<?php return ' . var_export($classLoaderCache, true) . '; ?>');
+		file_put_contents($classLoaderCacheFile . '.tmp', '<?php return ' . var_export($classLoaderCache, true) . '; ?>');
+		@unlink($classLoaderCacheFile);
+		rename($classLoaderCacheFile . '.tmp', $classLoaderCacheFile);
 	}
 
 	session_write_close();

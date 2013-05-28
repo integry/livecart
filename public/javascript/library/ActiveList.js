@@ -341,7 +341,11 @@ ActiveList.prototype = {
 
 		var title = jQuery(container).closest('li.activeList').find('span:visible').not('.activeList_icons').html();
 
-		jQuery(container).dialog('close');
+		if (jQuery(container).data('dialog'))
+		{
+			jQuery(container).dialog('close');
+		}
+
 		jQuery(container).data('originalParent', container.parentNode).dialog(
 			{
 				autoOpen: false,
@@ -352,7 +356,7 @@ ActiveList.prototype = {
 				autoResize: true,
 				beforeClose: function(event, ui){
 					//jQuery(container).html('').data('originalParent').appendChild(container);
-			   }.bind(this),
+			   }.bind(this)
 			}).dialog('open');
 
 		jQuery(this.ul).sortable('destroy');
@@ -389,7 +393,10 @@ ActiveList.prototype = {
 		var container = $(container);
 		this.createSortable(true);
 
-		jQuery(container).dialog('close');
+		if (jQuery(container).data('dialog'))
+		{
+			jQuery(container).dialog('close');
+		}
 
 		// Create parent sortable as well
 		var parentList = this.ul.up(".activeList");

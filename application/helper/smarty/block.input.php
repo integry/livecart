@@ -28,6 +28,17 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 			$msg = '';
 		}
 
+		if ('checkbox' == $fieldType)
+		{
+			preg_match('/<input(.*) \/\>(.*)\<label(.*)\>(.*)\<\/label\>/msU', $content, $matches);
+			if ($matches)
+			{
+				$content = '<label ' . $matches[3] . '><input ' . $matches[1] . ' /> ' . $matches[4] . '</label>';
+			}
+
+			//var_dump($matches);
+		}
+
 		$content = '<div class="control-group ' . ($msg ? 'has-error' : '') .  ' name_' . $params['name'] . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . (!empty($params['class']) ? ' ' . $params['class'] : '' ) . '">' .
 						$content .
 						'<div class="text-danger' . ($msg ? '' : ' hidden') . '">' . $msg . '</div>

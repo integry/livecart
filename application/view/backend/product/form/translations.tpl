@@ -6,16 +6,12 @@
 
 	{input name="shortDescription_`$lang.ID`"}
 		{label}{t _short_description}:{/label}
-		<div class="textarea">
-			{textarea class="shortDescr tinyMCE"}
-		</div>
+		{textarea class="shortDescr tinyMCE"}
 	{/input}
 
 	{input name="longDescription_`$lang.ID`"}
 		{label}{t _long_description}:{/label}
-		<div class="textarea">
-			{textarea class="longDescr tinyMCE"}
-		</div>
+		{textarea class="longDescr tinyMCE"}
 	{/input}
 
 	{input name="pageTitle_`$lang.ID`"}

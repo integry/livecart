@@ -787,7 +787,7 @@ class LiveCart extends Application implements Serializable
 		return $output;
 	}
 
-	public function renderBlock($block, Controller $controllerInstance)
+	public function renderBlock($block, Controller $controllerInstance, $params = array())
 	{
 		$id = $block['view'];
 
@@ -801,7 +801,7 @@ class LiveCart extends Application implements Serializable
 			return $block;
 		}
 
-		$output = parent::renderBlock($block, $controllerInstance);
+		$output = parent::renderBlock($block, $controllerInstance, $params);
 
 		$params = array('block' => $block, 'output' => &$output);
 		$this->processInstancePlugins('outputBlockAfter', $params);

@@ -18,7 +18,7 @@ function smarty_function_renderBlock($params, Smarty_Internal_Template $smarty)
 		$block = substr($block, 0, -1);
 	}
 
-	return $smarty->getApplication()->getBlockContent($block);
+	return $smarty->getApplication()->getBlockContent($block, $params);
 }
 
 ?>
