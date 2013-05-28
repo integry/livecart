@@ -2186,17 +2186,44 @@ h2 small
 }
 
 /* quick shop */
-.popupClose
+#quickShopContainer h1
 {
-	float: right;
-	margin: 1em;
-	height: 16px;
-	padding-left: 16px;
+	display: none;
+}
+
+#quickShopContainer .modal-dialog
+{
+	width: 760px;
+}
+
+#quickShopContainer select.quantity
+{
+	display: inline-block;
+}
+
+#quickShopContainer #actionButtons p
+{
+	display: inline;
 }
 
 .quickShopMenu
 {
 	position: absolute;
+}
+
+#quickShopContainer #productToCart span.param
+{
+	display: none;
+}
+
+#quickShopContainer #productSummaryContainer .col
+{
+	width: 100%;
+}
+
+.modal-footer .pager
+{
+	margin: 0;
 }
 
 /**** color options ****/

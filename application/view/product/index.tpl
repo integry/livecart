@@ -13,6 +13,12 @@
 
 {include file="product/head.tpl"}
 
+<div class="row" id="productNavigation">
+	<div class="col col-lg-12">
+		{block PRODUCT-NAVIGATION}  {* product/block/images.tpl *}
+	</div>
+</div>
+
 {if 'PRODUCT_TABS'|config}
 	<ul class="nav nav-tabs" id="productTabs"></ul>
 {/if}
