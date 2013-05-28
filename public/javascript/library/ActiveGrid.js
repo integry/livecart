@@ -451,7 +451,7 @@ ActiveGrid.prototype =
 			jQuery(this.tableInstance).data('columnContainer', container);
 		}
 
-		if (jQuery(container).dialog('isOpen'))
+		if (jQuery(container).data('dialog'))
 		{
 			jQuery(container).dialog('close');
 		}
@@ -463,6 +463,7 @@ ActiveGrid.prototype =
 				resizable: false,
 				width: 'auto',
 				autoResize: true,
+				modal: true
 			}).dialog('open');
 
 		jQuery('input.checkbox', container).click(function(e)
@@ -1459,7 +1460,7 @@ ActiveGridAdvancedSearch.prototype =
 	linkClicked: function()
 	{
 		var container = this.nodes.queryContainer;
-		if (jQuery(container).dialog('isOpen'))
+		if (jQuery(container).data('dialog'))
 		{
 			jQuery(container).dialog('close');
 		}
@@ -1469,6 +1470,7 @@ ActiveGridAdvancedSearch.prototype =
 				autoOpen: false,
 				title: Backend.getTranslation('_advanced_search'),
 				resizable: false,
+				modal: true,
 				width: 'auto',
 				height: 'auto',
 				minHeight: 20,

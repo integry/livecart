@@ -393,7 +393,7 @@ ActiveList.prototype = {
 		var container = $(container);
 		this.createSortable(true);
 
-		if (jQuery(container).dialog('isOpen'))
+		if (jQuery(container).data('dialog'))
 		{
 			jQuery(container).dialog('close');
 		}

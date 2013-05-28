@@ -1946,20 +1946,20 @@ Backend.MultiInstanceEditor.prototype =
 
 	showContainer: function(container)
 	{
-		console.log('test');
-		if (jQuery(container).dialog('isOpen'))
+		if (jQuery(container).data('dialog'))
 		{
 			jQuery(container).dialog('close');
 		}
 
 		jQuery(container).dialog(
-			{
-				autoOpen: false,
-				title: this.getTitle(container),
-				resizable: false,
-				width: 'auto',
-				autoResize: true,
-			}).dialog('open');
+		{
+			autoOpen: false,
+			title: this.getTitle(container),
+			resizable: false,
+			width: 'auto',
+			autoResize: true,
+			modal: true
+		}).dialog('open');
 
 		this.initContainer(container);
 	},
@@ -1980,7 +1980,7 @@ Backend.MultiInstanceEditor.prototype =
 		//Form.restore(this.nodes.form, false, false);
 
 		var container = jQuery($(this.getMainContainerId()));
-		if (container.dialog('isOpen'))
+		if (container.data('dialog'))
 		{
 			container.dialog('close');
 		}
