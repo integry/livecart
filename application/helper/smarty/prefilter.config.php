@@ -14,6 +14,10 @@ function smarty_prefilter_config($source, $smarty)
 {
 	$source = $smarty->smarty->applyViewPlugins($smarty->template_resource, $source);
 
+	// AngularJS variables
+	$source = str_replace('{{', '{literal}{{', $source);
+	$source = str_replace('}}', '}}{/literal}', $source);
+
 	// remove comments
 	$source = preg_replace('/\{\*(.*)\*\}/msU', '', $source);
 

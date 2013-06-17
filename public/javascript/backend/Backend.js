@@ -1,6 +1,14 @@
 /**
  *	@author Integry Systems
  */
+var app = angular.module('LiveCart', []);
+app.run(function($rootScope)
+{
+	$rootScope.route = function(controller, action, params)
+	{
+		return Router.createUrl(controller, action, params);
+	}
+});
 
 var Backend =
 {
@@ -479,216 +487,24 @@ Backend.Breadcrumb =
 /*************************************************
 	Backend menu
 **************************************************/
-Backend.NavMenu = Class.create();
 
-/**
- * Builds navigation menu from passed JSON array
- */
-Backend.NavMenu.prototype =
-{
-	initialize: function(menuArray, controller, action)
+var MenuController = function($scope, $http) {
+
+	$scope.items = window.menuArray;
+
+	$scope.setDescription = function(description)
 	{
-		var index = -1;
-		var subIndex = 0;
-		var subItemIndex = 0;
-		var match = false;
+		$scope.description = description;
+	};
 
-		// find current menu items
-		for (topIndex in menuArray)
-		{
-			if('object' == typeof menuArray[topIndex])
-			{
-				mItem = menuArray[topIndex];
-
-				if (mItem['controller'] == controller)
-				{
-					index = topIndex;
-				}
-
-				if (mItem['controller'] == controller && mItem['action'] == action)
-				{
-					index = topIndex;
-					subItemIndex = 0;
-					match = true;
-					break;
-				}
-
-				match = false;
-
-				if ('object' == typeof mItem['items'])
-				{
-					for (subIndex in mItem['items'])
-					{
-						subItem = mItem['items'][subIndex];
-
-						if (subItem['controller'] == controller && subItem['action'] == action)
-						{
-							index = topIndex;
-							subItemIndex = subIndex;
-							match = true;
-							break;
-						}
-						else if (controller == subItem['controller'])
-						{
-							index = topIndex;
-							subItemIndex = subIndex;
-						}
-					}
-
-					if (match)
-					{
-						break;
-					}
-				}
-			}
-		}
-
-		// add current menu items to breadcrumb
-		/*
-		breadcrumb.addItem(menuArray[index]['title'], menuArray[index]['url']);
-		if (subItemIndex > 0)
-		{
-			breadcrumb.addItem(menuArray[index]['items'][subItemIndex]['title'],
-							   menuArray[index]['items'][subItemIndex]['url']);
-		}
-		*/
-
-		// build menu
-		var topItem = $('navTopItem-template');
-		var subItem = $('navSubItem-template');
-		var nr = 0, subNr;
-		navCont = $('nav');
-
-		for (topIndex in menuArray)
-		{
-			if('object' == typeof menuArray[topIndex])
-			{
-				mItem = menuArray[topIndex];
-
-				menuItem = topItem.cloneNode(true);
-
-				var a = menuItem.getElementsByTagName('a')[0];
-				a.href = mItem['url'];
-				a.descr = mItem['descr'];
-				a.id="menu_"+nr;
-				if(!mItem['url'])
-				{
-					a.onclick = function() { return false; }
-					a.className = 'topItem';
-				}
-				a.innerHTML = mItem['title'];
-				menuItem.style.display = 'block';
-				if ('' != mItem['icon'])
-				{
-					a.style.backgroundImage = 'url(' + mItem['icon'] + ')';
-				}
-
-				if (topIndex == index)
-				{
-					menuItem.id = 'navSelected';
-				}
-				else
-				{
-					Event.observe(menuItem, 'mouseover', this.hideCurrentSubMenu);
-					Event.observe(menuItem, 'mouseout', this.showCurrentSubMenu);
-				}
-
-				// submenu container
-				ul = menuItem.getElementsByTagName('ul')[0];
-
-				if ('object' == typeof mItem['items'])
-				{
-					subNr = 0;
-					for (subIndex in mItem['items'])
-					{
-						sub = mItem['items'][subIndex];
-
-						if ('object' == typeof sub)
-						{
-							subNode = subItem.cloneNode(true);
-							var a = subNode.getElementsByTagName('a')[0];
-							if ('' != sub['icon'])
-							{
-								a.style.backgroundImage = 'url(' + sub['icon'] + ')';
-							}
-
-							a.href = sub['url'];
-							a.innerHTML = sub['title'];
-							a.descr = sub['descr'];
-							a.id="menu_"+nr+"_"+subNr;
-							subNr++;
-							if ((topIndex == index) && (subIndex == subItemIndex))
-							{
-								subNode.id = 'navSubSelected';
-							}
-
-							ul.appendChild(subNode);
-						}
-					}
-				}
-				else
-				{
-					// no subitems
-					ul.parentNode.removeChild(ul);
-				}
-
-				// do not show empty menus
-				if (menuItem.getElementsByTagName('ul').length || mItem['url'])
-				{
-					navCont.appendChild(menuItem);
-				}
-			}
-			nr++;
-		}
-
-		Event.observe(navCont, 'mouseover', this.showDescription.bind(this));
-		Event.observe(navCont, 'mouseout', this.hideDescription.bind(this));
-	},
-
-	hideCurrentSubMenu: function()
+	$scope.menuRoute = function(item)
 	{
-		if ($('navSelected') && $('navSelected').getElementsByTagName('ul')[0])
+		if (item.controller)
 		{
-			$('navSelected').getElementsByTagName('ul')[0].style.visibility = 'hidden';
+			return $scope.route(item.controller, item.action, item.params);
 		}
-	},
-
-	showCurrentSubMenu: function()
-	{
-		if ($('navSelected') && $('navSelected').getElementsByTagName('ul')[0])
-		{
-			$('navSelected').getElementsByTagName('ul')[0].style.visibility = 'visible';
-		}
-	},
-
-	showDescription: function(e)
-	{
-		var a = Event.element(e);
-		if ((a.tagName != 'A') || !a.descr)
-		{
-			this.hideDescription();
-			return;
-		}
-
-		this.getDescrContainer().update(a.descr);
-		this.getDescrContainer().show();
-	},
-
-	hideDescription: function()
-	{
-		this.getDescrContainer().hide();
-	},
-
-	getDescrContainer: function()
-	{
-		if (!this.descrContainer)
-		{
-			this.descrContainer = $('menuDescription');
-		}
-
-		return this.descrContainer;
 	}
-}
+};
 
 Backend.ThemePreview = Class.create();
 Backend.ThemePreview.prototype =

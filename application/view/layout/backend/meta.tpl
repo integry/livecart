@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng-app="LiveCart">
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{'SOFT_NAME'|config} Admin - {$TITLE}</title>
@@ -15,9 +15,9 @@
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
 	{includeCss file="backend/stat.css" front=true}
 	{includeCss file="backend/Backend.css" front=true}
-	
+
 	{* includeCss file="backend/theme/redmond/jquery-ui.css" front=true *}
-	
+
 	{includeCss file="library/jquery/jquery-ui.css" front=true}
 	{includeCss file="library/jquery/jquery-plugins.css" front=true}
 
@@ -40,6 +40,7 @@
 	{includeJs file="library/prototype/prototype.js" front=true}
 	{includeJs file="backend/BackendToolbar.js"}
 
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
 	{compiledJs glue=true nameMethod=hash}
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 

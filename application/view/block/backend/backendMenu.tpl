@@ -1,26 +1,20 @@
-<div id="menuDescription" style="display: none;"></div>
-
-<ul style="display: none;">
-	<li id="navTopItem-template">
-		<div>
-			<div>
-				<div>
-					<a href=""></a>
-					<ul>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</li>
-	<li id="navSubItem-template">
-		<a href=""></a>
-	</li>
-</ul>
-
 <script type="text/javascript">
 	window.menuArray = {$menuArray};
-	new Backend.NavMenu(window.menuArray, '{$controller}', '{$action}');
 </script>
 
+<div ng-controller="MenuController">
+	<div id="menuDescription" ng-show="description">{{description}}</div>
 
-
+	<ul id="nav">
+		<li ng-repeat="item in items">
+			<div><div><div>
+				<a style="background-image:url('{{item.icon}}')" ng-mouseout="setDescription('')" ng-mouseover="setDescription(item.descr)" ng-href="{{menuRoute(item)}}">{{item.title}}</a>
+				<ul ng-show="item.items">
+					<li ng-repeat="subitem in item.items">
+						<a style="background-image:url('{{subitem.icon}}')" ng-mouseout="setDescription('')" ng-mouseover="setDescription(subitem.descr)" ng-href="{{menuRoute(subitem)}}">{{subitem.title}}</a>
+					</li>
+				</ul>
+			</div></div></div>
+		</li>
+	</ul>
+</div>
