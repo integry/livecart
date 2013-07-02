@@ -167,6 +167,17 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		{
 			$params['method'] = strtolower($params['method']);
 		}
+		
+		if (empty($params['class']))
+		{
+			$params['class'] = '';
+		}
+		
+		if (strpos($params['class'], 'form-') === false)
+		{
+			$params['class'] .= ' form-horizontal';
+			$params['class'] = trim($params['class']);
+		}
 
 		if (empty($params['class']))
 		{

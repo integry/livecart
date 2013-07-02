@@ -2057,7 +2057,30 @@ fieldset.eavGroup
 	float: right;
 }
 
+.step-status-icon
+{
+	font-size: larger;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.ok-sign
+{
+	color: green;
+}
+
+.incomplete-sign
+{
+	display: none;
+}
+
+.step-incomplete .incomplete-sign
+{
+	display: inline-block;
+}
+
 .step-incomplete .modifyStep,
+.step-incomplete .ok-sign,
 .step.opened .modifyStep,
 .step.closed .closed,
 .step.closed .accordion-inner,

@@ -4,7 +4,7 @@
 	{assign var="action" value="controller=backend.taxClass action=create"}
 {/if}
 
-{form handle=$classForm action=$action id="classForm_`$class.ID`" method="post" onsubmit="Backend.TaxClass.prototype.getInstance(this).save(); return false;"}
+{form handle=$classForm class="form-horizontal" action=$action id="classForm_`$class.ID`" method="post" onsubmit="Backend.TaxClass.prototype.getInstance(this).save(); return false;"}
 
 	{hidden name="ID"}
 

@@ -1,6 +1,8 @@
 <div class="row">
 	<div class="col col-lg-6">
 		<a href="#" class="accordion-toggle">
+			<span class="glyphicon glyphicon-ok-sign step-status-icon ok-sign"></span>
+			<span class="glyphicon glyphicon-plus-sign step-status-icon incomplete-sign"></span>
 			<strong>{translate text=$title}</strong>
 		</a>
 	</div>
