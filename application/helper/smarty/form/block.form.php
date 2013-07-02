@@ -13,6 +13,8 @@
  */
 function smarty_block_form($params, $content, $smarty, &$repeat)
 {
+	$params = $smarty->filterParams($params);
+
 	if ($repeat)
 	{
 		// Check permissions
@@ -77,7 +79,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 				$actionURL = "INVALID_FORM_ACTION_URL";
 			}
 		}
-		else if ('self' == $formAction || !$formAction)
+		else if ('self' == $formAction)
 		{
 			$actionURL = urldecode($_SERVER['REQUEST_URI']);
 		}
@@ -106,11 +108,11 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		{
 			if (!empty($customOnSubmit))
 			{
-				$onSubmit = $preValidate . 'if (!validateForm(this)) { return false; } ' . $customOnSubmit;
+				$onSubmit = $preValidate . 'if (!validateForm(this, event)) { return false; } ' . $customOnSubmit;
 			}
 			else
 			{
-				$onSubmit = 'return validateForm(this);';
+				$onSubmit = 'return validateForm(this, event);';
 			}
 
 			$validatorField = '<input type="hidden" disabled="disabled" name="_validator" value="' . $formHandler->getValidator()->getJSValidatorParams() . '"/>';
@@ -178,16 +180,22 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 
 		$formAttributes = "";
 		unset($params['readonly']);
+
+		if ($actionURL)
+		{
+			$params['action'] = $actionURL;
+		}
+
 		foreach ($params as $param => $value)
 		{
 			$formAttributes .= $param . '="' . $value . '" ';
 		}
 
-		$form = '<form action="'.$actionURL.'" '.$formAttributes.'>' . "\n";
+		$form = '<form '.$formAttributes.' novalidate>' . "\n";
 		$form .= $validatorField;
 		$form .= isset($filterField) ? $filterField : '';
 		$form .= $content;
-		$form .= "</form>";
+		$form .= '</form>';
 
 		return $form;
 	}

@@ -19,15 +19,9 @@ function smarty_block_label($params, $content, Smarty_Internal_Template $smarty,
 			$class = 'control-label ' . $class;
 		}
 
-		$for = $smarty->getTemplateVars('last_fieldID');
-		if (!empty($params['for']))
-		{
-			$for = $params['for'];
-		}
+		$for = empty($params['for']) ? '' : ' for="' . $params['for'] . '"';
 
-		$label = '<label class="' . $class . '" for="' . $for . '">';
-
-		$content = $label . $content . '</label>';
+		$content = '<label class="' . $class . '"' . $for . '>' . $content . '</label>';
 
 		return $content;
 	}

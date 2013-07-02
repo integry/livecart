@@ -10,9 +10,6 @@
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/SectionExpander.js"}
 
-{includeJs file="library/lightbox/lightbox.js"}
-{includeCss file="library/lightbox/lightbox.css"}
-
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/ActiveList.css"}
@@ -46,7 +43,7 @@
 {pageTitle help="order"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">
+<div id="orderGroupsWrapper" class="treeContainer">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 </div>
 

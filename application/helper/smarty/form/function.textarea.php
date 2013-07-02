@@ -17,7 +17,8 @@ function smarty_function_textarea($params, $smarty)
 		$params['name'] = $smarty->getTemplateVars('input_name');
 	}
 
-	if (empty($params['id']))
+	// @todo: can be removed when all TinyMCE editors are instantiated via Angular
+	if (empty($params['id']) && empty($params['tinymce']))
 	{
 		$params['id'] = uniqid();
 	}
@@ -25,6 +26,24 @@ function smarty_function_textarea($params, $smarty)
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
+
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
+
+	$params = $smarty->applyFieldValidation($params, $formHandler);
+
+	if (!empty($params['tinymce']))
+	{
+		if (is_bool($params['tinymce']))
+		{
+			$params['tinymce'] = 'getTinyMceOpts()';
+		}
+
+		$params['ui-tinymce'] = $params['tinymce'];
+		unset($params['tinymce']);
+	}
 
 	// Check permissions
 	if($formParams['readonly'])

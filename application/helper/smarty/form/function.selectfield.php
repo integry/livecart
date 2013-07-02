@@ -20,6 +20,11 @@ function smarty_function_selectfield($params, $smarty)
 	$formParams = $smarty->_tag_stack[0][1];
 	$formHandler = $formParams['handle'];
 
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
+
 	$options = $params['options'];
 	if (empty($options))
 	{

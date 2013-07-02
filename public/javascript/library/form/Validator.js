@@ -2,7 +2,7 @@
  *	@author Integry Systems
  */
 
-function validateForm(form)
+function validateForm(form, event)
 {
 	Element.saveTinyMceFields(form);
 	ActiveForm.prototype.resetErrorMessages(form);
@@ -45,6 +45,12 @@ function validateForm(form)
 		{
 			isFormValid = validateForm(parentForm);
 		}
+	}
+
+	if (!isFormValid && event)
+	{
+		event.stopPropagation();
+		console.log('stopping');
 	}
 
 	return isFormValid;

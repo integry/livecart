@@ -24,8 +24,8 @@
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 
-<div id="userGroupsWrapper" class="maxHeight h--50">
-	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
+<div id="userGroupsWrapper">
+	<div id="userGroupsBrowserWithControlls" class="treeContainer">
 		<ul class="menu popup">
 			<li class="done">
 				<a href="#" onclick="window.close(); return false;">

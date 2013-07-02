@@ -25,6 +25,10 @@ function smarty_function_radio($params, $smarty)
 	}
 	$fieldName = $params['name'];
 
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
 
 	// Check permissions
 	if($formParams['readonly'])

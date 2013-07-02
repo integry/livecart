@@ -1,10 +1,5 @@
-{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
-{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
-{includeJs file="library/form/Validator.js"}
-{includeJs file="library/form/ActiveForm.js"}
 {includeJs file="backend/StaticPage.js"}
 
-{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="backend/StaticPage.css"}
 
 {pageTitle help="content.pages"}{t _static_pages}{/pageTitle}
@@ -12,58 +7,131 @@
 {include file="backend/eav/includes.tpl"}
 {include file="layout/backend/header.tpl"}
 
-<div id="staticPageContainer">
+<div id="staticPageContainer" ng-controller="TreeController" ng-init="setTree({$pages|escape})">
 	<div class="treeContainer">
-		<div id="pageBrowser" class="treeBrowser"></div>
+		<div class="tree ui-widget-content">
+			<ul ui-nested-sortable="{
+				listType: 'ul',
+				doNotClear: true,
+				placeholder: 'ui-state-highlight',
+				forcePlaceholderSize: true,
+				toleranceElement: '> div'
+				}"
+				ui-nested-sortable-stop="updatePosition($event, $ui)"
+				>
+				<li ya-tree="child in data.children at ul" ng-class="minimized-{{child.minimized == true}}">
+					<div ng-click="tree.select(child)" ng-mouseover="mouseover=1" ng-mouseout="mouseover=0" ng-class="{ldelim}'ui-state-hover': mouseover, 'ui-state-active': tree.selectedID == child.id{rdelim}">
+						<ins ng-click="child.minimized = !child.minimized" ng-show="child.children.length" class="jstree-icon ui-icon ui-icon-triangle-1-e"> </ins>
+						<ins class="ui-icon" ng-class="{ldelim}'ui-icon-folder-open': (!child.minimized && child.children.length), 'ui-icon-folder-collapsed': (child.children.length && child.minimized), 'ui-icon-document': !child.children.length{rdelim}"> </ins>
+						<strong>{{child.title}}</strong>
+					</div>
+					<ul><branch></ul>
+				</li>
+			</ul>
+		</div>
 
 		<ul class="verticalMenu">
-			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
-			<li id="moveUpMenu" class="moveUpTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a></li>
-			<li id="moveDownMenu" class="moveDownTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a></li>
-			<li id="removeMenu" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
+			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a ng-click="add()">{t _add_new}</a></li>
+			<li id="removeMenu" ng-show="activeID" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a ng-click="remove()">{t _remove}</a></li>
 		</ul>
 
-		<div id="confirmations">
-			<div id="yellowZone">
-				<div id="staticPageAdded" class="yellowMessage" style="display: none;">
-					{img class="closeMessage" src="image/silk/cancel.png"}
-					<div>{t _new_page_was_successfully_added}</div>
-				</div>
-			</div>
-		</div>
 	</div>
 
-	<div class="treeManagerContainer maxHeight h--100">
-		<span id="settingsIndicator" class="progressIndicator" style="display: none;"></span>
+	<div class="treeManagerContainer">
 
-		<div id="pageContent" class="maxHeight">
-			{include file="backend/staticPage/emptyPage.tpl"}
-		</div>
+		<tabset>
+			<tab ng-repeat="instance in pages" ng-click="selectID(instance.ID)" heading="{{getTabTitle(instance)}}">
+				<div ng-show="instance.ID">
+					<ul class="menu" id="staticPageMenu">
+						<li id="codeMenu">
+							<a class="menu" ng-click="showcode = !showcode">{t _show_template_code}</a>
+						</li>
+					</ul>
+
+					<fieldset id="templateCode" ng-show="showcode">
+						<legend>{t _template_code}</legend>
+						{t _code_explain}:
+						<br /><br />
+						&lt;a href="<strong>{ldelim}pageUrl id={{instance.ID}}{rdelim}</strong>"&gt;<strong>{ldelim}pageName id={{instance.ID}}{rdelim}</strong>&lt;/a&gt;
+					</fieldset>
+				</div>
+
+				{form model="instance" name="myform" rel="controller=backend.staticPage action=save" ng_submit="save(this)" handle=$form method="post" role="page.update(edit),page.create(add)"}
+
+				<div id="editContainer">
+
+					{input name="title"}
+						{label}{t _title}:{/label}
+						{if $page.ID}
+							{textfield class="wider" id="title_`$page.ID`"}
+						{else}
+							{textfield class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
+						{/if}
+					{/input}
+
+					<p>{t _add_page_to_menu}</p>
+
+					{input name="menuInformation"}
+						{checkbox}
+						{label}{t _information_menu}{/label}
+					{/input}
+
+					{input name="menuRootCategories"}
+						{checkbox}
+						{label}{t _main_header_menu}{/label}
+					{/input}
+
+					{input name="handle"}
+						{label}{t _handle}:{/label}
+						{textfield id="handle"}
+					{/input}
+
+					{input name="text"}
+						{label class="wide"}{t _text}:{/label}
+						<div class="textarea" id="textContainer">
+							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
+						</div>
+					{/input}
+
+					{input name="metaDescription"}
+						{label class="wide"}{t _meta_description}:{/label}
+						{textarea style="width: 100%; height: 4em;"}
+					{/input}
+
+					{include file="backend/eav/fields.tpl" item=$page angular="instance"}
+
+					{language}
+						{input name="title_`$lang.ID`"}
+							{label}{t _title}:{/label}
+							{textfield class="wider"}
+						{/input}
+
+						{input name="text_`$lang.ID`"}
+							{label class="wide"}{t _text}:{/label}
+							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
+						{/input}
+
+						{input name="metaDescription_`{$lang.ID}`"}
+							{label class="wide"}{t _meta_description}:{/label}
+							{textarea style="width: 100%; height: 4em;"}
+						{/input}
+
+						{include file="backend/eav/fields.tpl" angular="instance" item=$page language=$lang.ID}
+					{/language}
+
+				</div>
+
+				<fieldset class="controls">
+					<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
+					<input ng-disabled="myform.$invalid" type="submit" value="{tn _save}" class="submit" />
+					{t _or}
+					<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
+				</fieldset>
+
+				{/form}
+			</tab>
+		</tabset>
 	</div>
 </div>
-
-{literal}
-<script type="text/javascript">
-	var pageHandler = new Backend.StaticPage({/literal}{$pages}{literal});
-
-	pageHandler.urls['edit'] = '{/literal}{link controller="backend.staticPage" action=edit}?id=_id_{literal}';
-	pageHandler.urls['add'] = '{/literal}{link controller="backend.staticPage" action=add}{literal}';
-	pageHandler.urls['delete'] = '{/literal}{link controller="backend.staticPage" action=delete}?id=_id_{literal}';
-	pageHandler.urls['moveup'] = '{/literal}{link controller="backend.staticPage" action=reorder}?order=up&id=_id_{literal}';
-	pageHandler.urls['movedown'] = '{/literal}{link controller="backend.staticPage" action=reorder}?order=down&id=_id_{literal}';
-	pageHandler.urls['empty'] = '{/literal}{link controller="backend.staticPage" action=emptyPage}{literal}';
-	pageHandler.urls['create'] = '{/literal}{link controller="backend.staticPage" action=create}{literal}';
-	pageHandler.urls['update'] = '{/literal}{link controller="backend.staticPage" action=update}{literal}';
-
-	// methods that need urls
-	pageHandler.afterInit();
-
-//	Event.observe(window, 'load', function() {pageHandler.activateCategory('00-store');})
-</script>
-{/literal}
-
-<div class="clear"></div>
-
-<div id="pageDelConf" style="display: none;">{t _del_conf}</div>
 
 {include file="layout/backend/footer.tpl"}

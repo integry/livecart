@@ -32,6 +32,11 @@ function smarty_function_calendar($params, $smarty)
 		$fieldName = $params['name'];
 	}
 
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
+
 	$id = isset($params['id']) ? $params['id'] : uniqid();
 	unset($params['id']);
 

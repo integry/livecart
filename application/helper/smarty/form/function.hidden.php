@@ -26,6 +26,10 @@ function smarty_function_hidden($params, $smarty)
 		throw new HelperException('Element must be placed in {form} block');
 	}
 
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
 
 	$fieldName = $params['name'];
 

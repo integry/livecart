@@ -33,6 +33,30 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return self::$application;
 	}
 
+	public function loadRequestModel(Request $request, $prefix = '')
+	{
+		$json = $request->getJSON();
+		$modelReq = new Request();
+		$modelReq->setValueArray($json);
+
+		if (!empty($json['attributes']) && is_array($json['attributes']))
+		{
+			foreach ($json['attributes'] as $key => $value)
+			{
+				$modelReq->set($prefix . 'specField_' . $key, $value['value']);
+				foreach (self::getApplication()->getLanguageArray() as $lang)
+				{
+					if (!empty($value['value_' . $lang]))
+					{
+						$modelReq->set($prefix . 'specField_' . $key . '_' . $lang, $value['value_' . $lang]);
+					}
+				}
+			}
+		}
+
+		$this->loadRequestData($modelReq, $prefix);
+	}
+
 	/**
 	 *  Note that the form may not always contain all the fields of the model, so we must always
 	 *  make sure that the data for the particular field has actually been submitted to avoid

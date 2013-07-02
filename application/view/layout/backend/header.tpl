@@ -39,14 +39,14 @@
 
 	<div id="pageTitleContainer">
 		<div id="pageTitle">{$PAGE_TITLE}</div>
-		<div id="breadcrumb_template" class="dom_template">
-			<span class="breadcrumb_item"><a href=""></a></span>
-			<span class="breadcrumb_separator"> &gt; </span>
-			<span class="breadcrumb_lastItem"></span>
-		</div>
-		<div id="breadcrumb"></div>
+
+		<ul id="breadcrumb" ng-controller="BreadCrumbController" ng-visible="items">
+			<li ng-repeat="item in items">
+				<a href="{$item.url}">{$item.title}</a>
+			</li>
+		</ul>
 	</div>
 
 	<div id="pageContentContainer">
 
-		<div id="pageContentInnerContainer" class="maxHeight h--20"  >
+		<div id="pageContentInnerContainer" class="maxHeight"  >

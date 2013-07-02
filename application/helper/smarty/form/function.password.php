@@ -23,6 +23,12 @@ function smarty_function_password($params, $smarty)
 	{
 		throw new HelperException('Element must be placed in {form} block');
 	}
+
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
+
 	$fieldName = $params['name'];
 
 	$output = '<input type="password"';

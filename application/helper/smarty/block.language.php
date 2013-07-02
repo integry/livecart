@@ -49,11 +49,10 @@ function smarty_block_language($params, $content, Smarty_Internal_Template $smar
 		}
 
 		$contentLang = $smarty->getTemplateVars('lang');
-		$content = '<div class="languageFormContainer languageFormContainer_' . $contentLang['ID'] . ' ' . $app->langClassNames[$contentLang['ID']] . '">' . $content . '</div>';
+		$content = '<tab class="lang_' . $contentLang['ID'] . '" heading="' . $contentLang['originalName'] . '">' . $content . '</tab>';
 
 		if (!$app->langHeadDisplayed)
 		{
-			$smarty->assign('langFormId', 'langForm_' . uniqid());
 			$smarty->assign('classNames', $app->langClassNames);
 			$content = $smarty->fetch('block/backend/langFormHead.tpl') . $content;
 			$app->langHeadDisplayed = true;

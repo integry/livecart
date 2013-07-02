@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng-app="LiveCart">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng-controller="BackendController" ng-app="LiveCart" ng-cloak>
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{'SOFT_NAME'|config} Admin - {$TITLE}</title>
@@ -28,19 +28,24 @@
 		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
 	{/if}
 
-	{includeJs file="library/KeyboardEvent.js" front=true}
-	{includeJs file="backend/Backend.js" front=true}
-	{includeJs file="backend/QuickSearch.js"}
+	{includeJs file="library/form/ActiveForm.js" front=true}
+	{includeJs file="library/form/Validator.js" front=true}
+	{includeJs file="backend/BackendToolbar.js" front=true}
+	{includeJs file="library/dhtmlHistory/dhtmlHistory.js" front=true}
 	{includeJs file="library/FooterToolbar.js" front=true}
+	{includeJs file="backend/QuickSearch.js" front=true}
+	{includeJs file="backend/Backend.js" front=true}
+	{includeJs file="library/KeyboardEvent.js" front=true}
+	{includeJs file="library/angular/tinymce.js" front=true}
+	{includeJs file="library/angular/ui-bootstrap-tpls-0.4.0.min.js" front=true}
+	{includeJs file="library/angular/angular.min.js" front=true}
 	{includeJs file="library/livecart.js" front=true}
-	{includeJs file="library/dhtmlHistory/dhtmlHistory.js"}
 	{includeJs file="library/jquery/plugins.js" front=true}
 	{includeJs file="library/jquery/jquery-ui.js" front=true}
 	{includeJs file="library/jquery/jquery-min.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
-	{includeJs file="backend/BackendToolbar.js"}
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+	{* <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script> *}
 	{compiledJs glue=true nameMethod=hash}
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 
@@ -61,13 +66,12 @@
 
 	if (window.tinyMCE)
 	{
-		tinyMCE.init({
+		window.tinyMCEOptions = {
 			theme : "advanced",
 			mode : "exact",
 			plugins: "table,contextmenu,paste",
 			paste_insert_word_content_callback : "convertWord",
 			paste_auto_cleanup_on_paste : true,
-			elements : "",
 			auto_reset_designmode : true,
 			theme_advanced_resizing_use_cookie : false,
 			theme_advanced_toolbar_location : "top",
@@ -90,7 +94,7 @@
 			, {'TINYMCE_PARAMS'|config}
 			{/if}
 			{literal}
-		});
+		};
 	}
 
 	if (window.jscolor)
@@ -146,6 +150,7 @@
 
 </head>
 <body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-{$request.action} ui-widget">
+<div id="confirmations" class="messagesList" app-messages></div>
 <script type="text/javascript">
 {literal}
 	window.historyStorage.init();

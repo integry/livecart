@@ -62,13 +62,17 @@ Backend.CustomerOrder.prototype =
 
 		this.insertTreeBranch(groups, 0);
 
+		this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {});
+		Backend.CustomerOrder.prototype.instance = this;
+
 		var orderID = Backend.getHash().match(/order_(\d+)/);
 		if (orderID && orderID[1])
 		{
 			Element.show($('loadingOrder'));
 			Backend.CustomerOrder.prototype.openOrder(orderID[1], null, function() {
+				this.activateGroup(1);
 				Element.hide($('loadingOrder'));
-			});
+			}.bind(this));
 		}
 		else
 		{
@@ -77,10 +81,6 @@ Backend.CustomerOrder.prototype =
 				window.location.hash = 'group_1#tabOrders__';
 			}
 		}
-
-		this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {});
-
-		Backend.CustomerOrder.prototype.instance = this;
 	},
 
 	createNewOrder: function(customerID)
@@ -197,8 +197,6 @@ Backend.CustomerOrder.prototype =
 			Backend.CustomerOrder.prototype.instance.tabControl.activateTab('tabOrders', function() {
 				Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
 			});
-
-			Backend.showContainer("orderGroupsManagerContainer");
 		}
 
 		Backend.CustomerOrder.prototype.activeGroup = id;
@@ -263,7 +261,7 @@ Backend.CustomerOrder.prototype =
 			Backend.CustomerOrder.Editor.prototype.getInstance(id);
 		}
 
-		Backend.showContainer("orderManagerContainer");
+		slideForm("orderManagerContainer")
 	},
 
 	onStopRebillsSuccess: function(transport, orderID)
@@ -620,6 +618,7 @@ Backend.CustomerOrder.Editor.prototype =
 		this.nodes.addCoupon = $("order_" + this.id + "_addCoupon");
 
 		// this.nodes.form = this.nodes.parent.down("form");
+		console.log(this.nodes.parent);
 		this.nodes.form = $A(this.nodes.parent.getElementsByTagName("form")).find(function(f){return f.id != "calendarForm";});
 		this.nodes.isCanceled = $("order_" + this.id + "_isCanceled");
 		this.nodes.isCanceledIndicator = $("order_" + this.id + "_isCanceledIndicator");
@@ -722,8 +721,6 @@ Backend.CustomerOrder.Editor.prototype =
 			orderIndicator.style.visibility = 'hidden';
 		}
 
-
-		Backend.showContainer("orderManagerContainer");
 		this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
 
 		this.toggleStatuses();
@@ -741,7 +738,6 @@ Backend.CustomerOrder.Editor.prototype =
 					[currentUser.nodes.form.elements.namedItem("email").value, function(e)
 					{
 					   e.preventDefault();
-					   Backend.hideContainer();
 					   setTimeout(function()
 					   {
 						   Backend.Breadcrumb.display(
@@ -778,7 +774,6 @@ Backend.CustomerOrder.Editor.prototype =
 			return;
 		}
 
-		Backend.hideContainer();
 		Form.restore(this.nodes.form);
 
 		if(Backend.UserGroup.prototype.treeBrowser)

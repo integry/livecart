@@ -42,14 +42,14 @@ function smarty_function_checkbox($params, $smarty)
 	}
 	$fieldName = $params['name'];
 
-	if (!isset($params['id']))
-	{
-	  	$params['id'] = $params['name'];
-	}
-
 	if(!isset($params['value']))
 	{
 		$params['value'] = 1;
+	}
+
+	if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
 	}
 
 	// Check permissions

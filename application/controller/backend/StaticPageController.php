@@ -19,84 +19,46 @@ class StaticPageController extends StoreManagementController
 	{
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		$f->setOrder(new ARFieldHandle('StaticPage', 'parentID'));
 		$s = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 
 		$pages = array();
 		foreach ($s as $page)
 		{
-			$pages[$page['ID']] = array('title' => $page['title_lang'], 'parent' => $page['parentID']);
+			$pointers[$page['ID']] = array('title' => $page['title_lang'], 'id' => $page['ID'], 'parentID' => $page['parentID']);
+		}
+
+		foreach ($pointers as $page)
+		{
+			if ($page['parentID'] && !empty($pointers[$page['parentID']]))
+			{
+				$root =& $pointers[$page['parentID']];
+			}
+			else
+			{
+				$root =& $pages;
+			}
+
+			$root['children'][] =& $pointers[$page['id']];
 		}
 
 		$response = new ActionResponse();
 		$response->set('pages', json_encode($pages));
-		return $response;
-	}
 
-	/**
-	 * @role create
-	 */
-	public function add()
-	{
-		$response = new ActionResponse();
-		$response->set('form', $this->getForm());
+		$form = $this->getForm();
+		$page = StaticPage::getNewInstance();
+		$page->getSpecification()->setFormResponse($response, $form);
+		$response->set('form', $form);
+		$response->set('page', $page->toArray());
+
 		return $response;
 	}
 
 	public function edit()
 	{
 		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
-		$pageArray = $page->toArray();
-		$spec = $page->getSpecification();
-		$form = $this->getForm();
-		$form->setData($pageArray);
-		$response = new ActionResponse();
-		$spec->setFormResponse($response, $form);
-		$response->set('form', $form);
-		$response->set('page', $pageArray);
-
-		return $response;
-	}
-
-	/**
-	 * Reorder pages
-	 *
-	 * @role sort
-	 */
-	public function reorder()
-	{
-		$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
-
-		$f = new ARSelectFilter();
-		$handle = new ARFieldHandle('StaticPage', 'position');
-		if ('down' == $this->request->get('order'))
-		{
-			$f->setCondition(new MoreThanCond($handle, $inst->position->get()));
-			$f->setOrder($handle, 'ASC');
-		}
-		else
-		{
-			$f->setCondition(new LessThanCond($handle, $inst->position->get()));
-			$f->setOrder($handle, 'DESC');
-		}
-		$f->setLimit(1);
-
-		$s = ActiveRecordModel::getRecordSet('StaticPage', $f);
-
-		if ($s->size())
-		{
-			$pos = $inst->position->get();
-			$replace = $s->get(0);
-			$inst->position->set($replace->position->get());
-			$replace->position->set($pos);
-			$inst->save();
-			$replace->save();
-
-			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success');
-		}
-		else
-		{
-			return new JSONResponse(false, 'failure', $this->translate('_could_not_reorder_pages'));
-		}
+		$page->getSpecification();
+		return new JSONResponse($page->toArray());
 	}
 
 	/**
@@ -115,6 +77,7 @@ class StaticPageController extends StoreManagementController
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
 
+		// update parent
 		if ($this->request->get('parent'))
 		{
 			$parent = StaticPage::getInstanceById((int)$this->request->get('parent'), StaticPage::LOAD_DATA);
@@ -125,8 +88,38 @@ class StaticPageController extends StoreManagementController
 		}
 
 		$page->parent->set($parent);
+		$page->save();
 
-		return $this->save($page, /*do not update menu*/false);
+		// update order
+		$f = new ARUpdateFilter();
+		if ($parent)
+		{
+			$f->setCondition(eq(f('StaticPage.parentID'), $parent->getID()));
+		}
+		else
+		{
+			$f->setCondition(new IsNullCond(f('StaticPage.parentID')));
+		}
+
+		$f->addModifier('StaticPage.position', new ARExpressionHandle('position+2'));
+
+		if ($this->request->get('previous'))
+		{
+			$previous = StaticPage::getInstanceById((int)$this->request->get('previous'), StaticPage::LOAD_DATA);
+			$position = $previous->position->get();
+			$f->mergeCondition(gt(f('StaticPage.position'), $position));
+			$page->position->set($position + 1);
+		}
+		else
+		{
+			$previous = null;
+			$page->position->set(1);
+		}
+
+		ActiveRecordModel::updateRecordSet('StaticPage', $f);
+		$page->save();
+
+		return new JSONResponse(array(), 'success', $this->translate('_pages_were_successfully_reordered'));
 	}
 
 	/**
@@ -161,28 +154,28 @@ class StaticPageController extends StoreManagementController
 		return new ActionResponse();
 	}
 
-	private function save(StaticPage $page, $updateMenu = true)
+	public function save()
 	{
-		$request = $this->getRequest();
+		$data = $this->request->getJSON();
+		$page = StaticPage::getInstanceByID($data['ID'], true);
 		$page->getSpecification();
-		$page->loadRequestData($request);
+		$page->loadRequestModel($this->request);
 
-		if($updateMenu)
+		$menu = array(
+			'INFORMATION' => !empty($data['menuInformation']),
+			'ROOT_CATEGORIES' => !empty($data['menuRootCategories'])
+		);
+
+		if(!array_filter($menu))
 		{
-			$menu = array (
-				'INFORMATION' => !!$request->get('menuInformation'),
-				'ROOT_CATEGORIES' => !!$request->get('menuRootCategories')
-			);
-			if($menu['INFORMATION'] == false && $menu['ROOT_CATEGORIES'] == false)
-			{
-				$menu = null;
-			}
-			$page->menu->set($menu);
+			$menu = null;
 		}
-		
+
+		$page->menu->set($menu);
+
 		$page->save();
-		$arr = $page->toArray();
-		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']), 'success', $this->translate('_page_has_been_successfully_saved'));
+
+		return new JSONResponse(array(), 'success', $this->translate('_page_has_been_successfully_saved'));
 	}
 
 	private function getForm()

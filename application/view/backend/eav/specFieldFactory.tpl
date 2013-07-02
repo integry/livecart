@@ -4,6 +4,13 @@
 	{assign var="fieldName" value="`$field.fieldName`_`$language`"}
 {/if}
 
+{if $angular}
+	{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.value"}
+	{if $language}
+		{assign var="ngmodel" value="`$ngmodel`_`$language`"}
+	{/if}
+{/if}
+
 {if $field.type == 1 || $field.type == 5}
 	{if $field.isMultiValue}
 		<div class="controls multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
@@ -46,7 +53,7 @@
 
 {elseif $field.type == 2}
 	<div class="controls">
-		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number" noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number" noFormat=true ng_model=$ngmodel}<span class="suffix">{$field.valueSuffix_lang}</span>
 	</div>
 
 {elseif $field.type == 3}
@@ -54,12 +61,12 @@
 		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
 		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{/if}
-	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text {$textFieldClass}" autocomplete=$autocomplete}
+	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text {$textFieldClass}" ng_model=$ngmodel autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
-	{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE"}
+	{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE" ng_model=$ngmodel}
 	<div class="text-error hidden"></div>
 
 {elseif $field.type == 6}
-	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`"}
+	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" ng_model=$ngmodel}
 {/if}

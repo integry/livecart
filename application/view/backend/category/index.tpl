@@ -7,7 +7,6 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/jscolor/jscolor.js"}
 {includeJs file="library/TabControl.js"}
-{includeJs file="library/lightbox/lightbox.js"}
 
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
@@ -51,7 +50,6 @@
 {includeCss file="backend/Review.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Eav.css"}
-{includeCss file="library/lightbox/lightbox.css"}
 
 {include file="backend/category/loadJsTree.tpl"}
 

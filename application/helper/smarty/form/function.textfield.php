@@ -40,6 +40,18 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 		$params['type'] = 'text';
 	}
 
+	if (isset($params['ng_model']))
+	{
+		$params['ng-model'] = $params['ng_model'];
+		unset($params['ng_model']);
+	}
+	else if (!empty($formParams['model']))
+	{
+		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+	}
+
+	$params = $smarty->applyFieldValidation($params, $formHandler);
+
 	// Check permissions
 	if($formParams['readonly'])
 	{
@@ -98,6 +110,7 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 			$acparams['field'] = 'query';
 		}
 
+		/*
 		$content .= '<script type="text/javascript">
 						jQuery("#' . $params['id'] . '").typeahead({
 								source: function (query, process) {
@@ -106,6 +119,7 @@ function smarty_function_textfield($params, Smarty_Internal_Template $smarty)
 									});
 								}});
 					</script>';
+		*/
 	}
 
 	return $content;

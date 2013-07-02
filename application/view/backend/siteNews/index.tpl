@@ -85,7 +85,32 @@
 
 </fieldset>
 
-<ul id="newsList" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed}">
+<ul ng-controller="SiteNewsController" id="newsList" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed}" active-list>
+	<li ng-repeat="friend in friends">
+		<div>
+			<div class="newsListContainer">
+
+				<span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
+					<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
+					<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
+				</span>
+
+				<span class="progressIndicator" style="display: none; "></span>
+
+				<span class="newsData">
+					<span class="newsTitle"></span>
+					<span class="newsDate"></span>
+					<br class="clear" />
+					<span class="newsText"></span>
+				</span>
+
+			</div>
+
+			<div class="formContainer activeList_editContainer" style="display: none;"></div>
+
+		</div>
+		<div class="clear"></div>
+	</li>
 </ul>
 
 <div style="display: none">
@@ -96,37 +121,163 @@
 	<span id="saveUrl">{link controller="backend.siteNews" action=save}</span>
 </div>
 
-<ul style="display: none;">
-<li id="newsList_template" style="position: relative;">
-	<div>
-		<div class="newsListContainer">
 
-			<span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
-				<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
-				<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
-			</span>
-
-			<span class="progressIndicator" style="display: none; "></span>
-
-			<span class="newsData">
-				<span class="newsTitle"></span>
-				<span class="newsDate"></span>
-				<br class="clear" />
-				<span class="newsText"></span>
-			</span>
-
-		</div>
-
-		<div class="formContainer activeList_editContainer" style="display: none;"></div>
-
-	</div>
-	<div class="clear"></div>
-</li>
-</ul>
-
+ <!-- Load the app module and its classes. -->
 <script type="text/javascript">
-	Form.State.backup($("newsForm"));
-	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
+
+
+// Define our AngularJS application module.
+var demo = angular.module( "Demo", [] );
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// I am the main controller for the application.
+demo.controller(
+"SiteNewsController",
+function( $scope ) {
+
+
+// -- Define Scope Methods. ----------------- //
+
+
+// I remove the given friend from the list of
+// selected friends.
+$scope.deselectFriend = function( friend ) {
+
+// NOTE: indexOf() works in IE 9+.
+var index = $scope.selectedFriends.indexOf( friend );
+
+if ( index >= 0 ) {
+
+$scope.selectedFriends.splice( index, 1 );
+
+}
+
+};
+
+
+// I add the given friend to the list of selected
+// friends.
+$scope.selectFriend = function( friend ) {
+
+$scope.selectedFriends.push( friend );
+
+};
+
+
+// -- Define Scope Variables. --------------- //
+
+
+// I am the list of friends to show.
+$scope.friends = [
+{
+id: 1,
+name: "Tricia",
+nickname: "Sugar Pie"
+},
+{
+id: 2,
+name: "Joanna",
+nickname: "Honey Dumpling"
+},
+{
+id: 3,
+name: "Kit",
+nickname: "Sparky"
+}
+];
+
+
+// I am the list of friend that have been selected
+// by the current user.
+$scope.selectedFriends = [];
+
+
+}
+);
+
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// I am the controller for the list item in the ngRepeat.
+// Each instance of the LI in the list will bet its own
+// instance of the ItemController.
+demo.controller(
+"ItemController",
+function( $scope ) {
+
+
+// -- Define Scope Methods. ----------------- //
+
+
+// I deactivate the list item, if possible.
+$scope.deactivate = function() {
+
+// If the list item is currently selected, then
+// ignore any request to deactivate.
+if ( $scope.isSelected ) {
+
+return;
+
+}
+
+$scope.isShowingNickname = false;
+
+};
+
+
+// I activate the list item.
+$scope.activate = function() {
+
+$scope.isShowingNickname = true;
+
+};
+
+
+// I toggle the selected-states of the current item.
+// Remember, since ngRepeat creates a new $scope for
+// each list item, we have a reference to our
+// contextual "friend" instance.
+$scope.toggleSelection = function() {
+
+$scope.isSelected = ! $scope.isSelected;
+
+// If the item has been selected, then we have to
+// tell the parent controller to selected the
+// relevant friend.
+if ( $scope.isSelected ) {
+
+$scope.selectFriend( $scope.friend );
+
+// If the item has been unselected, then we have
+// to tell the parent controller to DEselected the
+// relevant friend.
+} else {
+
+$scope.deselectFriend( $scope.friend );
+
+}
+
+};
+
+
+// -- Define Scope Variables. --------------- //
+
+
+// I determine if the nichkame is showing.
+$scope.isShowingNickname = false;
+
+// I determine if the list item has been selected.
+$scope.isSelected = false;
+
+
+}
+);
+
 </script>
 
 {include file="layout/backend/footer.tpl"}

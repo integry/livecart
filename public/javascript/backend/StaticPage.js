@@ -1,273 +1,388 @@
-/**
- *	@author Integry Systems
- */
+app.directive('yaTree', function () {
 
-Backend.StaticPage = Class.create();
+  return {
+    restrict: 'A',
+    transclude: 'element',
+    priority: 1000,
+    terminal: true,
+    compile: function (tElement, tAttrs, transclude) {
 
-Backend.StaticPage.prototype =
+      var repeatExpr, childExpr, rootExpr, childrenExpr;
+
+      repeatExpr = tAttrs.yaTree.match(/^(.*) in ((?:.*\.)?(.*)) at (.*)$/);
+      childExpr = repeatExpr[1];
+      rootExpr = repeatExpr[2];
+      childrenExpr = repeatExpr[3];
+      branchExpr = repeatExpr[4];
+
+      return function link (scope, element, attrs) {
+
+        var rootElement = element[0].parentNode,
+            cache = [];
+
+        // Reverse lookup object to avoid re-rendering elements
+        function lookup (child) {
+          var i = cache.length;
+          while (i--) {
+            if (cache[i].scope[childExpr] === child) {
+              return cache.splice(i, 1)[0];
+            }
+          }
+        }
+
+        scope.$watch(rootExpr, function (root) {
+
+          var currentCache = [];
+
+          // Recurse the data structure
+          (function walk (children, parentNode, parentScope, depth) {
+
+            var i = 0,
+                n = children.length,
+                last = n - 1,
+                cursor,
+                child,
+                cached,
+                childScope,
+                grandchildren;
+
+            // Iterate the children at the current level
+            for (; i < n; ++i) {
+
+              // We will compare the cached element to the element in
+              // at the destination index. If it does not match, then
+              // the cached element is being moved into this position.
+              cursor = parentNode.childNodes[i];
+
+              child = children[i];
+
+              // See if this child has been previously rendered
+              // using a reverse lookup by object reference
+              cached = lookup(child);
+
+              // If the parentScope no longer matches, we've moved.
+              // We'll have to transclude again so that scopes
+              // and controllers are properly inherited
+              if (cached && cached.parentScope !== parentScope) {
+                cache.push(cached);
+                cached = null;
+              }
+
+              // If it has not, render a new element and prepare its scope
+              // We also cache a reference to its branch node which will
+              // be used as the parentNode in the next level of recursion
+              if (!cached) {
+                transclude(parentScope.$new(), function (clone, childScope) {
+
+                  childScope[childExpr] = child;
+
+                  cached = {
+                    scope: childScope,
+                    parentScope: parentScope,
+                    element: clone[0],
+                    branch: clone.find(branchExpr)[0]
+                  };
+
+                  // This had to happen during transclusion so inherited
+                  // controllers, among other things, work properly
+                  parentNode.insertBefore(cached.element, cursor);
+
+                });
+              } else if (cached.element !== cursor) {
+                parentNode.insertBefore(cached.element, cursor);
+              }
+
+              // Lets's set some scope values
+              childScope = cached.scope;
+
+              // Store the current depth on the scope in case you want
+              // to use it (for good or evil, no judgment).
+              childScope.$depth = depth;
+
+              // Emulate some ng-repeat values
+              childScope.$index = i;
+              childScope.$first = (i === 0);
+              childScope.$last = (i === last);
+              childScope.$middle = !(childScope.$first || childScope.$last);
+
+              // Push the object onto the new cache which will replace
+              // the old cache at the end of the walk.
+              currentCache.push(cached);
+
+              // If the child has children of its own, recurse 'em.
+              grandchildren = child[childrenExpr];
+              if (grandchildren && grandchildren.length) {
+                walk(grandchildren, cached.branch, childScope, depth + 1);
+              }
+            }
+          })(root, rootElement, scope, 0);
+
+          // Cleanup objects which have been removed.
+          // Remove DOM elements and destroy scopes to prevent memory leaks.
+          i = cache.length;
+
+          while (i--) {
+            cached = cache[i];
+            if (cached.scope) {
+              cached.scope.$destroy();
+            }
+            if (cached.element) {
+              cached.element.parentNode.removeChild(cached.element);
+            }
+          }
+
+          // Replace previous cache.
+          cache = currentCache;
+
+        }, true);
+      };
+    }
+  };
+});
+
+app.directive('uiNestedSortable', ['$parse', function ($parse) {
+
+  'use strict';
+
+  var eventTypes = 'Create Start Sort Change BeforeStop Stop Update Receive Remove Over Out Activate Deactivate'.split(' ');
+
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+
+    var element = jQuery(element);
+
+      var options = attrs.uiNestedSortable ? $parse(attrs.uiNestedSortable)() : {};
+
+      angular.forEach(eventTypes, function (eventType) {
+
+        var attr = attrs['uiNestedSortable' + eventType],
+          callback;
+
+        if (attr) {
+          callback = $parse(attr);
+          options[eventType.charAt(0).toLowerCase() + eventType.substr(1)] = function (event, ui) {
+            scope.$apply(function () {
+
+              callback(scope, {
+                $event: event,
+                $ui: ui
+              });
+            });
+          };
+        }
+
+      });
+
+      element.nestedSortable(options);
+
+    }
+  };
+}]);
+
+app.factory('treeService', function($timeout)
 {
-  	treeBrowser: null,
+	var data = {
+		children: []
+		};
 
-  	urls: new Array(),
-
-	initialize: function(pages)
+	var service =
 	{
-		this.treeBrowser = new dhtmlXTreeObject("pageBrowser","","", 0);
-//		Backend.Breadcrumb.setTree(this.treeBrowser);
+		setTree: function(treeData)
+		{
+			data = treeData;
+		},
 
-		this.treeBrowser.def_img_x = 'auto';
-		this.treeBrowser.def_img_y = 'auto';
+		getTree: function()
+		{
+			return data;
+		},
 
-		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
-		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));
-		this.treeBrowser.setDragHandler(this.reorderCategory);
-		this.treeBrowser.enableDragAndDrop(1);
+		toggleMinimized: function (child)
+		{
+			child.minimized = !child.minimized;
+		},
 
-		this.treeBrowser.showFeedback =
-			function(itemId)
-			{
-				if (!this.iconUrls)
-				{
-					this.iconUrls = new Object();
+		addChild: function (child)
+		{
+			child.children.push({
+			  title: '',
+			  children: []
+			});
+		},
+
+		remove: function (child)
+		{
+			function walk(target) {
+			  var children = target.children,
+				i;
+			  if (children) {
+				i = children.length;
+				while (i--) {
+				  if (children[i].id == child) {
+					return children.splice(i, 1);
+				  } else {
+					walk(children[i])
+				  }
 				}
+			  }
+			}
+			walk(data);
+		},
 
-				if (!this.iconUrls[itemId])
-				{
-					this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+		update: function (event, ui)
+		{
+			var root = event.target,
+			  item = angular.element(ui.item),
+			  parent = item.parent(),
+			  target = (parent[0] === root) ? data : parent.scope().child,
+			  child = item.scope().child,
+			  index = jQuery(item).index();
+
+			target.children || (target.children = []);
+
+			function walk(target, child) {
+			  var children = target.children,
+				i;
+			  if (children) {
+				i = children.length;
+				while (i--) {
+				  if (children[i] === child) {
+					return children.splice(i, 1);
+				  } else {
+					walk(children[i], child);
+				  }
 				}
-
-				this.setItemImage(itemId, '../../../image/indicator.gif');
+			  }
 			}
+			walk(data, child);
 
-		this.treeBrowser.hideFeedback =
-			function()
+			target.children.splice(index, 0, child);
+
+			if (this.controller.update)
 			{
-				for (var itemId in this.iconUrls)
-				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);
-				}
+				this.controller.update(item);
 			}
+		},
 
-		this.insertTreeBranch(pages, 0);
-		this.showControls();
-	},
-
-	afterInit: function()
-	{
-		// at this initialization point this.urls are set.
-		var
-			match = Backend.getHash().match(/page_(\d+?)$/),
-			id=null;
-		if(match)
+		select: function(item)
 		{
-			id = match.pop();
-			this.activateCategory(id);
-		}
-	},
+			this.selectedID = item.id;
+			this.controller.activate(item);
+		},
 
-	showAddForm: function()
-	{
-		this.treeBrowser.clearSelection();
-		this.showControls();
-		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this), {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); } });
-	},
-
-	initForm: function()
-	{
-		if (window.tinyMCE)
+		selectID: function(ID)
 		{
-			tinyMCE.idCounter = 0;
-		}
-		ActiveForm.prototype.initTinyMceFields($('editContainer'));
-	},
+			console.log(ID);
+			this.selectedID = ID;
+		},
 
-	insertTreeBranch: function(treeBranch, rootId)
-	{
-		this.treeBrowser.showItemSign(rootId, 0);
-		for (k in treeBranch)
+		initController: function($scope)
 		{
-		  	if('function' != typeof treeBranch[k])
-		  	{
-				this.treeBrowser.insertNewItem(treeBranch[k].parent || rootId, k, treeBranch[k].title, null, 0, 0, 0, '', 1);
-				this.treeBrowser.showItemSign(k, 0);
-			}
-		}
-	},
+			this.controller = $scope;
 
-	save: function(form)
-	{
-		form.action = form.id.value
-			? pageHandler.urls.update
-			: pageHandler.urls.create;
-
-		new LiveCart.AjaxRequest(form, $('saveIndicator'), this.saveCompleted.bind(this));
-	},
-
-	saveCompleted: function(originalRequest)
-	{
-		var item = eval('(' + originalRequest.responseText + ')');
-
-		if (!this.treeBrowser.getItemText(item.id))
-		{
-			this.treeBrowser.insertNewItem(0, item.id, item.title, null, 0, 0, 0, '', 1);
-			this.treeBrowser.selectItem(item.id, true);
-		}
-		else
-		{
-			this.treeBrowser.setItemText(item.id, item.title);
-		}
-	},
-
-	activateCategory: function(id)
-	{
-		this.treeBrowser.showFeedback(id);
-		var url = this.urls['edit'].replace('_id_', id);
-		var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator', null, null, {onLoaded: function() { ActiveForm.prototype.destroyTinyMceFields($('pageContent')); }} );
-		upd.onComplete = this.displayPage.bind(this);
-
-		this.showControls()
-	},
-
-	displayPage: function(response)
-	{
-		if (window.tinyMCE)
-		{
-			tinyMCE.idCounter = 0;
-		}
-
-		this.treeBrowser.hideFeedback();
-		this.initForm();
-		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));
-	},
-
-	deleteSelected: function()
-	{
-		if (!confirm($('pageDelConf').innerHTML))
-		{
-			return false;
-		}
-
-		var id = this.treeBrowser.getSelectedItemId();
-		var url = this.urls['delete'].replace('_id_', id);
-		new LiveCart.AjaxRequest(url, null, this.deleteCompleted.bind(this));
-		this.treeBrowser.showFeedback(id);
-	},
-
-	deleteCompleted: function(originalRequest)
-	{
-		var response = eval('(' + originalRequest.responseText + ')');
-
-		if (response.id != 0)
-		{
-
-			parentId = this.treeBrowser.getParentId(response.id)
-			categoryIndex = this.treeBrowser.getIndexById(response.id)
-			if(parseInt(categoryIndex) - 1 > 0) {
-				secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) - 1)
-			} else {
-				secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-			}
-
-			this.treeBrowser.deleteItem(response.id, true);
-			new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');
-
-			try
+			$scope.setTree = function(treeData)
 			{
-				this.treeBrowser.selectItem(secondId, true);
-			}
-			catch(e)
+				$scope.tree.setTree(treeData);
+				$scope.data = $scope.tree.getTree();
+			};
+
+			$scope.updatePosition = function(event, ui)
 			{
-
-			}
+				$scope.tree.update(event, ui);
+			};
 		}
-	},
+	};
 
-	moveUp: function()
+	return service;
+
+
+});
+
+app.controller('TreeController', function ($scope, treeService, $http, $element)
+{
+	$scope.tree = treeService;
+	$scope.tree.initController($scope);
+
+	$scope.pages = [];
+	$scope.ids = {};
+
+	$scope.activate = function(child)
 	{
-		var id = this.treeBrowser.getSelectedItemId();
-		var url = this.urls['moveup'].replace('_id_', id);
-		new LiveCart.AjaxRequest(url, null, this.moveCompleted.bind(this));
-		this.treeBrowser.showFeedback(id);
-	},
-
-	moveDown: function()
-	{
-		var id = this.treeBrowser.getSelectedItemId();
-		var url = this.urls['movedown'].replace('_id_', id);
-		new LiveCart.AjaxRequest(url, null, this.moveCompleted.bind(this));
-		this.treeBrowser.showFeedback(id);
-	},
-
-	moveCompleted: function(originalRequest)
-	{
-		this.treeBrowser.hideFeedback();
-		var result = eval('(' + originalRequest.responseText + ')');
-
-		if (result.status == 'success')
+		if (!$scope.ids[child.id])
 		{
-			var direction = ('up' == result.order) ? 'up_strict' : 'down_strict';
-			this.treeBrowser.moveItem(result.id, direction);
-		}
-
-		this.showControls();
-	},
-
-	showTemplateCode: function()
-	{
-		if ($('templateCode'))
-		{
-			Element.show($('templateCode'));
-			Element.hide($('staticPageMenu'));
-		}
-	},
-
-	reorderCategory: function(targetId, parentId, siblingNodeId)
-	{
-		new LiveCart.AjaxRequest(Backend.Router.createUrl('backend.staticPage', 'move', {id: targetId, parent: parentId}));
-
-		return true;
-	},
-
-	showControls: function()
-	{
-		var categoryId = this.treeBrowser.getSelectedItemId();
-
-		parentId = this.treeBrowser.getParentId(categoryId)
-		categoryIndex = this.treeBrowser.getIndexById(categoryId)
-
-		nextCategoryId = categoryId ? this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1) : 0;
-
-		if(nextCategoryId && categoryId)
-		{
-			$("moveDownMenu").show();
+			$http.get(Router.createUrl('backend.staticPage', 'edit', {id : child.id})).success(function(data)
+			{
+				$scope.pages.push(data);
+				$scope.ids[data.ID] = true;
+				$scope.activeID = data.ID;
+			});
 		}
 		else
 		{
-			$("moveDownMenu").hide();
+			$scope.activeID = child.id;
 		}
+	};
 
-		if(categoryId && categoryIndex > 0)
-		{
-			$("moveUpMenu").show();
-		}
-		else
-		{
-			$("moveUpMenu").hide();
-		}
-
-		if(categoryId)
-		{
-			$("removeMenu").show();
-		}
-		else
-		{
-			$("removeMenu").hide();
-		}
-
-	},
-
-	cancel: function()
+	$scope.isActive = function(instance)
 	{
-		new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');
+		/*
+		if (instance)
+		{
+			return instance.ID == $scope.activeID;
+		}
+		*/
+	};
+
+	$scope.update = function(item)
+	{
+		var params = {id: angular.element(item).scope().child.id};
+		var parent = item.parent().scope();
+		if (parent.child)
+		{
+			params.parent = parent.child.id;
+		}
+		var prev = angular.element(item.prev()).scope();
+		if (prev && prev.child)
+		{
+			params.previous = prev.child.id;
+		}
+
+		$http.post(Router.createUrl('backend.staticPage', 'move', params), this.instance);
+	};
+
+	$scope.add = function()
+	{
+		if (!$scope.pages || $scope.pages[0].ID)
+		{
+			$scope.pages.splice({id: null, children: []}, 0, 0);
+		}
+
+		$scope.activeID = null;
+	};
+
+	$scope.remove = function()
+	{
+		if (confirm(Backend.getTranslation('_del_conf')))
+		{
+			$http.post(Router.createUrl('backend.staticPage', 'delete', {id: $scope.activeID}));
+			$scope.tree.remove($scope.activeID);
+			$scope.activeID = null;
+		}
+	};
+
+	$scope.getTabTitle = function(page)
+	{
+		return page.ID ? page.title : Backend.getTranslation('_add_new_title');
+	};
+
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend.staticPage', 'save'), this.instance);
 	}
+});
+
+var StaticPageController = function($scope)
+{
+
 }

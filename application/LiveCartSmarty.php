@@ -149,6 +149,54 @@ class LiveCartSmarty extends Smarty
 		return $this->processPlugins($source_content, $resource_name);
 	}
 
+	public function filterParams($params)
+	{
+		foreach ($params as $key => $param)
+		{
+			if (substr($key, 0, 3) == 'ng_')
+			{
+				$params[str_replace('_', '-', $key)] = $param;
+				unset($params[$key]);
+			}
+		}
+
+		return $params;
+	}
+
+	public function applyFieldValidation($params, Form $form)
+	{
+		$validation = $this->getFieldValidation($params['name'], $form);
+		foreach ($validation as $val)
+		{
+			$params[$val[0]] = $val[2];
+		}
+
+		return $params;
+	}
+
+	public function getFieldValidation($name, $form)
+	{
+		$var = $form->getValidator()->getValidatorVar($name);
+		if (!$var)
+		{
+			return;
+		}
+
+		$validation = array();
+		foreach ($var->getChecks() as $check)
+		{
+			$msg = $check->getViolationMsg();
+			$params = $check->getParamList();
+
+			if ($check instanceof IsNotEmptyCheck)
+			{
+				$validation[] = array('ng-required', $msg, true);
+			}
+		}
+
+		return $validation;
+	}
+
    /**
      * Get the compile path for this resource
      *
