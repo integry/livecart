@@ -19,7 +19,9 @@ class SettingsController extends StoreManagementController
 	 */
 	public function index()
 	{
-		$tree = $this->config->getTree();
+		$this->config->updateSettings();
+		$tree = array('children' => $this->config->getTree());
+
 		if (file_exists($this->getPrivateLabelFile()))
 		{
 			unset($tree['49-private-label']);
@@ -27,30 +29,20 @@ class SettingsController extends StoreManagementController
 
 		$response = new ActionResponse('categories', json_encode($tree));
 		$response->set('settings', json_encode($this->config->toArray()));
-		return $response;
-	}
-
-	/**
-	 * Individual settings section
-	 */
-	public function edit()
-	{
-		$this->config->updateSettings();
 
 		$defLang = $this->application->getDefaultLanguageCode();
 		$languages = $this->application->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 
-		$sectionId = $this->request->get('id');
-		$values = $this->config->getSettingsBySection($sectionId);
+		$values = $layouts = array();
 
-		$validation = $this->getValidationRules($values);
-		$form = $this->getForm($values, $validation);
-		$types = $multiLingualValues = array();
-
-		if (!$values)
+		foreach ($this->config->getSectionList() as $section)
 		{
-			return new RawResponse();
+			$values = array_merge($values, $this->config->getSettingsBySection($section));
+			$layouts[$section] = $this->config->getSectionLayout($section);
 		}
+
+		$form = $this->getForm($values, $this->getValidationRules($values));
+		$types = $multiLingualValues = array();
 
 		foreach ($values as $key => $value)
 		{
@@ -65,20 +57,19 @@ class SettingsController extends StoreManagementController
 			}
 			else
 			{
-				$form->set($key, $this->config->get($key));
+				if ($this->config->isValueSet($key))
+				{
+					$form->set($key, $this->config->get($key));
+				}
 			}
 
 			$types[$key] = $value['type'];
 		}
 
-		$response = new ActionResponse();
 		$response->set('form', $form);
-		$response->set('title', $this->translate($this->config->getSectionTitle($sectionId)));
 		$response->set('values', $values);
 		$response->set('types', $types);
-		$response->set('id', $sectionId);
-		$response->set('sectionKey', array_pop(explode('.', $sectionId)));
-		$response->set('layout', $this->config->getSectionLayout($sectionId));
+		$response->set('layouts', $layouts);
 		$response->set('multiLingualValues', $multiLingualValues);
 		return $response;
 	}
@@ -88,7 +79,13 @@ class SettingsController extends StoreManagementController
 	 */
 	public function save()
 	{
-		$values = $this->config->getSettingsBySection($this->request->get('id'));
+		$values = $layouts = array();
+
+		foreach ($this->config->getSectionList() as $section)
+		{
+			$values = array_merge($values, $this->config->getSettingsBySection($section));
+		}
+
 		$validation = $this->getValidationRules($values);
 		$validator = $this->buildValidator($values, $validation);
 
@@ -122,9 +119,13 @@ class SettingsController extends StoreManagementController
 						$this->config->set($key, $file);
 					}
 				}
+				else if ('bool' == $value['type'])
+				{
+					$this->config->set($key, $this->request->get($key, 0));
+				}
 				else
 				{
-					$this->config->set($key, $this->request->get($key, 'bool' == $value['type'] ? 0 : ''));
+					$this->config->set($key, $this->request->get($key));
 				}
 
 				$data[$key] = $this->config->get($key);
@@ -135,8 +136,8 @@ class SettingsController extends StoreManagementController
 
 			ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
 			SearchableConfigurationIndexing::buildIndexIfNeeded();
-			$sc = new SearchableConfigurationIndexing($this->config, $this->application);
-			$sc->buildIndex($this->request->get('id'));
+//			$sc = new SearchableConfigurationIndexing($this->config, $this->application);
+//			$sc->buildIndex($this->request->get('id'));
 
 			return new JSONResponse($data, 'success', $this->translate('_save_conf'));
 		}
@@ -182,15 +183,18 @@ class SettingsController extends StoreManagementController
 		// set multi-select values
 		foreach ($settings as $key => $value)
 		{
-			if ('multi' == $value['extra'])
+			if ($this->config->isValueSet($value['title']))
 			{
-				$values = $this->config->get($value['title']);
-
-				if (is_array($values))
+				if ('multi' == $value['extra'])
 				{
-					foreach ($values as $key => $val)
+					$values = $this->config->get($value['title']);
+
+					if (is_array($values))
 					{
-						$form->set($value['title'] . '[' . $key . ']', 1);
+						foreach ($values as $key => $val)
+						{
+							$form->set($value['title'] . '[' . $key . ']', 1);
+						}
 					}
 				}
 			}

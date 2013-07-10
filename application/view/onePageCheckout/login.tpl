@@ -26,7 +26,7 @@
 
 	<div class="one-page-checkout-login-field controls">
 		<label>{t _your_email}:</label>
-		<div class="control-group">
+		<div class="row">
 			<input type="text" class="text" id="email" name="email" />
 		</div>
 	</div>

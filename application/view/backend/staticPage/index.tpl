@@ -9,32 +9,12 @@
 
 <div id="staticPageContainer" ng-controller="TreeController" ng-init="setTree({$pages|escape})">
 	<div class="treeContainer">
-		<div class="tree ui-widget-content">
-			<ul ui-nested-sortable="{
-				listType: 'ul',
-				doNotClear: true,
-				placeholder: 'ui-state-highlight',
-				forcePlaceholderSize: true,
-				toleranceElement: '> div'
-				}"
-				ui-nested-sortable-stop="updatePosition($event, $ui)"
-				>
-				<li ya-tree="child in data.children at ul" ng-class="minimized-{{child.minimized == true}}">
-					<div ng-click="tree.select(child)" ng-mouseover="mouseover=1" ng-mouseout="mouseover=0" ng-class="{ldelim}'ui-state-hover': mouseover, 'ui-state-active': tree.selectedID == child.id{rdelim}">
-						<ins ng-click="child.minimized = !child.minimized" ng-show="child.children.length" class="jstree-icon ui-icon ui-icon-triangle-1-e"> </ins>
-						<ins class="ui-icon" ng-class="{ldelim}'ui-icon-folder-open': (!child.minimized && child.children.length), 'ui-icon-folder-collapsed': (child.children.length && child.minimized), 'ui-icon-document': !child.children.length{rdelim}"> </ins>
-						<strong>{{child.title}}</strong>
-					</div>
-					<ul><branch></ul>
-				</li>
-			</ul>
-		</div>
+		{include file="block/backend/tree.tpl" sortable=true}
 
 		<ul class="verticalMenu">
 			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a ng-click="add()">{t _add_new}</a></li>
 			<li id="removeMenu" ng-show="activeID" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a ng-click="remove()">{t _remove}</a></li>
 		</ul>
-
 	</div>
 
 	<div class="treeManagerContainer">

@@ -23,6 +23,8 @@ class ModuleController extends StoreManagementController
 
 	protected function initRepos()
 	{
+		return;
+
 		$conf = $this->application->getConfigContainer();
 		$conf->clearConfigurationCache();
 		foreach ($conf->getAvailableModules() as $module)
@@ -120,6 +122,8 @@ class ModuleController extends StoreManagementController
 
 	private function getRepoResponse($query, $params = array(), $raw = false)
 	{
+		return;
+
 		$repo = $this->repos[$this->request->get('repo')];
 		$repo->setHandshake($this->request->get('handshake'));
 		$params['package'] = $this->request->get('id');

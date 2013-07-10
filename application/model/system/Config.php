@@ -106,7 +106,10 @@ class Config
 		// @todo - this can obviously be optimized
 		foreach ($this->values as $key => $value)
 		{
-			$array[$key] = $this->get($key);
+			if ($this->isValueSet($key))
+			{
+				$array[$key] = $this->get($key);
+			}
 		}
 
 		return $array;
@@ -167,7 +170,7 @@ class Config
 		{
 			foreach($this->values[$key] as $k => $v)
 			{
-				if (strlen($k) != 2 || !is_string($v) || !preg_match('/^[a-z]{2}$/', $k))
+				if (strlen($k) != 2 || !preg_match('/^[a-z]{2}$/', $k))
 				{
 					return false;
 				}
@@ -311,18 +314,17 @@ class Config
 		{
 			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
 			{
-
 				$ini = parse_ini_file($file->getPathName(), true);
 				$key = substr($file->getFileName(), 0, -4);
 
 				$out = array();
-				$out['name'] = $this->application->translate(key($ini));
+				$out['title'] = $this->application->translate(key($ini));
 
 				$subpath = $file->getPath() . '/' . substr($key, 3);
 
 				if (file_exists($subpath) && (strlen($key) > 3))
 				{
-				  	$out['subs'] = $this->getTree($subpath, substr($key, 3));
+				  	$out['children'] = $this->getTree($subpath, substr($key, 3));
 				}
 
 				if ($keyPrefix)
@@ -330,13 +332,35 @@ class Config
 				  	$key = $keyPrefix . '.' . $key;
 				}
 
-				$res[$key] = $out;
+				$out['id'] = $key;
+
+				$res[] = $out;
 			}
 		}
 
-		ksort($res);
+		usort($res, function ($a, $b) { return $a['id'] > $b['id'] ? 1 : -1; });
 
 		return $res;
+	}
+
+	public function getSectionList()
+	{
+		function getBranchSections($branch)
+		{
+			$sections = array();
+			foreach ($branch['children'] as $element)
+			{
+				$sections[] = $element['id'];
+				if (!empty($element['children']))
+				{
+					$sections = array_merge($sections, getBranchSections($element));
+				}
+			}
+
+			return $sections;
+		}
+
+		return getBranchSections(array('children' => $this->getTree()));
 	}
 
 	public function getSettingsBySection($sectionId)
@@ -432,7 +456,7 @@ class Config
 			  	$type = 'string';
 			}
 
-			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key, 'extra' => $extra);
+			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key, 'extra' => $extra, 'section' => $sectionId);
 		}
 
 		return $values;
@@ -455,9 +479,9 @@ class Config
 		foreach ($branch as $key => $sub)
 		{
 			$res[] = $key;
-			if (is_array($sub) && isset($sub['subs']))
+			if (is_array($sub) && isset($sub['children']))
 			{
-				$res = array_merge($res, $this->getAllSections($sub['subs']));
+				$res = array_merge($res, $this->getAllSections($sub['children']));
 			}
 		}
 

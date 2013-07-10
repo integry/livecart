@@ -38,11 +38,23 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 			}
 		}
 
-		$content = '<div class="control-group ' . ($msg ? 'has-error' : '') .  ' name_' . $params['name'] . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . (!empty($params['class']) ? ' ' . $params['class'] : '' ) . '">' . $content;
+		$name = $params['name'];
+		$class = !empty($params['class']) ? $params['class'] : ' ';
+		unset($params['name'], $params['class']);
 
-		foreach ($smarty->getFieldValidation($params['name'], $formHandler) as $val)
+		$c = $content;
+		$content = '<div class="row ' . ($msg ? 'has-error' : '') .  ' name_' . $name . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . $class . '"';
+
+		foreach ($params as $n => $param)
 		{
-			$content .= '<div ng-show="myform.' . $params['name'] . '.$error.' . substr($val[0], 3) . '" class="text-danger">' . $val[1] . '</div>';
+			$content .= ' ' . $n . '="' . $param . '"';
+		}
+
+		$content .= '>' . $c;
+
+		foreach ($smarty->getFieldValidation($name, $formHandler) as $val)
+		{
+			$content .= '<div ng-show="myform.' . $name . '.$error.' . substr($val[0], 3) . '" class="text-danger">' . $val[1] . '</div>';
 		}
 
 		if ($msg)

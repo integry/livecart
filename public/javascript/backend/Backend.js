@@ -73,7 +73,7 @@ angular
         });
     });
 
-var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors']);
+var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree']);
 
 app.run(function($rootScope)
 {

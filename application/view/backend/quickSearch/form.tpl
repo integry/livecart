@@ -5,7 +5,7 @@
 			autocomplete="off"
 			name="q"
 			type="text"
-			value="{translate|escape:"html" text=$hint}"
+			placeholder="{translate|escape:"html" text=$hint}"
 			class="text quickSearchInput hasHint"
 		/>
 		<input type="hidden" value="{$limit}" name="limit" />

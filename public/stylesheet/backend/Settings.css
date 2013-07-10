@@ -3,24 +3,9 @@ h1
 	margin-bottom: 6px;
 }
 
-#settingsContent label.setting
-{
-	display: block;
-	float: auto;
-	float: none;
-	margin-bottom: 0px;
-	width: auto;
-	background-repeat: no-repeat;
-}
-
 #settingsContent select
 {
     width: auto;
-}
-
-p.checkbox
-{
-	padding-left: 0px;
 }
 
 div.multi
@@ -28,11 +13,6 @@ div.multi
     border: 1px solid gray;
     margin: 5px;
     background: #EEE;
-}
-
-div.setting div.input input.checkbox
-{
-	margin-left: 0;
 }
 
 #settingsBrowser
@@ -141,7 +121,7 @@ div.setting div.input input.checkbox
 
 #SettingsSearchQuery
 {
-	font-size: 14px;
+	margin-bottom: 10px;
 }
 
 #SettingsSearchContainer h3
@@ -175,5 +155,5 @@ label.repoDown
 
 fieldset.settings
 {
-	padding-left: 1em;
+	padding-left: 2em;
 }

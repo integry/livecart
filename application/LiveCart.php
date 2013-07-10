@@ -1568,11 +1568,15 @@ class LiveCart extends Application implements Serializable
 		if (!$this->cache)
 		{
 			$class = $this->config->get('CACHE_METHOD');
-			ClassLoader::import("application.model.cache." . $class);
-			$this->cache = new $class($this);
+
+			if ($class)
+			{
+				ClassLoader::import("application.model.cache." . $class);
+				$this->cache = new $class($this);
+			}
 
 			// default to file cache
-			if (!$this->cache->isValid())
+			if (!$class || !$this->cache->isValid())
 			{
 				ClassLoader::import("application.model.cache.FileCache");
 				$this->cache = new FileCache($this);

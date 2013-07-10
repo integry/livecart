@@ -1,4 +1,4 @@
-<div class="control-group">
+<div class="row">
 {foreach from=$rates.$key item="rate" name="rates"}
 <div class="radio">
 	<label>
