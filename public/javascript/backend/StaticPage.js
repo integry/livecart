@@ -33,20 +33,8 @@ app.controller('TreeController', function ($scope, treeService, $http, $element)
 		*/
 	};
 
-	$scope.update = function(item)
+	$scope.update = function(item, params)
 	{
-		var params = {id: angular.element(item).scope().child.id};
-		var parent = item.parent().scope();
-		if (parent.child)
-		{
-			params.parent = parent.child.id;
-		}
-		var prev = angular.element(item.prev()).scope();
-		if (prev && prev.child)
-		{
-			params.previous = prev.child.id;
-		}
-
 		$http.post(Router.createUrl('backend.staticPage', 'move', params), this.instance);
 	};
 

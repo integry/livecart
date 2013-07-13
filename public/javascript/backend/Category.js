@@ -15,13 +15,13 @@ app.directive("tabRoute", function($compile, $http, $location)
 				newElem.attr(val, attrs[name]);
 			});
 
-			newElem.attr('select', 'activate(this)');
+			newElem.attr('select', 'activate()');
 
 			newElem = $compile(newElem)(scope);
 
 			element.replaceWith(newElem);
 
-			scope.activate = function(p)
+			scope.activate = function()
 			{
 				$location.path(newElem.attr('route'));
 				var content = jQuery(jQuery(newElem).closest('.tabbable').find('.tab-content .tab-pane.active')[jQuery(newElem).index()]);
@@ -71,21 +71,9 @@ app.controller('CategoryController', function ($scope, treeService, $http, $elem
 		*/
 	};
 
-	$scope.update = function(item)
+	$scope.update = function(item, params)
 	{
-		var params = {id: angular.element(item).scope().child.id};
-		var parent = item.parent().scope();
-		if (parent.child)
-		{
-			params.parent = parent.child.id;
-		}
-		var prev = angular.element(item.prev()).scope();
-		if (prev && prev.child)
-		{
-			params.previous = prev.child.id;
-		}
-
-		$http.post(Router.createUrl('backend.staticPage', 'move', params), this.instance);
+		$http.post(Router.createUrl('backend.category', 'move', params), this.instance);
 	};
 
 	$scope.add = function()

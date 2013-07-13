@@ -212,23 +212,15 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @role !category.sort
 	 */
-	public function reorder()
+	public function move()
 	{
 		$targetNode = Category::getInstanceByID((int)$this->request->get("id"));
-		$parentNode = Category::getInstanceByID((int)$this->request->get("parentId"));
+		$parentNode = Category::getInstanceByID((int)$this->request->get("parent"));
+		$next = $this->request->get("next") ? Category::getInstanceByID((int)$this->request->get("next")) : null;
 
 		try
 		{
-			if($direction = $this->request->get("direction", false))
-			{
-				if(ActiveTreeNode::DIRECTION_LEFT == $direction) $targetNode->moveLeft(false);
-				if(ActiveTreeNode::DIRECTION_RIGHT == $direction) $targetNode->moveRight(false);
-			}
-			else
-			{
-				$targetNode->moveTo($parentNode);
-			}
-
+			$targetNode->moveTo($parentNode, $next);
 			Category::reindex();
 			Category::recalculateProductsCount();
 
@@ -238,8 +230,6 @@ class CategoryController extends StoreManagementController
 		{
 			return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
 		}
-
-		return new JSONResponse($status);
 	}
 
 	public function countTabsItems()

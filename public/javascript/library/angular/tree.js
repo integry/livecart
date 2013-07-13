@@ -262,8 +262,32 @@ treeModule.factory('treeService', function($timeout)
 
 			if (this.controller.update)
 			{
-				this.controller.update(item);
+				this.controller.update(item, this.getUpdateParams(item));
 			}
+		},
+
+		getUpdateParams: function(item)
+		{
+			var params = {id: angular.element(item).scope().child.id};
+			var parent = item.parent().scope();
+			if (parent.child)
+			{
+				params.parent = parent.child.id;
+			}
+
+			var prev = angular.element(item.prev()).scope();
+			if (prev && prev.child)
+			{
+				params.previous = prev.child.id;
+			}
+
+			var next = angular.element(item.next()).scope();
+			if (next && next.child)
+			{
+				params.next = next.child.id;
+			}
+
+			return params;
 		},
 
 		select: function(item)
