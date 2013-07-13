@@ -82,6 +82,9 @@ function smarty_function_checkbox($params, $smarty)
 		unset($params['checked']);
 	}
 
+	$params['ng-true-value'] = 1;
+	$params['ng-false-value'] = 0;
+
 	$output = '<input type="checkbox"';
 	foreach ($params as $name => $value)
 	{

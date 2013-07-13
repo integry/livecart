@@ -1026,10 +1026,9 @@ form
     display: none;
 }
 
-form p, form div.field
+form .row
 {
-    position: relative;
-    clear: both;
+	margin: 0;
 }
 
 fieldset.error, div.error, fieldset.container

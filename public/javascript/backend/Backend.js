@@ -75,6 +75,11 @@ angular
 
 var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree']);
 
+app.config(function($locationProvider)
+{
+	$locationProvider.html5Mode(false);
+});
+
 app.run(function($rootScope)
 {
 	$rootScope.route = function(controller, action, params)
@@ -83,7 +88,8 @@ app.run(function($rootScope)
 	}
 });
 
-app.controller('BackendController', function($scope) {
+app.controller('BackendController', function($scope)
+{
     $scope.tinymceOptions = window.tinyMCEOptions;
     $scope.getTinyMceOpts = function()
     {

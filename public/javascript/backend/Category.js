@@ -1,3 +1,128 @@
+app.directive("tabRoute", function($compile, $http, $location)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        priority: 0,
+
+        link: function(scope, element, attrs)
+        {
+			var newElem = angular.element('<tab><ng-include src="\'http://localhost' + element.attr('template') + '\'"></ng-include></tab>');
+
+			angular.forEach(attrs.$attr, function(val, name)
+			{
+				newElem.attr(val, attrs[name]);
+			});
+
+			newElem.attr('select', 'activate(this)');
+
+			newElem = $compile(newElem)(scope);
+
+			element.replaceWith(newElem);
+
+			scope.activate = function(p)
+			{
+				$location.path(newElem.attr('route'));
+				var content = jQuery(jQuery(newElem).closest('.tabbable').find('.tab-content .tab-pane.active')[jQuery(newElem).index()]);
+				if (content.is(':empty'))
+				{
+					$http({method: 'GET', url: newElem.attr('template')}).
+					 success(function(data, status, headers, config) {
+						var html = content.html(data);
+						$compile(html)(scope);
+						});
+				}
+			};
+        }
+    };
+});
+
+app.controller('CategoryController', function ($scope, treeService, $http, $element)
+{
+	$scope.tree = treeService;
+	$scope.tree.initController($scope);
+
+	$scope.categories = [];
+	$scope.ids = {};
+
+	$scope.alert = function(t) { console.log(t); };
+
+	$scope.setData = function(t) { console.log(t); };
+
+	$scope.activate = function(child)
+	{
+		if (!$scope.ids[child.id])
+		{
+			$scope.categories.push(child);
+			$scope.ids[child.id] = true;
+		}
+
+		$scope.activeID = child.id;
+	};
+
+	$scope.isActive = function(instance)
+	{
+		/*
+		if (instance)
+		{
+			return instance.ID == $scope.activeID;
+		}
+		*/
+	};
+
+	$scope.update = function(item)
+	{
+		var params = {id: angular.element(item).scope().child.id};
+		var parent = item.parent().scope();
+		if (parent.child)
+		{
+			params.parent = parent.child.id;
+		}
+		var prev = angular.element(item.prev()).scope();
+		if (prev && prev.child)
+		{
+			params.previous = prev.child.id;
+		}
+
+		$http.post(Router.createUrl('backend.staticPage', 'move', params), this.instance);
+	};
+
+	$scope.add = function()
+	{
+		if (!$scope.pages || $scope.pages[0].ID)
+		{
+			$scope.pages.splice({id: null, children: []}, 0, 0);
+		}
+
+		$scope.activeID = null;
+	};
+
+	$scope.remove = function()
+	{
+		if (confirm(Backend.getTranslation('_del_conf')))
+		{
+			$http.post(Router.createUrl('backend.staticPage', 'delete', {id: $scope.activeID}));
+			$scope.tree.remove($scope.activeID);
+			$scope.activeID = null;
+		}
+	};
+});
+
+app.controller('CategoryFormController', function ($scope, $http)
+{
+	$http.get(Router.createUrl('backend.category', 'category', {id: $scope.category.id})).
+		success(function(data, status, headers, config)
+		{
+			$scope.category = data;
+		});
+
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend.category', 'update'), $scope.category);
+	}
+});
+
 /**
  *	@author Integry Systems
  */

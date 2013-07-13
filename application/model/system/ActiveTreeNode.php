@@ -271,9 +271,9 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @param string $className
 	 * @param bool $loadReferencedRecords
 	 */
-	public static function loadTree($className, $loadReferencedRecords = false)
+	public static function loadTree($loadReferencedRecords = false)
 	{
-		$root = self::getRootNode($className);
+		$root = self::getRootNode(get_called_class());
 		$root->loadSubTree($loadReferencedRecords);
 	}
 

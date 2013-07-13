@@ -33,9 +33,14 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return self::$application;
 	}
 
-	public function loadRequestModel(Request $request, $prefix = '')
+	public function loadRequestModel(Request $request, $key = '')
 	{
 		$json = $request->getJSON();
+		if ($key)
+		{
+			$json = $json[$key];
+		}
+
 		$modelReq = new Request();
 		$modelReq->setValueArray($json);
 
@@ -43,18 +48,32 @@ abstract class ActiveRecordModel extends ActiveRecord
 		{
 			foreach ($json['attributes'] as $key => $value)
 			{
-				$modelReq->set($prefix . 'specField_' . $key, $value['value']);
+				$modelReq->set('specField_' . $key, $value['value']);
 				foreach (self::getApplication()->getLanguageArray() as $lang)
 				{
 					if (!empty($value['value_' . $lang]))
 					{
-						$modelReq->set($prefix . 'specField_' . $key . '_' . $lang, $value['value_' . $lang]);
+						$modelReq->set('specField_' . $key . '_' . $lang, $value['value_' . $lang]);
 					}
 				}
 			}
 		}
 
-		$this->loadRequestData($modelReq, $prefix);
+		$this->loadRequestData($modelReq);
+	}
+
+	public static function getRequestInstance(Request $request)
+	{
+		$data = $request->getJSON();
+		return ActiveRecordModel::getInstanceByID(get_called_class(), $data['ID'], true);
+	}
+
+	public static function updateFromRequest(Request $request)
+	{
+		$instance = self::getRequestInstance($request);
+		$instance->loadRequestModel($request);
+
+		return $instance;
 	}
 
 	/**
@@ -359,6 +378,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		if ($this->specificationInstance && ($this->specificationInstance instanceof EavSpecificationManager) && (empty($array['attributes']) || $force))
 		{
 			$array['attributes'] = $this->specificationInstance->toArray();
+			$array['attributes']['markAsJSONObject'] = true;
 			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);
 		}
 

@@ -86,9 +86,9 @@
 
 .activeGrid_viewport
 {
-    /* margin-right: -67px; */
-    width: 100%;
-    height: auto !important;
+	margin-right: -20px;
+	width: 100%;
+	height: auto !important;
 }
 
 .activeGrid_viewport.loading

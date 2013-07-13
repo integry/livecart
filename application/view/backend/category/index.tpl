@@ -61,92 +61,46 @@
 <div id="filter_item_blank" class="dom_template">{include file="backend/filterGroup/form.tpl"}</div>
 <div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
-<div id="productOption_item_blank" class="dom_template">{include file="backend/productOption/form.tpl"}</div>
+<div id="productOption_item_blank" class="dom_template">{* include file="backend/productOption/form.tpl" *}</div>
 
-<div id="confirmations">
-	<div id="redZone">
-		<div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png" }
-			<div>{t _could_not_create_product_relationship}</div>
-		</div>
-		<div id="productFileSaveFailure" class="redMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _could_not_save_product_file}</div>
-		</div>
-		<div id="productImageSaveFailure" class="redMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _could_not_save_product_image}</div>
+<div ng-controller="CategoryController" ng-init="setTree({$categoryList|escape})">
+	<div class="treeContainer">
+		{include file="block/backend/tree.tpl" sortable=true}
+
+		{allowed role="category.create,category.remove,category.sort"}
+			{t _with_selected_category}:
+
+			<ul id="categoryBrowserActions" class="verticalMenu">
+
+				{allowed role="category.create"}
+					<li class="addTreeNode">
+						<a href="#" id="createNewCategoryLink">
+							{t _create_subcategory}
+						</a>
+					</li>
+				{/allowed}
+
+				{allowed role="category.remove"}
+					<li class="removeTreeNode">
+						<a href="#" id="removeCategoryLink">
+							{t _remove_category}
+						</a>
+					</li>
+				{/allowed}
+			</ul>
+		{/allowed}
+	</div>
+
+	<div id="managerContainer" class="treeManagerContainer maxHeight h--60">
+		<div ng-repeat="category in categories" ng-show="category.id == activeID">
+			<tabset>
+				{* <tab-route heading="{t _products}" template="{link controller="backend.product" action="index"}" route="{{'backend.product/' + activeID + '/index'}}"></tab-route> *}
+				<tab-route heading="{t _category_details}" template="{link controller="backend.category" action="form"}" route="{{route('backend.category', 'category', {id: category.id})}}"></tab-route>
+			</tabset>
 		</div>
 	</div>
-	<div id="yellowZone">
-		<div id="categoryImageSaved" class="yellowMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _category_image_was_successfully_saved}</div>
-		</div>
-		<div id="productImageSaved" class="yellowMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _product_image_was_successfully_saved}</div>
-		</div>
-		<div id="productFileSaved" class="yellowMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _product_file_was_successfully_saved}</div>
-		</div>
-		<div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
-			{img class="closeMessage" src="image/silk/cancel.png"}
-			<div>{t _a_relationship_between_products_was_successfully_created}</div>
-		</div>
-	</div>
-</div>
 
-<div id="catgegoryContainer" class="treeContainer  maxHeight h--60">
-	<div id="categoryBrowser" class="treeBrowser"></div>
-
-	<br />
-
-	{allowed role="category.create,category.remove,category.sort"}
-		{t _with_selected_category}:
-
-		<ul id="categoryBrowserActions" class="verticalMenu">
-
-			{allowed role="category.create"}
-				<li class="addTreeNode">
-					<a href="#" id="createNewCategoryLink">
-						{t _create_subcategory}
-					</a>
-				</li>
-			{/allowed}
-
-			{allowed role="category.sort"}
-				<li class="moveUpTreeNode">
-					<a href="#" id="moveCategoryUp">
-						{t _move_category_up}
-					</a>
-				</li>
-				<li class="moveDownTreeNode">
-					<a href="#" id="moveCategoryDown">
-						{t _move_category_down}
-					</a>
-				</li>
-			{/allowed}
-
-			{allowed role="category.remove"}
-				<li class="removeTreeNode">
-					<a href="#" id="removeCategoryLink">
-						{t _remove_category}
-					</a>
-				</li>
-			{/allowed}
-		</ul>
-
-	{/allowed}
-
-</div>
-
-<div id="managerContainer" class="treeManagerContainer maxHeight h--60">
-
-	<div id="loadingProduct" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
-		<span style="padding: 40px; background-color: white; border: 1px solid black;">{t _loading_product}<span class="progressIndicator"></span></span>
-	</div>
+	{*
 
 	<div id="categoryTabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<div id="tabContainer" class="tabContainer">
@@ -166,8 +120,9 @@
 		<div id="sectionContainer" class="ui-tabs-panel ui-widget-content ui-corner-bottom sectionContainer maxHeight  h--50">
 		</div>
 	</div>
-
 	<div id="addProductContainer" style="display: none;"></div>
+	*}
+
 </div>
 
 <script type="text/javascript">
@@ -181,25 +136,9 @@
 
 	Backend.showContainer('managerContainer');
 
-	/**
-	 * URL assigment for internal javascript requests
-	 */
-	Backend.Category.links = {literal}{}{/literal};
-	Backend.Category.links.popup  = '{link controller="backend.category" action=popup}';
-	Backend.Category.links.create  = '{link controller="backend.category" action=create id=_id_}';
-	Backend.Category.links.remove  = '{link controller="backend.category" action=remove id=_id_}';
-	Backend.Category.links.countTabsItems = '{link controller="backend.category" action=countTabsItems id=_id_}';
-	Backend.Category.links.reorder = '{link controller="backend.category" action=reorder id=_id_ query="parentId=_pid_&direction=_direction_"}';
-	Backend.Category.links.addProduct  = '{link controller="backend.product" action=add id=_id_}';
+	//Backend.Category.init({json array=$categoryList});
 
-	Backend.Category.messages = {literal}{}{/literal};
-	Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
-	Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
-	Backend.Category.messages._confirm_move = '{t _confirm_move|escape}';
-
-	Backend.Category.init({json array=$categoryList});
-
-	CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
+	//CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
 </script>
 
 {include file="backend/product/tabs.tpl"}

@@ -27,9 +27,10 @@ function smarty_function_textarea($params, $smarty)
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
 
-	if (!empty($formParams['model']))
+	if (empty($params['ng_model']) && !empty($formParams['model']))
 	{
 		$params['ng-model'] = $formParams['model'] . '.' . $params['name'];
+		unset($params['ng_model']);
 	}
 
 	$params = $smarty->applyFieldValidation($params, $formHandler);

@@ -19,7 +19,7 @@
 				{foreach from=$field.values key="id" item="value"}
 					{if '' != $id}
 						<div class="input">
-							{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on" id="product_`$cat`_`$item.ID`_specItem_`$id`"}
+							{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on"}
 							<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
 						</div>
 					{/if}
@@ -30,7 +30,7 @@
 			<div class="other">
 				<p>
 					<label for="product_{$cat}_{$item.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
-					{textfield name="`$prefix`other[`$field.ID`][]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`"}
+					{textfield name="`$prefix`other[`$field.ID`][]"}
 				</p>
 			</div>
 		{/if}
@@ -45,15 +45,15 @@
 		{if !$disableNewOptionValues}
 			{php}$field = $smarty->getTemplateVars('field'); $field['values']['other'] = $smarty->getApplication()->translate('_enter_other'); $smarty->assign('field', $field);{/php}
 		{/if}
-		<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" options=$field.values class="select"}<span class="suffix">{$field.valueSuffix_lang}</span>
+		<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield name="`$prefix``$fieldName`" options=$field.values class="select"}<span class="suffix">{$field.valueSuffix_lang}</span>
 		{if !$disableNewOptionValues}
-			{textfield name="`$prefix`other[`$field.ID`]" id="product_`$cat`_`$item.ID`_specItem_other_`$field.ID`" style="display: none" class="text"}
+			{textfield name="`$prefix`other[`$field.ID`]" style="display: none" class="text"}
 		{/if}
 	{/if}
 
 {elseif $field.type == 2}
 	<div class="controls">
-		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text numeric number" noFormat=true ng_model=$ngmodel}<span class="suffix">{$field.valueSuffix_lang}</span>
+		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield name="`$prefix``$fieldName`" class="text numeric number" noFormat=true ng_model=$ngmodel}<span class="suffix">{$field.valueSuffix_lang}</span>
 	</div>
 
 {elseif $field.type == 3}
@@ -61,12 +61,12 @@
 		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
 		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{/if}
-	{textfield id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="text {$textFieldClass}" ng_model=$ngmodel autocomplete=$autocomplete}
+	{textfield name="`$prefix``$fieldName`" class="text {$textFieldClass}" ng_model=$ngmodel autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
-	{textarea id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" class="tinyMCE" ng_model=$ngmodel}
+	{textarea tinymce=true name="`$prefix``$fieldName`" class="tinyMCE" ng_model=$ngmodel}
 	<div class="text-error hidden"></div>
 
 {elseif $field.type == 6}
-	{calendar id="product_`$cat`_`$item.ID`_`$fieldName`" name="`$prefix``$fieldName`" ng_model=$ngmodel}
+	{calendar name="`$prefix``$fieldName`" ng_model=$ngmodel}
 {/if}
