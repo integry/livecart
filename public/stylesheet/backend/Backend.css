@@ -1012,7 +1012,17 @@ html #footpanel .subpanel ul li a.active
 ***************************/
 form
 {
-     display: inline;
+    display: inline;
+}
+
+label
+{
+	font-weight: normal;
+}
+
+.required label
+{
+	font-weight: bold;
 }
 
 .ui-dialog form
@@ -2415,6 +2425,12 @@ button.fg-button { width:auto; overflow:visible; }
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }
 
 /**** modal dialogs ****/
+
+/* todo: recheck when dialogOpenClass option is available in Angularui-bootstrap (v0.5?) */
+.modal
+{
+	display: block;
+}
 
 .modalTitle
 {

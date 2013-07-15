@@ -77,6 +77,20 @@ class CategoryController extends StoreManagementController
 	}
 
 	/**
+	 * Add form
+	 *
+	 * @role !category.create
+	 *
+	 * @return ActionRedirectResponse
+	 */
+	public function add()
+	{
+		$response = new BlockResponse();
+		$response->set('form', $this->buildAddForm());
+		return $response;
+	}
+
+	/**
 	 * Creates a new category record
 	 *
 	 * @role !category.create
@@ -85,17 +99,13 @@ class CategoryController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$parent = Category::getInstanceByID((int)$this->request->get("id"));
+		$parent = Category::getRequestInstance($this->request, 'parent');
 
 		$categoryNode = Category::getNewInstance($parent);
-		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), 'dump' );
+		$categoryNode->loadRequestModel($this->request);
 		$categoryNode->save();
 
-		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
-
-		$categoryNode->save();
-
-		return new JSONResponse($categoryNode->toArray(), 'success');
+		return new JSONResponse($this->getCategoryJson($categoryNode->toArray()), 'success', $this->translate('_new_category_was_successfully_created'));
 	}
 
 	/**
@@ -353,6 +363,29 @@ class CategoryController extends StoreManagementController
 	public function reindex()
 	{
 		ActiveTreeNode::reindex("Category");
+	}
+
+	/**
+	 * Builds a category form validator
+	 *
+	 * @return RequestValidator
+	 */
+	private function buildAddValidator()
+	{
+		$validator = $this->getValidator("category", $this->request);
+		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Category name should not be empty")));
+
+		return $validator;
+	}
+
+	/**
+	 * Builds a category form instance
+	 *
+	 * @return Form
+	 */
+	private function buildAddForm()
+	{
+		return new Form($this->buildAddValidator());
 	}
 
 	/**

@@ -73,11 +73,16 @@ angular
         });
     });
 
-var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree']);
+var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents']);
 
 app.config(function($locationProvider)
 {
 	$locationProvider.html5Mode(false);
+});
+
+app.config(function($dialogProvider)
+{
+    $dialogProvider.options({backdropClick: true, dialogFade: true, backdropFade: true, dialogOpenClass: 'modal-open'});
 });
 
 app.run(function($rootScope)

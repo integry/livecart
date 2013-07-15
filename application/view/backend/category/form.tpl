@@ -1,5 +1,5 @@
 <div ng-controller="CategoryFormController" ng-show="category.ID">
-{form model="category" ng_submit="save()" handle=$catalogForm name="myform" role="category.update"}
+{form model="category" ng_submit="save()" handle=$catalogForm role="category.update"}
 	{input name="isEnabled"}
 		{checkbox}
 		{label}{tip _active}{/label}

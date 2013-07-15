@@ -36,6 +36,7 @@
 	{includeJs file="backend/QuickSearch.js" front=true}
 	{includeJs file="backend/Backend.js" front=true}
 	{includeJs file="library/KeyboardEvent.js" front=true}
+	{includeJs file="library/angular/directives.js" front=true}
 	{includeJs file="library/angular/tree.js" front=true}
 	{includeJs file="library/angular/tinymce.js" front=true}
 	{includeJs file="library/angular/ui-bootstrap-tpls-0.4.0.min.js" front=true}

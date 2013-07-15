@@ -63,7 +63,7 @@
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 <div id="productOption_item_blank" class="dom_template">{* include file="backend/productOption/form.tpl" *}</div>
 
-<div ng-controller="CategoryController" ng-init="setTree({$categoryList|escape})">
+<div ng-controller="CategoryController" ng-init="setTree({$categoryList|escape}); expandRoot();">
 	<div class="treeContainer">
 		{include file="block/backend/tree.tpl" sortable=true}
 
@@ -74,15 +74,15 @@
 
 				{allowed role="category.create"}
 					<li class="addTreeNode">
-						<a href="#" id="createNewCategoryLink">
+						<a ng-click="add(activeID)">
 							{t _create_subcategory}
 						</a>
 					</li>
 				{/allowed}
 
 				{allowed role="category.remove"}
-					<li class="removeTreeNode">
-						<a href="#" id="removeCategoryLink">
+					<li class="removeTreeNode" ng-show="activeID > 1">
+						<a ng-click="remove()">
 							{t _remove_category}
 						</a>
 					</li>
@@ -125,27 +125,7 @@
 
 </div>
 
-<script type="text/javascript">
-	{allowed role="category.sort"}
-		Backend.Category.allowSorting = true;
-	{/allowed}
-
-	{allowed role="product"}
-		Backend.Product.productsMiscPermision = true;
-	{/allowed}
-
-	Backend.showContainer('managerContainer');
-
-	//Backend.Category.init({json array=$categoryList});
-
-	//CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
-</script>
-
 {include file="backend/product/tabs.tpl"}
-
-<script>
-	Backend.Category.loadBookmarkedProduct();
-</script>
 
 <div id="specFieldSection"></div>
 

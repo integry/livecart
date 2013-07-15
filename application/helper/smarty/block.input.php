@@ -54,7 +54,7 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 
 		foreach ($smarty->getFieldValidation($name, $formHandler) as $val)
 		{
-			$content .= '<div ng-show="myform.' . $name . '.$error.' . substr($val[0], 3) . '" class="text-danger">' . $val[1] . '</div>';
+			$content .= '<div ng-show="isSubmitted && form.' . $name . '.$error.' . substr($val[0], 3) . '" class="text-danger">' . $val[1] . '</div>';
 		}
 
 		if ($msg)

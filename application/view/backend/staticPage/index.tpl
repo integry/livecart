@@ -36,7 +36,7 @@
 					</fieldset>
 				</div>
 
-				{form model="instance" name="myform" rel="controller=backend.staticPage action=save" ng_submit="save(this)" handle=$form method="post" role="page.update(edit),page.create(add)"}
+				{form model="instance" name="form" rel="controller=backend.staticPage action=save" ng_submit="save(this)" handle=$form method="post" role="page.update(edit),page.create(add)"}
 
 				<div id="editContainer">
 
@@ -103,7 +103,7 @@
 
 				<fieldset class="controls">
 					<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-					<input ng-disabled="myform.$invalid" type="submit" value="{tn _save}" class="submit" />
+					<input ng-disabled="form.$invalid" type="submit" value="{tn _save}" class="submit" />
 					{t _or}
 					<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
 				</fieldset>

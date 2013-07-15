@@ -62,10 +62,10 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$this->loadRequestData($modelReq);
 	}
 
-	public static function getRequestInstance(Request $request)
+	public static function getRequestInstance(Request $request, $field = 'ID')
 	{
 		$data = $request->getJSON();
-		return ActiveRecordModel::getInstanceByID(get_called_class(), $data['ID'], true);
+		return ActiveRecordModel::getInstanceByID(get_called_class(), $data[$field], true);
 	}
 
 	public static function updateFromRequest(Request $request)

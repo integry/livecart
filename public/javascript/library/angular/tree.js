@@ -220,7 +220,7 @@ treeModule.factory('treeService', function($timeout)
 			  if (children) {
 				i = children.length;
 				while (i--) {
-				  if (children[i].id == child) {
+				  if (children[i] == child) {
 					return children.splice(i, 1);
 				  } else {
 					walk(children[i])
@@ -264,6 +264,91 @@ treeModule.factory('treeService', function($timeout)
 			{
 				this.controller.update(item, this.getUpdateParams(item));
 			}
+		},
+
+		append: function(data, id)
+		{
+			var node = this.findByID(id);
+			if (!node)
+			{
+				return false;
+			}
+
+			if (!node.children)
+			{
+				node.children = [];
+			}
+
+			node.children.push(data);
+
+			return true;
+		},
+
+		findByID: function(id)
+		{
+			function walk(target)
+			{
+			  var children = target.children,
+				i;
+			  if (children) {
+				i = children.length;
+				while (i--) {
+				  if (children[i].id == id) {
+					return children[i];
+				  } else {
+					var cat = walk(children[i]);
+					if (cat)
+					{
+						return cat;
+					}
+				  }
+				}
+			  }
+			}
+
+			return walk(data);
+		},
+
+		expandID: function(id)
+		{
+			var node = this.findByID(id);
+			if (!node)
+			{
+				return false;
+			}
+
+			node.open = true;
+		},
+
+		getParent: function(item)
+		{
+			function walk(target)
+			{
+				var children = target.children,
+					i;
+
+				if (children)
+				{
+					if (children.indexOf(item) > -1)
+					{
+						return target;
+					}
+					else
+					{
+						i = children.length;
+						while (i--)
+						{
+							var cat = walk(children[i]);
+							if (cat)
+							{
+								return cat;
+							}
+						}
+					}
+				}
+			}
+
+			return walk(data);
 		},
 
 		getUpdateParams: function(item)
