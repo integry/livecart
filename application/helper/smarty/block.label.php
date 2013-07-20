@@ -16,7 +16,7 @@ function smarty_block_label($params, $content, Smarty_Internal_Template $smarty,
 
 		if (strpos($class, 'checkbox') === false)
 		{
-			$class = 'control-label ' . $class;
+			$class = 'control-label col-lg-2 ' . $class;
 		}
 
 		$for = empty($params['for']) ? '' : ' for="' . $params['for'] . '"';

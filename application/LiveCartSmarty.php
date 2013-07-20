@@ -197,6 +197,27 @@ class LiveCartSmarty extends Smarty
 		return $validation;
 	}
 
+	public function formatControl($html, $params)
+	{
+		if (empty($params['noFormat']))
+		{
+			$html = '<div class="controls col-lg-10">' . $html . '</div>';
+		}
+
+		return $html;
+	}
+
+	public function appendParams($content, $params)
+	{
+		unset($params['noFormat']);
+		foreach ($params as $name => $param)
+		{
+			$content .= ' ' . $name . '="' . htmlspecialchars($param, ENT_QUOTES, 'UTF-8') . '"';
+		}
+
+		return $content;
+	}
+
    /**
      * Get the compile path for this resource
      *

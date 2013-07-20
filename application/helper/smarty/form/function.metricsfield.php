@@ -61,7 +61,7 @@ function smarty_function_metricsfield($params, Smarty_Internal_Template $smarty)
 		$hiParams['id'] = $hiParams['id'] . '_HiValue';
 	}
 	$content .= '<input type="text"';
-	foreach ($hiParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+	$content = $smarty->appendParams($content, $hiParams);
 	$content .= ' />';
 
 	// Lo value
@@ -72,7 +72,7 @@ function smarty_function_metricsfield($params, Smarty_Internal_Template $smarty)
 		$loParams['id'] = $loParams['id'] . '_HiValue';
 	}
 	$content .= '<input type="text"';
-	foreach ($loParams as $name => $value) $content .= ' ' . $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
+	$content = $smarty->appendParams($content, $loParams);
 	$content .= ' />';
 
 	$content .= '<div class="text-error hidden"></div>';
@@ -81,7 +81,7 @@ function smarty_function_metricsfield($params, Smarty_Internal_Template $smarty)
 	$content .= '   <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");</script>';
 	$content .= '</div >';
 
-	$content = '<div class="controls">' . $content . '</div>';
+	$content = $smarty->formatControl($content, $params);
 
 	return $content;
 }

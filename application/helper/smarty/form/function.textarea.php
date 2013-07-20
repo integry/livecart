@@ -53,9 +53,7 @@ function smarty_function_textarea($params, $smarty)
 	}
 
 	$content = '<div class="controls"><textarea';
-	foreach ($params as $name => $param) {
-		$content .= ' ' . $name . '="' . $param . '"';
-	}
+	$content = $smarty->appendParams($content, $params);
 
 	$content .= '>' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '</textarea></div>';
 
