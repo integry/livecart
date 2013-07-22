@@ -52,10 +52,12 @@ function smarty_function_textarea($params, $smarty)
 		$params['readonly'] = 'readonly';
 	}
 
-	$content = '<div class="controls"><textarea';
+	$content = '<textarea';
 	$content = $smarty->appendParams($content, $params);
 
-	$content .= '>' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '</textarea></div>';
+	$content .= '>' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '</textarea>';
+
+	$content = $smarty->formatControl($content, $params);
 
 	return $content;
 }

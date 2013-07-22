@@ -39,11 +39,11 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 		}
 
 		$name = $params['name'];
-		$class = !empty($params['class']) ? $params['class'] : ' ';
+		$class = !empty($params['class']) ? ' ' . $params['class'] : ' ';
 		unset($params['name'], $params['class']);
 
 		$c = $content;
-		$content = '<div class="row ' . ($msg ? 'has-error' : '') .  ' name_' . $name . ' ' . $fieldType . ' ' . ($isRequired ? ' required' : '') . $class . '"';
+		$content = '<div class="row ' . ($msg ? 'has-error' : '') .  ' name_' . $name . ' type_' . $fieldType . ' ' . ($isRequired ? ' required' : '') . $class . '"';
 
 		foreach ($params as $n => $param)
 		{
