@@ -57,7 +57,7 @@ class ActiveGrid
 		$request = $this->application->getRequest();
 
 		// set recordset boundaries (limits)
-		$filter->setLimit($request->get('page_size', 50), $request->get('offset', 0));
+		$filter->setLimit($request->get('page_size', 10), $request->get('offset', 0));
 
 		// set order
 		if ($request->isValueSet('sort_col'))

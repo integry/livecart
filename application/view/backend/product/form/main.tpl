@@ -6,36 +6,34 @@
 		{selectfield options=$productStatuses}
 	{/input}
 
-	<div style="border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;"></div>
-
 	{input name="name"}
 		{label}{t _product_name}:{/label}
 		{textfield class="wide" autocomplete="controller=backend.product field=name"}
 	{/input}
 
 	{input name="autosku"}
-		{checkbox onclick="Backend.Product.toggleSkuField(this);"}
+		{checkbox}
 		{label}{t _generate_sku}{/label}
 	{/input}
 
 	{input name="sku"}
 		{label}{tip _sku_code _hint_sku}:{/label}
-		{textfield class="product_sku" autocomplete="controller=backend.product field=sku"}
+		{textfield class="product_sku" ng_disabled="product.autosku == true" autocomplete="controller=backend.product field=sku"}
 	{/input}
 
 	{input name="shortDescription"}
 		{label}{tip _short_description _hint_shortdescr}:{/label}
-		{textarea class="shortDescr tinyMCE"}
+		{textarea tinymce=true class="shortDescr tinyMCE"}
 	{/input}
 
 	{input name="longDescription"}
 		{label}{tip _long_description _hint_longdescr}:{/label}
-		{textarea class="longDescr tinyMCE"}
+		{textarea tinymce=true class="longDescr tinyMCE"}
 	{/input}
 
 	{input name="type"}
 		{label}{tip _product_type}:{/label}
-		{selectfield options=$productTypes id="product_`$cat`_`$product.ID`_type"}
+		{selectfield options=$productTypes}
 	{/input}
 
 	{input name="URL"}
@@ -43,7 +41,7 @@
 		{textfield class="wide" autocomplete="controller=backend.product field=URL"}
 	{/input}
 
-	{input name="manufacturer"}
+	{input name="Manufacturer.name"}
 		{label}{t _manufacturer}:{/label}
 		{textfield class="wide" autocomplete="controller=backend.manufacturer field=manufacturer"}
 	{/input}

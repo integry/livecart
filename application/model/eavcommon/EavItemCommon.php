@@ -53,9 +53,14 @@ abstract class EavItemCommon extends EavSpecificationCommon
 
 	public function set(EavValueCommon $value)
 	{
-	  	// test whether the value belongs to the same field
+		if(!$value->getID())
+		{
+			return;
+		}
+
+		// test whether the value belongs to the same field
 		if ($value->getField()->get()->getID() != $this->getField()->get()->getID())
-	  	{
+		{
 			$class = get_class($value->getField()->get());
 			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->get()->getID() . ' value to ' . $class . ':' . $this->getField()->get()->getID());
 		}
@@ -91,10 +96,6 @@ abstract class EavItemCommon extends EavSpecificationCommon
 		$this->getValue()->destructValue();
 		parent::__destruct();
 	}
-
-
-
-
 }
 
 ?>

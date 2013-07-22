@@ -50,6 +50,36 @@ h1
 }
 
 /***************************
+	Bootstrap extensions
+***************************/
+.btn.btn-mini
+{
+	font-size: 11px;
+	padding: 3px 7px;
+}
+
+.modal
+{
+	overflow: visible;
+}
+
+.modal-body
+{
+	overflow: auto;
+}
+
+.modal-dialog
+{
+	left: 0;
+	width: inherit;
+}
+
+div.controls
+{
+	display: inline-block;
+}
+
+/***************************
 	Common classes
 ***************************/
 .disabled, .disabled * {
@@ -89,7 +119,6 @@ div.tip div {
   	background-color: #FFFD8C;
   	display: inline;
 	width: auto;
-/*	background-image: url(../../image/backend/icon/information.png); */
 	background-repeat: no-repeat;
 	background-position: 5px center;
 	margin-right: 10px;
@@ -1020,6 +1049,11 @@ label
 	font-weight: normal;
 }
 
+.form-horizontal .row.type_checkbox
+{
+	margin-top: 0;
+}
+
 .required label
 {
 	font-weight: bold;
@@ -1164,16 +1198,7 @@ optgroup
 
 textarea, .disabledTextarea
 {
-    padding: 2px;
-    width: 40em;
-    height: 10em;
-    font-size: 14px;
-    font-family: arial, verdana;
-    color: #333;
-}
-.feedback_textarea
-{
-   line-height: 10em;
+    height: 7em;
 }
 
 input.submit, input.reset
@@ -1290,19 +1315,10 @@ span.mceEditor
  	vertical-align: top;
 }
 
-input.wide
-{
-  	width: 35em;
-}
-
-.wider
-{
-	width: 50em;
-}
-
 input.money, input.number
 {
-  	width: 5em;
+  	width: 7em;
+  	display: inline;
 }
 
 input.date
@@ -1351,7 +1367,8 @@ td.param
 
 .UnitConventer_Root input
 {
-	width: 2em;
+	width: 3em;
+	display: inline-block;
 }
 
 a.UnitConventer_SwitchUnits
@@ -1523,6 +1540,11 @@ fieldset.group p
 /***************************
 	Tabs
 ***************************/
+.tab-content
+{
+	padding: 1em;
+}
+
 .tabContainer
 {
 	position: relative;
@@ -1591,255 +1613,6 @@ fieldset.group p
 {
 	text-align: center;
 	padding: 5em;
-}
-
-/**************************
-	Translation tabs
-***************************/
-.languageForm
-{
-    margin-top: 1em;
-    margin-bottom: 0;
-    border: 0px none;
-    background-color: transparent;
-    padding: 0;
-    position: relative;
-    width: 100%;
-    z-index: 200;
-}
-
-.languageFormCaption
-{
-    margin-right: 10px;
-    display: inline;
-    padding: 0.5em 1em 0.5em 1em ! important;
-    vertical-align: middle;
-    font-size: smaller;
-}
-
-.languageTabsContainer
-{
-   height: 30px;
-   position: relative;
-   z-index: 10;
-}
-
-ul.languageFormTabs
-{
-    height: 21px;
-    width: 100%;
-    display: block;
-	position: absolute;
-	white-space: nowrap;
-	overflow: hidden;
-	padding-top: 10px;
-}
-
-ul.languageFormTabs li
-{
-	list-style-type: none;
-}
-
-ul.languageFormTabs li.langTab
-{
-    display: inline;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-bottom: 0px;
-    background-color: #f5f5f5;
-    margin-left: 2px;
-    padding: 4px ! important;
-    padding-bottom: 3px !important;
-    font-size: 12px;
-}
-
-ul.languageFormTabs li.langTab:hover, ul.languageFormTabs li.langTab.active
-{
-    border-top: 2px solid red;
-    background-color: #fafafa;
-}
-
-ul.languageFormTabs li.langTab.active
-{
-    background-color: #FDFDFD;
-    font-weight: bold;
-	position: relative;
-	z-index: 50;
-	padding-bottom: 4px !important;
-}
-
-.languageFormContent
-{
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #FDFDFD;
-    position: relative;
-}
-
-.languageFormContainer
-{
-     display: none;
-}
-
-.languageFormContainer.active
-{
- 	display: block;
-}
-
-.languageTabsContainer li.moreTabs
-{
-	background-color: #FDFDFD;
-	position: absolute;
-	z-index: 60;
-	right: 0;
-	top: 0;
-	height: 25px;
-	padding: 0 !important;
-	padding-left: 20px !important;
-	width: auto !important;
-}
-
-.tabContainer ul li.moreTabs.inactive
-{
-	border: 0;
-}
-
-.languageTabsContainer li.moreTabs li
-{
-	display: none;
-}
-
-.languageTabsContainer li.moreTabs li.langTab
-{
-	display: block;
-}
-
-li.langTab.hidden
-{
-	display: none !important;
-}
-
-.moreTabs .moreLink
-{
-	line-height: 30px;
-}
-
-.moreTabsMenu li.hidden
-{
-	display: block !important;
-}
-
-.moreTabsMenu li
-{
-	white-space: nowrap;
-	padding: 3px !important;
-}
-
-li.moreTabs
-{
-	border: 0;
-	position: relative;
-	padding-left: 3px !important;
-	padding-right: 3px !important;
-	padding-bottom: 3px !important;
-	right: 0;
-	top: -2px;
-	background-color: #fff;
-	margin-right: 0;
-	list-style: none;
-}
-
-li.moreTabs a.moreTabsLink
-{
-	font-size: 0.75em;
-	text-decoration: none;
-}
-
-a.moreTabsLink span
-{
-	text-decoration: underline;
-}
-
-a.moreTabsLink span.downArrow
-{
-	text-decoration: none;
-	font-size: 1.1em;
-}
-
-li.moreTabs a
-{
-	font-weight: bold;
-	font-size: 0.85em;
-	text-decoration: underline;
-}
-
-li.moreTabs ul
-{
-	height: auto !important;
-	padding: 0 !important;
-}
-
-li.moreTabs li
-{
-	float: none !important;
-	border: 0 !important;
-	background: #fff !important;
-	display: block !important;
-	margin-right: 0 !important;
-	font-weight: normal !important;
-}
-
-.tabContainer ul li.moreTabs li
-{
-	font-size: 0.85em !important;
-	padding-left: 10px !important;
-}
-
-li.moreTabs .moreTabsMenu
-{
-	position: absolute;
-	left: 0;
-	z-index: 100;
-	border: 1px solid #aaa;
-	background-color: #fff;
-}
-
-.moreTabsMenu ul.tabList
-{
-	height: auto !important;
-	max-height: 1000px !important;
-}
-
-li.moreTabs li:hover
-{
-	text-decoration: line-through;
-}
-
-li.moreTabs li, li.moreTabs li *, li.moreTabs li.hidden:hover
-{
-	color: #000;
-	text-decoration: none;
-}
-
-li.moreTabs li:hover
-{
-	background-color: #eee !important;
-}
-
-li.moreTabs .moreTabs
-{
-	display: none !important;
-}
-
-li.moreTabs li.hidden a,
-li.moreTabs li:hover a
-{
-	text-decoration: line-through;
-}
-
-li.moreTabs li.hidden:hover a
-{
-	text-decoration: none;
 }
 
 /***************************
@@ -2487,6 +2260,12 @@ button.fg-button { width:auto; overflow:visible; }
 .jstree > ul > li
 {
 	margin-top: 5px;
+}
+
+/* ng-grid */
+.ngCell .editColumn
+{
+	padding: 3px;
 }
 
 /* ya-tree */

@@ -40,8 +40,20 @@ width:100%;
 {
 vertical-align:top;
 }
-.productForm {
+
+.productForm
+{
 	margin-left:4px;
+}
+
+.productForm .col-lg-2
+{
+	width: 40%;
+}
+
+.productForm .col-lg-10
+{
+	width: 60%;
 }
 
 .quantityPricing

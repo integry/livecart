@@ -18,6 +18,7 @@
 
 	{* includeCss file="backend/theme/redmond/jquery-ui.css" front=true *}
 
+	{includeCss file="library/ng-grid.css" front=true}
 	{includeCss file="library/jquery/jquery-ui.css" front=true}
 	{includeCss file="library/jquery/jquery-plugins.css" front=true}
 
@@ -39,7 +40,11 @@
 	{includeJs file="library/angular/directives.js" front=true}
 	{includeJs file="library/angular/tree.js" front=true}
 	{includeJs file="library/angular/tinymce.js" front=true}
+	{includeJs file="library/angular/ng-grid-scroller/ng-grid-scroller.js" front=true}
+	{includeJs file="library/angular/ng-grid-scroller/ng-grid-select-all.js" front=true}
+	{includeJs file="library/angular/ng-grid.min.js" front=true}
 	{includeJs file="library/angular/ui-bootstrap-tpls-0.4.0.min.js" front=true}
+	{includeJs file="library/angular/angular-resource.min.js" front=true}
 	{includeJs file="library/angular/angular.min.js" front=true}
 	{includeJs file="library/livecart.js" front=true}
 	{includeJs file="library/jquery/plugins.js" front=true}

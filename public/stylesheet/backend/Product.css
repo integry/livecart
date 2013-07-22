@@ -71,12 +71,6 @@ li.addProduct
   	width: 100%;
 }
 
-.cell_cb
-{
-/*	width: 4% !important; */
-	text-align: center !important;
-}
-
 .cell_cb input
 {
 	float: none;
@@ -151,19 +145,20 @@ li.addProduct
 /********************
 	Pricing
 *********************/
-.priceRow div.input
+.priceRow .row
 {
-	display: inline;
+	display: inline-block;
 }
 
-.priceRow div.input.basePrice
+.priceRow
 {
-	margin-right: 1em;
+	white-space: nowrap;
 }
 
 .productForm .pricing label
 {
 	width: auto;
+	min-width: 70px;
 }
 
 a.setQuantPrice

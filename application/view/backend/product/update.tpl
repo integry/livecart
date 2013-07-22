@@ -6,4 +6,4 @@
 	{/form}
 {/capture}
 
-{ldelim} 'status': 'success', 'message': '{t _product_information_was_successfully_saved|addslashes}', 'specFieldHtml': {json array=$specField}{rdelim}
+{ldelim} "status": "success", "message": "{t _product_information_was_successfully_saved|addslashes}", "specFieldHtml": {json array=$specField}{rdelim}

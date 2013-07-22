@@ -50,6 +50,7 @@ abstract class ActiveGridController extends StoreManagementController
 			$exportFrom = ($exportBufferIndex - 1) * self::EXPORT_BUFFER_ROW_COUNT;
 			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
+
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
 
 		if (!$displayedColumns)
@@ -61,6 +62,7 @@ abstract class ActiveGridController extends StoreManagementController
 		{
 			return $data;
 		}
+
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
 		$return['totalCount'] = $recordCount;
@@ -108,7 +110,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 			$value = $this->getColumnValue($row, $class, $field);
 
-			$record[] = $this->formatValue($value, $type);
+			$record[str_replace('.', '_', $column)] = $this->formatValue($value, $type);
 		}
 
 		return array($record);
@@ -316,8 +318,61 @@ abstract class ActiveGridController extends StoreManagementController
 		return $columns;
 	}
 
-	protected function setGridResponse(ActionResponse $response)
+	protected function getGridOptions()
 	{
+		$options = array();
+
+		$displayedColumns = $this->getRequestColumns();
+		foreach ($this->getAvailableRequestColumns() as $field => $column)
+		{
+			if (empty($displayedColumns[$field]))
+			{
+				//continue;
+			}
+
+			if (substr($field, -3) == '.ID')
+			{
+				$options['primaryKey'] = str_replace('.', '_', $field);
+			}
+
+			$options['columnDefs'][] = array(
+				'field' => str_replace('.', '_', $field),
+				'displayName' => $column['name'],
+				'visible' => !empty($displayedColumns[$field]) && (substr($field, -3) != '.ID')
+				);
+		}
+
+		return $options;
+
+		var_dump($displayedColumns, $availableColumns);
+
+		return;
+
+		// sort available columns by display state (displayed columns first)
+		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
+		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
+
+		$response->set('displayedColumns', $displayedColumns);
+		$response->set('availableColumns', $availableColumns);
+		$response->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
+
+		$response->set('massForm', $this->getMassForm());
+		$response->set('totalCount', '0');
+		$response->set('filters', $this->request->get('filters'));
+		$response->set('data', $this->lists(false, $displayedColumns)->getData());
+
+		return $response;
+	}
+
+	protected function setGridResponse(ActionResponse $response = null)
+	{
+		if (empty($response))
+		{
+			$jsonResponse = true;
+			$response = new ActionResponse();
+		}
+
 		$displayedColumns = $this->getRequestColumns();
 		$availableColumns = $this->getAvailableRequestColumns();
 
@@ -352,6 +407,12 @@ abstract class ActiveGridController extends StoreManagementController
 			$response->set('quickEditUrl', $router->createURL(
 				array('controller'=>'backend.'.$className, 'action'=>'quickEdit', 'id'=>$idToken)));
 		}
+
+		if (isset($jsonResponse))
+		{
+			return $response->getData();
+		}
+
 		return $response;
 	}
 

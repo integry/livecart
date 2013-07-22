@@ -172,6 +172,14 @@ class ProductPricing
 		$ruleController = $this->application->getBusinessRuleController();
 
 		$defined = array();
+
+		foreach ($this->application->getCurrencySet() as $id => $currency)
+		{
+			$defined[$id] = '';
+		}
+
+		$definedListPrice = $defined;
+
 		foreach ($this->prices as $inst)
 		{
 			$defPrice = $inst->$field->get();
@@ -188,6 +196,8 @@ class ProductPricing
 			{
 				$defined[$curr] = $defPrice;
 			}
+
+			$definedListPrice[$curr] = $inst->listPrice->get();
 		}
 
 		if ($listPrice)
@@ -242,7 +252,7 @@ class ProductPricing
 			}
 		}
 
-		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
+		$return = array('defined' => $defined, 'definedlistPrice' => $definedListPrice, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
 		return ('both' == $part) ? $return : $return[$part];
 	}
 

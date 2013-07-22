@@ -1,3 +1,41 @@
+app.controller('ProductController', function ($scope, $http, $resource, $dialog)
+{
+	$scope.resource = $resource(Router.createUrl('backend.product', 'lists', {id: $scope.category.id}), {}, {'query':  {method:'GET', isArray: false}});
+
+	$http.get(Router.createUrl('backend.product', 'category', {id: $scope.category.id})).
+		success(function(data, status, headers, config)
+		{
+			$scope.columnDefs = data.options.columnDefs;
+			$scope.data = data.data;
+			$scope.totalServerItems = data.totalCount;
+		});
+
+	$scope.edit = function(id)
+	{
+		var d = $dialog.dialog({dialogFade: false, resolve: {id: function(){ return id; } }});
+		d.open(Router.createUrl('backend.product', 'edit'), 'EditProductController');
+	};
+});
+
+app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', function ($scope, $http, dialog, id)
+{
+	$http.get(Router.createUrl('backend.product', 'get', {id: id})).
+		success(function(data)
+		{
+			$scope.product = data;
+		});
+
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend.product', 'update'), $scope.product);
+	}
+
+    $scope.cancel = function()
+    {
+        dialog.close();
+    };
+}]);
+
 /**
  *	@author Integry Systems
  */
@@ -76,7 +114,6 @@ Backend.Product =
 		}
 
 		ActiveForm.prototype.initTinyMceFields(container);
-		this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 
 		this.initSpecFieldControls(0);
 		this.initInventoryControls(container.down('.inventory'));
@@ -123,51 +160,6 @@ Backend.Product =
 	{
 		var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
 		new Backend.Eav(container);
-	},
-
-	initInventoryControls: function(container)
-	{
-	  	var stockCountContainer = container.down('div.stockCount');
-	  	var stockCountField = stockCountContainer.down('input');
-	  	var unlimitedCb = container.down('input.isUnlimitedStock');
-
-	  	var onchange = function()
-	  	{
-			if (unlimitedCb.checked)
-			{
-				stockCountField._backedUpValue = stockCountField.value;
-				stockCountField.value = '1';
-				$(stockCountContainer).hide();
-			}
-			else
-			{
-				if (stockCountField._backedUpValue)
-				{
-					stockCountField.value = stockCountField._backedUpValue;
-				}
-
-				$(stockCountContainer).show();
-			}
-		}
-
-		onchange();
-		unlimitedCb.onchange = onchange;
-	},
-
-	toggleSkuField: function(checkbox)
-	{
-	  	var skuField = checkbox.form.elements.namedItem('sku');
-	  	skuField.disabled = checkbox.checked;
-	  	if (checkbox.checked)
-	  	{
-			skuField._backedUpValue = skuField.value;
-			skuField.value = '';
-		}
-		else
-		{
-		  	if(skuField._backedUpValue) skuField.value = skuField._backedUpValue;
-			skuField.focus();
-		}
 	},
 
 	saveForm: function(form)

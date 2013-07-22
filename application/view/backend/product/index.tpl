@@ -1,14 +1,17 @@
-{literal}
-<script type="text/javascript">
-	Backend.Product.Editor.prototype.links = {};
-	Backend.Product.Editor.prototype.links.countTabsItems = '{/literal}{link controller="backend.product" action=countTabsItems}{literal}';
-	Backend.Product.GridFormatter.productUrl = '{/literal}{backendProductUrl}{literal}';
-</script>
-{/literal}
+<div ng-controller="ProductController">
 
-{block TRANSLATIONS}
+	<grid controller="backend.product" primaryKey="Product_ID">
+		<actions>
+			<edit-button>{t _edit}</edit-button>
+		</actions>
+		<mass>
+			{* include file="backend/product/massAction.tpl" *}
+		</mass>
+	</grid>
 
-<div>
+</div>
+
+{*
 
 {activeGrid
 	prefix="products"
@@ -29,9 +32,7 @@
 
 </div>
 
-{literal}
 <script type="text/javascript">
-{/literal}
 
 	var massHandler = new ActiveGrid.MassActionHandler(
 						$('productMass_{$categoryID}'),
@@ -64,10 +65,8 @@
 									movedCat.value = null;
 								}
 						}
-{/literal}
 						);
 	massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
-{literal}
 </script>
-{/literal}
+*}

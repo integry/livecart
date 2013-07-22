@@ -44,6 +44,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$modelReq = new Request();
 		$modelReq->setValueArray($json);
 
+		/*
 		if (!empty($json['attributes']) && is_array($json['attributes']))
 		{
 			foreach ($json['attributes'] as $key => $value)
@@ -58,6 +59,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 				}
 			}
 		}
+		*/
 
 		$this->loadRequestData($modelReq);
 	}

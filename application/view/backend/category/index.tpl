@@ -94,14 +94,13 @@
 	<div id="managerContainer" class="treeManagerContainer maxHeight h--60">
 		<div ng-repeat="category in categories" ng-show="category.id == activeID">
 			<tabset>
-				{* <tab-route heading="{t _products}" template="{link controller="backend.product" action="index"}" route="{{'backend.product/' + activeID + '/index'}}"></tab-route> *}
+				<tab-route heading="{t _products}" template="{link controller="backend.product" action="index"}" route="{{route('backend.product', 'list', {id: category.id})}}"></tab-route>
 				<tab-route heading="{t _category_details}" template="{link controller="backend.category" action="form"}" route="{{route('backend.category', 'category', {id: category.id})}}"></tab-route>
 			</tabset>
 		</div>
 	</div>
 
 	{*
-
 	<div id="categoryTabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<div id="tabContainer" class="tabContainer">
 			{tabControl id="tabList"}

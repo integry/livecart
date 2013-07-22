@@ -1,4 +1,4 @@
-<fieldset class="shipping">
+<fieldset class="shipping" ng-show="product.type != 1">
 	<legend>{t _shipping}</legend>
 
 	{input name="isSeparateShipment"}
@@ -28,7 +28,7 @@
 
 	{input name="shippingSurchargeAmount"}
 		{label}{tip _shipping_surcharge}:{/label}
-		<div class="controls">{textfield class="number" noFormat=true} {$baseCurrency}</div>
+		{control}{textfield class="number" noFormat=true} {$baseCurrency}{/control}
 	{/input}
 
 	{input name="minimumQuantity"}

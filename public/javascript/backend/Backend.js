@@ -73,7 +73,7 @@ angular
         });
     });
 
-var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents']);
+var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
 
 app.config(function($locationProvider)
 {

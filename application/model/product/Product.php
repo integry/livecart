@@ -369,26 +369,23 @@ class Product extends MultilingualObject
 		return $this->stockCount->get();
 	}
 
-	private function loadPricingFromRequest(Request $request, $listPrice = false)
+	private function loadPricingFromRequest(Request $request, $listPrice = false, $removeMissing = false)
 	{
-		$field = $listPrice ? 'listPrice' : 'price';
-
-		$currencies = self::getApplication()->getCurrencyArray();
-		foreach ($currencies as $currency)
+		$prices = $request->get('defined' . ($listPrice ? 'listPrice' : ''));
+		foreach (self::getApplication()->getCurrencyArray() as $currency)
 		{
-			$price = $request->get($field . '_' . $currency);
-			if (strlen($price))
+			if (isset($prices[$currency]) && strlen($prices[$currency]))
 			{
-				$this->setPrice($currency, $price, $listPrice);
+				$this->setPrice($currency, $prices[$currency], $listPrice);
 			}
-			else if ($request->isValueSet($field . '_' . $currency))
+			else if ($removeMissing)
 			{
 				$this->getPricingHandler()->removePriceByCurrencyCode($currency, $listPrice);
 			}
 		}
 	}
 
-	public function loadRequestData(Request $request)
+	public function loadRequestData(Request $request, $removeMissingPrices = true)
 	{
 		// basic data
 		parent::loadRequestData($request);
@@ -399,16 +396,16 @@ class Product extends MultilingualObject
 		}
 
 		// set manufacturer
-		if ($request->isValueSet('manufacturer'))
+		if ($man = $request->get('Manufacturer'))
 		{
-			$this->manufacturer->set(Manufacturer::getInstanceByName($request->get('manufacturer')));
+			$this->manufacturer->set(!empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
 		}
 
-		$this->getSpecification()->loadRequestData($request);
+		//$this->getSpecification()->loadRequestData($request);
 
 		// set prices
-		$this->loadPricingFromRequest($request);
-		$this->loadPricingFromRequest($request, true);
+		$this->loadPricingFromRequest($request, false, $removeMissingPrices);
+		$this->loadPricingFromRequest($request, true, $removeMissingPrices);
 	}
 
 	/**
