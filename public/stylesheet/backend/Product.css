@@ -145,9 +145,15 @@ li.addProduct
 /********************
 	Pricing
 *********************/
+.productForm .pricing .row
+{
+    margin-top: 5px;
+}
+
 .priceRow .row
 {
 	display: inline-block;
+	margin: 0;
 }
 
 .priceRow
@@ -168,48 +174,38 @@ a.setQuantPrice
 	font-size: 11px;
 }
 
-div.quantityPricing
-{
-	margin-bottom: 1em;
-}
-
-.quantityPricing table
-{
-	border: 1px solid #eee;
-}
-
-div.quantityPricing .quantityLabel,
-div.quantityPricing .groupLabel
+quantity-price .quantityLabel,
+quantity-price .groupLabel
 {
 	font-size: smaller;
 	font-weight: bold;
 }
 
-div.quantityPricing .quantityLabel
+quantity-price .quantityLabel
 {
 	float: right;
 	margin-bottom: 10px;
 	padding-top: 10px;
 }
 
-div.quantityPricing .groupLabel
+quantity-price .groupLabel
 {
 	margin-top: 24px;
 	float: left;
 	padding-left: 5px;
 }
 
-.quantityPricing select
+quantity-price select
 {
 	width: 150px;
 }
 
-.quantityPricing td
+quantity-price td
 {
 	padding: 0 2px;
 }
 
-.quantityPricing .number
+quantity-price .number
 {
 	width: 50px;
 	font-size: smaller;

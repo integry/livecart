@@ -72,7 +72,7 @@
 
 	{input name="position"}
 		{label}{tip _sort_order _hint_sort_order}:{/label}
-		{textfield class="number"}
+		{textfield class="number" number=true}
 	{/input}
 
 	{input name="isFeatured"}

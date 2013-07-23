@@ -28,17 +28,17 @@
 
 	{input name="shippingSurchargeAmount"}
 		{label}{tip _shipping_surcharge}:{/label}
-		{control}{textfield class="number" noFormat=true} {$baseCurrency}{/control}
+		{control}{textfield class="number" money=true noFormat=true} {$baseCurrency}{/control}
 	{/input}
 
 	{input name="minimumQuantity"}
 		{label}{tip _minimum_order_quantity}:{/label}
-		{textfield class="number"}
+		{textfield class="number" number="float"}
 	{/input}
 
 	{input name="fractionalStep"}
 		{label}{tip _fractionalStep _hint_fractionalStep}:{/label}
-		{textfield class="number"}
+		{textfield class="number" number="float"}
 	{/input}
 
 </fieldset>

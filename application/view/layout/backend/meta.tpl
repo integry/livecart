@@ -51,6 +51,7 @@
 	{includeJs file="library/jquery/jquery-ui.js" front=true}
 	{includeJs file="library/jquery/jquery-min.js" front=true}
 	{includeJs file="library/prototype/prototype.js" front=true}
+	{includeJs file="library/underscore/underscore-min.js" front=true}
 
 	{* <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script> *}
 	{compiledJs glue=true nameMethod=hash}

@@ -36,6 +36,158 @@ app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', func
     };
 }]);
 
+app.directive('quantityPrice', function($compile)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        controller: function($scope, $element, $attrs)
+        {
+			$scope.groups = [{id: '0', oldValue: '0'}, {id: '', oldValue: ''}];
+			$scope.quantities = [];
+			$scope.isInitialized = false;
+			$scope.isActive = false;
+
+			$scope.init = function(currency)
+			{
+				$scope.currency = currency;
+				$scope.$watch('product.quantityPrice.' + currency + '.serializedRules', function(newPrice)
+				{
+					if (!newPrice || $scope.isInitialized)
+					{
+						return;
+					}
+
+					$scope.isInitialized = true;
+					$scope.isActive = true;
+
+					$scope.quantities = [];
+					_.each(newPrice, function(prices, quant)
+					{
+						var quantity = {quantity: quant, oldValue: quant};
+						_.each(prices, function(price, group)
+						{
+							quantity[group] = price;
+						});
+
+						$scope.quantities.push(quantity);
+					});
+
+					var groups = [];
+					_.each(newPrice, function(prices) { groups = groups.concat(_.keys(prices)); });
+
+					$scope.groups = [];
+					_.each(_.uniq(groups), function(group)
+					{
+						var id = (group).toString();
+						$scope.groups.push({id: id, oldValue: id});
+					});
+
+					$scope.groups.push({id: '', oldValue: ''});
+					$scope.addQuantity();
+					$scope.sortGroups();
+				});
+			};
+
+			$scope.updateQuantities = function(quantity)
+			{
+				if (quantity.oldValue == '')
+				{
+					$scope.addQuantity();
+				}
+
+				quantity.oldValue = quantity.quantity;
+			};
+
+			$scope.updateOnBlur = function(quantity)
+			{
+				if (quantity.quantity == '')
+				{
+					$scope.quantities.splice($scope.quantities.indexOf(quantity), 1);
+					$scope.addQuantity();
+				}
+
+				$scope.quantities = _.sortBy($scope.quantities, function(quantity)
+				{
+					return quantity.quantity != '' ? parseInt(quantity.quantity) : 'a';
+				});
+			};
+
+			$scope.addQuantity = function()
+			{
+				if (($scope.quantities.length == 0) || (_.last($scope.quantities).quantity != ''))
+				{
+					$scope.quantities.push({quantity: '', oldValue: '', 0: ''});
+				}
+			};
+
+			$scope.addGroup = function(group)
+			{
+				if (group.oldValue == '0')
+				{
+					$scope.groups.unshift({id: '0', oldValue: '0'});
+				}
+				else if (group.oldValue === '')
+				{
+					$scope.groups.push({id: '', oldValue: ''});
+				}
+
+				var existing = _.findWhere($scope.groups, {id: group.id, oldValue: group.id});
+				if (existing)
+				{
+					$scope.groups.splice(_.indexOf($scope.groups, existing), 1);
+				}
+
+				_.each($scope.quantities, function(quantity)
+				{
+					quantity[group.id] = quantity[group.oldValue];
+					delete quantity[group.oldValue];
+				});
+
+				group.oldValue = group.id;
+
+				$scope.sortGroups();
+			};
+
+			$scope.sortGroups = function()
+			{
+				$scope.groups = _.sortBy($scope.groups, function(group) { return group.id != '0'; });
+			};
+
+			$scope.$watch('quantities', function()
+			{
+				if (!$scope.product)
+				{
+					return;
+				}
+
+				var rules = {};
+				_.each($scope.quantities, function(quantity)
+				{
+					if ('' === quantity.quantity)
+					{
+						return;
+					}
+
+					rules[quantity.quantity] = {};
+					_.each(quantity, function(price, id)
+					{
+						if (!isNaN(parseInt(id)))
+						{
+							rules[quantity.quantity][id] = price;
+						}
+					});
+				});
+
+				$scope.product.quantityPrice[$scope.currency].serializedRules = rules;
+			}, true);
+
+			$scope.addQuantity();
+		}
+    };
+});
+
+
 /**
  *	@author Integry Systems
  */
@@ -736,399 +888,6 @@ Backend.Product.Editor.prototype =
 		}
 
 		node.href = node.urlTemplate.replace('_id_', Backend.Product.Editor.prototype.getCurrentProductId());
-	}
-}
-
-Backend.Product.Prices = Class.create();
-Backend.Product.Prices.prototype =
-{
-	__instances__: {},
-
-	initialize: function(parent, product)
-	{
-		this.product = product;
-
-		this.__nodes__($(parent));
-		this.__bind__();
-
-		$A(this.nodes.form.down('fieldset.pricing').getElementsByClassName('price')).each(function(price)
-		{
-			var listPrice = price.form.elements.namedItem('listPrice_' + price.name.substr(6));
-
-			price.onchange = function()
-			{
-				listPrice.disabled = this.value.length == 0;
-			}
-
-			price.onkeyup = price.onchange;
-
-			price.onchange();
-		});
-
-		Backend.Product.initInventoryControls(this.nodes.form.down('.inventory'));
-
-		Form.State.backup(this.nodes.form);
-	},
-
-	getInstance: function(parent, product)
-	{
-		var parentNode = $(parent);
-		if(!Backend.Product.Prices.prototype.__instances__[parentNode.id])
-		{
-			Backend.Product.Prices.prototype.__instances__[parentNode.id] = new Backend.Product.Prices(parentNode.id, product);
-		}
-
-		Backend.Product.Prices.prototype.__instances__[parentNode.id].__init__();
-		return Backend.Product.Prices.prototype.__instances__[parentNode.id];
-	},
-
-	__nodes__: function(parent)
-	{
-		this.nodes = {};
-		this.nodes.parent = parent;
-		this.nodes.form = parent;
-
-		this.nodes.submit = this.nodes.parent.down("input.submit");
-		this.nodes.cancel = this.nodes.parent.down("a.cancel");
-	},
-
-	__bind__: function(args)
-	{
-		var self = this;
-		Event.observe(this.nodes.cancel, "click", function(e) {
-			e.preventDefault();
-			self.resetForm();
-		});
-	},
-
-	__init__: function(args)
-	{
-	},
-
-	submitForm: function()
-	{
-		new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
-	},
-
-	resetForm: function(response)
-	{
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		Form.State.restore(this.nodes.form);
-	},
-
-	saveComplete: function(responseJSON)
-	{
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-
-		var responseObject = eval("(" + responseJSON.responseText + ")");
-
-		this.afterSubmitForm(responseObject);
-	},
-
-	afterSubmitForm: function(response)
-	{
-		if('success' == response.status)
-		{
-			var self = this;
-			$H(response.prices).each(function(price) {
-				self.nodes.form.elements.namedItem(price.key).value = price.value;
-			});
-
-			Form.State.backup(this.nodes.form);
-		}
-		else
-		{
-			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
-		}
-	}
-}
-
-Backend.Product.QuantityPrice = function(container, rules)
-{
-	this.rules = rules;
-	this.container = container;
-	this.hiddenValue = container.parentNode.down('.hiddenValue');
-	this.headRow = container.down('thead').down('tr');
-
-	var hasSerialized = false;
-
-	if (this.rules && this.rules.serializedRules)
-	{
-		$H(this.rules.serializedRules).each(function(s) {hasSerialized = true;});
-	}
-
-	if (hasSerialized)
-	{
-		$H(this.rules.serializedRules).each(function(pair, index)
-		{
-			var quant = pair[0];
-			var prices = pair[1];
-			var col = this.createColumn();
-			this.headRow.lastChild.down('input').value = quant;
-
-			if (prices instanceof Array)
-			{
-				var obj = {};
-				for (k = 0; k < prices.length; k++)
-				{
-					obj[k] = prices[k];
-				}
-				prices = obj;
-			}
-
-			$H(prices).each(function(pair)
-			{
-				var group = pair[0];
-				var price = pair[1];
-				var row = this.getGroupRow(group);
-				row.getElementsByTagName('input')[index + 1].value = price;
-			}.bind(this));
-		}.bind(this));
-
-		this.createRow();
-		this.createColumn();
-		this.deleteColumn(1);
-		this.deleteRow(this.container.down('select'));
-
-		$A(this.container.getElementsByTagName('select')).each(this.changeGroup.bind(this));
-
-		this.container.parentNode.show();
-	}
-	else
-	{
-		this.container.parentNode.hide();
-		this.menuLink = this.container.up('.priceRow').down('a.menu');
-		this.menuLink.onclick = this.showForm.bind(this);
-		this.menuLink.show();
-	}
-
-	this.initCells(this.container);
-}
-
-Backend.Product.QuantityPrice.prototype =
-{
-	showForm: function(e)
-	{
-		e.preventDefault();
-		this.menuLink.hide();
-		this.container.parentNode.show();
-	},
-
-	initCells: function(container)
-	{
-		$A(container.getElementsByClassName('quantity')).each(function(field) { field.onchange = this.changeQuantity.bindAsEventListener(this); field.onkeyup = function(){NumericFilter(field);}}.bind(this));
-		$A(container.getElementsByTagName('select')).each(function(field) { field.onchange = this.changeGroup.bindAsEventListener(this);}.bind(this));
-		$A(container.getElementsByClassName('qprice')).each(function(field) { field.onchange = this.changePrice.bindAsEventListener(this); field.onkeyup = function(){NumericFilter(field);}}.bind(this));
-	},
-
-	getGroupRow: function(groupID)
-	{
-		var row = null;
-		$A(this.container.getElementsByTagName('select')).each(function(field)
-		{
-			if (field.value == groupID)
-			{
-				row = field.up('tr');
-				return;
-			}
-		});
-
-		if (!row)
-		{
-			row = this.createRow();
-			row.down('select').value = groupID;
-		}
-
-		return row;
-	},
-
-	changeQuantity: function(field)
-	{
-		if (field instanceof Event)
-		{
-			field = Event.element(field);
-		}
-
-		// last column
-		if (this.getColumnNumber(field) == this.getColumnCount() -1)
-		{
-			if (field.value != '')
-			{
-				this.createColumn();
-			}
-		}
-
-		if (field.value == '')
-		{
-			this.deleteColumn(this.getColumnNumber(field));
-		}
-
-		this.indexForm();
-	},
-
-	changePrice: function()
-	{
-		this.indexForm();
-	},
-
-	changeGroup: function(field)
-	{
-		if (field instanceof Event)
-		{
-			field = Event.element(field);
-		}
-
-		if (field.value == '')
-		{
-			if (this.getRowNumber(field) != this.getRowCount() - 1)
-			{
-				this.deleteRow(field);
-			}
-		}
-		else
-		{
-			// last column
-			if (this.getRowNumber(field) == this.getRowCount() - 1)
-			{
-				this.createRow();
-			}
-		}
-
-		var selectedGroups = {};
-		var selects = this.container.getElementsByTagName('select');
-		$A(selects).each(function(sel)
-		{
-			if (0 == sel.value.length)
-			{
-				return;
-			}
-
-			selectedGroups[sel.value] = sel;
-		});
-
-		$A(selects).each(function(sel)
-		{
-			var opts = sel.getElementsByTagName('option');
-			$A(opts).each(function(opt)
-			{
-				if (selectedGroups[opt.value] && (selectedGroups[opt.value] != sel))
-				{
-					opt.hide();
-				}
-				else
-				{
-					opt.show();
-				}
-			});
-		}.bind(this));
-
-		this.indexForm();
-	},
-
-	getColumnNumber: function(field)
-	{
-		return this.getNodeIndex(field.up('td'));
-	},
-
-	getRowNumber: function(field)
-	{
-		return this.getNodeIndex(field.up('tr')) + 1;
-	},
-
-	getColumnCount: function()
-	{
-		return this.container.down('tr').getElementsByTagName('td').length;
-	},
-
-	getRowCount: function()
-	{
-		return this.container.getElementsByTagName('tr').length;
-	},
-
-	deleteColumn: function(columnID)
-	{
-		var rows = this.container.getElementsByTagName('tr');
-		for (var k = 0; k < rows.length; k++)
-		{
-			var cell = rows[k].getElementsByTagName('td')[columnID];
-			cell.parentNode.removeChild(cell);
-		}
-	},
-
-	deleteRow: function(field)
-	{
-		var row = field.up('tr');
-		row.parentNode.removeChild(row);
-	},
-
-	createColumn: function()
-	{
-		var rows = this.container.getElementsByTagName('tr');
-		for (var k = 0; k < rows.length; k++)
-		{
-			var cell = rows[k].lastChild.cloneNode(true);
-			rows[k].appendChild(cell);
-			cell.down('input').value = '';
-			this.initCells(cell);
-		}
-	},
-
-	createRow: function()
-	{
-		var row = $A(this.container.getElementsByTagName('tr')).pop();
-		var cloned = row.cloneNode(true);
-		this.container.down('tbody').appendChild(cloned);
-		$A(cloned.getElementsByTagName('input')).each(function(f) {f.value = '';});
-		this.initCells(cloned);
-
-		return cloned;
-	},
-
-	// there should be an existing function for that
-	getNodeIndex: function(node)
-	{
-		var nodes = node.parentNode.getElementsByTagName(node.tagName);
-		for (k = 0; k < nodes.length; k++)
-		{
-			if (nodes[k] == node)
-			{
-				return k;
-			}
-		}
-	},
-
-	indexForm: function()
-	{
-		var val = {quant: [], group: [], price: []};
-		$A(this.container.getElementsByClassName('quantity')).each(function(f){val.quant.push(f.value); });
-		$A(this.container.getElementsByTagName('select')).each(function(f){val.group.push(f.value); });
-		$A(this.container.getElementsByClassName('qprice')).each(function(f){val.price.push(f.value); });
-		this.hiddenValue.value = Object.toJSON(val);
-	}
-}
-
-Backend.Product.GridFormatter =
-{
-	productUrl: '',
-
-	getClassName: function(field, value)
-	{
-
-	},
-
-	formatValue: function(field, value, id)
-	{
-		if ('Product.name' == field && Backend.Product.productsMiscPermision)
-		{
-			value = '<span>' +
-						'<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' +
-					'</span>' +
-					'<a href="' + this.productUrl + id + '" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
-						value +
-					'</a>';
-		}
-
-		return value;
 	}
 }
 

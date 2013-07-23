@@ -7,6 +7,113 @@ backendComponents.copyAttrs = function(element, attrs)
 	});
 }
 
+/* taken from https://gist.github.com/eliotsykes/5394631 */
+backendComponents.directive('ngfocus', ['$parse', function($parse) {
+  return function(scope, element, attr) {
+    var fn = $parse(attr['ngfocus']);
+    element.bind('focus', function(event) {
+      scope.$apply(function() {
+        fn(scope, {$event:event});
+      });
+    });
+  }
+}]);
+
+backendComponents.directive('ngblur', ['$parse', function($parse) {
+  return function(scope, element, attr) {
+    var fn = $parse(attr['ngblur']);
+    element.bind('blur', function(event) {
+      scope.$apply(function() {
+        fn(scope, {$event:event});
+      });
+    });
+  }
+}]);
+
+backendComponents.directive('number', function() {
+  return {
+    require: 'ngModel',
+    link: function (scope, element, attr, ngModelCtrl)
+    {
+		function fromUser(text)
+		{
+			var transformedInput = (attr.number == 'float') ? text.replace(/[^0-9\.]/g, '') : text.replace(/[^0-9]/g, '');
+
+			if(transformedInput !== text)
+			{
+				ngModelCtrl.$setViewValue(transformedInput);
+				ngModelCtrl.$render();
+			}
+
+			return transformedInput;
+		}
+		ngModelCtrl.$parsers.push(fromUser);
+    }
+  };
+});
+
+backendComponents.directive('money', function() {
+  return {
+    require: 'ngModel',
+    link: function (scope, element, attr, ngModelCtrl)
+    {
+		function fromUser(text)
+		{
+			var value = (text).toString().replace(/^0+/, '');
+			if(!value) return;
+
+			value = value.replace(',' , '.');
+
+			// only keep the last comma
+			parts = value.split('.');
+
+			value = '';
+			for (k = 0; k < parts.length; k++)
+			{
+				value += parts[k] + ((k == (parts.length - 2)) && (parts.length > 1) ? '.' : '');
+			}
+
+			// split digits and decimal part
+			parts = value.split('.');
+
+			// leading comma (for example: .5 converted to 0.5)
+			if ('' == parts[0] && 2 == parts.length)
+			{
+				parts[0] = '0';
+			}
+
+			//next remove all characters save 0 though 9
+			//in both elms of the array
+			dollars = parts[0].replace(/^-?[^0-9]-/gi, '');
+
+			if ('' != dollars && '-' != dollars)
+			{
+				dollars = parseInt(dollars);
+
+				if(!dollars) dollars = 0;
+			}
+
+			if (2 == parts.length)
+			{
+				cents = parts[1].replace(/[^0-9]/gi, '');
+				dollars += '.' + cents;
+			}
+
+			transformedInput = dollars;
+
+			if(transformedInput !== text)
+			{
+				ngModelCtrl.$setViewValue(transformedInput);
+				ngModelCtrl.$render();
+			}
+
+			return transformedInput;
+		}
+		ngModelCtrl.$parsers.push(fromUser);
+    }
+  };
+});
+
 backendComponents.directive('tabRoute', function($compile, $http, $location)
 {
     return {

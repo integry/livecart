@@ -65,6 +65,7 @@ function smarty_block_input($params, $content, Smarty_Internal_Template $smarty,
 		$content .= '</div>';
 
 		$smarty->assign('last_fieldType', '');
+		$smarty->assign('input_name', '');
 
 		return $content;
 	}

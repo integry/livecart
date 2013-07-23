@@ -67,7 +67,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$product->loadSpecification();
 		$product->loadPricing();
 
-		return new JSONResponse($product->toArray());
+		$arr = $product->toArray();
+
+		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+		{
+			$arr['quantityPrice'][$price['currencyID']] = $price;
+		}
+
+		return new JSONResponse($arr);
 	}
 
 	protected function getPreparedRecord($row, $displayedColumns)
@@ -742,17 +749,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$productForm = $response->get('productForm');
 		// $response->set("pricingForm", $pricingForm);
 
-		// get user groups
-		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
-		$groups[0] = $this->translate('_all_customers');
-		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
-		{
-			$groups[$group['ID']] = $group['name'];
-		}
-		$groups[''] = '';
-		$response->set('userGroups', $groups);
-
 		// all product prices in a separate array
 		$prices = array();
 		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
@@ -1050,6 +1046,17 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
 		$response->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 		$response->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
+
+		// get user groups
+		$f = new ARSelectFilter();
+		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
+		$groups[0] = $this->translate('_all_customers');
+		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
+		{
+			$groups[$group['ID']] = $group['name'];
+		}
+		$groups[''] = '';
+		$response->set('userGroups', $groups);
 
 		return $response;
 	}

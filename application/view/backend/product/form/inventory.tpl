@@ -9,7 +9,7 @@
 	<div class="stockCount" ng-show="product.isUnlimitedStock == false">
 		{input name="stockCount"}
 			{label}{tip _items_in_stock}:{/label}
-			{textfield class="number"}
+			{textfield class="number" number=true}
 		{/input}
 	</div>
 </div>

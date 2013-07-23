@@ -406,6 +406,21 @@ class Product extends MultilingualObject
 		// set prices
 		$this->loadPricingFromRequest($request, false, $removeMissingPrices);
 		$this->loadPricingFromRequest($request, true, $removeMissingPrices);
+
+		if ($quantities = $request->get('quantityPrice'))
+		{
+			foreach ($this->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
+			{
+				$id = $price->currency->get()->getID();
+				if (!empty($quantities[$id]['serializedRules']))
+				{
+					$prices = $quantities[$id]['serializedRules'];
+					ksort($prices);
+					$price->serializedRules->set(serialize($prices));
+					$price->save();
+				}
+			}
+		}
 	}
 
 	/**
