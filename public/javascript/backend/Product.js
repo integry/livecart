@@ -17,6 +17,25 @@ app.controller('ProductController', function ($scope, $http, $resource, $dialog)
 	};
 });
 
+app.controller('ProductPresentationController', function ($scope, $http)
+{
+	$http.get(Router.createUrl('backend.product', 'presentation', {id: $scope.product.ID})).
+		success(function(data)
+		{
+			$scope.presentation = data;
+		});
+
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend.presentation', 'updatePresentation'), $scope.presentation);
+	}
+
+    $scope.cancel = function()
+    {
+        dialog.close();
+    };
+});
+
 app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', function ($scope, $http, dialog, id)
 {
 	$http.get(Router.createUrl('backend.product', 'get', {id: id})).

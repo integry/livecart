@@ -77,6 +77,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return new JSONResponse($arr);
 	}
 
+	public function getPresentation()
+	{
+		$product = Product::getInstanceByID($this->request->get('id'), true);
+		return new JSONResponse(CategoryPresentation::getInstance($product)->toArray());
+	}
+
 	protected function getPreparedRecord($row, $displayedColumns)
 	{
 		$records = parent::getPreparedRecord($row, $displayedColumns);
@@ -990,13 +996,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				}
 			}
 
-			// $product->loadRequestData($this->request);
-			// $product->save();
-
-			if ($this->isQuickEdit == false)
-			{
-				BackendToolbarItem::registerLastViewedProduct($product);
-			}
 			$response = $this->productForm(true);
 
 			$response->setHeader('Cache-Control', 'no-cache, must-revalidate');

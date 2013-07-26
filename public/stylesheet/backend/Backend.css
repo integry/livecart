@@ -1355,29 +1355,24 @@ td.param
 	margin: 0;
 }
 
-.UnitConventer_HiUnit
-{
-	margin-right: 8px;
-}
-
-.UnitConventer_SwitchUnits
-{
-	font-size: smaller;
-}
-
-.UnitConventer_Root input
-{
-	width: 3em;
-	display: inline-block;
-}
-
-a.UnitConventer_SwitchUnits
+.unitConverter a
 {
 	font-size: 11px;
 	display: block;
 	color: red;
-	margin-top: -3px;
 	margin-bottom: 5px;
+}
+
+.unitConverter input
+{
+	width: 4em;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+.unitConverter span
+{
+	margin-right: 6px;
 }
 
 .fieldDescription

@@ -75,7 +75,7 @@ class Product extends MultilingualObject
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("name", ARArray::instance())); // ->setValidation('required')
 		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
 		$schema->registerField(new ARField("longDescription", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARText::instance()));
@@ -88,7 +88,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("isFeatured", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
-		$schema->registerField(new ArField("ratingSum", ARInteger::instance()));
+		$schema->registerField(new ArField("ratingSum", ARInteger::instance()));//->protect();
 		$schema->registerField(new ArField("ratingCount", ARInteger::instance()));
 		$schema->registerField(new ArField("rating", ARFloat::instance(8)));
 		$schema->registerField(new ArField("reviewCount", ARInteger::instance()));

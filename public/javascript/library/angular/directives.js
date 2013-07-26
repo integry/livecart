@@ -37,6 +37,7 @@ backendComponents.directive('number', function() {
     {
 		function fromUser(text)
 		{
+			var text = (text || '').toString();
 			var transformedInput = (attr.number == 'float') ? text.replace(/[^0-9\.]/g, '') : text.replace(/[^0-9]/g, '');
 
 			if(transformedInput !== text)
@@ -59,7 +60,7 @@ backendComponents.directive('money', function() {
     {
 		function fromUser(text)
 		{
-			var value = (text).toString().replace(/^0+/, '');
+			var value = (text || '').toString().replace(/^0+/, '');
 			if(!value) return;
 
 			value = value.replace(',' , '.');
@@ -432,5 +433,64 @@ backendComponents.directive('legend', function($compile)
         transclude: true,
         scope: false,
         template: '<div class="panel-heading" ng-transclude></div>'
+    };
+});
+
+backendComponents.directive('weightInput', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        replace: true,
+        transclude: true,
+        scope: true,
+        template: '<div class="unitConverter"><input type="number" number="true" ng-change="recalculate()" ng-model="values[type].hi" /><span>{{captions[type].hi}}</span><input number="true" type="number" ng-change="recalculate()" ng-model="values[type].lo" maxlength="{{multipliers[type][3]}}" /><span>{{captions[type].lo}}</span><input type="hidden" ng-bind="kg" ng-transclude /><a ng-click="toggleType()">{{captions[type].sw}}</a></div>',
+        link: function(scope, element, attrs)
+		{
+			scope.type = attrs.type;
+			scope.captions = {};
+			scope.captions.english = {hi: attrs.enHi, lo: attrs.enLo, sw: attrs.enSw};
+			scope.captions.metric = {hi: attrs.mHi, lo: attrs.mLo, sw: attrs.mSw};
+			scope.values = {english: {hi: 0, lo: 0}, metric: {hi: 0, lo: 0}};
+			scope.multipliers = {english: [0.45359237, 0.0283495231, 1, 2], metric: [1, 0.001, 0, 3]};
+			scope.model = attrs.ngModel;
+			scope.kg = scope.$eval(scope.model);
+
+			scope.toggleType = function()
+			{
+				scope.type = scope.type == 'english' ? 'metric' : 'english';
+			};
+
+			scope.recalculate = function()
+			{
+				var values = scope.values[scope.type];
+				var multi = scope.multipliers[scope.type];
+				scope.kg = values.hi * multi[0] + values.lo * multi[1];
+			}
+
+			scope.$watch(scope.model, function(kg)
+			{
+				scope.kg = kg;
+			});
+
+			scope.$watch('kg', function(kg)
+			{
+				if (typeof kg === "undefined")
+				{
+					return;
+				}
+
+				angular.forEach(['english', 'metric'], function(type)
+				{
+					var multi = scope.multipliers[type];
+					var hi = Math.floor(kg / multi[0]);
+					var lo = Math.round((kg - (hi * multi[0])) / multi[1], multi[2]);
+					scope.values[type] = {hi: hi, lo: lo};
+					$timeout(function()
+					{
+						scope.$apply(scope.model + ' = ' + kg);
+					}, 0, true);
+				});
+			});
+    	}
     };
 });

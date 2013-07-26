@@ -11,25 +11,6 @@
 	{/if}
 	*}
 
-	<fieldset>
-		<legend>{t _presentation}</legend>
-
-		{input name="isVariationImages"}
-			{label}{tip _theme}:{/label}
-			{selectfield options=$themes}
-		{/input}
-
-		{input name="isVariationImages"}
-			{checkbox}
-			{label}{tip _show_variation_images}{/label}
-		{/input}
-
-		{input name="isAllVariations"}
-			{checkbox}
-			{label}{tip _allow_all_variations}{/label}
-		{/input}
-	</fieldset>
-
 	</td><td>
 
 	<div class="productForm ng-class="{ldelim}'intangible': product.type == 1{rdelim}">
