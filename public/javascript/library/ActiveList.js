@@ -368,17 +368,9 @@ ActiveList.prototype = {
 		   ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
 		}
 
-		if(BrowserDetect.browser != 'Explorer')
-		{
-			setTimeout(function() {
-				if(highlight) this.highlight(container.up('li'), highlight);
-			}.bind(this), 300);
-		}
-		else
-		{
-			container.style.display = 'block';
+		setTimeout(function() {
 			if(highlight) this.highlight(container.up('li'), highlight);
-		}
+		}.bind(this), 300);
 
 		Element.addClassName(container.up('li'), this.cssPrefix  + this.getContainerAction(container) + '_inProgress');
 	},
@@ -1273,7 +1265,7 @@ ActiveList.prototype = {
 	{
 		if(touch !== false) touch = true;
 
-		if(touch && BrowserDetect.browser != 'Explorer')
+		if(touch)
 		{
 			Effect.SwitchOff(li, {duration: 1});
 			setTimeout(function() {
