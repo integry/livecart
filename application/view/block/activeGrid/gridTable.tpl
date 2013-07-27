@@ -85,7 +85,6 @@
 
 <div class="activeGridCellContent" style="display: none; position:absolute;"></div>
 
-{* <div class="quickEditContainer"></div> *}
 <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}">
 
 <thead>
@@ -256,12 +255,6 @@
 		window.activeGrids['{$prefix}_{$id}'].setDataFormatter({$dataFormatter});
 	{/if}
 	window.activeGrids['{$prefix}_{$id}'].setInitialData({json array=$data});
-
-	{*
-	{if $isQuickEdit && !'DISABLE_QUICKEDIT'|config}
-		window.activeGrids['{$prefix}_{$id}'].initQuickEdit("{$quickEditUrl}", "{$quickEditUrlIdentificatorToken}");
-	{/if}
-	*}
 
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}

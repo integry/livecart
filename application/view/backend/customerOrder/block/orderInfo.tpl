@@ -1,7 +1,7 @@
 <div>
 	<a href="{link controller="backend.customerOrder query="rt=`$randomToken`"}#order_{$order.ID}__" class="qeInvoiceNumber">{$order.invoiceNumber|escape}</a>
 	{if $statusEditor}
-		<span style="margin-left: 2em;">{t _status}: {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status" onchange="return ActiveGrid.QuickEdit.onSubmit(this);"}</span>
+		<span style="margin-left: 2em;">{t _status}: {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}</span>
 	{/if}
 
 	<div class="qeOrderSideMenu">

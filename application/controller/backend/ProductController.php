@@ -22,9 +22,6 @@ ClassLoader::import('application.model.tax.TaxClass');
  */
 class ProductController extends ActiveGridController implements MassActionInterface
 {
-	private $isQuickEdit = false;
-	private $quickEditValidation = false;
-
     public function index()
 	{
 		$response = new ActionResponse();
@@ -740,7 +737,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		// pricing
-
 		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
 		$f->setOrder(new ARFieldHandle('Currency', 'position'));
 		$otherCurrencies = array();
@@ -753,73 +749,19 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response->set("otherCurrencies", $otherCurrencies);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$productForm = $response->get('productForm');
-		// $response->set("pricingForm", $pricingForm);
 
 		// all product prices in a separate array
 		$prices = array();
 		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
 		{
 			$prices[$price['currencyID']] = $price;
-			$productForm->/*$pricingForm->*/set('price_' . $price['currencyID'], $price['price']);
-			$productForm->/*$pricingForm->*/set('listPrice_' . $price['currencyID'], $price['listPrice']);
+			$productForm->set('price_' . $price['currencyID'], $price['price']);
+			$productForm->set('listPrice_' . $price['currencyID'], $price['listPrice']);
 		}
-		$response->set('prices', $prices);
-
-		if ($this->isQuickEdit == false) // viewing in quick edit form does not add to last viewed.
-		{
-			BackendToolbarItem::registerLastViewedProduct($product);
-		}
-
-		return $response;
-	}
-
-	private function pricingInformation(Product $product)
-	{
-		// $this->locale->translationManager()->loadFile('backend/Product');
-		// $product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
-
-		// $pricingForm = $this->buildPricingForm($product);
-
-		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
-		$f->setOrder(new ARFieldHandle('Currency', 'position'));
-		$otherCurrencies = array();
-		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
-		{
-			$otherCurrencies[] = $row['ID'];
-		}
-
-		$response = new ActionResponse();
-		$response->set("product", $product->toFlatArray());
-		$response->set("otherCurrencies", $otherCurrencies);
-		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
-		$response->set("pricingForm", $pricingForm);
-
-		// get user groups
-		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
-		$groups[0] = $this->translate('_all_customers');
-		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
-		{
-			$groups[$group['ID']] = $group['name'];
-		}
-		$groups[''] = '';
-		$response->set('userGroups', $groups);
-
-		// all product prices in a separate array
-		$prices = array();
-		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
-		{
-			$prices[$price['currencyID']] = $price;
-			$pricingForm->set('price_' . $price['currencyID'], $price['price']);
-			$pricingForm->set('listPrice_' . $price['currencyID'], $price['listPrice']);
-		}
-
 		$response->set('prices', $prices);
 
 		return $response;
 	}
-
-
 
 	public function countTabsItems()
 	{
@@ -1116,40 +1058,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		self::addInventoryValidator($validator);
 
 		return $validator;
-	}
-
-	public function quickEdit()
-	{
-		$this->isQuickEdit = true;
-
-		$this->loadQuickEditLanguageFile();
-		$request = $this->getRequest();
-		$response = $this->basicData();
-		return $response;
-	}
-
-	public function isQuickEdit()
-	{
-		return true;
-	}
-
-	public function saveQuickEdit()
-	{
-		$this->isQuickEdit = true;
-		$this->quickEditValidation = true;
-
-		$response = $this->update(true);
-		if($response instanceof JSONResponse)
-		{
-			return $response;
-		}
-		$product = $response->get('product');
-		$displayedColumns = $this->getRequestColumns();
-		$r = array(
-			'data'=> $this->recordSetArrayToListData(array($product), $displayedColumns),
-			'columns'=>array_keys($displayedColumns)
-		);
-		return new JSONResponse($r, 'success');
 	}
 
 	public function massActionField()

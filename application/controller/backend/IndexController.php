@@ -16,8 +16,6 @@ class IndexController extends StoreManagementController
 {
 	public function index()
 	{
-		$this->loadLanguageFile('backend/abstract/ActiveGridQuickEdit');
-
 		$this->updateApplicationUri();
 
 		// order stats

@@ -391,22 +391,6 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('totalCount', '0');
 		$response->set('filters', $this->request->get('filters'));
 		$response->set('data', $this->lists(false, $displayedColumns)->getData());
-		$isQuickEdit = $this->isQuickEdit();
-		$response->set('isQuickEdit', $isQuickEdit);
-		if ($isQuickEdit)
-		{
-			$router = $this->getApplication()->getRouter();
-			$className = get_class($this);
-			$className = str_replace('Controller', '', $className);
-			$className[0] = strtolower($className[0]); //lcfirst() when php5.3
-
-			$idToken = '000';
-			$response->set('quickEditUrlIdentificatorToken',$idToken);
-			$response->set('saveQuickEditUrl', $router->createURL(
-				array('controller'=>'backend.'.$className, 'action'=>'saveQuickEdit', 'id'=>$idToken)));
-			$response->set('quickEditUrl', $router->createURL(
-				array('controller'=>'backend.'.$className, 'action'=>'quickEdit', 'id'=>$idToken)));
-		}
 
 		if (isset($jsonResponse))
 		{
@@ -586,36 +570,6 @@ abstract class ActiveGridController extends StoreManagementController
 	{
 		$className = $className ? $className : $this->getClassName();
 		return ActiveRecordModel::isEav($className);
-	}
-
-	public function isQuickEdit()
-	{
-		return false;
-	}
-
-	public function quickEdit()
-	{
-		return false;
-	}
-
-	public function saveQuickEdit()
-	{
-		return false;
-	}
-
-	protected function loadQuickEditLanguageFile()
-	{
-		$this->loadLanguageFile('backend/abstract/ActiveGridQuickEdit');
-	}
-
-	protected function quickEditSaveResponse($object)
-	{
-		$displayedColumns = $this->getRequestColumns();
-		$r = array(
-			'data'=> $this->recordSetArrayToListData(array($object->toArray()), $displayedColumns),
-			'columns'=>array_keys($displayedColumns)
-		);
-		return new JSONResponse($r, 'success');
 	}
 }
 ?>

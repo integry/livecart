@@ -544,7 +544,6 @@ _admin_misc=Miscellaneous Options
 TINYMCE_PARAMS=Custom TinyMCE parameters (for example: <em>param: "value", param: "value"</em>)
 DISABLE_WYSIWYG=Disable WYSIWYG editors
 DISABLE_TOOLBAR=Disable footer toolbar
-DISABLE_QUICKEDIT=Disable "quick edit" pop-ups in data grids
 
 # SSL options
 _ssl_opts=Security

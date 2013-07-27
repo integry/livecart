@@ -42,30 +42,28 @@
 {if $lastOrders}
 <fieldset class="dashboardOrders stats">
 	<legend>{t _last_orders}</legend>
-	<div class="quickEditContainer3">
-		{if $lastOrders}
-			<table class="qeOrders">
-				<thead>
+	{if $lastOrders}
+		<table class="qeOrders">
+			<thead>
+				<tr>
+					<th>{t _invoice_number}</th>
+					<th>{t _date}</th>
+					<th>{t _ammount}</th>
+					<th>{t _status}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach from=$lastOrders item=order name=lastOrders}
 					<tr>
-						<th>{t _invoice_number}</th>
-						<th>{t _date}</th>
-						<th>{t _ammount}</th>
-						<th>{t _status}</th>
+						<td><a href="{backendOrderUrl order=$order}">{$order.invoiceNumber|escape}</a></td>
+						<td title="{$order.formatted_dateCreated.date_medium|escape} {$order.formatted_dateCreated.time_short|escape}">{$order.formatted_dateCreated.date_short|escape}</td>
+						<td>{$order.formatted_totalAmount|escape}</td>
+						<td>{t `$order.status_name`}</td>
 					</tr>
-				</thead>
-				<tbody>
-					{foreach from=$lastOrders item=order name=lastOrders}
-						<tr>
-							<td><a href="{backendOrderUrl order=$order}">{$order.invoiceNumber|escape}</a></td>
-							<td title="{$order.formatted_dateCreated.date_medium|escape} {$order.formatted_dateCreated.time_short|escape}">{$order.formatted_dateCreated.date_short|escape}</td>
-							<td>{$order.formatted_totalAmount|escape}</td>
-							<td>{t `$order.status_name`}</td>
-						</tr>
-					{/foreach}
-				</tbody>
-			</table>
-		{/if}
-	</div>
+				{/foreach}
+			</tbody>
+		</table>
+	{/if}
 </fieldset>
 {/if}
 

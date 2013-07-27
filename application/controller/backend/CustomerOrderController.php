@@ -1109,7 +1109,7 @@ class CustomerOrderController extends ActiveGridController
 						))
 					)
 				);
-				
+
 				break;
 
 			case self::TYPE_RECURRING_ALL:
@@ -1131,7 +1131,7 @@ class CustomerOrderController extends ActiveGridController
 				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 				$cond->addAND(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
 				break;
-				
+
 			case self::TYPE_RECURRING_WITH_PARENT:
 				$parentID = $this->getRequest()->get('parentID');
 				if (!$parentID)
@@ -1543,50 +1543,6 @@ class CustomerOrderController extends ActiveGridController
 	private function createFieldsForm(CustomerOrder $order)
 	{
 		return new Form($this->createFieldsFormValidator($order));
-	}
-
-	public function quickEdit()
-	{
-		$this->loadQuickEditLanguageFile();
-		$response = new ActionResponse();
-		$request = $this->getRequest();
-		$order = CustomerOrder::getInstanceByID($request->get('id'), CustomerOrder::LOAD_DATA);
-		$order->loadAll();
-		$response->set('order', $order->toArray());
-		$response->set('statusEditor', true);
-		$response->set('form', $this->createOrderForm($order->toArray()));
-		$response->set('randomToken', md5(time().mt_rand(1,9999999999)));
-		$this->assignStatuses($response);
-
-		return $response;
-	}
-
-	public function isQuickEdit()
-	{
-		return true;
-	}
-
-	public function saveQuickEdit()
-	{
-		$order = CustomerOrder::getInstanceByID($this->getRequest()->get('id'));
-		$oldStatus = $order->status->get();
-		$status = (int)$this->request->get('status');
-		if($oldStatus != $status)
-		{
-			$order->status->set($status);
-			$order->updateShipmentStatuses();
-		}
-		$response = $this->save($order);
-		$value = $response->getValue();
-		if($value['status'] == 'success')
-		{
-			// quick edit response
-			return $this->quickEditSaveResponse($order);
-		}
-		else
-		{
-			return $response;
-		}
 	}
 
 	public function addCoupon()
