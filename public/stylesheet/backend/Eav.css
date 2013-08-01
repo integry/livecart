@@ -8,12 +8,11 @@ fieldset.specification .numeric
  	width: 100px;
 }
 
-.multiValueSelect p.selectMenu
+.multiValueSelect .selectMenu
 {
 	clear: none;
-	margin: 10px 0 10px 20px;
 	font-size: smaller;
-	float: left;
+	text-align: right;
 }
 
 fieldset.specification .notDisplayed
@@ -21,29 +20,12 @@ fieldset.specification .notDisplayed
 	color: #aaa;
 }
 
-.multiValueSelect div.other
-{
-	float: left;
-}
-
-.multiValueSelect div.other label
-{
-  	width: auto;
-  	margin-right: 10px;
-	line-height: 1.8em;
-}
-
-.multiValueSelect div.other input, input.other
-{
-  	width: 200px;
-  	font-size: smaller;
-}
-
 .multiValueSelect input.filter
 {
 	font-size: smaller;
 	width: 100px;
 	margin: 0;
+	display: inline-block;
 }
 
 .eavCheckboxes
@@ -51,6 +33,17 @@ fieldset.specification .notDisplayed
 	max-height: 200px;
 	overflow: auto;
 	border: 1px solid #ddd;
-	width: 570px;
 	padding: 0.5em;
+	margin-bottom: 10px;
+}
+
+.newOptionValue
+{
+	margin-top: 10px;
+}
+
+input.newOptionValue
+{
+	margin-bottom: 10px;
+	margin-top: 0;
 }

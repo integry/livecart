@@ -13,48 +13,61 @@
 
 {if $field.type == 1 || $field.type == 5}
 	{if $field.isMultiValue}
-		<div class="controls multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
+		{if $angular}
+			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`"}
+		{/if}
+
+		{control}
+		<eav-multiselect values='{json array=$field.values}' ng-model="{$ngmodel}">
+		<div class="multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 
 			<div class="eavCheckboxes">
-				{foreach from=$field.values key="id" item="value"}
-					{if '' != $id}
-						<div class="input">
-							{checkbox name="`$prefix`specItem_`$id`" class="checkbox" value="on"}
-							<label class="checkbox" for="product_{$cat}_{$item.ID}_specItem_{$id}"> {$value}</label>
+				<div class="input" ng-repeat="value in values | orderBy:sortOrder() | filter:filter">
+					<label class="checkbox">
+						{checkbox ng_model="value.checked" ng_checked="value.checked == true"}
+						{{value.value}}
+					</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-5">
+					{if !$disableNewOptionValues}
+						<div ng-repeat="value in newValues">
+							{textfield placeholder="{t _other}" class="newOptionValue" ng_model="value.value" ng_change="handleNewValues()" noFormat=true}
 						</div>
 					{/if}
-				{/foreach}
+				</div>
+
+				<div class="col-lg-7 selectMenu">
+					<a ng-click="selectAll()" class="eavSelectAll">{t _select_all}</a> | <a ng-click="deselectAll()" class="deselect eavDeselectAll">{t _deselect_all}</a> | <a class="eavSort" ng-click="sort()">A-Z</a> | <input type="text" ng-model="filter" placeholder="{t _eav_filter}" class="text filter" />
+				</div>
 			</div>
-
-		{if !$disableNewOptionValues}
-			<div class="other">
-				<p>
-					<label for="product_{$cat}_{$item.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
-					{textfield name="`$prefix`other[`$field.ID`][]"}
-				</p>
-			</div>
-		{/if}
-
-		<p class="selectMenu">
-			<a href="#" class="eavSelectAll">{t _select_all}</a> | <a href="#" class="deselect eavDeselectAll">{t _deselect_all}</a> | <a class="eavSort" href="#">A-Z</a> | {t _eav_filter}: <input type="text" class="text filter" />
-		</p>
-
 		</div>
-		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
+		</eav-multiselect>
+		{/control}
 	{else}
-		{if !$disableNewOptionValues}
-			{php}$field = $smarty->getTemplateVars('field'); $field['values']['other'] = $smarty->getApplication()->translate('_enter_other'); $smarty->assign('field', $field);{/php}
+		{if $angular}
+			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.ID"}
+			{assign var="ngmodelnew" value="`$angular`.attributes.`$field.ID`.newValue"}
 		{/if}
-		<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield name="`$prefix``$fieldName`" options=$field.values class="select"}<span class="suffix">{$field.valueSuffix_lang}</span>
-		{if !$disableNewOptionValues}
-			{textfield name="`$prefix`other[`$field.ID`]" style="display: none" class="text"}
-		{/if}
+
+		{control}
+		<eav-select {if !$disableNewOptionValues}new="{t _enter_other}"{/if}>
+			<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+			{if !$disableNewOptionValues}
+				<div class="newOptionValue" style="display: none">
+					{textfield ng_model=$ngmodelnew name="`$prefix`other[`$field.ID`]" class="text" noFormat=true}
+				</div>
+			{/if}
+		</eav-select>
+		{/control}
 	{/if}
 
 {elseif $field.type == 2}
-	<div class="controls">
-		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield name="`$prefix``$fieldName`" class="text numeric number" noFormat=true ng_model=$ngmodel}<span class="suffix">{$field.valueSuffix_lang}</span>
-	</div>
+	{control}
+		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+	{/control}
 
 {elseif $field.type == 3}
 	{if !$disableAutocomplete}

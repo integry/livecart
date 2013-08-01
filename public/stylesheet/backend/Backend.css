@@ -1304,17 +1304,6 @@ a.progressIndicator
 	height: 15px;
 }
 
-/* textarea container */
-div.textarea,
-.multiValueSelect,
-.input-append.date,
-span.mceEditor
-{
- 	margin-bottom: 7px;
- 	display: inline-block;
- 	vertical-align: top;
-}
-
 input.money, input.number
 {
   	width: 7em;

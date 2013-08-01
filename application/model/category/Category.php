@@ -816,6 +816,100 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		ClassLoader::import("application.model.product.Product");
 
+		//self::beginTransaction();
+
+		$conditions = array('totalProductCount' => '',
+							'activeProductCount' => 'Product.isEnabled = 1',
+							'availableProductCount' => ' Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  ')');
+
+		$fields = array('totalProductCount', 'activeProductCount', 'availableProductCount');
+
+		$queries = array();
+		foreach ($conditions as $field => $condition)
+		{
+			$index = array_search($field, $fields);
+			$queries[] = 'SELECT categoryID, COUNT(*), ' . $index . ' FROM Product ' . $condition . ' GROUP BY categoryID';
+			$queries[] = 'SELECT ProductCategory.categoryID, COUNT(*), ' . $index . ' FROM ProductCategory LEFT JOIN Product ON Product.ID=ProductCategory.productID ' . $condition . ' GROUP BY ProductCategory.categoryID';
+		}
+
+		$basicCounts = implode(' UNION ', $queries);
+
+		echo $basicCounts;exit;
+
+		// reset counts to 0
+		$sql = 'UPDATE Category SET ';
+		foreach ($fields as $field)
+		{
+			$sql .= $field . '=0' . ('availableProductCount' != $field ? ',' : '');
+		}
+
+		self::executeUpdate($sql);
+
+		// category product counts
+		$categoryCond = '((categoryID = Category.ID) OR ((SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.categoryID=Category.ID AND ProductCategory.productID=Product.ID) > 0))';
+		$sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE ' . $categoryCond . '),
+									activeProductCount = (SELECT COUNT(*) FROM Product WHERE ' . $categoryCond . ' AND Product.isEnabled = 1),
+									availableProductCount = (SELECT COUNT(*) FROM Product WHERE ' . $categoryCond . ' AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
+		self::executeUpdate($sql);
+
+		//self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
+
+		// add subcategory counts to parent categories
+		// @todo - rewrite so this wouldn't use temporary tables - possible?
+		$sql = 'CREATE TEMPORARY TABLE CategoryCount
+					SELECT ID';
+
+		foreach ($fields as $field)
+		{
+			$sql .= ', (SELECT SUM(' . $field . ')
+			FROM Category AS cat
+			WHERE cat.lft >= Category.lft
+				AND cat.rgt <= Category.rgt) AS ' . $field;
+		}
+
+		$sql .= ' FROM Category';
+
+		self::executeUpdate($sql);
+
+		// additional categories
+		$q = 'SELECT
+				COUNT(DISTINCT productID)
+				FROM ProductCategory
+				LEFT JOIN Category AS jCat ON ProductCategory.categoryID=jCat.ID
+				LEFT JOIN Product ON Product.ID=ProductCategory.productID
+				LEFT JOIN Category AS mainCat ON Product.categoryID=mainCat.ID
+				WHERE
+					NOT (mainCat.lft >= Category.lft
+					AND
+					mainCat.rgt <= Category.rgt)
+					AND
+					jCat.lft >= Category.lft
+					AND
+					jCat.rgt <= Category.rgt';
+
+		$sql = 'UPDATE CategoryCount LEFT JOIN Category ON CategoryCount.ID=Category.ID SET CategoryCount.totalProductCount = CategoryCount.totalProductCount + (' . $q . '),
+									CategoryCount.activeProductCount = CategoryCount.activeProductCount + (' . $q . ' AND Product.isEnabled = 1),
+									CategoryCount.availableProductCount = CategoryCount.availableProductCount + (' . $q . ' AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
+		//self::executeUpdate($sql);
+
+		$sql = 'UPDATE Category LEFT JOIN CategoryCount ON Category.ID=CategoryCount.ID SET ';
+		foreach ($fields as $field)
+		{
+			$sql .= 'Category.' . $field . '=CategoryCount.' . $field . ('availableProductCount' != $field ? ',' : '');
+		}
+
+		self::executeUpdate($sql);
+		self::executeUpdate('DROP TEMPORARY TABLE CategoryCount');
+
+		self::updateCategoryIntervals();
+
+		//self::commit();
+	}
+
+	public static function old_recalculateProductsCount()
+	{
+		ClassLoader::import("application.model.product.Product");
+
 		self::beginTransaction();
 
 		$fields = array('totalProductCount', 'activeProductCount', 'availableProductCount');

@@ -53,7 +53,7 @@ function smarty_function_selectfield($params, $smarty)
 			$fieldValue = $defaultValue;
 		}
 
-		$params['initialValue'] = $fieldValue;
+		//$params['initialValue'] = $fieldValue;
 	}
 
 	$content = '<select';

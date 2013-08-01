@@ -401,7 +401,7 @@ class Product extends MultilingualObject
 			$this->manufacturer->set(!empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
 		}
 
-		//$this->getSpecification()->loadRequestData($request);
+		$this->getSpecification()->loadRequestData($request);
 
 		// set prices
 		$this->loadPricingFromRequest($request, false, $removeMissingPrices);

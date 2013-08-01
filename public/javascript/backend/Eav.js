@@ -6,74 +6,7 @@ if (!window.Backend)
 {
 	Backend = {}
 }
-
-Backend.Eav = Class.create();
-Backend.Eav.prototype =
-{
-	container: '',
-
-	initialize: function(container)
-	{
-		this.container = container;
-
-		if (!container)
-		{
-			return;
-		}
-
-		this.initFieldControls(container);
-
-		ActiveForm.prototype.initTinyMceFields(container);
-	},
-
-	initFieldControls: function(container)
-	{
-		// specField entry logic (multiple value select)
-		var containers = document.getElementsByClassName('multiValueSelect', container);
-
-		for (k = 0; k < containers.length; k++)
-		{
-			new Backend.Eav.specFieldEntryMultiValue(containers[k]);
-		}
-
-		// single value select
-		var selects = container.getElementsByTagName('select');
-		for (k = 0; k < selects.length; k++)
-		{
-			new Backend.Eav.specFieldEntrySingleSelect(selects[k]);
-		}
-	}
-}
-
-Backend.Eav.specFieldEntrySingleSelect = Class.create();
-Backend.Eav.specFieldEntrySingleSelect.prototype =
-{
-	field: null,
-
-	initialize: function(field)
-	{
-	  	this.field = field;
-	  	this.field.onchange = this.handleChange.bindAsEventListener(this);
-	},
-
-	handleChange: function(e)
-	{
-		var otherInput = this.field.parentNode.getElementsByTagName('input')[0];
-
-		if (!otherInput)
-		{
-			return false;
-		}
-
-		jQuery(otherInput).toggle('other' == this.field.value);
-
-		if ('none' != otherInput.style.display)
-		{
-			otherInput.focus();
-		}
-	}
-}
-
+/*
 Backend.Eav.specFieldEntryMultiValue = Class.create();
 Backend.Eav.specFieldEntryMultiValue.prototype =
 {
@@ -233,6 +166,8 @@ Backend.Eav.specFieldEntryMultiValue.prototype =
 	  	NumericFilter(Event.element(e));
 	}
 }
+
+* /
 
 /**
  *  Validate multiple-select option attribute values (at least one option must be selected)

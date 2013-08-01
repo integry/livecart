@@ -763,6 +763,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
+	public function specFields()
+	{
+		$form = new Form($this->getValidator('specField'));
+		$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+		$product->loadSpecification();
+
+		$response = new BlockResponse('form', $form);
+		$product->getSpecification()->setFormResponse($response, $form);
+		$product->getSpecification()->setValidation($form->getValidator());
+		return $response;
+	}
+
 	public function countTabsItems()
 	{
 	  	ClassLoader::import('application.model.product.*');

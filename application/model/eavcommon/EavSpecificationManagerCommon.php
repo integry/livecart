@@ -351,6 +351,7 @@ abstract class EavSpecificationManagerCommon
 				  		if ($request->get($fieldName))
 				  		{
 				  			$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
+				  			$field->resetModifiedStatus(true);
 				  		}
 				  		else
 				  		{
@@ -364,8 +365,8 @@ abstract class EavSpecificationManagerCommon
 
 					foreach ($values as $value)
 					{
-					  	if ($request->isValueSet($prefix . $value->getFormFieldName()) || $request->isValueSet($prefix . 'checkbox_' . $value->getFormFieldName()))
-					  	{
+						if ($request->isValueSet($prefix . $value->getFormFieldName()) || $request->isValueSet($prefix . 'removeEmpty_' . $field->getID()))
+						{
 						  	if ($request->get($prefix . $value->getFormFieldName()))
 						  	{
 								$this->setAttributeValue($field, $value);
@@ -537,8 +538,6 @@ abstract class EavSpecificationManagerCommon
 		}
 
 		$form->setData($this->getFormData($prefix));
-
-		//$this->setFormValidator($form->getValidator());
 	}
 
 	public function setValidation(RequestValidator $validator, $filtersOnly = false, $fieldPrefix = '')

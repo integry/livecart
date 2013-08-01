@@ -124,7 +124,7 @@ backendComponents.directive('tabRoute', function($compile, $http, $location)
 
         link: function(scope, element, attrs)
         {
-			var newElem = angular.element('<tab heading="{{heading}}"><ng-include src="\'http://localhost' + element.attr('template') + '\'"></ng-include></tab>').attr(attrs.$attr);;
+			var newElem = angular.element('<tab heading="{{heading}}"><ng-include src="\'' + element.attr('template') + '\'"></ng-include></tab>').attr(attrs.$attr);;
 			backendComponents.copyAttrs(newElem, attrs);
 
 			newElem.attr('select', 'activate()');
@@ -492,5 +492,111 @@ backendComponents.directive('weightInput', function($compile, $timeout)
 				});
 			});
     	}
+    };
+});
+
+backendComponents.directive('eavSelect', function($compile)
+{
+    return {
+        restrict: "E",
+        link: function(scope, element, attrs)
+		{
+			var newValue = attrs['new'];
+			if (!newValue)
+			{
+				return;
+			}
+
+			element.find('select').append('<option value="other">' + newValue + '</option>').change(function()
+			{
+				element.find('.newOptionValue').toggle(jQuery(this).val() == 'other').find('input').focus();
+			});
+    	}
+    };
+});
+
+backendComponents.directive('eavMultiselect', function($parse)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        link: function($scope, $element, $attrs)
+        {
+			$scope.selectedValues = [];
+			$scope.sortOrder = null;
+			$scope.filter = '';
+			$scope.newValues = [{value: ''}];
+		},
+
+        controller: function($scope, $element, $attrs)
+        {
+			$scope.model = $attrs.ngModel;
+
+			if (!($parse($scope.model)($scope)))
+			{
+				var allModel = $scope.model.substr(0, $scope.model.lastIndexOf('.'));
+				var attributeID = $scope.model.substr($scope.model.lastIndexOf('.') + 1, $scope.model.length);
+				var allAttributes = $parse(allModel)($scope);
+				allAttributes[attributeID] = {valueIDs: []};
+				$parse(allModel).assign($scope, allAttributes);
+			}
+
+			$scope.values = [];
+			_.each(JSON.parse($attrs.values), function(value, key)
+			{
+				if (key)
+				{
+					$scope.values.push({key: key, value: value, checked: $parse($scope.model)($scope).valueIDs.indexOf(key) > -1});
+				}
+			});
+
+			$scope.selectAll = function()
+			{
+				_.each($scope.values, function(value)
+				{
+					value.checked = true;
+				});
+			};
+
+			$scope.deselectAll = function()
+			{
+				_.each($scope.values, function(value)
+				{
+					value.checked = false;
+				});
+			};
+
+			$scope.sort = function()
+			{
+				$scope.sortOrder = function()
+				{
+					return 'value';
+				};
+			};
+
+			$scope.handleNewValues = function()
+			{
+				$scope.newValues = _.filter($scope.newValues, function(val) { return val.value != '' });
+				$scope.newValues.push({value: ''});
+			};
+
+			$scope.$watch('values', function(value)
+			{
+				if (value)
+				{
+					var values = _.pluck(_.filter($scope.values, function(value) { return value.checked == true; }), 'key');
+					$parse($scope.model + '.valueIDs').assign($scope, values);
+				}
+			}, true);
+
+			$scope.$watch('newValues', function(value)
+			{
+				if (value)
+				{
+					var values = _.pluck($scope.newValues, 'value');
+					$parse($scope.model + '.newValues').assign($scope, values);
+				}
+			}, true);
+		}
     };
 });

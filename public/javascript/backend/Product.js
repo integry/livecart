@@ -44,6 +44,16 @@ app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', func
 			$scope.product = data;
 		});
 
+	$scope.getSpecFieldTemplate = function(product)
+	{
+		if (!product)
+		{
+			return;
+		}
+
+		return Router.createUrl('backend.product', 'specFields', {id: product.ID});
+	};
+
 	$scope.save = function(form)
 	{
 		$http.post(Router.createUrl('backend.product', 'update'), $scope.product);

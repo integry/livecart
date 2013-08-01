@@ -44,22 +44,52 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$modelReq = new Request();
 		$modelReq->setValueArray($json);
 
-		/*
 		if (!empty($json['attributes']) && is_array($json['attributes']))
 		{
 			foreach ($json['attributes'] as $key => $value)
 			{
-				$modelReq->set('specField_' . $key, $value['value']);
-				foreach (self::getApplication()->getLanguageArray() as $lang)
+				if (!empty($value['valueIDs']))
 				{
-					if (!empty($value['value_' . $lang]))
+					foreach (json_decode($value['valueIDs']) as $valueID)
 					{
-						$modelReq->set('specField_' . $key . '_' . $lang, $value['value_' . $lang]);
+						$modelReq->set('specItem_' . $valueID, 'on');
+					}
+
+					if (!empty($value['newValues']))
+					{
+						foreach (json_decode($value['newValues']) as $newVal)
+						{
+							$others = $modelReq->get('other', array());
+							$others[$key][] = $newVal;
+							$modelReq->set('other', $others);
+						}
+					}
+
+					$modelReq->set('removeEmpty_' . $key, 'on');
+				}
+				else if (isset($value['ID']))
+				{
+					$modelReq->set('specField_' . $key, $value['ID']);
+					if (!empty($value['newValue']))
+					{
+						$others = $modelReq->get('other', array());
+						$others[$key] = $value['newValue'];
+						$modelReq->set('other', $others);
+					}
+				}
+				else
+				{
+					$modelReq->set('specField_' . $key, $value['value']);
+					foreach (self::getApplication()->getLanguageArray() as $lang)
+					{
+						if (!empty($value['value_' . $lang]))
+						{
+							$modelReq->set('specField_' . $key . '_' . $lang, $value['value_' . $lang]);
+						}
 					}
 				}
 			}
 		}
-		*/
 
 		$this->loadRequestData($modelReq);
 	}
