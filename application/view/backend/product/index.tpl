@@ -1,5 +1,7 @@
 <div ng-controller="ProductController">
 
+	<a class="btn btn-primary" ng-click="add()">{t _add_product}</a>
+	
 	<grid controller="backend.product" primaryKey="Product_ID">
 		<actions>
 			<edit-button>{t _edit}</edit-button>

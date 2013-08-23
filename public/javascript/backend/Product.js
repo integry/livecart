@@ -12,8 +12,14 @@ app.controller('ProductController', function ($scope, $http, $resource, $dialog)
 
 	$scope.edit = function(id)
 	{
-		var d = $dialog.dialog({dialogFade: false, resolve: {id: function(){ return id; } }});
+		var d = $dialog.dialog({dialogFade: false, resolve: {id: function(){ return id; }, categoryID: function(){ return null; }  }});
 		d.open(Router.createUrl('backend.product', 'edit'), 'EditProductController');
+	};
+
+	$scope.add = function()
+	{
+		var d = $dialog.dialog({dialogFade: false, resolve: {categoryID: function(){ return $scope.category.id; }, id: function(){ return null; } }});
+		d.open(Router.createUrl('backend.product', 'add'), 'EditProductController');
 	};
 });
 
@@ -36,9 +42,11 @@ app.controller('ProductPresentationController', function ($scope, $http)
     };
 });
 
-app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', function ($scope, $http, dialog, id)
+app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', 'categoryID', function ($scope, $http, dialog, id, categoryID)
 {
-	$http.get(Router.createUrl('backend.product', 'get', {id: id})).
+	// if id != 0 --> edit product
+	// if categoryID != 0 --> add new product
+	$http.get(Router.createUrl('backend.product', 'get', {id: id, categoryID: categoryID})).
 		success(function(data)
 		{
 			$scope.product = data;
@@ -51,7 +59,7 @@ app.controller('EditProductController', ['$scope', '$http', 'dialog', 'id', func
 			return;
 		}
 
-		return Router.createUrl('backend.product', 'specFields', {id: product.ID});
+		return Router.createUrl('backend.product', 'specFields', {id: product.ID, categoryID: categoryID});
 	};
 
 	$scope.save = function(form)

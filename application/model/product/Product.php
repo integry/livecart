@@ -6,13 +6,14 @@ ClassLoader::import('application.model.product.ProductSpecification');
 ClassLoader::import('application.model.product.ProductPricing');
 ClassLoader::import('application.model.product.ProductImage');
 ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import("application.model.system.Language");
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.category.*");
-ClassLoader::import("application.model.specification.*");
-ClassLoader::import("application.model.product.*");
-ClassLoader::import("application.model.delivery.ShippingClass");
-ClassLoader::import("application.model.tax.TaxClass");
+ClassLoader::import('application.model.system.Language');
+ClassLoader::import('application.model.system.MultilingualObject');
+ClassLoader::import('application.model.category.*');
+ClassLoader::import('application.model.specification.*');
+ClassLoader::import('application.model.product.*');
+ClassLoader::import('application.model.delivery.ShippingClass');
+ClassLoader::import('application.model.tax.TaxClass');
+ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -74,8 +75,8 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("name", ARArray::instance())); // ->setValidation('required')
+		$schema->registerField(new ARField("sku", ARVarchar::instance(20)))->validate('required', 'IsUniqueSkuCheck');
+		$schema->registerField(new ARField("name", ARArray::instance()))->validate('required');
 		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
 		$schema->registerField(new ARField("longDescription", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARText::instance()));
@@ -625,6 +626,19 @@ class Product extends MultilingualObject
 		}
 	}
 
+	public static function getRequestInstance(Request $request, $field = 'ID')
+	{
+		$product = parent::getRequestInstance($request, $field);
+		if (!$product->getID())
+		{
+			$data = $request->getJSON();
+			$category = Category::getRequestInstance($request, $field);
+			$product = Product::getNewInstance($category);
+		}
+
+		return $product;
+	}
+
 	/*####################  Saving ####################*/
 
 	public function getCountUpdateFilter($isDeleting = false)
@@ -923,9 +937,9 @@ class Product extends MultilingualObject
 	public function toArray()
 	{
 	  	$array = parent::toArray();
+		$array['attributes'] = $this->getSpecification()->toArray();
 	  	if ($this->isLoaded())
 	  	{
-			$array['attributes'] = $this->getSpecification()->toArray();
 			self::sortAttributesByHandle($array);
 			$array = array_merge($array, $this->getPricesFields());
 		}

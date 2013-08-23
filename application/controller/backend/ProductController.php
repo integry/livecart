@@ -59,16 +59,24 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function get()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), true, array('Manufacturer'));
-
-		$product->loadSpecification();
-		$product->loadPricing();
-
-		$arr = $product->toArray();
-
-		foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+		if ((int)$this->request->get('id'))
 		{
-			$arr['quantityPrice'][$price['currencyID']] = $price;
+			$product = Product::getInstanceByID($this->request->get('id'), true, array('Manufacturer'));
+			$product->loadSpecification();
+			$product->loadPricing();
+
+			$arr = $product->toArray();
+
+			foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
+			{
+				$arr['quantityPrice'][$price['currencyID']] = $price;
+			}
+		}
+		else
+		{
+			$cat = Category::getInstanceByID($this->request->get('categoryID'), true);
+			$product = Product::getNewInstance($cat);
+			$arr = $product->toArray();
 		}
 
 		return new JSONResponse($arr);
@@ -668,18 +676,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return new AutoCompleteResponse($resp);
 	}
 
-	/**
-	 * Displays main product information form
-	 *
-	 * @role create
-	 *
-	 * @return ActionResponse
-	 */
-	public function add()
+	public function old_add()
 	{
 		$this->loadLanguageFile('backend/ProductPrice');
 
-		$category = Category::getInstanceByID($this->request->get("id"), ActiveRecordModel::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get("categoryID"), ActiveRecordModel::LOAD_DATA);
 
 		$response = $this->productForm(Product::getNewInstance($category, ''));
 		if ($this->config->get('AUTO_GENERATE_SKU'))
@@ -689,6 +690,19 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$response->get('productForm')->set('isEnabled', $this->config->get('DEFAULT_PRODUCT_ENABLED'));
 
+		return $response;
+	}
+
+	/**
+	 * Displays main product information form
+	 *
+	 * @role create
+	 *
+	 * @return ActionResponse
+	 */
+	public function add()
+	{
+		$response = $this->productForm(false);
 		return $response;
 	}
 
@@ -766,7 +780,17 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function specFields()
 	{
 		$form = new Form($this->getValidator('specField'));
-		$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+
+		if ($this->request->get('id'))
+		{
+			$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+		}
+		else
+		{
+			$cat = Category::getInstanceByID((int)$this->request->get('categoryID'), ActiveRecord::LOAD_DATA);
+			$product = Product::getNewInstance($cat);
+		}
+
 		$product->loadSpecification();
 
 		$response = new BlockResponse('form', $form);
@@ -1039,6 +1063,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function buildValidator($isExisting)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
+		//Product::setValidation($validator);
 
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
 
@@ -1053,14 +1078,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 			//$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
-		}
-
-		// validate price input in all currencies
-		if(!$isExisting)
-		{
-			self::addPricesValidator($validator);
-			self::addShippingValidator($validator);
-			self::addInventoryValidator($validator);
 		}
 
 		//$product->getSpecification()->setValidation($validator);
