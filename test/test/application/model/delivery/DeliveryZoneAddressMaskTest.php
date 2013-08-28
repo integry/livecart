@@ -47,8 +47,8 @@ class DeliveryZoneAddressMaskTest extends LiveCartTest
 
 		$addressMask->reload();
 
-		$this->assertEquals($addressMask->deliveryZone->get(), $this->zone);
-		$this->assertEquals($addressMask->mask->get(), 'Viln%');
+		$this->assertEquals($addressMask->deliveryZone, $this->zone);
+		$this->assertEquals($addressMask->mask, 'Viln%');
 	}
 }
 ?>

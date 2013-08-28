@@ -239,16 +239,16 @@ class ReportController extends StoreManagementController
 
 	private function getOption($key, $defaultValue)
 	{
-		$options = json_decode($this->request->get('options'), true);
+		$options = json_decode($this->request->gget('options'), true);
 		return isset($options[$key]) ? $options[$key] : $defaultValue;
 	}
 
 	private function getDateRange()
 	{
-		if ($this->request->get('date') && ('all' != $this->request->get('date')))
+		if ($this->request->gget('date') && ('all' != $this->request->gget('date')))
 		{
 			$res = array();
-			foreach (explode(' | ', $this->request->get('date')) as $part)
+			foreach (explode(' | ', $this->request->gget('date')) as $part)
 			{
 				$res[] = ('now' == $part) ? null : getDateFromString($part);
 			}

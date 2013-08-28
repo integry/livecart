@@ -23,7 +23,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	public function index()
 	{
 		$this->loadLanguageFile('backend/Product');
-		$productID = (int)$this->request->get('id');
+		$productID = (int)$this->request->gget('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA);
 		$rppa = RecurringProductPeriod::getRecordSetByProduct($product)->toArray();
 		$response = new ActionResponse();
@@ -42,7 +42,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	public function edit()
 	{
 		$this->loadLanguageFile('backend/Product');
-		$rpp = RecurringProductPeriod::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
+		$rpp = RecurringProductPeriod::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
 		$rpp = $rpp->toArray();
 
 		$form = $this->createForm($rpp);
@@ -62,7 +62,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	public function update()
 	{
 		$request = $this->getRequest();
-		$rpp = RecurringProductPeriod::getInstanceByID($request->get('id'), true);
+		$rpp = RecurringProductPeriod::getInstanceByID($request->gget('id'), true);
 
 		return $this->save($rpp);
 	}
@@ -74,7 +74,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	{
 		$request = $this->getRequest();
 		$rpp = RecurringProductPeriod::getNewInstance(
-			Product::getInstanceByID((int)$request->get('productID'), ActiveRecord::LOAD_DATA)
+			Product::getInstanceByID((int)$request->gget('productID'), ActiveRecord::LOAD_DATA)
 		);
 		$rpp->position->set(1000);
 
@@ -84,7 +84,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	public function delete()
 	{
 		$request = $this->getRequest();
-		$rpp = RecurringProductPeriod::getInstanceByID($request->get('id'));
+		$rpp = RecurringProductPeriod::getInstanceByID($request->gget('id'));
 		$rpp->delete();
 		return new JSONResponse(null, 'success');
 	}
@@ -97,7 +97,7 @@ class RecurringProductPeriodController extends StoreManagementController
 		{
 			$rpp->loadRequestData($this->request);
 			// null value is not set by loadRequestData()..
-			$rebillCount = $this->request->get('rebillCount');
+			$rebillCount = $this->request->gget('rebillCount');
 			$rebillCount=floor($rebillCount);
 			$rpp->rebillCount->set(is_numeric($rebillCount) && $rebillCount <= 0 ? $rebillCount : NULL);
 			$rpp->save();
@@ -110,8 +110,8 @@ class RecurringProductPeriodController extends StoreManagementController
 					$currencies[$currency] = Currency::getInstanceByID($currency);
 				}
 				foreach(array(
-					ProductPrice::TYPE_SETUP_PRICE => $request->get('ProductPrice_setup_price_'.$currency),
-					ProductPrice::TYPE_PERIOD_PRICE => $request->get('ProductPrice_period_price_'.$currency)
+					ProductPrice::TYPE_SETUP_PRICE => $request->gget('ProductPrice_setup_price_'.$currency),
+					ProductPrice::TYPE_PERIOD_PRICE => $request->gget('ProductPrice_period_price_'.$currency)
 					) as $type=>$value)
 				{
 					$price = ProductPrice::getInstance($product, $currencies[$currency], $rpp, $type);

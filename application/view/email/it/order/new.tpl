@@ -1,7 +1,7 @@
-{'STORE_NAME'|config} Conferma Ordine
+[[ config('STORE_NAME') ]] Conferma Ordine
 Gentile {$user.fullName},
 
-Ti ringraziamo per il tuo ordine, che hai effettuato presso {'STORE_NAME'|config}.
+Ti ringraziamo per il tuo ordine, che hai effettuato presso [[ config('STORE_NAME') ]].
 
 Se volessi contattarci in merito a questo ordine, ti preghiamo di fare riferimento
 a questo numero identificativo: Ordine numero {$order.invoiceNumber}.

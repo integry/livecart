@@ -134,9 +134,9 @@ class SpecFieldValueTest extends LiveCartTest
 		}
 
 		// After merging values specification item should point to other value
-		$this->assertTrue($specificationItems[1]->specFieldValue->get() === $specFieldValues[1]);
-		$this->assertTrue($specificationItems[2]->specFieldValue->get() === $specFieldValues[2]);
-		$this->assertTrue($specificationItems[2]->specFieldValue->get() !== $specFieldValues[3]);
+		$this->assertTrue($specificationItems[1]->specFieldValue === $specFieldValues[1]);
+		$this->assertTrue($specificationItems[2]->specFieldValue === $specFieldValues[2]);
+		$this->assertTrue($specificationItems[2]->specFieldValue !== $specFieldValues[3]);
 	}
 }
 

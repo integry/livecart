@@ -15,7 +15,7 @@ class OrderNoteController extends StoreManagementController
 {
 	public function index()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
 		$notes = $order->getNotes();
 		foreach ($notes as $note)
@@ -36,18 +36,18 @@ class OrderNoteController extends StoreManagementController
 
 	public function view()
 	{
-		return new ActionResponse('note', ActiveRecordModel::getInstanceById('OrderNote', $this->request->get('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
+		return new ActionResponse('note', ActiveRecordModel::getInstanceById('OrderNote', $this->request->gget('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
 	}
 
 	public function add()
 	{
 		if ($this->buildOrderNoteValidator()->isValid())
 		{
-			$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
+			$order = CustomerOrder::getInstanceById($this->request->gget('id'), CustomerOrder::LOAD_DATA);
 
 			$note = OrderNote::getNewInstance($order, $this->user);
 			$note->isAdmin->set(true);
-			$note->text->set($this->request->get('comment'));
+			$note->text->set($this->request->gget('comment'));
 			$note->save();
 
 			if ($this->config->get('EMAIL_ORDERNOTE'))

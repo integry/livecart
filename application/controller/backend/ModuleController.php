@@ -124,9 +124,9 @@ class ModuleController extends StoreManagementController
 	{
 		return;
 
-		$repo = $this->repos[$this->request->get('repo')];
-		$repo->setHandshake($this->request->get('handshake'));
-		$params['package'] = $this->request->get('id');
+		$repo = $this->repos[$this->request->gget('repo')];
+		$repo->setHandshake($this->request->gget('handshake'));
+		$params['package'] = $this->request->gget('id');
 
 		return $repo->getResponse($query, $params, $raw);
 	}
@@ -164,8 +164,8 @@ class ModuleController extends StoreManagementController
 	public function setStatus()
 	{
 		$module = $this->getModule();
-		$module->setStatus($this->request->get('state') == 'true', $this->application);
-		return $this->statusResponse($this->request->get('state') == 'true' ? '_enable_confirm' : '_disable_confirm', $module);
+		$module->setStatus($this->request->gget('state') == 'true', $this->application);
+		return $this->statusResponse($this->request->gget('state') == 'true' ? '_enable_confirm' : '_disable_confirm', $module);
 	}
 
 	public function install()
@@ -199,13 +199,13 @@ class ModuleController extends StoreManagementController
 
 	public function listVersions()
 	{
-		return new JSONResponse($this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $this->request->get('channel')))));
+		return new JSONResponse($this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $this->request->gget('channel')))));
 	}
 
 	public function node()
 	{
 		$module = $this->toArray($this->getModule());
-		$module['repo'] = array('repo' => $this->request->get('repo'), 'handshake' => $this->request->get('handshake'));
+		$module['repo'] = array('repo' => $this->request->gget('repo'), 'handshake' => $this->request->gget('handshake'));
 		return new ActionResponse('module', $module);
 	}
 
@@ -215,7 +215,7 @@ class ModuleController extends StoreManagementController
 		$this->config->save();
 
 		$response = new JSONResponse('');
-		$updatePath = $this->getRepoResponse('package/updatePath', array('from' => $this->request->get('from'), 'to' => $this->request->get('to')));
+		$updatePath = $this->getRepoResponse('package/updatePath', array('from' => $this->request->gget('from'), 'to' => $this->request->gget('to')));
 
 		$flush = array('path' => $updatePath);
 		$flush['status'] = $this->translate($updatePath ? '_status_fetch' : '_status_nothing_to_fetch');
@@ -229,7 +229,7 @@ class ModuleController extends StoreManagementController
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
 
 		// process update
-		$module = $this->application->getConfigContainer()->getModule($this->request->get('id'));
+		$module = $this->application->getConfigContainer()->getModule($this->request->gget('id'));
 
 		foreach ($updatePath as $key => $package)
 		{
@@ -270,7 +270,7 @@ class ModuleController extends StoreManagementController
 
 	public function repoStatus()
 	{
-		$repo = $this->request->get('repo');
+		$repo = $this->request->gget('repo');
 		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
 		{
 			return new RawResponse('Invalid URL');
@@ -283,7 +283,7 @@ class ModuleController extends StoreManagementController
 
 	public function repoDescription()
 	{
-		$repo = $this->request->get('repo');
+		$repo = $this->request->gget('repo');
 		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
 		{
 			return new RawResponse('Invalid URL');
@@ -299,7 +299,7 @@ class ModuleController extends StoreManagementController
 		$resp = array();
 		$conf = $this->application->getConfigContainer();
 
-		foreach (json_decode($this->request->get('repos'), true) as $repo)
+		foreach (json_decode($this->request->gget('repos'), true) as $repo)
 		{
 			$this->request->set('repo', $repo['repo']);
 			$this->request->set('handshake', $repo['handshake']);
@@ -319,7 +319,7 @@ class ModuleController extends StoreManagementController
 		}
 
 		$response = new ActionResponse();
-		$response->set('repos', base64_encode($this->request->get('repos')));
+		$response->set('repos', base64_encode($this->request->gget('repos')));
 		$response->set('packages', $resp);
 		return $response;
 	}
@@ -328,8 +328,8 @@ class ModuleController extends StoreManagementController
 	{
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
 
-		$id = unserialize(base64_decode($this->request->get('module')));
-		$repos = json_decode(base64_decode($this->request->get('repos')), true);
+		$id = unserialize(base64_decode($this->request->gget('module')));
+		$repos = json_decode(base64_decode($this->request->gget('repos')), true);
 
 		$repo = $repos[$id[0]];
 		$this->request->set('repo', $repo['repo']);
@@ -418,7 +418,7 @@ class ModuleController extends StoreManagementController
 
 	private function getModule()
 	{
-		return $this->application->getConfigContainer()->getModule($this->request->get('id'));
+		return $this->application->getConfigContainer()->getModule($this->request->gget('id'));
 	}
 }
 

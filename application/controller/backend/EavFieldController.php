@@ -73,9 +73,9 @@ class EavFieldController extends EavFieldControllerCommon
 
 	protected function save(EavField $specField)
 	{
-		if (!is_numeric($this->request->get('categoryID')))
+		if (!is_numeric($this->request->gget('categoryID')))
 		{
-			$specField->stringIdentifier->set($this->request->get('categoryID'));
+			$specField->stringIdentifier->set($this->request->gget('categoryID'));
 		}
 		return parent::save($specField);
 	}

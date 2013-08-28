@@ -20,8 +20,8 @@ ClassLoader::import("application.model.ActiveRecordModel");
  *		  $schema->setName("Catalog");
  *
  *		  parent::defineSchema($className);
- *		  $schema->registerField(new ARField("name", Varchar::instance(40)));
- *		  $schema->registerField(new ARField("description", Varchar::instance(200)));
+ *		  public $name", Varchar::instance()));
+ *		  public $description", Varchar::instance()));
  *	}
  * }
  *
@@ -38,8 +38,8 @@ ClassLoader::import("application.model.ActiveRecordModel");
  * // Inserting a new node
  * $parent = getParentNodeFromSomewhere();
  * $catalogNode = ARTreeNode::getNewInstance("Catalog", $parent);
- * $catalogNode->name->set("This is my new catalog node!");
- * $catalogNode->name->set("This node will be created as child for a gived $parent instance");
+ * $catalogNode->name = "This is my new catalog node!");
+ * $catalogNode->name = "This node will be created as child for a gived $parent instance");
  * $catalogNode->save();
  *
  * // Deleting a node and all its childs
@@ -127,7 +127,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance($className);
 		$tableName = $schema->getName();
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		public $ID;
 		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
 		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
 		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
@@ -298,7 +298,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function setParentNode(ActiveTreeNode $parentNode)
 	{
-		$this->getField(self::PARENT_NODE_FIELD_NAME)->set($parentNode);
+		$this->getField(self::PARENT_NODE_FIELD_NAME) = $parentNode);
 	}
 
 	/**
@@ -593,8 +593,8 @@ class ActiveTreeNode extends ActiveRecordModel
 				self::executeUpdate($update);
 			}
 
-			$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
-			$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
+			$this->getField(self::RIGHT_NODE_FIELD_NAME) = $nodeRightValue);
+			$this->getField(self::LEFT_NODE_FIELD_NAME) = $nodeLeftValue);
 
 			ActiveRecordModel::commit();
 

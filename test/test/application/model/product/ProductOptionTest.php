@@ -56,7 +56,7 @@ class ProductOptionTest extends LiveCartTest
 		foreach ($cloned->getChoiceSet() as $key => $choice)
 		{
 			$this->assertNotEquals($choice->getID(), $this->choices[$key]->getID());
-			$this->assertEquals($choice->priceDiff->get(), 10 + $key);
+			$this->assertEquals($choice->priceDiff, 10 + $key);
 		}
 	}
 }

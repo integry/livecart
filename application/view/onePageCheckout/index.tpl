@@ -67,7 +67,7 @@
 {include file="layout/frontend/footer.tpl"}
 
 	<script type="text/javascript">
-		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: {'OPC_SHOW_CART'|config}{rdelim});
+		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: [[ config('OPC_SHOW_CART') ]]{rdelim});
 		checkout.updateCompletedSteps({json array=$completedSteps});
 		checkout.updateEditableSteps({json array=$editableSteps});
 		Observer.process('order', {json array=$orderValues});

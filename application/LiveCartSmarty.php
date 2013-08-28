@@ -80,7 +80,7 @@ class LiveCartSmarty extends Smarty
 	 *  Retrieve software configuration values from Smarty templates
 	 *
 	 *  <code>
-	 *	  {'STORE_NAME'|config}
+	 *	  [[ config('STORE_NAME') ]]
 	 *  </code>
 	 */
 	public function config($key)

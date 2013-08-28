@@ -31,7 +31,7 @@ class UserGroupController extends ActiveGridController
 
 	public function edit()
 	{
-		$group = UserGroup::getInstanceByID((int)$this->request->get('id'), true);
+		$group = UserGroup::getInstanceByID((int)$this->request->gget('id'), true);
 		$form = $this->createUserGroupForm($group);
 
 		$response = new ActionResponse();
@@ -47,12 +47,12 @@ class UserGroupController extends ActiveGridController
 	{
 		parent::changeColumns();
 
-		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->get('id')));
+		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->gget('id')));
 	}
 
 	public function users()
 	{
-		$id = (int)$this->request->get("id");
+		$id = (int)$this->request->gget("id");
 
 		$response = new ActionResponse();
 
@@ -83,7 +83,7 @@ class UserGroupController extends ActiveGridController
 	 */
 	public function save()
 	{
-		if($id = $this->request->get('id'))
+		if($id = $this->request->gget('id'))
 		{
 			$group = UserGroup::getInstanceByID($id);
 		}
@@ -122,7 +122,7 @@ class UserGroupController extends ActiveGridController
 	 */
 	public function remove()
 	{
-		$userGroup = UserGroup::getInstanceByID((int)$this->request->get("id"), true);
+		$userGroup = UserGroup::getInstanceByID((int)$this->request->gget("id"), true);
 		$userGroupArray = $userGroup->toArray();
 		$userGroup->delete();
 
@@ -189,7 +189,7 @@ class UserGroupController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 
 		if (!is_numeric($id))
 		{

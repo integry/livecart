@@ -16,10 +16,10 @@ class ProductRatingType extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('name', ARArray::instance()));
-		$schema->registerField(new ARField('position', ARInteger::instance()));
+		public $ID;
+		public $categoryID;
+		public $name', ARArray::instance()));
+		public $position;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -27,7 +27,7 @@ class ProductRatingType extends MultilingualObject
 	public static function getNewInstance(Category $category)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category->set($category);
+		$instance->category = $category);
 		return $instance;
 	}
 
@@ -97,7 +97,7 @@ class ProductRatingType extends MultilingualObject
 
 	public function getCategory()
 	{
-		return $this->category->get();
+		return $this->category;
 	}
 
 	protected function insert()
@@ -109,7 +109,7 @@ class ProductRatingType extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position->set($position);
+		$this->position = $position);
 
 		return parent::insert();
 	}

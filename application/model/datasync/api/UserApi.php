@@ -69,7 +69,7 @@ class UserApi extends ModelApi
 		//
 		$request = $this->application->getRequest();
 		$id = $this->getRequestID(true);
-		if($id != '' && $request->get('email') != '')
+		if($id != '' && $request->gget('email') != '')
 		{
 			$users = ActiveRecordModel::getRecordSetArray('User',
 				select(eq(f('User.ID'), $id))
@@ -133,10 +133,10 @@ class UserApi extends ModelApi
 			{
 				if(is_numeric($user[$addressType.'ID']))
 				{
-					$address = $u->defaultBillingAddress->get()->userAddressID->get();
+					$address = $u->defaultBillingAddress->userAddressID;
 					foreach($addressFieldNames as $addressFieldName)
 					{
-						$responseCustomer->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName->get());
+						$responseCustomer->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName);
 					}
 				}
 			}
@@ -172,10 +172,10 @@ class UserApi extends ModelApi
 			{
 				if(is_numeric($customer[$addressType.'ID']))
 				{
-					$address = $u->defaultBillingAddress->get()->userAddressID->get();
+					$address = $u->defaultBillingAddress->userAddressID;
 					foreach($addressFieldNames as $addressFieldName)
 					{
-						$customerNode->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName->get());
+						$customerNode->addChild($addressType.'_'.$addressFieldName, $address->$addressFieldName);
 					}
 				}
 			}
@@ -188,7 +188,7 @@ class UserApi extends ModelApi
 	private function mergeUserEavFields($customerNode, $u)
 	{
 		$eavFieldsNode = $customerNode->addChild('EavFields');
-		if($u->eavObjectID->get())
+		if($u->eavObjectID)
 		{
 			$u->getSpecification();
 			$userArray = $u->toArray();

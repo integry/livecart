@@ -23,33 +23,31 @@ class DiscountAction extends ActiveRecordModel
 	 *
 	 * @param string $className Schema name
 	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("conditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("actionConditionID", "DiscountCondition", "ID", "DiscountCondition", ARInteger::instance()));
 
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("isOrderLevel", ARBool::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance()));
 
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("discountStep", ARInteger::instance()));
-		$schema->registerField(new ARField("discountLimit", ARInteger::instance()));
+		public $ID;
+		public $conditionID", "DiscountCondition", "ID", "DiscountCondition;
+		public $actionConditionID", "DiscountCondition", "ID", "DiscountCondition;
 
-		$schema->registerField(new ARField("amount", ARFloat::instance()));
-		$schema->registerField(new ARField("actionClass", ARVarchar::instance(80)));
-		$schema->registerField(new ARField("serializedData", ARText::instance()));
+		public $isEnabled;
+		public $isOrderLevel;
+		public $type;
+
+		public $position;
+		public $discountStep;
+		public $discountLimit;
+
+		public $amount;
+		public $actionClass;
+		public $serializedData;
 	}
 
 	public static function getNewInstance(DiscountCondition $condition, $className = 'RuleActionPercentageDiscount')
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->condition->set($condition);
-		$instance->actionClass->set($className);
+		$instance->condition = $condition);
+		$instance->actionClass = $className);
 
 		return $instance;
 	}
@@ -72,7 +70,7 @@ class DiscountAction extends ActiveRecordModel
 	{
 		$params = unserialize($this->serializedData->get());
 		$params[$key] = $value;
-		$this->serializedData->set(serialize($params));
+		$this->serializedData = serialize($params));
 	}
 
 	public function save()

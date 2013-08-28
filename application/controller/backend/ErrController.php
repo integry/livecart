@@ -13,16 +13,16 @@ class ErrController extends BackendController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$response->set('id', $this->request->get('id'));
-		$response->set('ajax', $this->request->get('ajax'));
-		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
+		$response->set('id', $this->request->gget('id'));
+		$response->set('ajax', $this->request->gget('ajax'));
+		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->gget('id')));
 
 		return $response;
 	}
 
 	public function redirect()
 	{
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 		$params = array();
 
 		if($this->isAjax())
@@ -47,7 +47,7 @@ class ErrController extends BackendController
 				$params['id'] = $id;
 				return new ActionRedirectResponse('backend.err', 'index', $params);
 			default:
-			   	return new RawResponse('error ' . $this->request->get('id'));
+			   	return new RawResponse('error ' . $this->request->gget('id'));
 		}
 	}
 }

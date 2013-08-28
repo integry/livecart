@@ -187,7 +187,7 @@ class ProductSet extends ARSet
 
 		foreach (ActiveRecordModel::getRecordSet('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType')) as $value)
 		{
-			$value->product->get()->registerVariation($value->variation->get());
+			$value->product->registerVariation($value->variation);
 		}
 	}
 

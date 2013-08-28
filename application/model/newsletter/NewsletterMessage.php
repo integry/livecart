@@ -21,12 +21,12 @@ class NewsletterMessage extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("status", ARInteger::instance()));
-		$schema->registerField(new ARField("time", ARDateTime::instance()));
-		$schema->registerField(new ARField("subject", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("text", ARText::instance()));
-		$schema->registerField(new ARField("html", ARText::instance()));
+		public $ID;
+		public $status;
+		public $time;
+		public $subject;
+		public $text;
+		public $html;
 	}
 
 	public function getSentCount()
@@ -66,31 +66,31 @@ class NewsletterMessage extends ActiveRecordModel
 
 		$email = new Email($application);
 		$email->setTemplate('newsletter/template');
-		$email->set('subject', $this->subject->get());
-		$email->set('htmlMessage', $this->html->get());
-		$email->set('text', $this->text->get());
-		$email->set('email', $this->text->get());
-		
+		$email = 'subject', $this->subject->get());
+		$email = 'htmlMessage', $this->html->get());
+		$email = 'text', $this->text->get());
+		$email = 'email', $this->text->get());
+
 		$email->setFrom($config->get('NEWSLETTER_EMAIL') ? $config->get('NEWSLETTER_EMAIL') : $config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
 
 		if ($user = $sent->user->get())
 		{
 			$email->setTo($user->email->get(), $user->getName());
-			$email->set('email', $user->email->get());
+			$email = 'email', $user->email->get());
 		}
 		else if ($subscriber = $sent->subscriber->get())
 		{
 			$email->setTo($subscriber->email->get());
-			$email->set('email', $subscriber->email->get());
+			$email = 'email', $subscriber->email->get());
 		}
 
-		//$sent->time->set(new ARExpressionHandle('NOW()'));
+		//$sent->time = new ARExpressionHandle('NOW()'));
 		$sent->save();
 
 		if ($this->status->get() == self::STATUS_NOT_SENT)
 		{
-			$this->status->set(self::STATUS_PARTIALLY_SENT);
-			$this->time->set(new ARExpressionHandle('NOW()'));
+			$this->status = self::STATUS_PARTIALLY_SENT);
+			$this->time = new ARExpressionHandle('NOW()'));
 			$this->save();
 		}
 
@@ -99,8 +99,8 @@ class NewsletterMessage extends ActiveRecordModel
 
 	public function markAsSent()
 	{
-		$this->status->set(self::STATUS_SENT);
-		$this->time->set(new ARExpressionHandle('NOW()'));
+		$this->status = self::STATUS_SENT);
+		$this->time = new ARExpressionHandle('NOW()'));
 		$this->save();
 	}
 }

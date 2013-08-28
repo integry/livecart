@@ -1,4 +1,4 @@
-Nytt meddelande om din order hos {'STORE_NAME'|config}
+Nytt meddelande om din order hos [[ config('STORE_NAME') ]]
 Kära {$user.fullName},
 
 Ett nytt meddelande har lagts till rörande din order.

@@ -19,14 +19,13 @@ class OrderedItemOption extends ActiveRecordModel
 	 */
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryForeignKeyField("orderedItemID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("choiceID", "ProductOptionChoice", "ID", "ProductOptionChoice", ARInteger::instance()));
 
-		$schema->registerField(new ARField("priceDiff", ARFloat::instance()));
-		$schema->registerField(new ARField("optionText", ARText::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("orderedItemID", "OrderedItem", "ID", "OrderedItem;
+		$schema->registerField(new ARPrimaryForeignKeyField("choiceID", "ProductOptionChoice", "ID", "ProductOptionChoice;
+
+		public $priceDiff;
+		public $optionText;
 
 		$schema->registerCircularReference('Choice', 'ProductOptionChoice');
 		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
@@ -37,8 +36,8 @@ class OrderedItemOption extends ActiveRecordModel
 	public static function getNewInstance(OrderedItem $item, ProductOptionChoice $choice)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->orderedItem->set($item);
-		$instance->choice->set($choice);
+		$instance->orderedItem = $item);
+		$instance->choice = $choice);
 
 		return $instance;
 	}
@@ -101,7 +100,7 @@ class OrderedItemOption extends ActiveRecordModel
 	public function updatePriceDiff()
 	{
 		$currency = $this->orderedItem->get()->customerOrder->get()->currencyID->get()->getID();
-		$this->priceDiff->set($this->choice->get()->getPriceDiff($currency));
+		$this->priceDiff = $this->choice->get()->getPriceDiff($currency));
 	}
 
 	public function setFile($fileArray)
@@ -121,7 +120,7 @@ class OrderedItemOption extends ActiveRecordModel
 		}
 
 		move_uploaded_file($fileArray['tmp_name'], $path);
-		$this->optionText->set($fileName);
+		$this->optionText = $fileName);
 
 		// create thumbnails for images
 		if ($paths = self::getImagePaths($path))

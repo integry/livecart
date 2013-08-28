@@ -30,7 +30,7 @@ class FilterGroupController extends StoreManagementController
 	{
 		$response = new ActionResponse();
 
-		$categoryID = (int)$this->request->get('id');
+		$categoryID = (int)$this->request->gget('id');
 		$category = Category::getInstanceByID($categoryID);
 		$specFieldsList = $category->getSpecificationFieldSet();
 
@@ -57,9 +57,9 @@ class FilterGroupController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->get('specFieldID', false)));
+		$filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->gget('specFieldID', false)));
 
-		if($specFieldID = $this->request->get('specFieldID', false))
+		if($specFieldID = $this->request->gget('specFieldID', false))
 		{
 			$filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
 		}
@@ -72,7 +72,7 @@ class FilterGroupController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$filterGroup = FilterGroup::getInstanceByID((int)$this->request->get('ID'));
+		$filterGroup = FilterGroup::getInstanceByID((int)$this->request->gget('ID'));
 
 		return $this->save($filterGroup);
 	}
@@ -90,10 +90,10 @@ class FilterGroupController extends StoreManagementController
 
 		if(!$errors)
 		{
-			$filters = $this->request->get('filters', false);
+			$filters = $this->request->gget('filters', false);
 
 			$filterGroup->loadRequestData($this->request);
-			$filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->get('specFieldID')));
+			$filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->gget('specFieldID')));
 			$filterGroup->save();
 
 			$specField = $filterGroup->specField->get();
@@ -123,8 +123,8 @@ class FilterGroupController extends StoreManagementController
 	 */
 	public function item()
 	{
-		$groupID = $this->request->get('id');
-		$categoryID = $this->request->get('categoryID');
+		$groupID = $this->request->gget('id');
+		$categoryID = $this->request->gget('categoryID');
 
 		$response = new ActionResponse();
 		$filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
@@ -162,7 +162,7 @@ class FilterGroupController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		if($id = $this->request->get("id", false))
+		if($id = $this->request->gget("id", false))
 		{
 			FilterGroup::deletebyID((int)$id);
 			return new JSONResponse(false, 'success');
@@ -182,7 +182,7 @@ class FilterGroupController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 			if(!empty($key))
 			{

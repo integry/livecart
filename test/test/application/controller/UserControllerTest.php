@@ -93,9 +93,9 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		// verify user data
 		$user = SessionUser::getUser();
 		$user->reload(true);
-		$this->assertEquals($user->firstName->get(), 'First');
-		$this->assertEquals($user->defaultBillingAddress->get()->userAddress->get()->countryID->get(), 'LV');
-		$this->assertEquals($user->defaultShippingAddress->get()->userAddress->get()->countryID->get(), 'LV');
+		$this->assertEquals($user->firstName, 'First');
+		$this->assertEquals($user->defaultBillingAddress->userAddress->countryID, 'LV');
+		$this->assertEquals($user->defaultShippingAddress->userAddress->countryID, 'LV');
 	}
 
 	public function testUserCheckoutWithDifferentAddresses()
@@ -155,16 +155,16 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		// verify user data
 		$user = SessionUser::getUser();
 		$user->reload(true);
-		$this->assertEquals($user->firstName->get(), 'First');
-		$this->assertEquals($user->defaultShippingAddress->get()->userAddress->get()->firstName->get(), 'Recipient');
-		$this->assertEquals($user->defaultBillingAddress->get()->userAddress->get()->countryID->get(), 'LV');
-		$this->assertEquals($user->defaultShippingAddress->get()->userAddress->get()->countryID->get(), 'LT');
+		$this->assertEquals($user->firstName, 'First');
+		$this->assertEquals($user->defaultShippingAddress->userAddress->firstName, 'Recipient');
+		$this->assertEquals($user->defaultBillingAddress->userAddress->countryID, 'LV');
+		$this->assertEquals($user->defaultShippingAddress->userAddress->countryID, 'LT');
 
 		// order address
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$order->loadAll();
-		$this->assertEquals($order->shippingAddress->get()->countryID->get(), 'LT');
+		$this->assertEquals($order->shippingAddress->countryID, 'LT');
 
 	}
 

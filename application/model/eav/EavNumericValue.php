@@ -13,7 +13,7 @@ class EavNumericValue extends EavValueSpecification
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARField("value", ARInteger::instance()));
+		public $value;
 	}
 
 	public static function getNewInstance(EavObject $product, EavField $field, $value)

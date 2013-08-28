@@ -1,180 +1,172 @@
 <?php
 
-	/**
-	 * LiveCart front controller
-	 *
-	 * @author Integry Systems
-	 * @package application
-	 */
+/*
+$f = new ReflectionMethod('\Phalcon\Mvc\View\Engine\Volt\Compiler::_compileSource');
+var_dump($f->getParameters());
+var_dump($f->getNumberOfParameters());
+*/
 
-	// @todo: remove
-	/*
-	function onShutDown()
-	{
-		define('SHUTDOWN', true);
-	}
+/**
+ * LiveCart front controller
+ *
+ * @author Integry Systems
+ * @package application
+ */
+try
+{
+	define('__ROOT__', dirname(__DIR__) . '/');
 
-	function logDestruct($obj, $details = '')
-	{
-		if (defined('SHUTDOWN'))
-		{
-			//var_dump($obj);
-			echo '! ' . get_class($obj) . ($details ? ' (' . $details . ')' : '') . "\n";
-		}
-	}
+	//Register an autoloader
+	$loader = new \Phalcon\Loader();
+	$loader->registerDirs(array(
+		__ROOT__ . '/application/controller/',
+		__ROOT__ . '/application/model/',
+		__ROOT__ . '/application/'
+	))->register();
 
-	register_shutdown_function('onShutDown');
-	*/
+	//Create a DI
+	$di = new Phalcon\DI\FactoryDefault();
 
-	ob_start();
+	//Setting up the view component
+	$di->set('view', function(){
+		$view = new \Phalcon\Mvc\View();
+		$view->setViewsDir(__ROOT__ . '/application/view/');
 
-	// session cookie expires in 180 days
-	session_set_cookie_params(180 * 60 * 60 * 24);
-
-	include_once (include 'appdir.php') . '/application/Initialize.php';
-
-	ClassLoader::import('application.LiveCart');
-
-	$app = new LiveCart();
-
-	if (isset($stat))
-	{
-		$app->setStatHandler($stat);
-		$stat->logStep('Initialization');
-	}
-
-	// Custom initialization tasks
-	$custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
-	if (file_exists($custom))
-	{
-		include $custom;
-	}
-
-	if (version_compare('5.2', PHP_VERSION, '>'))
-	{
-		ClassLoader::import('library.json.json');
-	}
-
-	function runApp(LiveCart $app)
-	{
-		static $attempts = 0;
-
-		// check if we're not getting into an endless loop
-		if (++$attempts > 5)
-		{
-			try
+		$view->registerEngines(array(
+			".tpl" => function($view, $di)
 			{
-				$app->run();
+				$volt = new LiveVolt($view, $di);
+				$volt->setOptions(array('compiledPath' => __ROOT__ . '/cache/templates/'));
+				return $volt;
 			}
-			catch (Exception $e)
-			{
-				dump_livecart_trace($e);
-				die('error');
-			}
-		}
+		));
 
-		try
+		return $view;
+	});
+
+	// configuration handler
+	$di->set('config', function() use ($di)
+	{
+		return new \system\Config($di);
+	});
+
+	// Caching
+	$di->set('cache', function()
+	{
+		$frontCache = new Phalcon\Cache\Frontend\Output(array(
+			"lifetime" => 0
+		));
+
+		return new Phalcon\Cache\Backend\File($frontCache, array(
+    		"cacheDir" => __ROOT__ . "/cache/"
+			));
+	});
+
+	$di->set('modelCache', function() use ($di)
+	{
+		return $di->get('cache');
+	});
+
+	//Handle the request
+	$application = new LiveCart($di);
+	//$application->useImplicitView(true);
+
+	$di->set('application', $application);
+
+	echo $application->handle()->getContent();
+} catch(Exception $e)
+{
+     echo dump_livecart_trace($e);
+}
+
+function dump_livecart_trace(Exception $e)
+{
+	echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
+	echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+	echo getFileTrace($e->getTrace());
+	exit;
+}
+
+function getFileTrace($trace)
+{
+	$showedFiles = array();
+	$i = 0;
+	$traceString = '';
+
+	$ajax = false; //isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? true : false;
+
+
+	// Get new line
+	$newLine = $ajax ? "\n" : "<br />\n";
+
+	foreach($trace as $call)
+	{
+		if(isset($call['file']) && isset($call['line']) && !isset($showedFiles[$call['file']][$call['line']]))
 		{
-			if ($app->isDevMode())
+			$showedFiles[$call['file']][$call['line']] = true;
+
+			// Get file name and line
+			if($ajax)
 			{
-				try
-				{
-					$app->run();
-				}
-				catch (Exception $e)
-				{
-					if (!$e instanceof HTTPStatusException)
-					{
-						dump_livecart_trace($e);
-					}
-					else
-					{
-						throw $e;
-					}
-				}
+				$position = ($i++).": {$call['file']}:{$call['line']}";
 			}
 			else
 			{
-				$app->run();
+				$position = "<strong>".($i++)."</strong>: \"{$call['file']}\":{$call['line']}";
 			}
-		}
-		catch (HTTPStatusException $e)
-		{
-			if($e->getController() instanceof BackendController)
+
+			// Get function name
+			if(isset($call['class']) && isset($call['type']) && isset($call['function']))
 			{
-				$route = 'backend.err/redirect/' . $e->getStatusCode();
+				$functionName = "{$call['class']}{$call['type']}{$call['function']}";
 			}
 			else
 			{
-				$route = 'err/redirect/' . $e->getStatusCode();
+				$functionName = $call['function'];
 			}
 
-			$app->getRouter()->setRequestedRoute($route);
-			runApp($app);
-		}
+			// Get function arguments
+			$arguments = '';
+			$j = 1;
+			if (isset($call['args']))
+			{
+				foreach($call['args'] as $argv)
+				{
+					switch(gettype($argv))
+					{
+						case 'string':
+							$arguments .= "\"$argv\"";
+						break;
+						case 'boolean':
+							 $arguments .= ($argv ? 'true' : 'false');
+						break;
+						case 'integer':
+						case 'double':
+							 $arguments .= $argv;
+						break;
+						case 'object':
+							 $arguments .= "(object)" . get_class($argv);
+						break;
+						case 'array':
+							 $arguments .= "Array";
+						break;
+						default:
+							$arguments .= $argv;
+						break;
+					}
 
-		catch (ARNotFoundException $e)
-		{
-			$app->getRouter()->setRequestedRoute('err/redirect/404');
-			runApp($app);
-		}
+					if($j < count($call['args'])) $arguments .= ", "; $j++;
+				}
+			}
 
-		catch (ControllerNotFoundException $e)
-		{
-			$app->getRouter()->setRequestedRoute('err/redirect/404');
-			runApp($app);
-		}
 
-		catch (ActionNotFoundException $e)
-		{
-			$app->getRouter()->setRequestedRoute('err/redirect/404');
-			runApp($app);
-		}
-
-		catch (UnsupportedBrowserException $e)
-		{
-			header('Location: ' . $app->getRouter()->createUrl(array('controller' => 'err', 'action' =>'backendBrowser')));
-			exit;
-		}
-
-		catch (SQLException $e)
-		{
-			$_REQUEST['exception'] = $e;
-			$app->getRouter()->setRequestedRoute('err/database');
-			runApp($app);
-		}
-
-		catch (Exception $e)
-		{
-			$route = 'err/redirect/500';
-			$app->getRouter()->setRequestedRoute($route);
-			runApp($app);
+			// format the output line
+			$traceString .= "$newLine$position - $functionName($arguments)";
 		}
 	}
 
-	runApp($app);
+	return $traceString;
+}
 
-	if (!empty($_GET['stat']))
-	{
-		$stat->display();
-	}
-
-	function dump_livecart_trace(Exception $e)
-	{
-		echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
-		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-		echo ApplicationException::getFileTrace($e->getTrace());
-		exit;
-	}
-
-	if (!isset($classLoaderCache) || ClassLoader::isCacheChanged())
-	{
-		$classLoaderCache = array('realPath' => ClassLoader::getRealPathCache(), 'mountPoint' => ClassLoader::getMountPointCache());
-		file_put_contents($classLoaderCacheFile . '.tmp', '<?php return ' . var_export($classLoaderCache, true) . '; ?>');
-		@unlink($classLoaderCacheFile);
-		rename($classLoaderCacheFile . '.tmp', $classLoaderCacheFile);
-	}
-
-	session_write_close();
 
 ?>

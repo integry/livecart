@@ -1,9 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.eav.EavAble');
-ClassLoader::import('application.model.eav.EavObject');
-ClassLoader::importNow('application.helper.CreateHandleString');
-
+namespace staticpage;
 
 /**
  * Static site pages (shipping information, contact information, terms of service, etc.)
@@ -11,23 +8,30 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  * @package application.model.staticpage
  * @author Integry Systems <http://integry.com>
  */
-class StaticPage extends MultilingualObject implements EavAble
+class StaticPage extends \ActiveRecordModel // MultilingualObject implements EavAble
 {
 	private $isFileLoaded = false;
 
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $parentID;
+	public $eavObjectID;
+	public $handle;
+	public $title;
+	public $text;
+	public $metaDescription;
+	public $menu;
+	public $position;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("parentID", "StaticPage", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("title", ARArray::instance()));
-		$schema->registerField(new ARField("text", ARArray::instance()));
-		$schema->registerField(new ARField("metaDescription", ARArray::instance()));
-		$schema->registerField(new ARField("menu", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+        $this->hasMany('ID', 'StaticPage', 'parentID', array(
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+
+		$this->belongsTo('parentID', 'StaticPage', 'ID', array('foreignKey' => true));
+		$this->hasOne('eavObjectID', 'EavObject', 'ID', array('foreignKey' => true));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -80,19 +84,21 @@ class StaticPage extends MultilingualObject implements EavAble
 		return ClassLoader::getRealPath('cache.staticpage') . '/' . $this->getID() . '.php';
 	}
 
+	/*
 	public function save($forceOperation = null)
 	{
 		$this->loadFile();
 
 		if (!$this->handle->get())
 		{
-			$this->handle->set(createHandleString($this->getValueByLang('title')));
+			$this->handle = createHandleString($this->getValueByLang('title')));
 		}
 
 		parent::save($forceOperation);
 
 		$this->saveFile();
 	}
+	*/
 
 	public function delete()
 	{
@@ -170,7 +176,7 @@ class StaticPage extends MultilingualObject implements EavAble
 	  	$rec = ActiveRecord::getRecordSetArray('StaticPage', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position->set($position);
+		$this->position = $position;
 
 		return parent::insert();
 	}
@@ -202,11 +208,11 @@ class StaticPage extends MultilingualObject implements EavAble
 			}
 
 			include $this->getFileName();
-			$this->title->set($pageData['title']);
+			$this->title = $pageData['title'];
 
 			if (!$this->handle->get())
 			{
-				$this->handle->set($pageData['handle']);
+				$this->handle = $pageData['handle'];
 			}
 
 			$this->isFileLoaded = true;

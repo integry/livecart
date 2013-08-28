@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} طلب المنتج 
+[[ config('STORE_NAME') ]] طلب المنتج
 اسم المنتج : {$product.name_lang}
 SKU: {$product.sku}
 

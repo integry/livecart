@@ -15,10 +15,10 @@ class ProductBundle extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARField("position",  ARInteger::instance()));
-		$schema->registerField(new ARField("count",  ARFloat::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", "Product;
+		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", "ID", "Product;
+		public $position",  ARInteger::instance()));
+		public $count",  ARFloat::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -59,8 +59,8 @@ class ProductBundle extends ActiveRecordModel
 
 		$relationship = parent::getNewInstance(__CLASS__);
 
-		$relationship->product->set($product);
-		$relationship->relatedProduct->set($related);
+		$relationship->product = $product);
+		$relationship->relatedProduct = $related);
 
 		return $relationship;
 	}
@@ -128,7 +128,7 @@ class ProductBundle extends ActiveRecordModel
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-		$this->position->set($position);
+		$this->position = $position);
 
 		return parent::insert();
 	}

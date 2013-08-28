@@ -27,14 +27,14 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
-		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
-		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));
-		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
+		public $ID;
+		$filterGroupID", "FilterGroup", "ID", "FilterGroup;
+		public $name;
+		public $position;
+		public $rangeStart;
+		public $rangeEnd;
+		public $rangeDateStart", ARDate::instance()));
+		public $rangeDateEnd", ARDate::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -60,7 +60,7 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	public static function getNewInstance(FilterGroup $filterGroup)
 	{
 		$inst = parent::getNewInstance(__CLASS__);
-		$inst->filterGroup->set($filterGroup);
+		$inst->filterGroup = $filterGroup);
 		return $inst;
 	}
 

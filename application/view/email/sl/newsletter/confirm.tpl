@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Mailing lista - aktivacija e-mail naslova
+[[ config('STORE_NAME') ]] Mailing lista - aktivacija e-mail naslova
 Pozdravljeni,
 
 Za aktivacijo e-mail naslova, prosimo kliknite na naslednjo povezavo:

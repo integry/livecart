@@ -61,7 +61,7 @@ class UpdateController extends StoreManagementController
 		{
 			try
 			{
-				Installer::loadDatabaseDump(file_get_contents($sql), true, $this->request->get('force'));
+				Installer::loadDatabaseDump(file_get_contents($sql), true, $this->request->gget('force'));
 				$progress['sql'] = true;
 			}
 			catch (Exception $e)

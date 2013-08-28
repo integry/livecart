@@ -52,31 +52,31 @@ class ProductPriceApi extends ModelApi
 	private function updatePrice($replaceQuantityPrices) // update is action name in parent class, cant make it private.
 	{
 		$request = $this->getApplication()->getRequest();
-		$sku = $request->get('sku');
+		$sku = $request->gget('sku');
 
 		$product = Product::getInstanceBySku($sku, array('ProductPrice'));
 		if($product == null)
 		{
 			throw new Exception('Product not found');
 		}
-		$currency = $request->get('currency');
+		$currency = $request->gget('currency');
 		if($currency == '')
 		{
 			$currency = $this->getApplication()->getDefaultCurrency()->getID();
 		}
-		$price=$request->get('definedPrice');
+		$price=$request->gget('definedPrice');
 		if(is_numeric($price))
 		{
 			$product->setPrice($currency, $price, false);
 		}
 		
-		$price=$request->get('definedListPrice');
+		$price=$request->gget('definedListPrice');
 		if(is_numeric($price))
 		{
 			$product->setPrice($currency, $price, true);
 		}
 	
-		$quantityPrices = $request->get('quantityPrices');
+		$quantityPrices = $request->gget('quantityPrices');
 		$groupedQuantityPrices = array();
 		
 		foreach($quantityPrices as $item)
@@ -137,7 +137,7 @@ class ProductPriceApi extends ModelApi
 	public function get()
 	{
 		$request = $this->getApplication()->getRequest();
-		$product = Product::getInstanceBySku($request->get('SKU'));
+		$product = Product::getInstanceBySku($request->gget('SKU'));
 		if($product == null)
 		{
 			throw new Exception('Product not found');

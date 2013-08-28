@@ -1,7 +1,7 @@
-Laipni lūdzam {'STORE_NAME'|config}!
+Laipni lūdzam [[ config('STORE_NAME') ]]!
 Cien. {$user.fullName},
 
-Jūsu lietotāja konta pieejas informācija {'STORE_NAME'|config} ir sekojoša:
+Jūsu lietotāja konta pieejas informācija [[ config('STORE_NAME') ]] ir sekojoša:
 
 E-pasts: <b>{$user.email}</b>
 Parole: <b>{$user.newPassword}</b>

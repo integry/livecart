@@ -13,7 +13,7 @@ class SpecificationStringValue extends ValueSpecification
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARField("value", ARArray::instance()));
+		public $value;
 	}
 
 	public static function getNewInstance(Product $product, SpecField $field, $value)
@@ -24,7 +24,7 @@ class SpecificationStringValue extends ValueSpecification
 	public static function restoreInstance(Product $product, SpecField $field, $value)
 	{
 		$specItem = parent::restoreInstance(__CLASS__, $product, $field, $value);
-		$specItem->value->set(unserialize($value));
+		$specItem->value = unserialize($value));
 
 		$specItem->resetModifiedStatus();
 

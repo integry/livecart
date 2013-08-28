@@ -47,10 +47,10 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$zone->reload();
 
-		$this->assertEquals($zone->name->get(), ':TEST_ZONE');
-		$this->assertEquals($zone->isEnabled->get(), 1);
-		$this->assertEquals($zone->isFreeShipping->get(), 1);
-		$this->assertEquals(DeliveryZone::TAX_RATES, $zone->type->get());
+		$this->assertEquals($zone->name, ':TEST_ZONE');
+		$this->assertEquals($zone->isEnabled, 1);
+		$this->assertEquals($zone->isFreeShipping, 1);
+		$this->assertEquals(DeliveryZone::TAX_RATES, $zone->type);
 	}
 
 	public function testGetAllDeliveryZones()

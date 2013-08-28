@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng-controller="BackendController" ng-app="LiveCart" ng-cloak>
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>{'SOFT_NAME'|config} Admin - {$TITLE}</title>
+	<title>[[ config('SOFT_NAME') ]] Admin - {$TITLE}</title>
 	<base href="{baseUrl}" />
 
 	{if 'FAVICON'|config}
-		<link href="{'FAVICON'|config}" rel="shortcut icon" />
+		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
 	{/if}
 
 	<!-- Css includes -->
@@ -99,7 +99,7 @@
 			file_browser_callback : "ajaxfilemanager"
 			{/literal}
 			{if 'TINYMCE_PARAMS'|config}
-			, {'TINYMCE_PARAMS'|config}
+			, [[ config('TINYMCE_PARAMS') ]]
 			{/if}
 			{literal}
 		};

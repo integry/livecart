@@ -1,4 +1,4 @@
-Vaše geslo za {'STORE_NAME'|config}!
+Vaše geslo za [[ config('STORE_NAME') ]]!
 Spoštovani/a {$user.fullName},
 
 Vaši podatki za spletno trgovino {$config.STORE_NAME}:

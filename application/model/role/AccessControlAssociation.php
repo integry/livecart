@@ -13,9 +13,9 @@ class AccessControlAssociation extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("AccessControlAssociation");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("roleID", "Role", "ID", "Role", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", "UserGroup", ARInteger::instance()));
+		public $ID;
+		public $roleID", "Role", "ID", "Role;
+		public $userGroupID", "UserGroup", "ID", "UserGroup;
 	}
 
 	/**
@@ -42,8 +42,8 @@ class AccessControlAssociation extends ActiveRecordModel
 	public static function getNewInstance(UserGroup $userGroup, Role $role)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->userGroup->set($userGroup);
-		$instance->role->set($role);
+	  	$instance->userGroup = $userGroup);
+		$instance->role = $role);
 
 	  	return $instance;
 	}

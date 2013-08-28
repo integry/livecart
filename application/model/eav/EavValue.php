@@ -20,7 +20,7 @@ class EavValue extends EavValueCommon
 	public static function defineSchema()
 	{
 		$schema = parent::defineSchema(__CLASS__);
-		$schema->registerField(new ARForeignKeyField("fieldID", "EavField", "ID", "EavField", ARInteger::instance()));
+		public $fieldID", "EavField", "ID", "EavField;
 	}
 
 	protected function getFieldClass()

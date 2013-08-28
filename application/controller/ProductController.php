@@ -42,7 +42,7 @@ class ProductController extends CatalogController
 	{
 		$this->loadLanguageFile('Category');
 
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
 		$this->product = $product;
 
 		if (!$product->isEnabled->get() || $product->parent->get())
@@ -53,9 +53,9 @@ class ProductController extends CatalogController
 		$product->loadPricing();
 		$productArray = $product->toArray();
 
-		if ($this->request->get('category'))
+		if ($this->request->gget('category'))
 		{
-			$this->category = Category::getInstanceByID($this->request->get('category'), true);
+			$this->category = Category::getInstanceByID($this->request->gget('category'), true);
 		}
 		else
 		{
@@ -68,7 +68,7 @@ class ProductController extends CatalogController
 
 		$this->setupBreadcrumb($productArray);
 
-		$this->redirect301($this->request->get('producthandle'), createHandleString($productArray['name_lang']));
+		$this->redirect301($this->request->gget('producthandle'), createHandleString($productArray['name_lang']));
 		//ProductSpecification::loadSpecificationForProductArray($productArray);
 
 		// filter empty attributes
@@ -110,7 +110,7 @@ class ProductController extends CatalogController
 		$response->set('product', $productArray);
 		$response->set('category', $productArray['Category']);
 		$response->set('quantity', $this->getQuantities($product));
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$response->set('currency', $this->request->gget('currency', $this->application->getDefaultCurrencyCode()));
 		$response->set('catRoute', $catRoute);
 		$response->set('context', $this->getContext());
 
@@ -488,15 +488,15 @@ class ProductController extends CatalogController
 	public function sendToFriend()
 	{
 		$request = $this->getRequest();
-		$product = Product::getInstanceByID($request->get('id'), Product::LOAD_DATA);
-		$friendemail = $request->get('friendemail');
+		$product = Product::getInstanceByID($request->gget('id'), Product::LOAD_DATA);
+		$friendemail = $request->gget('friendemail');
 		$validator = $this->buildSharingValidator($product);
 
 		if ($validator->isValid())
 		{
 			$productArray = $product->toArray();
 			$email = new Email($this->application);
-			$email->setTo($request->get('friendemail'));
+			$email->setTo($request->gget('friendemail'));
 			$email->setTemplate('notify.sendProductToFriend');
 			$email->set('product', $productArray);
 			$user = SessionUser::getUser();
@@ -504,7 +504,7 @@ class ProductController extends CatalogController
 
 			if ($user->isAnonymous())
 			{
-				$friendName = $request->get('nickname');
+				$friendName = $request->gget('nickname');
 			}
 			else
 			{
@@ -512,7 +512,7 @@ class ProductController extends CatalogController
 				$friendName = $user->firstName->get().' '.$user->lastName->get();
 			}
 			$email->set('friendName', trim($friendName));
-			$email->set('notes', $request->get('notes'));
+			$email->set('notes', $request->gget('notes'));
 			$email->send();
 
 			$response = new JSONResponse(
@@ -530,7 +530,7 @@ class ProductController extends CatalogController
 
 	public function rate()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA);
 		$ratingTypes = ProductRatingType::getProductRatingTypes($product);
 
 		$validator = $this->buildRatingValidator($ratingTypes->toArray(), $product, true);
@@ -559,7 +559,7 @@ class ProductController extends CatalogController
 			foreach ($ratingTypes as $type)
 			{
 				$rating = ProductRating::getNewInstance($product, $type, $this->user);
-				$rating->rating->set($this->request->get('rating_'  . $type->getID()));
+				$rating->rating->set($this->request->gget('rating_'  . $type->getID()));
 				if (isset($review))
 				{
 					$rating->review->set($review);
@@ -603,9 +603,9 @@ class ProductController extends CatalogController
 
 		$response = $this->index();
 
-		$page = $this->request->get('page', 1);
+		$page = $this->request->gget('page', 1);
 		$perPage = $this->config->get('REVIEWS_PER_PAGE');
-		$offsetStart = ($this->request->get('page', 1) - 1) * $perPage;
+		$offsetStart = ($this->request->gget('page', 1) - 1) * $perPage;
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
 		$f->setLimit($perPage, $offsetStart);
@@ -627,7 +627,7 @@ class ProductController extends CatalogController
 
 	public function sendContactForm()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA);
 		$redirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID()));
 
 		$validator = $this->buildContactValidator();
@@ -635,9 +635,9 @@ class ProductController extends CatalogController
 		{
 			$email = new Email($this->application);
 			$email->setTemplate('contactForm/productInquiry');
-			$email->setFrom($this->request->get('email'), $this->request->get('name'));
+			$email->setFrom($this->request->gget('email'), $this->request->gget('name'));
 			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
-			$email->set('message', $this->request->get('msg'));
+			$email->set('message', $this->request->gget('msg'));
 			$email->set('product', $product->toArray());
 			$email->send();
 
@@ -674,15 +674,15 @@ class ProductController extends CatalogController
 
 	public function previous($diff = -1)
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
-		$this->category = (!$this->request->get('category') ? $product->category->get() : Category::getInstanceByID($this->request->get('category'), true));
+		$product = Product::getInstanceByID($this->request->gget('id'), true, array('Category'));
+		$this->category = (!$this->request->gget('category') ? $product->category->get() : Category::getInstanceByID($this->request->gget('category'), true));
 
 		$this->getAppliedFilters();
 		$this->getSelectFilter();
 
-		if ($this->request->get('quickShopSequence'))
+		if ($this->request->gget('quickShopSequence'))
 		{
-			$ids = json_decode($this->request->get('quickShopSequence'));
+			$ids = json_decode($this->request->gget('quickShopSequence'));
 		}
 		else
 		{
@@ -707,7 +707,7 @@ class ProductController extends CatalogController
 
 		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
 
-		if ('quickShop' == $this->request->get('originalAction'))
+		if ('quickShop' == $this->request->gget('originalAction'))
 		{
 			return new ActionRedirectResponse('product', 'quickShop', array('id' => $ids[$prevIndex], 'query' => $this->getContext()));
 		}
@@ -872,7 +872,7 @@ class ProductController extends CatalogController
 
 	private function isAddingReview()
 	{
-		return $this->config->get('ENABLE_REVIEWS') && ($this->config->get('REVIEWS_WITH_RATINGS') || ($this->request->get('nickname') || $this->request->get('title') || $this->request->get('text')));
+		return $this->config->get('ENABLE_REVIEWS') && ($this->config->get('REVIEWS_WITH_RATINGS') || ($this->request->gget('nickname') || $this->request->gget('title') || $this->request->gget('text')));
 	}
 
 	private function isRated(Product $product, $isRating = false)

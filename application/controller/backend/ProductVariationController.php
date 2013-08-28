@@ -22,7 +22,7 @@ class ProductVariationController extends StoreManagementController
 	{
 		$response = new ActionResponse();
 
-		$parent = Product::getInstanceByID($this->request->get('id'), true);
+		$parent = Product::getInstanceByID($this->request->gget('id'), true);
 
 		$variationTypes = $parent->getRelatedRecordSet('ProductVariationType');
 		$variations = $variationTypes->getVariations();
@@ -44,11 +44,11 @@ class ProductVariationController extends StoreManagementController
 	{
 		ActiveRecordModel::beginTransaction();
 
-		$parent = Product::getInstanceByID($this->request->get('id'), true);
+		$parent = Product::getInstanceByID($this->request->gget('id'), true);
 
-		$items = json_decode($this->request->get('items'), true);
-		$types = json_decode($this->request->get('types'), true);
-		$variations = json_decode($this->request->get('variations'), true);
+		$items = json_decode($this->request->gget('items'), true);
+		$types = json_decode($this->request->gget('types'), true);
+		$variations = json_decode($this->request->gget('variations'), true);
 
 		$existingTypes = $existingVariations = $existingItems = array();
 		$currency = $this->application->getDefaultCurrencyCode();

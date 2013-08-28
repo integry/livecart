@@ -26,17 +26,17 @@ class ShippingService extends MultilingualObject implements EavAble
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ShippingService");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
-		$schema->registerField(new ARField("isFinal", ARBool::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(10)));
-		$schema->registerField(new ARField("rangeType", ARInteger::instance(1)));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("deliveryTimeMinDays", ARInteger::instance(10)));
-		$schema->registerField(new ARField("deliveryTimeMaxDays", ARInteger::instance(10)));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-        $schema->registerField(new ARField("isLocalPickup", ARBool::instance()));
+		public $ID;
+		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
+		public $isFinal;
+		public $name;
+		public $position;
+		public $rangeType;
+		public $description;
+		public $deliveryTimeMinDays;
+		public $deliveryTimeMaxDays;
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+        public $isLocalPickup;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -69,10 +69,10 @@ class ShippingService extends MultilingualObject implements EavAble
 		$instance = parent::getNewInstance(__CLASS__);
 		if($deliveryZone)
 		{
-			$instance->deliveryZone->set($deliveryZone);
+			$instance->deliveryZone = $deliveryZone);
 		}
 		$instance->setValueByLang('name', null, $defaultLanguageName);
-		$instance->rangeType->set($calculationCriteria);
+		$instance->rangeType = $calculationCriteria);
 
 		return $instance;
 	}
@@ -126,7 +126,7 @@ class ShippingService extends MultilingualObject implements EavAble
 		{
 			foreach ($services as $service)
 			{
-				$service->deliveryZone->set($deliveryZone);
+				$service->deliveryZone = $deliveryZone);
 			}
 		}
 
@@ -156,9 +156,9 @@ class ShippingService extends MultilingualObject implements EavAble
 		$hasFreeShipping = false;
 
 		// get applicable rates
-		if (self::WEIGHT_BASED == $this->rangeType->get())
+		if (self::WEIGHT_BASED == $this->rangeType)
 		{
-			$weight = $shipment->getChargeableWeight($this->deliveryZone->get());
+			$weight = $shipment->getChargeableWeight($this->deliveryZone);
 			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight * 1.000001);
 			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight * 0.99999));
 		}
@@ -179,26 +179,26 @@ class ShippingService extends MultilingualObject implements EavAble
 			return null;
 		}
 
-		$itemCount = $shipment->getChargeableItemCount($this->deliveryZone->get());
+		$itemCount = $shipment->getChargeableItemCount($this->deliveryZone);
 
 		$maxRate = 0;
 
 		foreach ($rates as $rate)
 		{
-			$charge = $rate->flatCharge->get();
+			$charge = $rate->flatCharge;
 
 			foreach ($shipment->getItems() as $item)
 			{
 				$charge += ($rate->getItemCharge($item) * $item->getCount());
 			}
 
-			if (self::WEIGHT_BASED == $this->rangeType->get())
+			if (self::WEIGHT_BASED == $this->rangeType)
 			{
-				$charge += ($rate->perKgCharge->get() * $weight);
+				$charge += ($rate->perKgCharge * $weight);
 			}
 			else
 			{
-				$charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
+				$charge += ($rate->subtotalPercentCharge / 100) * $total;
 			}
 
 			if ($charge > $maxRate)
@@ -212,14 +212,14 @@ class ShippingService extends MultilingualObject implements EavAble
 
 	public function save($forceOperation = null)
 	{
-		if ($this->deliveryZone->get() && (0 == $this->deliveryZone->get()->getID()))
+		if ($this->deliveryZone && (0 == $this->deliveryZone->getID()))
 		{
-			$this->deliveryZone->set(null);
+			$this->deliveryZone = null);
 		}
 
 		return parent::save($forceOperation);
 	}
-	
+
 	public function deleteShippingRates()
 	{
 		foreach($this->getRates() as $rate)
@@ -230,9 +230,9 @@ class ShippingService extends MultilingualObject implements EavAble
 
     public function isLocalPickup()
     {
-        return (boolean)$this->isLocalPickup->get();
+        return (boolean)$this->isLocalPickup;
     }
-    
+
 	public function toArray()
 	{
 		$this->getSpecification();

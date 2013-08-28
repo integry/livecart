@@ -1,7 +1,7 @@
-Pozdravljeni na {'STORE_NAME'|config}!
+Pozdravljeni na [[ config('STORE_NAME') ]]!
 Spoštovani/a {$user.fullName},
 
-Vaši podatki za spletno trgovino {'STORE_NAME'|config}:
+Vaši podatki za spletno trgovino [[ config('STORE_NAME') ]]:
 
 E-mail: <b>{$user.email}</b>
 Geslo: <b>{$user.newPassword}</b>

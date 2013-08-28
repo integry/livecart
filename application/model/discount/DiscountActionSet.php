@@ -15,7 +15,7 @@ class DiscountActionSet extends ARSet
 		$result = new DiscountActionSet();
 		foreach ($this as $rec)
 		{
-			if ($rec->actionType->get() == $type)
+			if ($rec->actionType == $type)
 			{
 				$result->add($rec);
 			}

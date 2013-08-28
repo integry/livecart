@@ -66,53 +66,53 @@ class Product extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Product");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("parentID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
+		public $ID;
+		public $categoryID", "Category", "ID", null, ARInteger::instance()));
+		public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
+		public $defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
+		public $parentID", "Product", "ID", null, ARInteger::instance()));
+		public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
+		public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("sku", ARVarchar::instance(20)))->validate('required', 'IsUniqueSkuCheck');
-		$schema->registerField(new ARField("name", ARArray::instance()))->validate('required');
-		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
-		$schema->registerField(new ARField("longDescription", ARArray::instance()));
-		$schema->registerField(new ARField("keywords", ARText::instance()));
-		$schema->registerField(new ARField("pageTitle", ARArray::instance()));
+		public $isEnabled;
+		public $sku", ARVarchar::instance()))->validate('required', 'IsUniqueSkuCheck');
+		public $name", ARArray::instance()))->validate('required');
+		public $shortDescription;
+		public $longDescription;
+		public $keywords;
+		public $pageTitle;
 
-		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
-		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));
+		public $dateCreated;
+		public $dateUpdated;
 
-		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
-		$schema->registerField(new ARField("isFeatured", ARBool::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(4)));
+		public $URL;
+		public $isFeatured;
+		public $type;
 
-		$schema->registerField(new ArField("ratingSum", ARInteger::instance()));//->protect();
-		$schema->registerField(new ArField("ratingCount", ARInteger::instance()));
-		$schema->registerField(new ArField("rating", ARFloat::instance(8)));
-		$schema->registerField(new ArField("reviewCount", ARInteger::instance()));
+		public $ratingSum;//->protect();
+		public $ratingCount;
+		public $rating;
+		public $reviewCount;
 
-		$schema->registerField(new ArField("minimumQuantity", ARFloat::instance(8)));
-		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
-		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
-		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
-		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
-		$schema->registerField(new ArField("isFractionalUnit", ARBool::instance()));
-		$schema->registerField(new ArField("isUnlimitedStock", ARBool::instance()));
+		public $minimumQuantity;
+		public $shippingSurchargeAmount;
+		public $isSeparateShipment;
+		public $isFreeShipping;
+		public $isBackOrderable;
+		public $isFractionalUnit;
+		public $isUnlimitedStock;
 
-		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
+		public $shippingWeight;
 
-		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
-		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
-		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
-		$schema->registerField(new ArField("childSettings", ARText::instance()));
-		$schema->registerField(new ArField("fractionalStep", ARFloat::instance(8)));
-		$schema->registerField(new ArField("position", ARInteger::instance()));
-		$schema->registerField(new ArField("categoryIntervalCache", ARText::instance()));
+		public $stockCount;
+		public $reservedCount;
+		public $salesRank;
+		public $childSettings;
+		public $fractionalStep;
+		public $position;
+		public $categoryIntervalCache;
 
-		$schema->registerField(new ArField("isRecurring", ARBool::instance()));
+		public $isRecurring;
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Product extends MultilingualObject
 	public static function getNewInstance(Category $category, $name = '')
 	{
 		$product = parent::getNewInstance(__CLASS__);
-		$product->category->set($category);
+		$product->category = $category);
 		$product->setValueByLang('name', null, $name);
 
 		return $product;
@@ -188,7 +188,7 @@ class Product extends MultilingualObject
 	public function createChildProduct()
 	{
 		$child = ActiveRecord::getNewInstance(__CLASS__);
-		$child->parent->set($this);
+		$child->parent = $this);
 		return $child;
 	}
 
@@ -205,7 +205,7 @@ class Product extends MultilingualObject
 	{
 		$settings = unserialize($this->childSettings->get());
 		$settings[$setting] = $value;
-		$this->childSettings->set(serialize($settings));
+		$this->childSettings = serialize($settings));
 	}
 
 	public function belongsTo(Category $category)
@@ -372,7 +372,7 @@ class Product extends MultilingualObject
 
 	private function loadPricingFromRequest(Request $request, $listPrice = false, $removeMissing = false)
 	{
-		$prices = $request->get('defined' . ($listPrice ? 'listPrice' : ''));
+		$prices = $request->gget('defined' . ($listPrice ? 'listPrice' : ''));
 		foreach (self::getApplication()->getCurrencyArray() as $currency)
 		{
 			if (isset($prices[$currency]) && strlen($prices[$currency]))
@@ -397,9 +397,9 @@ class Product extends MultilingualObject
 		}
 
 		// set manufacturer
-		if ($man = $request->get('Manufacturer'))
+		if ($man = $request->gget('Manufacturer'))
 		{
-			$this->manufacturer->set(!empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
+			$this->manufacturer = !empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
 		}
 
 		$this->getSpecification()->loadRequestData($request);
@@ -408,7 +408,7 @@ class Product extends MultilingualObject
 		$this->loadPricingFromRequest($request, false, $removeMissingPrices);
 		$this->loadPricingFromRequest($request, true, $removeMissingPrices);
 
-		if ($quantities = $request->get('quantityPrice'))
+		if ($quantities = $request->gget('quantityPrice'))
 		{
 			foreach ($this->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
 			{
@@ -417,7 +417,7 @@ class Product extends MultilingualObject
 				{
 					$prices = $quantities[$id]['serializedRules'];
 					ksort($prices);
-					$price->serializedRules->set(serialize($prices));
+					$price->serializedRules = serialize($prices));
 					$price->save();
 				}
 			}
@@ -559,7 +559,7 @@ class Product extends MultilingualObject
 	public function addRelatedProduct(Product $product, $type = 0)
 	{
 		$relationship = ProductRelationship::getNewInstance($this, $product);
-		$relationship->type->set($type);
+		$relationship->type = $type);
 		$this->getRelationships($type)->add($relationship);
 		$this->getRemovedRelationships()->removeRecord($relationship);
 	}
@@ -673,8 +673,8 @@ class Product extends MultilingualObject
 
 		try
 		{
-			$this->dateCreated->set(new ARSerializableDateTime());
-			$this->dateUpdated->set(new ARSerializableDateTime());
+			$this->dateCreated = new ARSerializableDateTime());
+			$this->dateUpdated = new ARSerializableDateTime());
 
 			parent::insert();
 
@@ -789,7 +789,7 @@ class Product extends MultilingualObject
 		{
 			$stockDifference = $this->stockCount->get() - $this->stockCount->getInitialValue();
 
-			$this->parent->get()->stockCount->set($this->parent->get()->stockCount->get() + $stockDifference);
+			$this->parent->get()->stockCount = $this->parent->get()->stockCount->get() + $stockDifference);
 			$this->parent->get()->save();
 		}
 
@@ -833,7 +833,7 @@ class Product extends MultilingualObject
 				$sku .= $k;
 			}
 
-			$this->sku->set($sku);
+			$this->sku = $sku);
 			parent::save();
 		}
 
@@ -1613,7 +1613,7 @@ class Product extends MultilingualObject
 		foreach (ProductOption::getProductOptions($original) as $option)
 		{
 			$clonedOpt = clone $option;
-			$clonedOpt->product->set($this);
+			$clonedOpt->product = $this);
 			$clonedOpt->save();
 		}
 
@@ -1626,7 +1626,7 @@ class Product extends MultilingualObject
 			if ($id)
 			{
 				$groups[$id] = clone $group;
-				$groups[$id]->product->set($this);
+				$groups[$id]->product = $this);
 				$groups[$id]->save();
 			}
 

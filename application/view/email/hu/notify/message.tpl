@@ -1,4 +1,4 @@
-Új üzenet rendelés mellé{'STORE_NAME'|config}
+Új üzenet rendelés mellé[[ config('STORE_NAME') ]]
 Egy vásárló üzenete írt az egyik rendelésseé kapcsolatosan <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------

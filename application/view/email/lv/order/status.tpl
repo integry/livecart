@@ -1,4 +1,4 @@
-Jaunumi par {'STORE_NAME'|config} pasūtījumu
+Jaunumi par [[ config('STORE_NAME') ]] pasūtījumu
 Cien. {$user.fullName},
 
 {if $order.shipments|@count == 1}

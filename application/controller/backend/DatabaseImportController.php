@@ -33,17 +33,17 @@ class DatabaseImportController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 
-		$dsn = $this->request->get('dbType') . '://' .
-				   $this->request->get('dbUser') .
-				   		($this->request->get('dbPass') ? ':' . $this->request->get('dbPass') : '') .
-				   			'@' . $this->request->get('dbServer') .
-				   				'/' . $this->request->get('dbName');
+		$dsn = $this->request->gget('dbType') . '://' .
+				   $this->request->gget('dbUser') .
+				   		($this->request->gget('dbPass') ? ':' . $this->request->gget('dbPass') : '') .
+				   			'@' . $this->request->gget('dbServer') .
+				   				'/' . $this->request->gget('dbName');
 
 		try
 		{
-			$cart = $this->request->get('cart');
+			$cart = $this->request->gget('cart');
 			ClassLoader::import('library.import.driver.' . $cart);
-			$driver = new $cart($dsn, $this->request->get('filePath'));
+			$driver = new $cart($dsn, $this->request->gget('filePath'));
 		}
 		catch (SQLException $e)
 		{

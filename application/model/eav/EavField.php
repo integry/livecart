@@ -26,8 +26,8 @@ class EavField extends EavFieldCommon
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARField("classID", ARInteger::instance()));
-		$schema->registerField(new ARField("stringIdentifier", ARVarchar::instance(40)));
+		public $classID;
+		public $stringIdentifier;
 	}
 
 	public function getClassID($className)
@@ -73,7 +73,7 @@ class EavField extends EavFieldCommon
 					'Transaction' => 0,
 					'ShippingService' => 6,
 					'StaticPage' => 7
-					
+
 				);
 		}
 
@@ -172,7 +172,7 @@ class EavField extends EavFieldCommon
 		}
 
 		$field = parent::getNewInstance(__CLASS__, $dataType, $type);
-		$field->classID->set(self::getClassID($className));
+		$field->classID = self::getClassID($className));
 
 		return $field;
 	}

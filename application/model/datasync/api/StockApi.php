@@ -38,8 +38,8 @@ class StockApi extends ModelApi
 	public function set()
 	{
 		$request = $this->getApplication()->getRequest();
-		$sku = $request->get('sku');
-		$quantity = $request->get('quantity');
+		$sku = $request->gget('sku');
+		$quantity = $request->gget('quantity');
 		if(is_numeric($quantity) == false)
 		{
 			throw new Exception('Stock quantity must be numeric');
@@ -57,7 +57,7 @@ class StockApi extends ModelApi
 	public function get()
 	{
 		$request = $this->getApplication()->getRequest();
-		$product = Product::getInstanceBySku($request->get('SKU'));
+		$product = Product::getInstanceBySku($request->gget('SKU'));
 		if($product == null)
 		{
 			throw new Exception('Product not found');

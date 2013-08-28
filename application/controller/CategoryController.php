@@ -62,14 +62,14 @@ class CategoryController extends CatalogController
 
 			if ($layout = $theme->listStyle->get())
 			{
-				$this->request->set('layout', strtolower($layout));
-				$this->config->set('LIST_LAYOUT', $layout);
-				$this->config->set('ALLOW_SWITCH_LAYOUT', false);
+				$this->request = 'layout', strtolower($layout));
+				$this->config = 'LIST_LAYOUT', $layout);
+				$this->config = 'ALLOW_SWITCH_LAYOUT', false);
 			}
 		}
 
 		// pagination
-		$currentPage = $this->request->get('page', 1);
+		$currentPage = $this->request->gget('page', 1);
 		$listLayout = $this->getListLayout();
 		$perPage = $this->getProductLimitCount($listLayout);
 
@@ -77,7 +77,7 @@ class CategoryController extends CatalogController
 		$offsetEnd = $currentPage * $perPage;
 
 		// create new search filter
-		$query = $this->request->get('q');
+		$query = $this->request->gget('q');
 		if ($query)
 		{
 			$searchFilter = new SearchFilter($query);
@@ -109,7 +109,7 @@ class CategoryController extends CatalogController
 		}
 
 		// root category?
-		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage > 1))
+		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->gget('includeSub') && ($currentPage > 1))
 		{
 			return new ActionRedirectResponse('index', 'index');
 		}
@@ -135,7 +135,7 @@ class CategoryController extends CatalogController
 			}
 		}
 
-		$order = $this->request->get('sort');
+		$order = $this->request->gget('sort');
 
 		$products = $this->getProductsArray($productFilter);
 		$this->hasProducts = count($products) > 0;
@@ -159,7 +159,7 @@ class CategoryController extends CatalogController
 
 		if (!$this->getCategory()->isRoot())
 		{
-			$this->redirect301($this->request->get('cathandle'), createHandleString($categoryArray['name_lang']));
+			$this->redirect301($this->request->gget('cathandle'), createHandleString($categoryArray['name_lang']));
 		}
 
 		// if all the results come from one category, redirect to this category
@@ -243,43 +243,43 @@ class CategoryController extends CatalogController
 		}
 
 		$response = new ActionResponse();
-		$response->set('id', $this->getCategoryId());
+		$response = 'id', $this->getCategoryId());
 
-		$response->set('context', $this->getContext());
-		$response->set('products', $products);
-		$response->set('count', $totalCount);
-		$response->set('offsetStart', $offsetStart);
-		$response->set('offsetEnd', $offsetEnd);
-		$response->set('perPage', $perPage);
-		$response->set('currentPage', $currentPage);
-		$response->set('category', $categoryArray);
-		$response->set('subCategories', $subCategories);
+		$response = 'context', $this->getContext());
+		$response = 'products', $products);
+		$response = 'count', $totalCount);
+		$response = 'offsetStart', $offsetStart);
+		$response = 'offsetEnd', $offsetEnd);
+		$response = 'perPage', $perPage);
+		$response = 'currentPage', $currentPage);
+		$response = 'category', $categoryArray);
+		$response = 'subCategories', $subCategories);
 
-		$response->set('currency', $this->getRequestCurrency());
-		$response->set('sortOptions', $sort);
-		$response->set('sortForm', $this->buildSortForm($order));
-		$response->set('sortField', $order);
-		$response->set('categoryNarrow', $categoryNarrow);
-		$response->set('subCatFeatured', $subCatFeatured);
-		//$response->set('allFilters', $filters);
-		//$response->set('showAll', $showAll);
-		$response->set('appliedFilters', $filterArray);
-		$response->set('layout', $listLayout);
-		$response->set('listAttributes', $this->getListAttributes());
+		$response = 'currency', $this->getRequestCurrency());
+		$response = 'sortOptions', $sort);
+		$response = 'sortForm', $this->buildSortForm($order));
+		$response = 'sortField', $order);
+		$response = 'categoryNarrow', $categoryNarrow);
+		$response = 'subCatFeatured', $subCatFeatured);
+		//$response = 'allFilters', $filters);
+		//$response = 'showAll', $showAll);
+		$response = 'appliedFilters', $filterArray);
+		$response = 'layout', $listLayout);
+		$response = 'listAttributes', $this->getListAttributes());
 
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
-		$response->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
-		$response->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
-		$response->set('filterChainHandle', $filterChainHandle);
+		$response = 'url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
+		$response = 'layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
+		$response = 'filterChainHandle', $filterChainHandle);
 
 		if (isset($searchQuery))
 		{
-			$response->set('searchQuery', $searchQuery);
+			$response = 'searchQuery', $searchQuery);
 		}
 
 		if (isset($foundCategories))
 		{
-			$response->set('foundCategories', $foundCategories->toArray());
+			$response = 'foundCategories', $foundCategories->toArray());
 		}
 
 		// look for manufacturer filter
@@ -287,14 +287,14 @@ class CategoryController extends CatalogController
 		{
 			if ($filter instanceof ManufacturerFilter)
 			{
-				$response->set('manufacturerFilter', $filter->toArray());
+				$response = 'manufacturerFilter', $filter->toArray());
 			}
 		}
 
 		if ((1 == $currentPage) && $query)
 		{
 			$searchCon = new SearchController($this->application);
-			$response->set('modelSearch', $searchCon->searchAll($cleanedQuery));
+			$response = 'modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
 
 		return $response;
@@ -321,8 +321,8 @@ class CategoryController extends CatalogController
 		}
 
 		$response = new ActionResponse('sorted', $sorted);
-		$response->set('totalCount', count($allCategories));
-		$response->set('categories', $allCategories);
+		$response = 'totalCount', count($allCategories));
+		$response = 'categories', $allCategories);
 		return $response;
 	}
 
@@ -331,20 +331,20 @@ class CategoryController extends CatalogController
 	 */
 	public function allProducts()
 	{
-		$this->request->set('page', $this->request->get('id', 1));
-		$this->request->set('id', 1);
-		$this->request->set('includeSub', true);
+		$this->request = 'page', $this->request->gget('id', 1));
+		$this->request = 'id', 1);
+		$this->request = 'includeSub', true);
 		$this->removeBlock('PRODUCT_LISTS');
 
 		$response = $this->index();
 
-		$response->set('subCategories', array());
-		$response->set('categoryNarrow', array());
-		$response->set('url', $this->router->createUrl(array('controller' => 'category', 'action' => 'allProducts', 'id' => 0)));
+		$response = 'subCategories', array());
+		$response = 'categoryNarrow', array());
+		$response = 'url', $this->router->createUrl(array('controller' => 'category', 'action' => 'allProducts', 'id' => 0)));
 
 		$category = $response->get('category');
 		$category['name_lang'] = $this->translate('_all_products');
-		$response->set('category', $category);
+		$response = 'category', $category);
 
 		return $response;
 	}
@@ -357,8 +357,8 @@ class CategoryController extends CatalogController
 		}
 
 		$urlParams = array('controller' => 'category', 'action' => 'index',
-				   'id' => $this->request->get('id'),
-				   'cathandle' => $this->request->get('cathandle'),
+				   'id' => $this->request->gget('id'),
+				   'cathandle' => $this->request->gget('cathandle'),
 				   );
 
 		$urlParams = array_merge($urlParams, $params);
@@ -529,7 +529,7 @@ class CategoryController extends CatalogController
 		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
-		$cache->set($key, $this->getProductsArray($featuredFilter), time() + 1800);
+		$cache = $key, $this->getProductsArray($featuredFilter), time() + 1800);
 
 		return $cache->get($key);
 	}
@@ -541,7 +541,7 @@ class CategoryController extends CatalogController
 	{
 		$form = new Form($this->getValidator("productSort", $this->request));
 		$form->enableClientSideValidation(false);
-		$form->set('sort', $order);
+		$form = 'sort', $order);
 		return $form;
 	}
 
@@ -551,7 +551,7 @@ class CategoryController extends CatalogController
 		$context['category'] = $this->getCategoryId();
 
 		$response = new BlockResponse();
-		$response->set('context', $context);
+		$response = 'context', $context);
 		return $response;
 	}
 
@@ -600,7 +600,7 @@ class CategoryController extends CatalogController
 		}
 
 		$response = new BlockResponse();
-		$response->set('lists', $lists);
+		$response = 'lists', $lists);
 		return $response;
 	}
 
@@ -617,7 +617,7 @@ class CategoryController extends CatalogController
 
 		// remove empty filter groups
 		$maxCriteria = $this->config->get('MAX_FILTER_CRITERIA_COUNT');
-		$showAll = $this->request->get('showAll');
+		$showAll = $this->request->gget('showAll');
 
 		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute(), true);
 		$url = $this->router->addQueryParams($url);
@@ -649,7 +649,7 @@ class CategoryController extends CatalogController
 
 		if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
 		{
-			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
+			$response = 'allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
 		}
 
 		if (!$this->getCategory())
@@ -701,7 +701,7 @@ class CategoryController extends CatalogController
 
 		if ($this->config->get('ENABLE_MAN_FILTERS') && count($manFilters) > 1)
 		{
-		 	$response->set('manGroup', array('filters' => $manFilters));
+		 	$response = 'manGroup', array('filters' => $manFilters));
 		}
 
 		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($count['prices']) > 1))
@@ -714,11 +714,11 @@ class CategoryController extends CatalogController
 				}
 			}
 
-		 	$response->set('priceGroup', array('filters' => $priceFilters));
+		 	$response = 'priceGroup', array('filters' => $priceFilters));
 		}
 
 		$appliedFilterArray = $this->getAppliedFilterArray();
-		$response->set('filters', $appliedFilterArray);
+		$response = 'filters', $appliedFilterArray);
 		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
 		{
 			$IDs = array();
@@ -726,10 +726,10 @@ class CategoryController extends CatalogController
 			{
 				$IDs[] = $item['ID'];
 			}
-			$response->set('filtersIDs', $IDs);
+			$response = 'filtersIDs', $IDs);
 		}
-	 	$response->set('category', $this->getCategory()->toArray());
-	 	$response->set('groups', $filterGroups);
+	 	$response = 'category', $this->getCategory()->toArray());
+	 	$response = 'groups', $filterGroups);
 		return $response;
 	}
 
@@ -847,17 +847,17 @@ class CategoryController extends CatalogController
 
 			if (isset($manFilters))
 			{
-				$response->set('manGroup', $manFilters);
+				$response = 'manGroup', $manFilters);
 			}
 
 			if (isset($priceFilters))
 			{
-				$response->set('priceGroup', $priceFilters);
+				$response = 'priceGroup', $priceFilters);
 			}
 
-			$response->set('filters', $this->getAppliedFilterArray());
-			$response->set('category', $this->getCategory()->toArray());
-			$response->set('groups', $groups);
+			$response = 'filters', $this->getAppliedFilterArray());
+			$response = 'category', $this->getCategory()->toArray());
+			$response = 'groups', $groups);
 
 			return $response;
 		}
@@ -1034,7 +1034,7 @@ class CategoryController extends CatalogController
 
 	private function getListLayout()
 	{
-		$layout = $this->request->get('layout');
+		$layout = $this->request->gget('layout');
 		return $layout && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
 						(in_array($layout, array('grid', 'list', 'table')) ? strtoupper($layout) : 'LIST') :
 						$this->config->get('LIST_LAYOUT');
@@ -1047,11 +1047,11 @@ class CategoryController extends CatalogController
 		if (!isset($searchLog[$query]))
 		{
 			$log = SearchLog::getNewInstance($query);
-			$log->ip->set($this->request->getIPLong());
+			$log->ip = $this->request->getIPLong());
 			$log->save();
 
 			$searchLog[$query] = true;
-			$this->session->set('searchLog', $searchLog);
+			$this->session = 'searchLog', $searchLog);
 		}
 	}
 
@@ -1084,7 +1084,7 @@ class CategoryController extends CatalogController
 				$product = array('ID' => 0);
 			}
 
-			$cache->set($key, $product, 1800);
+			$cache = $key, $product, 1800);
 
 			$products[] = $product;
 		}
@@ -1115,7 +1115,7 @@ class CategoryController extends CatalogController
 	{
 		if (!$this->category)
 		{
-			$this->category = Category::getInstanceById($this->request->get('id', 1), Category::LOAD_DATA);
+			$this->category = Category::getInstanceById($this->request->gget('id', 1), Category::LOAD_DATA);
 		}
 
 		return $this->category;

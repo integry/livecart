@@ -1,4 +1,4 @@
-Your password at {'STORE_NAME'|config}!
+Your password at [[ config('STORE_NAME') ]]!
 Gerbiama(-s) {$user.fullName},
 
 Siunčiame Jūsų {$config.STORE_NAME} sąskaitos prieigos informaciją:

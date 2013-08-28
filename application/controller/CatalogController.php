@@ -31,9 +31,9 @@ abstract class CatalogController extends FrontendController
 
 		foreach (array('category', 'quickShopSequence', 'includeSub') as $key)
 		{
-			if ($this->request->get($key))
+			if ($this->request->gget($key))
 			{
-				$context[$key] = $this->request->get($key);
+				$context[$key] = $this->request->gget($key);
 			}
 		}
 
@@ -45,7 +45,7 @@ abstract class CatalogController extends FrontendController
 		$selectFilter = new ARSelectFilter();
 		$this->application->processInstancePlugins('productFilter', $selectFilter);
 
-		$order = $this->request->get('sort');
+		$order = $this->request->gget('sort');
 		$defOrder = strtolower($this->config->get('SORT_ORDER'));
 		if (!$order)
 		{
@@ -74,7 +74,7 @@ abstract class CatalogController extends FrontendController
 			}
 		}
 
-		if (($this->getCategory()->isRoot() && $this->filters) || $this->filters || $this->request->get('includeSub'))
+		if (($this->getCategory()->isRoot() && $this->filters) || $this->filters || $this->request->gget('includeSub'))
 		{
 			$productFilter->includeSubcategories();
 		}
@@ -100,7 +100,7 @@ abstract class CatalogController extends FrontendController
 		if($controller->config->get('FILTER_STYLE') == 'FILTER_STYLE_CHECKBOXES')
 		{
 			$delimiter = ',';
-			$filters = explode($delimiter, $request->get('filters'));
+			$filters = explode($delimiter, $request->gget('filters'));
 			foreach($request->getRawRequest() as $key=>$value)
 			{
 				if(strtolower($value) == 'on') // could be a filter
@@ -108,10 +108,10 @@ abstract class CatalogController extends FrontendController
 					$filters[] = $key;
 				}
 			}
-			$request->set('filters', implode($delimiter, array_filter($filters)));
+			$request = 'filters', implode($delimiter, array_filter($filters)));
 		}
 
-		if ($request->get('filters'))
+		if ($request->gget('filters'))
 		{
 			$filterGroups = $this->getCategory()->getFilterGroupSet();
 
@@ -121,7 +121,7 @@ abstract class CatalogController extends FrontendController
 			$priceFilterIds = array();
 			$searchFilters = array();
 
-			$filters = explode(',', $request->get('filters'));
+			$filters = explode(',', $request->gget('filters'));
 
 			foreach ($filters as $filter)
 			{

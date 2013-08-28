@@ -1,4 +1,4 @@
-Ny order hos  {'STORE_NAME'|config}
+Ny order hos  [[ config('STORE_NAME') ]]
 Order ID: {$order.invoiceNumber}
 
 Orderadministration:

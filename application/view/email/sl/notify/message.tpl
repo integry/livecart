@@ -1,4 +1,4 @@
-Novo sporočilo za naročilo na {'STORE_NAME'|config}
+Novo sporočilo za naročilo na [[ config('STORE_NAME') ]]
 Stranka je dodala novo sporočilo glede naročila <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------

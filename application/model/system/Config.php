@@ -1,5 +1,7 @@
 <?php
 
+namespace system;
+
 /**
  * System configuration manager
  *
@@ -18,11 +20,11 @@ class Config
 
 	private $isUpdated = false;
 
-	private $application;
+	private $di;
 
 	private $directories = array();
 
-	public function __construct(LiveCart $application)
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
 	{
 		$filePath = $this->getFilePath();
 		if (file_exists($filePath) || file_exists($this->getControlFilePath()))
@@ -39,7 +41,7 @@ class Config
 			$this->values = $config;
 		}
 
-		$this->application = $application;
+		$this->di = $di;
 	}
 
 	public function isValueSet($key, $updateIfNotFound = false)
@@ -68,12 +70,13 @@ class Config
 		{
 		  	if (is_array($this->values[$key]))
 		  	{
-				$lang = $this->application->getLocaleCode();
+				$app = $this->di->get('application');
+				$lang = $app->getLocaleCode();
 				if (!empty($this->values[$key][$lang]))
 				{
 					return $this->values[$key][$lang];
 				}
-				else if (isset($this->values[$key][$this->application->getDefaultLanguageCode()]))
+				else if (isset($this->values[$key][$app->getDefaultLanguageCode()]))
 				{
 					return $this->values[$key][$this->application->getDefaultLanguageCode()];
 				}
@@ -94,7 +97,7 @@ class Config
 		}
 		else
 		{
-			throw new ApplicationException('Configuration value ' . $key . ' not found');
+			return null;
 		}
 	}
 
@@ -504,7 +507,7 @@ class Config
 	{
 		if (!$this->directories)
 		{
-			$this->directories = $this->application->getConfigContainer()->getConfigDirectories();
+			//$this->directories = $this->application->getConfigContainer()->getConfigDirectories();
 		}
 
 		return $this->directories;
@@ -512,12 +515,12 @@ class Config
 
 	private function getFilePath()
 	{
-	  	return ClassLoader::getRealPath('storage.configuration.') . 'settings.php';
+		return $this->getPath('storage/configuration/') . 'settings.php';
 	}
 
 	private function getControlFilePath()
 	{
-		return ClassLoader::getRealPath('cache.') . 'configExists.php';
+		return $this->getPath('cache/') . 'configExists.php';
 	}
 
 	public function getValues()
@@ -525,6 +528,10 @@ class Config
 		return $this->values;
 	}
 
+	public function getPath($path)
+	{
+		return __ROOT__ . $path;
+	}
 }
 
 ?>

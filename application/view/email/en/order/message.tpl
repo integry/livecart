@@ -1,4 +1,4 @@
-New Message Regarding Your Order at {'STORE_NAME'|config}
+New Message Regarding Your Order at [[ config('STORE_NAME') ]]
 Dear {$user.fullName},
 
 A new message has been added regarding your order.

@@ -61,10 +61,10 @@ abstract class EavMultiValueItemCommon implements iEavSpecification
 	public function set(EavValueCommon $value)
 	{
 	  	// test whether the value belongs to the same field
-		if ($value->getField()->get()->getID() != $this->fieldInstance->getID())
+		if ($value->getField()->getID() != $this->fieldInstance->getID())
 	  	{
-			$class = get_class($value->getField()->get());
-			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->get()->getID() . ' value to ' . $class . ':' . $this->fieldInstance->getID());
+			$class = get_class($value->getField());
+			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->getID() . ' value to ' . $class . ':' . $this->fieldInstance->getID());
 		}
 
 		if (!isset($this->items[$value->getID()]))
@@ -98,7 +98,7 @@ abstract class EavMultiValueItemCommon implements iEavSpecification
 
 	protected function setItem(EavItemCommon $item)
 	{
-		$this->items[$item->getValue()->get()->getID()] = $item;
+		$this->items[$item->getValue()->getID()] = $item;
 	}
 
 	protected function deleteRemovedValues()
@@ -178,13 +178,13 @@ abstract class EavMultiValueItemCommon implements iEavSpecification
 		// get value ID's
 		$ids = array();
 		$values = array();
-		$isLanguage = (EavFieldCommon::TYPE_TEXT_SELECTOR == $this->fieldInstance->type->get());
+		$isLanguage = (EavFieldCommon::TYPE_TEXT_SELECTOR == $this->fieldInstance->type);
 
 		foreach ($this->items as $id => $item)
 		{
 		  	$ids[] = $id;
 
-			$value = $item->getValue()->get()->toArray();
+			$value = $item->getValue()->toArray();
 
 			if ($isLanguage)
 			{

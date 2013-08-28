@@ -83,23 +83,23 @@ class OnePageCheckoutController extends CheckoutController
 			$this->user->load();
 			$this->user->loadAddresses();
 
-			$address = $this->user->defaultShippingAddress->get();
+			$address = $this->user->defaultShippingAddress;
 			if (!$address)
 			{
-				$address = $this->user->defaultBillingAddress->get();
+				$address = $this->user->defaultBillingAddress;
 			}
 
-			if (!$this->order->shippingAddress->get() && $address && $this->isShippingRequired($this->order))
+			if (!$this->order->shippingAddress && $address && $this->isShippingRequired($this->order))
 			{
-				$userAddress = $address->userAddress->get();
+				$userAddress = $address->userAddress;
 				$this->order->shippingAddress->set($userAddress);
 				$this->order->save();
 			}
 
-			$address = $this->user->defaultBillingAddress->get();
-			if (!$this->order->billingAddress->get() && $address)
+			$address = $this->user->defaultBillingAddress;
+			if (!$this->order->billingAddress && $address)
 			{
-				$userAddress = $address->userAddress->get();
+				$userAddress = $address->userAddress;
 				$this->order->billingAddress->set($userAddress);
 				$this->order->save();
 			}
@@ -145,7 +145,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 
 		$response = new ActionResponse();
-		if ($this->request->get('failedLogin'))
+		if ($this->request->gget('failedLogin'))
 		{
 			$response->set('failedLogin', true);
 		}
@@ -165,9 +165,9 @@ class OnePageCheckoutController extends CheckoutController
 			$response = $this->getUserController()->checkout();
 			$form = $response->get('form');
 
-			if ($this->user->defaultShippingAddress->get())
+			if ($this->user->defaultShippingAddress)
 			{
-				$addressInstance = $this->user->defaultShippingAddress->get()->userAddress->get();
+				$addressInstance = $this->user->defaultShippingAddress->userAddress;
 				$shippingAddress = $addressInstance->toFlatArray();
 
 				foreach ($shippingAddress as $key => $value)
@@ -220,9 +220,9 @@ class OnePageCheckoutController extends CheckoutController
 
 		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
-		if ($this->order->shippingAddress->get())
+		if ($this->order->shippingAddress)
 		{
-			$response->set('preview_shipping', $this->order->shippingAddress->get()->toArray());
+			$response->set('preview_shipping', $this->order->shippingAddress->toArray());
 		}
 
 		return $this->postProcessResponse($response);
@@ -234,11 +234,11 @@ class OnePageCheckoutController extends CheckoutController
 
 		$response = $this->postProcessResponse(parent::selectAddress());
 
-		$response->get('form')->set('email', $this->user->email->get());
+		$response->get('form')->set('email', $this->user->email);
 
-		if ($this->order->billingAddress->get())
+		if ($this->order->billingAddress)
 		{
-			$response->set('preview_billing', $this->order->billingAddress->get()->toArray());
+			$response->set('preview_billing', $this->order->billingAddress->toArray());
 		}
 
 		return $response;
@@ -253,16 +253,16 @@ class OnePageCheckoutController extends CheckoutController
 
 		/*
 		$tempShipping = false;
-		if (!$this->order->shippingAddress->get())
+		if (!$this->order->shippingAddress)
 		{
-			$this->order->shippingAddress->set($this->order->billingAddress->get() ? $this->order->billingAddress->get() : SessionOrder::getEstimateAddress());
+			$this->order->shippingAddress->set($this->order->billingAddress ? $this->order->billingAddress : SessionOrder::getEstimateAddress());
 			$tempShipping = true;
 		}
 
 		$tempBilling = false;
-		if (!$this->order->billingAddress->get())
+		if (!$this->order->billingAddress)
 		{
-			$this->order->billingAddress->set($this->order->shippingAddress->get());
+			$this->order->billingAddress->set($this->order->shippingAddress);
 			$tempBilling = true;
 		}
 		*/
@@ -339,7 +339,7 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
 		{
-			$this->order->shippingAddress->set($this->order->billingAddress->get());
+			$this->order->shippingAddress->set($this->order->billingAddress);
 			$this->order->shippingAddress->resetModifiedStatus();
 		}
 
@@ -419,7 +419,7 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			try
 			{
-				$billing = $this->user->defaultBillingAddress->get();
+				$billing = $this->user->defaultBillingAddress;
 				if ($err = $this->setAddress('shipping'))
 				{
 					return $err;
@@ -432,20 +432,20 @@ class OnePageCheckoutController extends CheckoutController
 				$this->user->defaultBillingAddress->set($billing);
 				$this->user->defaultShippingAddress->set($this->lastAddress);
 
-				if ($this->user->defaultShippingAddress->get())
+				if ($this->user->defaultShippingAddress)
 				{
-					$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+					$this->order->shippingAddress->set($this->user->defaultShippingAddress->userAddress);
 				}
 
-				if ($this->order->shippingAddress->get() && ($this->order->shippingAddress->get()->getID() == $this->order->billingAddress->get()->getID()))
+				if ($this->order->shippingAddress && ($this->order->shippingAddress->getID() == $this->order->billingAddress->getID()))
 				{
-					$shipping = clone $this->user->defaultBillingAddress->get()->userAddress->get();
-					if (!$this->user->defaultShippingAddress->get())
+					$shipping = clone $this->user->defaultBillingAddress->userAddress;
+					if (!$this->user->defaultShippingAddress)
 					{
 						$this->user->defaultShippingAddress->set(ShippingAddress::getNewInstance($this->user, $shipping));
 					}
 
-					$this->user->defaultShippingAddress->get()->userAddress->set($shipping);
+					$this->user->defaultShippingAddress->userAddress->set($shipping);
 				}
 
 				$this->saveAnonUser($this->user);
@@ -461,21 +461,21 @@ class OnePageCheckoutController extends CheckoutController
 			}
 
 			// UserAddress::toString() uses old data otherwise
-			if ($this->order->shippingAddress->get())
+			if ($this->order->shippingAddress)
 			{
-				$this->order->shippingAddress->get()->resetArrayData();
+				$this->order->shippingAddress->resetArrayData();
 
 				if ($sameAddress)
 				{
-					$this->order->billingAddress->set($this->order->shippingAddress->get());
+					$this->order->billingAddress->set($this->order->shippingAddress);
 					$this->order->save();
 				}
-				else if ($this->request->get('sameAsShipping') &&
-						((!$this->order->billingAddress->get() && $this->order->shippingAddress->get() && $this->order->isShippingRequired()) ||
-						($this->order->billingAddress->get() && $this->order->shippingAddress->get() && ($this->order->billingAddress->get()->toString() != $this->order->shippingAddress->get()->toString()))))
+				else if ($this->request->gget('sameAsShipping') &&
+						((!$this->order->billingAddress && $this->order->shippingAddress && $this->order->isShippingRequired()) ||
+						($this->order->billingAddress && $this->order->shippingAddress && ($this->order->billingAddress->toString() != $this->order->shippingAddress->toString()))))
 				{
-					$this->order->billingAddress->set(clone $this->order->shippingAddress->get());
-					$this->order->billingAddress->get()->save();
+					$this->order->billingAddress->set(clone $this->order->shippingAddress);
+					$this->order->billingAddress->save();
 					$this->order->save();
 				}
 			}
@@ -488,8 +488,8 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (isset($anonOrder))
 		{
-			$this->order->shippingAddress->set($anonOrder->shippingAddress->get());
-			$this->order->billingAddress->set($anonOrder->billingAddress->get());
+			$this->order->shippingAddress->set($anonOrder->shippingAddress);
+			$this->order->billingAddress->set($anonOrder->billingAddress);
 		}
 
 		// @todo: needs to be called twice for the auto-selection to get saved
@@ -513,9 +513,9 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($this->user->isAnonymous())
 		{
-			$shipping = $this->user->defaultShippingAddress->get();
+			$shipping = $this->user->defaultShippingAddress;
 
-			$this->session->set('newsletter', $this->request->get('newsletter'));
+			$this->session->set('newsletter', $this->request->gget('newsletter'));
 			$this->request->set('sameAsBilling', true);
 
 			$controller = $this->getUserController();
@@ -527,7 +527,7 @@ class OnePageCheckoutController extends CheckoutController
 
 			if ($shipping)
 			{
-				$this->order->shippingAddress->set($shipping->userAddress->get());
+				$this->order->shippingAddress->set($shipping->userAddress);
 				$this->order->shippingAddress->resetModifiedStatus();
 				$user->defaultShippingAddress->set($shipping);
 			}
@@ -539,9 +539,9 @@ class OnePageCheckoutController extends CheckoutController
 
 			if ($this->order->getSpecification()->hasValues())
 			{
-				if (!$this->order->eavObject->get()->getID())
+				if (!$this->order->eavObject->getID())
 				{
-					$this->order->eavObject->get()->save();
+					$this->order->eavObject->save();
 				}
 
 				$this->order->eavObject->setAsModified(true);
@@ -623,7 +623,7 @@ class OnePageCheckoutController extends CheckoutController
 		// @todo: in case only one shipping rate is available, it is unselected when setting payment method unless the shipping() method is called
 		$this->shipping();
 
-		$method = $this->request->get('payMethod');
+		$method = $this->request->gget('payMethod');
 		if ('cc' == $method)
 		{
 			$method = $this->config->get('CC_HANDLER');
@@ -646,14 +646,14 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function redirect()
 	{
-		$this->session->set('paymentMethod', $this->request->get('id'));
+		$this->session->set('paymentMethod', $this->request->gget('id'));
 		$this->beforePayment();
 		return parent::redirect();
 	}
 
 	public function payOffline()
 	{
-		$this->session->set('paymentMethod', $this->request->get('id'));
+		$this->session->set('paymentMethod', $this->request->gget('id'));
 		$this->beforePayment();
 		return parent::payOffline();
 	}
@@ -693,7 +693,7 @@ class OnePageCheckoutController extends CheckoutController
 	 */
 	protected function getStepStatus(CustomerOrder $order, $isCompleted = 0)
 	{
-		if (!$order->shippingAddress->get() || $order->billingAddress->get())
+		if (!$order->shippingAddress || $order->billingAddress)
 		{
 			$this->setAnonAddresses();
 		}
@@ -711,7 +711,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
-		if (!$order->shippingAddress->get() && !$this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
+		if (!$order->shippingAddress && !$this->user->defaultShippingAddress && $this->order->isShippingRequired())
 		{
 			if ($isCompleted)
 			{
@@ -719,7 +719,7 @@ class OnePageCheckoutController extends CheckoutController
 			}
 		}
 
-		if (!$order->billingAddress->get() && !$this->user->defaultBillingAddress->get() && !($this->config->get('REQUIRE_SAME_ADDRESS') && $order->shippingAddress->get()))
+		if (!$order->billingAddress && !$this->user->defaultBillingAddress && !($this->config->get('REQUIRE_SAME_ADDRESS') && $order->shippingAddress))
 		{
 			if ($isCompleted)
 			{
@@ -744,17 +744,17 @@ class OnePageCheckoutController extends CheckoutController
 			$res['billingAddress'] = true;
 		}
 
-		if ($order->billingAddress->get())
+		if ($order->billingAddress)
 		{
 			$res['billingAddress'] = true;
 		}
 
-		if ($order->billingAddress->get() && $isStepEditable)
+		if ($order->billingAddress && $isStepEditable)
 		{
 			//$res['shippingAddress'] = true;
 		}
 
-		if ($isStepEditable && !$order->shippingAddress->get())
+		if ($isStepEditable && !$order->shippingAddress)
 		{
 			//$res['shippingAddress'] = false;
 		}
@@ -769,9 +769,9 @@ class OnePageCheckoutController extends CheckoutController
 
 	protected function validateOrder(CustomerOrder $order, $step = 0)
 	{
-		if ($this->config->get('REQUIRE_SAME_ADDRESS') && !$order->billingAddress->get())
+		if ($this->config->get('REQUIRE_SAME_ADDRESS') && !$order->billingAddress)
 		{
-			$order->billingAddress->set($order->shippingAddress->get());
+			$order->billingAddress->set($order->shippingAddress);
 			$tempBilling = true;
 		}
 
@@ -815,8 +815,8 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (isset($anonOrder))
 		{
-			$this->order->shippingAddress->set($anonOrder->shippingAddress->get());
-			$this->order->billingAddress->set($anonOrder->billingAddress->get());
+			$this->order->shippingAddress->set($anonOrder->shippingAddress);
+			$this->order->billingAddress->set($anonOrder->billingAddress);
 		}
 
 		$this->order->loadAll();
@@ -832,14 +832,14 @@ class OnePageCheckoutController extends CheckoutController
 		$this->setAnonAddresses();
 
 		// @todo: sometimes the shipping address disappears (for registered users that might already have the shipping address entered before)
-		if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order) && $this->user->defaultShippingAddress->get())
+		if (!$this->order->shippingAddress && $this->isShippingRequired($this->order) && $this->user->defaultShippingAddress)
 		{
-			$this->user->defaultShippingAddress->get()->load();
-			$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+			$this->user->defaultShippingAddress->load();
+			$this->order->shippingAddress->set($this->user->defaultShippingAddress->userAddress);
 
-			if ($this->order->shippingAddress->get())
+			if ($this->order->shippingAddress)
 			{
-				$this->order->shippingAddress->get()->load();
+				$this->order->shippingAddress->load();
 			}
 		}
 
@@ -933,16 +933,16 @@ class OnePageCheckoutController extends CheckoutController
 
 			foreach (array('billingAddress' => 'defaultBillingAddress', 'shippingAddress' => 'defaultShippingAddress') as $order => $key)
 			{
-				$address = $this->user->$key->get();
+				$address = $this->user->$key;
 				if ($address)
 				{
 					$newAddress = clone $address;
-					$newAddress->userAddress->set(clone $newAddress->userAddress->get());
+					$newAddress->userAddress->set(clone $newAddress->userAddress);
 					$newAddress->user->set($this->user);
 					$this->user->$key->set($newAddress);
 					$newAddress->save();
 
-					$this->order->$order->set($newAddress->userAddress->get());
+					$this->order->$order->set($newAddress->userAddress);
 				}
 			}
 
@@ -951,7 +951,7 @@ class OnePageCheckoutController extends CheckoutController
 			// shipping and billing addresses the same? save only the billing address
 			if ($this->isSameAddress())
 			{
-				$this->user->defaultShippingAddress->get()->delete();
+				$this->user->defaultShippingAddress->delete();
 				$this->user->defaultShippingAddress->setNull();
 			}
 
@@ -981,19 +981,19 @@ class OnePageCheckoutController extends CheckoutController
 
 	private function isSameAddress()
 	{
-		return $this->order->shippingAddress->get() && ($this->order->billingAddress->get()->toString() == $this->order->shippingAddress->get()->toString());
+		return $this->order->shippingAddress && ($this->order->billingAddress->toString() == $this->order->shippingAddress->toString());
 	}
 
 	private function setAnonAddresses()
 	{
 		if ($this->user->isAnonymous())
 		{
-			if ($this->user->defaultBillingAddress->get())
+			if ($this->user->defaultBillingAddress)
 			{
-				$billingAddress = $this->user->defaultBillingAddress->get()->userAddress->get();
+				$billingAddress = $this->user->defaultBillingAddress->userAddress;
 			}
 
-			if ($this->user->defaultBillingAddress->get() && !$this->order->billingAddress->get())
+			if ($this->user->defaultBillingAddress && !$this->order->billingAddress)
 			{
 				if ($billingAddress)
 				{
@@ -1001,7 +1001,7 @@ class OnePageCheckoutController extends CheckoutController
 				}
 			}
 
-			if ($this->isShippingRequired($this->order) && !$this->order->shippingAddress->get())
+			if ($this->isShippingRequired($this->order) && !$this->order->shippingAddress)
 			{
 				if ($this->config->get('REQUIRE_SAME_ADDRESS'))
 				{
@@ -1010,17 +1010,17 @@ class OnePageCheckoutController extends CheckoutController
 						$this->order->shippingAddress->set($billingAddress);
 					}
 				}
-				else if ($this->user->defaultShippingAddress->get())
+				else if ($this->user->defaultShippingAddress)
 				{
 					// same shipping address?
-					if (!$this->user->defaultShippingAddress->get())
+					if (!$this->user->defaultShippingAddress)
 					{
 						$this->order->shippingAddress->set($billingAddress);
-						$this->user->defaultShippingAddress->get()->userAddress->set(clone $billingAddress);
+						$this->user->defaultShippingAddress->userAddress->set(clone $billingAddress);
 					}
 					else
 					{
-						$address = $this->user->defaultShippingAddress->get()->userAddress->get();
+						$address = $this->user->defaultShippingAddress->userAddress;
 						$this->order->shippingAddress->set($address);
 					}
 				}

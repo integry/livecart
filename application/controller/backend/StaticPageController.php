@@ -56,7 +56,7 @@ class StaticPageController extends StoreManagementController
 
 	public function edit()
 	{
-		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
+		$page = StaticPage::getInstanceById($this->request->gget('id'), StaticPage::LOAD_DATA);
 		$page->getSpecification();
 		return new JSONResponse($page->toArray());
 	}
@@ -66,7 +66,7 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
+		$page = StaticPage::getInstanceById((int)$this->request->gget('id'), StaticPage::LOAD_DATA);
 		return $this->save($page);
 	}
 
@@ -75,12 +75,12 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function move()
 	{
-		$page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
+		$page = StaticPage::getInstanceById((int)$this->request->gget('id'), StaticPage::LOAD_DATA);
 
 		// update parent
-		if ($this->request->get('parent'))
+		if ($this->request->gget('parent'))
 		{
-			$parent = StaticPage::getInstanceById((int)$this->request->get('parent'), StaticPage::LOAD_DATA);
+			$parent = StaticPage::getInstanceById((int)$this->request->gget('parent'), StaticPage::LOAD_DATA);
 		}
 		else
 		{
@@ -103,9 +103,9 @@ class StaticPageController extends StoreManagementController
 
 		$f->addModifier('StaticPage.position', new ARExpressionHandle('position+2'));
 
-		if ($this->request->get('previous'))
+		if ($this->request->gget('previous'))
 		{
-			$previous = StaticPage::getInstanceById((int)$this->request->get('previous'), StaticPage::LOAD_DATA);
+			$previous = StaticPage::getInstanceById((int)$this->request->gget('previous'), StaticPage::LOAD_DATA);
 			$position = $previous->position->get();
 			$f->mergeCondition(gt(f('StaticPage.position'), $position));
 			$page->position->set($position + 1);
@@ -139,7 +139,7 @@ class StaticPageController extends StoreManagementController
 	{
 		try
 		{
-			$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
+			$inst = StaticPage::getInstanceById($this->request->gget('id'), StaticPage::LOAD_DATA);
 			$inst->delete();
 			return new JSONResponse(array('id' => $inst->getID()), 'success');
 		}

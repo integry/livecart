@@ -27,7 +27,7 @@ class LanguageController extends StoreManagementController
 
 		$tempDir = ClassLoader::getRealPath('cache.tmp.' . rand(1, 10000000));
 
-		$locale = Locale::getInstance($this->request->get('id'));
+		$locale = Locale::getInstance($this->request->gget('id'));
 
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $locale->translationManager()->getDefinitionFiles($fileDir);
@@ -115,7 +115,7 @@ class LanguageController extends StoreManagementController
 		$this->locale;
 
 		// get locale instance for the language being translated
-		$editLocaleName = $this->request->get('id');
+		$editLocaleName = $this->request->gget('id');
 		$editLocale = Locale::getInstance($editLocaleName);
 		$editManager = $editLocale->translationManager();
 
@@ -223,7 +223,7 @@ class LanguageController extends StoreManagementController
 		$this->locale;
 
 		// get locale instance
-		$localeCode = $this->request->get("id");
+		$localeCode = $this->request->gget("id");
 		$editLocale = Locale::getInstance($localeCode);
 
 		if (!$editLocale)
@@ -232,7 +232,7 @@ class LanguageController extends StoreManagementController
 		}
 
 		// get submited translation data
-		$submitedLang = json_decode($this->request->get("translations"), true);
+		$submitedLang = json_decode($this->request->gget("translations"), true);
 
 		if (!is_array($submitedLang))
 		{
@@ -270,7 +270,7 @@ class LanguageController extends StoreManagementController
 		$list = $this->getLanguages()->toArray();
 
 		$response = new ActionResponse();
-		$response->set("language", $this->request->get("language"));
+		$response->set("language", $this->request->gget("language"));
 		$response->set("languageArray", json_encode($list));
 		return $response;
 	}
@@ -305,7 +305,7 @@ class LanguageController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$langId = $this->request->get('id');
+		$langId = $this->request->gget('id');
 
 		try
 	  	{
@@ -325,7 +325,7 @@ class LanguageController extends StoreManagementController
 	 */
 	public function saveOrder()
 	{
-	  	$order = $this->request->get('languageList');
+	  	$order = $this->request->gget('languageList');
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
@@ -335,7 +335,7 @@ class LanguageController extends StoreManagementController
 		}
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->get('draggedId'));
+	  	$resp->setContent($this->request->gget('draggedId'));
 		return $resp;
 	}
 
@@ -348,7 +348,7 @@ class LanguageController extends StoreManagementController
 	{
 		try
 		{
-			$r = ActiveRecord::getInstanceByID('Language', $this->request->get('id'), true);
+			$r = ActiveRecord::getInstanceByID('Language', $this->request->gget('id'), true);
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -376,9 +376,9 @@ class LanguageController extends StoreManagementController
 	 */
 	public function setEnabled()
 	{
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 		$lang = Language::getInstanceById($id);
-		$lang->setAsEnabled($this->request->get("status"));
+		$lang->setAsEnabled($this->request->gget("status"));
 		$lang->save();
 
 		return new JSONResponse(array('language' => $lang->toArray()), 'success');
@@ -392,7 +392,7 @@ class LanguageController extends StoreManagementController
 	public function add()
 	{
 		$lang = ActiveRecord::getNewInstance('Language');
-		$lang->setID($this->request->get("id"));
+		$lang->setID($this->request->gget("id"));
 		$lang->save(ActiveRecord::PERFORM_INSERT);
 
 		return new JSONResponse(array('language' => $lang->toArray()), 'success', $this->translate('_new_language_was_successfully_added'));
@@ -414,7 +414,7 @@ class LanguageController extends StoreManagementController
 			$list[$key]['name'] = $this->locale->info()->getOriginalLanguageName($value['ID']);
 		}
 
-		$response->set('returnRoute', $this->request->get('returnRoute'));
+		$response->set('returnRoute', $this->request->gget('returnRoute'));
 		$response->set('languages', $list);
 		$response->set('currentLanguage', $this->locale->getLocaleCode());
 		return $response;
@@ -427,9 +427,9 @@ class LanguageController extends StoreManagementController
 	 */
 	public function changeLanguage()
 	{
-		$returnRoute = base64_decode($this->request->get('returnRoute'));
+		$returnRoute = base64_decode($this->request->gget('returnRoute'));
 
-		$lang = $this->request->get('id');
+		$lang = $this->request->gget('id');
 		$langInst = Language::getInstanceById($lang);
 		if ($langInst)
 		{
@@ -453,8 +453,8 @@ class LanguageController extends StoreManagementController
 	 */
 	public function translationDialog()
 	{
-	  	$id = $this->request->get('id');
-	  	$file = base64_decode($this->request->get('file'));
+	  	$id = $this->request->gget('id');
+	  	$file = base64_decode($this->request->gget('file'));
 	  	$translation = $this->locale->translationManager()->get($file, $id);
 
 	  	$defaultTranslation = Locale::getInstance($this->application->getDefaultLanguageCode())->translationManager()->get($file, $id);
@@ -476,10 +476,10 @@ class LanguageController extends StoreManagementController
 	 */
 	public function saveTranslationDialog()
 	{
-	  	$file = $this->request->get('file');
+	  	$file = $this->request->gget('file');
 
 	  	$this->locale->translationManager()->loadFile($file, true);
-		$this->locale->translationManager()->updateValue($file, $this->request->get('id'), $this->request->get('translation'));
+		$this->locale->translationManager()->updateValue($file, $this->request->gget('id'), $this->request->gget('translation'));
 
 	  	return new RawResponse();
 	}

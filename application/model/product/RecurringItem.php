@@ -13,17 +13,17 @@ class RecurringItem extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('recurringID', 'RecurringProductPeriod', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('orderedItemID', 'OrderedItem', 'ID', 'OrderedItem', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('lastInvoiceID', 'CustomerOrder', 'ID', 'CustomerOrder', ARInteger::instance()));
+		public $ID;
+		public $recurringID', 'RecurringProductPeriod', 'ID', null, ARInteger::instance()));
+		public $orderedItemID', 'OrderedItem', 'ID', 'OrderedItem;
+		public $lastInvoiceID', 'CustomerOrder', 'ID', 'CustomerOrder;
 
-		$schema->registerField(new ARField('setupPrice', ARInteger::instance()));
-		$schema->registerField(new ARField('periodPrice', ARInteger::instance()));
-		$schema->registerField(new ARField('rebillCount', ARInteger::instance()));
-		$schema->registerField(new ARField('processedRebillCount', ARInteger::instance()));
-		$schema->registerField(new ARField('periodType', ARInteger::instance()));
-		$schema->registerField(new ARField('periodLength', ARInteger::instance()));
+		public $setupPrice;
+		public $periodPrice;
+		public $rebillCount;
+		public $processedRebillCount;
+		public $periodType;
+		public $periodLength;
 
 	}
 
@@ -54,23 +54,23 @@ class RecurringItem extends ActiveRecordModel
 		OrderedItem $item, $setupPrice = null, $periodPrice = null, $rebillCount = null)
 	{
 		$instance = ActiveRecord::getNewInstance(__CLASS__);
-		$instance->orderedItem->set($item);
+		$instance->orderedItem = $item);
 		$instance->setRecurringProductPeriod($recurringProductPeriod); // call after orderedItem is added!
-		$instance->periodLength->set($recurringProductPeriod->periodLength->get());
-		$instance->periodType->set($recurringProductPeriod->periodType->get());
+		$instance->periodLength = $recurringProductPeriod->periodLength);
+		$instance->periodType = $recurringProductPeriod->periodType);
 		if ($setupPrice !== null)
 		{
-			$instance->setupPrice->set($setupPrice);
+			$instance->setupPrice = $setupPrice);
 		}
-		
+
 		if ($periodPrice !== null)
 		{
-			$instance->periodPrice->set($periodPrice);
+			$instance->periodPrice = $periodPrice);
 		}
 
 		if ($rebillCount !== null)
 		{
-			$instance->rebillCount->set($rebillCount);
+			$instance->rebillCount = $rebillCount);
 		}
 
 		return $instance;
@@ -95,35 +95,35 @@ class RecurringItem extends ActiveRecordModel
 
 	public function setRecurringProductPeriod(RecurringProductPeriod $recurringProductPeriod)
 	{
-		$order = $this->orderedItem->get()->customerOrder->get();
+		$order = $this->orderedItem->customerOrder;
 		$order->load();
-		$currencyID = $order->currencyID->get()->getID();
-		$this->recurring->set($recurringProductPeriod);
+		$currencyID = $order->currencyID->getID();
+		$this->recurring = $recurringProductPeriod);
 		if ($recurringProductPeriod->isLoaded() == false)
 		{
 			$recurringProductPeriod->load();
 		}
-		$this->rebillCount->set($recurringProductPeriod->rebillCount->get());
+		$this->rebillCount = $recurringProductPeriod->rebillCount);
 		$rppa = $recurringProductPeriod->toArray($currencyID);
 		if (array_key_exists('ProductPrice_setup', $rppa) && @isset($rppa['ProductPrice_setup'][$currencyID]['price']))
 		{
-			$this->setupPrice->set($rppa['ProductPrice_setup'][$currencyID]['price']);
+			$this->setupPrice = $rppa['ProductPrice_setup'][$currencyID]['price']);
 		}
 		if (array_key_exists('ProductPrice_period', $rppa) && @isset($rppa['ProductPrice_period'][$currencyID]['price']))
 		{
-			$this->periodPrice->set($rppa['ProductPrice_period'][$currencyID]['price']);
+			$this->periodPrice = $rppa['ProductPrice_period'][$currencyID]['price']);
 		}
 		if (array_key_exists('periodType', $rppa) )
 		{
-			$this->periodType->set($rppa['periodType']);
+			$this->periodType = $rppa['periodType']);
 		}
 		if (array_key_exists('periodLength', $rppa) )
 		{
-			$this->periodLength->set($rppa['periodLength']);
+			$this->periodLength = $rppa['periodLength']);
 		}
 		if (array_key_exists('rebillCount', $rppa) )
 		{
-			$this->rebillCount->set($rppa['rebillCount']);
+			$this->rebillCount = $rppa['rebillCount']);
 		}
 	}
 
@@ -133,19 +133,19 @@ class RecurringItem extends ActiveRecordModel
 		{
 			return false;
 		}
-		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET 
+		ActiveRecord::executeUpdate('UPDATE '.__CLASS__. ' SET
 			processedRebillCount = IF(processedRebillCount IS NULL, 1, processedRebillCount+1)
 		WHERE
 			ID IN('.implode(',', $ids).')');
-			
+
 		//ActiveRecordModel::ClearPool();
-		
+
 		return true;
 	}
 
 	public function saveLastInvoice(CustomerOrder $order)
 	{
-		$this->lastInvoiceID->set($order);
+		$this->lastInvoiceID = $order);
 		$this->save();
 	}
 
@@ -156,7 +156,7 @@ class RecurringItem extends ActiveRecordModel
 		$currency = Currency::getInstanceByID($currencyID);
 		$array['ProductPrice_setup']['formated_price'][$currencyID] = $currency->getFormattedPrice($array['setupPrice']);
 		$array['ProductPrice_period']['formated_price'][$currencyID] = $currency->getFormattedPrice($array['periodPrice']);
-		
+
 		return $array;
 	}
 }

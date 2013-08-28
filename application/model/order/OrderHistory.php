@@ -36,21 +36,21 @@ class OrderHistory
 		$array = array();
 
 		$array['ID'] = $order->getID();
-		$array['totalAmount'] = $order->totalAmount->get();
-		$array['isCancelled'] = (int)$order->isCancelled->get();
-		$array['status'] = (int)$order->status->get();
+		$array['totalAmount'] = $order->totalAmount;
+		$array['isCancelled'] = (int)$order->isCancelled;
+		$array['status'] = (int)$order->status;
 
 		$array['shipments'] = array();
 		foreach ($order->getShipments() as $shipment)
 		{
 			$shippingServiceArray = null;
-			if($shipment->shippingService->get() && (int)$shipment->shippingService->get()->getID())
+			if($shipment->shippingService && (int)$shipment->shippingService->getID())
 			{
-				$shippingServiceArray = $shipment->shippingService->get()->toArray();
+				$shippingServiceArray = $shipment->shippingService->toArray();
 			}
 			else
 			{
-				$shippingService = unserialize($shipment->shippingServiceData->get());
+				$shippingService = unserialize($shipment->shippingServiceData);
 
 				$shippingServiceArray = null;
 				if(is_object($shippingService))
@@ -62,7 +62,7 @@ class OrderHistory
 
 			$array['shipments'][$shipment->getID()] = array(
 				'ID' => $shipment->getID(),
-				'status' => (int)$shipment->status->get(),
+				'status' => (int)$shipment->status,
 				'ShippingService' => $shippingServiceArray
 			);
 		}
@@ -72,28 +72,28 @@ class OrderHistory
 		{
 			$array['items'][$item->getID()] = array(
 				'ID' => $item->getID(),
-				'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null,
-				'count' => (int)$item->count->get(),
-				'price' => $item->price->get(),
+				'shipmentID' => $item->shipment ? $item->shipment->getID() : null,
+				'count' => (int)$item->count,
+				'price' => $item->price,
 				'Product' => array(
 					'ID' => (int)$item->getProduct()->getID(),
-					'sku' => $item->getProduct()->sku->get(),
+					'sku' => $item->getProduct()->sku,
 					'name' => $item->getProduct()->getName($order->getApplication()->getDefaultLanguageCode()),
 					'isDownloadable' => (int)$item->getProduct()->isDownloadable(),
 				),
-				'Shipment' => ($item->shipment->get() && isset($array['shipments'][$item->shipment->get()->getID()])) ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
+				'Shipment' => ($item->shipment && isset($array['shipments'][$item->shipment->getID()])) ? $array['shipments'][$item->shipment->getID()] : array('ID' => 0)
 			);
 		}
 
 		// @todo: dirty fix
-		if ($order->shippingAddress->get())
+		if ($order->shippingAddress)
 		{
-			if ($order->shippingAddress->get()->state->get())
+			if ($order->shippingAddress->state)
 			{
-				$order->shippingAddress->get()->state->get()->load();
+				$order->shippingAddress->state->load();
 			}
 
-			$array['ShippingAddress'] = $order->shippingAddress->get()->toArray();
+			$array['ShippingAddress'] = $order->shippingAddress->toArray();
 
 		}
 		else
@@ -101,14 +101,14 @@ class OrderHistory
 			$array['ShippingAddress'] = array();
 		}
 
-		if ($order->billingAddress->get())
+		if ($order->billingAddress)
 		{
-			if ($order->billingAddress->get()->state->get())
+			if ($order->billingAddress->state)
 			{
-				$order->billingAddress->get()->state->get()->load();
+				$order->billingAddress->state->load();
 			}
 
-			$array['BillingAddress'] = $order->billingAddress->get()->toArray();
+			$array['BillingAddress'] = $order->billingAddress->toArray();
 		}
 		else
 		{

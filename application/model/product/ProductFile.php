@@ -18,15 +18,15 @@ class ProductFile extends ObjectFile
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productFileGroupID", "ProductFileGroup", "ID", "ProductFileGroup", ARInteger::instance()));
-		$schema->registerField(new ARField("isPublic", ARBool::instance()));
-		$schema->registerField(new ARField("isEmbedded", ARBool::instance()));
-		$schema->registerField(new ARField("title", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("allowDownloadDays", ARInteger::instance()));
-		$schema->registerField(new ARField("allowDownloadCount", ARInteger::instance()));
+		public $productID", "Product", "ID", "Product;
+		public $productFileGroupID", "ProductFileGroup", "ID", "ProductFileGroup;
+		public $isPublic;
+		public $isEmbedded;
+		public $title;
+		public $description;
+		public $position;
+		public $allowDownloadDays;
+		public $allowDownloadCount;
 	}
 
 	/**
@@ -40,7 +40,7 @@ class ProductFile extends ObjectFile
 	public static function getNewInstance(Product $product, $filePath, $fileName, $pathOrUrl = null)
 	{
 		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName, $pathOrUrl);
-		$productFileInstance->product->set($product);
+		$productFileInstance->product = $product);
 
 		return $productFileInstance;
 	}

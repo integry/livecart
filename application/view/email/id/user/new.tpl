@@ -1,7 +1,7 @@
-Selamat Datang di {'STORE_NAME'|config}!
+Selamat Datang di [[ config('STORE_NAME') ]]!
 Yth Bapak/Ibu {$user.fullName},
 
-Berikut ini adalah informasi rekening Anda di {'STORE_NAME'|config}:
+Berikut ini adalah informasi rekening Anda di [[ config('STORE_NAME') ]]:
 
 E-mail: <b>{$user.email}</b>
 Password: <b>{$user.newPassword}</b>

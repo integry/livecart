@@ -1,4 +1,4 @@
-Vaše heslo na {'STORE_NAME'|config}!
+Vaše heslo na [[ config('STORE_NAME') ]]!
 Vážený(á) {$user.fullName},
 
 zasíláme Vám přihlašovací údaje do našeho obchodu {$config.STORE_NAME}:

@@ -17,8 +17,8 @@ class ProductCategory extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryForeignKeyField('categoryID', 'Category', 'ID', 'Category', ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField('productID', 'Product', 'ID', 'Product', ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField('categoryID', 'Category', 'ID', 'Category;
+		$schema->registerField(new ARPrimaryForeignKeyField('productID', 'Product', 'ID', 'Product;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -34,8 +34,8 @@ class ProductCategory extends ActiveRecordModel
 	public static function getNewInstance(Product $product, Category $category)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
-		$instance->category->set($category);
+		$instance->product = $product);
+		$instance->category = $category);
 
 		return $instance;
 	}

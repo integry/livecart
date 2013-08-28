@@ -33,7 +33,7 @@ class ThemeController extends StoreManagementController
 
 	public function edit()
 	{
-		$theme = new Theme($this->request->get('id'), $this->application);
+		$theme = new Theme($this->request->gget('id'), $this->application);
 		$arr = $theme->toArray();
 
 		$form = $this->buildSettingsForm();
@@ -56,13 +56,13 @@ class ThemeController extends StoreManagementController
 		$themes = array();
 		for ($k = 1; $k <= 3; $k++)
 		{
-			if ($theme = $this->request->get('parent_' . $k))
+			if ($theme = $this->request->gget('parent_' . $k))
 			{
 				$themes[] = $theme;
 			}
 		}
 
-		$inst = new Theme($this->request->get('id'), $this->application);
+		$inst = new Theme($this->request->gget('id'), $this->application);
 		$inst->setParentThemes($themes);
 		$inst->saveConfig();
 
@@ -71,7 +71,7 @@ class ThemeController extends StoreManagementController
 
 	public function add()
 	{
-		$inst = new Theme($this->request->get('name'), $this->application);
+		$inst = new Theme($this->request->gget('name'), $this->application);
 
 		$errors = array();
 		$validator = $this->buildValidator();
@@ -95,7 +95,7 @@ class ThemeController extends StoreManagementController
 
 	public function delete()
 	{
-		$inst = new Theme($this->request->get('id'), $this->application);
+		$inst = new Theme($this->request->gget('id'), $this->application);
 		if ($inst->isCoreTheme())
 		{
 			return new JSONResponse($inst->toArray(), 'failure', $this->translate('_err_cannot_delete_core_theme'));
@@ -109,7 +109,7 @@ class ThemeController extends StoreManagementController
 
 	public function colors()
 	{
-		$inst = new Theme($this->request->get('id'), $this->application);
+		$inst = new Theme($this->request->gget('id'), $this->application);
 
 		$response = new ActionResponse();
 		$response->set('config', $this->getParsedStyleConfig($inst));
@@ -119,7 +119,7 @@ class ThemeController extends StoreManagementController
 		$response->set('textStyles', $this->getSelectOptions(array('', 'none', 'underline')));
 		$response->set('bgRepeat', $this->getSelectOptions(array('repeat', 'no-repeat', 'repeat-x', 'repeat-y')));
 		$response->set('bgPosition', $this->getSelectOptions(array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom')));
-		$response->set('theme', $this->request->get('id'));
+		$response->set('theme', $this->request->gget('id'));
 		return $response;
 	}
 
@@ -136,9 +136,9 @@ class ThemeController extends StoreManagementController
 
 	public function saveColors()
 	{
-		$theme = $this->request->get('id');
+		$theme = $this->request->gget('id');
 		$css = new EditedCssFile($theme);
-		$code = $this->request->get('css');
+		$code = $this->request->gget('css');
 
 		// process uploaded files
 		$filePath = ClassLoader::getRealPath('public.upload.theme.' . $theme . '.');
@@ -172,7 +172,7 @@ class ThemeController extends StoreManagementController
 	{
 		$this->setLayout('empty');
 
-		$theme = $this->request->get('theme');
+		$theme = $this->request->gget('theme');
 		$css = new EditedCssFile($theme);
 
 		if (!$css->getCode())
@@ -246,8 +246,8 @@ class ThemeController extends StoreManagementController
 		ClassLoader::importNow('application.helper.CopyRecursive');
 
 		$request = $this->getRequest();
-		$this->fromTheme = $request->get('id');
-		$this->toTheme = $request->get('name');
+		$this->fromTheme = $request->gget('id');
+		$this->toTheme = $request->gget('name');
 		$files = $this->getThemeFiles($this->fromTheme);
 		$copyFiles = $this->getThemeFiles($this->toTheme, false);
 		$baseDir = ClassLoader::getBaseDir();

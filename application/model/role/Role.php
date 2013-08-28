@@ -16,8 +16,8 @@ class Role extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Role");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance(10)));
-		$schema->registerField(new ARField("name", ARText::instance(150)));
+		public $ID;
+		public $name;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Role extends ActiveRecordModel
 	public static function getNewInstance($name)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->name->set($name);
+	  	$instance->name = $name);
 
 	  	return $instance;
 	}

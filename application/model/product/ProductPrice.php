@@ -20,14 +20,14 @@ class ProductPrice extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductPrice");
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
-		$schema->registerField(new ARForeignKeyField("recurringID", "RecurringProductPeriod", "ID", "RecurringProductPeriod", ARInteger::instance()));
-		$schema->registerField(new ARField("price", ARFloat::instance(16)));
-		$schema->registerField(new ARField("listPrice", ARFloat::instance(16)));
-		$schema->registerField(new ARField("type", ARInteger::instance()));
-		$schema->registerField(new ARField("serializedRules", ARArray::instance()));
+		public $ID;
+		public $productID", "Product", "ID", null, ARInteger::instance()));
+		public $currencyID", "Currency", "ID", null, ARChar::instance()));
+		public $recurringID", "RecurringProductPeriod", "ID", "RecurringProductPeriod;
+		public $price;
+		public $listPrice;
+		public $type;
+		public $serializedRules;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -35,12 +35,12 @@ class ProductPrice extends ActiveRecordModel
 	public static function getNewInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
-		$instance->currency->set($currency);
-		$instance->type->set($type);
+		$instance->product = $product);
+		$instance->currency = $currency);
+		$instance->type = $type);
 		if ($recurring != null)
 		{
-			$instance->recurring->set($recurring);
+			$instance->recurring = $recurring);
 		}
 		return $instance;
 	}
@@ -88,18 +88,18 @@ class ProductPrice extends ActiveRecordModel
 
 	public function getPrice($applyRounding = true, $includeDiscounts = false)
 	{
-		$price = $this->price->get();
+		$price = $this->price;
 
-		if ($parent = $this->product->get()->parent->get())
+		if ($parent = $this->product->parent)
 		{
-			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get())->getPrice();
-			$price = $this->getChildPrice($parentPrice, $price, $this->product->get()->getChildSetting('price'));
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency)->getPrice();
+			$price = $this->getChildPrice($parentPrice, $price, $this->product->getChildSetting('price'));
 		}
 
 		if ($includeDiscounts)
 		{
-			$price = self::getApplication()->getDisplayTaxPrice($price, $this->product->get());
-			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product->get(), $price);
+			$price = self::getApplication()->getDisplayTaxPrice($price, $this->product);
+			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product, $price);
 		}
 
 		if (!$price)
@@ -107,7 +107,7 @@ class ProductPrice extends ActiveRecordModel
 			return null;
 		}
 
-		return $applyRounding ? $this->currency->get()->roundPrice($price) : $price;
+		return $applyRounding ? $this->currency->roundPrice($price) : $price;
 	}
 
 	private function getChildPrice($parentPrice, $childPriceDiff, $setting)
@@ -133,16 +133,16 @@ class ProductPrice extends ActiveRecordModel
 	public function getItemPrice(OrderedItem $item, $applyRounding = true)
 	{
 		$price = $this->getPrice($applyRounding);
-		$rules = is_array($this->serializedRules->get()) ? $this->serializedRules->get() : unserialize($this->serializedRules->get());
+		$rules = is_array($this->serializedRules) ? $this->serializedRules : unserialize($this->serializedRules);
 
-		if ($parent = $this->product->get()->parent->get())
+		if ($parent = $this->product->parent)
 		{
-			$priceSetting = $this->product->get()->getChildSetting('price');
-			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency->get());
+			$priceSetting = $this->product->getChildSetting('price');
+			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency);
 
 			if (!$rules)
 			{
-				$rules = unserialize($parentPrice->serializedRules->get());
+				$rules = unserialize($parentPrice->serializedRules);
 			}
 
 			if ($priceSetting !== Product::CHILD_OVERRIDE)
@@ -156,8 +156,8 @@ class ProductPrice extends ActiveRecordModel
 			// quantity/group based prices
 			if ($rules)
 			{
-				$user = $item->customerOrder->get()->user->get();
-				$groupID = ($user && $user->userGroup->get()) ? $user->userGroup->get()->getID() : 0;
+				$user = $item->customerOrder->user;
+				$groupID = ($user && $user->userGroup) ? $user->userGroup->getID() : 0;
 
 				foreach (array($groupID, 0) as $group)
 				{
@@ -172,15 +172,15 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		// convert from default currency
-		else if ($this->currency->get()->getID() != self::getApplication()->getDefaultCurrencyCode())
+		else if ($this->currency->getID() != self::getApplication()->getDefaultCurrencyCode())
 		{
 			$defaultCurrency = self::getApplication()->getDefaultCurrency();
-			$price = $this->convertFromDefaultCurrency($this->product->get()->getItemPrice($item, false, $defaultCurrency));
+			$price = $this->convertFromDefaultCurrency($this->product->getItemPrice($item, false, $defaultCurrency));
 		}
 
 		if ($price)
 		{
-			return $applyRounding ? $this->currency->get()->roundPrice($price) : $price;
+			return $applyRounding ? $this->currency->roundPrice($price) : $price;
 		}
 		else
 		{
@@ -193,18 +193,18 @@ class ProductPrice extends ActiveRecordModel
 		$itemCnt = 0;
 
 		// include other variations of the same product?
-		if ($parent = $item->getProduct()->parent->get())
+		if ($parent = $item->getProduct()->parent)
 		{
-			$order = $item->customerOrder->get();
+			$order = $item->customerOrder;
 
 			foreach ($order->getShoppingCartItems() as $orderItem)
 			{
 				if ($orderItem->isVariationDiscountsSummed())
 				{
-					$orderProduct = $orderItem->product->get()->getParent();
+					$orderProduct = $orderItem->product->getParent();
 					if ($orderProduct->getID() == $parent->getID())
 					{
-						$itemCnt += $orderItem->count->get();
+						$itemCnt += $orderItem->count;
 					}
 				}
 			}
@@ -212,7 +212,7 @@ class ProductPrice extends ActiveRecordModel
 
 		if (!$itemCnt)
 		{
-			$itemCnt = $item->count->get();
+			$itemCnt = $item->count;
 		}
 
 		// include past orders
@@ -220,7 +220,7 @@ class ProductPrice extends ActiveRecordModel
 		if (!is_null($dateRange))
 		{
 			$from = $dateRange ? strtotime('now -' . (int)$dateRange . ' days') : 0;
-			$orders = $item->customerOrder->get()->getBusinessRuleContext()->getPastOrdersBetween($from, time());
+			$orders = $item->customerOrder->getBusinessRuleContext()->getPastOrdersBetween($from, time());
 			$id = $item->getProduct()->getID();
 
 			foreach ($orders as $order)
@@ -242,14 +242,14 @@ class ProductPrice extends ActiveRecordModel
 
 	public function getPriceByGroup($groupID, $itemCnt = 1)
 	{
-		$rules = @unserialize($this->serializedRules->get());
+		$rules = @unserialize($this->serializedRules);
 		if (!$rules)
 		{
-			return $this->price->get();
+			return $this->price;
 		}
 
 		$groupPrice = self::getProductGroupPrice($groupID, $rules, $itemCnt);
-		return is_null($groupPrice) ? $this->price->get() : $groupPrice;
+		return is_null($groupPrice) ? $this->price : $groupPrice;
 	}
 
 	public static function getProductGroupPrice($groupID, $rules, $itemCnt)
@@ -287,14 +287,14 @@ class ProductPrice extends ActiveRecordModel
 	public function reCalculatePrice()
 	{
 		$defaultCurrency = self::getApplication()->getDefaultCurrency();
-		return $this->currency->get()->roundPrice($this->convertFromDefaultCurrency($this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE)));
+		return $this->currency->roundPrice($this->convertFromDefaultCurrency($this->product->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE)));
 	}
 
 	private function convertFromDefaultCurrency($price)
 	{
-		if ($this->currency->get()->rate->get())
+		if ($this->currency->rate)
 		{
-			return $price / $this->currency->get()->rate->get();
+			return $price / $this->currency->rate;
 		}
 		else
 		{
@@ -309,11 +309,11 @@ class ProductPrice extends ActiveRecordModel
 
 	public function multiplyPrice($multiply, $increaseQuantPrices = false)
 	{
-		$this->price->set($this->price->get() * $multiply);
+		$this->price = $this->price * $multiply);
 
 		if ($increaseQuantPrices)
 		{
-			$rules = unserialize($this->serializedRules->get());
+			$rules = unserialize($this->serializedRules);
 			if (!$rules)
 			{
 				return;
@@ -338,14 +338,14 @@ class ProductPrice extends ActiveRecordModel
 
 	public function setPriceRule($quantity, UserGroup $group = null, $price)
 	{
-		$rules = unserialize($this->serializedRules->get());
+		$rules = unserialize($this->serializedRules);
 		$rules[$quantity][is_null($group) ? 0 : $group->getID()] = $price;
 		$this->setRules($rules);
 	}
 
 	public function removePriceRule($quantity, UserGroup $group = null)
 	{
-		$rules = unserialize($this->serializedRules->get());
+		$rules = unserialize($this->serializedRules);
 		unset($rules[$quantity][is_null($group) ? 0 : $group->getID()]);
 		if (empty($rules[$quantity]))
 		{
@@ -357,7 +357,7 @@ class ProductPrice extends ActiveRecordModel
 	public function getUserPrices(User $user = null)
 	{
 		$id = $this->getGroupId($user);
-		$rules = is_array($this->serializedRules->get()) ? $this->serializedRules->get() : unserialize($this->serializedRules->get());
+		$rules = is_array($this->serializedRules) ? $this->serializedRules : unserialize($this->serializedRules);
 		$found = array();
 
 		if (is_array($rules))
@@ -386,13 +386,13 @@ class ProductPrice extends ActiveRecordModel
 			return 0;
 		}
 
-		return is_null($user->userGroup->get()) ? 0 : $user->userGroup->get()->getID();
+		return is_null($user->userGroup) ? 0 : $user->userGroup->getID();
 	}
 
 	private function setRules($rules)
 	{
 		ksort($rules);
-		$this->serializedRules->set(serialize($rules));
+		$this->serializedRules = serialize($rules));
 	}
 
 	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
@@ -408,7 +408,7 @@ class ProductPrice extends ActiveRecordModel
 
 	public static function convertPrice(Currency $currency, $basePrice)
 	{
-		$rate = (float)$currency->rate->get();
+		$rate = (float)$currency->rate;
 		if ($rate)
 		{
 			$price = $basePrice / $rate;
@@ -572,9 +572,9 @@ class ProductPrice extends ActiveRecordModel
 		$set = ARSet::buildFromArray($products->getData());
 		foreach ($products as $key => $product)
 	  	{
-			if ($product->parent->get())
+			if ($product->parent)
 			{
-				$set->add($product->parent->get());
+				$set->add($product->parent);
 			}
 		}
 

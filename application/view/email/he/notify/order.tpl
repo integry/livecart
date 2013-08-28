@@ -1,4 +1,4 @@
-הזמנה חדשה נמצאת ב {'STORE_NAME'|config}
+הזמנה חדשה נמצאת ב [[ config('STORE_NAME') ]]
 מספר הזמנה: {$order.invoiceNumber}
 
 ניהול הזמנה:

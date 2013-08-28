@@ -1,7 +1,7 @@
-Ο κωδικός σας πρόσβασης στο {'STORE_NAME'|config}!
+Ο κωδικός σας πρόσβασης στο [[ config('STORE_NAME') ]]!
 Αγαπητέ/ή {$user.fullName},
 
-Εδώ είναι οι πληροφορίες πρόσβασης στο λογαριασμό σας {'STORE_NAME'|config}:
+Εδώ είναι οι πληροφορίες πρόσβασης στο λογαριασμό σας [[ config('STORE_NAME') ]]:
 
 E-mail: <strong><b>{$user.email}</b></strong>
 Password: <strong><b>{$user.newPassword}</b></strong>

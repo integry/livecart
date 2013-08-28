@@ -20,7 +20,7 @@ class ProductCategoryController extends StoreManagementController
 {
 	public function index()
 	{
-		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
+		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$product->category->get()->getPathNodeSet();
 
 		$additional = $product->getAdditionalCategories();
@@ -41,8 +41,8 @@ class ProductCategoryController extends StoreManagementController
 
 	public function saveMainCategory()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
-		$category = Category::getInstanceByID($this->request->get('categoryId'), ActiveRecord::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
+		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
 		$product->category->set($category);
 		$product->save();
 
@@ -53,8 +53,8 @@ class ProductCategoryController extends StoreManagementController
 
 	public function addCategory()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
-		$category = Category::getInstanceByID($this->request->get('categoryId'), ActiveRecord::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
+		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
 
 		// check if the product is not assigned to this category already
 		$relation = ActiveRecordModel::getInstanceByIdIfExists('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $category->getID()));
@@ -70,8 +70,8 @@ class ProductCategoryController extends StoreManagementController
 
 	public function delete()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
-		$category = Category::getInstanceByID($this->request->get('categoryId'), ActiveRecord::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
+		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
 
 		$relation = ActiveRecordModel::getInstanceById('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $category->getID()));
 		$relation->delete();

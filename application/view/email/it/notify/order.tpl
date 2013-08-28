@@ -1,4 +1,4 @@
-Nuovo Ordine ricevuto da {'STORE_NAME'|config}
+Nuovo Ordine ricevuto da [[ config('STORE_NAME') ]]
 Numero Ordine: {$order.invoiceNumber}
 
 Pannello di Amministrazione Ordine:

@@ -3,7 +3,7 @@
 	{block FOOTER}
 
 	<div style="float: left;" id="footerPoweredBy">
-		<a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a>
+		<a href="[[ config('POWERED_BY_URL') ]]" target="_blank">[[ config('POWERED_BY_FRONTEND') ]]</a>
 	</div>
 
 	<div style="float: right" id="footerTrademarks">

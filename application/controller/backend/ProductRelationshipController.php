@@ -15,15 +15,15 @@ class ProductRelationshipController extends StoreManagementController
 {
 	public function index()
 	{
-		$productID = (int)$this->request->get('id');
+		$productID = (int)$this->request->gget('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 
 		$response = new ActionResponse();
 		$response->set('categoryID', $product->category->get()->getID());
 		$response->set('productID', $productID);
-		$response->set('relationships', $product->getRelationships($this->request->get('type'))->toArray());
-		$response->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray($this->request->get('type')));
-		$response->set('type', $this->request->get('type'));
+		$response->set('relationships', $product->getRelationships($this->request->gget('type'))->toArray());
+		$response->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray($this->request->gget('type')));
+		$response->set('type', $this->request->gget('type'));
 
 		return $response;
 	}
@@ -51,17 +51,17 @@ class ProductRelationshipController extends StoreManagementController
 	 */
 	public function addRelated()
 	{
-		$productID = (int)$this->request->get('id');
-		$relatedProductID = (int)$this->request->get('relatedownerID');
+		$productID = (int)$this->request->gget('id');
+		$relatedProductID = (int)$this->request->gget('relatedownerID');
 
 		$relatedProduct = Product::getInstanceByID($relatedProductID, true, array('DefaultImage' => 'ProductImage'), Product::LOAD_DATA);
 		$product = Product::getInstanceByID($productID, Product::LOAD_DATA);
 
-		if(!$relatedProduct->isRelatedTo($product, $this->request->get('type')))
+		if(!$relatedProduct->isRelatedTo($product, $this->request->gget('type')))
 		{
 			try
 			{
-				$product->addRelatedProduct($relatedProduct, $this->request->get('type'));
+				$product->addRelatedProduct($relatedProduct, $this->request->gget('type'));
 				$product->save();
 
 				$response = new ActionResponse();
@@ -87,13 +87,13 @@ class ProductRelationshipController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$productID = (int)$this->request->get('id');
-		$relatedProductID = (int)$this->request->get('relatedownerID');
+		$productID = (int)$this->request->gget('id');
+		$relatedProductID = (int)$this->request->gget('relatedownerID');
 
 		$relatedProduct = Product::getInstanceByID($relatedProductID);
 		$product = Product::getInstanceByID($productID);
 
-		$product->removeFromRelatedProducts($relatedProduct, $this->request->get('type'));
+		$product->removeFromRelatedProducts($relatedProduct, $this->request->gget('type'));
 		$product->save();
 
 		return new JSONResponse(false, 'success');
@@ -104,7 +104,7 @@ class ProductRelationshipController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		$target = $this->request->get('target');
+		$target = $this->request->gget('target');
 
 		if (!$target)
 		{
@@ -118,9 +118,9 @@ class ProductRelationshipController extends StoreManagementController
 			}
 		}
 
-		$product = Product::getInstanceByID($this->request->get('id'));
+		$product = Product::getInstanceByID($this->request->gget('id'));
 
-		$type = $this->request->get('type');
+		$type = $this->request->gget('type');
 
 		preg_match('/_(\d+)$/', $target, $match); // Get group.
 		if (substr($target, 0, 8) == 'noGroup_')
@@ -128,7 +128,7 @@ class ProductRelationshipController extends StoreManagementController
 			$match = array();
 		}
 
-		foreach($this->request->get($target, array()) as $position => $key)
+		foreach($this->request->gget($target, array()) as $position => $key)
 		{
 			if(empty($key)) continue;
 

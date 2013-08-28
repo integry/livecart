@@ -57,7 +57,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$response = $this->controller->rate();
 
 		$this->product->reload();
-		$this->assertEqual($this->product->rating->get(), 4);
+		$this->assertEqual($this->product->rating, 4);
 		$this->assertIsA($response, 'ActionRedirectResponse');
 
 		$this->request->set('ajax', 'true');
@@ -110,7 +110,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$response = $this->controller->rate();
 
 		$this->product->reload();
-		$this->assertEqual($this->product->rating->get(), 4);
+		$this->assertEqual($this->product->rating, 4);
 		$this->assertIsA($response, 'JSONResponse');
 
 		$this->assertEqual($this->product->getRelatedRecordSet('ProductReview', new ARSelectFilter())->size(), 1);
@@ -207,7 +207,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 		// review count
 		$this->product->reload();
-		$this->assertEqual($this->product->reviewCount->get(), 1);
+		$this->assertEqual($this->product->reviewCount, 1);
 
 		// delete review
 		$reviews = $this->product->getRelatedRecordSet('ProductReview', new ARSelectFilter());
@@ -215,7 +215,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$reviews->get(0)->delete();
 		$this->product->reload();
-		$this->assertEqual($this->product->reviewCount->get(), 0);
+		$this->assertEqual($this->product->reviewCount, 0);
 	}
 
 	public function testDoubleRatingsByUser()

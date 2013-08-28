@@ -61,15 +61,15 @@ class SitemapController extends FrontendController
 
 	public function sitemap()
 	{
-		$class = $this->request->get('type');
-		$page = $this->request->get('id', 0);
+		$class = $this->request->gget('type');
+		$page = $this->request->gget('id', 0);
 
 		if (!in_array($class, $this->getSupportedTypes()))
 		{
 			throw new ActionNotFoundException($this);
 		}
 
-		$cache = new OutputCache('sitemap', $this->request->get('route'));
+		$cache = new OutputCache('sitemap', $this->request->gget('route'));
 		if ($cache->isCached() && ($cache->getAge() < 86400))
 		{
 			return new RawResponse($cache->getData());
@@ -92,8 +92,8 @@ class SitemapController extends FrontendController
 	{
 		$languages = $this->application->getLanguageArray(true);
 		$defaultLanguage = $this->application->getDefaultLanguageCode();
-		$class = $this->request->get('type');
-		$page = $this->request->get('id', 0);
+		$class = $this->request->gget('type');
+		$page = $this->request->gget('id', 0);
 
 		$entries = array();
 		foreach ($this->getSupportedTypes() as $type)

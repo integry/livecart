@@ -47,8 +47,8 @@ class DeliveryZoneCountryTest extends LiveCartTest
 
 		$deliveryCountry->reload();
 
-		$this->assertEquals($deliveryCountry->deliveryZone->get(), $this->zone);
-		$this->assertEquals($deliveryCountry->countryCode->get(), 'LT');
+		$this->assertEquals($deliveryCountry->deliveryZone, $this->zone);
+		$this->assertEquals($deliveryCountry->countryCode, 'LT');
 	}
 }
 ?>

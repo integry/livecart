@@ -1,7 +1,7 @@
-Welcome to {'STORE_NAME'|config}!
+Welcome to [[ config('STORE_NAME') ]]!
 Gerbiama(-s) {$user.fullName},
 
-Siunčiame jums {'STORE_NAME'|config} prisijungimo informaciją:
+Siunčiame jums [[ config('STORE_NAME') ]] prisijungimo informaciją:
 
 El-paštas: <b>{$user.email}</b>
 Slaptažodis: <b>{$user.newPassword}</b>

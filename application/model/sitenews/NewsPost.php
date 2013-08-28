@@ -15,20 +15,20 @@ class NewsPost extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__CLASS__);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));	
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("time", ARDateTime::instance()));
-		$schema->registerField(new ARField("title", ARArray::instance()));
-		$schema->registerField(new ARField("text", ARArray::instance()));
-		$schema->registerField(new ARField("moreText", ARArray::instance()));
+		public $ID;
+		public $isEnabled;
+		public $position;
+		public $time;
+		public $title;
+		public $text;
+		public $moreText;
 	}
-	
+
 	protected function insert()
 	{
-	  	$this->setLastPosition();	  			
+	  	$this->setLastPosition();
 		return parent::insert();
-	}	
+	}
 }
 
 ?>

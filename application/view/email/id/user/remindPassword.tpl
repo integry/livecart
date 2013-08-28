@@ -1,4 +1,4 @@
-Password Anda di {'STORE_NAME'|config}!
+Password Anda di [[ config('STORE_NAME') ]]!
 Yth. Bapak/Ibu {$user.fullName},
 
 Berikut ini adalah informasi rekening Anda di {$config.STORE_NAME}:

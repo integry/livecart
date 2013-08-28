@@ -1,4 +1,5 @@
 <?php
+/*
 ClassLoader::import('framework.Application');
 ClassLoader::import('framework.response.ActionResponse');
 ClassLoader::import('application.ConfigurationContainer');
@@ -13,6 +14,7 @@ ClassLoader::import('application.model.session.DatabaseSessionHandler');
 ClassLoader::import('application.model.system.Cron');
 ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 ClassLoader::import('application.ControllerPlugin');
+*/
 
 // experimental feature
 define('ROUTE_CACHE', 0);
@@ -23,7 +25,7 @@ define('ROUTE_CACHE', 0);
  *  @package application
  *  @author Integry Systems
  */
-class LiveCart extends Application implements Serializable
+class LiveCart extends \Phalcon\Mvc\Application
 {
 	protected $routerClass = 'LiveCartRouter';
 
@@ -35,13 +37,6 @@ class LiveCart extends Application implements Serializable
 	 * @var Locale
 	 */
 	private $locale = null;
-
-  	/**
-	 * Configuration registry handler instance
-	 *
-	 * @var Config
-	 */
-	private $config = null;
 
   	/**
 	 * Session handler instance
@@ -122,24 +117,29 @@ class LiveCart extends Application implements Serializable
 	 *
 	 * @return LiveCart
 	 */
-	public function __construct()
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
 	{
-		ClassLoader::import('application.model.ActiveRecordModel');
-		ClassLoader::import('framework.renderer.SmartyRenderer');
-
-		parent::__construct();
+		parent::__construct($di);
 
 		unset($this->session, $this->config, $this->locale, $this->localeName);
 
-		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
+		$dsnPath = $this->config->getPath("storage/configuration/database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
-
-		ActiveRecordModel::setApplicationInstance($this);
 
 		if ($this->isInstalled)
 		{
-			ActiveRecordModel::setDSN(include $dsnPath);
+			//Set the database service
+			$di->set('db', function() use ($dsnPath) {
+				$dsn = parse_url(include $dsnPath);
+				return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+					"host" => $dsn['host'],
+					"username" => $dsn['user'],
+					"password" => !empty($dsn['password']) ? $dsn['password'] : '',
+					"dbname" => substr($dsn['path'], 1)
+				));
+			});
 
+			/*
 			if (!session_id())
 			{
 				$session = new DatabaseSessionHandler();
@@ -149,7 +149,10 @@ class LiveCart extends Application implements Serializable
 				}
 				$this->sessionHandler = $session;
 			}
+			*/
 		}
+
+		return;
 
 		// LiveCart request routing rules
 		$this->initRouter();
@@ -170,7 +173,7 @@ class LiveCart extends Application implements Serializable
 		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 
 		// mod_rewrite disabled?
-		if ($this->request->get('noRewrite'))
+		if ($this->request->gget('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 			//$this->router->enableURLRewrite(false);
@@ -229,9 +232,9 @@ class LiveCart extends Application implements Serializable
 				}
 				else
 				{
-					if ($this->request->get('sid'))
+					if ($this->request->gget('sid'))
 					{
-						session_id($this->request->get('sid'));
+						session_id($this->request->gget('sid'));
 					}
 				}
 
@@ -903,8 +906,6 @@ class LiveCart extends Application implements Serializable
 	{
 		if (empty($this->localeName))
 		{
-			ClassLoader::import('library.locale.Locale');
-
 			if ($this->requestLanguage)
 			{
 				$this->localeName = $this->requestLanguage;
@@ -958,15 +959,12 @@ class LiveCart extends Application implements Serializable
 				return $this->loadLocaleName();
 			break;
 
-			case 'config':
-				return $this->loadConfig();
-			break;
-
 			case 'session':
 				return $this->loadSession();
 			break;
 
 			default:
+				return parent::__get($name);
 			break;
 		}
 	}
@@ -1004,39 +1002,7 @@ class LiveCart extends Application implements Serializable
 	{
 		if ($this->languageList == null)
 		{
-			ClassLoader::import("application.model.system.Language");
-
-			$langCache = Language::getCacheFile();
-
-			if (file_exists($langCache))
-			{
-				$this->languageList = include $langCache;
-			}
-			else
-			{
-				try
-				{
-					$langFilter = new ARSelectFilter();
-				  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
-					$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
-					if (!$this->languageList->size())
-					{
-						throw new ApplicationException('No languages have been added');
-					}
-
-					$this->languageList->saveToFile($langCache);
-				}
-				catch (Exception $e)
-				{
-					// if the database hasn't yet been created
-					$this->languageList = new ARSet();
-					$lang = ActiveRecordModel::getNewInstance('Language');
-					$lang->setID('en');
-					$lang->isEnabled->set(1);
-					$lang->isDefault->set(1);
-					$this->languageList->unshift($lang);
-				}
-			}
+			$this->languageList = \system\Language::getLanguageList($this->getDI());
 		}
 
 		return $this->languageList;
@@ -1092,15 +1058,14 @@ class LiveCart extends Application implements Serializable
 	 */
 	public function getDefaultLanguageCode()
 	{
-		if (!$this->defaultLanguageCode)
+		if (empty($this->defaultLanguageCode))
 		{
 			$langList = $this->getLanguageList();
-			$langArray = array();
 			foreach ($langList as $lang)
 			{
 				if ($lang->isDefault())
 				{
-					$this->defaultLanguageCode = $lang->getID();
+					$this->defaultLanguageCode = $lang->ID;
 				}
 			}
 		}
@@ -1596,13 +1561,6 @@ class LiveCart extends Application implements Serializable
 		}
 
 		return $this->cron;
-	}
-
-	private function loadConfig()
-	{
-	  	ClassLoader::import("application.model.system.Config");
-		$this->config = new Config($this);
-		return $this->config;
 	}
 
 	public function getConfigContainer()

@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} newsletter e-mail address confirmation
+[[ config('STORE_NAME') ]] newsletter e-mail address confirmation
 Hello,
 
 To confirm your e-mail address and start receiving our newsletters, please visit this link:

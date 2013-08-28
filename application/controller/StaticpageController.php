@@ -1,21 +1,27 @@
 <?php
 
-ClassLoader::import("application.controller.FrontendController");
-ClassLoader::import('application.model.staticpage.StaticPage');
-
 /**
  * Displays static pages
  *
  * @author Integry Systems
  * @package application.controller
  */
-class StaticPageController extends FrontendController
+class StaticpageController extends ControllerBase
 {
-	public function view()
+	public function viewAction()
 	{
+		$pages = \staticpage\StaticPage::query()->execute();
+		//var_dump($pages->toArray());
+		$this->view->setRenderLevel(\Phalcon\MVC\View::LEVEL_ACTION_VIEW);
+		$this->view->pages = $pages->toArray();
+		$this->view->pick('staticpage/view');
+
+		$this->config->get('STORE_NAME');
+
+		/*
 		$this->loadLanguageFile('Frontend');
 
-		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
+		$page = StaticPage::getInstanceByHandle($this->request->gget('handle'));
 
 		if ($parent = $page->parent->get())
 		{
@@ -36,8 +42,9 @@ class StaticPageController extends FrontendController
 		$this->addBreadCrumb($pageArray['title_lang'], '');
 
 		$response = new ActionResponse('page', $pageArray);
-		$response->set('subPages', $page->getSubPageArray());
+		$response = 'subPages', $page->getSubPageArray());
 		return $response;
+		*/
 	}
 }
 

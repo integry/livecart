@@ -15,7 +15,7 @@ class OrderLogController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$customerOrder = CustomerOrder::getInstanceById($this->request->get('id'), true, array('User', 'Currency'));
+		$customerOrder = CustomerOrder::getInstanceById($this->request->gget('id'), true, array('User', 'Currency'));
 
 		$logs = array();
 		foreach(OrderLog::getRecordSetByOrder($customerOrder, null, array('User'))->toArray() as $entry)

@@ -27,18 +27,18 @@ class ShippingRate extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ShippingRate");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
+		public $ID;
+		public $shippingServiceID;
 
-		$schema->registerField(new ARField("weightRangeStart", ARFloat::instance()));
-		$schema->registerField(new ARField("weightRangeEnd", ARFloat::instance()));
-		$schema->registerField(new ARField("subtotalRangeStart", ARFloat::instance()));
-		$schema->registerField(new ARField("subtotalRangeEnd", ARFloat::instance()));
-		$schema->registerField(new ARField("flatCharge", ARFloat::instance()));
-		$schema->registerField(new ARField("perItemCharge", ARFloat::instance()));
-		$schema->registerField(new ARField("subtotalPercentCharge", ARFloat::instance()));
-		$schema->registerField(new ARField("perKgCharge", ARFloat::instance()));
-		$schema->registerField(new ArField("perItemChargeClass", ARArray::instance()));
+		public $weightRangeStart;
+		public $weightRangeEnd;
+		public $subtotalRangeStart;
+		public $subtotalRangeEnd;
+		public $flatCharge;
+		public $perItemCharge;
+		public $subtotalPercentCharge;
+		public $perKgCharge;
+		public $perItemChargeClass;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -68,7 +68,7 @@ class ShippingRate extends MultilingualObject
 	public static function getNewInstance(ShippingService $shippingService, $rangeStart, $rangeEnd)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->shippingService->set($shippingService);
+	  	$instance->shippingService = $shippingService);
 
 	  	$instance->setRangeStart($rangeStart);
 	  	$instance->setRangeEnd($rangeEnd);
@@ -112,12 +112,12 @@ class ShippingRate extends MultilingualObject
 
 	public function setRangeStart($rangeStart)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->set($rangeStart) : $this->subtotalRangeStart->set($rangeStart);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart = $rangeStart) : $this->subtotalRangeStart = $rangeStart);
 	}
 
 	public function setRangeEnd($rangeEnd)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->set($rangeEnd) : $this->subtotalRangeEnd->set($rangeEnd);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd = $rangeEnd) : $this->subtotalRangeEnd = $rangeEnd);
 	}
 
 	public function getRangeStart()

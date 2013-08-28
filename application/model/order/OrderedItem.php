@@ -47,20 +47,20 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("parentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("recurringParentID", "OrderedItem", "ID", "OrderedItem", ARInteger::instance()));
-		$schema->registerField(new ARField("price", ARFloat::instance()));
-		$schema->registerField(new ARField("count", ARFloat::instance()));
-		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
-		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
-		$schema->registerField(new ARField("isSavedForLater", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
+
+		public $ID;
+		public $productID", "Product", "ID", "Product;
+		public $customerOrderID", "CustomerOrder", "ID", "CustomerOrder;
+		public $shipmentID", "Shipment", "ID", "Shipment;
+		public $parentID", "OrderedItem", "ID", "OrderedItem;
+		public $recurringParentID", "OrderedItem", "ID", "OrderedItem;
+		public $price;
+		public $count;
+		public $reservedProductCount;
+		public $dateAdded;
+		public $isSavedForLater;
+		public $name;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -68,13 +68,13 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->customerOrder->set($order);
-		$instance->product->set($product);
-		$instance->count->set($count);
+		$instance->customerOrder = $order);
+		$instance->product = $product);
+		$instance->count = $count);
 
 		if ($order->isFinalized->get())
 		{
-			$instance->price->set($instance->getItemPrice(false));
+			$instance->price = $instance->getItemPrice(false));
 		}
 
 		return $instance;
@@ -184,7 +184,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	public function setCustomPrice($price)
 	{
 		$this->isCustomPrice = true;
-		$this->price->set($price);
+		$this->price = $price);
 	}
 
 	public function isCustomPrice()
@@ -250,7 +250,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	// Changed billing plan or adding item with recurring billing plan has nothing to do with discount, therefore there is need to update base price.
 	public function updateBasePriceToCalculatedPrice()
 	{
-		$this->price->set($this->getPrice(true));
+		$this->price = $this->getPrice(true));
 		$this->save();
 	}
 
@@ -339,10 +339,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		{
 			if ($product->isInventoryTracked() && !(!$unreserve && $this->reservedProductCount->get()))
 			{
-				$this->reservedProductCount->set($unreserve ? 0 : $this->count->get());
+				$this->reservedProductCount = $unreserve ? 0 : $this->count->get());
 				$multiplier = $unreserve ? -1 : 1;
-				$product->stockCount->set($product->stockCount->get() - ($this->count->get() * $multiplier));
-				$product->reservedCount->set($product->reservedCount->get() + ($this->count->get() * $multiplier));
+				$product->stockCount = $product->stockCount->get() - ($this->count->get() * $multiplier));
+				$product->reservedCount = $product->reservedCount->get() + ($this->count->get() * $multiplier));
 				$product->save();
 
 				$this->event('reserve');
@@ -383,8 +383,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$product = $this->getProduct();
 		if (!$product->isBundle())
 		{
-			$product->reservedCount->set($product->reservedCount->get() - $this->reservedProductCount->get());
-			$this->reservedProductCount->set(0);
+			$product->reservedCount = $product->reservedCount->get() - $this->reservedProductCount->get());
+			$this->reservedProductCount = 0);
 			$this->event('removeFromInventory');
 		}
 		else
@@ -453,7 +453,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 				if ($this->isFinalized())
 				{
-					$this->price->set($this->price->get() - $this->reduceBaseTaxes($choice->priceDiff->get()));
+					$this->price = $this->price->get() - $this->reduceBaseTaxes($choice->priceDiff->get()));
 				}
 			}
 		}
@@ -493,7 +493,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		if ($this->isFinalized())
 		{
 			$choice->updatePriceDiff();
-			$this->price->set($this->price->get() + $this->reduceBaseTaxes($choice->priceDiff->get()));
+			$this->price = $this->price->get() + $this->reduceBaseTaxes($choice->priceDiff->get()));
 		}
 
 		return $choice;
@@ -637,7 +637,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 		if (!$this->price->get())
 		{
-			$this->price->set($this->getProduct()->getItemPrice($this));
+			$this->price = $this->getProduct()->getItemPrice($this));
 		}
 
 		return parent::insert();
@@ -685,8 +685,8 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			{
 				if ($shipment->status->get() == Shipment::STATUS_RETURNED)
 				{
-					$this->reservedProductCount->set($this->count->get());
-					$product->reservedCount->set($product->reservedCount->get() + $this->count->get());
+					$this->reservedProductCount = $this->count->get());
+					$product->reservedCount = $product->reservedCount->get() + $this->count->get());
 				}
 				else
 				{
@@ -696,9 +696,9 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 			else if ($this->count->isModified())
 			{
 				$delta = $this->count->get() - $this->reservedProductCount->get();
-				$this->reservedProductCount->set($this->count->get());
-				$product->reservedCount->set($product->reservedCount->get() + $delta);
-				$product->stockCount->set($product->stockCount->get() - $delta);
+				$this->reservedProductCount = $this->count->get());
+				$product->reservedCount = $product->reservedCount->get() + $delta);
+				$product->stockCount = $product->stockCount->get() - $delta);
 			}
 		}
 
@@ -748,7 +748,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 			if ($this->price->isNull())
 			{
-				$this->price->set($this->getProduct()->getItemPrice($this));
+				$this->price = $this->getProduct()->getItemPrice($this));
 			}
 
 			return parent::update();
@@ -903,7 +903,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		foreach ($this->optionChoices as $key => $option)
 		{
 			$newOpt = clone $option;
-			$newOpt->orderedItem->set($this);
+			$newOpt->orderedItem = $this);
 			$newOpt->choice->setAsModified();
 			$this->optionChoices[$key] = $newOpt;
 		}

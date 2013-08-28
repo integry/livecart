@@ -24,8 +24,7 @@ abstract class EavItemCommon extends EavSpecificationCommon
 
 	public static function defineSchema($className)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+				$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryForeignKeyField(call_user_func(array($className, 'getFieldIDColumnName')), call_user_func(array($className, 'getFieldClass')), "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField(call_user_func(array($className, 'getValueIDColumnName')), call_user_func(array($className, 'getValueClass')), "ID", null, ARInteger::instance()));
@@ -35,9 +34,9 @@ abstract class EavItemCommon extends EavSpecificationCommon
 	public static function getNewInstance($className, ActiveRecordModel $owner, EavFieldCommon $field, EavValueCommon $value)
 	{
 		$specItem = parent::getNewInstance($className);
-		$specItem->getOwner()->set($owner);
-		$specItem->getField()->set($field);
-		$specItem->getValue()->set($value);
+		$specItem->getOwner() = $owner);
+		$specItem->getField() = $field);
+		$specItem->getValue() = $value);
 
 		return $specItem;
 	}
@@ -45,7 +44,7 @@ abstract class EavItemCommon extends EavSpecificationCommon
 	public static function restoreInstance($className, ActiveRecordModel $owner, EavFieldCommon $field, EavValueCommon $value)
 	{
 		$inst = parent::getInstanceByID($className, array(call_user_func(array($className, 'getOwnerIDColumnName')) => $owner->getID(), call_user_func(array($className, 'getFieldIDColumnName')) => $field->getID(), call_user_func(array($className, 'getValueIDColumnName')) => $value->getID()));
-		$inst->getValue()->set($value);
+		$inst->getValue() = $value);
 		$inst->resetModifiedStatus();
 
 		return $inst;
@@ -65,7 +64,7 @@ abstract class EavItemCommon extends EavSpecificationCommon
 			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->get()->getID() . ' value to ' . $class . ':' . $this->getField()->get()->getID());
 		}
 
-		if($value !== $this->getValue()->get()) $this->getValue()->set($value);
+		if($value !== $this->getValue()->get()) $this->getValue() = $value);
 	}
 
 	public function getField()

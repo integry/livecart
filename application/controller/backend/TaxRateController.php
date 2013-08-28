@@ -16,7 +16,7 @@ class TaxRateController extends StoreManagementController
 {
 	public function index()
 	{
-		if(($zoneID = (int)$this->request->get('id')) <= 0)
+		if(($zoneID = (int)$this->request->gget('id')) <= 0)
 		{
 			$deliveryZone = null;
 			$deliveryZoneArray = array('ID' => '-1');
@@ -54,7 +54,7 @@ class TaxRateController extends StoreManagementController
 		$taxes = Tax::getAllTaxes();
 		$classes = TaxClass::getAllClasses();
 
-		if(($zoneID = (int)$this->request->get('id')) <= 0)
+		if(($zoneID = (int)$this->request->gget('id')) <= 0)
 		{
 			$taxRates = TaxRate::getRecordSetByDeliveryZone(null);
 			$deliveryZone = DeliveryZone::getDefaultZoneInstance();
@@ -90,7 +90,7 @@ class TaxRateController extends StoreManagementController
 
 	private function saveRate(DeliveryZone $zone, Tax $tax, TaxClass $class = null)
 	{
-		$value = $this->request->get($this->getFieldName($tax, $class));
+		$value = $this->request->gget($this->getFieldName($tax, $class));
 		if (!is_null($value) && ($value !== ''))
 		{
 			$taxRate = TaxRate::getNewInstance($zone, $tax, $value);

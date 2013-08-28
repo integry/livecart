@@ -12,7 +12,7 @@
 		{block INFORMATION}
 		<div id="footerCopyright">
 
-			<span style="font-size: smaller;"><a href="{'POWERED_BY_URL'|config}" target="_blank">{'POWERED_BY_FRONTEND'|config}</a></span>
+			<span style="font-size: smaller;"><a href="[[ config('POWERED_BY_URL') ]]" target="_blank">[[ config('POWERED_BY_FRONTEND') ]]</a></span>
 			<div style="font-size: smaller; margin-top: 5px;">
 				All trademarks used are properties of their respective owners.
 			</div>

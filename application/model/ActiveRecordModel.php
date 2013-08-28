@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("library.activerecord.ActiveRecord");
-ClassLoader::import("application.model.*");
-
 /**
  * Base class for all ActiveRecord based models of application (single entry point in
  * application specific model class hierarchy)
@@ -10,27 +7,18 @@ ClassLoader::import("application.model.*");
  * @package application.model
  * @author Integry Systems <http://integry.com>
  */
-abstract class ActiveRecordModel extends ActiveRecord
+abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 {
- 	private static $application;
-
  	private static $eavQueue = array();
 
  	private static $isEav = array();
 
  	protected $specificationInstance;
 
-	public static function setApplicationInstance(LiveCart $application)
+	public function getSource()
 	{
-		self::$application = $application;
-	}
-
-	/**
-	 * @return LiveCart
-	 */
-	public function getApplication()
-	{
-		return self::$application;
+		$parts = explode('\\', get_class($this));
+		return array_pop($parts);
 	}
 
 	public function loadRequestModel(Request $request, $key = '')
@@ -158,19 +146,19 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 
 						case 'ARBool':
-							$this->setFieldValue($name, in_array(strtolower($request->get($reqName)), array('on', 1, 'yes', 'true')));
+							$this->setFieldValue($name, in_array(strtolower($request->gget($reqName)), array('on', 1, 'yes', 'true')));
 						break;
 
 						case 'ARInteger':
 						case 'ARFloat':
-							if (is_numeric($request->get($reqName)))
+							if (is_numeric($request->gget($reqName)))
 							{
-								$this->setFieldValue($name, $request->get($reqName));
+								$this->setFieldValue($name, $request->gget($reqName));
 							}
 						break;
 
 						default:
-							$this->setFieldValue($name, $request->get($reqName));
+							$this->setFieldValue($name, $request->gget($reqName));
 						break;
 					}
 				}
@@ -240,7 +228,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$parentField .= 'ID';
 
 		// get max position
-	  	$cond = $parent ? new EqualsCond(new ARFieldHandle(get_class($this), $parentField), $parent->get()->getID()) : null;
+	  	$cond = $parent ? new EqualsCond(new ARFieldHandle(get_class($this), $parentField), $parent->getID()) : null;
 
 		$f = new ARSelectFilter($cond);
 		$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
@@ -261,7 +249,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $res;
 	}
 
-	protected function update()
+	protected function _update()
 	{
 		$this->executePlugins($this, 'update');
 		$res = parent::update();
@@ -269,13 +257,13 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return $res;
 	}
 
-	public function save($forceOperation = null)
+	public function __save($forceOperation = null)
 	{
 		$this->executePlugins($this, 'before-save');
 
-		if (($this instanceof EavAble) && $this->eavObject->get() && !$this->eavObject->get()->getID() && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
+		if (($this instanceof EavAble) && $this->eavObject && !$this->eavObject->getID() && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
 		{
-			$eavObject = $this->eavObject->get();
+			$eavObject = $this->eavObject;
 			$this->eavObject->setNull();
 		}
 
@@ -288,7 +276,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			$this->save();
 		}
 
-		if ($this instanceof EavAble && $this->specificationInstance && $this->eavObject->get())
+		if ($this instanceof EavAble && $this->specificationInstance && $this->eavObject)
 		{
 			if ($this->specificationInstance->hasValues())
 			{
@@ -296,7 +284,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			}
 			else
 			{
-				$this->eavObject->get()->delete();
+				$this->eavObject->delete();
 			}
 		}
 
@@ -527,6 +515,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		$this->executePlugins($this, $event);
 	}
 
+	/*
 	public function __clone()
 	{
 		parent::__clone();
@@ -541,6 +530,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			$this->setSpecification(clone $this->specificationInstance);
 		}
 	}
+	*/
 
 	/**
 	 *	Assign an entirely new specification (custom field) container. Usually necessary after cloning, etc.
@@ -559,7 +549,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 
 		if (!empty($this->specificationInstance))
 		{
-			$this->specificationInstance->setOwner($this->eavObject->get());
+			$this->specificationInstance->setOwner($this->eavObject);
 		}
 
 		return $res;

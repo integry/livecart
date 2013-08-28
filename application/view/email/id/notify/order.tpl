@@ -1,4 +1,4 @@
-Order Baru Dibuat di {'STORE_NAME'|config}
+Order Baru Dibuat di [[ config('STORE_NAME') ]]
 No. Order: {$order.invoiceNumber}
 
 Administrasi order:

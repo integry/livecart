@@ -62,18 +62,18 @@ class ShippingRateTest extends LiveCartTest
 
 		$shippingRate->reload();
 
-		$this->assertTrue($shippingRate->shippingService->get() === $this->shippingService);
+		$this->assertTrue($shippingRate->shippingService === $this->shippingService);
 
 		// Range start and range end can be retrived using range start and range end shortcuts or using full name getSubtotalRange* or getWeightRange*
 		$this->assertEquals($shippingRate->getRangeStart(), 1.5);
 		$this->assertEquals($shippingRate->getRangeEnd(), 10.5);
-		$this->assertEquals($shippingRate->subtotalRangeStart->get(), $shippingRate->getRangeStart());
-		$this->assertEquals($shippingRate->subtotalRangeEnd->get(), $shippingRate->getRangeEnd());
+		$this->assertEquals($shippingRate->subtotalRangeStart, $shippingRate->getRangeStart());
+		$this->assertEquals($shippingRate->subtotalRangeEnd, $shippingRate->getRangeEnd());
 
-		$this->assertEquals($shippingRate->flatCharge->get(), 1.1);
-		$this->assertEquals($shippingRate->perItemCharge->get(), 1.2);
-		$this->assertEquals($shippingRate->subtotalPercentCharge->get(), 1.3);
-		$this->assertEquals($shippingRate->perKgCharge->get(), 1.4);
+		$this->assertEquals($shippingRate->flatCharge, 1.1);
+		$this->assertEquals($shippingRate->perItemCharge, 1.2);
+		$this->assertEquals($shippingRate->subtotalPercentCharge, 1.3);
+		$this->assertEquals($shippingRate->perKgCharge, 1.4);
 	}
 
 	public function testGetRatesByService()

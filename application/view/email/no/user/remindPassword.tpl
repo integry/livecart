@@ -1,4 +1,4 @@
-Ditt passord hos {'STORE_NAME'|config}!
+Ditt passord hos [[ config('STORE_NAME') ]]!
 Kjære {$user.fullName},
 
 Her er din kontaktinformasjon som kunde hos {$config.STORE_NAME}:

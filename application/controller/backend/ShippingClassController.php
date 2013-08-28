@@ -40,7 +40,7 @@ class ShippingClassController extends StoreManagementController
 
 	public function edit()
 	{
-		$class = ShippingClass::getInstanceByID((int)$this->request->get('id'), true);
+		$class = ShippingClass::getInstanceByID((int)$this->request->gget('id'), true);
 
 		$form = $this->createClassForm($class);
 		$form->setData($class->toArray());
@@ -57,7 +57,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$service = ShippingClass::getInstanceByID((int)$this->request->get('id'));
+		$service = ShippingClass::getInstanceByID((int)$this->request->gget('id'));
 		$service->delete();
 
 		return new JSONResponse(false, 'success');
@@ -68,7 +68,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$class = ShippingClass::getInstanceByID((int)$this->request->get('id'));
+		$class = ShippingClass::getInstanceByID((int)$this->request->gget('id'));
 
 		return $this->saveClass($class);
 	}
@@ -78,7 +78,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$class = ShippingClass::getNewInstance($this->request->get('name'));
+		$class = ShippingClass::getNewInstance($this->request->gget('name'));
 		$class->position->set(1000);
 
 		return $this->saveClass($class);
@@ -131,7 +131,7 @@ class ShippingClassController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 		   $class = ShippingClass::getInstanceByID((int)$key);
 		   $class->position->set((int)$position);

@@ -1,4 +1,4 @@
-Přijata nová objednávka na {'STORE_NAME'|config}
+Přijata nová objednávka na [[ config('STORE_NAME') ]]
 Objednávka č.: {$order.invoiceNumber}
 
 Manažer objednávky:

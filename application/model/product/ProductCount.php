@@ -44,7 +44,7 @@ class ProductCount
 				// value range filters
 				elseif ($filter instanceof Filter && $appliedFilter instanceof Filter)
 				{
-					if ($filter->filterGroup->get() === $appliedFilter->filterGroup->get())
+					if ($filter->filterGroup === $appliedFilter->filterGroup)
 					{
 						//unset($filters[$key]);
 					}
@@ -72,8 +72,8 @@ class ProductCount
 		{
 			if ($config->get('PRICE_FILTER_NAME_' . $k) && !is_array($config->get('PRICE_FILTER_NAME_' . $k)))
 			{
-				$from = $config->get('PRICE_FILTER_FROM_' . $k);
-				$to = $config->get('PRICE_FILTER_TO_' . $k);
+				$from = (int)$config->get('PRICE_FILTER_FROM_' . $k);
+				$to = (int)$config->get('PRICE_FILTER_TO_' . $k);
 				if ($to)
 				{
 					$filters[$k] = array($from, $to);

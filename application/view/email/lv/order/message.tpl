@@ -1,4 +1,4 @@
-Jauns ziņojums sakarā ar Jūsu {'STORE_NAME'|config} pasūtījumu
+Jauns ziņojums sakarā ar Jūsu [[ config('STORE_NAME') ]] pasūtījumu
 Cien. {$user.fullName},
 
 Jūsu pasūtījumam pievienots jauns paziņojums.

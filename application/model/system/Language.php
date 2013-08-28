@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
+namespace system;
 
 /**
  * System language logic - adding, removing or enabling languages.
@@ -8,23 +8,12 @@ ClassLoader::import("application.model.ActiveRecordModel");
  * @author Integry Systems <http://integry.com>
  * @package application.model.system
  */
-class Language extends ActiveRecordModel
+class Language extends \ActiveRecordModel
 {
-   	/**
-	 * Languages schema definition
-	 * @param string $className
-	 * @todo code must be Unique
-	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Language");
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARChar::instance(2)));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("isDefault", ARBool::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-	}
+	public $ID;
+	public $isEnabled;
+	public $isDefault;
+	public $position;
 
 	/**
 	 * Gets language by its id.
@@ -42,7 +31,7 @@ class Language extends ActiveRecordModel
 	 */
 	public function isDefault()
 	{
-	  	return (bool)$this->isDefault->get();
+	  	return (bool)$this->isDefault;
 	}
 
 	/**
@@ -51,7 +40,7 @@ class Language extends ActiveRecordModel
 	 */
 	public function setAsDefault($isDefault = 1)
 	{
-	  	$this->isDefault->set($isDefault == 1 ? 1 : 0);
+	  	$this->isDefault = $isDefault == 1 ? 1 : 0;
 	  	return true;
 	}
 
@@ -61,11 +50,11 @@ class Language extends ActiveRecordModel
 	 */
 	public function setAsEnabled($isEnabled = 1)
 	{
-	  	$this->isEnabled->set($isEnabled == 1 ? 1 : 0);
+	  	$this->isEnabled = $isEnabled == 1 ? 1 : 0;
 	  	return true;
 	}
 
-	public function save($forceOperation = 0)
+	public function _save()
 	{
 		self::deleteCache();
 
@@ -80,7 +69,7 @@ class Language extends ActiveRecordModel
 		$inst = ActiveRecord::getInstanceById('Language', $id, true);
 
 		// make sure it's not the default currency
-		if (true != $inst->isDefault->get())
+		if (true != $inst->isDefault)
 		{
 			ActiveRecord::deleteByID('Language', $id);
 			return true;
@@ -91,18 +80,26 @@ class Language extends ActiveRecordModel
 		}
 	}
 
-	public static function deleteCache()
+	public static function deleteCache($di)
 	{
-		$cacheFile = self::getCacheFile();
-		if (file_exists($cacheFile))
-		{
-			unlink($cacheFile);
-		}
+		$di->get('cache')->delete('languageList');
 	}
 
-	public static function getCacheFile()
+	public static function getLanguageList($di)
 	{
-		return ClassLoader::getRealPath('cache') . '/languages.php';
+		$languages = self::query()->order('position')->execute(array("cache" => array("key" => "languages")));
+		//$languages = self::find();
+
+		if (!count($languages))
+		{
+			$lang = new Language();
+			$lang->ID = en;
+			$lang->isEnabled = true;
+			$lang->isDefault = true;
+			$languages[] = $lang;
+		}
+
+		return $languages;
 	}
 
 	protected function insert()
@@ -112,7 +109,7 @@ class Language extends ActiveRecordModel
 		parent::insert();
 	}
 
-	public function toArray()
+	public function toArray($args = null)
 	{
 	  	$array = parent::toArray();
 
@@ -126,16 +123,6 @@ class Language extends ActiveRecordModel
 		}
 
 		return $array;
-	}
-
-	/**
-	 *
-	 * PHP segfaults (5.2.3 / mod_php) on installation time when an unsaved instance is destructed,
-	 * so to avoid this, we're simply not destructing the Language instances (and there's no need for that anyway)
-	 */
-	public function __destruct()
-	{
-
 	}
 }
 

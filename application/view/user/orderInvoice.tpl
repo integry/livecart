@@ -62,7 +62,7 @@
 			<div class="addressContainer">
 				<h2>{t _seller}</h2>
 				<p>
-					{'INVOICE_SELLER_INFO'|config}
+					[[ config('INVOICE_SELLER_INFO') ]]
 				</p>
 			</div>
 

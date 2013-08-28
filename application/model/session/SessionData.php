@@ -13,13 +13,13 @@ class SessionData extends ActiveRecordModel
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ArChar::instance(32)));
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
-		$schema->registerField(new ARField("lastUpdated", ArInteger::instance(12)));
-		$schema->registerField(new ARField("cacheUpdated", ArInteger::instance(12)));
-		$schema->registerField(new ARField("data", ArBinary::instance(0)));
+
+		public $ID;
+		public $userID;
+		public $lastUpdated;
+		public $cacheUpdated;
+		public $data;
 	}
 
 	/*####################  Static method implementations ####################*/

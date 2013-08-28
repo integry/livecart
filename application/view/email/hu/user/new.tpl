@@ -1,7 +1,7 @@
-Üdv a  {'STORE_NAME'|config} virtuális üzletben!
+Üdv a  [[ config('STORE_NAME') ]] virtuális üzletben!
 Kedves {$user.fullName},
 
-Az alábiakban találod a bejelentkezési információkat a {'STORE_NAME'|config} virtuális üzlethez:
+Az alábiakban találod a bejelentkezési információkat a [[ config('STORE_NAME') ]] virtuális üzlethez:
 
 E-mail: <b>{$user.email}</b>
 Jelszó: <b>{$user.newPassword}</b>

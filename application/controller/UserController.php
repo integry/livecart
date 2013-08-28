@@ -111,7 +111,7 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->addBreadCrumb($this->translate('_your_orders'), '');
 
-		$page = $this->request->get('id', 1);
+		$page = $this->request->gget('id', 1);
 		$perPage = $this->getOrdersPerPage();
 		$f = $this->getOrderListPaginateFilter($page, $perPage);
 		$f->setCondition(new IsNullCond(new ARFieldHandle('CustomerOrder','parentID')));
@@ -123,7 +123,7 @@ class UserController extends FrontendController
 	 */
 	public function invoices()
 	{
-		$page = $this->request->get('id', 1);
+		$page = $this->request->gget('id', 1);
 		$perPage = $this->getOrdersPerPage();
 		$f = $this->getOrderListPaginateFilter($page, $perPage);
 		$f->mergeCondition(
@@ -141,7 +141,7 @@ class UserController extends FrontendController
 	 */
 	public function pendingInvoices()
 	{
-		$page = $this->request->get('id', 1);
+		$page = $this->request->gget('id', 1);
 		$perPage = $this->getOrdersPerPage();
 		$f = $this->getOrderListPaginateFilter($page, $perPage);
 		$f->mergeCondition(
@@ -266,7 +266,7 @@ class UserController extends FrontendController
 	 */
 	public function item()
 	{
-		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->get()->loadAll();
 		$item->loadOptions();
 		$subItems = $item->getSubitems();
@@ -328,7 +328,7 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'changePassword');
 		}
 
-		$this->user->setPassword($this->request->get('password'));
+		$this->user->setPassword($this->request->gget('password'));
 		$this->user->save();
 
 		$this->session->set('userConfirm', $this->translate('_confirm_password_change'));
@@ -360,7 +360,7 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'changeEmail');
 		}
 
-		$this->user->email->set($this->request->get('email'));
+		$this->user->email->set($this->request->gget('email'));
 		$this->user->save();
 
 		$this->session->set('userConfirm', $this->translate('_confirm_email_change'));
@@ -422,7 +422,7 @@ class UserController extends FrontendController
 	 */
 	public function viewOrder()
 	{
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 		if ($order = $this->user->getOrder($id))
 		{
 			$this->addAccountBreadcrumb();
@@ -446,7 +446,7 @@ class UserController extends FrontendController
 			if ($order->isRecurring->get() == true)
 			{
 				// find invoices
-				$page = $this->request->get('page', 1);
+				$page = $this->request->gget('page', 1);
 				$perPage = $this->getOrdersPerPage();
 				$f = $this->getOrderListPaginateFilter($page, $perPage);
 				$f->mergeCondition(
@@ -500,7 +500,7 @@ class UserController extends FrontendController
 	 */
 	public function reorder()
 	{
-		$order = $this->user->getOrder($this->request->get('id'));
+		$order = $this->user->getOrder($this->request->gget('id'));
 		if ($order)
 		{
 			ClassLoader::import('application.model.order.SessionOrder');
@@ -521,7 +521,7 @@ class UserController extends FrontendController
 	{
 		ClassLoader::import('application.model.order.OrderNote');
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->gget('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$set = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 		if (!$set->size() || !$this->buildNoteValidator()->isValid())
@@ -531,7 +531,7 @@ class UserController extends FrontendController
 
 		$order = $set->get(0);
 		$note = OrderNote::getNewInstance($order, $this->user);
-		$note->text->set($this->request->get('text'));
+		$note->text->set($this->request->gget('text'));
 		$note->isAdmin->set(false);
 		$note->save();
 
@@ -559,7 +559,7 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->application->setTheme('');
 
-		$order = $this->getOrder($this->request->get('id'));
+		$order = $this->getOrder($this->request->gget('id'));
 
 		if (!$order)
 		{
@@ -604,15 +604,15 @@ class UserController extends FrontendController
 
 		$this->order;
 
-		$user = $this->createUser($this->request->get('password'));
+		$user = $this->createUser($this->request->gget('password'));
 		$this->user = $user;
 		$this->mergeOrder();
 
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
-			if ($this->request->get('return'))
+			if ($this->request->gget('return'))
 			{
-				return new RedirectResponse($this->request->get('return'));
+				return new RedirectResponse($this->request->gget('return'));
 			}
 			else
 			{
@@ -634,10 +634,10 @@ class UserController extends FrontendController
 	{
 		$success = false;
 
-		$user = User::getInstanceByEmail($this->request->get('email'));
+		$user = User::getInstanceByEmail($this->request->gget('email'));
 		if ($user && !$user->isEnabled->get() && $user->getPreference('confirmation'))
 		{
-			if ($this->request->get('code') == $user->getPreference('confirmation'))
+			if ($this->request->gget('code') == $user->getPreference('confirmation'))
 			{
 				$user->setPreference('confirmation', null);
 				$user->isEnabled->set(true);
@@ -669,9 +669,9 @@ class UserController extends FrontendController
 		$form = $this->buildRegForm();
 		$response = new ActionResponse();
 		$response->set('regForm', $form);
-		$response->set('email', $this->request->get('email'));
-		$response->set('failed', $this->request->get('failed'));
-		$response->set('return', $this->request->get('return'));
+		$response->set('email', $this->request->gget('email'));
+		$response->set('failed', $this->request->gget('failed'));
+		$response->set('return', $this->request->gget('return'));
 
 		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 
@@ -683,7 +683,7 @@ class UserController extends FrontendController
 	 */
 	public function doLogin()
 	{
-		$user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
+		$user = User::getInstanceByLogin($this->request->gget('email'), $this->request->gget('password'));
 		if (!$user)
 		{
 			return new ActionRedirectResponse('user', 'login', array('query' => 'failed=true'));
@@ -695,7 +695,7 @@ class UserController extends FrontendController
 		$this->user = $user;
 		$this->mergeOrder();
 
-		if ($return = $this->request->get('return'))
+		if ($return = $this->request->gget('return'))
 		{
 			if ((substr($return, 0, 1) != '/') && (!strpos($return, ':')))
 			{
@@ -751,13 +751,13 @@ class UserController extends FrontendController
 
 		$response = new ActionResponse();
 		$response->set('form', $this->buildPasswordReminderForm());
-		$response->set('return', $this->request->get('return'));
+		$response->set('return', $this->request->gget('return'));
 		return $response;
 	}
 
 	public function doRemindPassword()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('User', 'email'), $this->request->get('email')));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('User', 'email'), $this->request->gget('email')));
 		$s = ActiveRecordModel::getRecordSet('User', $f);
 		if ($s->size())
 		{
@@ -771,13 +771,13 @@ class UserController extends FrontendController
 			$email->send();
 		}
 
-		return new ActionRedirectResponse('user', 'remindComplete', array('query' => 'email=' . $this->request->get('email')));
+		return new ActionRedirectResponse('user', 'remindComplete', array('query' => 'email=' . $this->request->gget('email')));
 	}
 
 	public function remindComplete()
 	{
 		$response = new ActionResponse();
-		$response->set('email', $this->request->get('email'));
+		$response->set('email', $this->request->gget('email'));
 		return $response;
 	}
 
@@ -798,7 +798,7 @@ class UserController extends FrontendController
 
 		$form->set('billing_country', $this->config->get('DEF_COUNTRY'));
 		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
-		$form->set('return', $this->request->get('return'));
+		$form->set('return', $this->request->gget('return'));
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
@@ -821,19 +821,19 @@ class UserController extends FrontendController
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
 		{
-			$action = $this->request->get('regType') == 'register' ? 'registerAddress' : 'checkout';
-			return new ActionRedirectResponse('user', $action, array('query' => array('return' => $this->request->get('return'))));
+			$action = $this->request->gget('regType') == 'register' ? 'registerAddress' : 'checkout';
+			return new ActionRedirectResponse('user', $action, array('query' => array('return' => $this->request->gget('return'))));
 		}
 
 		// create user account
-		$user = $this->createUser($this->request->get('password'), 'billing_');
+		$user = $this->createUser($this->request->gget('password'), 'billing_');
 
 		// create billing and shipping address
 		$address = $this->createAddress('billing_');
 		$billingAddress = BillingAddress::getNewInstance($user, $address);
 		$billingAddress->save();
 
-		$shippingAddress = ShippingAddress::getNewInstance($user, $this->request->get('sameAsBilling') ? clone $address : $this->createAddress('shipping_'));
+		$shippingAddress = ShippingAddress::getNewInstance($user, $this->request->gget('sameAsBilling') ? clone $address : $this->createAddress('shipping_'));
 		$shippingAddress->save();
 
 		$user->defaultShippingAddress->set($shippingAddress);
@@ -855,7 +855,7 @@ class UserController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		if ($return = $this->request->get('return'))
+		if ($return = $this->request->gget('return'))
 		{
 			return new RedirectResponse($this->router->createUrlFromRoute($return));
 		}
@@ -868,11 +868,11 @@ class UserController extends FrontendController
 	private function createAddress($prefix)
 	{
 		// get address state
-		if ($this->request->get($prefix . 'state_select'))
+		if ($this->request->gget($prefix . 'state_select'))
 		{
 			try
 			{
-				$state = ActiveRecordModel::getInstanceByID('State', $this->request->get($prefix . 'state_select'), ActiveRecordModel::LOAD_DATA);
+				$state = ActiveRecordModel::getInstanceByID('State', $this->request->gget($prefix . 'state_select'), ActiveRecordModel::LOAD_DATA);
 			}
 			catch (Exception $e)
 			{
@@ -883,7 +883,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			$country = $this->request->get($prefix . 'country');
+			$country = $this->request->gget($prefix . 'country');
 		}
 
 		$address = UserAddress::getNewInstance();
@@ -895,7 +895,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			$address->stateName->set($this->request->get($prefix . 'state_text'));
+			$address->stateName->set($this->request->gget($prefix . 'state_text'));
 		}
 
 		$address->countryID->set($country);
@@ -911,7 +911,7 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+			return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->gget('id'), $this->user));
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -926,7 +926,7 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			return $this->deleteAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+			return $this->deleteAddress(BillingAddress::getUserAddress($this->request->gget('id'), $this->user));
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -937,7 +937,7 @@ class UserController extends FrontendController
 	private function deleteAddress(UserAddressType $address)
 	{
 		$address->delete();
-		return new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));
+		return new RedirectResponse($this->router->createURLFromRoute($this->request->gget('return')));
 	}
 
 	/**
@@ -947,7 +947,7 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			$response = $this->editAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+			$response = $this->editAddress(ShippingAddress::getUserAddress($this->request->gget('id'), $this->user));
 			$this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
 			return $response;
 		}
@@ -964,7 +964,7 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			$response = $this->editAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+			$response = $this->editAddress(BillingAddress::getUserAddress($this->request->gget('id'), $this->user));
 			$this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
 			return $response;
 		}
@@ -993,7 +993,7 @@ class UserController extends FrontendController
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
-		$response->set('return', $this->request->get('return'));
+		$response->set('return', $this->request->gget('return'));
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('country')));
 		$response->set('address', $address->toArray());
@@ -1011,14 +1011,14 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			$address = ShippingAddress::getUserAddress($this->request->get('id'), $this->user);
+			$address = ShippingAddress::getUserAddress($this->request->gget('id'), $this->user);
 		}
 		catch (ARNotFoundException $e)
 		{
 			return new ActionRedirectResponse('user', 'index');
 		}
 
-		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));
+		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->gget('id'), 'query' => array('return' => $this->request->gget('return')))));
 	}
 
 	/**
@@ -1028,14 +1028,14 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			$address = BillingAddress::getUserAddress($this->request->get('id'), $this->user);
+			$address = BillingAddress::getUserAddress($this->request->gget('id'), $this->user);
 		}
 		catch (ARNotFoundException $e)
 		{
 			return new ActionRedirectResponse('user', 'index');
 		}
 
-		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));
+		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->gget('id'), 'query' => array('return' => $this->request->gget('return')))));
 	}
 
 	private function doSaveAddress(UserAddressType $address, ActionRedirectResponse $invalidResponse)
@@ -1044,7 +1044,7 @@ class UserController extends FrontendController
 		if ($this->buildAddressValidator()->isValid())
 		{
 			$this->saveAddress($address);
-			return new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));
+			return new RedirectResponse($this->router->createURLFromRoute($this->request->gget('return')));
 		}
 		else
 		{
@@ -1084,7 +1084,7 @@ class UserController extends FrontendController
 
 		$response = new ActionResponse();
 		$response->set('form', $form);
-		$response->set('return', $this->request->get('return'));
+		$response->set('return', $this->request->gget('return'));
 		$response->set('countries', $this->getCountryList($form));
 		$response->set('states', $this->getStateList($form->get('country')));
 
@@ -1108,7 +1108,7 @@ class UserController extends FrontendController
 	 */
 	public function doAddBillingAddress()
 	{
-		return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->get('return')))));
+		return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->gget('return')))));
 	}
 
 	/**
@@ -1116,7 +1116,7 @@ class UserController extends FrontendController
 	 */
 	public function doAddShippingAddress()
 	{
-		return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->get('return')))));
+		return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->gget('return')))));
 	}
 
 	/**
@@ -1125,7 +1125,7 @@ class UserController extends FrontendController
 	 */
 	public function states()
 	{
-		$states = State::getStatesByCountry($this->request->get('country'));
+		$states = State::getStatesByCountry($this->request->gget('country'));
 		return new JSONResponse($states);
 	}
 
@@ -1139,7 +1139,7 @@ class UserController extends FrontendController
 	public function download()
 	{
 		// get and validate OrderedItem instance first
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->get('id')));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->gget('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 
 		$s = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('CustomerOrder', 'Product'));
@@ -1151,7 +1151,7 @@ class UserController extends FrontendController
 		}
 
 		$item = $s->get(0);
-		$file = $item->getFileByID($this->request->get('fileID'));
+		$file = $item->getFileByID($this->request->gget('fileID'));
 
 		// file does not exist for OrderedItem
 		if (!$file)
@@ -1181,7 +1181,7 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->addBreadCrumb($this->translate('_pay'), '');
 
-		$order = $this->getOrder($this->request->get('id'));
+		$order = $this->getOrder($this->request->gget('id'));
 
 		if (!$order || $order->isPaid->get())
 		{
@@ -1203,11 +1203,11 @@ class UserController extends FrontendController
 	 */
 	private function createUser($password = '', $prefix = '')
 	{
-		$user = User::getNewInstance($this->request->get('email'), $this->request->get('password'));
-		$user->firstName->set($this->request->get($prefix . 'firstName'));
-		$user->lastName->set($this->request->get($prefix . 'lastName'));
-		$user->companyName->set($this->request->get($prefix . 'companyName'));
-		$user->email->set($this->request->get('email'));
+		$user = User::getNewInstance($this->request->gget('email'), $this->request->gget('password'));
+		$user->firstName->set($this->request->gget($prefix . 'firstName'));
+		$user->lastName->set($this->request->gget($prefix . 'lastName'));
+		$user->companyName->set($this->request->gget($prefix . 'companyName'));
+		$user->email->set($this->request->gget('email'));
 		$user->isEnabled->set(!$this->config->get('REG_EMAIL_CONFIRM'));
 
 		// custom fields
@@ -1270,9 +1270,9 @@ class UserController extends FrontendController
 			$addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
 			$addressType->save();
 
-			if ($this->request->get('return'))
+			if ($this->request->gget('return'))
 			{
-				$response = new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));
+				$response = new RedirectResponse($this->router->createURLFromRoute($this->request->gget('return')));
 			}
 			else
 			{
@@ -1384,7 +1384,7 @@ class UserController extends FrontendController
 		$this->validateAddress($validator, 'billing_');
 		$this->validateEmail($validator);
 
-		if (($this->config->get('PASSWORD_GENERATION') == 'PASSWORD_REQUIRE') || $this->request->get('password'))
+		if (($this->config->get('PASSWORD_GENERATION') == 'PASSWORD_REQUIRE') || $this->request->gget('password'))
 		{
 			$this->validatePassword($validator);
 		}
@@ -1432,7 +1432,7 @@ class UserController extends FrontendController
 		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));
 
 		$emailErr = $this->translate($uniqueError);
-		$emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email'))), true), $emailErr);
+		$emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->gget('email'))), true), $emailErr);
 		$validator->addCheck('email', new IsUniqueEmailCheck($emailErr));
 	}
 
@@ -1577,9 +1577,9 @@ class UserController extends FrontendController
 		ClassLoader::import('application.model.order.Transaction');
 		ClassLoader::import('application.model.order.LiveCartTransaction');
 		$request = $this->getRequest();
-		$id = $request->get('id');
+		$id = $request->gget('id');
 
-		$page = $request->get('page');
+		$page = $request->gget('page');
 		$params = array('id'=>$id);
 		if ($page > 1)
 		{

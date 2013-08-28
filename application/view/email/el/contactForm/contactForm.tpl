@@ -1,1 +1,1 @@
-{'STORE_NAME'|config} φόρμα επικοινωνίας
+[[ config('STORE_NAME') ]] φόρμα επικοινωνίας

@@ -1,3 +1,3 @@
-{'STORE_NAME'|config} contact form
+[[ config('STORE_NAME') ]] contact form
 {$message}
 {include file="email/en/signature.tpl"}

@@ -1,4 +1,4 @@
-יידוע על המוצר {'STORE_NAME'|config}
+יידוע על המוצר [[ config('STORE_NAME') ]]
 שם המוצר: {$product.name_lang}
 יחידת אחזקת מלאי: {$product.sku}
 

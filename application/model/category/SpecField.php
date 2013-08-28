@@ -24,8 +24,8 @@ class SpecField extends EavFieldCommon
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', 'Category', ARInteger::instance()));
-		$schema->registerField(new ARField('isSortable', ARBool::instance()));
+		public $categoryID', 'Category', 'ID', 'Category;
+		public $isSortable', ARBool::instance()));
 	}
 
 	public function getOwnerClass()
@@ -75,7 +75,7 @@ class SpecField extends EavFieldCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->category->get()->getID());
+		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->category->getID());
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -106,7 +106,7 @@ class SpecField extends EavFieldCommon
 	public static function getNewInstance(Category $category, $dataType = false, $type = false)
 	{
 		$specField = parent::getNewInstance(__CLASS__, $dataType, $type);
-		$specField->category->set($category);
+		$specField->category = $category);
 
 		return $specField;
 	}

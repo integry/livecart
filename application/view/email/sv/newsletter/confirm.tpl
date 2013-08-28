@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} bekräfta e-mail adress för nyhetsbrev
+[[ config('STORE_NAME') ]] bekräfta e-mail adress för nyhetsbrev
 Hej,
 
 För att bekräfta din e-mail adress och börja ta emot våra nyhetsbrev, v.g. besök länken:

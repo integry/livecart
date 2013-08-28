@@ -1,7 +1,7 @@
-ברוכים הבאים אל {'STORE_NAME'|config}!
+ברוכים הבאים אל [[ config('STORE_NAME') ]]!
 לכבוד {$user.fullName},
 
-אתה כלקוח מקבל כעת מידע וגישות כניסה ל {'STORE_NAME'|config}:
+אתה כלקוח מקבל כעת מידע וגישות כניסה ל [[ config('STORE_NAME') ]]:
 
 כתובת הדוא''ל: <b>{$user.email}</b>
 סיסמתך: <b>{$user.newPassword}</b>

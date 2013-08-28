@@ -24,7 +24,7 @@ class XmlStockApiReader extends ApiReader
 			case 'get':
 				$request = parent::loadDataInRequest($request, '//', array($apiActionName));
 				// rename get to SKU
-				$request->set('SKU',$request->get($apiActionName));
+				$request->set('SKU',$request->gget($apiActionName));
 				$request->remove($apiActionName);			
 				break;
 

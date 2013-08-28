@@ -48,7 +48,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		}
 		else if ('inc_stock' == $act)
 		{
-			$product->stockCount->set($product->stockCount->get() + $this->request->get($act));
+			$product->stockCount->set($product->stockCount + $this->request->gget($act));
 		}
 		else if ('addRelated' == $act)
 		{
@@ -64,7 +64,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		{
 			// check if the product is not assigned to this category already
 			$relation = ActiveRecordModel::getInstanceByIdIfExists('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $this->params['category']->getID()));
-			if (!$relation->isExistingRecord() && ($product->category->get() !== $category))
+			if (!$relation->isExistingRecord() && ($product->category !== $category))
 			{
 				$relation->save();
 			}
@@ -91,7 +91,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		else if (substr($act, 0, 16) == 'remove_specField')
 		{
 			$this->params['request']->remove('manufacturer');
-			if ($this->params['field']->isMultiValue->get())
+			if ($this->params['field']->isMultiValue)
 			{
 				// remove only selected multi-select options
 				$product->loadRequestData($this->params['request']);

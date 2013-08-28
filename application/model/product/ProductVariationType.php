@@ -17,19 +17,19 @@ class ProductVariationType extends MultilingualObject
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(4)));
+		public $ID;
+		public $productID", "Product", "ID", null, ARInteger::instance()));
+
+		public $name;
+		public $position;
 	}
 
 	public static function getNewInstance(Product $product)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
+		$instance->product = $product);
 		return $instance;
 	}
 

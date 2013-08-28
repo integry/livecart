@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Rendelés státusz frissítve
+[[ config('STORE_NAME') ]] Rendelés státusz frissítve
 Kedves {$user.fullName},
 
 {if $order.shipments|@count == 1}

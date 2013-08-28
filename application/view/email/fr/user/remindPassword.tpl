@@ -1,4 +1,4 @@
-Votre mot de passe sur {'STORE_NAME'|config}!
+Votre mot de passe sur [[ config('STORE_NAME') ]]!
 Cher {$user.fullName},
 
 Voici les informations d'accès a votre compte sur {$config.STORE_NAME}:

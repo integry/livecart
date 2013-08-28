@@ -17,18 +17,18 @@ class ErrController extends FrontendController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$response->set('id', $this->request->get('id'));
-		$response->set('ajax', $this->request->get('ajax'));
-		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
+		$response->set('id', $this->request->gget('id'));
+		$response->set('ajax', $this->request->gget('ajax'));
+		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->gget('id')));
 
-		$response->setStatusCode($this->request->get('id'));
+		$response->setStatusCode($this->request->gget('id'));
 
 		return $response;
 	}
 
 	public function redirect()
 	{
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 		$params = array();
 
 		if($this->isAjax())
@@ -45,7 +45,7 @@ class ErrController extends FrontendController
 
 			default:
 				$response = new ActionResponse('id', $id);
-				$response->setStatusCode($this->request->get('id'));
+				$response->setStatusCode($this->request->gget('id'));
 				return $response;
 		}
 	}

@@ -57,24 +57,24 @@ class ActiveGrid
 		$request = $this->application->getRequest();
 
 		// set recordset boundaries (limits)
-		$filter->setLimit($request->get('page_size', 10), $request->get('offset', 0));
+		$filter->setLimit($request->gget('page_size', 10), $request->gget('offset', 0));
 
 		// set order
 		if ($request->isValueSet('sort_col'))
 		{
-			$handle = $this->getFieldHandle($request->get('sort_col'), self::SORT_HANDLE);
+			$handle = $this->getFieldHandle($request->gget('sort_col'), self::SORT_HANDLE);
 
 			if ($handle)
 			{
-				$filter->setOrder($handle, $request->get('sort_dir'));
+				$filter->setOrder($handle, $request->gget('sort_dir'));
 			}
 		}
 
 		// apply filters
-		$filters = $request->get('filters');
+		$filters = $request->gget('filters');
 		if (!is_array($filters))
 		{
-			$filters = (array)json_decode($request->get('filters'));
+			$filters = (array)json_decode($request->gget('filters'));
 		}
 		$conds = array();
 		if ($filter->getCondition())
@@ -234,12 +234,12 @@ class ActiveGrid
 		}
 
 		// apply IDs to filter
-		if ($request->get('selectedIDs') || $request->get('isInverse'))
+		if ($request->gget('selectedIDs') || $request->gget('isInverse'))
 		{
-			$selectedIDs = json_decode($request->get('selectedIDs'));
+			$selectedIDs = json_decode($request->gget('selectedIDs'));
 			if ($selectedIDs)
 			{
-				if ((bool)$request->get('isInverse'))
+				if ((bool)$request->gget('isInverse'))
 				{
 					$idcond = new NotINCond(new ARFieldHandle($modelClass, 'ID'), $selectedIDs);
 				}
@@ -252,7 +252,7 @@ class ActiveGrid
 			}
 			else
 			{
-				if (!(bool)$request->get('isInverse'))
+				if (!(bool)$request->gget('isInverse'))
 				{
 					$idcond = new EqualsCond(new ARExpressionHandle(1), 2);
 					$conds[] = $idcond;

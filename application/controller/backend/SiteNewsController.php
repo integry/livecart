@@ -25,7 +25,7 @@ class SiteNewsController extends StoreManagementController
 	public function edit()
 	{
 		$form = $this->buildForm();
-		$form->loadData(NewsPost::getInstanceById($this->request->get('id'), NewsPost::LOAD_DATA)->toArray());
+		$form->loadData(NewsPost::getInstanceById($this->request->gget('id'), NewsPost::LOAD_DATA)->toArray());
 		return new ActionResponse('form', $form);
 	}
 
@@ -40,7 +40,7 @@ class SiteNewsController extends StoreManagementController
 			return new JSONResponse(array('err' => $validator->getErrorList()));
 		}
 
-		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ActiveRecordModel::getNewInstance('NewsPost');
+		$post = $this->request->gget('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA) : ActiveRecordModel::getNewInstance('NewsPost');
 		$post->loadRequestData($this->request);
 		$post->save();
 
@@ -66,7 +66,7 @@ class SiteNewsController extends StoreManagementController
 	{
 		try
 	  	{
-			ActiveRecordModel::deleteById('NewsPost', $this->request->get('id'));
+			ActiveRecordModel::deleteById('NewsPost', $this->request->gget('id'));
 			return new JSONResponse(false, 'success');
 		}
 		catch (Exception $exc)
@@ -82,7 +82,7 @@ class SiteNewsController extends StoreManagementController
 	 */
 	public function saveOrder()
 	{
-	  	$order = array_reverse($this->request->get('newsList'));
+	  	$order = array_reverse($this->request->gget('newsList'));
 
 		foreach ($order as $key => $value)
 		{
@@ -93,7 +93,7 @@ class SiteNewsController extends StoreManagementController
 		}
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->get('draggedId'));
+	  	$resp->setContent($this->request->gget('draggedId'));
 		return $resp;
 	}
 
@@ -103,8 +103,8 @@ class SiteNewsController extends StoreManagementController
 	 */
 	public function setEnabled()
 	{
-		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), NewsPost::LOAD_DATA);
-		$post->isEnabled->set($this->request->get("status"));
+		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->gget('id'), NewsPost::LOAD_DATA);
+		$post->isEnabled->set($this->request->gget("status"));
 		$post->save();
 
 		return new JSONResponse($post->toArray());

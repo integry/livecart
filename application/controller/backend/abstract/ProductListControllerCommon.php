@@ -30,7 +30,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 	 */
 	public function create()
 	{
-		$group = call_user_func(array($this->getGroupClassName(), 'getNewInstance'), $this->getOwnerInstanceByID($this->request->get('ownerID')));
+		$group = call_user_func(array($this->getGroupClassName(), 'getNewInstance'), $this->getOwnerInstanceByID($this->request->gget('ownerID')));
 		return $this->save($group);
 	}
 
@@ -39,7 +39,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 	 */
 	public function update()
 	{
-		return $this->save($this->getGroupInstanceByID($this->request->get('ID')));
+		return $this->save($this->getGroupInstanceByID($this->request->gget('ID')));
 	}
 
 	/**
@@ -47,7 +47,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$this->getGroupInstanceByID($this->request->get('id'))->delete();
+		$this->getGroupInstanceByID($this->request->gget('id'))->delete();
 		return new JSONResponse(false, 'success');
 	}
 
@@ -56,7 +56,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;
 			$relationship = $this->getGroupInstanceByID($key, false);
@@ -69,7 +69,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 
 	public function edit()
 	{
-		return new JSONResponse($this->getGroupInstanceByID($this->request->get('id'))->toArray());
+		return new JSONResponse($this->getGroupInstanceByID($this->request->gget('id'))->toArray());
 	}
 
 	protected function buildValidator()

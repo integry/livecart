@@ -59,25 +59,24 @@ abstract class EavFieldCommon extends MultilingualObject
 	 */
 	public static function defineSchema($className)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+				$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		public $ID;
 
 		$group = $className . 'Group';
 		$schema->registerField(new ARForeignKeyField(strtolower(substr($group, 0, 1)) . substr($group, 1) . 'ID', $group, "ID", $group, ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
-		$schema->registerField(new ARField("isRequired", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
-		$schema->registerField(new ARField("valuePrefix", ARArray::instance()));
-		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
+		public $name;
+		public $description;
+		public $type;
+		public $dataType;
+		public $position;
+		public $handle;
+		public $isMultiValue;
+		public $isRequired;
+		public $isDisplayed;
+		public $isDisplayedInList;
+		public $valuePrefix;
+		public $valueSuffix;
 
 		return $schema;
 	}
@@ -97,8 +96,8 @@ abstract class EavFieldCommon extends MultilingualObject
 
 		if ($dataType)
 		{
-			$field->dataType->set($dataType);
-			$field->type->set($type);
+			$field->dataType = $dataType);
+			$field->type = $type);
 		}
 
 		return $field;
@@ -125,7 +124,7 @@ abstract class EavFieldCommon extends MultilingualObject
 	 */
 	public function addValue(EavValueCommon $value)
 	{
-		$value->getField()->set($this);
+		$value->getField() = $this);
 		$value->save();
 	}
 
@@ -310,7 +309,7 @@ abstract class EavFieldCommon extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position->set($position);
+		$this->position = $position);
 
 		return parent::insert();
 	}

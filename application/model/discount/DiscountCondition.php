@@ -48,32 +48,31 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	 */
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+
 		parent::defineSchema($className);
 
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("isAnyRecord", ARBool::instance()));
-		$schema->registerField(new ARField("isAllSubconditions", ARBool::instance()));
-		$schema->registerField(new ARField("isActionCondition", ARBool::instance()));
-		$schema->registerField(new ARField("isFinal", ARBool::instance()));
-		$schema->registerField(new ARField("isReverse", ARBool::instance()));
+		public $isEnabled;
+		public $isAnyRecord;
+		public $isAllSubconditions;
+		public $isActionCondition;
+		public $isFinal;
+		public $isReverse;
 
-		$schema->registerField(new ARField("conditionClass", ARVarchar::instance(80)));
+		public $conditionClass;
 
-		$schema->registerField(new ARField("recordCount", ARInteger::instance()));
-		$schema->registerField(new ARField("validFrom", ARDateTime::instance()));
-		$schema->registerField(new ARField("validTo", ARDateTime::instance()));
-		$schema->registerField(new ARField("subTotal", ARInteger::instance()));
-		$schema->registerField(new ARField("count", ARInteger::instance()));
-		$schema->registerField(new ARField("comparisonType", ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("couponCode", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("couponLimitCount", ARInteger::instance()));
-		$schema->registerField(new ARField("couponLimitType", ARInteger::instance()));
-		$schema->registerField(new ARField("serializedCondition", ARText::instance()));
+		public $recordCount;
+		public $validFrom;
+		public $validTo;
+		public $subTotal;
+		public $count;
+		public $comparisonType;
+		public $position;
+		public $name;
+		public $description;
+		public $couponCode;
+		public $couponLimitCount;
+		public $couponLimitType;
+		public $serializedCondition;
 	}
 
 	public function loadAll()
@@ -112,9 +111,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		{
 			$instance = ActiveRecordModel::getNewInstance(__CLASS__);
 			$instance->setID(self::ROOT_ID);
-			$instance->isEnabled->set(true);
-			$instance->lft->set(1);
-			$instance->rgt->set(2);
+			$instance->isEnabled = true);
+			$instance->lft = 1);
+			$instance->rgt = 2);
 			$instance->save();
 		}
 
@@ -299,7 +298,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	{
 		if (is_null($this->isAnyRecord->get()))
 		{
-			$this->isAnyRecord->set(1);
+			$this->isAnyRecord = 1);
 		}
 
 		if (!$this->position->get())

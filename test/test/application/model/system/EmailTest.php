@@ -61,7 +61,7 @@ class EmailTest extends LiveCartTest
 
 		$res = $email->send();
 
-		$this->assertTrue(strpos($email->getMessage()->getHeaders()->get('To'), $user->email->get()) !== false);
+		$this->assertTrue(strpos($email->getMessage()->getHeaders()->get('To'), $user->email) !== false);
 
 		$this->assertEqual($res, 1);
 	}

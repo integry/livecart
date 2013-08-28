@@ -15,15 +15,13 @@ class OrderDiscount extends ActiveRecordModel
 	 *
 	 * @param string $className Schema name
 	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-		$schema->registerField(new ARField("amount", ARFloat::instance()));
-		$schema->registerField(new ARField("description", ARText::instance()));
+
+
+		public $ID;
+		public $orderID", "CustomerOrder", "ID", "CustomerOrder;
+		public $amount;
+		public $description;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -31,7 +29,7 @@ class OrderDiscount extends ActiveRecordModel
 	public static function getNewInstance(CustomerOrder $order)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order->set($order);
+		$instance->order = $order);
 		return $instance;
 	}
 

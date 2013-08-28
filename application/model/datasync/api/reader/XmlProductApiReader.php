@@ -28,7 +28,7 @@ class XmlProductApiReader extends ApiReader
 		if(in_array($apiActionName, $shortFormatActions))
 		{
 			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
-			$request->set('SKU',$request->get($apiActionName));
+			$request->set('SKU',$request->gget($apiActionName));
 			$request->remove($apiActionName);
 		} else {
 			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());

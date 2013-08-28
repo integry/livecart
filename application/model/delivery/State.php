@@ -19,11 +19,11 @@ class State extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("countryID", ARChar::instance(2)));
-		$schema->registerField(new ARField("code", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("name", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("subdivisionType", ARVarchar::instance(60)));
+		public $ID;
+		public $countryID;
+		public $code;
+		public $name;
+		public $subdivisionType;
 	}
 
 	/*####################  Static method implementations ####################*/

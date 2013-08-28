@@ -33,12 +33,12 @@ abstract class FrontendController extends BaseController
 		{
 			if ($this->request->isValueSet($key))
 			{
-				$this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
+				$this->router->addAutoAppendQueryVariable($key, $this->request->gget($key));
 			}
 		}
 
 		// disallow creating new EAV select field values from frontend
-		if (is_array($this->request->get('other')))
+		if (is_array($this->request->gget('other')))
 		{
 			$this->request->remove('other');
 		}
@@ -90,7 +90,7 @@ abstract class FrontendController extends BaseController
 
 	public function getRequestCurrency()
 	{
-		$currencyCode = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
+		$currencyCode = $this->request->gget('currency', $this->application->getDefaultCurrencyCode());
 
 		// currency variable is sometimes POST'ed from external services, like payment gateway notifications
 		if (!empty($_POST['currency']) && !empty($_GET['currency']))
@@ -161,11 +161,11 @@ abstract class FrontendController extends BaseController
 	protected function saveAddress(UserAddress $address, $prefix = '')
 	{
 		$address->loadRequestData($this->request, $prefix);
-		$address->countryID->set($this->request->get($prefix . 'country'));
-		$address->stateName->set($this->request->get($prefix . 'state_text'));
-		if ($this->request->get($prefix . 'state_select'))
+		$address->countryID->set($this->request->gget($prefix . 'country'));
+		$address->stateName->set($this->request->gget($prefix . 'state_text'));
+		if ($this->request->gget($prefix . 'state_select'))
 		{
-			$address->state->set(State::getStateByIDAndCountry($this->request->get($prefix . 'state_select'), $this->request->get($prefix . 'country')));
+			$address->state->set(State::getStateByIDAndCountry($this->request->gget($prefix . 'state_select'), $this->request->gget($prefix . 'country')));
 		}
 		else
 		{
@@ -219,7 +219,7 @@ abstract class FrontendController extends BaseController
 		}
 
 		$response->set('order', $orderData);
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$response->set('currency', $this->request->gget('currency', $this->application->getDefaultCurrencyCode()));
 
 		return $response;
 	}
@@ -371,7 +371,7 @@ abstract class FrontendController extends BaseController
 		$form = new Form($this->getValidator("productSearch", $this->request));
 		$form->enableClientSideValidation(false);
 		$form->set('id', $this->getCategory()->getID());
-		$form->set('q', $this->request->get('q'));
+		$form->set('q', $this->request->gget('q'));
 
 		if ($this->filters && is_array($this->filters))
 		{

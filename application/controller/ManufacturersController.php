@@ -26,7 +26,7 @@ MANUFACTURER_PAGE_PER_PAGE
 		$config = $this->getApplication()->getConfig();
 		$request = $this->getRequest();
 		$listStyle = $config->get('MANUFACTURER_PAGE_LIST_STYLE');
-		$currentLetter = $listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER' ? $request->get('letter') : null;
+		$currentLetter = $listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER' ? $request->gget('letter') : null;
 
 		$letters = Manufacturer::getActiveProductManufacturerFirstLetters();
 		if (!$currentLetter)
@@ -35,7 +35,7 @@ MANUFACTURER_PAGE_PER_PAGE
 		}
 
 		// pagination
-		$page = $request->get('page', 1);
+		$page = $request->gget('page', 1);
 
 		extract(Manufacturer::getActiveProductManufacturers(array(
 			'currentPage' => $page,
@@ -71,7 +71,7 @@ MANUFACTURER_PAGE_PER_PAGE
 
 	public function view()
 	{
-		$manufacturer = Manufacturer::getInstanceByID($this->request->get('id'), true);
+		$manufacturer = Manufacturer::getInstanceByID($this->request->gget('id'), true);
 		$manufacturer->load();
 		return new RedirectResponse($this->getManufacturerFilterUrl($manufacturer->toArray()));
 	}

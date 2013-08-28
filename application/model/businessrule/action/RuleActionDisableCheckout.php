@@ -16,7 +16,7 @@ class RuleActionDisableCheckout extends RuleAction implements RuleOrderAction
 
 	public function applyToItem(OrderedItem $item)
 	{
-		$item->customerOrder->get()->setOrderable(false);
+		$item->customerOrder->setOrderable(false);
 	}
 
 	public static function getSortOrder()

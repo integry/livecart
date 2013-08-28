@@ -14,7 +14,7 @@ Options -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# if no rule matched the url, we redirect to our front web controller
-	RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
+    RewriteRule ^(.*)$ public/index.php?_url=/$1 [QSA,L]
 </IfModule>
 
 # big crash from our front web controller

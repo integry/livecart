@@ -48,9 +48,9 @@ class ProductReviewTest extends LiveCartTest
 
 		$review->reload();
 
-		$this->assertEqual($review->ratingCount->get(), 1);
-		$this->assertEqual($review->ratingSum->get(), 6);
-		$this->assertEqual($review->rating->get(), 6);
+		$this->assertEqual($review->ratingCount, 1);
+		$this->assertEqual($review->ratingSum, 6);
+		$this->assertEqual($review->rating, 6);
 	}
 
 	public function testRatingTypes()
@@ -75,9 +75,9 @@ class ProductReviewTest extends LiveCartTest
 		$rating->save();
 
 		$review->reload();
-		$this->assertEqual($review->ratingCount->get(), 2);
-		$this->assertEqual($review->ratingSum->get(), 10);
-		$this->assertEqual($review->rating->get(), 5);
+		$this->assertEqual($review->ratingCount, 2);
+		$this->assertEqual($review->ratingSum, 10);
+		$this->assertEqual($review->rating, 5);
 	}
 
 
@@ -105,21 +105,21 @@ class ProductReviewTest extends LiveCartTest
 		}
 
 		$this->product->reload();
-		$this->assertEqual($this->product->ratingCount->get(), 4);
-		$this->assertEqual($this->product->ratingSum->get(), 22);
-		$this->assertEqual($this->product->rating->get(), 5.5);
+		$this->assertEqual($this->product->ratingCount, 4);
+		$this->assertEqual($this->product->ratingSum, 22);
+		$this->assertEqual($this->product->rating, 5.5);
 
 		// delete last review
 		$review->delete();
 
 		$this->product->reload();
-		$this->assertEqual($this->product->ratingCount->get(), 2);
-		$this->assertEqual($this->product->ratingSum->get(), 10);
-		$this->assertEqual($this->product->rating->get(), 5);
+		$this->assertEqual($this->product->ratingCount, 2);
+		$this->assertEqual($this->product->ratingSum, 10);
+		$this->assertEqual($this->product->rating, 5);
 
 		// check rating summaries
 		$summary = ProductRatingSummary::getInstance($this->product, $type2);
-		$this->assertEqual($summary->rating->get(), 4);
+		$this->assertEqual($summary->rating, 4);
 	}
 }
 ?>

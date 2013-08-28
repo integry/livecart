@@ -1,4 +1,4 @@
-Naujo užsakymo pranešimas iš {'STORE_NAME'|config}
+Naujo užsakymo pranešimas iš [[ config('STORE_NAME') ]]
 Vartotojas parašė naują žinutę susijusią su užsakymu <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------

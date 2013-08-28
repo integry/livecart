@@ -1,4 +1,4 @@
-Új üzenet a {'STORE_NAME'|config} leadott rendeléseddel kapcsolatosan
+Új üzenet a [[ config('STORE_NAME') ]] leadott rendeléseddel kapcsolatosan
 Tisztelt {$user.fullName},
 
 Új üzenet lett hozzáadva rendeléseddel kapcsolatosan.

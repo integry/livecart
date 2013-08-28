@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} product inquiry
+[[ config('STORE_NAME') ]] product inquiry
 Product name: {$product.name_lang}
 SKU: {$product.sku}
 

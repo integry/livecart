@@ -15,10 +15,10 @@ class CategoryRelationship extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('relatedCategoryID', 'Category', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('position', ARInteger::instance()));
+		public $ID;
+		public $relatedCategoryID;
+		public $categoryID;
+		public $position;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -26,8 +26,8 @@ class CategoryRelationship extends ActiveRecordModel
 	public static function getNewInstance(Category $category, Category $relatedCategory)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category->set($category);
-		$instance->relatedCategory->set($relatedCategory);
+		$instance->category = $category);
+		$instance->relatedCategory = $relatedCategory);
 		return $instance;
 	}
 

@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} تحديث حالة الطلب 
+[[ config('STORE_NAME') ]] تحديث حالة الطلب
 Dear {$user.fullName},
 
 {if $order.shipments|@count == 1}

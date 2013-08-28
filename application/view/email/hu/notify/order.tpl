@@ -1,4 +1,4 @@
-Új rendelés a {'STORE_NAME'|config}
+Új rendelés a [[ config('STORE_NAME') ]]
 Rendelés ID: {$order.invoiceNumber}
 
 Redenlés adminisztrlásáa:

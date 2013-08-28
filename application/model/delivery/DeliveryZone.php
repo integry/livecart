@@ -99,10 +99,10 @@ class DeliveryZone extends MultilingualObject
 			foreach ($defaultZoneRates as $dzRate)
 			{
 				$found = false;
-				if (($dzRate->tax->get() == $rate->tax->get()) && ($dzRate->taxClass->get() == $rate->taxClass->get()))
+				if (($dzRate->tax == $rate->tax) && ($dzRate->taxClass == $rate->taxClass))
 				{
 					$found = true;
-					if ($dzRate->rate->get() != $rate->rate->get())
+					if ($dzRate->rate != $rate->rate)
 					{
 						return false;
 					}
@@ -171,15 +171,15 @@ class DeliveryZone extends MultilingualObject
 		}
 		$zones = array();
 		// get zones by state
-		if ($address->state->get())
+		if ($address->state)
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->getID()));
 			$f->mergeCondition(new InCond(new ARFieldHandle('DeliveryZone','type'), array(DeliveryZone::BOTH_RATES, $type)));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
 			foreach ($s as $zoneState)
 			{
-				$zones[] = $zoneState->deliveryZone->get();
+				$zones[] = $zoneState->deliveryZone;
 			}
 		}
 
@@ -187,12 +187,12 @@ class DeliveryZone extends MultilingualObject
 		if (!$zones)
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
+			$f->mergeCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID));
 			$f->mergeCondition(new InCond(new ARFieldHandle('DeliveryZone','type'), array(DeliveryZone::BOTH_RATES, $type)));
 			$s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, array('DeliveryZone'));
 			foreach ($s as $zone)
 			{
-				$zones[] = $zone->deliveryZone->get();
+				$zones[] = $zone->deliveryZone;
 			}
 		}
 
@@ -249,12 +249,12 @@ class DeliveryZone extends MultilingualObject
 	public function getMaskMatch(UserAddress $address)
 	{
 		return
-			   $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) +
+			   $this->hasMaskGroupMatch($this->getCityMasks(), $address->city) +
 
-			   ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1->get()) ||
-			   $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) +
+			   ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1) ||
+			   $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2)) +
 
-			   $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode->get());
+			   $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode);
 	}
 
 	private function hasMaskGroupMatch(ARSet $masks, $addressString)
@@ -268,7 +268,7 @@ class DeliveryZone extends MultilingualObject
 
 		foreach ($masks as $mask)
 		{
-			if ($this->isMaskMatch($addressString, $mask->mask->get()))
+			if ($this->isMaskMatch($addressString, $mask->mask))
 			{
 				$match = 2;
 			}
@@ -345,7 +345,7 @@ class DeliveryZone extends MultilingualObject
 	public function getShippingRates(Shipment $shipment)
 	{
 		$defined = $this->getDefinedShippingRates($shipment);
-		if (!$this->isRealTimeDisabled->get())
+		if (!$this->isRealTimeDisabled)
 		{
 			$defined->merge($this->getRealTimeRates($shipment));
 		}
@@ -354,7 +354,7 @@ class DeliveryZone extends MultilingualObject
 		$surcharge = 0;
 		foreach ($shipment->getItems() as $item)
 		{
-			$surcharge += ($item->getProduct()->getParent()->shippingSurchargeAmount->get() * $item->getCount());
+			$surcharge += ($item->getProduct()->getParent()->shippingSurchargeAmount * $item->getCount());
 		}
 
 		$currency = self::getApplication()->getDefaultCurrency();
@@ -379,7 +379,7 @@ class DeliveryZone extends MultilingualObject
 		{
 			if ($service = $rate->getService())
 			{
-				if ($service->isFinal->get())
+				if ($service->isFinal)
 				{
 					$rates = new ShippingRateSet();
 					$rates->add($rate);

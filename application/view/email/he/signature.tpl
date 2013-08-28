@@ -1,4 +1,4 @@
 ------------------------
 תודה שרכשת אצלנו!
-{'STORE_NAME'|config}
+[[ config('STORE_NAME') ]]
 {link url=true}

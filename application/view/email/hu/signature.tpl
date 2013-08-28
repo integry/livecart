@@ -1,5 +1,5 @@
 ------------------------
 Kellemes napot kíván a 
-{'STORE_NAME'|config}
+[[ config('STORE_NAME') ]]
 {link url=true}
 közössége

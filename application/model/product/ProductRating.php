@@ -18,14 +18,14 @@ class ProductRating extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('productID', 'Product', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('userID', 'User', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('reviewID', 'ProductReview', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('ratingTypeID', 'ProductRatingType', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('rating', ARInteger::instance()));
-		$schema->registerField(new ARField('ip', ARInteger::instance()));
-		$schema->registerField(new ARField('dateCreated', ARDateTime::instance()));
+		public $ID;
+		public $productID', 'Product', 'ID', null, ARInteger::instance()));
+		public $userID', 'User', 'ID', null, ARInteger::instance()));
+		public $reviewID', 'ProductReview', 'ID', null, ARInteger::instance()));
+		public $ratingTypeID', 'ProductRatingType', 'ID', null, ARInteger::instance()));
+		public $rating;
+		public $ip;
+		public $dateCreated', ARDateTime::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -33,19 +33,19 @@ class ProductRating extends ActiveRecordModel
 	public static function getNewInstance(Product $product, ProductRatingType $type = null, User $user = null)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
+		$instance->product = $product);
 
 		if ($type && is_null($type->getID()))
 		{
 			$type = null;
 		}
-		$instance->ratingType->set($type);
+		$instance->ratingType = $type);
 
 		if ($user && $user->isAnonymous())
 		{
 			$user = null;
 		}
-		$instance->user->set($user);
+		$instance->user = $user);
 
 		return $instance;
 	}
@@ -55,7 +55,7 @@ class ProductRating extends ActiveRecordModel
 		parent::delete();
 
 		$f = new ARUpdateFilter();
-		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum-' . $this->rating->get()));
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum-' . $this->rating));
 		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount-1'));
 		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
 
@@ -66,14 +66,14 @@ class ProductRating extends ActiveRecordModel
 	{
 		self::beginTransaction();
 
-		$this->dateCreated->set(new ARSerializableDateTime());
+		$this->dateCreated = new ARSerializableDateTime());
 		parent::insert();
 
-		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
+		$summary = ProductRatingSummary::getInstance($this->product, $this->ratingType);
 		$summary->save();
 
 		$f = new ARUpdateFilter();
-		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum+' . $this->rating->get()));
+		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum+' . $this->rating));
 		$f->addModifier('ratingCount', new ARExpressionHandle('ratingCount+1'));
 		$f->addModifier('rating', new ARExpressionHandle('ratingSum/ratingCount'));
 
@@ -86,7 +86,7 @@ class ProductRating extends ActiveRecordModel
 	{
 		self::beginTransaction();
 
-		$ratingDiff = $this->rating->get() - $this->rating->getInitialValue();
+		$ratingDiff = $this->rating - $this->rating->getInitialValue();
 
 		$f = new ARUpdateFilter();
 		$f->addModifier('ratingSum', new ARExpressionHandle('ratingSum+(' . $ratingDiff . ')'));
@@ -101,17 +101,17 @@ class ProductRating extends ActiveRecordModel
 
 	private function updateRatings(ARUpdateFilter $f)
 	{
-		$this->product->get()->updateRecord(clone $f);
+		$this->product->updateRecord(clone $f);
 
-		$summary = ProductRatingSummary::getInstance($this->product->get(), $this->ratingType->get());
+		$summary = ProductRatingSummary::getInstance($this->product, $this->ratingType);
 		if ($summary->getID())
 		{
 			$summary->updateRecord(clone $f);
 		}
 
-		if ($this->review->get() && !$this->review->get()->isDeleted())
+		if ($this->review && !$this->review->isDeleted())
 		{
-			$this->review->get()->updateRecord(clone $f);
+			$this->review->updateRecord(clone $f);
 		}
 	}
 }

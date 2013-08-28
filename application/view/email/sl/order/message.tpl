@@ -1,4 +1,4 @@
-Novo sporočilo glede vašega naročila na {'STORE_NAME'|config}
+Novo sporočilo glede vašega naročila na [[ config('STORE_NAME') ]]
 Spoštovani/a {$user.fullName},
 
 Dodano je bilo novo sporočilo glede vašega naročila.

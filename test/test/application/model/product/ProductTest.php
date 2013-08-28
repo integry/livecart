@@ -82,9 +82,9 @@ class ProductTest extends LiveCartTest
 
 		ActiveRecordModel::removeFromPool($secondCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->totalProductCount->get() + 1, (int)$sameCategory->totalProductCount->get());
-		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
-		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->totalProductCount + 1, (int)$sameCategory->totalProductCount);
+		$this->assertEqual((int)$secondCategory->activeProductCount, (int)$sameCategory->activeProductCount);
+		$this->assertEqual((int)$secondCategory->availableProductCount, (int)$sameCategory->availableProductCount);
 	}
 
 	/**
@@ -102,24 +102,24 @@ class ProductTest extends LiveCartTest
 
 		ActiveRecordModel::removeFromPool($secondCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
-		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount, (int)$sameCategory->activeProductCount);
+		$this->assertEqual((int)$secondCategory->availableProductCount, (int)$sameCategory->availableProductCount);
 
 		// enable the product, so available and enabled product counts should INCREASE by one
 		$product->isEnabled->set(1);
 		$product->save();
 		ActiveRecordModel::removeFromPool($sameCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
-		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount + 1, (int)$sameCategory->availableProductCount);
+		$this->assertEqual((int)$secondCategory->activeProductCount + 1, (int)$sameCategory->activeProductCount);
 
 		// disable the product, so available and enabled product counts should DECREASE by one
 		$product->isEnabled->set(0);
 		$product->save();
 		ActiveRecordModel::removeFromPool($sameCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
-		$this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount, (int)$sameCategory->availableProductCount);
+		$this->assertEqual((int)$secondCategory->activeProductCount, (int)$sameCategory->activeProductCount);
 	}
 
 	/**
@@ -137,8 +137,8 @@ class ProductTest extends LiveCartTest
 
 		ActiveRecordModel::removeFromPool($secondCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
-		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount + 1, (int)$sameCategory->activeProductCount);
+		$this->assertEqual((int)$secondCategory->availableProductCount + 1, (int)$sameCategory->availableProductCount);
 	}
 
 	/**
@@ -156,15 +156,15 @@ class ProductTest extends LiveCartTest
 
 		ActiveRecordModel::removeFromPool($secondCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
-		$this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->activeProductCount + 1, (int)$sameCategory->activeProductCount);
+		$this->assertEqual((int)$secondCategory->availableProductCount, (int)$sameCategory->availableProductCount);
 
 		// now add some stock, so available product count should increase by one
 		$product->stockCount->set(5);
 		$product->save();
 		ActiveRecordModel::removeFromPool($sameCategory);
 		$sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-		$this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+		$this->assertEqual((int)$secondCategory->availableProductCount + 1, (int)$sameCategory->availableProductCount);
 	}
 
 	public function testSimpleValues()
@@ -380,7 +380,7 @@ class ProductTest extends LiveCartTest
 			$product = Product::getNewInstance(Category::getRootNode());
 			$product->setPrice('XXX', $k);
 			$product->save();
-			$this->assertEqual($product->getPricingHandler()->getPriceByCurrencyCode('XXX')->price->get(), $k);
+			$this->assertEqual($product->getPricingHandler()->getPriceByCurrencyCode('XXX')->price, $k);
 		}
 	}
 
@@ -436,7 +436,7 @@ class ProductTest extends LiveCartTest
 		foreach($this->product->getRelationships() as $relationship)
 		{
 			$this->assertIsA($relationship, 'ProductRelationship');
-			$this->assertTrue($relationship->relatedProduct->get() === $otherProducts[$i]);
+			$this->assertTrue($relationship->relatedProduct === $otherProducts[$i]);
 
 			$i++;
 		}
@@ -476,7 +476,7 @@ class ProductTest extends LiveCartTest
 			$this->assertIsA($relatedProduct, 'Product');
 			$this->assertTrue($relatedProduct === $otherProducts[$i]);
 
-			$relatedProductName = $relatedProduct->name->get();
+			$relatedProductName = $relatedProduct->name;
 			$this->assertEqual($relatedProductName['en'], 'Test');
 
 			$i++;
@@ -630,7 +630,7 @@ class ProductTest extends LiveCartTest
 
 	public function testAutoSku()
 	{
-		$this->assertEqual($this->product->sku->get(), 'SKU' . $this->product->getID());
+		$this->assertEqual($this->product->sku, 'SKU' . $this->product->getID());
 
 		//reset sku
 		$this->product->sku->set('CUSTOM');
@@ -643,7 +643,7 @@ class ProductTest extends LiveCartTest
 		$product->save();
 
 		// SKU shouldn't be reset for products that are not loaded
-		$this->assertNotEquals($this->product->sku->get(), 'SKU' . $product->getID());
+		$this->assertNotEquals($this->product->sku, 'SKU' . $product->getID());
 	}
 
 	public function testClone()
@@ -652,7 +652,7 @@ class ProductTest extends LiveCartTest
 		$image->product->set($this->product);
 		$image->save();
 
-		$this->assertSame($image, $this->product->defaultImage->get());
+		$this->assertSame($image, $this->product->defaultImage);
 
 		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
 		$numField->save();
@@ -674,7 +674,7 @@ class ProductTest extends LiveCartTest
 		$this->assertEquals(1, $this->product->getRelationships()->size());
 
 		$cloned = clone $this->product;
-		$this->assertEquals(100, $cloned->getSpecification()->getAttribute($numField)->value->get());
+		$this->assertEquals(100, $cloned->getSpecification()->getAttribute($numField)->value);
 
 		$cloned->setAttributeValue($numField, 200);
 		$cloned->setPrice($this->usd, 80);
@@ -689,20 +689,20 @@ class ProductTest extends LiveCartTest
 		$this->assertEquals(80, $reloaded->getPrice($this->usd));
 
 		$reloaded->loadSpecification();
-		$this->assertEquals(200, $reloaded->getSpecification()->getAttribute($numField)->value->get());
+		$this->assertEquals(200, $reloaded->getSpecification()->getAttribute($numField)->value);
 
 		// related products
 		$rel = $reloaded->getRelationships();
 		$this->assertEquals(1, $rel->size());
-		$this->assertSame($reloaded, $rel->get(0)->productRelationshipGroup->get()->product->get());
+		$this->assertSame($reloaded, $rel->get(0)->productRelationshipGroup->product);
 
 		// options
 		$clonedOpts = ProductOption::getProductOptions($reloaded);
 		$this->assertEquals(1, $clonedOpts->size());
 
 		// image
-		$this->assertTrue(is_object($reloaded->defaultImage->get()));
-		$this->assertNotEquals($reloaded->defaultImage->get()->getID(), $this->product->defaultImage->get()->getID());
+		$this->assertTrue(is_object($reloaded->defaultImage));
+		$this->assertNotEquals($reloaded->defaultImage->getID(), $this->product->defaultImage->getID());
 	}
 
 	public function testChildProduct()
@@ -715,7 +715,7 @@ class ProductTest extends LiveCartTest
 
 		$root = Category::getRootNode();
 		$root->reload();
-		$productCount = $root->totalProductCount->get();
+		$productCount = $root->totalProductCount;
 
 		// in array representation, parent product data is used where own data is not set
 		$array = $child->toArray();
@@ -723,11 +723,11 @@ class ProductTest extends LiveCartTest
 
 		// auto-generated SKU is based on parent SKU
 		$child->save();
-		$this->assertEquals($child->sku->get(), $this->product->sku->get() . '-1');
+		$this->assertEquals($child->sku, $this->product->sku . '-1');
 
 		// category counters should not change
 		$root->reload();
-		$this->assertEquals($root->totalProductCount->get(), $productCount);
+		$this->assertEquals($root->totalProductCount, $productCount);
 
 		// parent product price used if not defined
 		$this->assertEquals($child->getPrice($this->usd), $this->product->getPrice($this->usd));
@@ -814,11 +814,11 @@ class ProductTest extends LiveCartTest
 		$child = $this->product->createChildProduct();
 		$child->stockCount->set(10);
 		$child->save();
-		$this->assertEquals(10, $this->product->stockCount->get());
+		$this->assertEquals(10, $this->product->stockCount);
 
 		$child->stockCount->set(20);
 		$child->save();
-		$this->assertEquals(20, $this->product->stockCount->get());
+		$this->assertEquals(20, $this->product->stockCount);
 	}
 
 	function test_SuiteTearDown()

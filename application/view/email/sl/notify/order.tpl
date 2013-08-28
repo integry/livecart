@@ -1,4 +1,4 @@
-Novo naročilo na {'STORE_NAME'|config}
+Novo naročilo na [[ config('STORE_NAME') ]]
 ID Naročila: {$order.invoiceNumber}
 
 Administracija Naročila:

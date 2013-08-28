@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Stato Ordine Aggiornato
+[[ config('STORE_NAME') ]] Stato Ordine Aggiornato
 Gentile {$user.fullName},
 
 {if $order.shipments|@count == 1}

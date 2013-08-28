@@ -1,11 +1,14 @@
-{pageTitle}{'STORE_HEADLINE'|config}{/pageTitle}
-{assign var="metaDescription" value='INDEX_META_DESCRIPTION'|config}
-{assign var="metaKeywords" value='INDEX_META_KEYWORDS'|config}
+{% extends "layout/frontend.tpl" %}
 
-{include file="layout/frontend/layout.tpl"}
+{% block title %}[[ config('STORE_HEADLINE') ]]{% endblock %}
+{% block metaDescription %}[[ config('INDEX_META_DESCRIPTION') ]]{% endblock %}
+{% block metaKeywords %}[[ config('INDEX_META_KEYWORDS') ]]{% endblock %}
 
-{include file="block/content-start.tpl"}
+{% block content %}
+    <p class="important">Welcome on my awesome {{homepage}}.</p>
+{% endblock %}
 
+{#
 	{block HOME-PAGE-TOP}
 
 	{if 'HOME_PAGE_SUBCATS'|config}
@@ -22,7 +25,4 @@
 	{/if}
 
 	{include file="category/categoryProductList.tpl"}
-
-{include file="block/content-stop.tpl"}
-
-{include file="layout/frontend/footer.tpl"}
+#}

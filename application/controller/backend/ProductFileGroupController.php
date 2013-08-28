@@ -18,7 +18,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$product = Product::getInstanceByID((int)$this->request->get('productID'));
+		$product = Product::getInstanceByID((int)$this->request->gget('productID'));
 		$fileGroup = ProductFileGroup::getNewInstance($product);
 		return $this->save($fileGroup);
 	}
@@ -28,7 +28,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->get('ID'));
+		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->gget('ID'));
 		return $this->save($fileGroup);
 	}
 
@@ -41,7 +41,7 @@ class ProductFileGroupController extends StoreManagementController
 			{
 				if ($this->request->isValueSet('name_' . $lang))
 				{
-					$fileGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
+					$fileGroup->setValueByLang('name', $lang, $this->request->gget('name_' . $lang));
 				}
 			}
 
@@ -60,7 +60,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		ProductFileGroup::getInstanceByID((int)$this->request->get('id'))->delete();
+		ProductFileGroup::getInstanceByID((int)$this->request->gget('id'))->delete();
 		return new JSONResponse(false, 'success');
 	}
 
@@ -69,7 +69,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;
 			$fileGroup = ProductFileGroup::getInstanceByID((int)$key);
@@ -82,7 +82,7 @@ class ProductFileGroupController extends StoreManagementController
 
 	public function edit()
 	{
-		$group = ProductFileGroup::getInstanceByID((int)$this->request->get('id'), true);
+		$group = ProductFileGroup::getInstanceByID((int)$this->request->gget('id'), true);
 
 		return new JSONResponse($group->toArray());
 	}

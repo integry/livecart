@@ -1,4 +1,4 @@
-Saņemts jauns pasūtījums {'STORE_NAME'|config}
+Saņemts jauns pasūtījums [[ config('STORE_NAME') ]]
 Pasūtījuma ID: {$order.invoiceNumber}
 
 Pasūtījuma administrācija:

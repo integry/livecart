@@ -18,21 +18,21 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("stateID", "State", "ID", 'State', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("address1", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("address2", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("city", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("stateName", ARVarchar::instance(255)));
-		$schema->registerField(new ARField("postalCode", ARVarchar::instance(50)));
-		$schema->registerField(new ARField("countryID", ARChar::instance(2)));
-		$schema->registerField(new ARField("phone", ARVarchar::instance(100)));
+
+		public $ID;
+		public $stateID", "State", "ID", 'State;
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+		public $firstName;
+		public $lastName;
+		public $companyName;
+		public $address1;
+		public $address2;
+		public $city;
+		public $stateName;
+		public $postalCode;
+		public $countryID;
+		public $phone;
 		$schema->registerAutoReference('stateID');
 	}
 
@@ -44,15 +44,15 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	public static function getNewInstanceByTransaction(TransactionDetails $details)
 	{
 		$instance = self::getNewInstance();
-		$instance->firstName->set($details->firstName->get());
-		$instance->lastName->set($details->lastName->get());
-		$instance->companyName->set($details->companyName->get());
-		$instance->address1->set($details->address->get());
-		$instance->city->set($details->city->get());
-		$instance->stateName->set($details->state->get());
-		$instance->postalCode->set($details->postalCode->get());
-		$instance->countryID->set($details->country->get());
-		$instance->phone->set($details->phone->get());
+		$instance->firstName = $details->firstName->get());
+		$instance->lastName = $details->lastName->get());
+		$instance->companyName = $details->companyName->get());
+		$instance->address1 = $details->address->get());
+		$instance->city = $details->city->get());
+		$instance->stateName = $details->state->get());
+		$instance->postalCode = $details->postalCode->get());
+		$instance->countryID = $details->country->get());
+		$instance->phone = $details->phone->get());
 		return $instance;
 	}
 
@@ -117,15 +117,15 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	{
 		parent::loadRequestData($request, $prefix);
 
-		if ($request->get($prefix . 'stateID'))
+		if ($request->gget($prefix . 'stateID'))
 		{
-			$this->state->set(State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
-			$this->stateName->set(null);
+			$this->state = State::getInstanceByID((int)$request->gget($prefix . 'stateID'), true));
+			$this->stateName = null);
 		}
 		else if ($request->isValueSet($prefix . 'stateName'))
 		{
-			$this->stateName->set($request->get($prefix . 'stateName'));
-			$this->state->set(null);
+			$this->stateName = $request->gget($prefix . 'stateName'));
+			$this->state = null);
 		}
 	}
 
@@ -150,7 +150,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		if ($this->serializedState)
 		{
-			$this->state->set(State::getInstanceByID($this->serializedState, true));
+			$this->state = State::getInstanceByID($this->serializedState, true));
 		}
 	}
 

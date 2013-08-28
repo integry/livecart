@@ -21,8 +21,8 @@ class ProductRelationshipGroup extends ProductParametersGroup
 		$schema = parent::defineSchema($className);
 		$schema->setName("ProductRelationshipGroup");
 
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance()));
+		public $name;
+		public $type;
 	}
 
 	/**
@@ -62,8 +62,8 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	public static function getNewInstance(Product $product, $type)
 	{
 		$group = parent::getNewInstance(__CLASS__);
-		$group->product->set($product);
-		$group->type->set($type);
+		$group->product = $product);
+		$group->type = $type);
 
 		return $group;
 	}

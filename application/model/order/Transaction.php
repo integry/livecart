@@ -45,34 +45,34 @@ class Transaction extends ActiveRecordModel implements EavAble
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("parentTransactionID", "Transaction", "ID", "Transaction", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
-		$schema->registerField(new ARForeignKeyField("realCurrencyID", "realCurrency", "ID", 'Currency', ARChar::instance(3)));
-		$schema->registerField(new ARForeignKeyField("userID", "user", "ID", 'User', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
-		$schema->registerField(new ARField("amount", ARFloat::instance()));
-		$schema->registerField(new ARField("realAmount", ARFloat::instance()));
-		$schema->registerField(new ARField("time", ARDateTime::instance()));
-		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("gatewayTransactionID", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("type", ARInteger::instance()));
-		$schema->registerField(new ARField("methodType", ARInteger::instance()));
-		$schema->registerField(new ARField("isCompleted", ARBool::instance()));
-		$schema->registerField(new ARField("isVoided", ARBool::instance()));
+		public $ID;
+		public $parentTransactionID", "Transaction", "ID", "Transaction;
+		public $orderID", "CustomerOrder", "ID", "CustomerOrder;
+		public $currencyID", "currency", "ID", 'Currency', ARChar::instance()));
+		public $realCurrencyID", "realCurrency", "ID", 'Currency', ARChar::instance()));
+		public $userID", "user", "ID", 'User;
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 
-		$schema->registerField(new ARField("ccExpiryYear", ARInteger::instance()));
-		$schema->registerField(new ARField("ccExpiryMonth", ARInteger::instance()));
-		$schema->registerField(new ARField("ccLastDigits", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("ccType", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("ccName", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("ccCVV", ARVarchar::instance(80)));
-		$schema->registerField(new ARField("comment", ARText::instance()));
-		$schema->registerField(new ARField("serializedData", ARText::instance()));
+		public $amount;
+		public $realAmount;
+		public $time;
+		public $method;
+		public $gatewayTransactionID;
+		public $type;
+		public $methodType;
+		public $isCompleted;
+		public $isVoided;
+
+		public $ccExpiryYear;
+		public $ccExpiryMonth;
+		public $ccLastDigits;
+		public $ccType;
+		public $ccName;
+		public $ccCVV;
+		public $comment;
+		public $serializedData;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -80,27 +80,27 @@ class Transaction extends ActiveRecordModel implements EavAble
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order->set($order);
-		$instance->gatewayTransactionID->set($result->gatewayTransactionID->get());
+		$instance->order = $order);
+		$instance->gatewayTransactionID = $result->gatewayTransactionID->get());
 
 		// determine currency
 		if ($result->currency->get())
 		{
-			$instance->realCurrency->set(Currency::getInstanceById($result->currency->get()));
+			$instance->realCurrency = Currency::getInstanceById($result->currency->get()));
 		}
 		else
 		{
-			$instance->realCurrency->set($order->currency->get());
+			$instance->realCurrency = $order->currency->get());
 		}
 
 		// amount
-		$instance->realAmount->set($result->amount->get());
+		$instance->realAmount = $result->amount->get());
 
 		// different currency than initial order currency?
 		if ($order->currency->get()->getID() != $result->currency->get())
 		{
-			$instance->amount->set($order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
-			$instance->currency->set($order->currency->get());
+			$instance->amount = $order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
+			$instance->currency = $order->currency->get());
 
 			// test if some amount is not missing due to currency conversion rounding (a difference of 0.01, etc)
 			$total = $order->totalAmount->get();
@@ -109,22 +109,22 @@ class Transaction extends ActiveRecordModel implements EavAble
 				$largerAmount = $order->currency->get()->convertAmount($instance->realCurrency->get(), 0.01 + $instance->realAmount->get());
 				if ($largerAmount >= $total)
 				{
-					$instance->amount->set($total);
+					$instance->amount = $total);
 				}
 			}
 		}
 
 		// transaction type
-		$instance->type->set($result->getTransactionType());
+		$instance->type = $result->getTransactionType());
 
 		if ($instance->type->get() != self::TYPE_AUTH)
 		{
-			$instance->isCompleted->set(true);
+			$instance->isCompleted = true);
 		}
 
 		if ($result->details->get())
 		{
-			$instance->comment->set($result->details->get());
+			$instance->comment = $result->details->get());
 		}
 
 		return $instance;
@@ -138,20 +138,20 @@ class Transaction extends ActiveRecordModel implements EavAble
 	public static function getNewSubTransaction(Transaction $transaction, TransactionResult $result)
 	{
 		$instance = self::getNewInstance($transaction->order->get(), $result);
-		$instance->parentTransaction->set($transaction);
-		$instance->method->set($transaction->method->get());
+		$instance->parentTransaction = $transaction);
+		$instance->method = $transaction->method->get());
 		return $instance;
 	}
 
 	public static function getNewOfflineTransactionInstance(CustomerOrder $order, $amount)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order->set($order);
-		$instance->realCurrency->set($order->currency->get());
-		$instance->type->set(self::TYPE_SALE);
-		$instance->methodType->set(self::METHOD_OFFLINE);
-		$instance->isCompleted->set(true);
-		$instance->realAmount->set($amount);
+		$instance->order = $order);
+		$instance->realCurrency = $order->currency->get());
+		$instance->type = self::TYPE_SALE);
+		$instance->methodType = self::METHOD_OFFLINE);
+		$instance->isCompleted = true);
+		$instance->realAmount = $amount);
 
 		return $instance;
 	}
@@ -211,7 +211,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	 */
 	public function setAsCreditCard()
 	{
-		$this->methodType->set(self::METHOD_CREDITCARD);
+		$this->methodType = self::METHOD_CREDITCARD);
 	}
 
 	/**
@@ -304,18 +304,18 @@ class Transaction extends ActiveRecordModel implements EavAble
 		self::beginTransaction();
 
 		$instance = self::getNewSubTransaction($this, $result);
-		$instance->amount->set($this->amount->get() * -1);
-		$instance->realAmount->set($this->realAmount->get() * -1);
-		$instance->currency->set($this->currency->get());
-		$instance->realCurrency->set($this->realCurrency->get());
+		$instance->amount = $this->amount->get() * -1);
+		$instance->realAmount = $this->realAmount->get() * -1);
+		$instance->currency = $this->currency->get());
+		$instance->realCurrency = $this->realCurrency->get());
 		$instance->save();
 
-		$this->isVoided->set(true);
+		$this->isVoided = true);
 		$this->save();
 
 		if ($this->order->get()->getDueAmount() > 0)
 		{
-			$this->order->get()->isPaid->set(false);
+			$this->order->get()->isPaid = false);
 			$this->order->get()->save();
 		}
 
@@ -337,7 +337,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		}
 
 		$handler = $this->getSubTransactionHandler($amount);
-		$handler->getDetails()->isCompleted->set($isCompleted);
+		$handler->getDetails()->isCompleted = $isCompleted);
 		$result = $handler->capture();
 
 		if (!($result instanceof TransactionResult))
@@ -346,7 +346,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		}
 
 		$instance = self::getNewSubTransaction($this, $result);
-		$instance->realAmount->set($result->amount->get());
+		$instance->realAmount = $result->amount->get());
 		$instance->save();
 
 		return $instance;
@@ -361,8 +361,8 @@ class Transaction extends ActiveRecordModel implements EavAble
 	{
 		// set up transaction parameters object
 		$details = new LiveCartTransaction($this->order->get(), $this->currency->get());
-		$details->amount->set(is_null($amount) ? $this->amount->get() : $amount);
-		$details->gatewayTransactionID->set($this->gatewayTransactionID->get());
+		$details->amount = is_null($amount) ? $this->amount->get() : $amount);
+		$details->gatewayTransactionID = $this->gatewayTransactionID->get());
 
 		// set up payment handler instance
 		$className = $this->loadHandlerClass();
@@ -376,14 +376,14 @@ class Transaction extends ActiveRecordModel implements EavAble
 	{
 		if (!$this->currency->get())
 		{
-			$this->currency->set($this->realCurrency->get());
-			$this->amount->set($this->realAmount->get());
+			$this->currency = $this->realCurrency->get());
+			$this->amount = $this->realAmount->get());
 		}
 
 		// encrypt card number
 		if ($this->ccLastDigits->isModified())
 		{
-			$this->ccLastDigits->set($this->encrypt($this->ccLastDigits->get()));
+			$this->ccLastDigits = $this->encrypt($this->ccLastDigits->get()));
 		}
 
 		return parent::save($forceOperation);
@@ -410,12 +410,12 @@ class Transaction extends ActiveRecordModel implements EavAble
 		if ($this->handler instanceof CreditCardPayment)
 		{
 			$this->setAsCreditCard();
-			$this->ccExpiryMonth->set($this->handler->getExpirationMonth());
-			$this->ccExpiryYear->set($this->handler->getExpirationYear());
-			$this->ccType->set($this->handler->getCardType());
-			$this->ccName->set($this->handler->getDetails()->getName());
+			$this->ccExpiryMonth = $this->handler->getExpirationMonth());
+			$this->ccExpiryYear = $this->handler->getExpirationYear());
+			$this->ccType = $this->handler->getCardType());
+			$this->ccName = $this->handler->getDetails()->getName());
 
-			$this->ccLastDigits->set($this->handler->getCardNumber());
+			$this->ccLastDigits = $this->handler->getCardNumber());
 
 			// only the last 5 digits of credit card number are normally stored
 			if (!$this->handler->isCardNumberStored())
@@ -424,15 +424,15 @@ class Transaction extends ActiveRecordModel implements EavAble
 			}
 			else
 			{
-				$this->ccCVV->set(self::encrypt($this->handler->getCardCode()));
+				$this->ccCVV = self::encrypt($this->handler->getCardCode()));
 			}
 
-			$this->ccLastDigits->set(self::encrypt($this->ccLastDigits->get()));
+			$this->ccLastDigits = self::encrypt($this->ccLastDigits->get()));
 		}
 
 		if ($this->handler)
 		{
-			$this->method->set(get_class($this->handler));
+			$this->method = get_class($this->handler));
 		}
 
 		return parent::insert();
@@ -440,9 +440,9 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public function truncateCcNumber()
 	{
-		$this->ccCVV->set(null);
-		$this->ccLastDigits->set(self::decrypt($this->ccLastDigits->get()));
-		$this->ccLastDigits->set(substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
+		$this->ccCVV = null);
+		$this->ccLastDigits = self::decrypt($this->ccLastDigits->get()));
+		$this->ccLastDigits = substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
 	}
 
 	public function setOfflineHandler($method)
@@ -455,7 +455,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	{
 		$data = unserialize($this->serializedData->get());
 		$data[$key] = $value;
-		$this->serializedData->set(serialize($data));
+		$this->serializedData = serialize($data));
 	}
 
 	/*####################  Data array transformation ####################*/

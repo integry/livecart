@@ -13,7 +13,7 @@ class CategoryImage extends ObjectImage
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+		public $categoryID", "Category", "ID", "Category;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -21,7 +21,7 @@ class CategoryImage extends ObjectImage
 	public static function getNewInstance(Category $category)
 	{
 	  	$catImage = ActiveRecord::getNewInstance(__CLASS__);
-	  	$catImage->category->set($category);
+	  	$catImage->category = $category);
 	  	return $catImage;
 	}
 

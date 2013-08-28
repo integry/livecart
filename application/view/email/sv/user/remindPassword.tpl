@@ -1,4 +1,4 @@
-Ditt password hos {'STORE_NAME'|config}!
+Ditt password hos [[ config('STORE_NAME') ]]!
 Kära {$user.fullName},
 
 Här kommer dina inloggningsuppgifter hos {$config.STORE_NAME}:

@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} potvrzení odběru novinek
+[[ config('STORE_NAME') ]] potvrzení odběru novinek
 Dobrý den,
 
 Pro potvrzení přihlášení k odběru novinek našeho obchodu klikněte na tento odkaz:

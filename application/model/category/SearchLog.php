@@ -14,10 +14,10 @@ class SearchLog extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARField('keywords', ARVarchar::instance(100)));
-		$schema->registerField(new ARField('ip', ARInteger::instance()));
-		$schema->registerField(new ARField('time', ARDateTime::instance()));
+		public $ID;
+		public $keywords', ARVarchar::instance()));
+		public $ip;
+		public $time', ARDateTime::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -25,7 +25,7 @@ class SearchLog extends ActiveRecordModel
 	public static function getNewInstance($query)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->keywords->set($query);
+		$instance->keywords = $query);
 		return $instance;
 	}
 
@@ -33,7 +33,7 @@ class SearchLog extends ActiveRecordModel
 
 	protected function insert()
 	{
-		$this->time->set(new ARSerializableDateTime());
+		$this->time = new ARSerializableDateTime());
 		return parent::insert();
 	}
 }

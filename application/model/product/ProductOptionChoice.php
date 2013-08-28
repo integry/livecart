@@ -17,14 +17,14 @@ class ProductOptionChoice extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductOptionChoice");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("optionID", "ProductOption", "ID", "ProductOption", ARInteger::instance()));
+		public $ID;
+		public $optionID", "ProductOption", "ID", "ProductOption;
 
-		$schema->registerField(new ARField("priceDiff", ARFloat::instance(4)));
-		$schema->registerField(new ARField("hasImage", ARBool::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(4)));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("config", ARText::instance()));
+		public $priceDiff;
+		public $hasImage;
+		public $position;
+		public $name;
+		public $config;
 
 		$schema->registerCircularReference('Option', 'ProductOption');
 	}
@@ -39,7 +39,7 @@ class ProductOptionChoice extends MultilingualObject
 	public static function getNewInstance(ProductOption $option)
 	{
 		$choice = parent::getNewInstance(__CLASS__);
-		$choice->option->set($option);
+		$choice->option = $option);
 
 		return $choice;
 	}
@@ -70,7 +70,7 @@ class ProductOptionChoice extends MultilingualObject
 	{
 		$config = unserialize($this->config->get());
 		$config['color'] = $color;
-		$this->config->set(serialize($config));
+		$this->config = serialize($config));
 	}
 
 	/*####################  Saving ####################*/

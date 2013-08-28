@@ -1,7 +1,7 @@
-{'STORE_NAME'|config} Potvrzení objednávky
+[[ config('STORE_NAME') ]] Potvrzení objednávky
 Vážený(á) {$user.fullName},
 
-Děkujeme za objednávku v našem obchodě {'STORE_NAME'|config}.
+Děkujeme za objednávku v našem obchodě [[ config('STORE_NAME') ]].
 Pokud nás ohledně této objednávky chcete kontaktovat, uvádějte její číslo: {$order.invoiceNumber}.
 
 Stav objednávky můžete sledovat zde:

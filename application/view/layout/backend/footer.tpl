@@ -5,7 +5,7 @@
 	</div>
 	<div id="pageFooter">
 		<div style="float: left;">
-			{'POWERED_BY_BACKEND'|config}
+			[[ config('POWERED_BY_BACKEND') ]]
 		</div>
 		{if 'BACKEND_SHOW_FOOTER_LINKS'|config}
 			<div id="supportLinks" style="float: right; padding-left: 50px;">

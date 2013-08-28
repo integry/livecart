@@ -21,8 +21,8 @@ class ProductListItemController extends StoreManagementController
 	 */
 	public function add()
 	{
-		$productID = $this->request->get('relatedownerID');
-		$ownerID = $this->request->get('id');
+		$productID = $this->request->gget('relatedownerID');
+		$ownerID = $this->request->gget('id');
 
 		$list = ActiveRecordModel::getInstanceById('ProductList', $ownerID, ActiveRecordModel::LOAD_DATA);
 		$product = Product::getInstanceByID($productID, Product::LOAD_DATA, array('ProductImage'));
@@ -47,7 +47,7 @@ class ProductListItemController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$item = ActiveRecordModel::getInstanceByID('ProductListItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA);
+		$item = ActiveRecordModel::getInstanceByID('ProductListItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
 
 		return new JSONResponse(false, 'success');
@@ -58,10 +58,10 @@ class ProductListItemController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		$target = $this->request->get('target');
+		$target = $this->request->gget('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.
 
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $id)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $id)
 		{
 			$item = ActiveRecordModel::getInstanceByID('ProductListItem', $id);
 			$item->position->set($position);

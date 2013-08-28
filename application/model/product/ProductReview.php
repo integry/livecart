@@ -14,20 +14,20 @@ class ProductReview extends ActiveRecordModel
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('productID', 'Product', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('userID', 'User', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('isEnabled', ARBool::instance()));
-		$schema->registerField(new ARField('dateCreated', ARDateTime::instance()));
-		$schema->registerField(new ARField('ip', ARInteger::instance()));
-		$schema->registerField(new ArField('ratingSum', ARInteger::instance()));
-		$schema->registerField(new ArField('ratingCount', ARInteger::instance()));
-		$schema->registerField(new ArField('rating', ARFloat::instance(8)));
-		$schema->registerField(new ARField('nickname', ARVarchar::instance(100)));
-		$schema->registerField(new ARField('title', ARVarchar::instance(255)));
-		$schema->registerField(new ARField('text', ARText::instance()));
+
+		public $ID;
+		public $productID', 'Product', 'ID', null, ARInteger::instance()));
+		public $userID', 'User', 'ID', null, ARInteger::instance()));
+		public $isEnabled', ARBool::instance()));
+		public $dateCreated', ARDateTime::instance()));
+		public $ip;
+		public $ratingSum;
+		public $ratingCount;
+		public $rating', ARFloat::instance()));
+		public $nickname', ARVarchar::instance()));
+		public $title', ARVarchar::instance()));
+		public $text', ARText::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -35,13 +35,13 @@ class ProductReview extends ActiveRecordModel
 	public static function getNewInstance(Product $product, User $user)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product->set($product);
+		$instance->product = $product);
 
 		if ($user && $user->isAnonymous())
 		{
 			$user = null;
 		}
-		$instance->user->set($user);
+		$instance->user = $user);
 
 		return $instance;
 	}
@@ -66,7 +66,7 @@ class ProductReview extends ActiveRecordModel
 	protected function insert()
 	{
 		$this->updateProductCounter();
-		$this->dateCreated->set(new ARSerializableDateTime());
+		$this->dateCreated = new ARSerializableDateTime());
 		return parent::insert();
 	}
 

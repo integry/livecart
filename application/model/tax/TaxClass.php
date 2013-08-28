@@ -13,9 +13,9 @@ class TaxClass extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		public $ID;
+		public $name;
+		public $position;
 	}
 
 	/**

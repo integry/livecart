@@ -1,7 +1,7 @@
 {if ($breadCrumb|@count > 1) && ('SHOW_BREADCRUMB'|config)}
 	<ul class="breadcrumb">
 		<style>
-			.breadcrumb > li:after {ldelim} content: " {'BREADCRUMB_SEPARATOR'|config} "; {rdelim}
+			.breadcrumb > li:after {ldelim} content: " [[ config('BREADCRUMB_SEPARATOR') ]] "; {rdelim}
 		</style>
 
 		{if 'SHOW_BREADCRUMB_CAPTION'|config}

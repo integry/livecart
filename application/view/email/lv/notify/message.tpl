@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} jauns klienta paziņojums sakarā ar pasūtījumu
+[[ config('STORE_NAME') ]] jauns klienta paziņojums sakarā ar pasūtījumu
 Klients ir pievienojis jaunu paziņojumu pie pasūtījuma <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------

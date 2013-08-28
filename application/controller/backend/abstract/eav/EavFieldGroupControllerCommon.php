@@ -28,17 +28,17 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 */
 	public function item()
 	{
-		return new JSONResponse($this->getInstanceByID($this->request->get('id'), true)->toArray());
+		return new JSONResponse($this->getInstanceByID($this->request->gget('id'), true)->toArray());
 	}
 
 	public function update()
 	{
-		return $this->save($this->getInstanceByID($this->request->get('id')));
+		return $this->save($this->getInstanceByID($this->request->gget('id')));
 	}
 
 	public function create()
 	{
-		$specFieldGroup = call_user_func_array(array($this->getClassName(), 'getNewInstance'), array($this->getParent($this->request->get('categoryID'))));
+		$specFieldGroup = call_user_func_array(array($this->getClassName(), 'getNewInstance'), array($this->getParent($this->request->gget('categoryID'))));
 		return $this->save($specFieldGroup);
 	}
 
@@ -49,7 +49,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 */
 	public function delete()
 	{
-		if($id = $this->request->get("id", false))
+		if($id = $this->request->gget("id", false))
 		{
 			ActiveRecordModel::deleteById($this->getClassName(), $id);
 			return new JSONResponse(false, 'success');
@@ -67,7 +67,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 			// Except new fields, because they are not yet in database
 			$group = $this->getInstanceByID($key);
@@ -125,7 +125,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 		{
 			foreach($this->application->getLanguageArray(true) as $langCode)
 			{
-				$specFieldGroup->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
+				$specFieldGroup->setValueByLang('name', $langCode, $this->request->gget('name_' . $langCode));
 			}
 
 			$specFieldGroup->save();

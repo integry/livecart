@@ -2,21 +2,21 @@
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * Country assignment to a DeliveryZone 
+ * Country assignment to a DeliveryZone
  *
  * @package application.model.delivery
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
-class DeliveryZoneCountry extends ActiveRecordModel 
+class DeliveryZoneCountry extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("DeliveryZoneCountry");
-		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
-		$schema->registerField(new ARField("countryCode", ARChar::instance(2)));
+
+		public $ID;
+		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
+		public $countryCode;
 	}
 
 	/**
@@ -25,23 +25,23 @@ class DeliveryZoneCountry extends ActiveRecordModel
 	public static function getNewInstance(DeliveryZone $zone, $countryCode)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	
-	  	$instance->deliveryZone->set($zone);
-	  	$instance->countryCode->set($countryCode);
-	  	
+
+	  	$instance->deliveryZone = $zone);
+	  	$instance->countryCode = $countryCode);
+
 	  	return $instance;
 	}
 
 	/**
 	 * @param DeliveryZone $zone
-	 * 
+	 *
 	 * @return ARSet
 	 */
 	public static function getRecordSetByZone(DeliveryZone $zone, $loadReferencedRecords = false)
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
-		
+
 		return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
@@ -49,7 +49,7 @@ class DeliveryZoneCountry extends ActiveRecordModel
 	{
 		$filter = new ARDeleteFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
-		
+
 		return ActiveRecord::deleteRecordSet(__CLASS__, $filter);
 	}
 }

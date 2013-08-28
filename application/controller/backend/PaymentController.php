@@ -13,7 +13,7 @@ class PaymentController extends StoreManagementController
 {
 	public function index()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 		$transactions = $this->appendOfflineTransactionData($this->getTransactionArray($order));
 		ActiveRecordModel::addArrayToEavQueue('Transaction', $transactions);
 
@@ -43,14 +43,14 @@ class PaymentController extends StoreManagementController
 	 */
 	public function void()
 	{
-		$transaction = Transaction::getInstanceById($this->request->get('id'));
+		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 
 		$voidTransaction = $transaction->void();
 
 		if ($voidTransaction instanceof Transaction)
 		{
 			$voidTransaction->user->set($this->user);
-			$voidTransaction->comment->set($this->request->get('comment'));
+			$voidTransaction->comment->set($this->request->gget('comment'));
 			$voidTransaction->save();
 
 			return $this->getTransactionUpdateResponse();
@@ -66,17 +66,17 @@ class PaymentController extends StoreManagementController
 	 */
 	public function capture()
 	{
-		$transaction = Transaction::getInstanceById($this->request->get('id'));
+		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 
-		$captureTransaction = $transaction->capture($this->request->get('amount'), $this->request->get('complete'));
+		$captureTransaction = $transaction->capture($this->request->gget('amount'), $this->request->gget('complete'));
 
 		if ($captureTransaction instanceof Transaction)
 		{
 			$captureTransaction->user->set($this->user);
-			$captureTransaction->comment->set($this->request->get('comment'));
+			$captureTransaction->comment->set($this->request->gget('comment'));
 			$captureTransaction->save();
 
-			if ($this->request->get('complete'))
+			if ($this->request->gget('complete'))
 			{
 				$transaction->isCompleted->set(true);
 				$transaction->save();
@@ -95,7 +95,7 @@ class PaymentController extends StoreManagementController
 	 */
 	public function deleteCcNumber()
 	{
-		$transaction = Transaction::getInstanceById($this->request->get('id'));
+		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$transaction->truncateCcNumber();
 		$transaction->save();
 
@@ -107,10 +107,10 @@ class PaymentController extends StoreManagementController
 	 */
 	public function addOffline()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
-		$transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->get('amount'));
-		$transaction->comment->set($this->request->get('comment'));
+		$transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->gget('amount'));
+		$transaction->comment->set($this->request->gget('comment'));
 		$transaction->user->set($this->user);
 		$transaction->save();
 
@@ -127,7 +127,7 @@ class PaymentController extends StoreManagementController
 
 	public function totals()
 	{
-		$transaction = Transaction::getInstanceById($this->request->get('id'));
+		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$response = new ActionResponse();
 		$response->set('order', $transaction->order->get()->toArray(array('payments' => true)));
 		return $response;
@@ -140,7 +140,7 @@ class PaymentController extends StoreManagementController
 	 */
 	public function transaction()
 	{
-		$transaction = Transaction::getInstanceById($this->request->get('id'));
+		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$transactions = $this->getTransactionArray($transaction->order->get());
 
 		$orderArray = $transaction->order->get()->toArray(array('payments' => true));
@@ -155,11 +155,11 @@ class PaymentController extends StoreManagementController
 
 	public function ccForm()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
 		$response = new ActionResponse();
 
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$response->set('currency', $this->request->gget('currency', $this->application->getDefaultCurrencyCode()));
 
 		$ccHandler = $this->application->getCreditCardHandler();
 		if ($ccHandler)
@@ -193,7 +193,7 @@ class PaymentController extends StoreManagementController
 	 */
 	public function processCreditCard()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
 		if (!$this->buildCreditCardValidator()->isValid())
 		{
@@ -202,16 +202,16 @@ class PaymentController extends StoreManagementController
 
 		// set up transaction details
 		$transaction = new LiveCartTransaction($order, $order->currency->get());
-		$transaction->amount->set($this->request->get('amount'));
+		$transaction->amount->set($this->request->gget('amount'));
 
 		// process payment
 		$handler = $this->application->getCreditCardHandler($transaction);
 		if ($this->request->isValueSet('ccType'))
 		{
-			$handler->setCardType($this->request->get('ccType'));
+			$handler->setCardType($this->request->gget('ccType'));
 		}
 
-		$handler->setCardData($this->request->get('ccNum'), $this->request->get('ccExpiryMonth'), $this->request->get('ccExpiryYear'), $this->request->get('ccCVV'));
+		$handler->setCardData($this->request->gget('ccNum'), $this->request->gget('ccExpiryMonth'), $this->request->gget('ccExpiryYear'), $this->request->gget('ccCVV'));
 
 		if ($this->config->get('CC_AUTHONLY'))
 		{
@@ -228,7 +228,7 @@ class PaymentController extends StoreManagementController
 
 			$transaction = Transaction::getNewInstance($order, $result);
 			$transaction->setHandler($handler);
-			$transaction->comment->set($this->request->get('comment'));
+			$transaction->comment->set($this->request->gget('comment'));
 			$transaction->save();
 
 			if ($order->totalAmount->get() <= $order->capturedAmount->get())
@@ -252,8 +252,8 @@ class PaymentController extends StoreManagementController
 
 	public function changeOrderPaidStatus()
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'));
-		if (0 == $this->request->get('status'))
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
+		if (0 == $this->request->gget('status'))
 		{
 			foreach ($order->getTransactions() as $transaction)
 			{
@@ -267,7 +267,7 @@ class PaymentController extends StoreManagementController
 			$transaction->save();
 		}
 
-		$order->isPaid->set($this->request->get('status') == true);
+		$order->isPaid->set($this->request->gget('status') == true);
 		$order->save();
 
 		return new RawResponse();
@@ -277,8 +277,8 @@ class PaymentController extends StoreManagementController
 	{
 		try {
 			$request = $this->getRequest();
-			$transaction = Transaction::getInstanceById($request->get('id'));
-			$handlerID = $request->get('handlerID');
+			$transaction = Transaction::getInstanceById($request->gget('id'));
+			$handlerID = $request->gget('handlerID');
 			$transaction->setOfflineHandler($handlerID);
 			$transaction->save();
 			return new JSONResponse(

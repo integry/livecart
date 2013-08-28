@@ -7,7 +7,7 @@ ClassLoader::import("application.model.user.UserAddress");
  * Express checkout data container
  *
  * @package application.model.user
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
 class ExpressCheckout extends ActiveRecordModel
 {
@@ -17,26 +17,26 @@ class ExpressCheckout extends ActiveRecordModel
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("addressID", "address", "ID", 'UserAddress', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("orderID", "order", "ID", 'CustomerOrder', ARInteger::instance()));
 
-		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("paymentData", ARText::instance()));
-	}	
-	
-	/*####################  Static method implementations ####################*/	
-	
+
+		public $ID;
+		public $addressID", "address", "ID", 'UserAddress;
+		public $orderID", "order", "ID", 'CustomerOrder;
+
+		public $method;
+		public $paymentData;
+	}
+
+	/*####################  Static method implementations ####################*/
+
 	public static function getNewInstance(CustomerOrder $order, ExpressPayment $handler)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order->set($order);
-		$instance->method->set(get_class($handler));
+		$instance->order = $order);
+		$instance->method = get_class($handler));
 		return $instance;
 	}
-	
+
 	public static function getInstanceByOrder(CustomerOrder $order)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
@@ -46,9 +46,9 @@ class ExpressCheckout extends ActiveRecordModel
 			return $s->get(0);
 		}
 	}
-	
-	/*####################  Saving ####################*/	
-	
+
+	/*####################  Saving ####################*/
+
 	public function deleteInstancesByOrder(CustomerOrder $order)
 	{
 		// remove other ExpressCheckout instances for this order
@@ -56,27 +56,27 @@ class ExpressCheckout extends ActiveRecordModel
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $order->getID()));
 		ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
 	}
-	
+
 	protected function insert()
 	{
 		$this->deleteInstancesByOrder($this->order->get());
-		
+
 		return parent::insert();
 	}
-	
-	/*####################  Get related objects ####################*/	
-	
+
+	/*####################  Get related objects ####################*/
+
 	public function getHandler(TransactionDetails $transaction = null)
 	{
 		$handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
 		$handler->setData(unserialize($this->paymentData->get()));
-		return $handler;		
+		return $handler;
 	}
-	
+
 	public function getTransactionDetails()
 	{
 		return $this->getHandler()->getDetails();
-	}	
+	}
 }
 
 ?>

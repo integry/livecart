@@ -1,4 +1,4 @@
-New Order Placed at {'STORE_NAME'|config}
+New Order Placed at [[ config('STORE_NAME') ]]
 Ordre ID: {$order.invoiceNumber}
 
 Ordreadministration:

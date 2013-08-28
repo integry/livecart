@@ -1,4 +1,4 @@
-Ny bestilling hos {'STORE_NAME'|config}
+Ny bestilling hos [[ config('STORE_NAME') ]]
 Bestillingsnr: {$order.invoiceNumber}
 
 Order administration:

@@ -1,4 +1,4 @@
-You may be interested in produt at {'STORE_NAME'|config}
+You may be interested in produt at [[ config('STORE_NAME') ]]
 Hello!
 Your friend {$friendName} wants you to take a look at this product
 {$product.name} ({productUrl product=$product full=true})

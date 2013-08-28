@@ -29,24 +29,24 @@ class ProductOption extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductOption");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice", ARInteger::instance()));
+		public $ID;
+		public $productID", "Product", "ID", null, ARInteger::instance()));
+		public $categoryID", "Category", "ID", null, ARInteger::instance()));
+		public $defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice;
 
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("selectMessage", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(4)));
-		$schema->registerField(new ARField("displayType", ARInteger::instance(4)));
-		$schema->registerField(new ARField("isRequired", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
-		$schema->registerField(new ARField("isDisplayedInCart", ARBool::instance()));
-		$schema->registerField(new ARField("isPriceIncluded", ARBool::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(4)));
-		$schema->registerField(new ARField("maxFileSize", ARInteger::instance(4)));
-		$schema->registerField(new ARField("fileExtensions", ARVarchar::instance(100)));
+		public $name;
+		public $description;
+		public $selectMessage;
+		public $type;
+		public $displayType;
+		public $isRequired;
+		public $isDisplayed;
+		public $isDisplayedInList;
+		public $isDisplayedInCart;
+		public $isPriceIncluded;
+		public $position;
+		public $maxFileSize;
+		public $fileExtensions;
 
 		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
 	}
@@ -64,11 +64,11 @@ class ProductOption extends MultilingualObject
 
 		if ($parent instanceof Product)
 		{
-			$option->product->set($parent);
+			$option->product = $parent);
 		}
 		else if ($parent instanceof Category)
 		{
-			$option->category->set($parent);
+			$option->category = $parent);
 		}
 		else
 		{
@@ -353,12 +353,12 @@ class ProductOption extends MultilingualObject
 		foreach ($this->originalRecord->getChoiceSet() as $choice)
 		{
 			$newChoice = clone $choice;
-			$newChoice->option->set($this);
+			$newChoice->option = $this);
 			$newChoice->save();
 
 			if ($defaultChoice && ($choice->getID() == $defaultChoice->getID()))
 			{
-				$this->defaultChoice->set($newChoice);
+				$this->defaultChoice = $newChoice);
 			}
 		}
 

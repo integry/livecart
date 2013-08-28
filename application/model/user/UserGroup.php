@@ -23,10 +23,10 @@ class UserGroup extends ActiveRecordModel implements EavAble
 		$schema = self::getSchemaInstance($className);
 
 		$schema->setName("UserGroup");
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("description", ARVarchar::instance(100)));
+		public $ID;
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+		public $name;
+		public $description;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -57,8 +57,8 @@ class UserGroup extends ActiveRecordModel implements EavAble
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
 
-	  	$instance->name->set($name);
-	  	$instance->description->set($description);
+	  	$instance->name = $name);
+	  	$instance->description = $description);
 
 	  	return $instance;
 	}

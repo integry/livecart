@@ -26,6 +26,6 @@
 </div>
 
 <script type="text/javascript">
-	var filters = new Filter.SelectorMenu($("filterTop_{uniqid last=true}"), {'TOP_FILTER_RELOAD'|config});
+	var filters = new Filter.SelectorMenu($("filterTop_{uniqid last=true}"), [[ config('TOP_FILTER_RELOAD') ]]);
 </script>
 {/footer}{/sect}

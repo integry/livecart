@@ -1,7 +1,7 @@
-{'STORE_NAME'|config} Confirmation de la commande
+[[ config('STORE_NAME') ]] Confirmation de la commande
 Cher {$user.fullName},
 
-Merci pour votre commande, Que vous venez tout juste de place sur {'STORE_NAME'|config}. Si vous avez besoin de nous contacter a propos de cette commande, s.v.p indiquer l'identifiant (ID) de la commande <b class="orderID">#{$order.invoiceNumber}</b>.
+Merci pour votre commande, Que vous venez tout juste de place sur [[ config('STORE_NAME') ]]. Si vous avez besoin de nous contacter a propos de cette commande, s.v.p indiquer l'identifiant (ID) de la commande <b class="orderID">#{$order.invoiceNumber}</b>.
 
 Vous pourrez suivre l'évolution de votre commande sur cette page:
 {link controller=user action=viewOrder id=$order.ID url=true}

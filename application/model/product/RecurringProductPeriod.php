@@ -19,14 +19,14 @@ class RecurringProductPeriod extends MultilingualObject
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("periodType", ARInteger::instance()));
-		$schema->registerField(new ARField("periodLength", ARInteger::instance()));
-		$schema->registerField(new ARField("rebillCount", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
+		public $ID;
+		public $productID", "Product", "ID", null, ARInteger::instance()));
+		public $position;
+		public $periodType;
+		public $periodLength;
+		public $rebillCount;
+		public $name;
+		public $description;
 	}
 
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
@@ -134,7 +134,7 @@ class RecurringProductPeriod extends MultilingualObject
 	{
 		$instance = ActiveRecord::getNewInstance(__CLASS__);
 		//$instance->setValueByLang('name', null, $defaultLanguageName);
-		$instance->productID->set($product);
+		$instance->productID = $product);
 		return $instance;
 	}
 

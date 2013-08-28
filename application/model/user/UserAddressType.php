@@ -19,16 +19,16 @@ abstract class UserAddressType extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userID", "user", "ID", 'User', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userAddressID", "userAddress", "ID", 'UserAddress', ARInteger::instance()));
+		public $ID;
+		public $userID", "user", "ID", 'User;
+		public $userAddressID", "userAddress", "ID", 'UserAddress;
 	}
 
 	public static function getNewInstance($className, User $user, UserAddress $userAddress)
 	{
 		$instance = parent::getNewInstance($className);
-		$instance->user->set($user);
-		$instance->userAddress->set($userAddress);
+		$instance->user = $user);
+		$instance->userAddress = $userAddress);
 		return $instance;
 	}
 

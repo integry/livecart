@@ -1,7 +1,7 @@
-Välkommen till {'STORE_NAME'|config}!
+Välkommen till [[ config('STORE_NAME') ]]!
 Kära {$user.fullName},
 
-Här kommer dina användaruppgifter hos {'STORE_NAME'|config}:
+Här kommer dina användaruppgifter hos [[ config('STORE_NAME') ]]:
 
 E-mail: <b>{$user.email}</b>
 Password: <b>{$user.newPassword}</b>

@@ -1,4 +1,4 @@
 Jūsų parašas čia:
 ------------------------
-{'STORE_NAME'|config}
+[[ config('STORE_NAME') ]]
 {link url=true}

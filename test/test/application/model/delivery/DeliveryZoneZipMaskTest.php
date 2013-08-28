@@ -47,8 +47,8 @@ class DeliveryZoneZipMaskTest extends LiveCartTest
 
 		$zipMask->reload();
 
-		$this->assertEquals($zipMask->deliveryZone->get(), $this->zone);
-		$this->assertEquals($zipMask->mask->get(), 'Viln%');
+		$this->assertEquals($zipMask->deliveryZone, $this->zone);
+		$this->assertEquals($zipMask->mask, 'Viln%');
 	}
 }
 ?>

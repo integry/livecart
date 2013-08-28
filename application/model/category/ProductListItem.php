@@ -16,10 +16,10 @@ class ProductListItem extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('productListID', 'ProductList', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('productID', 'Product', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('position', ARInteger::instance()));
+		public $ID;
+		public $productListID', 'ProductList', 'ID', null, ARInteger::instance()));
+		public $productID', 'Product', 'ID', null, ARInteger::instance()));
+		public $position;
 		$schema->registerAutoReference('productID');
 	}
 
@@ -28,8 +28,8 @@ class ProductListItem extends ActiveRecordModel
 	public static function getNewInstance(ProductList $productList, Product $product)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->productList->set($productList);
-		$instance->product->set($product);
+		$instance->productList = $productList);
+		$instance->product = $product);
 		return $instance;
 	}
 

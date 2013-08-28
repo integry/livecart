@@ -21,11 +21,11 @@ class ShipmentTax extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__class__);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("taxRateID", "TaxRate", "ID", "TaxRate", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		public $ID;
+		public $taxRateID;
+		public $shipmentID;
+		public $type;
+		public $amount;
 	}
 
 	/**
@@ -36,9 +36,9 @@ class ShipmentTax extends ActiveRecordModel
 	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment, $type)
 	{
 	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);
-	  	$instance->taxRate->set($taxRate);
-	  	$instance->shipment->set($shipment);
-	  	$instance->type->set($type);
+	  	$instance->taxRate = $taxRate);
+	  	$instance->shipment = $shipment);
+	  	$instance->type = $type);
 	  	$instance->recalculateAmount(null);
 
 	  	return $instance;
@@ -71,7 +71,7 @@ class ShipmentTax extends ActiveRecordModel
 
 			if (!$totalAmount)
 			{
-				$this->amount->set(0);
+				$this->amount = 0);
 				return;
 			}
 
@@ -117,7 +117,7 @@ class ShipmentTax extends ActiveRecordModel
 			}
 		}
 
-		$this->amount->set($taxAmount);
+		$this->amount = $taxAmount);
 	}
 
 	public function getAmount($amount = null)

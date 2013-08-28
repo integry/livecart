@@ -119,7 +119,7 @@ class CustomerOrderController extends ActiveGridController
 	public function info()
 	{
 		$this->loadLanguageFile('backend/Shipment');
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('User', 'Currency'));
+		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, array('User', 'Currency'));
 		$order->getSpecification();
 		$order->loadAll();
 		$this->removeEmptyShipments($order);
@@ -281,7 +281,7 @@ class CustomerOrderController extends ActiveGridController
 
 	private function shipmentInfo($response)
 	{
-		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'), true, true);
 		$order->loadAll();
 		$order->getCoupons();
 
@@ -350,7 +350,7 @@ class CustomerOrderController extends ActiveGridController
 		$totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
 
 		// $response = new ActionResponse();
-		$response->set('orderID', $this->request->get('id'));
+		$response->set('orderID', $this->request->gget('id'));
 		$response->set('order', $order->toArray());
 		$response->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
 		$response->set('shipments', $shipmentsArray);
@@ -392,8 +392,8 @@ class CustomerOrderController extends ActiveGridController
 			return new JSONResponse(array('errors'=>$errors), 'validationError');
 		}
 
-		$order = CustomerOrder::getInstanceById($request->get('orderID'));
-		$newDate =  $request->get('dateCompleted');
+		$order = CustomerOrder::getInstanceById($request->gget('orderID'));
+		$newDate =  $request->gget('dateCompleted');
 		if(strpos($newDate, ':') === false)
 		{
 			list($oldDate, $oldTime) = explode(' ',(string)$order->dateCompleted->get());
@@ -477,21 +477,21 @@ class CustomerOrderController extends ActiveGridController
 
 		$response = new ActionResponse();
 		$response->set("massForm", $this->getMassForm());
-		$response->set("orderGroupID", $this->request->get('id'));
+		$response->set("orderGroupID", $this->request->gget('id'));
 
-		if ($this->request->get('userOrderID'))
+		if ($this->request->gget('userOrderID'))
 		{
-			$order = CustomerOrder::getInstanceById($this->request->get('userOrderID'), true);
+			$order = CustomerOrder::getInstanceById($this->request->gget('userOrderID'), true);
 			$this->request->set('userID', $order->user->get()->getID());
 		}
 
-		if ($this->request->get('userID'))
+		if ($this->request->gget('userID'))
 		{
-			$response->set('userID', $this->request->get('userID'));
+			$response->set('userID', $this->request->gget('userID'));
 		}
 
 		$this->setGridResponse($response);
-		$response->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
+		$response->set("filters", ((int)$this->request->gget('userID') ? array('filter_User.ID' => $this->request->gget('userID')) : false));
 
 		return $response;
 	}
@@ -501,7 +501,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function switchCancelled()
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 
 		$history = new OrderHistory($order, $this->user);
 		if ($order->isCancelled->get())
@@ -532,7 +532,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function finalize()
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 		$order->loadAll();
 
 		$order->finalize();
@@ -598,12 +598,12 @@ class CustomerOrderController extends ActiveGridController
 
 		$filter = new ARSelectFilter();
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder', $this->getHavingClauseColumnTypes());
-		$typeCond = $this->getTypeCondition($this->request->get('id'));
+		$typeCond = $this->getTypeCondition($this->request->gget('id'));
 		$this->applyFullNameFilter($typeCond);
 		$this->applyStateFilter($typeCond);
 		$filter->mergeCondition($typeCond);
 
-		if ('printLabels' == $this->request->get('act'))
+		if ('printLabels' == $this->request->gget('act'))
 		{
 			$GLOBALS['filter'] = $filter;
 			return new InternalRedirectResponse('backend.customerOrder', 'printLabels');
@@ -632,7 +632,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 		else
 		{
-			$filter = select(eq('CustomerOrder.ID', $this->request->get('id')));
+			$filter = select(eq('CustomerOrder.ID', $this->request->gget('id')));
 		}
 
 		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
@@ -642,14 +642,14 @@ class CustomerOrderController extends ActiveGridController
 	{
 		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
 
-		return new JSONResponse(array('isCancelled' => OrderMassActionProcessor::isCancelled($this->request->get('pid'))));
+		return new JSONResponse(array('isCancelled' => OrderMassActionProcessor::isCancelled($this->request->gget('pid'))));
 	}
 
 	public function changeColumns()
 	{
 		parent::changeColumns();
 
-		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->get('id')));
+		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->gget('id')));
 	}
 
 	public function exportDetailed()
@@ -750,17 +750,17 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 
-		$id = $this->request->get('id');
+		$id = $this->request->gget('id');
 		if (!is_numeric($id))
 		{
-			list ($foo, $id) = explode('_', $this->request->get('id'));
+			list ($foo, $id) = explode('_', $this->request->gget('id'));
 		}
 		$cond = $this->getTypeCondition($id);
 
 		$this->applyFullNameFilter($cond);
 		$this->applyStateFilter($cond);
 
-		$filters = $this->request->get('filters');
+		$filters = $this->request->gget('filters');
 		$displayedColumns = $this->getDisplayedColumns();
 		$columns = array_merge(array_keys(is_array($filters) ? $filters : array()), array_keys(is_array($displayedColumns) ? $displayedColumns : array()));
 
@@ -885,17 +885,17 @@ class CustomerOrderController extends ActiveGridController
 			)', '', 'HasUnrespondedCustomerMessage');
 		}
 
-		if($this->request->get('sort_col') == 'User.fullName')
+		if($this->request->gget('sort_col') == 'User.fullName')
 		{
 			$this->request->remove('sort_col');
-			$direction = ($this->request->get('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
+			$direction = ($this->request->gget('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
 			$filter->setOrder(new ARFieldHandle("User", "lastName"), $direction);
 			$filter->setOrder(new ARFieldHandle("User", "firstName"), $direction);
 		}
 
-		if ($this->request->get('userID'))
+		if ($this->request->gget('userID'))
 		{
-			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->request->get('userID')));
+			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->request->gget('userID')));
 		}
 
 		$filter->setCondition($cond);
@@ -1000,7 +1000,7 @@ class CustomerOrderController extends ActiveGridController
 
 	private function applyFullNameFilter(Condition $cond)
 	{
-		$filters = $this->request->get('filters');
+		$filters = $this->request->gget('filters');
 		if (!is_array($filters))
 		{
 			$filters = (array)json_decode($filters);
@@ -1030,7 +1030,7 @@ class CustomerOrderController extends ActiveGridController
 
 	private function applyStateFilter(Condition $cond)
 	{
-		$filters = $this->request->get('filters');
+		$filters = $this->request->gget('filters');
 		if (!is_array($filters))
 		{
 			$filters = (array)json_decode($filters);
@@ -1146,7 +1146,7 @@ class CustomerOrderController extends ActiveGridController
 				return;
 		}
 
-		$filters = $this->request->get('filters');
+		$filters = $this->request->gget('filters');
 		if (!in_array($type, array(
 			self::TYPE_CANCELLED,
 			self::TYPE_ALL,
@@ -1167,7 +1167,7 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function saveFields()
 	{
-		$order = CustomerOrder::getInstanceByID($this->request->get('id'), true);
+		$order = CustomerOrder::getInstanceByID($this->request->gget('id'), true);
 		$order->loadAll();
 		if ($this->createFieldsFormValidator($order)->isValid())
 		{
@@ -1187,15 +1187,15 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function update()
 	{
-		$order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
+		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('ID'), true);
 		$order->loadAll();
 		$history = new OrderHistory($order, $this->user);
 
 		$oldStatus = $order->status->get();
 
-		$status = (int)$this->request->get('status');
+		$status = (int)$this->request->gget('status');
 		$order->status->set($status);
-		//$isCancelled = (int)$this->request->get('isCancelled') ? true : false;
+		//$isCancelled = (int)$this->request->gget('isCancelled') ? true : false;
 		//$order->isCancelled->set($isCancelled);
 
 		$order->updateShipmentStatuses();
@@ -1212,8 +1212,8 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function setMultiAddress()
 	{
-		$order = CustomerOrder::getInstanceByID((int)$this->request->get('id'), true);
-		$order->isMultiAddress->set($this->request->get('status'));
+		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('id'), true);
+		$order->isMultiAddress->set($this->request->gget('status'));
 		$order->save(true);
 	}
 
@@ -1223,7 +1223,7 @@ class CustomerOrderController extends ActiveGridController
 	public function create()
 	{
 		ActiveRecord::beginTransaction();
-		$user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
+		$user = User::getInstanceByID((int)$this->request->gget('customerID'), true, true);
 		$user->loadAddresses();
 
 		$order = CustomerOrder::getNewInstance($user);
@@ -1261,15 +1261,15 @@ class CustomerOrderController extends ActiveGridController
 
 		if($validator->isValid())
 		{
-			$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
-			$address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true, array('State'));
+			$order = CustomerOrder::getInstanceByID((int)$this->request->gget('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
+			$address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->gget('ID'), true, array('State'));
 
 			$history = new OrderHistory($order, $this->user);
 			$address->loadRequestData($this->request);
 			$address->save();
 			$history->saveLog();
 
-			if (!$this->request->get('ID'))
+			if (!$this->request->gget('ID'))
 			{
 				if (!$order->billingAddress->get())
 				{
@@ -1305,7 +1305,7 @@ class CustomerOrderController extends ActiveGridController
 
 	public function recalculateDiscounts()
 	{
-		$order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 		$order->deleteRelatedRecordSet('OrderDiscount');
 		$order->loadAll();
 
@@ -1322,7 +1322,7 @@ class CustomerOrderController extends ActiveGridController
 	public function printInvoice()
 	{
 		$this->application->setTheme('');
-		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
 		$order->loadAll();
 
 		if ($order->user->get())
@@ -1549,7 +1549,7 @@ class CustomerOrderController extends ActiveGridController
 	{
 		ClassLoader::import('application.model.discount.DiscountCondition');
 		$response = $this->getRequest();
-		$code = $this->request->get('coupon');
+		$code = $this->request->gget('coupon');
 
 		$msg = '_coupon_not_found';
 		$error = true;
@@ -1609,7 +1609,7 @@ class CustomerOrderController extends ActiveGridController
 	private function invoiceRequestPreFilter() // or putting it simple - witchcraft
 	{
 		$request = $this->getRequest();
-		$parentID = $request->get('id'); // for invoice tab active grid parentID is passed as id
+		$parentID = $request->gget('id'); // for invoice tab active grid parentID is passed as id
 		$parentID = str_replace('recurringOrdersWithParent_', '',$parentID); // and when listing (reload, advanced search) id can has some prefix, removing.
 		$request->set('id', self::TYPE_RECURRING_WITH_PARENT); // but for orders active grid id is used as type, setting type then, because reusing as much as possible from orders grid.
 		$request->set('parentID', $parentID); // and also parent id.
@@ -1619,7 +1619,7 @@ class CustomerOrderController extends ActiveGridController
 	{
 		try {
 			$request = $this->getRequest();
-			$id = $request->get('id');
+			$id = $request->gget('id');
 			$order = CustomerOrder::getInstanceById($id);
 			if ($this->canCancelRecurring($order))
 			{
@@ -1647,7 +1647,7 @@ class CustomerOrderController extends ActiveGridController
 		if ($order === null)
 		{
 			$request = $this->getRequest();
-			$id = $request->get('id');
+			$id = $request->gget('id');
 			$order = CustomerOrder::getInstanceById($id);
 		}
 

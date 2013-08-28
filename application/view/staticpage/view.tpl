@@ -1,3 +1,14 @@
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+test
+    <p class="important">Welcome on my awesome {{homepage}}.</p>
+{% endblock %}
+
+{#
+
 {pageTitle}{$page.title_lang}{/pageTitle}
 {assign var="metaDescription" value=$page.metaDescription_lang|@strip_tags}
 
@@ -42,3 +53,5 @@
 {include file="block/content-stop.tpl"}
 {include file="layout/frontend/footer.tpl"}
 </div>
+
+#}

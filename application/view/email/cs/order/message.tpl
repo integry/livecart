@@ -1,4 +1,4 @@
-Nová zpráva ohledně Vaší objednávky na {'STORE_NAME'|config}
+Nová zpráva ohledně Vaší objednávky na [[ config('STORE_NAME') ]]
 Vážený(á) {$user.fullName},
 
 Dostal jste novou zprávu ohledně Vaší objednávky.

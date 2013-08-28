@@ -105,10 +105,10 @@ class InstallController extends FrontendController
 		$type = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
 
 		$dsn = $type . '://' .
-				   $this->request->get('username') .
-				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') .
-				   			'@' . $this->request->get('server') .
-				   				'/' . $this->request->get('name');
+				   $this->request->gget('username') .
+				   		($this->request->gget('password') ? ':' . $this->request->gget('password') : '') .
+				   			'@' . $this->request->gget('server') .
+				   				'/' . $this->request->gget('name');
 
 		ClassLoader::import('library.activerecord.ActiveRecord');
 		ActiveRecord::resetDBConnection();
@@ -205,9 +205,9 @@ class InstallController extends FrontendController
 		$group->save();
 
 		// create administrator account
-		$user = User::getNewInstance($this->request->get('email'), null, $group);
+		$user = User::getNewInstance($this->request->gget('email'), null, $group);
 		$user->loadRequestData($this->request);
-		$user->setPassword($this->request->get('password'));
+		$user->setPassword($this->request->gget('password'));
 		$user->isEnabled->set(true);
 		$user->save();
 
@@ -217,9 +217,9 @@ class InstallController extends FrontendController
 		SessionUser::setUser($user);
 
 		// set store email
-		$this->config->set('MAIN_EMAIL', $this->request->get('email'));
-		$this->config->set('NOTIFICATION_EMAIL', $this->request->get('email'));
-		$this->config->set('NEWSLETTER_EMAIL', $this->request->get('email'));
+		$this->config->set('MAIN_EMAIL', $this->request->gget('email'));
+		$this->config->set('NOTIFICATION_EMAIL', $this->request->gget('email'));
+		$this->config->set('NEWSLETTER_EMAIL', $this->request->gget('email'));
 		$this->config->save();
 
 		return new ActionRedirectResponse('install', 'config');
@@ -263,20 +263,20 @@ class InstallController extends FrontendController
 		Language::deleteCache();
 
 		// site name
-		$this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
+		$this->config->setValueByLang('STORE_NAME', $this->request->gget('language'), $this->request->gget('name'));
 		$this->config->save();
 
 		ClassLoader::import('application.model.Currency');
 
 		// create currency
-		if (ActiveRecord::objectExists('Currency', $this->request->get('curr')))
+		if (ActiveRecord::objectExists('Currency', $this->request->gget('curr')))
 		{
-			$currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
+			$currency = Currency::getInstanceByID($this->request->gget('curr'), Currency::LOAD_DATA);
 		}
 		else
 		{
 			$currency = ActiveRecord::getNewInstance('Currency');
-			$currency->setID($this->request->get('curr'));
+			$currency->setID($this->request->gget('curr'));
 			$currency->isEnabled->set(true);
 			$currency->isDefault->set(true);
 			$currency->save(ActiveRecord::PERFORM_INSERT);
@@ -285,14 +285,14 @@ class InstallController extends FrontendController
 		ClassLoader::import('application.model.system.Language');
 
 		// create language
-		if (ActiveRecord::objectExists('Language', $this->request->get('language')))
+		if (ActiveRecord::objectExists('Language', $this->request->gget('language')))
 		{
-			$language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
+			$language = Language::getInstanceByID($this->request->gget('language'), Language::LOAD_DATA);
 		}
 		else
 		{
 			$language = ActiveRecord::getNewInstance('Language');
-			$language->setID($this->request->get('language'));
+			$language->setID($this->request->gget('language'));
 			$language->save(ActiveRecord::PERFORM_INSERT);
 
 			$language->isEnabled->set(true);
@@ -443,7 +443,7 @@ class InstallController extends FrontendController
 		$validator->addCheck("email", new IsUniqueEmailCheck($this->translate("The e-mail address is already assigned to an existing user account")));
 		$validator->addCheck("password", new IsNotEmptyCheck($this->translate("Please enter the password")));
 		$validator->addCheck("confirmPassword", new IsNotEmptyCheck($this->translate("Please enter the password")));
-		$validator->addCheck("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->get('password'), 'password'));
+		$validator->addCheck("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->gget('password'), 'password'));
 		return $validator;
 	}
 

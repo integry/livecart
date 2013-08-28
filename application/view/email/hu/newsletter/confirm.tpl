@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Hírlevélre való feliratkozás megerősítése
+[[ config('STORE_NAME') ]] Hírlevélre való feliratkozás megerősítése
 Hello,
 
 Hogy megerősítsd e-mail címedet, és elkezd kapni hírlevelünkett kattints a következő linkre:

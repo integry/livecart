@@ -21,10 +21,10 @@ class ObjectFile extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("fileName", ARText::instance()));
-		$schema->registerField(new ARField("extension", ARText::instance()));
-		$schema->registerField(new ARField("filePath", ARText::instance()));
+		public $ID;
+		public $fileName;
+		public $extension;
+		public $filePath;
 		return $schema;
 	}
 
@@ -43,12 +43,12 @@ class ObjectFile extends MultilingualObject
 		$fileInfo = pathinfo($baseName);
 		if (!empty($fileInfo['filename']))
 		{
-			$this->fileName->set($fileInfo['filename']);
+			$this->fileName = $fileInfo['filename']);
 		}
 
 		if (!empty($fileInfo['extension']))
 		{
-			$this->extension->set($fileInfo['extension']);
+			$this->extension = $fileInfo['extension']);
 		}
 	}
 
@@ -80,7 +80,7 @@ class ObjectFile extends MultilingualObject
 
 		$this->setBaseName($fileName ? $fileName : $pathOrUrl);
 		$this->sourceFilePath = $sourceFilePath;
-		$this->filePath->set($pathOrUrl);
+		$this->filePath = $pathOrUrl);
 	}
 
 	public function save($forceOperation = false)

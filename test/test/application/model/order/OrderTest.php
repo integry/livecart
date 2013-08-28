@@ -91,10 +91,10 @@ class OrderTest extends OrderTestCommon
 		$sum = 0;
 		foreach ($this->order->getShipments() as $shipment)
 		{
-			$sum += $shipment->amount->get();
+			$sum += $shipment->amount;
 		}
 
-		$this->assertEqual($sum, $this->order->totalAmount->get());
+		$this->assertEqual($sum, $this->order->totalAmount);
 
 		ActiveRecord::clearPool();
 
@@ -106,7 +106,7 @@ class OrderTest extends OrderTestCommon
 		// change price for one product...
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			$product = $item->product->get();
+			$product = $item->product;
 			$product->setPrice('USD', $product->getPrice('USD') + 10);
 //			$order->removeProduct($product);
 //			var_dump(count($order->getShoppingCartItems()));
@@ -114,7 +114,7 @@ class OrderTest extends OrderTestCommon
 //			var_dump(count($order->getShoppingCartItems()));
 //			$order->save();
 //			var_dump(count($order->getShoppingCartItems()));
-//			var_dump($order->totalAmount->get() . '!');
+//			var_dump($order->totalAmount . '!');
 //			var_dump('test');
 //			$order->addProduct($product, 1);
 			$order->save();
@@ -130,7 +130,7 @@ class OrderTest extends OrderTestCommon
 		// $this->assertNotEqual($total, $order->getTotal(true));
 
 		// however the "closed" price should still be the same as this order is already finalized
-		$this->assertEqual($total, $order->totalAmount->get());
+		$this->assertEqual($total, $order->totalAmount);
 	}
 
 	function testPayment()
@@ -142,15 +142,15 @@ class OrderTest extends OrderTestCommon
 		$this->order->finalize();
 
 		$result = new TransactionResult();
-		$result->amount->set($this->order->totalAmount->get());
-		$result->currency->set($this->order->currency->get()->getID());
+		$result->amount->set($this->order->totalAmount);
+		$result->currency->set($this->order->currency->getID());
 		$result->gatewayTransactionID->set('TESTTRANSACTION');
 		$result->setTransactionType(TransactionResult::TYPE_SALE);
 
 		$transaction = Transaction::getNewInstance($this->order, $result);
 		$transaction->save();
 
-		$this->assertEqual($this->order->totalAmount->get(), $this->order->capturedAmount->get());
+		$this->assertEqual($this->order->totalAmount, $this->order->capturedAmount);
 	}
 
 	function testMerge()
@@ -234,17 +234,17 @@ class OrderTest extends OrderTestCommon
 		$product->isFractionalUnit->set(true);
 		$order->addProduct($product, 1.5);
 		$items = $order->getItemsByProduct($product);
-		$this->assertEqual($items[0]->count->get(), 1.5);
+		$this->assertEqual($items[0]->count, 1.5);
 
 		// disable fractional units
 		$product->isFractionalUnit->set(false);
 		$order->updateCount($items[0], 1.2);
-		$this->assertEqual($items[0]->count->get(), 1);
+		$this->assertEqual($items[0]->count, 1);
 
 		$order->removeProduct($product);
 		$order->addProduct($product, 3.3);
 		$items = $order->getItemsByProduct($product);
-		$this->assertEqual($items[0]->count->get(), 3);
+		$this->assertEqual($items[0]->count, 3);
 	}
 
 	function testDigitalItems()
@@ -425,18 +425,18 @@ class OrderTest extends OrderTestCommon
 		$order->finalize();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 1);
+		$this->assertEqual($product->stockCount, 1);
+		$this->assertEqual($product->reservedCount, 1);
 
 		// mark order as shipped - the stock is gone
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 		foreach ($order->getShipments() as $shipment)
 		{
-			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+			$this->assertEqual($shipment->status, Shipment::STATUS_SHIPPED);
 		}
 
-		$this->assertEqual($product->stockCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 1);
+		$this->assertEqual($product->reservedCount, 0);
 	}
 
 	public function testInventoryForCancelledOrder()
@@ -452,12 +452,12 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 		$order->finalize();
 
-		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->stockCount, 1);
 		$order->cancel();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 2);
-		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 2);
+		$this->assertEqual($product->reservedCount, 0);
 	}
 
 	public function testInventoryForRestoredOrder()
@@ -475,20 +475,20 @@ class OrderTest extends OrderTestCommon
 
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 		$product->reload();
-		$this->assertEqual($product->reservedCount->get(), 0);
-		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->reservedCount, 0);
+		$this->assertEqual($product->stockCount, 1);
 
 		$order->setStatus(CustomerOrder::STATUS_RETURNED);
 		$product->reload();
-		$this->assertEqual($item->reservedProductCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 1);
-		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($item->reservedProductCount, 1);
+		$this->assertEqual($product->reservedCount, 1);
+		$this->assertEqual($product->stockCount, 1);
 
 		$order->cancel();
 		$product->reload();
-		$this->assertEqual($item->reservedProductCount->get(), 0);
-		$this->assertEqual($product->stockCount->get(), 2);
-		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($item->reservedProductCount, 0);
+		$this->assertEqual($product->stockCount, 2);
+		$this->assertEqual($product->reservedCount, 0);
 	}
 
 	public function testInventoryForReturnedOrder()
@@ -505,18 +505,18 @@ class OrderTest extends OrderTestCommon
 		$order->finalize();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 1);
+		$this->assertEqual($product->stockCount, 1);
 
 		$order->cancel();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 2);
+		$this->assertEqual($product->stockCount, 2);
 
 		$order->restore();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 1);
+		$this->assertEqual($product->stockCount, 1);
+		$this->assertEqual($product->reservedCount, 1);
 	}
 
 	public function testInventoryForChangedOrder()
@@ -536,37 +536,37 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 		$order->finalize();
 
-		$i = $order->addProduct($second, 1, null, $item->shipment->get());
-		$this->assertEqual($i->shipment->get()->getID(), $item->shipment->get()->getID());
+		$i = $order->addProduct($second, 1, null, $item->shipment);
+		$this->assertEqual($i->shipment->getID(), $item->shipment->getID());
 		$order->save();
-		$this->assertEqual($i->shipment->get()->getID(), $item->shipment->get()->getID());
-		$this->assertEqual(count($item->shipment->get()->getItems()), 2);
+		$this->assertEqual($i->shipment->getID(), $item->shipment->getID());
+		$this->assertEqual(count($item->shipment->getItems()), 2);
 
 		$second->reload();
-		$this->assertEqual($second->stockCount->get(), 1);
-		$this->assertEqual($second->reservedCount->get(), 1);
+		$this->assertEqual($second->stockCount, 1);
+		$this->assertEqual($second->reservedCount, 1);
 
 		$i->count->set(2);
 		$i->save();
-		$this->assertEqual($second->stockCount->get(), 0);
-		$this->assertEqual($second->reservedCount->get(), 2);
+		$this->assertEqual($second->stockCount, 0);
+		$this->assertEqual($second->reservedCount, 2);
 
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
-		$this->assertEqual($second->stockCount->get(), 0);
-		$this->assertEqual($second->reservedCount->get(), 0);
+		$this->assertEqual($second->stockCount, 0);
+		$this->assertEqual($second->reservedCount, 0);
 
 		$order->setStatus(CustomerOrder::STATUS_RETURNED);
-		$this->assertEqual($second->stockCount->get(), 0);
-		$this->assertEqual($second->reservedCount->get(), 2);
+		$this->assertEqual($second->stockCount, 0);
+		$this->assertEqual($second->reservedCount, 2);
 
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
-		$this->assertEqual($second->stockCount->get(), 0);
-		$this->assertEqual($second->reservedCount->get(), 0);
+		$this->assertEqual($second->stockCount, 0);
+		$this->assertEqual($second->reservedCount, 0);
 
 		// stock levels won't change if a shipped order is cancelled
 		$order->cancel();
-		$this->assertEqual($second->stockCount->get(), 0);
-		$this->assertEqual($second->reservedCount->get(), 0);
+		$this->assertEqual($second->stockCount, 0);
+		$this->assertEqual($second->reservedCount, 0);
 	}
 
 	public function testInventoryForChangedProduct()
@@ -591,12 +591,12 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 2);
-		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 2);
+		$this->assertEqual($product->reservedCount, 0);
 
 		$second->reload();
-		$this->assertEqual($second->stockCount->get(), 1);
-		$this->assertEqual($second->reservedCount->get(), 1);
+		$this->assertEqual($second->stockCount, 1);
+		$this->assertEqual($second->reservedCount, 1);
 	}
 
 	public function testInventoryForDownloadableProducts()
@@ -615,17 +615,17 @@ class OrderTest extends OrderTestCommon
 		$order->finalize();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 2);
-		$this->assertEqual((int)$product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 2);
+		$this->assertEqual((int)$product->reservedCount, 0);
 
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 		foreach ($order->getShipments() as $shipment)
 		{
-			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+			$this->assertEqual($shipment->status, Shipment::STATUS_SHIPPED);
 		}
 
-		$this->assertEqual($product->stockCount->get(), 2);
-		$this->assertEqual((int)$product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 2);
+		$this->assertEqual((int)$product->reservedCount, 0);
 	}
 
 	public function testEnabledInventoryTrackingForDownloadableProducts()
@@ -644,18 +644,18 @@ class OrderTest extends OrderTestCommon
 		$order->finalize();
 
 		$product->reload();
-		$this->assertEqual($product->stockCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 1);
+		$this->assertEqual($product->stockCount, 1);
+		$this->assertEqual($product->reservedCount, 1);
 
 		// mark order as shipped - the stock is gone
 		$order->setStatus(CustomerOrder::STATUS_SHIPPED);
 		foreach ($order->getShipments() as $shipment)
 		{
-			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+			$this->assertEqual($shipment->status, Shipment::STATUS_SHIPPED);
 		}
 
-		$this->assertEqual($product->stockCount->get(), 1);
-		$this->assertEqual($product->reservedCount->get(), 0);
+		$this->assertEqual($product->stockCount, 1);
+		$this->assertEqual($product->reservedCount, 0);
 
 		$this->assertEqual($product->getMaxOrderableCount(), 1);
 	}
@@ -686,9 +686,9 @@ class OrderTest extends OrderTestCommon
 
 		// quantity of the first item should be reduced to 1 and the second item should be removed
 		$this->assertEqual(count($result), 2);
-		$this->assertEqual($item->count->get(), 1);
-		$this->assertEqual((int)$item->isSavedForLater->get(), OrderedItem::CART);
-		$this->assertEqual($item2->isSavedForLater->get(), OrderedItem::OUT_OF_STOCK);
+		$this->assertEqual($item->count, 1);
+		$this->assertEqual((int)$item->isSavedForLater, OrderedItem::CART);
+		$this->assertEqual($item2->isSavedForLater, OrderedItem::OUT_OF_STOCK);
 
 		// no changes made after update - return nothing
 		$this->assertEqual(count($order->updateToStock()), 0);
@@ -697,8 +697,8 @@ class OrderTest extends OrderTestCommon
 		$second->stockCount->set(2);
 		$result = $order->updateToStock();
 		$this->assertEqual(count($result), 1);
-		$this->assertEqual((int)$item->isSavedForLater->get(), OrderedItem::CART);
-		$this->assertEqual($item2->isSavedForLater->get(), OrderedItem::CART);
+		$this->assertEqual((int)$item->isSavedForLater, OrderedItem::CART);
+		$this->assertEqual($item2->isSavedForLater, OrderedItem::CART);
 	}
 
 	public function testOrderingABundle()
@@ -742,7 +742,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($order->getTotal(true), 100);
 
 		$containerItem = array_shift($order->getItemsByProduct($container));
-		$this->assertSame($containerItem->product->get(), $container);
+		$this->assertSame($containerItem->product, $container);
 
 		$subItems = $containerItem->getSubItems();
 		$this->assertEqual($subItems->size(), count($this->products));
@@ -760,25 +760,25 @@ class OrderTest extends OrderTestCommon
 		// check inventory
 		foreach ($this->products as $product)
 		{
-			$this->assertEqual($product->reservedCount->get(), 1);
-			$this->assertEqual($product->stockCount->get(), 2);
+			$this->assertEqual($product->reservedCount, 1);
+			$this->assertEqual($product->stockCount, 2);
 		}
 */
 		// mark order as shipped - the stock is gone
-		$this->assertNotEquals($order->status->get(), CustomerOrder::STATUS_SHIPPED);
+		$this->assertNotEquals($order->status, CustomerOrder::STATUS_SHIPPED);
 
 		$reloaded->setStatus(CustomerOrder::STATUS_SHIPPED);
 
 		foreach ($reloaded->getShipments() as $shipment)
 		{
-			$this->assertEqual($shipment->status->get(), Shipment::STATUS_SHIPPED);
+			$this->assertEqual($shipment->status, Shipment::STATUS_SHIPPED);
 		}
 
 		foreach ($this->products as $key => $product)
 		{
 			$product->reload();
-			$this->assertEqual($product->reservedCount->get(), 0);
-			$this->assertEqual($product->stockCount->get(), 1);
+			$this->assertEqual($product->reservedCount, 0);
+			$this->assertEqual($product->stockCount, 1);
 		}
 
 		$this->config->setRuntime('INVENTORY_TRACKING', 'DISABLE');
@@ -947,7 +947,7 @@ class OrderTest extends OrderTestCommon
 
 		// test item prices
 		$item = array_shift($order->getItemsByProduct($this->products[0]));
-		//var_dump($item->price->get());
+		//var_dump($item->price);
 
 
 	}
@@ -1504,7 +1504,7 @@ class OrderTest extends OrderTestCommon
 		$price->setPriceRule(4, $group, 10);
 		$this->assertEquals($this->order->getTotal(true), 75);
 
-		$user = $this->order->user->get();
+		$user = $this->order->user;
 		$user->userGroup->set($group);
 		$user->save();
 		$this->assertEquals($this->order->getTotal(true), 50);
@@ -1621,7 +1621,7 @@ class OrderTest extends OrderTestCommon
 		foreach ($order->getShipments() as $key => $shipment)
 		{
 			$this->assertEquals(count($shipment->getItems()), 1);
-			$this->assertEquals(array_shift($shipment->getItems())->count->get(), $key + 1);
+			$this->assertEquals(array_shift($shipment->getItems())->count, $key + 1);
 		}
 
 		// order total with taxes and shipping
@@ -1648,7 +1648,7 @@ class OrderTest extends OrderTestCommon
 
 		foreach ($this->order->getShipments() as $shipment)
 		{
-			$shipment->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+			$shipment->shippingAddress->set($this->user->defaultShippingAddress->userAddress);
 		}
 
 		$this->order->user->set($this->user);
@@ -1669,31 +1669,31 @@ class OrderTest extends OrderTestCommon
 		// check original order
 		$this->assertEquals(2, $reloaded->getShipments()->size());
 		$this->assertEquals(2, count($reloaded->getOrderedItems()));
-		$this->assertEquals(1, array_shift($reloaded->getItemsByProduct($this->products[0]))->count->get());
+		$this->assertEquals(1, array_shift($reloaded->getItemsByProduct($this->products[0]))->count);
 		$this->assertEquals($total, $reloaded->getTotal(true));
 
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($cloned->getID(), true);
 		$order->loadAll();
-		$order->currency->get()->load();
+		$order->currency->load();
 
-		$this->assertTrue(is_object($this->user->defaultShippingAddress->get()));
+		$this->assertTrue(is_object($this->user->defaultShippingAddress));
 
 		//$this->user->reload();
 		//$this->user->loadAddresses();
 
-		$this->assertFalse((bool)$order->isFinalized->get());
+		$this->assertFalse((bool)$order->isFinalized);
 
-		$this->assertTrue(is_object($this->user->defaultShippingAddress->get()));
+		$this->assertTrue(is_object($this->user->defaultShippingAddress));
 
-		$this->assertEquals($this->user->getID(), $order->user->get()->getID());
-		$this->assertEquals($order->billingAddress->get()->getID(), $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
-		$this->assertEquals($order->shippingAddress->get()->getID(), $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+		$this->assertEquals($this->user->getID(), $order->user->getID());
+		$this->assertEquals($order->billingAddress->getID(), $this->user->defaultBillingAddress->userAddress->getID());
+		$this->assertEquals($order->shippingAddress->getID(), $this->user->defaultShippingAddress->userAddress->getID());
 
 		foreach ($order->getShipments() as $shipment)
 		{
-			$this->assertEquals($shipment->shippingAddress->get()->getID(),
-								$this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+			$this->assertEquals($shipment->shippingAddress->getID(),
+								$this->user->defaultShippingAddress->userAddress->getID());
 		}
 
 		$this->assertEquals(2, count($order->getOrderedItems()));
@@ -1702,8 +1702,8 @@ class OrderTest extends OrderTestCommon
 		$this->assertEquals(1, count($order->getShipments()->get(1)->getItems()));
 
 		$item = array_shift($order->getShipments()->get(1)->getItems());
-		$this->assertEquals(3, $item->count->get());
-		$this->assertEquals($this->products[1]->getID(), $item->product->get()->getID());
+		$this->assertEquals(3, $item->count);
+		$this->assertEquals($this->products[1]->getID(), $item->product->getID());
 
 		// check the total of the original order
 		ActiveRecord::clearPool();
@@ -1772,18 +1772,18 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 		$this->order->finalize();
 
-		$firstID = $this->order->invoiceNumber->get();
+		$firstID = $this->order->invoiceNumber;
 		$this->assertTrue(is_numeric($firstID));
 
 		// create an unfinished order between two finished orders
 		$cart->addProduct($this->products[0], 1);
 		$cart->save();
-		$this->assertNull($cart->invoiceNumber->get());
+		$this->assertNull($cart->invoiceNumber);
 
 		$second->addProduct($this->products[0], 1);
 		$second->save();
 		$second->finalize();
-		$this->assertEquals($firstID + 1, $second->invoiceNumber->get());
+		$this->assertEquals($firstID + 1, $second->invoiceNumber);
 		$this->assertEquals($this->order->getID() + 2, $second->getID());
 	}
 
@@ -1804,20 +1804,20 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 		$this->order->finalize();
 
-		$firstID = $this->order->invoiceNumber->get();
+		$firstID = $this->order->invoiceNumber;
 		$this->assertEquals($firstID, 'TEST0050005/2010');
 
 		// create an unfinished order between two finished orders
 		$cart->addProduct($this->products[0], 1);
 		$cart->save();
-		$this->assertNull($cart->invoiceNumber->get());
+		$this->assertNull($cart->invoiceNumber);
 
 		$second->addProduct($this->products[0], 1);
 		$second->save();
 		$second->finalize();
 		$this->assertEquals($this->order->getID() + 2, $second->getID());
-		$this->assertNotEquals($second->invoiceNumber->get(), $firstID);
-		$this->assertEquals($second->invoiceNumber->get(), 'TEST0050010/2010');
+		$this->assertNotEquals($second->invoiceNumber, $firstID);
+		$this->assertEquals($second->invoiceNumber, 'TEST0050010/2010');
 	}
 
 	public function testDeletedProductsInLiveOrders()
@@ -1837,7 +1837,7 @@ class OrderTest extends OrderTestCommon
 	{
 		$this->products[0]->setValueByLang('name', 'xx', 'test');
 		$this->products[0]->save();
-		$sku = $this->products[0]->sku->get();
+		$sku = $this->products[0]->sku;
 
 		$this->order->addProduct($this->products[0], 1);
 		$this->order->addProduct($this->products[1], 1);
@@ -2008,11 +2008,11 @@ class OrderTest extends OrderTestCommon
 		$rs = ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
 		$this->assertEquals(1, $rs->size(), 'Should generate one invoice order');
 		$invoice = $rs->shift();
-		$this->assertEquals('Recurring Order #1-1', $invoice->invoiceNumber->get());
+		$this->assertEquals('Recurring Order #1-1', $invoice->invoiceNumber);
 		$items = $invoice->getOrderedItems();
 		$this->assertEquals(1, count($items), 'Invoice should have one OrderedItem');
 		$item = array_shift($items);
-		$this->assertEquals(200, $item->price->get(), 'OrderedItem price should be set to period price');
+		$this->assertEquals(200, $item->price, 'OrderedItem price should be set to period price');
 	}
 
 	public function testGenerateInvoices_shortScenario()
@@ -2216,7 +2216,7 @@ class OrderTest extends OrderTestCommon
 		// 2010-03-01
 
 		$this->assertEquals(3, $order->getShipments()->size());
-		$this->assertEquals(-1, $order->rebillsLeft->get());
+		$this->assertEquals(-1, $order->rebillsLeft);
 
 		// from 2009-12-01 to 2010-01-04 there should be nothing to generate (see timeline above)
 		$this->assertIntervalHasNoInvoicesToGenerate('2009-12-01', '2010-01-04');
@@ -2412,8 +2412,8 @@ class OrderTest extends OrderTestCommon
 					$periodsInDb = array();
 					foreach($invoices as $invoice)
 					{
-						$start = $invoice->startDate->get();
-						$end = $invoice->endDate->get();
+						$start = $invoice->startDate;
+						$end = $invoice->endDate;
 						$key = sprintf('%s - %s', trim($start) ? date('Y-m-d',strtotime($start)) : 'NULL', trim($end) ? date('Y-m-d',strtotime($end)) : 'NULL' );
 						if (array_key_exists($key, $periodsInDb))
 						{
@@ -2447,7 +2447,7 @@ class OrderTest extends OrderTestCommon
 					$rebillsLeftInDb = array();
 					foreach ($invoices as $invoice)
 					{
-						$key = '_'.$invoice->rebillsLeft->get();
+						$key = '_'.$invoice->rebillsLeft;
 						if (array_key_exists($key, $rebillsLeftInDb))
 						{
 							$rebillsLeftInDb[$key]++;

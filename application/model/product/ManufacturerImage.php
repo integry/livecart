@@ -15,7 +15,7 @@ class ManufacturerImage extends ObjectImage
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", "Manufacturer", ARInteger::instance()));
+		public $manufacturerID", "Manufacturer", "ID", "Manufacturer;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -23,7 +23,7 @@ class ManufacturerImage extends ObjectImage
 	public static function getNewInstance(Manufacturer $manufacturer)
 	{
 	  	$image = ActiveRecord::getNewInstance(__CLASS__);
-	  	$image->manufacturer->set($manufacturer);
+	  	$image->manufacturer = $manufacturer);
 	  	return $image;
 	}
 
@@ -36,7 +36,7 @@ class ManufacturerImage extends ObjectImage
 			$this->load(array('Manufacturer'));
 		}
 
-		return self::getImagePath($this->getID(), $this->manufacturer->get()->getID(), $size);
+		return self::getImagePath($this->getID(), $this->manufacturer->getID(), $size);
 	}
 
 	public static function getImageSizes()
@@ -85,7 +85,7 @@ class ManufacturerImage extends ObjectImage
 
 	public function getOwner()
 	{
-		return $this->manufacturer->get();
+		return $this->manufacturer;
 	}
 }
 

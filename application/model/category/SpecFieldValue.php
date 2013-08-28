@@ -21,7 +21,7 @@ class SpecFieldValue extends EavValueCommon
 	public static function defineSchema()
 	{
 		$schema = parent::defineSchema(__CLASS__);
-		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
+		public $specFieldID", "SpecField", "ID", "SpecField;
 	}
 
 	protected function getFieldClass()

@@ -17,12 +17,12 @@ class TaxRate extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("TaxRate");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("taxID", "Tax", "ID", "Tax", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("taxClassID", "TaxClass", "ID", "TaxClass", ARInteger::instance()));
+		public $ID;
+		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
+		public $taxID", "Tax", "ID", "Tax;
+		public $taxClassID", "TaxClass", "ID", "TaxClass;
 
-		$schema->registerField(new ARField("rate", ARFloat::instance()));
+		public $rate;
 		$schema->registerAutoReference('taxClassID');
 	}
 
@@ -54,11 +54,11 @@ class TaxRate extends MultilingualObject
 
 		if($deliveryZone)
 		{
-			$instance->deliveryZone->set($deliveryZone);
+			$instance->deliveryZone = $deliveryZone);
 		}
 
-	  	$instance->tax->set($tax);
-	  	$instance->rate->set($rate);
+	  	$instance->tax = $tax);
+	  	$instance->rate = $rate);
 
 	  	return $instance;
 	}

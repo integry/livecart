@@ -18,7 +18,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 	public static function defineSchema()
 	{
 		$schema = parent::defineSchema(__CLASS__);
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+		public $categoryID;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -31,7 +31,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 	public static function getNewInstance(Category $category)
 	{
 		$inst = parent::getNewInstance(__CLASS__);
-		$inst->category->set($category);
+		$inst->category = $category);
 
 		return $inst;
 	}
@@ -51,7 +51,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 
 	public function getCategory()
 	{
-		return $this->category->get();
+		return $this->category;
 	}
 
 	protected function getParentCondition()

@@ -95,7 +95,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 		$this->checkAccess();
 
-		$this->application->setRequestLanguage($this->request->get('requestLanguage'));
+		$this->application->setRequestLanguage($this->request->gget('requestLanguage'));
 		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
 
@@ -250,7 +250,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function isAjax()
 	{
-		return $this->request->get('ajax');
+		return $this->request->gget('ajax');
 	}
 
 	protected function getRequestLanguage()

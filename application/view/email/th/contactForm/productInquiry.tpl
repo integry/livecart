@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} สอบถามสินค้า
+[[ config('STORE_NAME') ]] สอบถามสินค้า
 Product name: {$product.name_lang}
 SKU: {$product.sku}
 

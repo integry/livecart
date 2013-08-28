@@ -71,7 +71,7 @@ class CheckoutController extends FrontendController
 		{
 			if (in_array($this->request->getActionName(), array('index', 'selectAddress', 'shipping', 'pay')))
 			{
-				if (!$this->order->isMultiAddress->get() && !$this->session->get('noJS'))
+				if (!$this->order->isMultiAddress && !$this->session->get('noJS'))
 				{
 					return new ActionRedirectResponse('onePageCheckout', 'index');
 				}
@@ -129,7 +129,7 @@ class CheckoutController extends FrontendController
 	public function express()
 	{
 		// redirect to external site
-		$class = $this->request->get('id');
+		$class = $this->request->gget('id');
 		$this->order->setPaymentMethod($class);
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->setOrder($this->order);
@@ -144,7 +144,7 @@ class CheckoutController extends FrontendController
 
 	public function expressReturn()
 	{
-		$class = $this->request->get('id');
+		$class = $this->request->gget('id');
 		$this->order->setPaymentMethod($class);
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
@@ -169,12 +169,12 @@ class CheckoutController extends FrontendController
 		if ($this->user->isAnonymous())
 		{
 			// create new user account if it doesn't exist
-			if (!($user = User::getInstanceByEmail($details->email->get())))
+			if (!($user = User::getInstanceByEmail($details->email)))
 			{
-				$user = User::getNewInstance($details->email->get());
-				$user->firstName->set($details->firstName->get());
-				$user->lastName->set($details->lastName->get());
-				$user->companyName->set($details->companyName->get());
+				$user = User::getNewInstance($details->email);
+				$user->firstName->set($details->firstName);
+				$user->lastName->set($details->lastName);
+				$user->companyName->set($details->companyName);
 				$user->isEnabled->set(true);
 				$user->save();
 			}
@@ -203,7 +203,7 @@ class CheckoutController extends FrontendController
 	{
 		$this->user->loadAddresses();
 
-		$step = $this->config->get('ENABLE_CHECKOUTDELIVERYSTEP') ? $this->request->get('step', 'billing') : null;
+		$step = $this->config->get('ENABLE_CHECKOUTDELIVERYSTEP') ? $this->request->gget('step', 'billing') : null;
 
 		if ($this->config->get('REQUIRE_SAME_ADDRESS') && ('shipping' == $step))
 		{
@@ -213,19 +213,19 @@ class CheckoutController extends FrontendController
 		// address step disabled?
 		if ($this->config->get('DISABLE_CHECKOUT_ADDRESS_STEP'))
 		{
-			if ($this->user->defaultBillingAddress->get())
+			if ($this->user->defaultBillingAddress)
 			{
-				$this->order->billingAddress->set($this->user->defaultBillingAddress->get()->userAddress->get());
+				$this->order->billingAddress->set($this->user->defaultBillingAddress->userAddress);
 			}
 
-			if ($this->user->defaultShippingAddress->get() && $this->order->isShippingRequired())
+			if ($this->user->defaultShippingAddress && $this->order->isShippingRequired())
 			{
-				$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+				$this->order->shippingAddress->set($this->user->defaultShippingAddress->userAddress);
 			}
 
 			$this->order->save();
 
-			if (!$this->order->shippingAddress->get() && $this->isShippingRequired($this->order))
+			if (!$this->order->shippingAddress && $this->isShippingRequired($this->order))
 			{
 				$step = 'shipping';
 			}
@@ -242,33 +242,33 @@ class CheckoutController extends FrontendController
 
 		$form = $this->buildAddressSelectorForm($this->order, $step);
 
-		if ($this->order->billingAddress->get())
+		if ($this->order->billingAddress)
 		{
-			$form->set('billingAddress', $this->order->billingAddress->get()->getID());
+			$form->set('billingAddress', $this->order->billingAddress->getID());
 		}
 		else
 		{
-			if ($this->user->defaultBillingAddress->get())
+			if ($this->user->defaultBillingAddress)
 			{
-				$form->set('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
+				$form->set('billingAddress', $this->user->defaultBillingAddress->userAddress->getID());
 			}
 		}
 
-		if ($this->order->shippingAddress->get())
+		if ($this->order->shippingAddress)
 		{
-			$form->set('shippingAddress', $this->order->shippingAddress->get()->getID());
+			$form->set('shippingAddress', $this->order->shippingAddress->getID());
 		}
 		else
 		{
-			if ($this->user->defaultShippingAddress->get())
+			if ($this->user->defaultShippingAddress)
 			{
-				$form->set('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+				$form->set('shippingAddress', $this->user->defaultShippingAddress->userAddress->getID());
 			}
 		}
 
 		if (!$form->get('checkbox_sameAsBilling'))
 		{
-			$form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress->get()));
+			$form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress));
 		}
 
 		foreach (array('firstName', 'lastName') as $name)
@@ -276,7 +276,7 @@ class CheckoutController extends FrontendController
 			$var = 'billing_' . $name;
 			if (!$form->get($var))
 			{
-				$form->set($var, $this->user->$name->get());
+				$form->set($var, $this->user->$name);
 			}
 		}
 
@@ -356,7 +356,7 @@ class CheckoutController extends FrontendController
 	{
 		$this->user->loadAddresses();
 
-		$step = $this->request->get('step');
+		$step = $this->request->gget('step');
 
 		$validator = $this->buildAddressSelectorValidator($this->order, $step);
 		if (!$validator->isValid())
@@ -366,20 +366,20 @@ class CheckoutController extends FrontendController
 
 		// create or edit addresses
 		$types = array('billing', 'shipping');
-		if ($this->request->get('sameAsBilling') || $this->order->isMultiAddress->get())
+		if ($this->request->gget('sameAsBilling') || $this->order->isMultiAddress)
 		{
 			unset($types[1]);
 		}
 
 		foreach ($types as $type)
 		{
-			if ((!$step || ($type == $step)) && !$this->request->get($type . 'Address'))
+			if ((!$step || ($type == $step)) && !$this->request->gget($type . 'Address'))
 			{
 				$addressField = 'default' . ucfirst($type). 'Address';
-				if ($address = $this->user->$addressField->get())
+				if ($address = $this->user->$addressField)
 				{
 					$address->load();
-					$this->saveAddress($address->userAddress->get(), $type . '_');
+					$this->saveAddress($address->userAddress, $type . '_');
 				}
 				else
 				{
@@ -388,7 +388,7 @@ class CheckoutController extends FrontendController
 
 				$this->lastAddress = $address;
 
-				$this->request->set($type . 'Address', $address->userAddress->get()->getID());
+				$this->request->set($type . 'Address', $address->userAddress->getID());
 			}
 		}
 
@@ -400,47 +400,47 @@ class CheckoutController extends FrontendController
 				{
 					$f = new ARSelectFilter();
 					$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->user->getID()));
-					$f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->get('billingAddress')));
+					$f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->gget('billingAddress')));
 					$r = ActiveRecordModel::getRecordSet('BillingAddress', $f, array('UserAddress'));
 
 					if ($r->size())
 					{
 						$billing = $r->get(0);
 					}
-					else if (!($billing = $this->user->defaultBillingAddress->get()))
+					else if (!($billing = $this->user->defaultBillingAddress))
 					{
 						throw new ApplicationException('Invalid billing address');
 					}
 
-					$address = $billing->userAddress->get();
+					$address = $billing->userAddress;
 				}
 				else
 				{
-					$address = $address->userAddress->get();
+					$address = $address->userAddress;
 				}
 
 				$this->order->billingAddress->set($address);
 			}
 
 			// shipping address
-			if ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress->get() && (!$step || ('shipping' == $step)))
+			if ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress && (!$step || ('shipping' == $step)))
 			{
-				if ($this->request->get('sameAsBilling'))
+				if ($this->request->gget('sameAsBilling'))
 				{
 					if (isset($billing))
 					{
-						$shipping = $billing->userAddress->get();
+						$shipping = $billing->userAddress;
 					}
 					else
 					{
-						$shipping = $this->order->billingAddress->get();
+						$shipping = $this->order->billingAddress;
 					}
 				}
 				else
 				{
 					$f = new ARSelectFilter();
 					$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
-					$f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->get('shippingAddress')));
+					$f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->gget('shippingAddress')));
 					$r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
 
 					if (!$r->size())
@@ -448,7 +448,7 @@ class CheckoutController extends FrontendController
 						throw new ApplicationException('Invalid shipping address');
 					}
 
-					$shipping = $r->get(0)->userAddress->get();
+					$shipping = $r->get(0)->userAddress;
 				}
 
 				$this->order->shippingAddress->set($shipping);
@@ -457,7 +457,7 @@ class CheckoutController extends FrontendController
 
 			if ($this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired())
 			{
-				$this->order->shippingAddress->set($this->order->billingAddress->get());
+				$this->order->shippingAddress->set($this->order->billingAddress);
 				$step = 'shipping';
 			}
 
@@ -476,7 +476,7 @@ class CheckoutController extends FrontendController
 
 		SessionOrder::save($this->order);
 
-		if (('billing' == $step) && ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress->get()))
+		if (('billing' == $step) && ($this->isShippingRequired($this->order) && !$this->order->isMultiAddress))
 		{
 			return new ActionRedirectResponse('checkout', 'selectAddress', array('query' => array('step' => 'shipping')));
 		}
@@ -565,7 +565,7 @@ class CheckoutController extends FrontendController
 			else
 			{
 				$shipment->setRateId($shipmentRates->get(0)->getServiceId());
-				if ($this->order->isMultiAddress->get())
+				if ($this->order->isMultiAddress)
 				{
 					$shipment->save();
 				}
@@ -700,7 +700,7 @@ class CheckoutController extends FrontendController
 			{
 				$rates = $shipment->getAvailableRates();
 
-				$selectedRateId = $this->request->get('shipping_' . $key);
+				$selectedRateId = $this->request->gget('shipping_' . $key);
 
 				if (!$rates->getByServiceId($selectedRateId))
 				{
@@ -710,7 +710,7 @@ class CheckoutController extends FrontendController
 
 				$shipment->setRateId($selectedRateId);
 
-				if ($this->order->isMultiAddress->get())
+				if ($this->order->isMultiAddress)
 				{
 					$shipment->save();
 				}
@@ -719,7 +719,7 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		if (!$this->order->isMultiAddress->get())
+		if (!$this->order->isMultiAddress)
 		{
 			$this->order->serializeShipments();
 		}
@@ -745,7 +745,7 @@ class CheckoutController extends FrontendController
 
 		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
 		{
-			$this->order->shippingAddress->set($this->order->billingAddress->get());
+			$this->order->shippingAddress->set($this->order->billingAddress);
 
 			if (!$this->user->isAnonymous())
 			{
@@ -768,9 +768,9 @@ class CheckoutController extends FrontendController
 		// @todo: the addresses should be loaded automatically...
 		foreach ($this->order->getShipments() as $shipment)
 		{
-			if ($shipment->shippingAddress->get())
+			if ($shipment->shippingAddress)
 			{
-				$shipment->shippingAddress->get()->load();
+				$shipment->shippingAddress->load();
 			}
 		}
 
@@ -780,12 +780,12 @@ class CheckoutController extends FrontendController
 			return new ActionRedirectResponse('checkout', 'payExpress');
 		}
 
-		$currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
+		$currency = $this->request->gget('currency', $this->application->getDefaultCurrencyCode());
 
 		$response = new ActionResponse();
 		$response->set('order', $this->order->toArray());
 		$response->set('currency', $this->getRequestCurrency());
-		$response->set('error', strip_tags($this->request->get('error')));
+		$response->set('error', strip_tags($this->request->gget('error')));
 
 		// offline payment methods
 		$offlineMethods = OfflineTransactionHandler::getEnabledMethods();
@@ -824,9 +824,9 @@ class CheckoutController extends FrontendController
 		$ccHandler = $this->application->getCreditCardHandler();
 		$ccForm = $this->buildCreditCardForm($ccHandler);
 
-		if ($order->billingAddress->get())
+		if ($order->billingAddress)
 		{
-			$ccForm->set('ccName', $order->billingAddress->get()->getFullName());
+			$ccForm->set('ccName', $order->billingAddress->getFullName());
 		}
 
 		$response->set('ccForm', $ccForm);
@@ -892,7 +892,7 @@ class CheckoutController extends FrontendController
 	 */
 	public function payCreditCard()
 	{
-		if ($id = $this->request->get('id'))
+		if ($id = $this->request->gget('id'))
 		{
 			$this->request->set('order', $id);
 		}
@@ -905,7 +905,7 @@ class CheckoutController extends FrontendController
 		}
 
 		// already paid?
-		if ($order->isPaid->get())
+		if ($order->isPaid)
 		{
 			return new ActionRedirectResponse('checkout', 'completed');
 		}
@@ -917,7 +917,7 @@ class CheckoutController extends FrontendController
 
 		// process payment
 		$transaction = $this->getTransaction();
-		$names = explode(' ', $this->request->get('ccName'), 2);
+		$names = explode(' ', $this->request->gget('ccName'), 2);
 		$transaction->firstName->set(array_shift($names));
 		$transaction->lastName->set(array_shift($names));
 
@@ -925,10 +925,10 @@ class CheckoutController extends FrontendController
 
 		if ($this->request->isValueSet('ccType'))
 		{
-			$handler->setCardType($this->request->get('ccType'));
+			$handler->setCardType($this->request->gget('ccType'));
 		}
 
-		$handler->setCardData($this->request->get('ccNum'), $this->request->get('ccExpiryMonth'), $this->request->get('ccExpiryYear'), $this->request->get('ccCVV'));
+		$handler->setCardData($this->request->gget('ccNum'), $this->request->gget('ccExpiryMonth'), $this->request->gget('ccExpiryYear'), $this->request->gget('ccCVV'));
 
 		if (!$this->buildCreditCardValidator($handler)->isValid())
 		{
@@ -980,9 +980,9 @@ class CheckoutController extends FrontendController
 
 	private function getPaymentPageRedirect()
 	{
-		if (is_numeric($this->request->get('id')))
+		if (is_numeric($this->request->gget('id')))
 		{
-			return new ActionRedirectResponse('user', 'pay', array('id' => $this->request->get('id')));
+			return new ActionRedirectResponse('user', 'pay', array('id' => $this->request->gget('id')));
 		}
 		else
 		{
@@ -997,7 +997,7 @@ class CheckoutController extends FrontendController
 	{
 		ActiveRecordModel::beginTransaction();
 
-		$method = $this->request->get('id');
+		$method = $this->request->gget('id');
 
 		if (!OfflineTransactionHandler::isMethodEnabled($method) || !$this->getOfflinePaymentValidator($method)->isValid())
 		{
@@ -1065,7 +1065,7 @@ class CheckoutController extends FrontendController
 			$result = $handler->authorizeAndCapture();
 		}
 
-		if ($transaction->recurringItemCount->get())
+		if ($transaction->recurringItemCount)
 		{
 			$handler->createRecurringPaymentProfile();
 		}
@@ -1109,9 +1109,9 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}
 
-		$notifyParams = $this->request->isValueSet('order') ? array('order' => $this->request->get('order')) : array();
+		$notifyParams = $this->request->isValueSet('order') ? array('order' => $this->request->gget('order')) : array();
 
-		$class = $this->request->get('id');
+		$class = $this->request->gget('id');
 		$order->setPaymentMethod($class);
 		$this->order = $order;
 
@@ -1146,12 +1146,12 @@ class CheckoutController extends FrontendController
 	 */
 	public function notify()
 	{
-		$handler = $this->application->getPaymentHandler($this->request->get('id'));
+		$handler = $this->application->getPaymentHandler($this->request->gget('id'));
 		$orderId = $handler->getOrderIdFromRequest($this->request->toArray());
 
 		if (!$this->getRequestCurrency())
 		{
-			$this->request->set('currency', $handler->getCurrency($this->request->get('currency')));
+			$this->request->set('currency', $handler->getCurrency($this->request->gget('currency')));
 		}
 
 		$order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
@@ -1178,7 +1178,7 @@ class CheckoutController extends FrontendController
 
 		// determine if the notification URL is called by payment gateway or the customer himself
 		// this shouldn't usually happen though as the payment notifications should be sent by gateway
-		if (($order->user->get() == $this->user))
+		if (($order->user == $this->user))
 		{
 			$this->request->set('id', $this->order->getID());
 			return $this->completeExternal();
@@ -1206,13 +1206,13 @@ class CheckoutController extends FrontendController
 	 */
 	public function completeExternal()
 	{
-		if (SessionOrder::getOrder()->getID() != $this->request->get('id'))
+		if (SessionOrder::getOrder()->getID() != $this->request->gget('id'))
 		{
 			SessionOrder::destroy();
 		}
 
-		$order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
-		if ($order->user->get() != $this->user)
+		$order = CustomerOrder::getInstanceById($this->request->gget('id'), CustomerOrder::LOAD_DATA);
+		if ($order->user != $this->user)
 		{
 			throw new ApplicationException('Invalid order');
 		}
@@ -1228,7 +1228,7 @@ class CheckoutController extends FrontendController
 	{
 		if ($this->request->isValueSet('id'))
 		{
-			return new ActionRedirectResponse('checkout', 'completeExternal', array('id' => $this->request->get('id')));
+			return new ActionRedirectResponse('checkout', 'completeExternal', array('id' => $this->request->gget('id')));
 		}
 
 		$order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
@@ -1237,7 +1237,7 @@ class CheckoutController extends FrontendController
 		$response->set('order', $order->toArray());
 		$response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
 
-		if (!$order->isPaid->get())
+		if (!$order->isPaid)
 		{
 			$transactions = $order->getTransactions()->toArray();
 			$response->set('transactions', $transactions);
@@ -1276,9 +1276,9 @@ class CheckoutController extends FrontendController
 	{
 		if (!$this->paymentOrder)
 		{
-			if ($this->request->get('order'))
+			if ($this->request->gget('order'))
 			{
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('order')));
+				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->gget('order')));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 				//$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), false));
@@ -1304,7 +1304,7 @@ class CheckoutController extends FrontendController
 	protected function registerPayment(TransactionResult $result, TransactionPayment $handler)
 	{
 		// transaction already registered?
-		if (Transaction::getInstance($this->order, $result->gatewayTransactionID->get()))
+		if (Transaction::getInstance($this->order, $result->gatewayTransactionID))
 		{
 			$this->session->set('completedOrderID', $this->order->getID());
 			return new ActionRedirectResponse('checkout', 'completed');
@@ -1315,7 +1315,7 @@ class CheckoutController extends FrontendController
 		$transaction->save();
 
 		$this->order->setPaidStatus();
-		if ($this->order->isPaid->get())
+		if ($this->order->isPaid)
 		{
 			$this->order->save();
 		}
@@ -1330,7 +1330,7 @@ class CheckoutController extends FrontendController
 			throw new ApplicationException('No shipments in order');
 		}
 
-		$user = $this->order->user->get();
+		$user = $this->order->user;
 		$user->load();
 		$newOrder = $this->order->finalize($options);
 
@@ -1389,7 +1389,7 @@ class CheckoutController extends FrontendController
 	 */
 	protected function validateOrder(CustomerOrder $order, $step = 0)
 	{
-		if ($order->isFinalized->get())
+		if ($order->isFinalized)
 		{
 			return false;
 		}
@@ -1399,7 +1399,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->request->isValueSet('return'))
 			{
-				return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
+				return new RedirectResponse($this->router->createUrlFromRoute($this->request->gget('return')));
 			}
 			else
 			{
@@ -1417,7 +1417,7 @@ class CheckoutController extends FrontendController
 		$valStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
 		$validateFields = ('CART_PAGE' == $valStep) ||
 						  (('BILLING_ADDRESS_STEP' == $valStep) && (self::STEP_ADDRESS <= $step)) ||
-						  (('SHIPPING_ADDRESS_STEP' == $valStep) && (((self::STEP_ADDRESS == $step) && ('shipping' == $this->request->get('step'))) || (self::STEP_ADDRESS < $step))) ||
+						  (('SHIPPING_ADDRESS_STEP' == $valStep) && (((self::STEP_ADDRESS == $step) && ('shipping' == $this->request->gget('step'))) || (self::STEP_ADDRESS < $step))) ||
 						  (('SHIPPING_METHOD_STEP' == $valStep) && (self::STEP_SHIPPING < $step));
 
 		$isOrderable = $order->isOrderable(true, $validateFields);
@@ -1431,9 +1431,9 @@ class CheckoutController extends FrontendController
 		// shipping address selected
 		if ($step >= self::STEP_SHIPPING)
 		{
-			if ((!$order->shippingAddress->get() && $order->isShippingRequired() && !$order->isMultiAddress->get()) || !$order->billingAddress->get() || !$isOrderable)
+			if ((!$order->shippingAddress && $order->isShippingRequired() && !$order->isMultiAddress) || !$order->billingAddress || !$isOrderable)
 			{
-				return new ActionRedirectResponse('checkout', 'selectAddress', $this->request->get('step') ? array('step' => $this->request->get('step')) : null);
+				return new ActionRedirectResponse('checkout', 'selectAddress', $this->request->gget('step') ? array('step' => $this->request->gget('step')) : null);
 			}
 		}
 
@@ -1475,7 +1475,7 @@ class CheckoutController extends FrontendController
 		catch (PaymentException $e)
 		{
 			$expressInstance->delete();
-			return new ActionRedirectResponse('checkout', 'express', array('id' => $expressInstance->method->get()));
+			return new ActionRedirectResponse('checkout', 'express', array('id' => $expressInstance->method));
 		}
 
 		return $expressInstance;
@@ -1499,7 +1499,7 @@ class CheckoutController extends FrontendController
 
 		if ($this->config->get('CHECKOUT_CUSTOM_FIELDS') == 'SHIPPING_METHOD_STEP')
 		{
-			$shipment->order->get()->getSpecification()->setValidation($validator);
+			$shipment->order->getSpecification()->setValidation($validator);
 		}
 
 		return $validator;
@@ -1530,7 +1530,7 @@ class CheckoutController extends FrontendController
 
 		if (!$step || ('shipping' == $step))
 		{
-			if ($this->isShippingRequired($order) && !$order->isMultiAddress->get())
+			if ($this->isShippingRequired($order) && !$order->isMultiAddress)
 			{
 				$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
 				$this->validateAddress($validator, 'shipping_');
@@ -1613,7 +1613,7 @@ class CheckoutBillingAddressCheckCondition extends CheckCondition
 {
 	function isSatisfied()
 	{
-		return !$this->request->get('billingAddress');
+		return !$this->request->gget('billingAddress');
 	}
 }
 
@@ -1621,8 +1621,8 @@ class CheckoutShippingAddressCheckCondition extends CheckCondition
 {
 	function isSatisfied()
 	{
-		return  !$this->request->get('shippingAddress') &&
-				!$this->request->get('sameAsBilling');
+		return  !$this->request->gget('shippingAddress') &&
+				!$this->request->gget('sameAsBilling');
 	}
 }
 

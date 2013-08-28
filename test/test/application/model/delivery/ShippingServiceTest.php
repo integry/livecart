@@ -51,9 +51,9 @@ class ShippingServiceTest extends LiveCartTest
 		$service->reload();
 
 		$this->assertEquals($service->getValueByLang('name', 'en'), 'Test service');
-		$this->assertEquals($service->position->get(), 1);
-		$this->assertTrue($service->deliveryZone->get() === $this->deliveryZone);
-		$this->assertEquals($service->rangeType->get(), ShippingService::SUBTOTAL_BASED);
+		$this->assertEquals($service->position, 1);
+		$this->assertTrue($service->deliveryZone === $this->deliveryZone);
+		$this->assertEquals($service->rangeType, ShippingService::SUBTOTAL_BASED);
 	}
 
 	public function testGetServicesByDeliveryZone()

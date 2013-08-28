@@ -1,4 +1,4 @@
-Your password at {'STORE_NAME'|config}!
+Your password at [[ config('STORE_NAME') ]]!
 Dear {$user.fullName},
 
 Az alábiakban találod a bejelentkezési információkat a {$config.STORE_NAME}:

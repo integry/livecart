@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} อัพเดทสถานะออเดอร์เรียบร้อย
+[[ config('STORE_NAME') ]] อัพเดทสถานะออเดอร์เรียบร้อย
 เรียนคุณ {$user.fullName},
 
 {if $order.shipments|@count == 1}

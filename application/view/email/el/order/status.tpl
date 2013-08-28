@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Ενημέρωση Καταλόγου Παραγγελλίας
+[[ config('STORE_NAME') ]] Ενημέρωση Καταλόγου Παραγγελλίας
 Αγαπητέ/ή {$user.fullName},
 
 {if $order.shipments|@count == 1}

@@ -1,7 +1,7 @@
-Bienvenue sur {'STORE_NAME'|config}!
+Bienvenue sur [[ config('STORE_NAME') ]]!
 Cher {$user.fullName},
 
-Voici vos informations de connexion client sur {'STORE_NAME'|config}:
+Voici vos informations de connexion client sur [[ config('STORE_NAME') ]]:
 
 E-mail: <b>{$user.email}</b>
 Mot de passe: <b>{$user.newPassword}</b>

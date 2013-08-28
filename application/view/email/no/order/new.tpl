@@ -1,7 +1,7 @@
-{'STORE_NAME'|config} Ordre bekreftelse
+[[ config('STORE_NAME') ]] Ordre bekreftelse
 Kjære {$user.fullName},
 
-Takk for din bestilling fra {'STORE_NAME'|config}. Hvis du har behov for å kontakte oss ang. denne bestillingen, vennligst oppgi følgende bestillingsnummer <b class="orderID">#{$order.invoiceNumber}</b>.
+Takk for din bestilling fra [[ config('STORE_NAME') ]]. Hvis du har behov for å kontakte oss ang. denne bestillingen, vennligst oppgi følgende bestillingsnummer <b class="orderID">#{$order.invoiceNumber}</b>.
 
 Du kan følge din bestilling på denne siden:
 {link controller=user action=viewOrder id=$order.ID url=true}

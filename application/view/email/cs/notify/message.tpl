@@ -1,4 +1,4 @@
-Nový vzkaz k objednávce na {'STORE_NAME'|config}
+Nový vzkaz k objednávce na [[ config('STORE_NAME') ]]
 Zákazník poslal vzkaz k objednávce č.: {$order.invoiceNumber}
 
 --------------------------------------------------

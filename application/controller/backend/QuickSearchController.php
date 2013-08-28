@@ -28,10 +28,10 @@ class QuickSearchController extends StoreManagementController
 	public function search()
 	{
 		$request = $this->getRequest();
-		$this->query = $request->get('q');
-		$cn = trim($request->get('class', ''));
-		$to = $request->get('to', 0);
-		$from = $request->get('from',0);
+		$this->query = $request->gget('q');
+		$cn = trim($request->gget('class', ''));
+		$to = $request->gget('to', 0);
+		$from = $request->gget('from',0);
 		if(!strlen($cn))
 		{
 			$cn = null;
@@ -66,7 +66,7 @@ class QuickSearchController extends StoreManagementController
 		$offset = 0;
 		if ($cn)
 		{
-			$direction = $request->get('direction');
+			$direction = $request->gget('direction');
 			if ($direction == 'next')
 			{
 				$offset = $to;
@@ -135,7 +135,7 @@ class QuickSearchController extends StoreManagementController
 			'to', $to,
 			'from', $from,
 			'classNames', $this->orderResultBlockKeys(array_keys($res)),
-			'fullSearch', ($cn == '') || ($this->request->get('limit') && !$this->request->get('to'))
+			'fullSearch', ($cn == '') || ($this->request->gget('limit') && !$this->request->gget('to'))
 		);
 	}
 
@@ -219,7 +219,7 @@ class QuickSearchController extends StoreManagementController
 
 	private function getLimit()
 	{
-		return $this->request->get('limit') ? $this->request->get('limit') : self::LIMIT;
+		return $this->request->gget('limit') ? $this->request->gget('limit') : self::LIMIT;
 	}
 }
 

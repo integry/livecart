@@ -13,11 +13,11 @@ class RatingTypeController extends StoreManagementController
 {
 	public function index()
 	{
-		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->gget('id'), Category::LOAD_DATA);
 		$types = ProductRatingType::getCategoryRatingTypes($category)->toArray();
 		$response = new ActionResponse('typeList', $types);
 		$response->set('form', $this->buildForm());
-		$response->set('id', $this->request->get('id'));
+		$response->set('id', $this->request->gget('id'));
 		return $response;
 	}
 
@@ -27,7 +27,7 @@ class RatingTypeController extends StoreManagementController
 	public function edit()
 	{
 		$form = $this->buildForm();
-		$type = ActiveRecordModel::getInstanceByID('ProductRatingType', $this->request->get('id'), ProductRatingType::LOAD_DATA);
+		$type = ActiveRecordModel::getInstanceByID('ProductRatingType', $this->request->gget('id'), ProductRatingType::LOAD_DATA);
 		$form->loadData($type->toArray());
 		return new ActionResponse('form', $form);
 	}
@@ -43,7 +43,7 @@ class RatingTypeController extends StoreManagementController
 			return new JSONResponse(array('err' => $validator->getErrorList()));
 		}
 
-		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('ProductRatingType', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ProductRatingType::getNewInstance(Category::getInstanceByID($this->request->get('categoryId'), Category::LOAD_DATA));
+		$post = $this->request->gget('id') ? ActiveRecordModel::getInstanceById('ProductRatingType', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA) : ProductRatingType::getNewInstance(Category::getInstanceByID($this->request->gget('categoryId'), Category::LOAD_DATA));
 		$post->loadRequestData($this->request);
 		$post->save();
 
@@ -69,7 +69,7 @@ class RatingTypeController extends StoreManagementController
 	{
 		try
 	  	{
-			ActiveRecordModel::deleteById('ProductRatingType', $this->request->get('id'));
+			ActiveRecordModel::deleteById('ProductRatingType', $this->request->gget('id'));
 			return new JSONResponse(false, 'success');
 		}
 		catch (Exception $exc)
@@ -85,7 +85,7 @@ class RatingTypeController extends StoreManagementController
 	 */
 	public function saveOrder()
 	{
-		$order = array_reverse($this->request->get('typeList_' . $this->request->get('id')));
+		$order = array_reverse($this->request->gget('typeList_' . $this->request->gget('id')));
 
 		foreach ($order as $key => $value)
 		{
@@ -95,7 +95,7 @@ class RatingTypeController extends StoreManagementController
 			ActiveRecord::updateRecordSet('ProductRatingType', $update);
 		}
 
-		return new RawResponse($this->request->get('draggedId'));
+		return new RawResponse($this->request->gget('draggedId'));
 	}
 
 	private function buildForm()

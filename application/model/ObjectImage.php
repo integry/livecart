@@ -20,9 +20,9 @@ abstract class ObjectImage extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("title", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
+		public $ID;
+		public $title;
+		public $position;
 
 		return $schema;
 	}
@@ -59,7 +59,7 @@ abstract class ObjectImage extends MultilingualObject
 			$newDefaultImage = ActiveRecordModel::getRecordSet(get_class($inst), $f);
 			if ($newDefaultImage->size() > 0)
 			{
-			  	$owner->defaultImage->set($newDefaultImage->get(0));
+			  	$owner->defaultImage = $newDefaultImage->get(0));
 			  	$owner->save();
 			}
 		}
@@ -131,7 +131,7 @@ abstract class ObjectImage extends MultilingualObject
 		  	$maxPos = 0;
 		}
 
-		$this->position->set($maxPos);
+		$this->position = $maxPos);
 
 		return parent::insert();
 	}
@@ -192,7 +192,7 @@ abstract class ObjectImage extends MultilingualObject
 		if ($this->position->get() == 0)
 		{
 			$owner = $this->getOwner();
-			$owner->defaultImage->set($this);
+			$owner->defaultImage = $this);
 			$owner->save();
 		}
 	}

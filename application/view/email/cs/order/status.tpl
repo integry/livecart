@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Změna stavu objednávky
+[[ config('STORE_NAME') ]] Změna stavu objednávky
 Vážený(á) {$user.fullName},
 
 {if $order.shipments|@count == 1}

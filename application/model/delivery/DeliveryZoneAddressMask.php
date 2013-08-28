@@ -7,20 +7,20 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
  * rules to make sure an address from a wrong country doesn't get matched.
  *
  * @package application.model.delivery
- * @author Integry Systems <http://integry.com> 
+ * @author Integry Systems <http://integry.com>
  */
-class DeliveryZoneAddressMask extends ActiveRecordModel 
+class DeliveryZoneAddressMask extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("DeliveryZoneAddressMask");
-		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
-		$schema->registerField(new ARField("mask", ARChar::instance(60)));
+
+		public $ID;
+		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
+		public $mask;
 	}
-	
+
 	/**
 	 * Gets an existing record instance (persisted on a database).
 	 *
@@ -32,33 +32,33 @@ class DeliveryZoneAddressMask extends ActiveRecordModel
 	 * @return DeliveryZoneAddressMask
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{	
+	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
-	
+
 	/**
 	 * @return DeliveryZoneState
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $mask)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	
-	  	$instance->deliveryZone->set($zone);
-	  	$instance->mask->set($mask);
-	  	
+
+	  	$instance->deliveryZone = $zone);
+	  	$instance->mask = $mask);
+
 	  	return $instance;
 	}
 
 	/**
 	 * @param DeliveryZone $zone
-	 * 
+	 *
 	 * @return ARSet
 	 */
 	public static function getRecordSetByZone(DeliveryZone $zone, $loadReferencedRecords = false)
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
-		
+
 		return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 }

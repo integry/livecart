@@ -15,7 +15,7 @@ class ProductBundleController extends ProductListControllerCommon
 {
 	public function index()
 	{
-		$productID = (int)$this->request->get('id');
+		$productID = (int)$this->request->gget('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA);
 
 		$response = new ActionResponse();

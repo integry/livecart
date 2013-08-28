@@ -16,12 +16,12 @@ class ProductRelationship extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductRelationship");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", "ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
-		$schema->registerField(new ARField("position",  ARInteger::instance()));
-		$schema->registerField(new ARField("type",  ARInteger::instance()));
+		public $ID;
+		public $productID", "Product", "ID", "Product;
+		public $relatedProductID", "Product", "ID", "Product;
+		public $productRelationshipGroupID", "ProductRelationshipGroup", "ID", "ProductRelationshipGroup;
+		public $position",  ARInteger::instance()));
+		public $type",  ARInteger::instance()));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -63,11 +63,11 @@ class ProductRelationship extends ActiveRecordModel
 
 		$relationship = parent::getNewInstance(__CLASS__);
 
-		$relationship->product->set($product);
-		$relationship->relatedProduct->set($related);
+		$relationship->product = $product);
+		$relationship->relatedProduct = $related);
 		if(!is_null($group))
 		{
-			$relationship->productRelationshipGroup->set($group);
+			$relationship->productRelationshipGroup = $group);
 		}
 
 		return $relationship;
@@ -117,7 +117,7 @@ class ProductRelationship extends ActiveRecordModel
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-		$this->position->set($position);
+		$this->position = $position);
 
 		return parent::insert();
 	}

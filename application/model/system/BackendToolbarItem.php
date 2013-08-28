@@ -19,20 +19,18 @@ class BackendToolbarItem extends ActiveRecordModel
 	const TYPE_USER = 3;
 	const TYPE_ORDER = 4;
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName(__CLASS__);
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		
-		$schema->registerField(new ARField("menuID", ARVarchar::instance(16)));
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
+
+				$schema->setName(__CLASS__);
+		public $ID;
+
+		public $menuID;
+		public $productID", "Product", "ID", "Product;
+		public $userID", "User", "ID", "User;
+		public $orderID", "CustomerOrder", "ID", "CustomerOrder;
+		public $position;
 
 		//  must be declared after userID, otherwise ActiveRecord will select owner as User!
-		$schema->registerField(new ARForeignKeyField("ownerID", "User", "ID", "User", ARInteger::instance()));
+		public $ownerID", "User", "ID", "User;
 	}
 
 	// BackendToolbarItem::registerLastViewedOrder($order);
@@ -57,12 +55,12 @@ class BackendToolbarItem extends ActiveRecordModel
 	{
 		$item = new BackendToolbarItem();
 
-		$item->owner->set(SessionUser::getUser());
+		$item->owner = SessionUser::getUser());
 		foreach(array('productID', 'userID', 'orderID') as $fieldName)
 		{
 			if (array_key_exists($fieldName, $data))
 			{
-				$item->$fieldName->set($data['instance']);
+				$item->$fieldName = $data['instance']);
 				break; // should have only one instance;
 			}
 		}
@@ -71,7 +69,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		{
 			if (array_key_exists($fieldName, $data))
 			{
-				$item->$fieldName->set($data[$fieldName]);
+				$item->$fieldName = $data[$fieldName]);
 			}
 		}
 

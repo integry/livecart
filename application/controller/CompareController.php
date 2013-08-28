@@ -18,7 +18,7 @@ class CompareController extends FrontendController
 		$compare = new ProductCompare($this->application);
 		return new ActionResponse(
 					'products', $compare->getCompareData(),
-					'return', $this->request->get('return')
+					'return', $this->request->gget('return')
 					);
 	}
 
@@ -26,18 +26,18 @@ class CompareController extends FrontendController
 	{
 		$this->setLayout('empty');
 		$compare = new ProductCompare($this->application);
-		$added = $compare->addProductById($this->request->get('id'));
+		$added = $compare->addProductById($this->request->gget('id'));
 
-		if (!$this->request->get('ajax'))
+		if (!$this->request->gget('ajax'))
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
+			return new RedirectResponse($this->router->createUrlFromRoute($this->request->gget('return')));
 		}
 		else
 		{
 			return new ActionResponse(
 					'products', $compare->getComparedProductInfo(),
 					'added', $added,
-					'return', $this->request->get('return')
+					'return', $this->request->gget('return')
 					);
 		}
 	}
@@ -45,15 +45,15 @@ class CompareController extends FrontendController
 	public function delete()
 	{
 		$compare = new ProductCompare($this->application);
-		$compare->removeProductById($this->request->get('id'));
+		$compare->removeProductById($this->request->gget('id'));
 
-		if ($this->request->get('ajax'))
+		if ($this->request->gget('ajax'))
 		{
 
 		}
 		else
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
+			return new RedirectResponse($this->router->createUrlFromRoute($this->request->gget('return')));
 		}
 	}
 

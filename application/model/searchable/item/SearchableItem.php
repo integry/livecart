@@ -14,14 +14,14 @@ class SearchableItem extends ActiveRecordModel
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName(__CLASS__);
-		$schema->registerField(new ARField("section", ARVarchar::instance(64)));
-		$schema->registerField(new ARField("value", ARText::instance() ));
-		$schema->registerField(new ARField("locale", ARVarchar::instance(2)));
-		$schema->registerField(new ARField("meta", ARText::instance()));
-		$schema->registerField(new ARField("sort", ARInteger::instance()));
+		public $section;
+		public $value", ARText::instance() ));
+		public $locale;
+		public $meta;
+		public $sort;
 
-		// $schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		// $schema->registerField(new ARField("type", ARVarchar::instance(16)));
+		// public $ID;
+		// public $type;
 	}
 
 	public static function getRecordCount($locale=null)

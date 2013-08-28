@@ -25,13 +25,13 @@ class FilterGroup extends MultilingualObject
 		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
-		$schema->registerField(new ARField("displayStyle", ARInteger::instance()));
-		$schema->registerField(new ARField("displayLocation", ARInteger::instance()));
+		public $ID;
+		public $specFieldID", "SpecField", "ID", "SpecField;
+		public $name;
+		public $position;
+		public $isEnabled;
+		public $displayStyle;
+		public $displayLocation;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -44,7 +44,7 @@ class FilterGroup extends MultilingualObject
 	public static function getNewInstance(SpecField $specField)
 	{
 		$inst = parent::getNewInstance(__CLASS__);
-		$inst->specField->set($specField);
+		$inst->specField = $specField);
 		return $inst;
 	}
 
@@ -103,7 +103,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public function addFilter(Filter $filter)
 	{
-		$filter->filterGroup->set($this);
+		$filter->filterGroup = $this);
 		$filter->save();
 	}
 
@@ -153,8 +153,8 @@ class FilterGroup extends MultilingualObject
 
 			if($specFieldType == SpecField::TYPE_TEXT_DATE)
 			{
-				$filter->rangeDateStart->set($value['rangeDateStart']);
-				$filter->rangeDateEnd->set($value['rangeDateEnd']);
+				$filter->rangeDateStart = $value['rangeDateStart']);
+				$filter->rangeDateEnd = $value['rangeDateEnd']);
 				$filter->rangeStart->setNull();
 				$filter->rangeEnd->setNull();
 			}
@@ -162,12 +162,12 @@ class FilterGroup extends MultilingualObject
 			{
 				$filter->rangeDateStart->setNull();
 				$filter->rangeDateEnd->setNull();
-				$filter->rangeStart->set($value['rangeStart']);
-				$filter->rangeEnd->set($value['rangeEnd']);
+				$filter->rangeStart = $value['rangeStart']);
+				$filter->rangeEnd = $value['rangeEnd']);
 			}
 
-			$filter->filterGroup->set($this);
-			$filter->position->set($position++);
+			$filter->filterGroup = $this);
+			$filter->position = $position++);
 			$filter->save();
 
 			if(preg_match('/^new/', $key))

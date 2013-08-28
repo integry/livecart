@@ -17,13 +17,13 @@ class ReviewController extends ActiveGridController
 	{
 		$response = $this->getGridResponse();
 		$response->set('id', ($this->isCategory() ? 'c' : '') . $this->getID());
-		$response->set('container', $this->request->get('category') ? 'tabReviews' : 'tabProductReviews');
+		$response->set('container', $this->request->gget('category') ? 'tabReviews' : 'tabProductReviews');
 		return $response;
 	}
 
 	public function edit()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
 		//$manufacturer->getSpecification();
 
 		$response = new ActionResponse('review', $review->toArray());
@@ -36,11 +36,11 @@ class ReviewController extends ActiveGridController
 			$form->set('rating_' . $rating['ratingTypeID'], $rating['rating']);
 		}
 
-		$form->set('rating_', $review->rating->get());
+		$form->set('rating_', $review->rating);
 
 		//$manufacturer->getSpecification()->setFormResponse($response, $form);
 		$response->set('form', $form);
-		$response->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product->get())->toArray());
+		$response->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product)->toArray());
 
 		$options = range(1, $this->config->get('RATING_SCALE'));
 		$response->set('ratingOptions', array_combine($options, $options));
@@ -50,7 +50,7 @@ class ReviewController extends ActiveGridController
 
 	public function update()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
 		$validator = $this->buildValidator($review);
 
 		if ($validator->isValid())
@@ -61,8 +61,8 @@ class ReviewController extends ActiveGridController
 			// set ratings
 			foreach ($review->getRelatedRecordSet('ProductRating', new ARSelectFilter()) as $rating)
 			{
-				$typeId = $rating->ratingType->get() ? $rating->ratingType->get()->getID() : '';
-				$rating->rating->set($this->request->get('rating_' . $typeId));
+				$typeId = $rating->ratingType ? $rating->ratingType->getID() : '';
+				$rating->rating->set($this->request->gget('rating_' . $typeId));
 				$rating->save();
 			}
 
@@ -147,8 +147,8 @@ class ReviewController extends ActiveGridController
 		{
 			$owner = Category::getInstanceByID($id, Category::LOAD_DATA);
 
-			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $owner->lft->get());
-			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $owner->rgt->get()));
+			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $owner->lft);
+			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $owner->rgt));
 		}
 		else
 		{
@@ -160,13 +160,13 @@ class ReviewController extends ActiveGridController
 
 	private function isCategory()
 	{
-		$id = array_pop(explode('_', $this->request->get('id')));
-		return (substr($id, 0, 1) == 'c') || $this->request->get('category');
+		$id = array_pop(explode('_', $this->request->gget('id')));
+		return (substr($id, 0, 1) == 'c') || $this->request->gget('category');
 	}
 
 	private function getID()
 	{
-		$id = array_pop(explode('_', $this->request->get('id')));
+		$id = array_pop(explode('_', $this->request->gget('id')));
 
 		if ($this->isCategory() && (substr($id, 0, 1) == 'c'))
 		{
@@ -186,7 +186,7 @@ class ReviewController extends ActiveGridController
 		$validator = $this->getValidator("productRating", $this->getRequest());
 
 		// option validation
-		foreach (ProductRatingType::getProductRatingTypes($review->product->get())->toArray() as $type)
+		foreach (ProductRatingType::getProductRatingTypes($review->product)->toArray() as $type)
 		{
 			$validator->addCheck('rating_' . $type['ID'], new IsNotEmptyCheck($this->translate('_err_no_rating_selected')));
 		}

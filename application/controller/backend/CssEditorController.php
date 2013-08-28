@@ -30,7 +30,7 @@ class CssEditorController extends StoreManagementController
 
 	public function edit()
 	{
-		$css = new EditedCssFile($this->request->get('file'));
+		$css = new EditedCssFile($this->request->gget('file'));
 
 		$response = new ActionResponse();
 		$tabid = $this->getRequest()->get('tabid');
@@ -56,9 +56,9 @@ class CssEditorController extends StoreManagementController
 	 */
 	public function save()
 	{
-		$code = $this->request->get('code');
+		$code = $this->request->gget('code');
 
-		$css = new EditedCssFile($this->request->get('file'));
+		$css = new EditedCssFile($this->request->gget('file'));
 
 		$css->setCode($code);
 		$res = $css->save();
@@ -91,8 +91,8 @@ class CssEditorController extends StoreManagementController
 	public function templateData()
 	{
 		$request = $this->getRequest();
-		$version = $request->get('version');
-		$css = new EditedCssFile($request->get('file'),$version);
+		$version = $request->gget('version');
+		$css = new EditedCssFile($request->gget('file'),$version);
 		return new JSONResponse($css->toArray());
 	}
 

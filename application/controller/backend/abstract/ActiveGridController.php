@@ -359,7 +359,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 		$response->set('massForm', $this->getMassForm());
 		$response->set('totalCount', '0');
-		$response->set('filters', $this->request->get('filters'));
+		$response->set('filters', $this->request->gget('filters'));
 		$response->set('data', $this->lists(false, $displayedColumns)->getData());
 
 		return $response;
@@ -387,9 +387,9 @@ abstract class ActiveGridController extends StoreManagementController
 		$response->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
 
 		$response->set('massForm', $this->getMassForm());
-		$response->set('offset', $this->request->get('offset'));
+		$response->set('offset', $this->request->gget('offset'));
 		$response->set('totalCount', '0');
-		$response->set('filters', $this->request->get('filters'));
+		$response->set('filters', $this->request->gget('filters'));
 		$response->set('data', $this->lists(false, $displayedColumns)->getData());
 
 		if (isset($jsonResponse))
@@ -533,13 +533,13 @@ abstract class ActiveGridController extends StoreManagementController
 
 	public function isMassCancelled()
 	{
-		$isCancelled = call_user_func_array(array($this->getMassActionProcessor(), 'isCancelled'), array($this->request->get('pid')));
+		$isCancelled = call_user_func_array(array($this->getMassActionProcessor(), 'isCancelled'), array($this->request->gget('pid')));
 		return new JSONResponse(array('isCancelled' => $isCancelled));
 	}
 
 	public function changeColumns()
 	{
-		$columns = array_keys($this->request->get('col', array()));
+		$columns = array_keys($this->request->gget('col', array()));
 		$this->setSessionData('columns', $columns);
 		$this->user->setPreference('columns_' . get_class($this), $columns);
 		$this->user->save();
@@ -547,7 +547,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	public function sortColumns()
 	{
-		$columns = json_decode($this->request->get('columns'));
+		$columns = json_decode($this->request->gget('columns'));
 		$this->setSessionData('columns', $columns);
 		$this->user->setPreference('columns_' . get_class($this), $columns);
 		$this->user->save();
@@ -555,7 +555,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	public function saveColumnWidth()
 	{
-		$columns = json_decode($this->request->get('width'));
+		$columns = json_decode($this->request->gget('width'));
 		$this->setSessionData('columnWidth', $columns);
 		$this->user->setPreference('columnWidth_' . get_class($this), $columns);
 		$this->user->save();

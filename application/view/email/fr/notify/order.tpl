@@ -1,4 +1,4 @@
-Nouvelle commande placée sur {'STORE_NAME'|config}
+Nouvelle commande placée sur [[ config('STORE_NAME') ]]
 Commande ID: {$order.invoiceNumber}
 
 Administration de la commande:

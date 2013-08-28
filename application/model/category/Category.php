@@ -42,16 +42,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		parent::defineSchema($className);
 
-		$schema->registerField(new ARForeignKeyField("defaultImageID", "categoryImage", "ID", 'CategoryImage', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("keywords", ARArray::instance()));
-		$schema->registerField(new ARField("pageTitle", ARArray::instance()));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("availableProductCount", ARInteger::instance()));
-		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
-		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
+		public $defaultImageID", "categoryImage", "ID", 'CategoryImage;
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+		public $name;
+		public $description;
+		public $keywords;
+		public $pageTitle;
+		public $isEnabled;
+		public $availableProductCount;
+		public $activeProductCount;
+		public $totalProductCount;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -92,9 +92,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$category = parent::getNewInstance(__CLASS__, $parent);
 
-		$category->activeProductCount->set(0);
-		$category->availableProductCount->set(0);
-		$category->totalProductCount->set(0);
+		$category->activeProductCount = 0);
+		$category->availableProductCount = 0);
+		$category->totalProductCount = 0);
 
 		return $category;
 	}
@@ -1021,9 +1021,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$countActive += $sub->activeProductCount->get();
 		}
 
-		$category->totalProductCount->set($category->totalProductCount->get() + $countTotal);
-		$category->activeProductCount->set($category->activeProductCount->get() + $countActive);
-		$category->availableProductCount->set($category->availableProductCount->get() + $countAvailable);
+		$category->totalProductCount = $category->totalProductCount->get() + $countTotal);
+		$category->activeProductCount = $category->activeProductCount->get() + $countActive);
+		$category->availableProductCount = $category->availableProductCount->get() + $countAvailable);
 		$category->save();
 	}
 

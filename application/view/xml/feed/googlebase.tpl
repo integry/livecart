@@ -4,7 +4,7 @@
 <rss version ="2.0" xmlns:g="http://base.google.com/ns/1.0">
 
 	<channel>
-		<title>{'STORE_NAME'|config}</title>
+		<title>[[ config('STORE_NAME') ]]</title>
 		<link>{link url=true}</link>
 		<description></description>
 

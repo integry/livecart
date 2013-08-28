@@ -23,7 +23,7 @@ class RuleConditionUserGroupIs extends RuleCondition
 			$user->load();
 		}
 
-		$userGroup = $user->userGroup->get();
+		$userGroup = $user->userGroup;
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 
 		if (!$userGroupID)

@@ -15,12 +15,11 @@ class EavFieldGroupCommon extends MultilingualObject
 	 */
 	public static function defineSchema($className)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+				$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		public $ID;
+		public $name;
+		public $position;
 
 		return $schema;
 	}
@@ -37,7 +36,7 @@ class EavFieldGroupCommon extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position->set($position);
+		$this->position = $position);
 
 		return parent::insert();
 	}

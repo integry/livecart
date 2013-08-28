@@ -43,8 +43,8 @@ class ActiveRecordModelTest extends LiveCartTest
 		$serialized = serialize($user);
 		$unser = unserialize($serialized);
 
-		$this->assertEqual($user->firstName->get(), $unser->firstName->get());
-		$this->assertEqual($user->defaultBillingAddress->get()->userAddress->get()->city->get(), $unser->defaultBillingAddress->get()->userAddress->get()->city->get());
+		$this->assertEqual($user->firstName, $unser->firstName);
+		$this->assertEqual($user->defaultBillingAddress->userAddress->city, $unser->defaultBillingAddress->userAddress->city);
 	}
 
 	function testCloning()
@@ -63,10 +63,10 @@ class ActiveRecordModelTest extends LiveCartTest
 		$newAddress = clone $address;
 
 		// simple value
-		$this->assertEqual($address->city->get(), $newAddress->city->get());
+		$this->assertEqual($address->city, $newAddress->city);
 
 		// foreign key
-		$this->assertEqual($address->state->get(), $newAddress->state->get());
+		$this->assertEqual($address->state, $newAddress->state);
 
 		$newAddress->save();
 

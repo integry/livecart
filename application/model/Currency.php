@@ -24,19 +24,19 @@ class Currency extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Currency");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ArChar::instance(3)));
+		public $ID;
 
-		$schema->registerField(new ARField("rate", ArFloat::instance(16)));
-		$schema->registerField(new ARField("lastUpdated", ArDateTime::instance()));
-		$schema->registerField(new ARField("isDefault", ArBool::instance()));
-		$schema->registerField(new ARField("isEnabled", ArBool::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
-		$schema->registerField(new ARField("pricePrefix", ARText::instance(20)));
-		$schema->registerField(new ARField("priceSuffix", ARText::instance(20)));
-		$schema->registerField(new ARField("decimalSeparator", ARVarchar::instance(3)));
-		$schema->registerField(new ARField("thousandSeparator", ARVarchar::instance(3)));
-		$schema->registerField(new ARField("decimalCount", ARInteger::instance()));
-		$schema->registerField(new ARField("rounding", ARText::instance()));
+		public $rate;
+		public $lastUpdated;
+		public $isDefault;
+		public $isEnabled;
+		public $position;
+		public $pricePrefix;
+		public $priceSuffix;
+		public $decimalSeparator;
+		public $thousandSeparator;
+		public $decimalCount;
+		public $rounding;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -72,7 +72,7 @@ class Currency extends ActiveRecordModel
 			$instance = null;
 		}
 
-		if (!$instance || !$instance->isEnabled->get())
+		if (!$instance || !$instance->isEnabled)
 		{
 			$instance = self::getApplication()->getDefaultCurrency();
 		}
@@ -84,12 +84,12 @@ class Currency extends ActiveRecordModel
 
 	public function setAsDefault($default = true)
 	{
-	  	$this->isDefault->set((bool)$default);
+	  	$this->isDefault = (bool)$default);
 	}
 
 	public function isDefault()
 	{
-	  	return $this->isDefault->get();
+	  	return $this->isDefault;
 	}
 
 	public function getFormattedPrice($price)
@@ -106,9 +106,9 @@ class Currency extends ActiveRecordModel
 		}
 
 		$number = $this->round($price);
-		$number = number_format($number, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, $this->decimalSeparator->get(), $this->thousandSeparator->get());
+		$number = number_format($number, !is_null($this->decimalCount) ? $this->decimalCount : 2, $this->decimalSeparator, $this->thousandSeparator);
 
-		return ($isNegative ? '-' : '') . $this->pricePrefix->get() . $number . $this->priceSuffix->get();
+		return ($isNegative ? '-' : '') . $this->pricePrefix . $number . $this->priceSuffix;
 	}
 
 	public function round($price)
@@ -126,7 +126,7 @@ class Currency extends ActiveRecordModel
 			}
 		}
 
-		$number = number_format($price, !is_null($this->decimalCount->get()) ? $this->decimalCount->get() : 2, '.', '');
+		$number = number_format($price, !is_null($this->decimalCount) ? $this->decimalCount : 2, '.', '');
 
 		return $number;
 	}
@@ -166,23 +166,23 @@ class Currency extends ActiveRecordModel
 
 	public function convertAmountFromDefaultCurrency($amount)
 	{
-		if ($this->isDefault->get())
+		if ($this->isDefault)
 		{
 			return $amount;
 		}
 
-		$rate = $this->rate->get();
+		$rate = $this->rate;
 		return $amount / (empty($rate) ? 1 : $rate);
 	}
 
 	public function convertAmountToDefaultCurrency($amount)
 	{
-		if ($this->isDefault->get())
+		if ($this->isDefault)
 		{
 			return $amount;
 		}
 
-		$rate = $this->rate->get();
+		$rate = $this->rate;
 		return $amount * (empty($rate) ? 1 : $rate);
 	}
 
@@ -194,9 +194,9 @@ class Currency extends ActiveRecordModel
 
 	public function setRoundingRule($range, $type, $precision = null)
 	{
-		$rounding = unserialize($this->rounding->get());
+		$rounding = unserialize($this->rounding);
 		$rounding[] = array('range' => $range, 'type' => $type, 'precision' => $precision);
-		$this->rounding->set(serialize($rounding));
+		$this->rounding = serialize($rounding));
 	}
 
 	public function clearRoundingRules()
@@ -226,7 +226,7 @@ class Currency extends ActiveRecordModel
 		$inst = ActiveRecord::getInstanceById('Currency', $id, true);
 
 		// make sure it's not the default currency
-		if (true != $inst->isDefault->get())
+		if (true != $inst->isDefault)
 		{
 			ActiveRecord::deleteByID('Currency', $id);
 			return true;
@@ -254,9 +254,9 @@ class Currency extends ActiveRecordModel
 	public function save($forceOperation = 0)
 	{
 		// do not allow 0 rates
-		if (!$this->rate->get())
+		if (!$this->rate)
 		{
-			$this->rate->set(1);
+			$this->rate = 1);
 		}
 
 		self::deleteCache();
@@ -267,18 +267,18 @@ class Currency extends ActiveRecordModel
 	protected function insert()
 	{
 	  	// check currency symbol
-	  	if (!$this->pricePrefix->get() && !$this->priceSuffix->get())
+	  	if (!$this->pricePrefix && !$this->priceSuffix)
 	  	{
 			$prefixes = include ClassLoader::getRealPath('installdata.currency.signs') . '.php';
 			if (isset($prefixes[$this->getID()]))
 			{
 				$signs = $prefixes[$this->getID()];
 
-				$this->pricePrefix->set($signs[0]);
+				$this->pricePrefix = $signs[0]);
 
 				if (isset($signs[1]))
 				{
-					$this->priceSuffix->set($signs[1]);
+					$this->priceSuffix = $signs[1]);
 				}
 			}
 		}
@@ -286,8 +286,8 @@ class Currency extends ActiveRecordModel
 		// check if default currency exists
 		if (!ActiveRecord::getRecordSet('Currency', select(eq('Currency.isDefault', 1)))->getTotalRecordCount())
 		{
-			$this->isDefault->set(true);
-			$this->isEnabled->set(true);
+			$this->isDefault = true);
+			$this->isEnabled = true);
 		}
 
 		$this->setLastPosition();
@@ -399,7 +399,7 @@ class Currency extends ActiveRecordModel
 
 		if (is_null($this->roundingRules))
 		{
-			$this->roundingRules = (array)unserialize($this->rounding->get());
+			$this->roundingRules = (array)unserialize($this->rounding);
 			usort($this->roundingRules, array($this, 'sortRoundingRules'));
 		}
 

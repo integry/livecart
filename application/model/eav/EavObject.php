@@ -15,21 +15,20 @@ class EavObject extends ActiveRecordModel
 
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("userAddressID", "UserAddress", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("transactionID", "Transaction", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", null, ARInteger::instance()), false);
-		$schema->registerField(new ARForeignKeyField("staticPageID", "StaticPage", "ID", null, ARInteger::instance()), false);
 
-		$schema->registerField(new ARField("classID", ARInteger::instance(2)));
+		public $ID;
+		public $categoryID", "Category", "ID", null, ARInteger::instance()), false);
+		public $customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()), false);
+		public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()), false);
+		public $userID", "User", "ID", null, ARInteger::instance()), false);
+		public $userAddressID", "UserAddress", "ID", null, ARInteger::instance()), false);
+		public $userGroupID", "UserGroup", "ID", null, ARInteger::instance()), false);
+		public $transactionID", "Transaction", "ID", null, ARInteger::instance()), false);
+		public $shippingServiceID", "ShippingService", "ID", null, ARInteger::instance()), false);
+		public $staticPageID", "StaticPage", "ID", null, ARInteger::instance()), false);
+
+		public $classID;
 	}
 
 	public static function getInstance(EavAble $parent)
@@ -42,10 +41,10 @@ class EavObject extends ActiveRecordModel
 			}
 		}
 
-		if ($parent->eavObject->get())
+		if ($parent->eavObject)
 		{
-			$parent->eavObject->get()->classID->set(EavField::getClassID(get_class($parent)));
-			return $parent->eavObject->get();
+			$parent->eavObject->classID = EavField::getClassID(get_class($parent)));
+			return $parent->eavObject;
 		}
 		else
 		{
@@ -57,11 +56,11 @@ class EavObject extends ActiveRecordModel
 	{
 		$field = self::getInstanceField($parent);
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->$field->set($parent);
-		$instance->classID->set(EavField::getClassID($parent));
+		$instance->$field = $parent);
+		$instance->classID = EavField::getClassID($parent));
 
 		$instance->parent = $parent;
-		$parent->eavObject->set($instance);
+		$parent->eavObject = $instance);
 
 		return $instance;
 	}
@@ -69,7 +68,7 @@ class EavObject extends ActiveRecordModel
 	public static function getInstanceByIdentifier($stringIdentifier)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->classID->set(0);
+		$instance->classID = 0);
 		$instance->setStringIdentifier($stringIdentifier);
 		return $instance;
 	}
@@ -93,9 +92,9 @@ class EavObject extends ActiveRecordModel
 	{
 		foreach ($this->getSchema()->getForeignKeyList() as $key => $field)
 		{
-			if ($this->data[$key]->get())
+			if ($this->data[$key])
 			{
-				return $this->data[$key]->get();
+				return $this->data[$key];
 			}
 		}
 	}

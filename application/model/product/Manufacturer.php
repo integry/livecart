@@ -18,19 +18,19 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
-		$schema->registerField(new ARForeignKeyField("defaultImageID", "ManufacturerImage", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+
+		public $ID;
+		public $name;
+		public $defaultImageID", "ManufacturerImage", "ID", null, ARInteger::instance()));
+		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
 		$schema->registerAutoReference('defaultImageID');
 	}
 
 	public static function getNewInstance($name)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->name->set($name);
+		$instance->name = $name);
 		return $instance;
 	}
 

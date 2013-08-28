@@ -100,7 +100,7 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 		$this->coupons = array();
 		foreach ($coupons as $coupon)
 		{
-			$this->coupons[$coupon->couponCode->get()] = true;
+			$this->coupons[$coupon->couponCode] = true;
 		}
 	}
 

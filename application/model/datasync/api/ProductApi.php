@@ -35,7 +35,7 @@ class ProductApi extends ModelApi
 	{
 		$request = $this->application->getRequest();
 		$products = ActiveRecordModel::getRecordSetArray('Product',
-			select(eq(f('Product.sku'), $request->get('SKU'))), array('Category', 'Manufacturer', 'ProductImage')
+			select(eq(f('Product.sku'), $request->gget('SKU'))), array('Category', 'Manufacturer', 'ProductImage')
 		);
 		if(count($products) == 0)
 		{
@@ -55,7 +55,7 @@ class ProductApi extends ModelApi
 	{
 		$parser = $this->getParser();		
 		$request = $this->getApplication()->getRequest();
-		$name = $request->get('name');
+		$name = $request->gget('name');
 		$request->set('name','%'.serialize($name).'%');
 		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		$products = Product::getRecordSetArray(
@@ -126,7 +126,7 @@ class ProductApi extends ModelApi
 	public function delete()
 	{
 		$request = $this->getApplication()->getRequest();
-		$instance = Product::getInstanceBySKU($request->get('SKU'));
+		$instance = Product::getInstanceBySKU($request->gget('SKU'));
 		if(!$instance)
 		{
 			throw new Exception('Product not found');

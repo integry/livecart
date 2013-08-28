@@ -1,4 +1,4 @@
-Ny beskjed ang. bestilling hos {'STORE_NAME'|config}
+Ny beskjed ang. bestilling hos [[ config('STORE_NAME') ]]
 En kunde har sendt en ny beskjed ang. bestillingsnr. <b class="orderID">#{$order.invoiceNumber}</b>
 
 --------------------------------------------------

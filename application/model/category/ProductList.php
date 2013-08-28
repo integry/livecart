@@ -15,13 +15,13 @@ class ProductList extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField('ID', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField('categoryID', 'Category', 'ID', null, ARInteger::instance()));
-		$schema->registerField(new ARField('isRandomOrder', ARBool::instance()));
-		$schema->registerField(new ARField('name', ARArray::instance()));
-		$schema->registerField(new ARField('listStyle', ARInteger::instance()));
-		$schema->registerField(new ARField('limitCount', ARInteger::instance()));
-		$schema->registerField(new ARField('position', ARInteger::instance()));
+		public $ID;
+		public $categoryID;
+		public $isRandomOrder', ARBool::instance()));
+		public $name', ARArray::instance()));
+		public $listStyle;
+		public $limitCount;
+		public $position;
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -29,7 +29,7 @@ class ProductList extends MultilingualObject
 	public static function getNewInstance(Category $category)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category->set($category);
+		$instance->category = $category);
 		return $instance;
 	}
 

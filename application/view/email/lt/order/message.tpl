@@ -1,4 +1,4 @@
-New Message Regarding Your Order at {'STORE_NAME'|config}
+New Message Regarding Your Order at [[ config('STORE_NAME') ]]
 Gerbiama(-s) {$user.fullName},
 
 Jums išsiųsta nauja žinutė susijusi su Jūsų užsakymu.

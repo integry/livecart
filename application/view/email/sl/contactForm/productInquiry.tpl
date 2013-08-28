@@ -1,4 +1,4 @@
-{'STORE_NAME'|config} Info o izdelku
+[[ config('STORE_NAME') ]] Info o izdelku
 Ime Izdelka: {$product.name_lang}
 Koda: {$product.sku}
 

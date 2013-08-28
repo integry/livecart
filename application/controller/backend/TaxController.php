@@ -40,7 +40,7 @@ class TaxController extends StoreManagementController
 
 	public function edit()
 	{
-		$tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
+		$tax = Tax::getInstanceByID((int)$this->request->gget('id'), true);
 		$form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
 		$response = new ActionResponse();
@@ -54,7 +54,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function delete()
 	{
-		$service = Tax::getInstanceByID((int)$this->request->get('id'));
+		$service = Tax::getInstanceByID((int)$this->request->gget('id'));
 		$service->delete();
 
 		return new JSONResponse(false, 'success');
@@ -66,7 +66,7 @@ class TaxController extends StoreManagementController
 	public function update()
 	{
 		$request = $this->getRequest();
-		$tax = Tax::getInstanceByID((int)$request->get('id'));
+		$tax = Tax::getInstanceByID((int)$request->gget('id'));
 		return $this->saveTax($tax);
 	}
 
@@ -75,7 +75,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$tax = Tax::getNewInstance($this->request->get('name'));
+		$tax = Tax::getNewInstance($this->request->gget('name'));
 		$tax->position->set(1000);
 
 		return $this->saveTax($tax);
@@ -138,7 +138,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function sort()
 	{
-		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
 		   $tax = Tax::getInstanceByID((int)$key);
 		   $tax->position->set((int)$position);
@@ -226,7 +226,7 @@ class TaxController extends StoreManagementController
 
 	private function saveRate(DeliveryZone $zone, Tax $tax, TaxClass $class = null)
 	{
-		$value = $this->request->get($this->getFieldName($zone, $class));
+		$value = $this->request->gget($this->getFieldName($zone, $class));
 		if (!is_null($value) && ($value !== ''))
 		{
 			$taxRate = TaxRate::getNewInstance($zone, $tax, $value);

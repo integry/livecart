@@ -6,20 +6,19 @@ class SearchLog extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ArInteger::instance()));
-		$schema->registerField(new ARField("keywords", ArVarchar::instance(60)));
-		$schema->registerField(new ARField("ip", ArInteger::instance()));
-		$schema->registerField(new ARField("time", ArDateTime::instance()));
+
+		public $ID;
+		public $keywords;
+		public $ip;
+		public $time;
 	}
 
 	public static function getNewInstance($keywords, $ipAddress)
 	{
 		$instance = parent::getNewInstance(__class__);
-		$instance->keywords->set($keywords);
-		$instance->ip->set(ip2long($ipAddress));
+		$instance->keywords = $keywords);
+		$instance->ip = ip2long($ipAddress));
 		return $instance;
 	}
 
