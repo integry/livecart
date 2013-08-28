@@ -16,7 +16,7 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
 
-{pageTitle}{t _select_product}{/pageTitle}
+{% block title %}{t _select_product}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

@@ -1,7 +1,9 @@
-{pageTitle}{t _change_email}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _change_email}{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="emailMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{form action="controller=user action=doChangeEmail" method="POST" handle=$form class="form-horizontal"}
 
@@ -19,5 +21,4 @@
 
 	{/form}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

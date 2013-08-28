@@ -11,7 +11,7 @@
 {includeCss file="backend/Category.css"}
 {includeCss file="backend/SelectFile.css"}
 
-{pageTitle}{t _select_file}{/pageTitle}
+{% block title %}{t _select_file}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

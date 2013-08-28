@@ -1,6 +1,8 @@
-{pageTitle}{t _remind_pass}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _remind_pass}{{% endblock %}
+
+{% block content %}
 
 	{form action="controller=user action=doRemindPassword" method="post"  class="form-horizontal" handle=$form}
 		{input name="email"}
@@ -14,5 +16,4 @@
 
 	{/form}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

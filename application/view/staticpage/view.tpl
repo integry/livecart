@@ -1,5 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
+{% extends "layout/frontend.tpl" %}
+
 {% block title %}Index{% endblock %}
 
 {% block content %}
@@ -9,12 +11,12 @@ test
 
 {#
 
-{pageTitle}[[page.title_lang]]{/pageTitle}
+{% block title %}[[page.title_lang]]{{% endblock %}
 {assign var="metaDescription" value=$page.metaDescription_lang|@strip_tags}
 
 <div class="staticPageView staticPage_[[page.ID]]">
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+
+{% block content %}
 
 	{if $subPages}
 		<div class="staticSubpages">
@@ -50,8 +52,8 @@ test
 		</div>
 	{/foreach}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 </div>
 
 #}

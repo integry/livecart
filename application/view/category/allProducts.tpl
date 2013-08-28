@@ -1,3 +1,3 @@
-{pageTitle}{t _all_products}{/pageTitle}
+{% block title %}{t _all_products}{{% endblock %}
 
 {include file="category/index.tpl"}

@@ -1,8 +1,10 @@
-{pageTitle}{t _personal_info}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _personal_info}{{% endblock %}
 
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="personalMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{form class="form-horizontal" action="controller=user action=savePersonal" method="POST" handle=$form class="form-horizontal"}
 
@@ -26,6 +28,5 @@
 		{include file="block/submit.tpl" caption="_save" cancel="user"}
 	{/form}
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
-{include file="layout/frontend/footer.tpl"}

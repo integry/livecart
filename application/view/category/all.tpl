@@ -1,6 +1,8 @@
-{pageTitle}{t _all_categories}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _all_categories}{{% endblock %}
+
+{% block content %}
 
 	{foreach from=$sorted item=categories key=letter}
 		<h2>{$letter|@capitalize}</h2>
@@ -22,5 +24,4 @@
 		{/foreach}
 	{/foreach}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

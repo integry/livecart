@@ -1,6 +1,8 @@
-{pageTitle}{t _manufacturers}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _manufacturers}{{% endblock %}
+
+{% block content %}
 
 	{if 'MANUFACTURER_PAGE_LIST_STYLE'|config == 'MANPAGE_STYLE_ALL_IN_ONE_PAGE'}
 		{include file="manufacturers/listAllInOnePage.tpl"}
@@ -12,5 +14,5 @@
 		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{/if}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+

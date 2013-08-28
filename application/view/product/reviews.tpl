@@ -1,15 +1,17 @@
+{% extends "layout/frontend.tpl" %}
+
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 
 {% set metaDescription = $product.shortDescription_lang %}
 {% set metaKeywords = $product.keywords_lang %}
-{pageTitle}[[product.name_lang]]{/pageTitle}
+{% block title %}[[product.name_lang]]{{% endblock %}
 
 <div class="reviewIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
 {include file="product/layout.tpl"}
 
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="returnToCategory">
 		<a href="{productUrl product=$product}" class="returnToCategory">[[product.name_lang]]</a>
@@ -35,7 +37,7 @@
 
 	{include file="product/ratingForm.tpl"}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 
 </div>

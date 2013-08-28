@@ -1,8 +1,9 @@
-{pageTitle}{t _cvv}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _cvv}{{% endblock %}
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{include file="checkout/cvvHelp.tpl"}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

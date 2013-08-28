@@ -14,7 +14,7 @@
 
 {include file="backend/category/loadJsTree.tpl"}
 
-{pageTitle}{t _select_product}{/pageTitle}
+{% block title %}{t _select_product}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

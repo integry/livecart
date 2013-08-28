@@ -1,5 +1,7 @@
+{% extends "layout/frontend.tpl" %}
+
 {includeJs file="frontend/OnePageCheckout.js"}
-{pageTitle}{t _checkout}{/pageTitle}
+{% block title %}{t _checkout}{{% endblock %}
 
 <noscript>
 	<meta http-equiv="refresh" content="0;{link controller=onePageCheckout action=fallback}" />
@@ -13,7 +15,7 @@
 </script>
 
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 <div class="row">
 
@@ -62,8 +64,8 @@
 
 </div>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 
 	<script type="text/javascript">
 		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: [[ config('OPC_SHOW_CART') ]]{rdelim});

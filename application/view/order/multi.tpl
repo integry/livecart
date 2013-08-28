@@ -1,6 +1,8 @@
-{pageTitle}{t _select_shipping_addresses}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _select_shipping_addresses}{{% endblock %}
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="checkoutHeader">
 		{if $cart.cartItems}
@@ -26,8 +28,8 @@
 
 	<div class="clear"></div>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 
 <script type="text/javascript">
 	new Order.OptionLoader($('cart'));

@@ -1,6 +1,8 @@
-{pageTitle}{t _pay} #[[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _pay} #[[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div id="payTotal">
 		<div>
@@ -16,8 +18,8 @@
 	</div>
 
 	<div class="clear"></div>
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
-{include file="layout/frontend/footer.tpl"}
+
 
 </div>

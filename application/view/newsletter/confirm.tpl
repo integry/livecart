@@ -1,6 +1,8 @@
-{pageTitle}{t _confirming_email}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _confirming_email}{{% endblock %}
+
+{% block content %}
 
 	<p>
 	{if $subscriber.isEnabled}
@@ -10,5 +12,4 @@
 	{/if}
 	</p>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

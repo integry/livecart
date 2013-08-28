@@ -1,7 +1,9 @@
-{pageTitle}{t _your_orders}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _your_orders}{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="orderMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="resultStats">
 		{if $orders}
@@ -24,8 +26,8 @@
 		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{/if}
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
-{include file="layout/frontend/footer.tpl"}
+
 
 </div>

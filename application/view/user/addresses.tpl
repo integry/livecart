@@ -1,7 +1,9 @@
-{pageTitle}{t _manage_addresses}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _manage_addresses}{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="addressMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<h2 id="billingAddresses">{t _billing_addresses}</h2>
 
@@ -37,5 +39,4 @@
 		</div>
 	{/foreach}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

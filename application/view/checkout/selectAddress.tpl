@@ -1,8 +1,10 @@
-{pageTitle}{t _select_addresses}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _select_addresses}{{% endblock %}
 {include file="checkout/layout.tpl"}
 
 <div class="step-[[step]]">
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="checkoutHeader">
 		{if 'shipping' == $step}
@@ -74,5 +76,5 @@
 
 	{/form}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+

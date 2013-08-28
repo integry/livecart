@@ -1,6 +1,8 @@
-{pageTitle}{t _pay}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _pay}{{% endblock %}
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div id="payTotal">
 		<div>
@@ -20,5 +22,4 @@
 
 	{include file="checkout/orderOverview.tpl"}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

@@ -3,7 +3,7 @@
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
 {% set metaKeywords = $product.keywords %}
 {canonical}{productUrl product=$product}{/canonical}
-{pageTitle}{$product.pageTitle_lang|default:$product.name_lang}{/pageTitle}
+{% block title %}{$product.pageTitle_lang|default:$product.name_lang}{{% endblock %}
 
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
@@ -50,7 +50,7 @@
 	{/if}
 </div>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 
 </div>

@@ -7,7 +7,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="backend/CsvImport.js"}
 
-{pageTitle}{t _import_csv}{/pageTitle}
+{% block title %}{t _import_csv}{{% endblock %}
 
 {include file="layout/backend/header.tpl"}
 

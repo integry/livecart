@@ -1,6 +1,8 @@
-{pageTitle}{t _compare_products}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _compare_products}{{% endblock %}
 {include file="layout/frontend/header.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 <a href="{link route=$return}" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
 
@@ -55,5 +57,4 @@
 	</table>
 {/foreach}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

@@ -1,7 +1,9 @@
-{pageTitle}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="ordersMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<label class="title">{t _order_id}:</label>
 	<label class="text">[[order.invoiceNumber]]</label>
@@ -180,5 +182,4 @@
 		{include file="block/submit.tpl" caption="_submit_response"}
 	{/form}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

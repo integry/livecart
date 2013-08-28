@@ -1,7 +1,9 @@
-{pageTitle}{t _password_sent}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
 
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block title %}{t _password_sent}{{% endblock %}
+
+
+{% block content %}
 
 	<p>
 	   {maketext text=_has_been_sent_to params=$email}
@@ -11,5 +13,4 @@
 	   {t _pass_security_warning}
 	</p>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

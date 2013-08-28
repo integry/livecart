@@ -4,7 +4,7 @@
 {includeCss file="backend/Category.css"}
 {include file="backend/category/loadJsTree.tpl"}
 
-{pageTitle}{t _select_category}{/pageTitle}
+{% block title %}{t _select_category}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

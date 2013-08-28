@@ -1,11 +1,13 @@
-{pageTitle}{t _user_registration}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _user_registration}{{% endblock %}
+
+{% block content %}
 
 	{include file="user/regForm.tpl"}
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
-{include file="layout/frontend/footer.tpl"}
+
 
 </div>

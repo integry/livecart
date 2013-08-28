@@ -1,5 +1,5 @@
 {includeCss file="backend/Session.css"}
-{pageTitle}{t _backend_login|branding}{/pageTitle}
+{% block title %}{t _backend_login|branding}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

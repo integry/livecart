@@ -9,7 +9,7 @@
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/CsvImport.js"}
 
-{pageTitle}{t _import_csv}{/pageTitle}
+{% block title %}{t _import_csv}{{% endblock %}
 
 {include file="layout/backend/header.tpl"}
 

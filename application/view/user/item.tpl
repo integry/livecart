@@ -1,7 +1,9 @@
-{pageTitle}{t _your_files}: [[item.Product.name_lang]]{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _your_files}: [[item.Product.name_lang]]{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="homeMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{if $files}
 		{foreach from=$files item="item"}
@@ -12,5 +14,4 @@
 		{/foreach}
 	{/if}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

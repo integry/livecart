@@ -1,7 +1,9 @@
-{pageTitle}{t _pending_invoices}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _pending_invoices}{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="pendingInvoicesMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{include file="user/invoicesTable.tpl"
 		itemList=$orders
@@ -12,5 +14,5 @@
 		query=''
 	}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+

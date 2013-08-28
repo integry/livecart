@@ -1,13 +1,15 @@
+{% extends "layout/frontend.tpl" %}
+
 {assign var="fields" value='USER_FIELDS'|config}
 
 {if $request.action == 'checkout'}
-	{pageTitle}{t _order_checkout}{/pageTitle}
+	{% block title %}{t _order_checkout}{{% endblock %}
 {else}
-	{pageTitle}{t _user_registration}{/pageTitle}
+	{% block title %}{t _user_registration}{{% endblock %}
 {/if}
 
 {include file="checkout/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
@@ -57,7 +59,7 @@
 	</div>
 	<div class="clear"></div>
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
 {literal}
 <script type="text/javascript">
@@ -65,4 +67,3 @@
 </script>
 {/literal}
 
-{include file="layout/frontend/footer.tpl"}

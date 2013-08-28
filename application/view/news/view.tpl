@@ -1,6 +1,8 @@
-{pageTitle}[[news.title_lang]]{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}[[news.title_lang]]{{% endblock %}
+
+{% block content %}
 
 	<div class="newsDate">[[news.formatted_time.date_long]]</div>
 
@@ -12,5 +14,4 @@
 		{/if}
 	</div>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

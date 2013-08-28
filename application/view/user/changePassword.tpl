@@ -1,7 +1,9 @@
-{pageTitle}{t _change_pass}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _change_pass}{{% endblock %}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="passwordMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form class="form-horizontal"}
 
@@ -24,5 +26,4 @@
 
 	{/form}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

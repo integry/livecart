@@ -1,10 +1,11 @@
-{pageTitle}{t _confirm_subscription}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _confirm_subscription}{{% endblock %}
+
+{% block content %}
 
 	<p>
 		{t _confirm_instructions}
 	</p>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

@@ -1,9 +1,11 @@
-{pageTitle}{t _your_files}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _your_files}{{% endblock %}
 
 {include file="user/layout.tpl"}
 
 {include file="user/userMenu.tpl" current="fileMenu"}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="resultStats">
 		{if $files}
@@ -20,8 +22,8 @@
 		{include file="user/fileList.tpl" item=$item}
 	{/foreach}
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
-{include file="layout/frontend/footer.tpl"}
+
 
 </div>

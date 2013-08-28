@@ -1,7 +1,9 @@
-{pageTitle}{$results.meta.name|capitalize} &gt;&gt; "[[query]]"{/pageTitle}
+{% extends "layout/frontend.tpl" %}
 
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% block title %}{$results.meta.name|capitalize} &gt;&gt; "[[query]]"{{% endblock %}
+
+
+{% block content %}
 
 	<div class="modelSearchResults">
 		<div class="resultStats">{maketext text="_found_x" params=$results.meta.name} {include file="block/count.tpl" count=$results.count}</div>
@@ -18,5 +20,5 @@
 		{paginate current=$page count=$results.count perPage=$perPage url=$url}
 	{/if}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+

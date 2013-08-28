@@ -3,7 +3,7 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 
-{pageTitle}{t _add_credit_card_payment}{/pageTitle}
+{% block title %}{t _add_credit_card_payment}{{% endblock %}
 {include file="layout/backend/meta.tpl"}
 
 {literal}

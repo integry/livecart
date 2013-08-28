@@ -6,7 +6,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="backend/DatabaseImport.js"}
 
-{pageTitle}{t _import_database}{/pageTitle}
+{% block title %}{t _import_database}{{% endblock %}
 
 {include file="layout/backend/header.tpl"}
 

@@ -19,7 +19,7 @@
 {includeCss file="library/ActiveGrid.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
 
-{pageTitle}{t _select_manufacturer}{/pageTitle}
+{% block title %}{t _select_manufacturer}{{% endblock %}
 
 {include file="layout/backend/meta.tpl"}
 

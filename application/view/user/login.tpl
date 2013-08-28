@@ -1,6 +1,8 @@
-{pageTitle}{t _login}{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _login}{{% endblock %}
 {include file="layout/frontend/layout.tpl" hideLeft=true}
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
@@ -29,7 +31,7 @@
 
 	<div class="clear"></div>
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
 {literal}
 	<script type="text/javascript">
@@ -37,4 +39,3 @@
 	</script>
 {/literal}
 
-{include file="layout/frontend/footer.tpl"}

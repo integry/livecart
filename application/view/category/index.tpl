@@ -1,10 +1,10 @@
-{pageTitle}{$category.pageTitle_lang|default:$category.name_lang}{/pageTitle}
+{% block title %}{$category.pageTitle_lang|default:$category.name_lang}{{% endblock %}
 {assign var="metaDescription" value=$category.description_lang|@strip_tags}
 {% set metaKeywords = $category.keywords_lang %}
 
 <div class="categoryIndex category_[[category.ID]]">
 
-{include file="layout/frontend/layout.tpl"}
+
 
 {include file="block/content-start.tpl" hideTitle=true}
 
@@ -58,7 +58,7 @@
 		jQuery(document).ready(Frontend.initCategory);
 	</script>
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}
+
 
 </div>

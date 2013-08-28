@@ -1,6 +1,8 @@
-{pageTitle}{t _reg_confirm}{/pageTitle}
-{include file="layout/frontend/layout.tpl"}
-{include file="block/content-start.tpl"}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _reg_confirm}{{% endblock %}
+
+{% block content %}
 
 	{if $success}
 		<p>{t _reg_confirm_success}</p>
@@ -13,5 +15,4 @@
 		<p>{t _reg_confirm_failure}</p>
 	{/if}
 
-{include file="block/content-stop.tpl"}
-{include file="layout/frontend/footer.tpl"}
+{% endblock %}

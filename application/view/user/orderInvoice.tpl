@@ -1,4 +1,6 @@
-{pageTitle}{t _invoice} [[order.invoiceNumber]]{/pageTitle}
+{% extends "layout/frontend.tpl" %}
+
+{% block title %}{t _invoice} [[order.invoiceNumber]]{{% endblock %}
 <div class="userOrderInvoice">
 
 {function name="address"}
@@ -30,7 +32,7 @@
 {/if}
 {/function}
 
-{include file="block/content-start.tpl"}
+{% block content %}
 
 	<div id="invoice">
 
@@ -137,7 +139,7 @@
 
 	</div>
 
-{include file="block/content-stop.tpl"}
+{% endblock %}
 
 {* include file="layout/frontend/footer.tpl" *}
 
