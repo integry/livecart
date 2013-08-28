@@ -178,6 +178,10 @@ class LiveCart extends \Phalcon\Mvc\Application
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 			//$this->router->enableURLRewrite(false);
 		}
+	}
+
+	protected function loadCoreModules()
+	{
 
 	}
 

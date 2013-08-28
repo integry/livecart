@@ -1,4 +1,4 @@
-<div id="content" class="col col-lg-{12-$layoutspanLeft-$layoutspanRight}">
+<div id="content" class="col col-lg-[[12 - layoutspanLeft - layoutspanRight]]">
 
 {block BREADCRUMB}
 

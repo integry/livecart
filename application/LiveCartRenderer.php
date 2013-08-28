@@ -34,92 +34,6 @@ class LiveCartRenderer extends SmartyRenderer
 		parent::__construct($application);
 	}
 
-	/**
-	 * Gets a smarty instance
-	 *
-	 * @return Smarty
-	 */
-	public function getSmartyInstance()
-	{
-		if (!$this->tpl)
-		{
-			$this->tpl = new LiveCartSmarty(self::getApplication());
-			$this->tpl->compile_dir = self::$compileDir;
-			$this->tpl->template_dir = ClassLoader::getRealPath("application.view");
-		}
-
-		return $this->tpl;
-	}
-
-	public function getTemplatePaths($template = '')
-	{
-		if (!$this->paths)
-		{
-			if ($theme = self::getApplication()->getTheme())
-			{
-				$this->paths = array_merge($this->paths, $this->getThemePaths($theme));
-			}
-
-			$this->paths[] = ClassLoader::getRealPath('storage.customize.view.');
-			$this->paths[] = ClassLoader::getRealPath('application.view.');
-			$this->paths[] = dirname(ClassLoader::getRealPath('module'));
-		}
-
-		if (!$template)
-		{
-			return $this->paths;
-		}
-
-		$paths = $this->paths;
-
-		foreach ($paths as &$path)
-		{
-			$path = $this->getPath($path, $template);
-		}
-
-		return $paths;
-	}
-
-	public function resetPaths()
-	{
-		$this->paths = array();
-	}
-
-	public function getTemplatePath($template)
-	{
-		if (!isset($this->cachedTemplatePath[$template]))
-		{
-			foreach ($this->getTemplatePaths($template) as $path)
-			{
-				if (is_readable($path))
-				{
-					$this->cachedTemplatePath[$template] = $path;
-					break;
-				}
-			}
-
-			if (!isset($this->cachedTemplatePath[$template]))
-			{
-				$this->cachedTemplatePath[$template] = null;
-			}
-		}
-
-		return $this->cachedTemplatePath[$template];
-	}
-
-	public function getBaseTemplatePath($tplName)
-	{
-		$tplName = substr($tplName, 1);
-		foreach (array(ClassLoader::getRealPath('storage.customize.view.'), ClassLoader::getRealPath('application.view.')) as $path)
-		{
-			$file = $path . $tplName;
-			if (file_exists($file))
-			{
-				return $file;
-			}
-		}
-	}
-
 	public function getThemeList()
 	{
 		$themes = array('default' => 'default', 'barebone' => 'barebone');
@@ -329,44 +243,6 @@ class LiveCartRenderer extends SmartyRenderer
 		return '.tpl' != strtolower(substr($objectName, -4));
 	}
 
-	private function getThemePaths($theme, $includedThemes = array())
-	{
-		$paths = $inheritConf = array();
-		$paths[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.');
-		$paths[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.');
-
-		$inheritConf[] = ClassLoader::getRealPath('storage.customize.view.theme.' . $theme . '.inherit') . '.php';
-		$inheritConf[] = ClassLoader::getRealPath('application.view.theme.' . $theme . '.inherit') . '.php';
-
-		foreach ($inheritConf as $inherit)
-		{
-			if (file_exists($inherit))
-			{
-				break;
-			}
-		}
-
-		if (file_exists($inherit))
-		{
-			$inherited = include $inherit;
-			if (!is_array($inherited))
-			{
-				$inherited = array($inherited);
-			}
-
-			foreach ($inherited as $parent)
-			{
-				if (empty($includedThemes[$parent]))
-				{
-					$includedThemes[$parent] = true;
-					$paths = array_merge($paths, $this->getThemePaths($parent, $includedThemes));
-				}
-			}
-		}
-
-		return $paths;
-	}
-
 	/**
 	 *
 	 */
@@ -499,40 +375,7 @@ class LiveCartRenderer extends SmartyRenderer
 		return $res;
 	}
 
-	public function getRelativeTemplatePath($template)
-	{
-		$template = str_replace('\\', '/', $template);
-		if (preg_match('/\/(module\/.*\/.*)/', $template, $match))
-		{
-			preg_match('/\/(module\/.*)/', $template, $match);
-			return str_replace('application/view/', '', $match[1]);
-		}
 
-		foreach (array('application.view', 'storage.customize.view') as $path)
-		{
-			$path = ClassLoader::getRealPath($path);
-			$path = str_replace('\\', '/', $path);
-
-			if (substr($template, 0, strlen($path)) == $path)
-			{
-				return substr($template, strlen($path) + 1);
-			}
-		}
-	}
-
-	private function getPath($root, $template)
-	{
-		if (substr($template, 0, 7) == 'module/')
-		{
-			if ($this->paths[count($this->paths) - 1] == $root)
-			{
-				$root = dirname(ClassLoader::getRealPath('module'));
-				$template = preg_replace('/module\/([-a-zA-Z0-9_]+)\/(.*)/', 'module/\\1/application/view/\\2', $template);
-			}
-		}
-
-		return $root . '/' . $template;
-	}
 }
 
 ?>

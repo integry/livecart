@@ -19,9 +19,9 @@ try
 	//Register an autoloader
 	$loader = new \Phalcon\Loader();
 	$loader->registerDirs(array(
-		__ROOT__ . '/application/controller/',
-		__ROOT__ . '/application/model/',
-		__ROOT__ . '/application/'
+		__ROOT__ . 'application/controller/',
+		__ROOT__ . 'application/model/',
+		__ROOT__ . 'application/'
 	))->register();
 
 	//Create a DI
@@ -30,13 +30,13 @@ try
 	//Setting up the view component
 	$di->set('view', function(){
 		$view = new \Phalcon\Mvc\View();
-		$view->setViewsDir(__ROOT__ . '/application/view/');
+		$view->setViewsDir(__ROOT__ . 'application/view/');
 
 		$view->registerEngines(array(
 			".tpl" => function($view, $di)
 			{
 				$volt = new LiveVolt($view, $di);
-				$volt->setOptions(array('compiledPath' => __ROOT__ . '/cache/templates/'));
+				$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
 				return $volt;
 			}
 		));
