@@ -12,9 +12,9 @@
 			<tr>
 				<td class="productName">
 					{if $item.Product.ID}
-						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+						<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
 					{else}
-						<span>{$item.Product.name_lang}</span>
+						<span>[[item.Product.name_lang]]</span>
 					{/if}
 
 					{if $item.recurringID && $recurringPlans[$item.recurringID]}
@@ -27,13 +27,13 @@
 							{if $period.periodLength == 1}
 								{t `$periodTypesSingle[$period.periodType]`}
 							{else}
-								{$period.periodLength} {t `$periodTypesPlural[$period.periodType]`}
+								[[period.periodLength]] {t `$periodTypesPlural[$period.periodType]`}
 							{/if}
 							{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}
 							{if $x > 0}
 								{t _for}
-								{$x}
-								{t `$periodTypesPlural[$period.periodType]`}, {$period.rebillCount} {t _rebill_times}{*
+								[[x]]
+								{t `$periodTypesPlural[$period.periodType]`}, [[period.rebillCount]] {t _rebill_times}{*
 									{if $period.ProductPrice_setup}
 										{t _setup_fee} {$period.ProductPrice_period.formated_price.$currency}
 									{/if}
@@ -47,9 +47,9 @@
 						</span>
 					{/if}
 				</td>
-				<td class="shipmentPrice">{$item.formattedDisplayPrice}</td>
-				<td class="shipmentQuantity">{$item.count}</td>
-				<td class="shipmentSubtotal">{$item.formattedDisplaySubTotal}</td>
+				<td class="shipmentPrice">[[item.formattedDisplayPrice]]</td>
+				<td class="shipmentQuantity">[[item.count]]</td>
+				<td class="shipmentSubtotal">[[item.formattedDisplaySubTotal]]</td>
 			</tr>
 		{/foreach}
 
@@ -64,7 +64,7 @@
 			{foreach from=$shipment.taxes item="tax"}
 				{if $tax.amount}
 					<tr>
-						<td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang} ({$tax.TaxRate.rate}%):</td>
+						<td colspan="3" class="tax">[[tax.TaxRate.Tax.name_lang]] ([[tax.TaxRate.rate]]%):</td>
 						<td>{$tax.formattedAmount.$currency}</td>
 					</tr>
 				{/if}

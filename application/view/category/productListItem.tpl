@@ -13,7 +13,7 @@
 
 		<p class="shortDescr">
 			{block PRODUCT-LIST-DESCR-BEFORE}
-			{$product.shortDescription_lang}
+			[[product.shortDescription_lang]]
 			{block PRODUCT-LIST-DESCR-AFTER}
 		</p>
 

@@ -1,7 +1,7 @@
 {*
 	<dl class="{if $order.ID !== $otherOrder.ID}logValueChanged{/if}">
 		<dt>{t _order_id}:</dt>
-		<dd>{$order.invoiceNumber}</dd>
+		<dd>[[order.invoiceNumber]]</dd>
 	</dl>
 *}
 

@@ -4,24 +4,24 @@
 {foreach from=$layout key=groupName item=fields name="groups"}
 
 	{if !$fields && !$smarty.foreach.groups.first}
-		{assign var="subsections" value=false}
+		{% set subsections = false %}
 		</fieldset>
 	{/if}
 
 	{include file="backend/settings/sectionHelp.tpl" key="$sectionKey"}
 
-	<fieldset class="settings" ng-show="activeID == '{$sectionId}'">
+	<fieldset class="settings" ng-show="activeID == '[[sectionId]]'">
 
 		{if $groupName}
 			<legend>{t $groupName}</legend>
 		{/if}
 
 		{foreach from=$fields key="fieldName" item="foo"}
-			<div class="setting" id="setting_{$fieldName}" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
+			<div class="setting" id="setting_[[fieldName]]" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
 			<div class="row {if 'bool' == $values.$fieldName.type} checkbox{/if}">
 
 			{if 'bool' != $values.$fieldName.type}
-				<label for="{$fieldName}" class="setting">{t `$values.$fieldName.title`}:</label>
+				<label for="[[fieldName]]" class="setting">{t `$values.$fieldName.title`}:</label>
 			{/if}
 
 			<div class="controls">
@@ -35,7 +35,7 @@
 				{elseif 'num' == $values.$fieldName.type || 'float' == $values.$fieldName.type}
 					{textfield class="text number" name=$fieldName id=$fieldName}
 				{elseif 'bool' == $values.$fieldName.type}
-					<label for="{$fieldName}">
+					<label for="[[fieldName]]">
 						{checkbox name=$fieldName id=$fieldName value="1"}
 						{t `$values.$fieldName.title`}
 					</label>
@@ -45,7 +45,7 @@
 						{foreach from=$values.$fieldName.type item="value" key="key"}
 							<div class="checkbox">
 							{checkbox name="`$fieldName`[`$key`]" id="`$fieldName`[`$key`]" value=1}
-							<label for="{$fieldName}[{$key}]">{$value}</label>
+							<label for="[[fieldName]][[[key]]]">[[value]]</label>
 							</div>
 						{/foreach}
 							<div class="clear"></div>
@@ -59,7 +59,7 @@
 			</div>
 			</div>
 		{foreachelse}
-			{assign var="subsections" value=true}
+			{% set subsections = true %}
 		{/foreach}
 
 	{if $fields || $smarty.foreach.groups.last}
@@ -89,7 +89,7 @@
 {/language}
 </div>
 
-<input type="hidden" name="id" value="{$id}" />
+<input type="hidden" name="id" value="[[id]]" />
 
 <fieldset class="controls">
 	<span class="progressIndicator" style="display: none;"></span>

@@ -39,7 +39,7 @@
 {/input}
 
 <script language="text/javascript">
-	Backend.Discount.Editor.prototype.initDiscountForm('{$id}');
+	Backend.Discount.Editor.prototype.initDiscountForm('[[id]]');
 </script>
 
 {language}

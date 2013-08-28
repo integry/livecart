@@ -9,7 +9,7 @@
 </head>
 <body>
 	<script type="text/javascript">
-		{$ACTION_VIEW}
+		[[ACTION_VIEW]]
 	</script>
 </body>
 </html>

@@ -19,7 +19,7 @@
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
-	Backend.DeliveryZone.countryGroups = {$countryGroups};
+	Backend.DeliveryZone.countryGroups = [[countryGroups]];
 </script>
 
 <div id="deliveryZoneWrapper" class="maxHeight h--50">
@@ -118,7 +118,7 @@
 	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller="backend.shippingService" action=create}{literal}';
 	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller="backend.shippingService" action=validateRates}{literal}';
 
-	var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
+	var zones = new Backend.DeliveryZone({/literal}[[zones]]{literal});
 
 </script>
 {/literal}

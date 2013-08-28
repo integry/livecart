@@ -8,7 +8,7 @@
 
 		{input}
 			{label}{t _current_email}:{/label}
-			<div class="controls">{$user.email}</div>
+			<div class="controls">[[user.email]]</div>
 		{/input}
 
 		{input name="email"}

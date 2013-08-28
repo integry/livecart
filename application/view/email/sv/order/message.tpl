@@ -1,10 +1,10 @@
 Nytt meddelande om din order hos [[ config('STORE_NAME') ]]
-Kära {$user.fullName},
+Kära [[user.fullName]],
 
 Ett nytt meddelande har lagts till rörande din order.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Du kan svara på meddelandet via följande länk:

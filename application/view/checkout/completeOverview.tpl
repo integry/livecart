@@ -6,25 +6,25 @@
 {function name="address"}
 	{if $address}
 		<p>
-			{$address.fullName}
+			[[address.fullName]]
 		</p>
 		<p>
-			{$address.companyName}
+			[[address.companyName]]
 		</p>
 		<p>
-			{$address.address1}
+			[[address.address1]]
 		</p>
 		<p>
-			{$address.address2}
+			[[address.address2]]
 		</p>
 		<p>
-			{$address.city}
+			[[address.city]]
 		</p>
 		<p>
-			{if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+			{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
 		</p>
 		<p>
-			{$address.countryName}
+			[[address.countryName]]
 		</p>
 		<p>
 			{include file="order/addressFieldValues.tpl" showLabels=true}

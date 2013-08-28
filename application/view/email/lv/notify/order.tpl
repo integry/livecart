@@ -1,5 +1,5 @@
 Saņemts jauns pasūtījums [[ config('STORE_NAME') ]]
-Pasūtījuma ID: {$order.invoiceNumber}
+Pasūtījuma ID: [[order.invoiceNumber]]
 
 Pasūtījuma administrācija:
 {backendOrderUrl order=$order url=true}

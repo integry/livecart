@@ -38,11 +38,11 @@
 	</div>
 
 	<div id="pageTitleContainer">
-		<div id="pageTitle">{$PAGE_TITLE}</div>
+		<div id="pageTitle">[[PAGE_TITLE]]</div>
 
 		<ul id="breadcrumb" ng-controller="BreadCrumbController" ng-visible="items">
 			<li ng-repeat="item in items">
-				<a href="{$item.url}">{$item.title}</a>
+				<a href="[[item.url]]">[[item.title]]</a>
 			</li>
 		</ul>
 	</div>

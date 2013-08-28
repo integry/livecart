@@ -6,7 +6,7 @@
 {foreach from=$maps item=map}
 	<sitemap>
 {foreach from=$map key=nodename item=node}
-		<{$nodename}>{$node}</{$nodename}>
+		<[[nodename]]>[[node]]</[[nodename]]>
 {/foreach}
 	</sitemap>
 {/foreach}

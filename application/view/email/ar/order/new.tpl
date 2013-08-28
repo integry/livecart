@@ -1,7 +1,7 @@
 [[ config('STORE_NAME') ]] تأكيد طلب
-العزيز {$user.fullName},
+العزيز [[user.fullName]],
 
-شكرا لطلبك ، والتي كنت قد وضعت للتو في [[ config('STORE_NAME') ]]. إذا كنت بحاجة إلى الاتصال بنا فيما يتعلق بهذه طلب ، يرجى اقتبس معرف طلب الخاص بطلبك <b class="orderID">#{$order.invoiceNumber}</b>.
+شكرا لطلبك ، والتي كنت قد وضعت للتو في [[ config('STORE_NAME') ]]. إذا كنت بحاجة إلى الاتصال بنا فيما يتعلق بهذه طلب ، يرجى اقتبس معرف طلب الخاص بطلبك <b class="orderID">#[[order.invoiceNumber]]</b>.
 
 ستكون قادرة على تتبع ما تك في طلبك في هذه الصفحة :
 {link controller=user action=viewOrder id=$order.ID url=true}

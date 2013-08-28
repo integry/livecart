@@ -4,7 +4,7 @@
 
 		{foreach $files as $file}
 			{if $file.productFileGroupID && ($file.productFileGroupID != $previousFileGroupID)}
-				<h3>{$file.ProductFileGroup.name}</h3>
+				<h3>[[file.ProductFileGroup.name]]</h3>
 			{/if}
 
 			{if $file.isEmbedded}

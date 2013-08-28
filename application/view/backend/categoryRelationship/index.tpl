@@ -3,7 +3,7 @@
 		{if $category.ParentNode}
 			{catPath category=$category.ParentNode} &gt;
 		{/if}
-		{$category.name_lang}
+		[[category.name_lang]]
 	{/if}
 {/function}
 
@@ -21,5 +21,5 @@
 </li>
 
 <script type="text/javascript">
-	new Backend.CategoryRelationship($('tabRelatedCategoryContent_{$category.ID}'), {json array=$category}, {json array=$categories});
+	new Backend.CategoryRelationship($('tabRelatedCategoryContent_[[category.ID]]'), {json array=$category}, {json array=$categories});
 </script>

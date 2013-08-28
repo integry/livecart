@@ -58,7 +58,7 @@
 {literal}
 <script type="text/javascript">
 	// creates global variable backendTemplateInstance
-	backendTemplateInstance = new Backend.Template({/literal}{$categories}{literal});
+	backendTemplateInstance = new Backend.Template({/literal}[[categories]]{literal});
 	backendTemplateInstance.urls['edit'] = '{/literal}{link controller="backend.template" action=edit}?file=_id_&tabid=_tabid_{literal}';
 	backendTemplateInstance.urls['empty'] = '{/literal}{link controller="backend.template" action=emptyPage}{literal}';
 	backendTemplateInstance.urls['templateData'] = '{/literal}{link controller="backend.template" action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';

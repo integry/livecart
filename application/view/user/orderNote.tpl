@@ -1,4 +1,4 @@
-<li class="responder_{$note.isAdmin}">
+<li class="responder_[[note.isAdmin]]">
 	
 	<div class="responseUser">
 		<span class="responderType">
@@ -9,11 +9,11 @@
 		{/if}
 		</span>
 		
-		{$note.User.fullName}
+		[[note.User.fullName]]
 	</div>
 		
 	<div class="noteDate">
-		{$note.formatted_time.date_full} {$note.formatted_time.time_full}
+		[[note.formatted_time.date_full]] [[note.formatted_time.time_full]]
 	</div>
 		
 	<div class="clear"></div>

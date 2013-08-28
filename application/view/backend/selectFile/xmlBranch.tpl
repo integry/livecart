@@ -1,5 +1,5 @@
-<tree id="{$rootID}">
+<tree id="[[rootID]]">
 	{foreach item="node" from=$tree}
-	   <item child="{$node.childrenCount}" id="{$node.ID}" text="{$node.name|escape:'html'}"></item>
+	   <item child="[[node.childrenCount]]" id="[[node.ID]]" text="{$node.name|escape:'html'}"></item>
 	{/foreach}
 </tree>

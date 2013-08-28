@@ -33,7 +33,7 @@
 		{canonical}{self}{/canonical}
 	{/if}
 
-	<link rel="canonical" href="{$CANONICAL}" />
+	<link rel="canonical" href="[[CANONICAL]]" />
 
 	<!-- Css includes -->
 	{includeCss file="frontend/Frontend.css"}
@@ -51,7 +51,7 @@
 	<!--[if lt IE 8]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
 		{if $ieCss}
-			<link href="{$ieCss}" rel="Stylesheet" type="text/css"/>
+			<link href="[[ieCss]]" rel="Stylesheet" type="text/css"/>
 		{/if}
 	<![endif]-->
 
@@ -66,7 +66,7 @@
 	</script>
 </head>
 
-<body class="{$request.controller}Con {$request.controller}-{$request.action}{if {isRTL}} rtl{/if}{if $bodyClass} {$bodyClass}{/if}">
+<body class="[[request.controller]]Con [[request.controller]]-[[request.action]]{if {isRTL}} rtl{/if}{if $bodyClass} [[bodyClass]]{/if}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
 		<div id="containerWrapper1">
@@ -75,7 +75,7 @@
 			<div class="container">
 				<div class="row">
 					{block PAGE-TOP}
-					{$ACTION_VIEW}
+					[[ACTION_VIEW]]
 					{block PAGE-BOTTOM}
 				</div>
 			</div>

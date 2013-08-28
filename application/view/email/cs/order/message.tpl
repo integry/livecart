@@ -1,10 +1,10 @@
 Nová zpráva ohledně Vaší objednávky na [[ config('STORE_NAME') ]]
-Vážený(á) {$user.fullName},
+Vážený(á) [[user.fullName]],
 
 Dostal jste novou zprávu ohledně Vaší objednávky.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Odpovědět můžete pomocí tohoto odkazu:

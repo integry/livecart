@@ -17,10 +17,10 @@
 			{assign var=opened value=true}
 			{assign var=columns value=$columns+1}
 		{/if}
-		<h2>{$manufacturer.name.0}</h2>
+		<h2>[[manufacturer.name.0]]</h2>
 	{/if}
 	<ul>
-		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a>
+		<li><a href="[[manufacturer.url]]">[[manufacturer.name]]</a>
 		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 	{assign var=lastLetter value=$manufacturer.name.0|@capitalize}

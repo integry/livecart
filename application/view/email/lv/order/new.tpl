@@ -1,7 +1,7 @@
 [[ config('STORE_NAME') ]] pasūtījuma apstiprinājums
-Cien. {$user.fullName},
+Cien. [[user.fullName]],
 
-Paldies par Jūsu [[ config('STORE_NAME') ]] pasūtījumu. Ja nepieciešams griezties pie mums dēļ papildus informācijas sakarā ar šo pasūtījumus, lūdzu miniet pasūtījuma numuru <b class="orderID">#{$order.invoiceNumber}</b>.
+Paldies par Jūsu [[ config('STORE_NAME') ]] pasūtījumu. Ja nepieciešams griezties pie mums dēļ papildus informācijas sakarā ar šo pasūtījumus, lūdzu miniet pasūtījuma numuru <b class="orderID">#[[order.invoiceNumber]]</b>.
 
 Jūs varat sekot līdzi pasūtījuma izpildes gaitai no šīs lapas:
 {link controller=user action=viewOrder id=$order.ID url=true}

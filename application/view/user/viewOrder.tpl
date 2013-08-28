@@ -1,15 +1,15 @@
-{pageTitle}{t _view_order} {$order.invoiceNumber} ({$order.formatted_dateCompleted.date_long}){/pageTitle}
+{pageTitle}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){/pageTitle}
 {loadJs form=true}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="ordersMenu"}
 {include file="block/content-start.tpl"}
 
 	<label class="title">{t _order_id}:</label>
-	<label class="text">{$order.invoiceNumber}</label>
+	<label class="text">[[order.invoiceNumber]]</label>
 	<div class="clear"></div>
 
 	<label class="title">{t _placed}:</label>
-	<label class="text">{$order.formatted_dateCompleted.date_long}</label>
+	<label class="text">[[order.formatted_dateCompleted.date_long]]</label>
 	<div class="clear"></div>
 
 	<label class="title">{t _order_total}:</label>
@@ -38,7 +38,7 @@
 				{assign var="length" value=''}
 				{capture name="a" assign="period"}{t `$periodTypesSingle[$period.periodType]`}{/capture}
 			{else}
-				{assign var="length" value=$period.periodLength}
+				{% set length = $period.periodLength %}
 				{capture name="a" assign="period"}{t `$periodTypesPlural[$period.periodType]`}{/capture}
 			{/if}
 			<label class="text">{maketext text=_rebills_every params="`$length`,`$period`"}</label>
@@ -47,12 +47,12 @@
 
 		{if $nextRebillDate}
 			<label class="title">{t _next_rebill}:</label>
-			<label class="text">{$nextRebillDate.date_medium}</label>
+			<label class="text">[[nextRebillDate.date_medium]]</label>
 			<div class="clear"></div>
 		{/if}
 
 		<label class="title">{t _remaining_rebills}:</label>
-		<label class="text">{if $order.rebillsLeft != -1}{$order.rebillsLeft}{else}{t _remaining_rebills_till_canceled}{/if}
+		<label class="text">{if $order.rebillsLeft != -1}[[order.rebillsLeft]]{else}{t _remaining_rebills_till_canceled}{/if}
 			{if $canCancelRebills}
 				<span class="cancelFurtherRebills">
 					{if $currentPage > 1}
@@ -80,7 +80,7 @@
 			{if !$shipment.isShippable}
 				<h2>{t _downloads}</h2>
 			{elseif $smarty.foreach.shipments.total > 1}
-				<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
+				<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				<p>
 					{t _status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
 				</p>
@@ -95,25 +95,25 @@
 	{function name="address"}
 		{if $address}
 			<p>
-				{$address.fullName}
+				[[address.fullName]]
 			</p>
 			<p>
-				{$address.companyName}
+				[[address.companyName]]
 			</p>
 			<p>
-				{$address.address1}
+				[[address.address1]]
 			</p>
 			<p>
-				{$address.address2}
+				[[address.address2]]
 			</p>
 			<p>
-				{$address.city}
+				[[address.city]]
 			</p>
 			<p>
-				{if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+				{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
 			</p>
 			<p>
-				{$address.countryName}
+				[[address.countryName]]
 			</p>
 			<p>
 				{include file="order/addressFieldValues.tpl" showLabels=false}

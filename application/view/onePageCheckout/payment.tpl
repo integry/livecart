@@ -22,7 +22,7 @@
 				{foreach from=$offlineMethods key="key" item="method"}
 					<div class="radio">
 						<label>
-							<input type="radio" name="payMethod" value="{$method}" id="{$method}"  {if $selectedMethod == $method}checked="checked"{/if} />
+							<input type="radio" name="payMethod" value="[[method]]" id="[[method]]"  {if $selectedMethod == $method}checked="checked"{/if} />
 							{"OFFLINE_NAME_`$key`"|config}
 						</label>
 					</div>
@@ -33,8 +33,8 @@
 						{foreach from=$otherMethods item=method}
 							<div class="radio">
 								<label>
-									<input type="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="{$method}" {if $selectedMethod == $method}checked="checked"{/if} />
-									<img src="{s image/payment/{$method}.gif}" class="paymentLogo" alt="{$method}" />
+									<input type="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="[[method]]" {if $selectedMethod == $method}checked="checked"{/if} />
+									<img src="{s image/payment/[[method]].gif}" class="paymentLogo" alt="[[method]]" />
 								</label>
 							</div>
 						{/foreach}
@@ -79,7 +79,7 @@
 				{/if}
 
 				{foreach from=$offlineMethods key="key" item="method"}
-					<div id="payForm_{$method}">
+					<div id="payForm_[[method]]">
 						{form action="controller=onePageCheckout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST" class="form-horizontal"}
 							{sect}
 								{header}

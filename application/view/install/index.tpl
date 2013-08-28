@@ -17,7 +17,7 @@
 						The following directories are not writable:
 						<ul id="notWritable">
 						{foreach from=$result item=dir}
-							<li>{$dir}</li>
+							<li>[[dir]]</li>
 						{/foreach}
 						</ul>		
 						<p>

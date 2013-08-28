@@ -1,6 +1,6 @@
 [[ config('STORE_NAME') ]] dotaz na zboží
-Název zboží: {$product.name_lang}
-Kód: {$product.sku}
+Název zboží: [[product.name_lang]]
+Kód: [[product.sku]]
 
-{$message}
+[[message]]
 {include file="email/en/signature.tpl"}

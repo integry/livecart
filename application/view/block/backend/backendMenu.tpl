@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	window.menuArray = {$menuArray};
+	window.menuArray = [[menuArray]];
 </script>
 
 <div ng-controller="MenuController">

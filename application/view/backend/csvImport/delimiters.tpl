@@ -19,7 +19,7 @@
 			</span>
 			<select name="currency">
 				{foreach from=$currencies item=currency}
-					<option>{$currency}</option>
+					<option>[[currency]]</option>
 				{/foreach}
 			</select>
 		</span>
@@ -30,7 +30,7 @@
 			<select name="group">
 				<option></option>
 				{foreach from=$groups item=group}
-					<option value="{$group.ID}">{$group.name}</option>
+					<option value="[[group.ID]]">[[group.name]]</option>
 				{/foreach}
 			</select>
 		</span>
@@ -55,7 +55,7 @@
 			</span>
 			<select name="language">
 				{foreach from=$languages item=language}
-					<option value="{$language.ID}">{$language.originalName} ({$language.name})</option>
+					<option value="[[language.ID]]">[[language.originalName]] ([[language.name]])</option>
 				{/foreach}
 			</select>
 		</span>
@@ -88,7 +88,7 @@
 
 			{input name=""}
 				{label}{tip _import_file}:{/label}
-				<label class="wide">{$file}</label>
+				<label class="wide">[[file]]</label>
 			{/input}
 
 			{if 'ProductImport' == $type}
@@ -96,7 +96,7 @@
 				<label>{t _import_category}</label>
 				<label class="wide">
 					{foreach from=$catPath item=node name="catPath"}
-						<a href="{link controller="backend.csvImport" action=index}?file={$file}&category={$node.ID}&selectCategory=true">{$node.name_lang}</a>
+						<a href="{link controller="backend.csvImport" action=index}?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
 						{if !$smarty.foreach.catPath.last}
 							&gt;
 						{/if}

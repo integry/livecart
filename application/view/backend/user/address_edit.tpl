@@ -56,10 +56,10 @@
 {include file="block/eav/fields.tpl" item=$address fieldList=$specFieldListByOwner.UserAddress[$address.ID]}
 
 <script type="text/javascript">
-$('{$idPrefix}_stateID').stateSwitcher = new Backend.User.StateSwitcher(
-		$('{$idPrefix}_countryID'),
-		$('{$idPrefix}_stateID'),
-		$('{$idPrefix}_stateName'),
+$('[[idPrefix]]_stateID').stateSwitcher = new Backend.User.StateSwitcher(
+		$('[[idPrefix]]_countryID'),
+		$('[[idPrefix]]_stateID'),
+		$('[[idPrefix]]_stateName'),
 		'{link controller="backend.user" action=states}'
 	);
 </script>

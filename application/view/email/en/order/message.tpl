@@ -1,10 +1,10 @@
 New Message Regarding Your Order at [[ config('STORE_NAME') ]]
-Dear {$user.fullName},
+Dear [[user.fullName]],
 
 A new message has been added regarding your order.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 You can respond to this message from the following page:

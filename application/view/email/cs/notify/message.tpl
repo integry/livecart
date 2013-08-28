@@ -1,8 +1,8 @@
 Nový vzkaz k objednávce na [[ config('STORE_NAME') ]]
-Zákazník poslal vzkaz k objednávce č.: {$order.invoiceNumber}
+Zákazník poslal vzkaz k objednávce č.: [[order.invoiceNumber]]
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Můžete mu odpovědět zde:

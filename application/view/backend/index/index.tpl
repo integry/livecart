@@ -20,22 +20,22 @@
 				<option value="January 1 last year | January 1">{t _last_year}</option>
 			</select>:
 			<label class="checkbox"><span class="progressIndicator" style="display: none;" id="periodProgress"></span></label>
-			<label class="periodCount" id="count">{$orderCount.last}</label><span class="sep"> | </span>
+			<label class="periodCount" id="count">[[orderCount.last]]</label><span class="sep"> | </span>
 
-	<span class="orderPeriod">{translate|@strtolower text=_this_week}:</span> <span class="periodCount">{$ordersThisWeek}</span><span class="sep"> | </span>
-	<span class="orderPeriod">{translate|@strtolower text=_this_month}:</span> <span class="periodCount">{$ordersThisMonth}</span><span class="sep"> | </span>
-	<span class="orderPeriod">{translate|@strtolower text=_last_month}:</span> <span class="periodCount">{$ordersLastMonth}</span><span class="sep"> | </span>
+	<span class="orderPeriod">{translate|@strtolower text=_this_week}:</span> <span class="periodCount">[[ordersThisWeek]]</span><span class="sep"> | </span>
+	<span class="orderPeriod">{translate|@strtolower text=_this_month}:</span> <span class="periodCount">[[ordersThisMonth]]</span><span class="sep"> | </span>
+	<span class="orderPeriod">{translate|@strtolower text=_last_month}:</span> <span class="periodCount">[[ordersLastMonth]]</span><span class="sep"> | </span>
 
 	<span class="orderStat"><a href="{link controller="backend.customerOrder"}#group_3#tabOrders__">{t _status_new}</a>:</span>
-	<span class="statCount">{$orderCount.new}</span>
+	<span class="statCount">[[orderCount.new]]</span>
 	<span class="sep"> | </span>
 
 	<span class="orderStat"><a href="{link controller="backend.customerOrder"}#group_4#tabOrders__">{t _status_processing}</a>:</span>
-	<span class="statCount">{$orderCount.processing}</span>
+	<span class="statCount">[[orderCount.processing]]</span>
 	<span class="sep"> | </span>
 
 	<span class="orderStat">{t _unread_msg}:</span>
-	<span class="statCount">{$orderCount.messages}</span>
+	<span class="statCount">[[orderCount.messages]]</span>
 
 </fieldset>
 
@@ -73,12 +73,12 @@
 	<form>
 		<p>
 			<label>{t _low_stock}:</label>
-			<label>{$inventoryCount.lowStock}</label>
+			<label>[[inventoryCount.lowStock]]</label>
 		</p>
 
 		<p>
 			<label>{t _out_stock}:</label>
-			<label>{$inventoryCount.outOfStock}</label>
+			<label>[[inventoryCount.outOfStock]]</label>
 		</p>
 	</form>
 </fieldset>
@@ -89,17 +89,17 @@
 	<form>
 		<p>
 			<label>{t _active_pr}:</label>
-			<label>{$rootCat.activeProductCount}</label>
+			<label>[[rootCat.activeProductCount]]</label>
 		</p>
 
 		<p>
 			<label>{t _inactive_pr}:</label>
-			<label>{$rootCat.inactiveProductCount}</label>
+			<label>[[rootCat.inactiveProductCount]]</label>
 		</p>
 
 		<p>
 			<label>{t _total_orders}:</label>
-			<label>{$orderCount.total}</label>
+			<label>[[orderCount.total]]</label>
 		</p>
 
 	</form>

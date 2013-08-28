@@ -17,9 +17,9 @@
 	{/literal}
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{if $configKey == 'types'}
-			Backend.Filter.prototype.{$configKey} = Backend.Filter.prototype.createTypesOptions({json array=$configItem});
+			Backend.Filter.prototype.[[configKey]] = Backend.Filter.prototype.createTypesOptions({json array=$configItem});
 		{else}
-			Backend.Filter.prototype.{$configKey} = {json array=$configItem};
+			Backend.Filter.prototype.[[configKey]] = {json array=$configItem};
 		{/if}
 	{/foreach}
 	{literal}
@@ -30,13 +30,13 @@
 {if $blankFilter.specFields|@count > 0}
 	<div>
 		<fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
-			<ul class="menu" id="filter_new_{$categoryID}_menu">
-				<li class="filter_add"><a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a></li>
-				<li class="filter_addCancel done" style="display: none"><a href="#new" id="filter_item_new_{$categoryID}_cancel">{t _cancel_adding_new_filter}</a></li>
+			<ul class="menu" id="filter_new_[[categoryID]]_menu">
+				<li class="filter_add"><a href="#new" id="filter_item_new_[[categoryID]]_show">{t _add_new_filter}</a></li>
+				<li class="filter_addCancel done" style="display: none"><a href="#new" id="filter_item_new_[[categoryID]]_cancel">{t _cancel_adding_new_filter}</a></li>
 			</ul>
 		</fieldset>
 
-		<fieldset class="addForm" id="filter_item_new_{$categoryID}_form" style="display: none;" class="filter_item_new">
+		<fieldset class="addForm" id="filter_item_new_[[categoryID]]_form" style="display: none;" class="filter_item_new">
 			<legend>{t _add_new_filter|capitalize}</legend>
 			<script type="text/javascript">
 				var newFilterForm = new Backend.Filter({json array=$blankFilter}, true);
@@ -47,10 +47,10 @@
 		</fieldset>
 	</div>
 
-	<ul id="filter_items_list_{$categoryID}" class="filterList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit ">
+	<ul id="filter_items_list_[[categoryID]]" class="filterList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit ">
 	{foreach item="filter" from=$filters}
-		<li id="filter_items_list_{$categoryID}_{$filter.ID}" {if $filter.filtersCount == 0}class="filtergroup_has_no_filters"{/if}>
-			<span class="filter_title">{$filter.name_lang}</span> <span class="filter_count">({$filter.filtersCount})</span>
+		<li id="filter_items_list_[[categoryID]]_[[filter.ID]]" {if $filter.filtersCount == 0}class="filtergroup_has_no_filters"{/if}>
+			<span class="filter_title">[[filter.name_lang]]</span> <span class="filter_count">([[filter.filtersCount]])</span>
 		</li>
 	{/foreach}
 	</ul>
@@ -63,12 +63,12 @@
 			 _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
 		 }
 
-		 Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e)
+		 Event.observe($("filter_item_new_{/literal}[[categoryID]]{literal}_show"), "click", function(e)
 		 {
 			 e.preventDefault();
-			 Backend.Filter.prototype.createNewAction('{/literal}{$categoryID}{literal}')
+			 Backend.Filter.prototype.createNewAction('{/literal}[[categoryID]]{literal}')
 		 });
-		 ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
+		 ActiveList.prototype.getInstance('filter_items_list_{/literal}[[categoryID]]{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
 	</script>
 	{/literal}
 {else}

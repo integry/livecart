@@ -31,7 +31,7 @@
 
 </fieldset>
 
-<fieldset class="currencyPriceFormatting rounding" id="rounding_{$id}">
+<fieldset class="currencyPriceFormatting rounding" id="rounding_[[id]]">
 
 	<legend>{t _rounding}</legend>
 
@@ -58,7 +58,7 @@
 </fieldset>
 
 <script type="text/javascript">
-	new Backend.CurrencyRounding($('rounding_{$id}'), {json array=$currency.rounding});
+	new Backend.CurrencyRounding($('rounding_[[id]]'), {json array=$currency.rounding});
 </script>
 
 <fieldset class="controls">

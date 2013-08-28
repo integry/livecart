@@ -13,9 +13,9 @@
 		{foreach from=$breadCrumb item="breadCrumbItem" name="breadCrumb"}
 			<li class="{if $smarty.foreach.breadCrumb.first}first {/if}{if $smarty.foreach.breadCrumb.last}last active{/if}">
 				{if !$smarty.foreach.breadCrumb.last}
-					<a href="{$breadCrumbItem.url}">{$breadCrumbItem.title}</a>
+					<a href="[[breadCrumbItem.url]]">[[breadCrumbItem.title]]</a>
 				{else}
-					{$breadCrumbItem.title}
+					[[breadCrumbItem.title]]
 				{/if}
 			</li>
 		{/foreach}

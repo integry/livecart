@@ -20,7 +20,7 @@
 	{*
 
 	<script type="text/javascript">
-		new Backend.ThemePreview($('productThemePreview_{$product.ID}'), $('productTheme_{$product.ID}'));
+		new Backend.ThemePreview($('productThemePreview_[[product.ID]]'), $('productTheme_[[product.ID]]'));
 	</script>
 	*}
 {/form}

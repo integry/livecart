@@ -1,21 +1,21 @@
-{assign var="TYPE_ORDER" value=0}
-{assign var="TYPE_SHIPMENT" value=1}
-{assign var="TYPE_ORDERITEM" value=2}
-{assign var="TYPE_SHIPPINGADDRESS" value=3}
-{assign var="TYPE_BILLINGADDRESS" value=4}
+{% set TYPE_ORDERITEM = 2 %}
+{% set TYPE_ORDERITEM = 2 %}
+{% set TYPE_ORDERITEM = 2 %}
+{% set TYPE_SHIPPINGADDRESS = 3 %}
+{% set TYPE_BILLINGADDRESS = 4 %}
 
-{assign var="ACTION_ADD" value=0}
-{assign var="ACTION_REMOVE" value=1}
-{assign var="ACTION_CHANGE" value=2}
-{assign var="ACTION_STATUSCHANGE" value=3}
-{assign var="ACTION_COUNTCHANGE" value=4}
-{assign var="ACTION_SHIPPINGSERVICECHANGE" value=5}
-{assign var="ACTION_SHIPMENTCHANGE" value=6}
-{assign var="ACTION_ORDER" value=7}
-{assign var="ACTION_CANCELEDCHANGE" value=8}
-{assign var="ACTION_REMOVED_WITH_SHIPMENT" value=9}
-{assign var="ACTION_NEW_DOWNLOADABLE_ITEM_ADDED" value=10}
-{assign var="ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED" value=11}
+{% set ACTION_ADD = 0 %}
+{% set ACTION_REMOVE = 1 %}
+{% set ACTION_CHANGE = 2 %}
+{% set ACTION_STATUSCHANGE = 3 %}
+{% set ACTION_COUNTCHANGE = 4 %}
+{% set ACTION_SHIPPINGSERVICECHANGE = 5 %}
+{% set ACTION_SHIPMENTCHANGE = 6 %}
+{% set ACTION_ORDER = 7 %}
+{% set ACTION_CANCELEDCHANGE = 8 %}
+{% set ACTION_REMOVED_WITH_SHIPMENT = 9 %}
+{% set ACTION_NEW_DOWNLOADABLE_ITEM_ADDED = 10 %}
+{% set ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED = 11 %}
 
 
 <ul class="logHistory">
@@ -53,8 +53,8 @@
 					{/if}
 				</td>
 				<td class="logEntryAuthor">
-					<div class="logEntryDate">{$log.formatted_time.date_long} {$log.formatted_time.time_long}</div>
-					<div class="logEntryUser"><a href="{backendUserUrl user=$log.User}">{$log.User.fullName}</a></div>
+					<div class="logEntryDate">[[log.formatted_time.date_long]] [[log.formatted_time.time_long]]</div>
+					<div class="logEntryUser"><a href="{backendUserUrl user=$log.User}">[[log.User.fullName]]</a></div>
 				</td>
 			</tr>
 			
@@ -111,9 +111,9 @@
 				<td class="logEntryTotalAmount">
 					<div class="logEntryTotalAmountTitle">{t _order_total_changed}:</div>
 					{t _from_lowercase} 
-					<span class="logEntryOldTotalAmount">{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</span> 
+					<span class="logEntryOldTotalAmount">[[log.Order.Currency.pricePrefix]][[log.oldTotal]][[log.Order.Currency.priceSuffix]]</span>
 					{t _to_lowercase} 
-					<span class="logEntryNewTotalAmount">{$log.Order.Currency.pricePrefix}{$log.newTotal}{$log.Order.Currency.priceSuffix}</span>
+					<span class="logEntryNewTotalAmount">[[log.Order.Currency.pricePrefix]][[log.newTotal]][[log.Order.Currency.priceSuffix]]</span>
 				</td>
 			</tr>
 			{/if}

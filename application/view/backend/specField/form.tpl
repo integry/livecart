@@ -111,19 +111,19 @@
 
 			<p>
 				<label class="translation_name_label">{t _SpecField_title}</label>
-				<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+				<input type="text" name="name_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
 				<label class="translation_valuePrefix_label sufixAndPrefix">{tip _SpecField_valuePrefix}</label>
-				<input type="text" class="sufixAndPrefix" name="valuePrefix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+				<input type="text" class="sufixAndPrefix" name="valuePrefix_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
 				<label class="translation_valueSuffix_label sufixAndPrefix">{tip _SpecField_valueSuffix}</label>
-				<input type="text" class="sufixAndPrefix" name="valueSuffix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+				<input type="text" class="sufixAndPrefix" name="valueSuffix_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 			<p>
 				<label class="translation_description_label">{t _SpecField_description}</label>
-				<textarea name="description_{$lang.ID}" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
+				<textarea name="description_[[lang.ID]]" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
 			</p>
 
 		{/language}

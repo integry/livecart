@@ -1,1 +1,1 @@
-{$ACTION_VIEW}
+[[ACTION_VIEW]]

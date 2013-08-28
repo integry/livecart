@@ -1,4 +1,4 @@
-<div id="countriesAndStatesMsg_{$categoryId}"></div>
+<div id="countriesAndStatesMsg_[[categoryId]]"></div>
 
 {form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
 
@@ -40,7 +40,7 @@
 			<div class="clear"></div>
 			<div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
 				{foreach key="groupName" item="group" from=$countryGroups}
-					<div><a href="#{$groupName}">{translate text=$groupName}</a>&nbsp;&nbsp;</div>
+					<div><a href="#[[groupName]]">{translate text=$groupName}</a>&nbsp;&nbsp;</div>
 				{/foreach}
 			</div>
 		</fieldset>
@@ -70,7 +70,7 @@
 		<fieldset>
 			<script type="text/jscript">
 				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_cityMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksCity, function() {});
+					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_cityMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksCity, function() {});
 				{/literal}
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
@@ -84,13 +84,13 @@
 				</div>
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
-			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_cityMasksList" id="countriesAndStates_{$zoneID}_cityMasks">
+			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_cityMasksList" id="countriesAndStates_[[zoneID]]_cityMasks">
 				{foreach from=$cityMasks item="mask"}
-					<li id="countriesAndStates_{$zoneID}_cityMasks_{$mask.ID}">
+					<li id="countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]">
 						{include file="backend/deliveryZone/mask.tpl" mask=$mask}
 					</li>
 					<script type="text/javascript">
-						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_cityMasks_{$mask.ID}");
+						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]");
 					</script>
 				{/foreach}
 			</ul>
@@ -102,7 +102,7 @@
 		<fieldset>
 			<script type="text/jscript">
 				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
+					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
 				{/literal}
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
@@ -116,13 +116,13 @@
 				</div>
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
-			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_zipMasksList" id="countriesAndStates_{$zoneID}_zipMasks">
+			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_zipMasksList" id="countriesAndStates_[[zoneID]]_zipMasks">
 				{foreach from=$zipMasks item="mask"}
-					<li id="countriesAndStates_{$zoneID}_zipMasks_{$mask.ID}">
+					<li id="countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]">
 						{include file="backend/deliveryZone/mask.tpl" mask=$mask}
 					</li>
 					<script type="text/javascript">
-						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_zipMasks_{$mask.ID}");
+						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]");
 					</script>
 				{/foreach}
 			</ul>
@@ -134,7 +134,7 @@
 		<fieldset>
 			<script type="text/jscript">
 				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
+					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
 				{/literal}
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
@@ -148,13 +148,13 @@
 				</div>
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
-			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_addressMasksList" id="countriesAndStates_{$zoneID}_addressMasks">
+			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_addressMasksList" id="countriesAndStates_[[zoneID]]_addressMasks">
 				{foreach from=$addressMasks item="mask"}
-					<li id="countriesAndStates_{$zoneID}_addressMasks_{$mask.ID}">
+					<li id="countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]">
 						{include file="backend/deliveryZone/mask.tpl" mask=$mask}
 					</li>
 					<script type="text/javascript">
-						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_addressMasks_{$mask.ID}");
+						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]");
 					</script>
 				{/foreach}
 			</ul>
@@ -164,5 +164,5 @@
 {/form}
 
 <script type="text/javascript">
-	Backend.DeliveryZone.CountriesAndStates.prototype.getInstance('countriesAndStates_{$zoneID}', {$zoneID});
+	Backend.DeliveryZone.CountriesAndStates.prototype.getInstance('countriesAndStates_[[zoneID]]', [[zoneID]]);
 </script>

@@ -3,13 +3,13 @@
 		<tr>
 			<td class="quantityAmount">
 				{if $quantityPrice.to}
-					{$quantityPrice.from} - {$quantityPrice.to}
+					[[quantityPrice.from]] - [[quantityPrice.to]]
 				{else}
 					{maketext text="_x_or_more" params=$quantityPrice.from}
 				{/if}
 			</td>
 			<td class="price quantityPrice">
-				{$quantityPrice.formattedPrice}
+				[[quantityPrice.formattedPrice]]
 			</td>
 		</tr>
 	{/foreach}

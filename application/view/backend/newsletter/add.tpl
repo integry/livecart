@@ -27,7 +27,7 @@
 	{literal}
 	<script type="text/javascript">
 		Backend.Newsletter.initAddForm();
-		// Backend.Product.setPath({/literal}{$product.Category.ID}, {json array=$path}{literal})
+		// Backend.Product.setPath({/literal}[[product.Category.ID]], {json array=$path}{literal})
 	</script>
 	{/literal}
 

@@ -47,5 +47,5 @@
 </form>
 
 {if $preview_options}
-	<div class="stepPreview">{$preview_options}</div>
+	<div class="stepPreview">[[preview_options]]</div>
 {/if}

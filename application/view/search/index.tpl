@@ -1,4 +1,4 @@
-{pageTitle}{$results.meta.name|capitalize} &gt;&gt; "{$query}"{/pageTitle}
+{pageTitle}{$results.meta.name|capitalize} &gt;&gt; "[[query]]"{/pageTitle}
 
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}

@@ -3,7 +3,7 @@
 <div class="radio">
 	<label>
 		{radio name="shipping_`$key`" value=$rate.serviceID}
-		{$rate.ShippingService.name_lang}
+		[[rate.ShippingService.name_lang]]
 		(&rlm;<strong>{$rate.taxPrice.$currency}</strong>)
 	</label>
 
@@ -11,18 +11,18 @@
 		<dl class="dl-horizontal">
 		{foreach $rate.ShippingService.attributes as $attr}
 			{if $attr.values || $attr.value || $attr.value_lang}
-			<dt>{$attr.EavField.name_lang}</dt>
+			<dt>[[attr.EavField.name_lang]]</dt>
 			<dd>
 				{if $attr.values}
 					<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
 						{foreach from=$attr.values item="value"}
-							<li class="fieldDescription"> {$value.value_lang}</li>
+							<li class="fieldDescription"> [[value.value_lang]]</li>
 						{/foreach}
 					</ul>
 				{elseif $attr.value_lang}
-					{$attr.value_lang}
+					[[attr.value_lang]]
 				{elseif $attr.value}
-					{$attr.EavField.valuePrefix_lang}{$attr.value}{$attr.EavField.valueSuffix_lang}
+					[[attr.EavField.valuePrefix_lang]][[attr.value]][[attr.EavField.valueSuffix_lang]]
 				{/if}
 			</dd>
 			{/if}
@@ -49,6 +49,6 @@
 {/foreach}
 
 <div class="text-danger hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
-	<div>{error for="shipping_`$key`"}{$msg}{/error}</div>
+	<div>{error for="shipping_`$key`"}[[msg]]{/error}</div>
 </div>
 </div>

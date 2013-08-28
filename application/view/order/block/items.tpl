@@ -22,11 +22,11 @@
 		<td class="cartName">
 			<div>
 				{if $item.Product.ID}
-					<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+					<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
 				{else}
-					<span>{$item.Product.name_lang}</span>
+					<span>[[item.Product.name_lang]]</span>
 				{/if}
-				<small class="categoryName">(&rlm;{$item.Product.Category.name_lang})</small>
+				<small class="categoryName">(&rlm;[[item.Product.Category.name_lang]])</small>
 			</div>
 
 			{include file="order/itemVariations.tpl"}
@@ -41,14 +41,14 @@
 
 		<td class="cartPrice {if $item.itemBasePrice != $item.itemPrice}discount{/if}">
 			{if $item.count == 1}
-				<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+				<span class="basePrice">[[item.formattedBasePrice]]</span><span class="actualPrice">[[item.formattedPrice]]</span>
 			{else}
-				{$item.formattedDisplaySubTotal}
+				[[item.formattedDisplaySubTotal]]
 				<div class="subTotalCalc">
 					<span class="itemCount">
-						{$item.count} x
+						[[item.count]] x
 					</span>
-					<span class="basePrice">{$item.formattedBasePrice}</span><span class="actualPrice">{$item.formattedPrice}</span>
+					<span class="basePrice">[[item.formattedBasePrice]]</span><span class="actualPrice">[[item.formattedPrice]]</span>
 				</div>
 			{/if}
 		</td>

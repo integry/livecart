@@ -22,7 +22,7 @@
 		</div>
 
 		{if $preview_shipping}
-			<div class="stepPreview">{$preview_shipping.compact}</div>
+			<div class="stepPreview">[[preview_shipping.compact]]</div>
 		{/if}
 	</div>
 </div>

@@ -22,27 +22,27 @@
 
 	{if !$user.ID}
 	<div id="checkout-login" class="step">
-		{$login}
+		[[login]]
 	</div>
 	{/if}
 
 	<div class="accordion">
 
 		<div id="checkout-billing" class="step">
-			{$billingAddress}
+			[[billingAddress]]
 		</div>
 
 		<div id="checkout-shipping">
 			<div id="checkout-shipping-address" class="step">
-				{$shippingAddress}
+				[[shippingAddress]]
 			</div>
 			<div id="checkout-shipping-method" class="step">
-				{$shippingMethods}
+				[[shippingMethods]]
 			</div>
 		</div>
 
 		<div id="checkout-payment" class="step">
-			{$payment}
+			[[payment]]
 		</div>
 
 	</div>
@@ -52,11 +52,11 @@
 	<div class="col col-lg-4" id="checkout-right">
 		<div id="checkout-right-inner">
 			<div id="checkout-cart">
-				{$cart}
+				[[cart]]
 			</div>
 
 			<div id="checkout-overview">
-				{$overview}
+				[[overview]]
 			</div>
 		</div>
 	</div>

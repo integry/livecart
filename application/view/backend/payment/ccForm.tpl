@@ -19,17 +19,17 @@
 
 {form action="controller=backend.payment action=processCreditCard id=`$order.ID`" onsubmit="new window.opener.Backend.Payment.AddCreditCard(this, window); return false;" handle=$ccForm method="POST"}
 
-<input type="hidden" name="id" value="{$order.ID}" />
+<input type="hidden" name="id" value="[[order.ID]]" />
 
 {error for="creditCardError"}
 	<div class="errorMsg ccPayment">
-		{$msg}
+		[[msg]]
 	</div>
 {/error}
 
 {input name="amount"}
 	{label}{t _amount}:{/label}
-	{textfield class="text number"} {$order.Currency.ID}
+	{textfield class="text number"} [[order.Currency.ID]]
 {/input}
 
 {input name="name"}

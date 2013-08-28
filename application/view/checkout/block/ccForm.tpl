@@ -11,7 +11,7 @@
 
 		{error for="creditCardError"}
 			<div class="errorMsg ccPayment">
-				{$msg}
+				[[msg]]
 			</div>
 		{/error}
 
@@ -68,7 +68,7 @@
 		{error for="creditCardError"}
 			<div class="clear"></div>
 			<div class="errorMsg ccPayment">
-				<p>{$msg}</p>
+				<p>[[msg]]</p>
 			</div>
 			<div class="clear"></div>
 		{/error}

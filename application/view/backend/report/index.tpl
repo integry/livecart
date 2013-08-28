@@ -45,8 +45,8 @@
 				<option value="today | now">{tn _today}</option>
 				<option value="yesterday | today">{tn _yesterday}</option>
 				<option value="-7 days | now">{tn _last_7_days}</option>
-				<option value="{$thisMonth}/1 | now">{tn _this_month}</option>
-				<option value="{$lastMonth}-1 | {$thisMonth}/1">{tn _last_month}</option>
+				<option value="[[thisMonth]]/1 | now">{tn _this_month}</option>
+				<option value="[[lastMonth]]-1 | [[thisMonth]]/1">{tn _last_month}</option>
 				<option value="January 1 | now">{t _this_year}</option>
 				<option value="all">{t _all_time}</option>
 				{* <option value="range">{tn _grid_date_range}</option> *}

@@ -1,6 +1,6 @@
-<div id="prodImgAdd_{$ownerId}" class="prodImageEditForm">
+<div id="prodImgAdd_[[ownerId]]" class="prodImageEditForm">
 {form handle=$form action="controller=backend.productQuickImage action=upload" method="post" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
-	<input type="hidden" name="ownerId" value="{$ownerId}" />
+	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
 	<fieldset class="addForm">
 		<legend>{t _add_new_image}</legend>
@@ -25,15 +25,15 @@
 			<input type="submit" name="upload" class="submit" value="{tn _upload}">
 			{t _or}
 			<a href="javascript:void(0);"
-			onclick="return Backend.Product.hideQuickEditAddImageForm($('product_{$ownerId}_quick_form').down('ul').down('li',1), {$ownerId});" class="cancel" >{t _cancel}</a>
+			onclick="return Backend.Product.hideQuickEditAddImageForm($('product_[[ownerId]]_quick_form').down('ul').down('li',1), [[ownerId]]);" class="cancel" >{t _cancel}</a>
 		</fieldset>
 	</fieldset>
 
 {/form}
-<iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}" style="display: none;"></iframe>
+<iframe name="prodImgUpload_[[ownerId]]" id="prodImgUpload_[[ownerId]]" style="display: none;"></iframe>
 </div>
 
-<ul id="prodImageList_{$ownerId}" class="hidden prodImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
+<ul id="prodImageList_[[ownerId]]" class="hidden prodImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
 	<li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore main">
 		{t _main_image}
 	</li>

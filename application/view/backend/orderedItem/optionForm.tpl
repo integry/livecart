@@ -9,9 +9,9 @@
 			{include file="backend/orderedItem/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
 		{/foreach}
 
-		<input type="hidden" name="id" value="{$item.ID}" />
-		<input type="hidden" name="orderID" value="{$item.CustomerOrder.ID}" />
-		<input type="hidden" name="shipmentID" value="{$item.Shipment.ID}" />
+		<input type="hidden" name="id" value="[[item.ID]]" />
+		<input type="hidden" name="orderID" value="[[item.CustomerOrder.ID]]" />
+		<input type="hidden" name="shipmentID" value="[[item.Shipment.ID]]" />
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>

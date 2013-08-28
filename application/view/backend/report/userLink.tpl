@@ -1,1 +1,1 @@
-<a href="{backendUserUrl id=$id}">{$value}</a>
+<a href="{backendUserUrl id=$id}">[[value]]</a>

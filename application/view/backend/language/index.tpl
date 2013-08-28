@@ -71,7 +71,7 @@
 
 {literal}
 <script type="text/javascript">
-	lng.renderList({/literal}{$languageArray}{literal});
+	lng.renderList({/literal}[[languageArray]]{literal});
 	lng.initLangList();
 </script>
 {/literal}

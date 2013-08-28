@@ -37,8 +37,8 @@
 			<div style="float: left;">
 				{foreach from=$groupsArray item=groupItem}
 					<p>
-						{checkbox class="checkbox userGroupCheckbox" name="group" name="group_{$groupItem.ID}" onchange="Backend.Newsletter.updateRecipientCount(this)"}
-						<label class="checkbox" for="group_{$groupItem.ID}">{$groupItem.name|escape}</label>
+						{checkbox class="checkbox userGroupCheckbox" name="group" name="group_[[groupItem.ID]]" onchange="Backend.Newsletter.updateRecipientCount(this)"}
+						<label class="checkbox" for="group_[[groupItem.ID]]">{$groupItem.name|escape}</label>
 					</p>
 				{/foreach}
 				<input type="hidden" value="" name="userGroupIDs" id="userGroupIDs" />
@@ -69,7 +69,7 @@
 		</p>
 		<p>
 			<label>{t _messages_sent}:</label>
-			<label class="sentCount">{$sentCount}</label>
+			<label class="sentCount">[[sentCount]]</label>
 		</p>
 		<div style="display: none;">
 			<span class="statusPartial">{t _status_1}</span>

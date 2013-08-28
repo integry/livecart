@@ -1,4 +1,4 @@
-{assign var="extraColspanSize" value=0}
+{% set extraColspanSize = 0 %}
 {if 'SHOW_SKU_CART'|config}
 	{assign var="extraColspanSize" value=1+$extraColspanSize}
 {/if}
@@ -41,7 +41,7 @@
 		{include file="order/block/coupons.tpl"}
 	</tbody>
 </table>
-<input type="hidden" name="return" value="{$return}" />
+<input type="hidden" name="return" value="[[return]]" />
 
 {include file="order/block/expressCheckout.tpl"}
 

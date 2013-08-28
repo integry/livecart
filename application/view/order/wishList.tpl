@@ -22,7 +22,7 @@
 				{/if}
 			</td>
 			<td class="cartName">
-				<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+				<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
 			</td>
 			<td class="cartPrice">
 				{$item.Product.formattedPrice.$currency}

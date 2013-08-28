@@ -1,4 +1,4 @@
-<span style="{denied role="order.mass"}visibility: hidden;{/denied}" id="orderMass_{$orderGroupID}" class="activeGridMass">
+<span style="{denied role="order.mass"}visibility: hidden;{/denied}" id="orderMass_[[orderGroupID]]" class="activeGridMass">
 
 	{form action="controller=backend.customerOrder action=processMass id=$orderGroupID" method="POST" handle=$massForm onsubmit="return false;"}
 

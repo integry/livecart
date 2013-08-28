@@ -1,3 +1,3 @@
 [[ config('STORE_NAME') ]] Kontaktni obrazec
-{$message}
+[[message]]
 {include file="email/en/signature.tpl"}

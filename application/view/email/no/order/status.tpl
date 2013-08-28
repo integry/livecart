@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Oppdatering av status på bestilling
-Kjære {$user.fullName},
+Kjære [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Status er oppdatert for bestillingsnr.{$order.invoiceNumber}.
+Status er oppdatert for bestillingsnr.[[order.invoiceNumber]].
 {else}
-Status er oppdatert for en eller flere forsendelser av din bestillingsordre <b class="orderID">#{$order.invoiceNumber}</b>.
+Status er oppdatert for en eller flere forsendelser av din bestillingsordre <b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 Hvis du har spørsmål ang. denne bestillingen, kan du sende oss en mail eller kontakte oss på følgene link:

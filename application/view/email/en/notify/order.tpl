@@ -1,5 +1,5 @@
 New Order Placed at [[ config('STORE_NAME') ]]
-Order ID: {$order.invoiceNumber}
+Order ID: [[order.invoiceNumber]]
 
 Order administration:
 {backendOrderUrl order=$order url=true}

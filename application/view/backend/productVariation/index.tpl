@@ -10,7 +10,7 @@
 			</th>
 			<th class="isEnabled"><input type="checkbox" class="checkbox" /></th>
 			<th class="sku">{tip _sku}</th>
-			<th class="price">{tip _price} ({$params.currency})</th>
+			<th class="price">{tip _price} ([[params.currency]])</th>
 			<th class="shippingWeight">{tip _weight} (kg)</th>
 			<th class="stockCount">{tip _inventory}</th>
 			<th class="image">{tip _image}</th>
@@ -81,7 +81,7 @@
 </form>
 
 <script type="text/javascript">
-	new Backend.ProductVariation.Editor({$parent.ID}, {json array=$params});
+	new Backend.ProductVariation.Editor([[parent.ID]], {json array=$params});
 </script>
 
 {block TRANSLATIONS}

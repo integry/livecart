@@ -1,4 +1,4 @@
-<quantity-price ng-init="init('{$currency}')">
+<quantity-price ng-init="init('[[currency]]')">
 	<a class="menu setQuantPrice" ng-click="isActive=true" ng-show="!isActive">{t _set_quant}</a>
 	<table class="table table-condensed table-bordered" ng-show="isActive">
 		<thead>

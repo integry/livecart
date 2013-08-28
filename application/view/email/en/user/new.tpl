@@ -1,10 +1,10 @@
 Welcome to [[ config('STORE_NAME') ]]!
-Dear {$user.fullName},
+Dear [[user.fullName]],
 
 Here are your customer account access information at [[ config('STORE_NAME') ]]:
 
-E-mail: <strong><b>{$user.email}</b></strong>
-Password: <strong><b>{$user.newPassword}</b></strong>
+E-mail: <strong><b>[[user.email]]</b></strong>
+Password: <strong><b>[[user.newPassword]]</b></strong>
 
 From your customer account you can instantly see the status of your order, view past orders, download files (for digital item purchases) and change your contact information.
 

@@ -1,8 +1,8 @@
 Pesan Baru Tentang Order di  [[ config('STORE_NAME') ]]
-Seorang pelanggan mengirimkan pesan mengenai order <b class="orderID">#{$order.invoiceNumber}</b>
+Seorang pelanggan mengirimkan pesan mengenai order <b class="orderID">#[[order.invoiceNumber]]</b>
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Anda dapat memberi respons melalui panel manajemen order:

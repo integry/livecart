@@ -6,7 +6,7 @@
 
 	{error for="connect"}
 		<div class="fail" style="float: left;">
-			{$msg}
+			[[msg]]
 		</div>
 		<div class="clear"></div>
 	{/error}

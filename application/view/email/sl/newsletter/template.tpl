@@ -1,5 +1,5 @@
-{$subject}
-{$text}
+[[subject]]
+[[text]]
 
 {include file="email/en/signature.tpl"}
 

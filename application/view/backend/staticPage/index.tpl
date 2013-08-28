@@ -91,7 +91,7 @@
 							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
 						{/input}
 
-						{input name="metaDescription_`{$lang.ID}`"}
+						{input name="metaDescription_`[[lang.ID]]`"}
 							{label class="wide"}{t _meta_description}:{/label}
 							{textarea style="width: 100%; height: 4em;"}
 						{/input}

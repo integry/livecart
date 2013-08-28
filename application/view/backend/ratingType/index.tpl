@@ -12,7 +12,7 @@
 	<legend>{t _add_rating_type|capitalize}</legend>
 
 	{form action="controller=backend.ratingType action=add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeform}
-		<input type="hidden" name="categoryId" value="{$id}" />
+		<input type="hidden" name="categoryId" value="[[id]]" />
 		<input type="hidden" name="id" />
 
 		{input name="name"}
@@ -37,7 +37,7 @@
 
 </fieldset>
 
-<ul id="typeList_{$id}" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed} typeList">
+<ul id="typeList_[[id]]" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed} typeList">
 </ul>
 <div style="display: none">
 	<span class="deleteUrl">{link controller="backend.ratingType" action=delete}?id=</span>
@@ -57,5 +57,5 @@
 </ul>
 
 <script type="text/javascript">
-	new Backend.RatingType({json array=$typeList}, $('tabRatingCategoriesContent_{$id}'), $('typeList_template'));
+	new Backend.RatingType({json array=$typeList}, $('tabRatingCategoriesContent_[[id]]'), $('typeList_template'));
 </script>

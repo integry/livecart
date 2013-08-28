@@ -4,7 +4,7 @@
 	Backend.ProductBundle.messages = {};
 	with(Backend.ProductBundle)
 	{
-		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _confirm_bundle_delete|addslashes}{literal}';
 	}
@@ -22,14 +22,14 @@
 </div>
 
 <div class="total">
-	{t _bundle_total_price}: <span class="price">{$total}</span>
+	{t _bundle_total_price}: <span class="price">[[total]]</span>
 </div>
 
 {* No group *}
-<ul id="productBundle_{$ownerID}" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
+<ul id="productBundle_[[ownerID]]" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$items}
 	{if $relationship.RelatedProduct.ID}
-		<li id="{$relationship.RelatedProduct.ID}">
+		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct template="backend/productBundle/bundleCount.tpl"}
 		</li>
 	{/if}
@@ -37,7 +37,7 @@
 </ul>
 
 <script type="text/javascript">
-	Backend.ProductBundle.Group.Controller.prototype.index({$ownerID});
+	Backend.ProductBundle.Group.Controller.prototype.index([[ownerID]]);
 </script>
 
 {block TRANSLATIONS}

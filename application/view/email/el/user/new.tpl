@@ -1,10 +1,10 @@
 Καλωσορίσατε στο [[ config('STORE_NAME') ]]!
-Αγαπητέ/ή {$user.fullName},
+Αγαπητέ/ή [[user.fullName]],
 
 Εδώ είναι οι πληροφορίες πρόσβασης στο λογαριασμό σας στο[[ config('STORE_NAME') ]]:
 
-E-mail: <strong><b>{$user.email}</b></strong>
-Password: <strong><b>{$user.newPassword}</b></strong>
+E-mail: <strong><b>[[user.email]]</b></strong>
+Password: <strong><b>[[user.newPassword]]</b></strong>
 
 Από τον λογαριασμό του πελάτη μπορείτε να δείτε στιγμιαία την κατάσταση της παραγγελλία σας,παλαιότερες παραγγελλίες σας,να κατεβάσετε αρχεία(για αγορές ψηφιακών ειδών) και να αλλάξετε τα στοιχεία επικοινωνίας.
 

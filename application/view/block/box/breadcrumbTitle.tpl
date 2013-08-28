@@ -1,1 +1,1 @@
-{$breadCrumb.title}
+[[breadCrumb.title]]

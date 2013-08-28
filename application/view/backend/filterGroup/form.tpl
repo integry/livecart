@@ -101,13 +101,13 @@
 			<fieldset class="activeForm_translation_values filter_language_translation">
 				<fieldset class="error">
 					<label>{t _Filter_name}</label>
-					<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+					<input type="text" name="name_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} />
 				</fieldset>
 			</fieldset>
 
 			<h5 class="filter_filters_title">{t _Filter_filters}:</h5>
 			<fieldset class="filters_translations_fieldset">
-				<ul class="filters_translations_{$lang.ID}">
+				<ul class="filters_translations_[[lang.ID]]">
 					<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
 						<label class="filter_update"> </label>
 						<input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />

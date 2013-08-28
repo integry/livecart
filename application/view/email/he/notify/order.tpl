@@ -1,5 +1,5 @@
 הזמנה חדשה נמצאת ב [[ config('STORE_NAME') ]]
-מספר הזמנה: {$order.invoiceNumber}
+מספר הזמנה: [[order.invoiceNumber]]
 
 ניהול הזמנה:
 {backendOrderUrl order=$order url=true}

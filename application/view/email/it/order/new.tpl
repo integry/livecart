@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Conferma Ordine
-Gentile {$user.fullName},
+Gentile [[user.fullName]],
 
 Ti ringraziamo per il tuo ordine, che hai effettuato presso [[ config('STORE_NAME') ]].
 
 Se volessi contattarci in merito a questo ordine, ti preghiamo di fare riferimento
-a questo numero identificativo: Ordine numero {$order.invoiceNumber}.
+a questo numero identificativo: Ordine numero [[order.invoiceNumber]].
 
 Potrai tracciare lo stato del tuo ordine direttamente da questa pagina:
 {link controller=user action=viewOrder id=$order.ID url=true}

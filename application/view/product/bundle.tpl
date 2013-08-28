@@ -12,10 +12,10 @@
 	</div>
 	<div class="highlight bundleInfo">
 		<p>
-			{t _regular_price}: <span class="price">{$bundleTotal}</span>
+			{t _regular_price}: <span class="price">[[bundleTotal]]</span>
 		</p>
 		<p>
-			{t _bundle_price}: <span class="price bundlePrice">{$product.formattedPrice.$currency}</span> ({t _bundle_save} <span class="price percent">{$bundleSavingPercent}%</span>)
+			{t _bundle_price}: <span class="price bundlePrice">{$product.formattedPrice.$currency}</span> ({t _bundle_save} <span class="price percent">[[bundleSavingPercent]]%</span>)
 		</p>
 
 	</div>

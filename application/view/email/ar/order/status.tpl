@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] تحديث حالة الطلب
-Dear {$user.fullName},
+Dear [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-وقد تم تحديث الحلة لطلبك <b class="orderID">#{$order.invoiceNumber}</b>.
+وقد تم تحديث الحلة لطلبك <b class="orderID">#[[order.invoiceNumber]]</b>.
 {else}
-وقد تم تحديث واحد أو أكثر من الشحنات طلبك<b class="orderID">#{$order.invoiceNumber}</b>.
+وقد تم تحديث واحد أو أكثر من الشحنات طلبك<b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 إذا كان لديك أي أسئلة بخصوص هذا النظام ، ويمكنك أن ترسل لنا رسالة عبر البريد الإلكتروني أو الاتصال من الصفحة التالية :

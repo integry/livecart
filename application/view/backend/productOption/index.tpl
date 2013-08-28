@@ -27,9 +27,9 @@
 	{/literal}
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{if $configKey == 'types'}
-			Backend.ProductOption.prototype.{$configKey} = Backend.ProductOption.prototype.createTypesOptions({json array=$configItem});
+			Backend.ProductOption.prototype.[[configKey]] = Backend.ProductOption.prototype.createTypesOptions({json array=$configItem});
 		{else}
-			Backend.ProductOption.prototype.{$configKey} = {json array=$configItem};
+			Backend.ProductOption.prototype.[[configKey]] = {json array=$configItem};
 		{/if}
 	{/foreach}
 
@@ -38,14 +38,14 @@
 
 
 <fieldset class="container">
-	<ul class="menu" id="productOption_menu_{$parentID}">
-		<li class="addProductOption"><a href="#new" id="productOption_item_new_{$parentID}_show">{t _add_new_field}</a></li>
-		<li class="done addProductOptionCancel" style="display: none;"><a href="#new" id="productOption_item_new_{$parentID}_cancel">{t _cancel_adding_new_field}</a></li>
+	<ul class="menu" id="productOption_menu_[[parentID]]">
+		<li class="addProductOption"><a href="#new" id="productOption_item_new_[[parentID]]_show">{t _add_new_field}</a></li>
+		<li class="done addProductOptionCancel" style="display: none;"><a href="#new" id="productOption_item_new_[[parentID]]_cancel">{t _cancel_adding_new_field}</a></li>
 	</ul>
 </fieldset>
 
 <div>
-	<fieldset class="addForm" id="productOption_item_new_{$parentID}_form" style="display: none;">
+	<fieldset class="addForm" id="productOption_item_new_[[parentID]]_form" style="display: none;">
 		<legend>{t _add_new_field|capitalize}</legend>
 		{literal}
 		<script type="text/javascript">
@@ -59,12 +59,12 @@
 </div>
 
 {* No group *}
-<ul id="productOption_items_list_{$parentID}_" class="productOptionList activeList_add_sort activeList_add_delete activeList_add_edit activeList_accept_productOptionList">
+<ul id="productOption_items_list_[[parentID]]_" class="productOptionList activeList_add_sort activeList_add_delete activeList_add_edit activeList_accept_productOptionList">
 {assign var="lastProductOptionGroup" value="-1"}
 {foreach name="productOptionForeach" item="field" from=$options}
 	{if $field.ID}
-		<li id="productOption_items_list_{$parentID}_{$field.ProductOptionGroup.ID}_{$field.ID}">
-			<span class="productOption_title">{$field.name_lang}</span>
+		<li id="productOption_items_list_[[parentID]]_[[field.ProductOptionGroup.ID]]_[[field.ID]]">
+			<span class="productOption_title">[[field.name_lang]]</span>
 			<span class="productOption_choiceCount"></span>
 		</li>
 	{/if}
@@ -72,7 +72,7 @@
 </ul>
 
 <script type="text/javascript">
-	 var parentID = '{$parentID}';
+	 var parentID = '[[parentID]]';
 
 	 Event.observe($("productOption_item_new_"+parentID+"_show"), "click", function(e)
 	 {ldelim}

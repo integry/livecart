@@ -24,7 +24,7 @@
 <div class="details col col-lg-8 {if !$sub.subCategories} noSubCats{/if}">
 	<div class="subCatContainer">
 		<div class="subCatName">
-			<a href="{categoryUrl data=$sub filters=$filters}">{$sub.name_lang}</a>
+			<a href="{categoryUrl data=$sub filters=$filters}">[[sub.name_lang]]</a>
 			{include file="block/count.tpl" count=$sub.searchCount|default:$sub.count}
 		</div>
 
@@ -38,7 +38,7 @@
 					{break}
 				{/if}
 				<li>
-					<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
+					<a href="{categoryUrl data=$subSub}">[[subSub.name_lang]]</a>
 					{include file="block/count.tpl" count=$subSub.count}
 				</li>
 			{/foreach}
@@ -47,7 +47,7 @@
 
 		{if 'CAT_MENU_DESCR'|config}
 			<div class="subCatDescr">
-				{$sub.description_lang}
+				[[sub.description_lang]]
 			</div>
 		{/if}
 	</div>

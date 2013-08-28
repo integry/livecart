@@ -9,9 +9,9 @@
 			<li class="disabled pagination-space"><a href="#">...</a></li>
 		{/if}
 	
-		<li class="page{if $page == $current} active{/if}"><a href="{$urls.$page}">{$page}</a></li>
+		<li class="page{if $page == $current} active{/if}"><a href="{$urls.$page}">[[page]]</a></li>
 	
-		{assign var="last" value=$page}
+		{% set last = $page %}
 	{/foreach}
 
 	<li {if !$urls.next}class="disabled"{/if}><a href="{$urls.next|default:'#'}">

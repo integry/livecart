@@ -9,7 +9,7 @@
 		{block BACKEND-TOOLBAR-BEFORE-BUTTONS}
 
 		{foreach from=$dropButtons item=item}
-			<li class="uninitializedDropButton" style="" id="button{$item.menuID}">
+			<li class="uninitializedDropButton" style="" id="button[[item.menuID]]">
 				<a href="">
 					<small></small>
 				</a>

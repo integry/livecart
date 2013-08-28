@@ -83,7 +83,7 @@
 
 		<ul id="progressBarContainer">
 			{foreach from=$recordTypes item=type}
-				<li id="progress_{$type}" style="display: none;">
+				<li id="progress_[[type]]" style="display: none;">
 					<h2>{translate text=$type}</h2>
 					<div class="progressBarIndicator"></div>
 					<div class="progressBar" style="display: none;">

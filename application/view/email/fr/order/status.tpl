@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Mise a jour du statut de la commande
-Cher {$user.fullName},
+Cher [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Le statut de votre commande a été mis a jour <b class="orderID">#{$order.invoiceNumber}</b>.
+Le statut de votre commande a été mis a jour <b class="orderID">#[[order.invoiceNumber]]</b>.
 {else}
-Le statut a été mis a jour pour une ou plusieures livraisons de votre commande <b class="orderID">#{$order.invoiceNumber}</b>.
+Le statut a été mis a jour pour une ou plusieures livraisons de votre commande <b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 Si vous avez des questions a propos de cette commande, vous pouvez nous envoyer un courriel ou nous contacter a parti de la page suivante:

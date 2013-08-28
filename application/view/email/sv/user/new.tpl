@@ -1,10 +1,10 @@
 Välkommen till [[ config('STORE_NAME') ]]!
-Kära {$user.fullName},
+Kära [[user.fullName]],
 
 Här kommer dina användaruppgifter hos [[ config('STORE_NAME') ]]:
 
-E-mail: <b>{$user.email}</b>
-Password: <b>{$user.newPassword}</b>
+E-mail: <b>[[user.email]]</b>
+Password: <b>[[user.newPassword]]</b>
 
 Via ditt användarkonto kan du se status på din order, tidigare order, ladda ner filer (för nedladdningsbara produkter du köpt) och uppdatera din kontaktinformation.
 

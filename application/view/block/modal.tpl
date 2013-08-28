@@ -6,10 +6,10 @@
 				<h4 class="modal-title">{translate text=$title}</h4>
 			</div>
 			<div class="modal-body">
-				{$body}
+				[[body]]
 			</div>
 			<div class="modal-footer">
-				{$footer}
+				[[footer]]
 			</div>
 		</div>
 	</div>

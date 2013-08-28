@@ -2,7 +2,7 @@
 	{if $node.ParentNode}
 		{categoryNode node=$node.ParentNode}
 		{if $node.ParentNode.ID > 1}&gt;{/if}
-		<a href="{categoryUrl data=$node}">{$node.name_lang}</a>
+		<a href="{categoryUrl data=$node}">[[node.name_lang]]</a>
 	{/if}
 {/function}
 

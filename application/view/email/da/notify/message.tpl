@@ -1,8 +1,8 @@
 New Order Message at [[ config('STORE_NAME') ]]
-En kunder har tilføet en ny ordre: <b class="orderID">#{$order.invoiceNumber}</b>
+En kunder har tilføet en ny ordre: <b class="orderID">#[[order.invoiceNumber]]</b>
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Du kan behandle orden i fanepladet under 'Ordrer':

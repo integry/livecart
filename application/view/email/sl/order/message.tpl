@@ -1,10 +1,10 @@
 Novo sporočilo glede vašega naročila na [[ config('STORE_NAME') ]]
-Spoštovani/a {$user.fullName},
+Spoštovani/a [[user.fullName]],
 
 Dodano je bilo novo sporočilo glede vašega naročila.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Na to sporočilo lahko odgovorite s naslednje strani:

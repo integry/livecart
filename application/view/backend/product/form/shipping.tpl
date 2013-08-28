@@ -28,7 +28,7 @@
 
 	{input name="shippingSurchargeAmount"}
 		{label}{tip _shipping_surcharge}:{/label}
-		{control}{textfield class="number" money=true noFormat=true} {$baseCurrency}{/control}
+		{control}{textfield class="number" money=true noFormat=true} [[baseCurrency]]{/control}
 	{/input}
 
 	{input name="minimumQuantity"}

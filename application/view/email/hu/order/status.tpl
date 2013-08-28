@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Rendelés státusz frissítve
-Kedves {$user.fullName},
+Kedves [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Rendelésed <b class="orderID">#{$order.invoiceNumber}</b> státusza megváltozott.
+Rendelésed <b class="orderID">#[[order.invoiceNumber]]</b> státusza megváltozott.
 {else}
-Rendelésed <b class="orderID">#{$order.invoiceNumber}</b>státusza egy vagy több szállítmányt illetően megváltozott.
+Rendelésed <b class="orderID">#[[order.invoiceNumber]]</b>státusza egy vagy több szállítmányt illetően megváltozott.
 {/if}
 
 Ha bármilyen kérdésed van a rendeléssel kapcsolatosan, azt felteheted az alábbi oldalon:

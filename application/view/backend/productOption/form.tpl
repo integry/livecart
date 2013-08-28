@@ -89,7 +89,7 @@
 			{input name="priceDiff"}
 				{label}{tip _option_price_diff}:{/label}
 				<input type="text" name="priceDiff" class="number productOption_form_priceDiff" />
-				{$defaultCurrencyCode}
+				[[defaultCurrencyCode]]
 			{/input}
 		</div>
 
@@ -103,17 +103,17 @@
 		{language}
 			{input name="name_`$lang.ID`"}
 				{label}{t _ProductOption_title}:{/label}
-				<input type="text" name="name_{$lang.ID}" />
+				<input type="text" name="name_[[lang.ID]]" />
 			{/input}
 
 			{input name="selectMessage_`$lang.ID`"}
 				{label}{toolTip label=_ProductOption_selectMessage hint=_tip_ProductOption_selectMessage}:{/label}
-				<textarea name="selectMessage_{$lang.ID}" class="productOption_form_description"></textarea>
+				<textarea name="selectMessage_[[lang.ID]]" class="productOption_form_description"></textarea>
 			{/input}
 
 			{input name="description_`$lang.ID`"}
 				{label}{tip _ProductOption_description}:{/label}
-				<textarea name="description_{$lang.ID}" class="productOption_form_description"></textarea>
+				<textarea name="description_[[lang.ID]]" class="productOption_form_description"></textarea>
 			{/input}
 		{/language}
 
@@ -137,7 +137,7 @@
 							{input name="valueName"}
 								{label}{tip _option_price_diff}:{/label}
 								<input type="text" class="number productOption_valuePrice"  />
-								{$defaultCurrencyCode}
+								[[defaultCurrencyCode]]
 							{/input}
 
 							<div class="selectColor">

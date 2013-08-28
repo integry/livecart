@@ -6,34 +6,34 @@
 </ul>
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
-	<ul class="menu" id="manImgMenu_{$ownerId}">
-		<li class="manImageAdd"><a href="#" id="manImageAdd_{$ownerId}_add" class="pageMenu">{t _add_new}</a></li>
-		<li class="manImageAddCancel done" style="display: none;"><a href="#" id="manImageAdd_{$ownerId}_cancel">{t _cancel_new}</a></li>
+	<ul class="menu" id="manImgMenu_[[ownerId]]">
+		<li class="manImageAdd"><a href="#" id="manImageAdd_[[ownerId]]_add" class="pageMenu">{t _add_new}</a></li>
+		<li class="manImageAddCancel done" style="display: none;"><a href="#" id="manImageAdd_[[ownerId]]_cancel">{t _cancel_new}</a></li>
 	</ul>
 </fieldset>
 
 {literal}
 <script type="text/javascript">
-	Event.observe("{/literal}manImageAdd_{$ownerId}_add{literal}", "click", function(e)
+	Event.observe("{/literal}manImageAdd_[[ownerId]]_add{literal}", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.show("manImageAdd", "{/literal}manImgAdd_{$ownerId}{literal}");
+		form.show("manImageAdd", "{/literal}manImgAdd_[[ownerId]]{literal}");
 	});
 
-	Event.observe("{/literal}manImageAdd_{$ownerId}_cancel{literal}", "click", function(e)
+	Event.observe("{/literal}manImageAdd_[[ownerId]]_cancel{literal}", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.hide("manImageAdd", "{/literal}manImgAdd_{$ownerId}{literal}");
+		form.hide("manImageAdd", "{/literal}manImgAdd_[[ownerId]]{literal}");
 	});
 </script>
 {/literal}
 
-<div id="manImgAdd_{$ownerId}" class="manImageEditForm" style="display: none;">
+<div id="manImgAdd_[[ownerId]]" class="manImageEditForm" style="display: none;">
 {form handle=$form action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 
-	<input type="hidden" name="ownerId" value="{$ownerId}" />
+	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
 
 	<fieldset class="addForm">
@@ -67,24 +67,24 @@
 
 	{literal}
 	<script type="text/javascript">
-		Element.observe($('{/literal}manImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e)
+		Element.observe($('{/literal}manImgAdd_[[ownerId]]{literal}').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
-			var form = ('{/literal}manImgAdd_{$ownerId}{literal}');
+			var form = ('{/literal}manImgAdd_[[ownerId]]{literal}');
 
-			$("{/literal}manImageList_{$ownerId}{literal}").handler.cancelAdd();
+			$("{/literal}manImageList_[[ownerId]]{literal}").handler.cancelAdd();
 
-			var menu = new ActiveForm.Slide('{/literal}manImgMenu_{$ownerId}{literal}');
+			var menu = new ActiveForm.Slide('{/literal}manImgMenu_[[ownerId]]{literal}');
 			menu.hide("manImageAdd", form);
 		});
 	</script>
 	{/literal}
 
 {/form}
-<iframe name="manImgUpload_{$ownerId}" id="manImgUpload_{$ownerId}" style="display: none;"></iframe>
+<iframe name="manImgUpload_[[ownerId]]" id="manImgUpload_[[ownerId]]" style="display: none;"></iframe>
 </div>
 
-<ul id="manImageList_{$ownerId}" class="manImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
+<ul id="manImageList_[[ownerId]]" class="manImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
 	<li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore main">
 		{t _main_image}
 	</li>
@@ -99,8 +99,8 @@
 
 {literal}
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("{/literal}manImageList_{$ownerId}{literal}"), 'man');
-	handler.initList({/literal}{$images}{literal});
+	var handler = new Backend.ObjectImage($("{/literal}manImageList_[[ownerId]]{literal}"), 'man');
+	handler.initList({/literal}[[images]]{literal});
 
 	handler.setDeleteUrl('{/literal}{link controller="backend.manufacturerImage" action=delete}{literal}');
 	handler.setSortUrl('{/literal}{link controller="backend.manufacturerImage" action=saveOrder}{literal}');

@@ -4,20 +4,20 @@
 
 <div
 	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
-	id="notice_changes_in_css_tab_{$theme}" class="warning cssAndStyleTab" style="display:none;"
+	id="notice_changes_in_css_tab_[[theme]]" class="warning cssAndStyleTab" style="display:none;"
 >{t _notice_changes_in_css_tab}</div>
 
 
 {form action="controller=backend.theme action=saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
 	{foreach from=$config item=section}
 		<fieldset>
-			<legend>{$section.name}</legend>
+			<legend>[[section.name]]</legend>
 
 			{foreach from=$section.properties item=property}
-				<fieldset class="container entry" rel="{$property.selector}/{$property.type}">
+				<fieldset class="container entry" rel="[[property.selector]]/[[property.type]]">
 
 					{if 'checkbox' != $property.type}
-						<label>{$property.name}</label>
+						<label>[[property.name]]</label>
 					{else}
 						<label></label>
 					{/if}
@@ -33,7 +33,7 @@
 					{elseif 'color' == $property.type}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
-							$('{$property.id}').color = new jscolor.color($('{$property.id}'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
+							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
 						</script>
 					{elseif 'size' == $property.type}
 						<div class="sizeEntry">
@@ -46,7 +46,7 @@
 						{selectfield options=$borderStyles}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
-							$('{$property.id}').color = new jscolor.color($('{$property.id}'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
+							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
 						</script>
 					{elseif 'text-decoration' == $property.type}
 						{selectfield options=$textStyles}
@@ -57,7 +57,7 @@
 					{elseif 'checkbox' == $property.type}
 						{checkbox id="{uniqid}" name="option" class="option checkbox" value=$property.append}
 						{if 'checkbox' == $property.type}
-							<label class="checkbox" for="{uniqid last=true}">{$property.name}</label>
+							<label class="checkbox" for="{uniqid last=true}">[[property.name]]</label>
 						{/if}
 					{/if}
 					{if $property.append}
@@ -69,7 +69,7 @@
 	{/foreach}
 
 	<fieldset class="controls">
-		<input type="hidden" name="id" value="{$theme}" />
+		<input type="hidden" name="id" value="[[theme]]" />
 		<input type="hidden" name="css" value="" />
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" value="{tn _save}" class="submit" />
@@ -78,5 +78,5 @@
 	</fieldset>
 {/form}
 
-<iframe src="{link controller="backend.theme" action=cssIframe query="theme=`$theme`"}" id="iframe_{$theme}" name="iframe_{$theme}" style="display: none;"></iframe>
+<iframe src="{link controller="backend.theme" action=cssIframe query="theme=`$theme`"}" id="iframe_[[theme]]" name="iframe_[[theme]]" style="display: none;"></iframe>
 

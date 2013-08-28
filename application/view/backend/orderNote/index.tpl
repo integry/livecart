@@ -1,5 +1,5 @@
 <div>
-<div class="menuContainer" id="orderNoteMenu_{$order.ID}">
+<div class="menuContainer" id="orderNoteMenu_[[order.ID]]">
 
 	<ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">
 		<li class="addResponse"><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
@@ -45,7 +45,7 @@
 </fieldset>
 
 <script type="text/javascript">
-	Backend.OrderNote.init($('orderNoteMenu_{$order.ID}'));
+	Backend.OrderNote.init($('orderNoteMenu_[[order.ID]]'));
 </script>
 
 <div class="clear"></div>

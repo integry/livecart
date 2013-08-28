@@ -22,7 +22,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 		<ul class="unstyled" id="dynamicNav">
 		{foreach from=$node item=category}
 				<li class="{if $category.parentNodeID == 1}topCategory{/if} {if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt} dynCurrent{/if}{if $category.subCategories} hasSubs{else} noSubs{/if}">
-					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
+					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
 					{if 'DISPLAY_NUM_CAT'|config}
 						{include file="block/count.tpl" count=$category.count}
 					{/if}

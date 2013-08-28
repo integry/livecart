@@ -2,7 +2,7 @@
 {pageTitle}{t _select_addresses}{/pageTitle}
 {include file="checkout/layout.tpl"}
 
-<div class="step-{$step}">
+<div class="step-[[step]]">
 {include file="block/content-start.tpl"}
 
 	<div class="checkoutHeader">
@@ -15,7 +15,7 @@
 
 	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form  class="form-horizontal"}
 
-	{error for="selectedAddress"}<div><span class="text-danger">{$msg}</span></div><div class="clear"></div>{/error}
+	{error for="selectedAddress"}<div><span class="text-danger">[[msg]]</span></div><div class="clear"></div>{/error}
 
 	{if !$step || ('billing' == $step)}
 		<div id="billingAddressColumn">
@@ -71,7 +71,7 @@
 
 	{include file="block/submit.tpl" caption="_continue"}
 
-	<input type="hidden" name="step" value="{$step}" />
+	<input type="hidden" name="step" value="[[step]]" />
 
 	{/form}
 

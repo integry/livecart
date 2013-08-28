@@ -3,10 +3,10 @@
 		{assign var="sortOrder" value='_'|@explode:$sortField|@array_pop|default:'asc'}
 		{if ($sortOrder != 'asc') && ($sortOrder != 'desc')}{assign var="sortOrder" value='asc'}{/if}
 		{if $sortField == "`$sortVar`_`$sortOrder`"}
-			{assign var="currentOrder" value=$sortOrder}
-			{if $sortOrder == "asc"}{assign var="sortOrder" value="desc"}{else}{assign var="sortOrder" value="asc"}{/if}
+			{% set currentOrder = $sortOrder %}
+			{if $sortOrder == "asc"}{% set sortOrder = "desc" %}{else}{% set sortOrder = "asc" %}{/if}
 		{/if}
-		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{if $currentOrder}direction_{$currentOrder}{/if}">{translate text=$title}</a>
+		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{if $currentOrder}direction_[[currentOrder]]{/if}">{translate text=$title}</a>
 	{/if}
 {/function}
 {assign var="columns" value='TABLE_VIEW_COLUMNS'|config}
@@ -27,7 +27,7 @@
 			{/if}
 
 			{foreach from=$listAttributes item=attribute}
-				<th class="attr_{$attribute.ID}">{headLink title=$attribute.name_lang sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
+				<th class="attr_[[attribute.ID]]">{headLink title=$attribute.name_lang sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
 			{/foreach}
 
 			{if $columns.PRICE && 'DISPLAY_PRICES'|config}
@@ -56,15 +56,15 @@
 				{/if}
 
 				{if $columns.SKU}
-					<td class="productSku text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.sku}</a></td>
+					<td class="productSku text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">[[product.sku]]</a></td>
 				{/if}
 
 				{if $columns.NAME}
-					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">{$product.name_lang}</a></td>
+					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">[[product.name_lang]]</a></td>
 				{/if}
 
 				{foreach from=$listAttributes item=attribute}
-					<td class="attribute attr_{$attribute.ID}">{include file="product/attributeValue.tpl" attr=$product.attributes[$attribute.ID]}</td>
+					<td class="attribute attr_[[attribute.ID]]">{include file="product/attributeValue.tpl" attr=$product.attributes[$attribute.ID]}</td>
 				{/foreach}
 
 				{if $columns.PRICE && 'DISPLAY_PRICES'|config}

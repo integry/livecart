@@ -1,10 +1,10 @@
 Votre mot de passe sur [[ config('STORE_NAME') ]]!
-Cher {$user.fullName},
+Cher [[user.fullName]],
 
-Voici les informations d'accès a votre compte sur {$config.STORE_NAME}:
+Voici les informations d'accès a votre compte sur [[config.STORE_NAME]]:
 
-E-mail: <b>{$user.email}</b>
-Mot de passe: <b>{$user.newPassword}</b>
+E-mail: <b>[[user.email]]</b>
+Mot de passe: <b>[[user.newPassword]]</b>
 
 Vous pouvez utiliser cette adresse pour vous connecter a votre compte:
 {link controller=user action=login url=true}

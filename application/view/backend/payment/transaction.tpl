@@ -1,11 +1,11 @@
-<li class="transactionType_{$transaction.type}" id="transaction_{$transaction.ID}">
+<li class="transactionType_[[transaction.type]]" id="transaction_[[transaction.ID]]">
 
 	<div class="transactionMainDetails">
 		<div class="transactionAmount{if $transaction.isVoided} isVoided{/if}">
-			{$transaction.formattedAmount}
+			[[transaction.formattedAmount]]
 			{if $transaction.Currency.ID != $transaction.RealCurrency.ID}
 				<span class="transactionRealAmount">
-				({$transaction.formattedRealAmount})
+				([[transaction.formattedRealAmount]])
 				</span>
 			{/if}
 		</div>
@@ -30,14 +30,14 @@
 		<div class="transactionUser">
 
 			{if $transaction.User}
-				{t _processed_by}: <a href="{backendUserUrl user=$transaction.User}">{$transaction.User.fullName}</a>
+				{t _processed_by}: <a href="{backendUserUrl user=$transaction.User}">[[transaction.User.fullName]]</a>
 			{/if}
 
 		</div>
 
 		{if $transaction.comment}
 			<div class="transactionComment">
-				{$transaction.comment}
+				[[transaction.comment]]
 			</div>
 		{/if}
 
@@ -54,18 +54,18 @@
 		<ul class="transactionMenu" {denied role='order.update'}style="display: none;"{/denied}>
 			{if $transaction.isCapturable}
 				<li class="captureMenu">
-					<a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}, event);">{t _capture}</a>
+					<a href="" onclick="Backend.Payment.showCaptureForm([[transaction.ID]], event);">{t _capture}</a>
 				</li>
 			{/if}
 			{if $transaction.isVoidable}
 				<li class="voidMenu">
-					<a href="#void" onclick="Backend.Payment.showVoidForm({$transaction.ID}, event);">{t _void}</a>
+					<a href="#void" onclick="Backend.Payment.showVoidForm([[transaction.ID]], event);">{t _void}</a>
 				</li>
 			{/if}
 			{if $transaction.hasFullNumber}
 				<li class="delCcNumMenu">
 					<span class="progressIndicator" style="display: none;"></span>
-					<a href="{link controller="backend.payment" action=deleteCcNumber id=$transaction.ID}" onclick="Backend.Payment.deleteCcNum({$transaction.ID}, event);">{t _delete_cc_num}</a>
+					<a href="{link controller="backend.payment" action=deleteCcNumber id=$transaction.ID}" onclick="Backend.Payment.deleteCcNum([[transaction.ID]], event);">{t _delete_cc_num}</a>
 				</li>
 			{/if}
 		</ul>
@@ -73,7 +73,7 @@
 		<div class="clear"></div>
 
 		<div class="transactionForm voidForm" style="display: none;">
-			<form action="{link controller="backend.payment" action=void id=$transaction.ID}" method="post" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
+			<form action="{link controller="backend.payment" action=void id=$transaction.ID}" method="post" onsubmit="Backend.Payment.voidTransaction([[transaction.ID]], this, event);">
 
 				<span class="confirmation" style="display: none">{t _void_conf}</span>
 
@@ -88,7 +88,7 @@
 				<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" value="{tn _void_button}" />
-					{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm({$transaction.ID}, event);">{t _cancel}</a>
+					{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm([[transaction.ID]], event);">{t _cancel}</a>
 				</fieldset>
 
 			</form>
@@ -105,7 +105,7 @@
 
 				<p>
 					{t _capture_amount}:<Br />
-					{textfield name="amount" class="text number" value=$transaction.amount} {$transaction.Currency.ID}
+					{textfield name="amount" class="text number" value=$transaction.amount} [[transaction.Currency.ID]]
 				</p>
 
 				<p class="captureComment">
@@ -127,7 +127,7 @@
 		<fieldset class="controls">
 				<span class="progressIndicator" style="display: none;"></span>
 				<input type="submit" class="submit" value="{tn _process_capture}" />
-			{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}, event);">{t _cancel}</a>
+			{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm([[transaction.ID]], event);">{t _cancel}</a>
 		</fieldset>
 
 			{/form}
@@ -154,37 +154,37 @@
 							handlerID=$transaction.handlerID
 						}
 					{else}
-						{$transaction.methodName}
+						[[transaction.methodName]]
 					{/if}
 				</legend>
 			{/if}
 
 			{if $transaction.ccLastDigits}
 				<div class="ccDetails">
-					<div>{$transaction.ccName}</div>
-					<div>{$transaction.ccType} <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}{$transaction.ccLastDigits}</span></div>
+					<div>[[transaction.ccName]]</div>
+					<div>[[transaction.ccType]] <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}[[transaction.ccLastDigits]]</span></div>
 					{if $transaction.ccCVV}
-						<div>{$transaction.ccCVV}<div>
+						<div>[[transaction.ccCVV]]<div>
 					{/if}
-					<div>{$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear}</div>
+					<div>[[transaction.ccExpiryMonth]] / [[transaction.ccExpiryYear]]</div>
 				</div>
 			{/if}
 
 			{if $transaction.gatewayTransactionID}
 				<div class="gatewayTransactionID">
-					{t _transaction_id}: {$transaction.gatewayTransactionID}
+					{t _transaction_id}: [[transaction.gatewayTransactionID]]
 				</div>
 			{/if}
 
 			<div class="transactionTime">
-				{$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
+				[[transaction.formatted_time.date_full]] [[transaction.formatted_time.time_full]]
 			</div>
 
 			{if $transaction.serializedData}
 			<div class="extraData">
 				{foreach from=$transaction.serializedData key=key item=value}
 					<div>
-						{$key}: {$value}
+						[[key]]: [[value]]
 					</div>
 				{/foreach}
 			</div>

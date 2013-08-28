@@ -1,8 +1,8 @@
 Novo sporočilo za naročilo na [[ config('STORE_NAME') ]]
-Stranka je dodala novo sporočilo glede naročila <b class="orderID">#{$order.invoiceNumber}</b>
+Stranka je dodala novo sporočilo glede naročila <b class="orderID">#[[order.invoiceNumber]]</b>
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Odgovor lahko dodate tako, da se prijavite v administracijo:

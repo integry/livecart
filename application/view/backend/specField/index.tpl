@@ -38,9 +38,9 @@
 	{/literal}
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{if $configKey == 'types'}
-			Backend.SpecField.prototype.{$configKey} = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
+			Backend.SpecField.prototype.[[configKey]] = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
 		{else}
-			Backend.SpecField.prototype.{$configKey} = {json array=$configItem};
+			Backend.SpecField.prototype.[[configKey]] = {json array=$configItem};
 		{/if}
 	{/foreach}
 
@@ -49,17 +49,17 @@
 
 
 <fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
-	<ul class="menu" id="specField_menu_{$categoryID}">
-		<li class="addSpecField"><a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a></li>
-		<li class="done addSpecFieldCancel" style="display: none;"><a href="#new" id="specField_item_new_{$categoryID}_cancel">{t _cancel_adding_new_field}</a></li>
+	<ul class="menu" id="specField_menu_[[categoryID]]">
+		<li class="addSpecField"><a href="#new" id="specField_item_new_[[categoryID]]_show">{t _add_new_field}</a></li>
+		<li class="done addSpecFieldCancel" style="display: none;"><a href="#new" id="specField_item_new_[[categoryID]]_cancel">{t _cancel_adding_new_field}</a></li>
 
-		<li class="addSpecFieldGroup"><a href="#new" id="specField_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
-		<li class="done addSpecFieldGroupCancel" style="display: none;"><a href="#new" id="specField_group_new_{$categoryID}_cancel">{t _cancel_adding_new_group}</a></li>
+		<li class="addSpecFieldGroup"><a href="#new" id="specField_group_new_[[categoryID]]_show">{t _add_new_group}</a></li>
+		<li class="done addSpecFieldGroupCancel" style="display: none;"><a href="#new" id="specField_group_new_[[categoryID]]_cancel">{t _cancel_adding_new_group}</a></li>
 	</ul>
 </fieldset>
 
 <div>
-	<fieldset class="addForm" id="specField_item_new_{$categoryID}_form" style="display: none;">
+	<fieldset class="addForm" id="specField_item_new_[[categoryID]]_form" style="display: none;">
 		<legend>{t _add_new_field|capitalize}</legend>
 		{literal}
 		<script type="text/javascript">
@@ -70,23 +70,23 @@
 		{/literal}
 	</fieldset>
 
-	<fieldset class="addForm" id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
+	<fieldset class="addForm" id="specField_group_new_[[categoryID]]_form" class="specField_new_group" style="display: none;">
 		<legend>{t _add_new_group|capitalize}</legend>
 		<script type="text/javascript">
-		   new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), {ldelim} Category: {ldelim} ID: '{$categoryID}' {rdelim} {rdelim});
+		   new Backend.SpecFieldGroup($('specField_group_new_[[categoryID]]_form'), {ldelim} Category: {ldelim} ID: '[[categoryID]]' {rdelim} {rdelim});
 		</script>
 	</fieldset>
 </div>
 
 {* No group *}
-<ul id="specField_items_list_{$categoryID}_" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_specFieldList">
+<ul id="specField_items_list_[[categoryID]]_" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
 	{if $field.SpecFieldGroup.ID}{break}{/if}
 
 	{if $field.ID}
-	<li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
-		<span class="specField_title">{$field.name_lang}</span>
+	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
+		<span class="specField_title">[[field.name_lang]]</span>
 	</li>
 	{/if}
 {/foreach}
@@ -94,30 +94,30 @@
 
 {* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
-<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeListGroup">
+<ul id="specField_groups_list_[[categoryID]]" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeListGroup">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
 	{if !$field.SpecFieldGroup.ID}{continue}{/if}
 
 	{if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
 		{if $lastSpecFieldGroup > 0}</ul></li>{/if}
-		<li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
-			<span class="specField_group_title">{$field.SpecFieldGroup.name_lang}</span>
-			<ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit  activeList_accept_specFieldList">
+		<li id="specField_groups_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]">
+			<span class="specField_group_title">[[field.SpecFieldGroup.name_lang]]</span>
+			<ul id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit  activeList_accept_specFieldList">
 	{/if}
 
 	{if $field.ID} {* For empty groups *}
-	<li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
-		<span class="specField_title">{$field.name_lang}</span>
+	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
+		<span class="specField_title">[[field.name_lang]]</span>
 	</li>
 	{/if}
 
-	{assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
+	{% set lastSpecFieldGroup = $field.SpecFieldGroup.ID %}
 {/foreach}
 </ul>
 
 
 <script type="text/javascript">
-	 var categoryID = '{$categoryID}';
+	 var categoryID = '[[categoryID]]';
 
 	 Event.observe($("specField_item_new_"+categoryID+"_show"), "click", function(e)
 	 {ldelim}
@@ -137,9 +137,9 @@
 	 {assign var="lastSpecFieldGroup" value="-1"}
 	 {foreach item="field" from=$specFieldsWithGroups}
 		 {if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID}
-			  ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
+			  ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_[[field.SpecFieldGroup.ID]]', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
 		 {/if}
-		 {assign var="lastSpecFieldGroupID" value=$field.SpecFieldGroup.ID}
+		 {% set lastSpecFieldGroupID = $field.SpecFieldGroup.ID %}
 	 {/foreach}
 
 	 groupList.createSortable(true);

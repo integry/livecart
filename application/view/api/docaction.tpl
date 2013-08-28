@@ -1,4 +1,4 @@
-<h1><a href="{link controller=api action=doc}">{t _livecart_api}</a> &gt; <a href="{link controller=api action=docview query="class=`$className`"}">{$info.path}</a>.{$action}</h1>
+<h1><a href="{link controller=api action=doc}">{t _livecart_api}</a> &gt; <a href="{link controller=api action=docview query="class=`$className`"}">[[info.path]]</a>.[[name]]</h1>
 
 {literal}
 <style>
@@ -54,7 +54,7 @@
 	{foreach from=$xmlSamples item=sample}
 		<div class="xmlSampleBlock">
 			{if $sample.comments}
-				<div class="xmlSampleComment">{$sample.comments}</div>
+				<div class="xmlSampleComment">[[sample.comments]]</div>
 			{/if}
 			<div class="xmlSample">
 				<pre>{$sample.formatted|htmlspecialchars}</pre>
@@ -77,8 +77,8 @@
 		<tbody>
 			{foreach from=$searchFields item=field}
 				<tr>
-					<td>{$field.field}</td>
-					<td>{$field.descr}</td>
+					<td>[[field.field]]</td>
+					<td>[[field.descr]]</td>
 				</tr>
 			{/foreach}
 		</tbody>
@@ -98,13 +98,13 @@
 		<tbody>
 			{foreach from=$createFields key=group item=fields}
 				<tr class="fieldGroup">
-					<td colspan="2">{$group}</td>
+					<td colspan="2">[[name]]</td>
 				</tr>
 
 				{foreach from=$fields key=field item=name}
 					<tr>
-						<td>{$field}</td>
-						<td>{$name}</td>
+						<td>[[name]]</td>
+						<td>[[name]]</td>
 					</tr>
 				{/foreach}
 			{/foreach}

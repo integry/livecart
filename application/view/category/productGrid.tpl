@@ -2,7 +2,7 @@
 
 <div class="row productGrid">
 {foreach from=$products item=product}
-	<div class="productGridItem col col-lg-{$col}{if $product.isFeatured} featured{/if}">
+	<div class="productGridItem col col-lg-[[col]]{if $product.isFeatured} featured{/if}">
 		{include file="category/productGridItem.tpl"}
 	</div>
 {/foreach}

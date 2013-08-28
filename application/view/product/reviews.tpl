@@ -2,18 +2,18 @@
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 
-{assign var="metaDescription" value=$product.shortDescription_lang}
-{assign var="metaKeywords" value=$product.keywords_lang}
-{pageTitle}{$product.name_lang}{/pageTitle}
+{% set metaDescription = $product.shortDescription_lang %}
+{% set metaKeywords = $product.keywords_lang %}
+{pageTitle}[[product.name_lang]]{/pageTitle}
 
-<div class="reviewIndex productCategory_{$product.Category.ID} product_{$product.ID}">
+<div class="reviewIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
 {include file="product/layout.tpl"}
 
 {include file="block/content-start.tpl"}
 
 	<div class="returnToCategory">
-		<a href="{productUrl product=$product}" class="returnToCategory">{$product.name_lang}</a>
+		<a href="{productUrl product=$product}" class="returnToCategory">[[product.name_lang]]</a>
 	</div>
 
 	<h1>{maketext text="_reviews_for" params=$product.name_lang}</h1>

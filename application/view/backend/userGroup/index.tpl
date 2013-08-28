@@ -31,7 +31,7 @@
 {include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
-	Backend.UserGroup.userGroups = {$userGroups};
+	Backend.UserGroup.userGroups = [[userGroups]];
 </script>
 
 <div id="userGroupsWrapper" class="maxHeight h--50">

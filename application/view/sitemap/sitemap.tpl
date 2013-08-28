@@ -6,7 +6,7 @@
 {foreach from=$entries item=entry}
 <url>
 {foreach from=$entry key=nodename item=node}
-	<{$nodename}>{$node}</{$nodename}>
+	<[[nodename]]>[[node]]</[[nodename]]>
 {/foreach}
 </url>
 {/foreach}

@@ -1,6 +1,6 @@
-{assign var="layoutspanLeft" value=3 scope="global"}
+{% set layoutspanLeft = 3 %}
 
-<div class="col col-lg-{$layoutspanLeft}" id="leftSide">
+<div class="col col-lg-[[layoutspanLeft]]" id="leftSide">
 
 	{block LEFT_SIDE}
 

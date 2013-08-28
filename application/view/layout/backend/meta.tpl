@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" ng-controller="BackendController" ng-app="LiveCart" ng-cloak>
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>[[ config('SOFT_NAME') ]] Admin - {$TITLE}</title>
+	<title>[[ config('SOFT_NAME') ]] Admin - [[TITLE]]</title>
 	<base href="{baseUrl}" />
 
 	{if 'FAVICON'|config}
@@ -157,7 +157,7 @@
 	{block TRANSLATIONS}
 
 </head>
-<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-{$request.action} ui-widget">
+<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-[[request.action]] ui-widget">
 <div id="confirmations" class="messagesList" app-messages></div>
 <script type="text/javascript">
 {literal}

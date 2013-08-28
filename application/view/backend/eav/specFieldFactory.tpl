@@ -1,5 +1,5 @@
 {if !$language || !is_string($language)}
-	{assign var="fieldName" value=$field.fieldName}
+	{% set fieldName = $field.fieldName %}
 {else}
 	{assign var="fieldName" value="`$field.fieldName`_`$language`"}
 {/if}
@@ -18,7 +18,7 @@
 		{/if}
 
 		{control}
-		<eav-multiselect values='{json array=$field.values}' ng-model="{$ngmodel}">
+		<eav-multiselect values='{json array=$field.values}' ng-model="[[ngmodel]]">
 		<div class="multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 
 			<div class="eavCheckboxes">
@@ -54,7 +54,7 @@
 
 		{control}
 		<eav-select {if !$disableNewOptionValues}new="{t _enter_other}"{/if}>
-			<span class="prefix">{$field.valuePrefix_lang}</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+			<span class="prefix">[[field.valuePrefix_lang]]</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix_lang]]</span>
 			{if !$disableNewOptionValues}
 				<div class="newOptionValue" style="display: none">
 					{textfield ng_model=$ngmodelnew name="`$prefix`other[`$field.ID`]" class="text" noFormat=true}
@@ -66,7 +66,7 @@
 
 {elseif $field.type == 2}
 	{control}
-		<span class="prefix">{$field.valuePrefix_lang}</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">{$field.valueSuffix_lang}</span>
+		<span class="prefix">[[field.valuePrefix_lang]]</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">[[field.valueSuffix_lang]]</span>
 	{/control}
 
 {elseif $field.type == 3}
@@ -74,7 +74,7 @@
 		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
 		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{/if}
-	{textfield name="`$prefix``$fieldName`" class="text {$textFieldClass}" ng_model=$ngmodel autocomplete=$autocomplete}
+	{textfield name="`$prefix``$fieldName`" class="text [[textFieldClass]]" ng_model=$ngmodel autocomplete=$autocomplete}
 
 {elseif $field.type == 4}
 	{textarea tinymce=true name="`$prefix``$fieldName`" class="tinyMCE" ng_model=$ngmodel}

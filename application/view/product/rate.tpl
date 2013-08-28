@@ -4,7 +4,7 @@
 		<td class="param"></td>
 		{section start=0 loop='RATING_SCALE'|config name=rate}
 			{assign var=index value=$smarty.section.rate.index+1}
-			<td class="{if $smarty.section.rate.last}value{/if}">{$index}</td>
+			<td class="{if $smarty.section.rate.last}value{/if}">[[index]]</td>
 		{/section}
 		<td class="ratingPreview"></td>
 	</tr>

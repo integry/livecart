@@ -10,11 +10,11 @@
 		{foreach from=$reportData key=id item=row name="report"}
 			<tr>
 			{foreach from=$row item=value key=key}
-				<td class="{$key}">
+				<td class="[[key]]">
 					{if $key == $format}
 						{include file="$template"}
 					{else}
-						{$value}
+						[[value]]
 					{/if}
 				</td>
 			{/foreach}

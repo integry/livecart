@@ -8,7 +8,7 @@
 			{else}
 				<li>
 			{/if}
-					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
+					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
 
 					{if 'DISPLAY_NUM_CAT'|config}
 						{include file="block/count.tpl" count=$category.count}

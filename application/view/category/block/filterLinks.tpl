@@ -7,7 +7,7 @@
 				{if $filter.count && (!$allLink || ($allLink && $smarty.foreach.filters.index < $maxFilters))}
 					<li>
 						<div>
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">{$filter.name_lang}</a>
+							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">[[filter.name_lang]]</a>
 							{if 'DISPLAY_NUM_FILTER'|config}
 								 {include file="block/count.tpl" count=$filter.count}
 							{/if}
@@ -17,7 +17,7 @@
 			{/foreach}
 
 			{if $allLink}
-				<li class="showAll"><a href="{$allLink}">{translate text=$allTitle}</a></li>
+				<li class="showAll"><a href="[[allLink]]">{translate text=$allTitle}</a></li>
 			{/if}
 		</ul>
 	</div>

@@ -1,23 +1,23 @@
-{pageTitle}{t _your_account} ({$user.fullName}){/pageTitle}
+{pageTitle}{t _your_account} ([[user.fullName]]){/pageTitle}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="homeMenu"}
 {include file="block/content-start.tpl"}
 
 	{if $userConfirm}
 	<div class="confirmationMessage">
-		{$userConfirm}
+		[[userConfirm]]
 	</div>
 	{/if}
 
 	{if $message}
-		<div class="confirmationMessage">{$message}</div>
+		<div class="confirmationMessage">[[message]]</div>
 	{/if}
 
 	{if $notes}
 		<h2 id="unreadMessages">{t _unread_msg}</h2>
 		<ul class="notes">
 			{foreach from=$notes item=note}
-			   <a href="{link controller=user action=viewOrder id=$note.orderID}#msg">{t _order} #{$note.orderID}</a>
+			   <a href="{link controller=user action=viewOrder id=$note.orderID}#msg">{t _order} #[[note.orderID]]</a>
 			   {include file="user/orderNote.tpl" note=$note}
 			{/foreach}
 		</ul>
@@ -28,7 +28,7 @@
 
 		{foreach from=$files item="item"}
 			<h3>
-				<a href="{link controller=user action=item id=$item.ID}">{$item.Product.name_lang}</a>
+				<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
 			</h3>
 			{include file="user/fileList.tpl" item=$item}
 			<div class="clear"></div>

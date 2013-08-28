@@ -19,7 +19,7 @@
 		<p>{t _to_update}: </p>
 		{foreach from=$currencies item=item}
 			{input name="curr_`$item.ID`"}
-				{label}{$item.ID}:{/label}
+				{label}[[item.ID]]:{/label}
 				{t _using} {selectfield options=$feeds}
 			{/input}
 		{foreachelse}

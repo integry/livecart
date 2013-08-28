@@ -1,16 +1,16 @@
 
 <fieldset class="container">
-	<ul class="menu" id="uploadMenu_{$theme}">
+	<ul class="menu" id="uploadMenu_[[theme]]">
 		<li class="fileUpload">
-			<a href="#" id="uploadNewFile_{$theme}_upload" class="pageMenu">{t _upload_new_file}</a>
+			<a href="#" id="uploadNewFile_[[theme]]_upload" class="pageMenu">{t _upload_new_file}</a>
 		</li>
 		<li class="fileUploadCancel done" style="display: none">
-			<a href="#" id="uploadNewFile_{$theme}_cancel" class="pageMenu">{t _cancel}</a>
+			<a href="#" id="uploadNewFile_[[theme]]_cancel" class="pageMenu">{t _cancel}</a>
 		</li>
 	</ul>
 </fieldset>
 
-<div id="themeFileForm_{$theme}" class="slideForm addForm" style="display: none;">
+<div id="themeFileForm_[[theme]]" class="slideForm addForm" style="display: none;">
 	{form handle=$form action="controller=backend.themeFile action=upload"
 		onsubmit=""
 		target="fileUpload_`$theme`" method="POST" enctype="multipart/form-data"
@@ -18,7 +18,7 @@
 		}
 
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="hidden" name="theme" value="{$theme}" />
+		<input type="hidden" name="theme" value="[[theme]]" />
 		<input type="hidden" name="orginalFileName" class="orginalFileName" value="" />
 
 		{input name="file"}
@@ -43,7 +43,7 @@
 	</fieldset>
 	{/form}
 
-	<iframe name="fileUpload_{$theme}" id="fileUpload_{$theme}" style="display: none"></iframe>
+	<iframe name="fileUpload_[[theme]]" id="fileUpload_[[theme]]" style="display: none"></iframe>
 
 </div>
 
@@ -52,7 +52,7 @@
 
 </div>
 
-<ul id="filesList_{$theme}" class="activeList activeList_add_delete activeList_add_edit">
+<ul id="filesList_[[theme]]" class="activeList activeList_add_delete activeList_add_edit">
 </ul>
 
 <div style="display: none">
@@ -62,7 +62,7 @@
 </div>
 
 <ul style="display: none;">
-	<li id="filesList_template_{$theme}" style="position: relative;">
+	<li id="filesList_template_[[theme]]" style="position: relative;">
 		<span class="progressIndicator" style="display: none; "></span>
 		<span class="filesData">
 			<input type="hidden" class="file" value="" />
@@ -87,5 +87,5 @@
 </ul>
 
 <script type="text/javascript">
-	new Backend.ThemeFile({json array=$filesList}, $('filesList_{$theme}'), $('filesList_template_{$theme}'));
+	new Backend.ThemeFile({json array=$filesList}, $('filesList_[[theme]]'), $('filesList_template_[[theme]]'));
 </script>

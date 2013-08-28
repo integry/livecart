@@ -1,3 +1,3 @@
 טופס יצירת קשר - [[ config('STORE_NAME') ]]
-{$message}
+[[message]]
 {include file="email/en/signature.tpl"}

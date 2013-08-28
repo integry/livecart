@@ -123,7 +123,7 @@
 
 {literal}
 <script type="text/javascript">
-	var pageHandler = new Backend.Theme({/literal}{$themes}{literal});
+	var pageHandler = new Backend.Theme({/literal}[[themes]]{literal});
 	pageHandler.urls['edit'] = '{/literal}{link controller="backend.theme" action=edit}?id=_id_{literal}';
 	pageHandler.urls['add'] = '{/literal}{link controller="backend.theme" action=add}{literal}';
 	pageHandler.urls['delete'] = '{/literal}{link controller="backend.theme" action=delete}?id=_id_{literal}';

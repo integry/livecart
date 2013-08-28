@@ -1,5 +1,5 @@
 <h3>
-	<a href="{link controller=user action=viewOrder id=$order.ID}">{$order.formatted_dateCompleted.date_long}</a>
+	<a href="{link controller=user action=viewOrder id=$order.ID}">[[order.formatted_dateCompleted.date_long]]</a>
 </h3>
 
 {if $order.unreadMessageCount}
@@ -28,12 +28,12 @@
 		</ul>
 
 	   <div class="orderID">
-		   {t _order_id}: {$order.invoiceNumber}
+		   {t _order_id}: [[order.invoiceNumber]]
 	   </div>
 
 	   {if $order.ShippingAddress}
 		   <div class="orderRecipient">
-			   {t _recipient}: {$order.ShippingAddress.fullName}
+			   {t _recipient}: [[order.ShippingAddress.fullName]]
 		   </div>
 	   {/if}
 
@@ -47,11 +47,11 @@
 
 		<ul>
 		{foreach from=$order.cartItems item="item"}
-			<li>{$item.count} x
+			<li>[[item.count]] x
 				{if $item.Product.isDownloadable}
-					<a href="{link controller=user action=item id=$item.ID}">{$item.Product.name_lang}</a>
+					<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
 				{else}
-					{$item.Product.name_lang}
+					[[item.Product.name_lang]]
 				{/if}
 
 				{sect}
@@ -61,7 +61,7 @@
 					{content}
 						{foreach $item.subItems as $subItem}
 							{if $subItem.Product.isDownloadable}
-								<li><a href="{link controller=user action=item id=$subItem.ID}">{$subItem.Product.name_lang}</a></li>
+								<li><a href="{link controller=user action=item id=$subItem.ID}">[[subItem.Product.name_lang]]</a></li>
 							{/if}
 						{/foreach}
 					{/content}

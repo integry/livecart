@@ -1,8 +1,8 @@
 Ny beskjed ang. bestilling hos [[ config('STORE_NAME') ]]
-En kunde har sendt en ny beskjed ang. bestillingsnr. <b class="orderID">#{$order.invoiceNumber}</b>
+En kunde har sendt en ny beskjed ang. bestillingsnr. <b class="orderID">#[[order.invoiceNumber]]</b>
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Du kan svare på denne fra order management panel:

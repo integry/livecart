@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Order statusuppdatering
-Kära {$user.fullName},
+Kära [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Status har uppdaterats fördin order <b class="orderID">#{$order.invoiceNumber}</b>.
+Status har uppdaterats fördin order <b class="orderID">#[[order.invoiceNumber]]</b>.
 {else}
-Status har uppdaterats för en eller flera leveranser av din <b class="orderID">#{$order.invoiceNumber}</b>.
+Status har uppdaterats för en eller flera leveranser av din <b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 Om du har frågor rörande din order kan du kontakta oss via följande länk:

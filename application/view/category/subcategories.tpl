@@ -8,7 +8,7 @@
 		</td>
 		<td class="details">
 			<div class="subCatName">
-				<a href="{categoryUrl data=$sub}">{$sub.name_lang}</a>
+				<a href="{categoryUrl data=$sub}">[[sub.name_lang]]</a>
 				{include file="block/count.tpl" count=$sub.count}
 			</div>
 
@@ -16,7 +16,7 @@
 			<ul class="subSubCats">
 				{foreach from=$sub.subCategories item="subSub"}
 					<li>
-						<a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
+						<a href="{categoryUrl data=$subSub}">[[subSub.name_lang]]</a>
 						{include file="block/count.tpl" count=$subSub.count}
 					</li>
 				{/foreach}

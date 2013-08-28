@@ -1,5 +1,5 @@
-<fieldset id="{$type}_edit" class="orderAddress_edit error" style="display: none">
-	<input name="orderID" type="hidden" value="{$order.ID}" />
+<fieldset id="[[type]]_edit" class="orderAddress_edit error" style="display: none">
+	<input name="orderID" type="hidden" value="[[order.ID]]" />
 
 	{input name="existingUserAddress"}
 		{label}{t _use_existing_address}:{/label}
@@ -17,7 +17,7 @@
 	</fieldset>
 </fieldset>
 
-<fieldset id="{$type}_view" class="container orderAddress_view">
+<fieldset id="[[type]]_view" class="container orderAddress_view">
 	{include file="backend/user/address_view.tpl" idPrefix=$type address=$address}
 </fieldset>
 

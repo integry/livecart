@@ -1,4 +1,4 @@
-{if 'SHOW_SKU_EMAIL'|config}{assign var="SHOW_SKU" value=true}{/if}
+{if 'SHOW_SKU_EMAIL'|config}{% set SHOW_SKU = true %}{/if}
 {if !$html}
 {if $SHOW_SKU}----------{/if}------------------------------------------------------------
 {if $SHOW_SKU}{t _sku|@str_pad_iconv:10}{/if}{t _product|@str_pad_iconv:25}{t _price|@str_pad_iconv:11}{t _qty|@str_pad_iconv:9}{t _subtotal}

@@ -1,8 +1,8 @@
 Naujo užsakymo pranešimas iš [[ config('STORE_NAME') ]]
-Vartotojas parašė naują žinutę susijusią su užsakymu <b class="orderID">#{$order.invoiceNumber}</b>
+Vartotojas parašė naują žinutę susijusią su užsakymu <b class="orderID">#[[order.invoiceNumber]]</b>
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Jūs galite pridėti atsakymą iš Užsakymų valdymo dalies:

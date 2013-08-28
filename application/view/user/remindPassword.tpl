@@ -11,7 +11,7 @@
 
 		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return cancel=user}
 
-		<input type="hidden" name="return" value="{$return}" />
+		<input type="hidden" name="return" value="[[return]]" />
 
 	{/form}
 

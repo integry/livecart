@@ -3,9 +3,9 @@
 	<h2>{t _description}</h2>
 	<div id="productDescription">
 		{if $product.longDescription_lang}
-			{$product.longDescription_lang}
+			[[product.longDescription_lang]]
 		{else}
-			{$product.shortDescription_lang}
+			[[product.shortDescription_lang]]
 		{/if}
 	</div>
 </div>
@@ -28,7 +28,7 @@
 <div id="relatedProducts">
 	{foreach from=$related item=group}
 	   {if $group.0.ProductRelationshipGroup.name_lang}
-		   <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
+		   <h3>[[group.0.ProductRelationshipGroup.name_lang]]</h3>
 	   {/if}
 	   {include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$group}
 	{/foreach}

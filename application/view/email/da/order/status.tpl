@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Order Status Update
-Kære {$user.fullName},
+Kære [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Vi har opdateret status for følgende ordre: <b class="orderID">#{$order.invoiceNumber}</b>.
+Vi har opdateret status for følgende ordre: <b class="orderID">#[[order.invoiceNumber]]</b>.
 {else}
-Vi har opdateret status for een eller flere forsendelser for følgende ordre: <b class="orderID">#{$order.invoiceNumber}</b>.
+Vi har opdateret status for een eller flere forsendelser for følgende ordre: <b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 Hvis du har spørgsmål vedrørende denne ordre, er du velkommen til at kontakte os pr. E-mail, eller kontakte os på følgende side:

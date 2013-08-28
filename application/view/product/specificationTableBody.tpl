@@ -11,6 +11,6 @@
 			{include file="product/attributeValue.tpl"}
 		</td>
 	</tr>
-	{assign var="prevAttr" value=$attr}
+	{% set prevAttr = $attr %}
 
 {/foreach}

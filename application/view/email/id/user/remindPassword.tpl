@@ -1,10 +1,10 @@
 Password Anda di [[ config('STORE_NAME') ]]!
-Yth. Bapak/Ibu {$user.fullName},
+Yth. Bapak/Ibu [[user.fullName]],
 
-Berikut ini adalah informasi rekening Anda di {$config.STORE_NAME}:
+Berikut ini adalah informasi rekening Anda di [[config.STORE_NAME]]:
 
-E-mail: <b>{$user.email}</b>
-Password: <b>{$user.newPassword}</b>
+E-mail: <b>[[user.email]]</b>
+Password: <b>[[user.newPassword]]</b>
 
 Anda dapat login ke rekening Anda di:
 {link controller=user action=login url=true}

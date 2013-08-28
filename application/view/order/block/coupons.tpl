@@ -6,7 +6,7 @@
 				<p class="appliedCoupons">
 					{t _applied_coupons}:
 					{foreach from=$cart.coupons item=coupon name=coupons}
-						<strong>{$coupon.couponCode}</strong>{if !$smarty.foreach.coupons.last}, {/if}
+						<strong>[[coupon.couponCode]]</strong>{if !$smarty.foreach.coupons.last}, {/if}
 					{/foreach}
 				</p>
 			{/if}

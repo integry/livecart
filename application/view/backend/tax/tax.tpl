@@ -34,7 +34,7 @@
 								<h3>{t _base_tax_rate}</h3>
 								<p>{t _base_tax_rates_description}</p>
 							{else}
-								<h3>{$zone.name}</h3>
+								<h3>[[zone.name]]</h3>
 							{/if}
 						</td>
 						<td>
@@ -45,7 +45,7 @@
 									<tbody>
 										{foreach $classes as $class}
 											<tr>
-												<td>{$class.name_lang}</td>
+												<td>[[class.name_lang]]</td>
 												<td>
 													{input name="taxRate_`$zone.ID`_`$class.ID`"}
 														{textfield class="number" value=$zone.taxRates[$zone.ID][$class.ID].rate|default:0} %

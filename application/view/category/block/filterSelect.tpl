@@ -4,13 +4,13 @@
 	{counter name="lastFilterSelected" assign="lastFilterSelected"}
 	{assign var="appliedFilters" value=$sectionFilters.appliedFilters|default:$filters}
 	{if !'TOP_FILTER_RELOAD'|config}
-		{assign var="action" value="boxFilterTopBlock"}
+		{% set action = "boxFilterTopBlock" %}
 	{else}
-		{assign var="action" value="index"}
+		{% set action = "index" %}
 	{/if}
 
 	{if 'TOP_FILTER_CONTINUOS'|config && ($lastFilterSelected < $topMenuFilterIndex)}
-		{assign var="disabled" value=true}
+		{% set disabled = true %}
 	{/if}
 
 	{if !'TOP_MENU_COMPACT'|config}
@@ -27,7 +27,7 @@
 		</option>
 		{if !$disabled}
 			{foreach from=$sectionFilters.filters item="filter" name="filters"}
-				<option value="{categoryUrl action=$action data=$category filters=$appliedFilters addFilter=$filter removeFilters=$sectionFilters.filters}" {if $filters[$filter.ID]}selected="selected" {counter name="lastFilterSelected" assign="lastFilterSelected"}{/if}>{$filter.name_lang}</option>
+				<option value="{categoryUrl action=$action data=$category filters=$appliedFilters addFilter=$filter removeFilters=$sectionFilters.filters}" {if $filters[$filter.ID]}selected="selected" {counter name="lastFilterSelected" assign="lastFilterSelected"}{/if}>[[filter.name_lang]]</option>
 			{/foreach}
 		{/if}
 	</select>

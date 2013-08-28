@@ -93,11 +93,11 @@
 			{language}
 				<fieldset class="error">
 					<label class="productFile_title_label">{t _productFile_title}</label>
-					<input type="text" name="title_{$lang.ID}" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
+					<input type="text" name="title_[[lang.ID]]" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
 				</fieldset>
 				<fieldset class="error">
 					<label class="productFile_description_label">{t _productFile_description}</label>
-					<textarea type="text" name="description_{$lang.ID}" class="tinyMCE productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
+					<textarea type="text" name="description_[[lang.ID]]" class="tinyMCE productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
 				</fieldset>
 			{/language}
 

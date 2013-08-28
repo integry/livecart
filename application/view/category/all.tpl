@@ -15,7 +15,7 @@
 			{/if}
 
 			<ul>
-				<li><a href="{categoryUrl data=$category}">{$category.name}</a>
+				<li><a href="{categoryUrl data=$category}">[[category.name]]</a>
 				{include file="block/count.tpl" count=$category.count}
 			</ul>
 			{assign var=index value=$index+1}

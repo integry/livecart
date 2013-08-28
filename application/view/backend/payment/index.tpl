@@ -1,5 +1,5 @@
 <div>
-<div class="menuContainer" id="paymentMenu_{$order.ID}">
+<div class="menuContainer" id="paymentMenu_[[order.ID]]">
 
 	<ul class="menu paymentMenu" {denied role='order.update'}style="display: none;"{/denied}>
 		<li class="offlinePayment"><a href="#addOfflinePayment" class="addOfflinePayment">{t _add_offline_payment}</a></li>
@@ -17,7 +17,7 @@
 
 				{input name="amount"}
 					{label}{t _amount}:{/label}
-					{textfield class="text number"} {$order.Currency.ID}
+					{textfield class="text number"} [[order.Currency.ID]]
 				{/input}
 
 				{input name="comment"}
@@ -52,7 +52,7 @@
 
 {literal}
 <script type="text/javascript">
-	Backend.Payment.init($('{/literal}paymentMenu_{$order.ID}{literal}'));
+	Backend.Payment.init($('{/literal}paymentMenu_[[order.ID]]{literal}'));
 </script>
 {/literal}
 

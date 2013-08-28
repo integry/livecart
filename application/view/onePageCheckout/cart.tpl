@@ -38,6 +38,6 @@
 
 	</tbody>
 </table>
-<input type="hidden" name="return" value="{$return}" />
+<input type="hidden" name="return" value="[[return]]" />
 
 {/form}

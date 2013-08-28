@@ -18,7 +18,7 @@
 			{language}
 				<fieldset class="error">
 					<label>{t _list_name}</label>
-					<input type="text" name="name_{$lang.ID}" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
+					<input type="text" name="name_[[lang.ID]]" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
 				</fieldset>
 			{/language}
 		</fieldset>

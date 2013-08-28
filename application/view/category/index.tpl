@@ -1,8 +1,8 @@
 {pageTitle}{$category.pageTitle_lang|default:$category.name_lang}{/pageTitle}
 {assign var="metaDescription" value=$category.description_lang|@strip_tags}
-{assign var="metaKeywords" value=$category.keywords_lang}
+{% set metaKeywords = $category.keywords_lang %}
 
-<div class="categoryIndex category_{$category.ID}">
+<div class="categoryIndex category_[[category.ID]]">
 
 {include file="layout/frontend/layout.tpl"}
 

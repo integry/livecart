@@ -1,2 +1,2 @@
 {include file="backend/productRelationship/addRelated.tpl"}
-<span class="newTotal">{$total}</span>
+<span class="newTotal">[[total]]</span>

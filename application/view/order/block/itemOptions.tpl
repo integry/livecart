@@ -10,7 +10,7 @@
 		{foreach from=$moreOptions[$item.ID] item=option}
 			{if $item.options[$option.ID]}
 				<div class="nonEditableOption">
-					{$option.name_lang}:
+					[[option.name_lang]]:
 					{if 0 == $option.type}
 						{t _option_yes}
 					{elseif 1 == $option.type}

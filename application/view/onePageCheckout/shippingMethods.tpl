@@ -11,7 +11,7 @@
 
 						{if $shipment.isShippable}
 							{if $order.isMultiAddress}
-								<h2>{$shipment.ShippingAddress.compact}</h2>
+								<h2>[[shipment.ShippingAddress.compact]]</h2>
 							{/if}
 
 							{if $shipments|@count > 1}
@@ -42,7 +42,7 @@
 			<div class="stepPreview">
 			{foreach from=$preview_shipping_methods item=method}
 				<div class="shippingPreview">
-					{$method.ShippingService.name_lang}
+					[[method.ShippingService.name_lang]]
 					({$method.formattedPrice[$method.costCurrency]})
 				</div>
 			{/foreach}

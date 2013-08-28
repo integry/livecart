@@ -156,7 +156,7 @@
 			<div class="ruleFields">
 				{foreach from=$ruleFields key=ruleClass item=fields}
 					{if $fields}
-					<div class="classContainer {$ruleClass}">
+					<div class="classContainer [[ruleClass]]">
 						{foreach from=$fields item=field}
 							<p>
 								<label>{translate text=$field.label}</label>
@@ -229,7 +229,7 @@
 					<label>{t _amount}</label>
 					<span>{textfield name="amount" class="number comparisonValue"}</span>
 					<span class="percent">%</span>
-					<span class="currency">{$currencyCode}</span>
+					<span class="currency">[[currencyCode]]</span>
 				</p>
 				<p>
 					<label>{tip _discount_step _discount_step_descr}</label>
@@ -251,7 +251,7 @@
 			<div class="actionFields">
 				{foreach from=$actionFields key=actionClass item=fields}
 					{if $fields}
-						<div class="classContainer {$actionClass}">
+						<div class="classContainer [[actionClass]]">
 							{foreach from=$fields item=field}
 								<p>
 									<label>{translate text=$field.label}</label>

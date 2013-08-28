@@ -12,7 +12,7 @@
 		<div class="content">
 			<ul class="list-unstyled" id="miniCartContents">
 			{foreach from=$order.cartItems item="item" name="cart"}
-				<li><span class="miniCartCount">{$item.count}</span> x <a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></li>
+				<li><span class="miniCartCount">[[item.count]]</span> x <a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a></li>
 			{/foreach}
 			</ul>
 

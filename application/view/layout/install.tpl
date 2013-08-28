@@ -40,7 +40,7 @@
 </head>
 
 <body>
-	<div id="container" class="lang_{localeCode} action_{$request.action}">
+	<div id="container" class="lang_{localeCode} action_[[request.action]]">
 		<div id="header">
 			<span id="title" style="float: left">LiveCart Installer</span>
 			<ul id="installProgress">
@@ -53,8 +53,8 @@
 			</ul>
 			<div class="clear"></div>
 		</div>
-		<div id="installContent" class="action_{$request.action}">
-			{$ACTION_VIEW}
+		<div id="installContent" class="action_[[request.action]]">
+			[[ACTION_VIEW]]
 			<div class="clear"></div>
 		</div>
 		<div id="installFooter">

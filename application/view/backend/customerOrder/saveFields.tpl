@@ -20,7 +20,7 @@
 
 	{form handle=$fieldsForm action="controller=backend.customerOrder action=saveFields" method="POST"}
 		{include file="backend/eav/fields.tpl" item=$order}
-		<input type="hidden" name="id" value="{$order.ID}" />
+		<input type="hidden" name="id" value="[[order.ID]]" />
 		<fieldset class="controls">
 			<span style="display: none;" class="progressIndicator"></span>
 			<input type="submit" class="button submit" value="{t _save}" />
@@ -31,5 +31,5 @@
 
 </fieldset>
 {literal}<script type="text/javascript">{/literal}
-	new Backend.CustomerOrder.CustomFields({$order.ID});
+	new Backend.CustomerOrder.CustomFields([[order.ID]]);
 </script>

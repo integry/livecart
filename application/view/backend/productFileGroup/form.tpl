@@ -17,7 +17,7 @@
 			<!-- STEP 3 -->
 			{language}
 				<label>{t _product_file_group_title}:</label>
-				<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
+				<input type="text" value="" id="name_[[lang.ID]]" name="name_[[lang.ID]]"/>
 			{/language}
 
 		<fieldset class="productFileGroup_controls controls">

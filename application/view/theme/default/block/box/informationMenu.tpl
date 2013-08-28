@@ -1,7 +1,7 @@
 {if $pages}
 <div class="informationMenu">
 	{foreach from=$pages item=page name="pages"}
-		<span class="infoLink" id="static_{$page.ID}"><a href="{pageUrl data=$page}">{$page.title_lang}</a></span>
+		<span class="infoLink" id="static_[[page.ID]]"><a href="{pageUrl data=$page}">[[page.title_lang]]</a></span>
 		{if !$smarty.foreach.pages.last}
 		<span class="sep"> | </span>
 		{/if}

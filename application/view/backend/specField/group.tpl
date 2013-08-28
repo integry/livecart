@@ -13,7 +13,7 @@
 			{language}
 				<fieldset class="error required">
 					<label>{t _specField_group_title}</label>
-					<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} autocomplete="off" />
+					<input type="text" name="name_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} autocomplete="off" />
 				</fieldset>
 			{/language}
 		</fieldset>

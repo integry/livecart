@@ -2,7 +2,7 @@
 {literal}
 	with(Backend.ProductList.Group)
 	{
-		Links.sort = '{/literal}{link controller="backend.productList" action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
+		Links.sort = '{/literal}{link controller="backend.productList" action=sort}?target=productRelationshipGroup_list_[[productID]]{literal}';
 		Messages.areYouSureYouWantToDelete = '{/literal}{t _really_remove_product_list|addslashes}{literal}'
 	}
 
@@ -10,7 +10,7 @@
 	Backend.ProductList.messages = {};
 	with(Backend.ProductList)
 	{
-		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_{$ownerID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_[[ownerID]]#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _really_remove_product_from_list|addslashes}{literal}';
 	}
@@ -32,19 +32,19 @@
 {foreach $items as $item}
 	{if $lastProductRelationshipGroup != $item.ProductList.ID }
 		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}
-		<li id="{$item.ProductList.ID}" class="groupContainer">
-			<span class="groupTitle">{$item.ProductList.name}</span>
+		<li id="[[item.ProductList.ID]]" class="groupContainer">
+			<span class="groupTitle">[[item.ProductList.name]]</span>
 			{include file="backend/productList/form.tpl"}
-			<ul id="{$item.ProductList.ID}" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
+			<ul id="[[item.ProductList.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 	{/if}
 
 	{if $item.Product.ID} {* For empty groups *}
-		<li id="{$item.ID}">
+		<li id="[[item.ID]]">
 			{include file="backend/productListItem/add.tpl" product=$item.Product}
 		</li>
 	{/if}
 
-	{assign var="lastProductRelationshipGroup" value=$item.ProductList.ID}
+	{% set lastProductRelationshipGroup = $item.ProductList.ID %}
 {/foreach}
 </ul>
 
@@ -61,5 +61,5 @@
 {block TRANSLATIONS}
 
 <script type="text/javascript">
-	Backend.ProductList.Group.Controller.prototype.index({$ownerID});
+	Backend.ProductList.Group.Controller.prototype.index([[ownerID]]);
 </script>

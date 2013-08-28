@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] Order Status Update
-Gerbiama(-s) {$user.fullName},
+Gerbiama(-s) [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-Pasikeitė Jūsų užsakymo <b class="orderID">#{$order.invoiceNumber}</b> būsena.
+Pasikeitė Jūsų užsakymo <b class="orderID">#[[order.invoiceNumber]]</b> būsena.
 {else}
-Būsena pakito vienam ar daugiau Jūsų užsakymo <b class="orderID">#{$order.invoiceNumber}</b> siuntinių.
+Būsena pakito vienam ar daugiau Jūsų užsakymo <b class="orderID">#[[order.invoiceNumber]]</b> siuntinių.
 {/if}
 
 Jei turite klausimų, susijusių su šiuo užsakymu, galite siųsti laišką ar susisiekti su mumis iš šio puslapio:

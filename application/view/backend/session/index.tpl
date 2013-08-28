@@ -33,7 +33,7 @@
 		<input type="submit" class="submit" value="{tn _login}" />
 	</p>
 
-	<input type="hidden" name="return" value="{$return}" />
+	<input type="hidden" name="return" value="[[return]]" />
 
 </form>
 

@@ -37,8 +37,8 @@
 <script type="text/javascript">
 
 	var massHandler = new ActiveGrid.MassActionHandler(
-						$('productMass_{$categoryID}'),
-						window.activeGrids['products_{$categoryID}'],
+						$('productMass_[[categoryID]]'),
+						window.activeGrids['products_[[categoryID]]'],
 {literal}
 						{
 							'onComplete':
@@ -46,7 +46,7 @@
 								{
 									Backend.Product.resetEditors();
 
-									var parentId = {/literal}{$categoryID}{literal};
+									var parentId = {/literal}[[categoryID]]{literal};
 									var massForm = $('productMass_' + parentId).down('form');
 									parentId = Backend.Category.treeBrowser.getParentId(parentId);
 

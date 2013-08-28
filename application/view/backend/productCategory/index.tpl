@@ -3,7 +3,7 @@
 		{if $category.ParentNode}
 			{catPath category=$category.ParentNode} &gt;
 		{/if}
-		{$category.name_lang}
+		[[category.name_lang]]
 	{/if}
 {/function}
 
@@ -37,5 +37,5 @@
 </fieldset>
 
 <script type="text/javascript">
-	new Backend.ProductCategory($('tabProductCategories_{$product.ID}Content'), {json array=$product}, {json array=$categories});
+	new Backend.ProductCategory($('tabProductCategories_[[product.ID]]Content'), {json array=$product}, {json array=$categories});
 </script>

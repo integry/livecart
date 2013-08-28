@@ -1,10 +1,10 @@
 Új üzenet a [[ config('STORE_NAME') ]] leadott rendeléseddel kapcsolatosan
-Tisztelt {$user.fullName},
+Tisztelt [[user.fullName]],
 
 Új üzenet lett hozzáadva rendeléseddel kapcsolatosan.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Válaszolhatsz erre az üzenetre a következő linkre kattintva:

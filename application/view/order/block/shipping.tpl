@@ -7,7 +7,7 @@
 				{t _shipping}:
 			{/if}
 		</td>
-		<td class="amount shippingAmount">{$cart.formatted_shippingSubtotal}</td>
+		<td class="amount shippingAmount">[[cart.formatted_shippingSubtotal]]</td>
 		{include file="order/block/cartUpdate.tpl"}
 	</tr>
 {/if}

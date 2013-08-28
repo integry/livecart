@@ -6,7 +6,7 @@
 	{form action="controller=checkout action=payOffline query=id=$method" handle=$offlineForms[$method] method="POST" class="form-horizontal"}
 		{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
 		{include file="block/submit.tpl" caption="_complete_now"}
-		<input type="hidden" name="{$method}" value="1" />
+		<input type="hidden" name="[[method]]" value="1" />
 	{/form}
 
 {/foreach}

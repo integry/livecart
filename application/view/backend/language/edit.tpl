@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	<a href="{link controller="backend.language"}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
+	<a href="{link controller="backend.language"}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} [[edit_language]])
 {/pageTitle}
 
 {includeJs file="library/json.js"}
@@ -18,8 +18,8 @@
 
 {literal}
 <script type="text/javascript">
-	var translations = {/literal}{$translations}{literal}
-	var english = {/literal}{$english}{literal}
+	var translations = {/literal}[[translations]]{literal}
+	var english = {/literal}[[english]]{literal}
 </script>
 {/literal}
 

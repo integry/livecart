@@ -16,25 +16,25 @@
 	{if 0 == $option.type}
 		{input name=$fieldName}
 			{checkbox class="checkbox"}
-			{label}{$option.name_lang} {optionPrice choice=$option.DefaultChoice}{/label}
+			{label}[[option.name_lang]] {optionPrice choice=$option.DefaultChoice}{/label}
 
 			{if $option.description_lang}
 				<p class="description">
-					{$option.description_lang}
+					[[option.description_lang]]
 				</p>
 			{/if}
 		{/input}
 	{else}
-		{label}{$option.name_lang}{/label}
+		{label}[[option.name_lang]]{/label}
 			{input}
 			{if 1 == $option.type}
 				{if 0 == $option.displayType}
 					<fieldset class="error">
-					<select name="{$fieldName}">
-						<option value="">{$option.selectMessage_lang}</option>
+					<select name="[[fieldName]]">
+						<option value="">[[option.selectMessage_lang]]</option>
 						{foreach from=$option.choices item=choice}
-							<option value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
-								{$choice.name_lang}
+							<option value="[[choice.ID]]"{if $selectedChoice.Choice.ID == $choice.ID} selected="selected"{/if}>
+								[[choice.name_lang]]
 								{optionPrice choice=$choice}
 							</option>
 						{/foreach}
@@ -43,16 +43,16 @@
 					<div class="radioOptions {if 2 == $option.displayType}colorOptions{/if}">
 						{if $option.selectMessage_lang}
 							<p>
-								<input name="{$fieldName}" type="radio" class="radio" id="{uniqid}" value=""{if !$selectedChoice.Choice.ID} checked="checked"{/if} />
-								<label class="radio" for="{uniqid last=true}">{$option.selectMessage_lang}</label>
+								<input name="[[fieldName]]" type="radio" class="radio" id="{uniqid}" value=""{if !$selectedChoice.Choice.ID} checked="checked"{/if} />
+								<label class="radio" for="{uniqid last=true}">[[option.selectMessage_lang]]</label>
 							</p>
 						{/if}
 
 						{foreach from=$option.choices item=choice}
 							<p>
-								<input name="{$fieldName}" type="radio" class="radio" id="{uniqid}" value="{$choice.ID}"{if $selectedChoice.Choice.ID == $choice.ID} checked="checked"{/if} />
+								<input name="[[fieldName]]" type="radio" class="radio" id="{uniqid}" value="[[choice.ID]]"{if $selectedChoice.Choice.ID == $choice.ID} checked="checked"{/if} />
 								<label class="radio" for="{uniqid last=true}">
-									<span class="optionName"  {if 2 == $option.displayType}style="background-color: {$choice.config.color};"{/if}>{$choice.name_lang}</span>
+									<span class="optionName"  {if 2 == $option.displayType}style="background-color: [[choice.config.color]];"{/if}>[[choice.name_lang]]</span>
 									{optionPrice choice=$choice}
 								</label>
 							</p>
@@ -66,7 +66,7 @@
 				{uniqid assign=uniq noecho=true}
 				{filefield name="upload_`$fieldName`" id=$uniq}
 				{hidden name=$fieldName}
-				{error for="upload_`$fieldName`"}<div class="text-danger">{$msg}</div>{/error}
+				{error for="upload_`$fieldName`"}<div class="text-danger">[[msg]]</div>{/error}
 				<div class="optionFileInfo" style="display: none;">
 					<div class="optionFileName"></div>
 					<div class="optionFileImage">
@@ -74,14 +74,14 @@
 					</div>
 				</div>
 				<script type="text/javascript">
-					var upload = $('{$uniq}');
+					var upload = $('[[uniq]]');
 					new LiveCart.FileUpload(upload, '{link controller=order action=uploadOptionFile id=$option.ID query="uniq=`$uniq`&field=`$fieldName`&productID=`$product.ID`"}', Order.previewOptionImage);
 				</script>
 			{/if}
 
 			{if $option.description_lang}
 				<p class="description">
-					{$option.description_lang}
+					[[option.description_lang]]
 				</p>
 			{/if}
 
@@ -91,5 +91,5 @@
 <div class="clear"></div>
 
 <script type="text/javascript">
-	Frontend.initColorOptions("{$optionContainer}");
+	Frontend.initColorOptions("[[optionContainer]]");
 </script>

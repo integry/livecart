@@ -1,10 +1,10 @@
 Pesan Baru Tentang Order Anda di [[ config('STORE_NAME') ]]
-Yth Bapak/Ibu {$user.fullName},
+Yth Bapak/Ibu [[user.fullName]],
 
 Ada pesan baru mengenai order Anda.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Anda dapat memberikan respons dari halaman berikut:

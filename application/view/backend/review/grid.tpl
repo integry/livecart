@@ -21,8 +21,8 @@
 <script type="text/javascript">
 {/literal}
 	var massHandler = new ActiveGrid.MassActionHandler(
-						$('reviewMass_{$id}'),
-						window.activeGrids['reviews_{$id}'],
+						$('reviewMass_[[id]]'),
+						window.activeGrids['reviews_[[id]]'],
 {literal}
 						{
 							'onComplete':

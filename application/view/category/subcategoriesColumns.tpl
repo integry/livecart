@@ -5,9 +5,9 @@
 {/if}
 
 <div class="subCategories row">
-{section name="rows" start=0 loop=$rows}{assign var="row" value=$smarty.section.rows}
+{section name="rows" start=0 loop=$rows}{% set row = $smarty.section.rows %}
 
-	{section name="columns" start=0 loop=$columns}{assign var="col" value=$smarty.section.columns}
+	{section name="columns" start=0 loop=$columns}{% set col = $smarty.section.columns %}
 
 		{if 'CAT_HOR' == 'CATEGORY_COL_DIRECTION'|config}
 			{assign var=colOffset value=$row.index*$columns}
@@ -20,7 +20,7 @@
 		{assign var=cat value=$subCategories[$index]}
 
 		{if $cat}
-		<div class="col col-lg-{$width} subCategoryItem">
+		<div class="col col-lg-[[width]] subCategoryItem">
 			<div class="thumbnail">
 				{include file="category/block/categoryItem.tpl" sub=$cat}
 			</div>

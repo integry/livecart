@@ -4,9 +4,9 @@
 		{foreach from=$letters item=letter}
 			<li>
 				{if $letter == $currentLetter}
-					<strong class="selectedLetter">{$letter}</strong>
+					<strong class="selectedLetter">[[letter]]</strong>
 				{else}
-					<a href="{link controller=manufacturers query="letter={$letter}"}">{$letter}</a>
+					<a href="{link controller=manufacturers query="letter=[[letter]]"}">[[letter]]</a>
 				{/if}
 			</li>
 		{/foreach}
@@ -34,7 +34,7 @@
 			{assign var=columns value=$columns+1}
 		{/if}
 	<ul>
-		<li><a href="{$manufacturer.url}">{$manufacturer.name}</a>
+		<li><a href="[[manufacturer.url]]">[[manufacturer.name]]</a>
 		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 {/foreach}

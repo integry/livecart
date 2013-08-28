@@ -1,4 +1,4 @@
-{pageTitle}{t _edit_template}: {$fileName}{/pageTitle}
+{pageTitle}{t _edit_template}: [[fileName]]{/pageTitle}
 {includeCss file="backend/Template.css"}
 {includeJs file="backend/Template.js"}
 {includeJs file="library/form/ActiveForm.js"}
@@ -19,7 +19,7 @@
 {/literal}
 
 <div id="pageTitleContainer">
-	<div id="pageTitle">{$PAGE_TITLE}</div>
+	<div id="pageTitle">[[PAGE_TITLE]]</div>
 </div>
 
 {form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm" class="templateForm"}
@@ -31,7 +31,7 @@
 
 		<div style="float: left;{denied role="template.save"} display: none;{/denied}">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="hidden" name="theme" value="{$theme}" />
+			<input type="hidden" name="theme" value="[[theme]]" />
 			<input type="submit" class="submit" value="{tn _save_template}" />
 			{t _or}
 			<a class="cancel" href="#" onclick="window.close();">{t _cancel}</a>
@@ -57,7 +57,7 @@
 {literal}
 	<script type="text/javascript">
 		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
-		$('code_undefined').value = {/literal}decode64("{$code}");{literal};
+		$('code_undefined').value = {/literal}decode64("[[code]]");{literal};
 		new Backend.TemplateHandler($('templateForm'));
 	</script>
 {/literal}

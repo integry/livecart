@@ -28,7 +28,7 @@
 
 	{include file="block/submit.tpl" caption="_form_submit"}
 
-	<input type="hidden" name="id" value="{$product.ID}" />
+	<input type="hidden" name="id" value="[[product.ID]]" />
 
 {/form}
 <div class="clear"></div>

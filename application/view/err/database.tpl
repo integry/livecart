@@ -4,5 +4,5 @@
 </p>
 
 <div style="margin-top: 1em; border: 1px solid red; padding: 1em; font-weight: bold;">
-	{$error}
+	[[error]]
 </div>

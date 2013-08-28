@@ -41,7 +41,7 @@
 	<ul id="tabList" class="tabList tabs">
 
 		<li id="tabProducts" class="tab active">
-			<a href="{link controller="backend.product" action=index id=_id_}?{$filters}">{t _products}</a>
+			<a href="{link controller="backend.product" action=index id=_id_}?[[filters]]">{t _products}</a>
 			<span> </span>
 			<span class="tabHelp">products</span>
 		</li>
@@ -77,8 +77,8 @@
 	<h2>{t _select_shippment}</h2>
 	{foreach name="shipments" item="shipment" from=$shipments}
 		<fieldset class="error">
-			<input name="shipment" type="radio" value="{$shipment.ID}" id="shipment{$shipment.ID}" class="checkbox" {if !$checked}checked="checked"{/if}>
-			<label for="shipment{$shipment.ID}" class="checkbox"><b>{t _shipment} #{$shipment.ID}</b> ({$shipment.ShippingService.name_lang} - {$shipment.formatted_totalAmount})</label>
+			<input name="shipment" type="radio" value="[[shipment.ID]]" id="shipment[[shipment.ID]]" class="checkbox" {if !$checked}checked="checked"{/if}>
+			<label for="shipment[[shipment.ID]]" class="checkbox"><b>{t _shipment} #[[shipment.ID]]</b> ([[shipment.ShippingService.name_lang]] - [[shipment.formatted_totalAmount]])</label>
 		</fieldset>
 
 	{/foreach}

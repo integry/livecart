@@ -5,7 +5,7 @@
 		{label}{t _set_all_permissions}{/label}
 	{/input}
 
-	<div id="userGroupsRolesTree_{$userGroup.ID}" class="treeBrowser"></div>
+	<div id="userGroupsRolesTree_[[userGroup.ID]]" class="treeBrowser"></div>
 
 	<fieldset class="roles_controls error controls">
 		<span class="progressIndicator" style="display: none;"></span>
@@ -18,10 +18,10 @@
 
 <script type="text/javascript">
 	Backend.Roles.prototype.Links.xmlBranch  = '{link controller="backend.roles" action=xmlBranch}';
-	var roles = Backend.Roles.prototype.getInstance('roles_form_{$userGroup.ID}', {json array=$roles}, {json array=$activeRolesIDs}, {json array=$disabledRolesIDs});
+	var roles = Backend.Roles.prototype.getInstance('roles_form_[[userGroup.ID]]', {json array=$roles}, {json array=$activeRolesIDs}, {json array=$disabledRolesIDs});
 	{denied role="userGroup.permissions"}
 		{literal}
-			$A($("{/literal}userGroupsRolesTree_{$userGroup.ID}{literal}").getElementsByTagName('img')).each(function(img)
+			$A($("{/literal}userGroupsRolesTree_[[userGroup.ID]]{literal}").getElementsByTagName('img')).each(function(img)
 			{
 				img.onclick = function() { return false; };
 			});

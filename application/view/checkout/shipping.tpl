@@ -19,7 +19,7 @@
 			{foreach from=$shipments key="key" item="shipment"}
 
 				{if $order.isMultiAddress}
-					<h2>{$shipment.ShippingAddress.compact}</h2>
+					<h2>[[shipment.ShippingAddress.compact]]</h2>
 				{/if}
 
 				{include file="checkout/shipmentProductList.tpl"}

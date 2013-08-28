@@ -2,10 +2,10 @@
 	{include file="order/changeMessages.tpl"}
 
 	{if $error}
-		<div class="errorMessage">{$error}</div>
+		<div class="errorMessage">[[error]]</div>
 	{/if}
 
-	<p class="addedToCart">{$msg}</p>
+	<p class="addedToCart">[[msg]]</p>
 {/capture}
 
 {capture assign="footer"}

@@ -11,12 +11,12 @@
 	<table class="taxes">
 		{foreach from=$taxes item=tax name="taxes"}
 			<tr>
-				<td class="taxName">{$tax.name_lang}:</td>
+				<td class="taxName">[[tax.name_lang]]:</td>
 				<td>{textfield class="text number" name="tax_`$tax.ID`_"}%</td>
 			</tr>
 			{foreach from=$classes item=class name="classes"}
 				<tr class="classes">
-					<td class="taxClassName">{$class.name_lang}:</td>
+					<td class="taxClassName">[[class.name_lang]]:</td>
 					<td>{textfield class="text number" name="tax_`$tax.ID`_`$class.ID`"}%</td>
 				</tr>
 			{/foreach}

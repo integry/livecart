@@ -1,4 +1,4 @@
-<span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_{$userGroupID}" >
+<span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_[[userGroupID]]" >
 
 	{form action="controller=backend.user action=processMass id=$userGroupID" method="POST" handle=$massForm onsubmit="return false;"}
 

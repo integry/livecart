@@ -2,7 +2,7 @@
 	{if $shipment.ID !== $otherShipment.ID}
 		<dl class="{if $shipment.ID !== $otherShipment.ID}logValueChanged{/if}">
 			<dt>{t _shipment_id}:</dt>
-			<dd>{$shipment.ID}&nbsp;</dd>
+			<dd>[[shipment.ID]]&nbsp;</dd>
 		</dl>
 	{/if}
 	
@@ -23,14 +23,14 @@
 		{if $shipment.ShippingService.serviceID !== $otherShipment.ShippingService.serviceID}
 			<dl class="{if $shipment.ShippingService.serviceID !== $otherShipment.ShippingService.serviceID}logValueChanged{/if}">
 				<dt>{t _shipping_service}:</dt>
-				<dd>{$shipment.ShippingService.serviceName}&nbsp;</dd>
+				<dd>[[shipment.ShippingService.serviceName]]&nbsp;</dd>
 			</dl>
 		{/if}
 		
 		{if $shipment.ShippingService.providerName !== $shipment.ShippingService.providerName}
 			<dl class="{if $shipment.ShippingService.providerName !== $$shipment.ShippingService.providerName}logValueChanged{/if}">
 				<dt>{t _provider_name}:</dt>
-				<dd>{$shipment.ShippingService.providerName}&nbsp;</dd>
+				<dd>[[shipment.ShippingService.providerName]]&nbsp;</dd>
 			</dl>
 		{/if}
 		
@@ -73,13 +73,13 @@
 					{foreach item="item" from=$log.items}
 						<li>
 							<span class="removedProductSKU">
-								({$item.oldValue.Product.sku}) 
+								([[item.oldValue.Product.sku]])
 							 </span>
 							<span class="removedProductPrice">
-								[{$item.oldValue.count} X {$log.Order.Currency.pricePrefix}{$item.oldValue.price}{$log.Order.Currency.priceSuffix}]
+								[[[item.oldValue.count]] X [[log.Order.Currency.pricePrefix]][[item.oldValue.price]][[log.Order.Currency.priceSuffix]]]
 							</span> <br />
 							<span class="removedProductName">
-								{$item.oldValue.Product.name}
+								[[item.oldValue.Product.name]]
 							</span>
 						</li>
 					{/foreach}

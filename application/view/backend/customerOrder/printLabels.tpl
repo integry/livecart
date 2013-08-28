@@ -11,7 +11,7 @@
 			{/if}
 			{assign var=index value=$index+1}
 
-			<td style="width: {$width}%; page-break-inside: avoid;">
+			<td style="width: [[width]]%; page-break-inside: avoid;">
 				{include file="backend/customerOrder/block/shippingLabel.tpl" address=$shipment.ShippingAddress}
 			</td>
 
@@ -27,7 +27,7 @@
 <body onLoad="window.print()">
 {section name="copies" loop='SHIP_LABELS_COPIES'|config|default:1}
 	<div style="page-break-after: always;">
-		{$labels}
+		[[labels]]
 	</div>
 {/section}
 </body>

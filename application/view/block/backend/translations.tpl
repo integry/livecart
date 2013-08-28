@@ -1,3 +1,3 @@
 <script type="text/javascript">
-	Backend.setTranslations({$languageData});
+	Backend.setTranslations([[languageData]]);
 </script>

@@ -6,7 +6,7 @@
 {foreach from=$classNames key=key item=className name="qsClasses"}
 	{if $result[$className].count > 0}
 		{if $fullSearch}
-			<div class="qsResultsContainer qs{$className}">
+			<div class="qsResultsContainer qs[[className]]">
 			<h3 class="qsClassName{if 0 == $key} first{/if}">
 				{if $className == 'SearchableItem'}
 				{* <span class="qsName">{t _title_`$className`}</span> *}
@@ -42,14 +42,14 @@
 			<div class="qsSeperator"></div>
 		{/if}
 
-		{assign var="hasResult" value=true}
+		{% set hasResult = true %}
 	{/if}
 {/foreach}
 
 {if $fullSearch}
 	{if !$hasResult}
 		<div class="qsNothingFound">
-			{t _nothing_found_for_query}: <strong>{$query}</strong>
+			{t _nothing_found_for_query}: <strong>[[query]]</strong>
 		</div>
 	{/if}
 {/if}

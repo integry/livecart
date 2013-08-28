@@ -9,7 +9,7 @@
 	{/if}
 {/if}
 
-{assign var="parentProduct" value=$product}
+{% set parentProduct = $product %}
 {form action="controller=order action=addToCart" handle=$cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
 	{foreach $variations.products as $product}
 		<h3>{$product.variationNames|@implode:' / '}</h3>
@@ -32,7 +32,7 @@
 
 		{assign var="optionPrefix" value="product_`$product.ID`_"}
 		{block PRODUCT-OPTIONS}
-		<input type="hidden" name="productIDs[]" value="{$product.ID}" />
+		<input type="hidden" name="productIDs[]" value="[[product.ID]]" />
 	{/foreach}
 
 	<div id="productToCart" class="cartLinks">
@@ -42,5 +42,5 @@
 
 {/form}
 
-{assign var="product" value=$parentProduct}
+{% set product = $parentProduct %}
 {block PRODUCT-OVERVIEW}

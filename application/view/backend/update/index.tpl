@@ -7,11 +7,11 @@
 <table id="versionCompare">
 	<tr>
 		<td>{t _newest}:</td>
-		<td class="version">{$newest}</td>
+		<td class="version">[[newest]]</td>
 	</tr>
 	<tr>
 		<td>{t _current}:</td>
-		<td class="version {if $needUpdate}outdated{else}upToDate{/if}">{$current}</td>
+		<td class="version {if $needUpdate}outdated{else}upToDate{/if}">[[current]]</td>
 	</tr>
 </table>
 

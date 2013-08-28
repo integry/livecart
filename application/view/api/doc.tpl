@@ -8,7 +8,7 @@
 
 <ul>
 	{foreach from=$classes key=class item=params}
-		<li><a href="{link controller=api action=docview query="class=`$class`"}">{$params.path}</a></li>
+		<li><a href="{link controller=api action=docview query="class=`$class`"}">[[params.path]]</a></li>
 	{/foreach}
 </ul>
 

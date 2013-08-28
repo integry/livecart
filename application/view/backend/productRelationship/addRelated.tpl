@@ -8,8 +8,8 @@
 		{if $template}
 			{include file=$template}
 		{/if}
-		<span class="productRelationship_title">{$product.name_lang}</span>
-		<a href="{backendProductUrl product=$product}" onclick="Backend.Product.openProduct({$product.ID}); return false;" class="openRelatedProduct"></a>
+		<span class="productRelationship_title">[[product.name_lang]]</span>
+		<a href="{backendProductUrl product=$product}" onclick="Backend.Product.openProduct([[product.ID]]); return false;" class="openRelatedProduct"></a>
 	</fieldset>
 	<div class="clear: both"></div>
 </span>

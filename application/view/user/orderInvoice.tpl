@@ -1,28 +1,28 @@
-{pageTitle}{t _invoice} {$order.invoiceNumber}{/pageTitle}
+{pageTitle}{t _invoice} [[order.invoiceNumber]]{/pageTitle}
 <div class="userOrderInvoice">
 
 {function name="address"}
 {if $address}
 	<p>
-		{$address.fullName}
+		[[address.fullName]]
 	</p>
 	<p>
-		{$address.companyName}
+		[[address.companyName]]
 	</p>
 	<p>
-		{$address.address1}
+		[[address.address1]]
 	</p>
 	<p>
-		{$address.address2}
+		[[address.address2]]
 	</p>
 	<p>
-		{$address.city}
+		[[address.city]]
 	</p>
 	<p>
-		{if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+		{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
 	</p>
 	<p>
-		{$address.countryName}
+		[[address.countryName]]
 	</p>
 	<p>
 		{include file="order/addressFieldValues.tpl" showLabels=false}
@@ -39,8 +39,8 @@
 			{assign var="logo" value='LOGO'|config}
 			{img src='INVOICE_LOGO'|config|default:$logo id="invoiceLogo" alt="Invoice Logo"}
 
-			<h1>{t _invoice} {$order.invoiceNumber}</h1>
-			<div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
+			<h1>{t _invoice} [[order.invoiceNumber]]</h1>
+			<div id="invoiceDate">[[order.formatted_dateCompleted.date_long]]</div>
 
 		</div>
 
@@ -52,7 +52,7 @@
 				{foreach $order.User.attributes as $attr}
 					{if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values)}
 						<p>
-							{$attr.EavField.name_lang}:
+							[[attr.EavField.name_lang]]:
 							{include file="product/attributeValue.tpl"}
 						</p>
 					{/if}
@@ -79,7 +79,7 @@
 				{if !$shipment.isShippable}
 					<h2>{t _downloads}</h2>
 				{else}
-					<h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
+					<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				{/if}
 
 				{include file="user/shipmentEntry.tpl" sku=true showTaxes=true}
@@ -94,21 +94,21 @@
 		<table id="invoicePaymentInfo">
 			<tr class="itemSubtotal">
 				<td>{t _item_subtotal}:</td>
-				<td class="amount">{$order.formatted_itemSubtotalWithoutTax}</td>
+				<td class="amount">[[order.formatted_itemSubtotalWithoutTax]]</td>
 			</tr>
 			<tr class="shippingSubtotal">
 				<td>{t _shipping_handling}:</td>
-				<td class="amount">{$order.formatted_shippingSubtotal}</td>
+				<td class="amount">[[order.formatted_shippingSubtotal]]</td>
 			</tr>
 			{if $order.taxes}
 				<tr class="beforeTaxSubtotal">
 					<td>{t _before_tax}:</td>
-					<td class="amount">{$order.formatted_subtotalBeforeTaxes}</td>
+					<td class="amount">[[order.formatted_subtotalBeforeTaxes]]</td>
 				</tr>
 				{foreach from=$order.taxes[$order.Currency.ID] item=tax}
 					<tr class="taxSubtotal">
-						<td>{$tax.name_lang}:</td>
-						<td class="amount">{$tax.formattedAmount}</td>
+						<td>[[tax.name_lang]]:</td>
+						<td class="amount">[[tax.formattedAmount]]</td>
 					</tr>
 				{/foreach}
 			{/if}
@@ -116,21 +116,21 @@
 			{if $order.discountAmount}
 				<tr class="discountAmount">
 					<td>{t _discount}:</td>
-					<td class="amount">{$order.formatted_discountAmount}</td>
+					<td class="amount">[[order.formatted_discountAmount]]</td>
 				</tr>
 			{/if}
 
 			<tr class="grandTotal">
 				<td>{t _grand_total}:</td>
-				<td class="amount">{$order.formatted_totalAmount}</td>
+				<td class="amount">[[order.formatted_totalAmount]]</td>
 			</tr>
 			<tr class="amountPaid">
 				<td>{t _amount_paid}:</td>
-				<td class="amount">{$order.formatted_amountPaid}</td>
+				<td class="amount">[[order.formatted_amountPaid]]</td>
 			</tr>
 			<tr class="amountDue">
 				<td>{t _amount_due}:</td>
-				<td class="amount">{$order.formatted_amountDue}</td>
+				<td class="amount">[[order.formatted_amountDue]]</td>
 			</tr>
 		</table>
 		{/if}

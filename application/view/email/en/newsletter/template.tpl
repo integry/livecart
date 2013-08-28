@@ -1,6 +1,6 @@
-{$subject}
-{if $html}{$htmlMessage}
-{else}{$text}{/if}
+[[subject]]
+{if $html}[[htmlMessage]]
+{else}[[text]]{/if}
 
 {include file="email/en/signature.tpl"}
 

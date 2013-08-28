@@ -2,11 +2,11 @@
 {includeJs file="frontend/Product.js"}
 
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
-{assign var="metaKeywords" value=$product.keywords}
+{% set metaKeywords = $product.keywords %}
 {canonical}{productUrl product=$product}{/canonical}
 {pageTitle}{$product.pageTitle_lang|default:$product.name_lang}{/pageTitle}
 
-<div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
+<div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
 {include file="product/layout.tpl"}
 {include file="block/content-start.tpl" hideTitle=true}

@@ -1,5 +1,5 @@
 Νέα Παραγγελλία Τοποθετήθηκε στο [[ config('STORE_NAME') ]]
-Κωδικός(ID) Παραγγeλλίας: {$order.invoiceNumber}
+Κωδικός(ID) Παραγγeλλίας: [[order.invoiceNumber]]
 
 Διαχείριση Παραγγελλίας:
 {backendOrderUrl order=$order url=true}

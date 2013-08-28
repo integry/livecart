@@ -6,38 +6,38 @@
 </ul>
 
 <fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
-	<ul class="menu" id="catImgMenu_{$ownerId}">
+	<ul class="menu" id="catImgMenu_[[ownerId]]">
 		<li class="catImageAdd">
-			<a href="#" id="catImgMenu_{$ownerId}_add" class="pageMenu">{t _add_new}</a>
+			<a href="#" id="catImgMenu_[[ownerId]]_add" class="pageMenu">{t _add_new}</a>
 		</li>
 		<li class="catImageAddCancel done" style="display: none">
-			<a href="#" id="catImgMenu_{$ownerId}_cancel" class="pageMenu">{t _cancel_new}</a>
+			<a href="#" id="catImgMenu_[[ownerId]]_cancel" class="pageMenu">{t _cancel_new}</a>
 		</li>
 	</ul>
 </fieldset>
 
 {literal}
 <script type="text/javascript">
-	Event.observe("{/literal}catImgMenu_{$ownerId}_add{literal}", "click", function(e)
+	Event.observe("{/literal}catImgMenu_[[ownerId]]_add{literal}", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.show("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
+		form.show("catImageAdd", "{/literal}catImgAdd_[[ownerId]]{literal}");
 	});
 
-	Event.observe("{/literal}catImgMenu_{$ownerId}_cancel{literal}", "click", function(e)
+	Event.observe("{/literal}catImgMenu_[[ownerId]]_cancel{literal}", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.hide("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
+		form.hide("catImageAdd", "{/literal}catImgAdd_[[ownerId]]{literal}");
 	});
 </script>
 {/literal}
 
-<div id="catImgAdd_{$ownerId}" class="catImageEditform style="display: none;">
+<div id="catImgAdd_[[ownerId]]" class="catImageEditform style="display: none;">
 {form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
 
-	<input type="hidden" name="ownerId" value="{$ownerId}" />
+	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
 
 	<fieldset class="addform">
@@ -71,24 +71,24 @@
 
 	{literal}
 	<script type="text/javascript">
-		Element.observe($('{/literal}catImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e)
+		Element.observe($('{/literal}catImgAdd_[[ownerId]]{literal}').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
-			var form = ('{/literal}catImgAdd_{$ownerId}{literal}');
+			var form = ('{/literal}catImgAdd_[[ownerId]]{literal}');
 
-			$("{/literal}catImageList_{$ownerId}{literal}").handler.cancelAdd();
+			$("{/literal}catImageList_[[ownerId]]{literal}").handler.cancelAdd();
 
-			var menu = new ActiveForm.Slide('{/literal}catImgMenu_{$ownerId}{literal}');
+			var menu = new ActiveForm.Slide('{/literal}catImgMenu_[[ownerId]]{literal}');
 			menu.hide("catImageAdd", form);
 		});
 	</script>
 	{/literal}
 {/form}
 
-<iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}" style="display: none"></iframe>
+<iframe name="catImgUpload_[[ownerId]]" id="catImgUpload_[[ownerId]]" style="display: none"></iframe>
 </div>
 
-<ul id="catImageList_{$ownerId}" class="catImageList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
+<ul id="catImageList_[[ownerId]]" class="catImageList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
 	<li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore main">
 		{t _main_image}
 	</li>
@@ -103,8 +103,8 @@
 
 {literal}
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("{/literal}catImageList_{$ownerId}{literal}"), 'cat');
-	handler.initList({/literal}{$images}{literal});
+	var handler = new Backend.ObjectImage($("{/literal}catImageList_[[ownerId]]{literal}"), 'cat');
+	handler.initList({/literal}[[images]]{literal});
 
 	handler.setDeleteUrl('{/literal}{link controller="backend.categoryImage" action=delete}{literal}');
 	handler.setSortUrl('{/literal}{link controller="backend.categoryImage" action=saveOrder}{literal}');

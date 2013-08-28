@@ -15,7 +15,7 @@
 
 	{if $error}
 		<div class="errorMessage">
-			<div>{$error}</div>
+			<div>[[error]]</div>
 		</div>
 	{/if}
 

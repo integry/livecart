@@ -1,10 +1,10 @@
 Benvenuto su [[ config('STORE_NAME') ]]!
-Gentile {$user.fullName},
+Gentile [[user.fullName]],
 
 Queste sono i dati del tuo account presso il nostro negozio online [[ config('STORE_NAME') ]]:
 
-E-mail: <b>{$user.email}</b>
-Password: <b>{$user.newPassword}</b>
+E-mail: <b>[[user.email]]</b>
+Password: <b>[[user.newPassword]]</b>
 
 Dal tuo pannello personalizzato potrai controllare lo stato dei tuoi ordini, controllare lo storico degli
 ordini, scaricare files e modificare le informazioni relative agli indirizzi di fatturazione e consegna della merce.

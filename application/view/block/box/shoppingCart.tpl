@@ -19,7 +19,7 @@
 	</div>
 
 	{if 'ENABLE_CART'|config}
-		{if ($request.controller == 'product') || ($request.controller == 'category')}{assign var="returnPath" value=true}{/if}
+		{if ($request.controller == 'product') || ($request.controller == 'category')}{% set returnPath = true %}{/if}
 
 		<div class="btn-group" id="topCart">
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=order returnPath=$returnPath}">

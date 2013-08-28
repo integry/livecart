@@ -28,14 +28,14 @@
 
 	{foreach $currencies as $currency}
 		{input name="ProductPrice_setup_price_`$currency`"}
-			{label}{t _setup_price} ({$currency}):{/label}
+			{label}{t _setup_price} ([[currency]]):{/label}
 			{textfield value=$recurringProductPeriod.ProductPrice_setup[$currency].price class="number"}
 		{/input}
 	{/foreach}
 
 	{foreach $currencies as $currency}
 		{input name="ProductPrice_period_price_`$currency`"}
-			{label}{t _period_price} ({$currency}):{/label}
+			{label}{t _period_price} ([[currency]]):{/label}
 			{textfield value=$recurringProductPeriod.ProductPrice_period[$currency].price class="number"}
 		{/input}
 	{/foreach}

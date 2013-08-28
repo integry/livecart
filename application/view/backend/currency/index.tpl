@@ -109,7 +109,7 @@
 		 }, messages);
 	}
 
-	curr.renderList({/literal}{$currencies}{literal});
+	curr.renderList({/literal}[[currencies]]{literal});
 	initCurrencyList();
 
 	TabControl.prototype.getInstance('tabContainer', Backend.Currency.prototype.getTabUrl, Backend.Currency.prototype.getContentTabId);

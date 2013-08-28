@@ -1,4 +1,4 @@
-<ul id="wizardProgress" class="wizardProgress {$class}">
+<ul id="wizardProgress" class="wizardProgress [[class]]">
 	<li id="progressSelect">{t _select_file}</li>
 	<li id="progressDelimiters">{t _delimiters}</li>
 	<li id="progressArrange">{t _arrange}</li>

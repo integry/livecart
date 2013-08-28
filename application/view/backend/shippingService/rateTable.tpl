@@ -16,7 +16,7 @@
 		<tr>
 			<td valign="top" width="150">
 
-<table id="ratesTableLabels_{$service.DeliveryZone.ID}_{$service.ID}">
+<table id="ratesTableLabels_[[service.DeliveryZone.ID]]_[[service.ID]]">
 	<tbody>
 		<tr class="weight weightRow">
 			<td class="fixedHeader">{tip _weight}
@@ -30,13 +30,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="fixedHeader">{tip _flat_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _flat_charge} ([[defaultCurrencyCode]])</td>
 		</tr>
 		<tr>
-			<td class="fixedHeader">{tip _per_item_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _per_item_charge} ([[defaultCurrencyCode]])</td>
 		</tr>
 		<tr class="weight">
-			<td class="fixedHeader">{tip _per_kg_charge} ({$defaultCurrencyCode})</td>
+			<td class="fixedHeader">{tip _per_kg_charge} ([[defaultCurrencyCode]])</td>
 		</tr>
 		<tr class="subtotal">
 			<td class="fixedHeader">{tip _subtotal_percent_charge} (%)</td>
@@ -48,7 +48,7 @@
 			<td valign="top" style="text-align:left;">
 
 <div class="ratesTableContainerScroll" style="float:left;">
-	<table id="ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}">
+	<table id="ratesTableContainer_[[service.DeliveryZone.ID]]_[[service.ID]]">
 		<tbody>
 			<tr class="weight weightRow">
 				{foreach from=$shippingRates item=rate name=weightRowLoop key=key}
@@ -201,8 +201,8 @@
 
 <script type="text/javacript">
 	Backend.DeliveryZone.WeightTable.prototype.getInstance(
-		$("ratesTableContainer_{$service.DeliveryZone.ID}_{$service.ID}"),
-		"{$rangeTypeName}",
+		$("ratesTableContainer_[[service.DeliveryZone.ID]]_[[service.ID]]"),
+		"[[rangeTypeName]]",
 		{if !$service.ID}true{else}false{/if}
 	);
 </script>

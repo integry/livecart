@@ -1,10 +1,10 @@
 [[ config('STORE_NAME') ]] עדכון מצב הזמנה
-לכבוד {$user.fullName},
+לכבוד [[user.fullName]],
 
 {if $order.shipments|@count == 1}
-עדכון מצב בנוגע להזמנה שלך <b class="orderID">#{$order.invoiceNumber}</b>.
+עדכון מצב בנוגע להזמנה שלך <b class="orderID">#[[order.invoiceNumber]]</b>.
 {else}
-המצב עודכן עבור משלוח אחד או יותר מההזמנה שלך <b class="orderID">#{$order.invoiceNumber}</b>.
+המצב עודכן עבור משלוח אחד או יותר מההזמנה שלך <b class="orderID">#[[order.invoiceNumber]]</b>.
 {/if}
 
 אם יש לך שאלות כלשהם הנוגעות להזמנה זו, אנא אל תהסס לשלוח אלינו אימייל או ליצור עימנו קשר באמצעות הקישור הבא::

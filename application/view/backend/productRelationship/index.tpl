@@ -2,7 +2,7 @@
 {literal}
 	with(Backend.RelatedProduct.Group)
 	{
-		Links.sort = '{/literal}{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
+		Links.sort = '{/literal}{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_[[productID]]{literal}';
 		Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_group|addslashes}{literal}'
 	}
 
@@ -10,7 +10,7 @@
 	Backend.RelatedProduct.messages = {};
 	with(Backend.RelatedProduct)
 	{
-		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
+		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__{literal}';
 		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
 		messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
 	}
@@ -30,11 +30,11 @@
 </div>
 
 {* No group *}
-<ul id="noGroup_{$type}_{$productID}" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
+<ul id="noGroup_[[type]]_[[productID]]" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$relationshipsWithGroups}
 	{if $relationship.ProductRelationshipGroup.ID}{break}{/if}
 	{if $relationship.RelatedProduct.ID}
-		<li id="{$relationship.RelatedProduct.ID}">
+		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
 		</li>
 	{/if}
@@ -47,24 +47,24 @@
 
 	{if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
 		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}
-		<li id="{$relationship.ProductRelationshipGroup.ID}" class="groupContainer">
-			<span class="groupTitle">{$relationship.ProductRelationshipGroup.name}</span>
+		<li id="[[relationship.ProductRelationshipGroup.ID]]" class="groupContainer">
+			<span class="groupTitle">[[relationship.ProductRelationshipGroup.name]]</span>
 			{include file="backend/productRelationshipGroup/form.tpl"}
-			<ul id="{$relationship.ProductRelationshipGroup.ID}" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
+			<ul id="[[relationship.ProductRelationshipGroup.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 	{/if}
 
 	{if $relationship.RelatedProduct.ID} {* For empty groups *}
-		<li id="{$relationship.RelatedProduct.ID}">
+		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
 		</li>
 	{/if}
 
-	{assign var="lastProductRelationshipGroup" value=$relationship.ProductRelationshipGroup.ID}
+	{% set lastProductRelationshipGroup = $relationship.ProductRelationshipGroup.ID %}
 {/foreach}
 </ul>
 
 <div class="blankItem" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
 
 <script type="text/javascript">
-	Backend.RelatedProduct.Group.Controller.prototype.index({$productID}, {$type});
+	Backend.RelatedProduct.Group.Controller.prototype.index([[productID]], [[type]]);
 </script>

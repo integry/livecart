@@ -6,7 +6,7 @@
 				{if file_exists($item.image)}
 					{img src=$item.image}
 				{/if}
-				{$item.originalName}
+				[[item.originalName]]
 			</span>
 		</div>
 		{/foreach}

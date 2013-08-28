@@ -1,10 +1,10 @@
 Jauns ziņojums sakarā ar Jūsu [[ config('STORE_NAME') ]] pasūtījumu
-Cien. {$user.fullName},
+Cien. [[user.fullName]],
 
 Jūsu pasūtījumam pievienots jauns paziņojums.
 
 --------------------------------------------------
-{$message.text}
+[[message.text]]
 --------------------------------------------------
 
 Jūs varat atbildēt no šīs lapas:

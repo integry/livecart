@@ -1,6 +1,6 @@
 [[ config('STORE_NAME') ]] Info o izdelku
-Ime Izdelka: {$product.name_lang}
-Koda: {$product.sku}
+Ime Izdelka: [[product.name_lang]]
+Koda: [[product.sku]]
 
-{$message}
+[[message]]
 {include file="email/en/signature.tpl"}
