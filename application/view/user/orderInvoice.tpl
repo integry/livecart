@@ -55,7 +55,7 @@
 					{if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values)}
 						<p>
 							[[attr.EavField.name_lang]]:
-							{include file="product/attributeValue.tpl"}
+							[[ partial("product/attributeValue.tpl") ]]
 						</p>
 					{/if}
 				{/foreach}
@@ -71,7 +71,7 @@
 		</div>
 		<div class="clear"></div>
 
-		{include file="order/orderFieldValues.tpl"}
+		[[ partial("order/orderFieldValues.tpl") ]]
 		<div class="clear"></div>
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}

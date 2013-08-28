@@ -9,8 +9,8 @@
 Εάν έχετε οποιαδήποτε ερώτηση σχετικά με αυτήτην παραγγελλία,μπορείτε να στείλετε ένα μήνυμα μέσω της παραπάνω σελίδας επίσης.
 
 Σας υπενθυμίζουμε ότι έχουν παραγγελθεί τα ακόλουθα είδη:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

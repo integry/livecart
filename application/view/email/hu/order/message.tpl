@@ -10,4 +10,4 @@ Tisztelt [[user.fullName]],
 Válaszolhatsz erre az üzenetre a következő linkre kattintva:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

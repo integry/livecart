@@ -1,1 +1,1 @@
-{include file="backend/manufacturer/grid.tpl"}
+[[ partial("backend/manufacturer/grid.tpl") ]]

@@ -1,6 +1,6 @@
 <p class="productAction">
 	{if $product.rating && 'ENABLE_RATINGS'|config}
-		<span class="actionItem ratingItem">{include file="category/productListRating.tpl"}</span>
+		<span class="actionItem ratingItem">[[ partial("category/productListRating.tpl") ]]</span>
 	{/if}
 
 	{if 'ENABLE_WISHLISTS'|config}
@@ -8,6 +8,6 @@
 	{/if}
 
 	{if 'ENABLE_PRODUCT_COMPARE'|config}
-		<span class="actionItem compareItem"><span class="glyphicon glyphicon-eye-close"></span> {include file="compare/block/compareLink.tpl"}</span>
+		<span class="actionItem compareItem"><span class="glyphicon glyphicon-eye-close"></span> [[ partial("compare/block/compareLink.tpl") ]]</span>
 	{/if}
 </p>

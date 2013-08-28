@@ -8,4 +8,4 @@ Stranka je dodala novo sporočilo glede naročila <b class="orderID">#[[order.in
 Odgovor lahko dodate tako, da se prijavite v administracijo:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

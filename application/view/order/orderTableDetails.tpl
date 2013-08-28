@@ -11,7 +11,7 @@
 
 		{if !$productsInSeparateLine}
 			<td class="productName">
-				{include file="order/itemProductInfo.tpl"}
+				[[ partial("order/itemProductInfo.tpl") ]]
 			</td>
 		{/if}
 
@@ -34,7 +34,7 @@
 	{if $productsInSeparateLine}
 		<tr>
 			<td class="productName productNameRow" colspan="{$colspan+1}">
-				{include file="order/itemProductInfo.tpl"}
+				[[ partial("order/itemProductInfo.tpl") ]]
 			</td>
 		</tr>
 	{/if}

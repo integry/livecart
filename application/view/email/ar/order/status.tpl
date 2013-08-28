@@ -13,10 +13,10 @@ Dear [[user.fullName]],
 {foreach from=$order.shipments item=shipment}
 حالة جديدة : {if $shipment.status == 2}في انتظار شحنة{elseif $shipment.status == 3}شحنت{elseif $shipment.status == 4}عاد{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

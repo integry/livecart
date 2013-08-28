@@ -18,10 +18,10 @@
 {includeJs file="library/ActiveList.js"}
 {includeCss file="library/ActiveGrid.css"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="products"}{t _manufacturers}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div class="manufacturerGrid" id="manufacturerGrid" class="maxHeight h--50">
 
@@ -34,7 +34,7 @@
 		</li>
 	</ul>
 
-	{include file="backend/manufacturer/grid.tpl"}
+	[[ partial("backend/manufacturer/grid.tpl") ]]
 
 </div>
 
@@ -75,4 +75,4 @@
 	{/literal}
 </div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

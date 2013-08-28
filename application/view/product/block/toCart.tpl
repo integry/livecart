@@ -8,7 +8,7 @@
 		<div id="productToCart" class="cartLinks">
 			<span class="param">{t _quantity}:</span>
 			<span class="value">
-				{include file="product/block/quantity.tpl"}
+				[[ partial("product/block/quantity.tpl") ]]
 			</span>
 
 			<button type="submit" class="btn btn-success btn-large addToCart">

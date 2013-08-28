@@ -9,4 +9,4 @@ Password: <strong><b>[[user.newPassword]]</b></strong>
 Μπορείτε να χρησιμοποιήσετε αυτή τη διεύθυνση για να υπογράψετε στο λογαριασμό σας:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

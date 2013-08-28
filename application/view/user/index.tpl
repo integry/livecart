@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _your_account} ([[user.fullName]]){{% endblock %}
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="homeMenu"}
 {% block content %}
 

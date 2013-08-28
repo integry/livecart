@@ -10,4 +10,4 @@ En ny besked vedrørende din ordre, er blevet tilføjet.
 Du kan besvare denne besked fra den følgende side:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

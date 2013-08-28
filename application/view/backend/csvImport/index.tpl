@@ -11,7 +11,7 @@
 
 {% block title %}{t _import_csv}{{% endblock %}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="import">
 
@@ -107,4 +107,4 @@
 	</script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

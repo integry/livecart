@@ -30,7 +30,7 @@
 {includeJs file="backend/RatingType.js"}
 {includeJs file="backend/Review.js"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
@@ -51,16 +51,16 @@
 {includeCss file="library/TabControl.css"}
 {includeCss file="backend/Eav.css"}
 
-{include file="backend/category/loadJsTree.tpl"}
+[[ partial("backend/category/loadJsTree.tpl") ]]
 
 {pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t _products_and_categories}</span>{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
-<div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
-<div id="specField_group_blank" class="dom_template">{include file="backend/specField/group.tpl"}</div>
-<div id="filter_item_blank" class="dom_template">{include file="backend/filterGroup/form.tpl"}</div>
-<div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
-<div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
+<div id="specField_item_blank" class="dom_template">[[ partial("backend/specField/form.tpl") ]]</div>
+<div id="specField_group_blank" class="dom_template">[[ partial("backend/specField/group.tpl") ]]</div>
+<div id="filter_item_blank" class="dom_template">[[ partial("backend/filterGroup/form.tpl") ]]</div>
+<div id="productFileGroup_item_blank">[[ partial("backend/productFileGroup/form.tpl") ]]</div>
+<div id="productFile_item_blank">[[ partial("backend/productFile/form.tpl") ]]</div>
 <div id="productOption_item_blank" class="dom_template">{* include file="backend/productOption/form.tpl" *}</div>
 
 <div ng-controller="CategoryController" ng-init="setTree({$categoryList|escape}); expandRoot();">
@@ -124,8 +124,8 @@
 
 </div>
 
-{include file="backend/product/tabs.tpl"}
+[[ partial("backend/product/tabs.tpl") ]]
 
 <div id="specFieldSection"></div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

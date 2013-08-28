@@ -17,7 +17,7 @@
 
 				{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shippingStates}
 
-				{include file="onePageCheckout/block/continueButton.tpl"}
+				[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 			{/form}
 		</div>
 

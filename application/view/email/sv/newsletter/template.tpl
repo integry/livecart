@@ -1,7 +1,7 @@
 [[subject]]
 [[text]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Om du inte längre vill ta emot våra nyhetsbrev kan du avbeställa prenumerationen genom länken nedan:

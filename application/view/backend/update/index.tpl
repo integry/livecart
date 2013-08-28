@@ -2,7 +2,7 @@
 
 {includeCss file="backend/Update.css"}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <table id="versionCompare">
 	<tr>
@@ -23,4 +23,4 @@
 {/if}
 </p>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

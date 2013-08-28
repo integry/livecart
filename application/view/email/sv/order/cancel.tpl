@@ -7,6 +7,6 @@ Om du har några frågor om ordern kan du sända oss ett e-mail eller kontakta o
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Den annullerade ordern innehöll följande varor:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

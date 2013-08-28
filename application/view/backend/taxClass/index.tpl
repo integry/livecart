@@ -9,4 +9,4 @@
 	Backend.TaxClass.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_class}";
 </script>
 
-{include file="backend/taxClass/classes.tpl"}
+[[ partial("backend/taxClass/classes.tpl") ]]

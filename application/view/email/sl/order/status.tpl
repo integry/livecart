@@ -13,10 +13,10 @@ Status vašega naročila za eno ali več pošiljk je bil obnovljen <b class="ord
 {foreach from=$order.shipments item=shipment}
 Novi status: {if $shipment.status == 2}awaiting shipment{elseif $shipment.status == 3}shipped{elseif $shipment.status == 4}returned{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

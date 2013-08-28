@@ -7,7 +7,7 @@
 	{elseif $isPurchaseRequiredToRate}
 		<p>{t _msg_rating_purchase_required}</p>
 	{else}
-		{include file="product/rate.tpl"}
+		[[ partial("product/rate.tpl") ]]
 	{/if}
 </div>
 </div>

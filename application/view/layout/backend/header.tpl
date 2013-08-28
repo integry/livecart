@@ -1,4 +1,4 @@
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 <div id="topAuthInfo">
 	{block USER_MENU}

@@ -58,4 +58,4 @@
 	</tbody>
 </table>
 
-{include file="order/fieldValues.tpl"}
+[[ partial("order/fieldValues.tpl") ]]

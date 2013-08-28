@@ -4,8 +4,8 @@
 
 {pageTitle help="content.pages"}{t _static_pages}{/pageTitle}
 
-{include file="backend/eav/includes.tpl"}
-{include file="layout/backend/header.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="staticPageContainer" ng-controller="TreeController" ng-init="setTree({$pages|escape})">
 	<div class="treeContainer">
@@ -114,4 +114,4 @@
 	</div>
 </div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

@@ -11,4 +11,4 @@ Iš savo sąskaitos galite stebėti savo užsakymų būseną, užsakymų archyv�
 Prisijungti galite šiuo adresu:
 {link controller=user action=login url=true}
 
-{include file="email/lt/signature.tpl"}
+[[ partial("email/lt/signature.tpl") ]]

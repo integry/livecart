@@ -11,4 +11,4 @@ Via ditt användarkonto kan du se status på din order, tidigare order, ladda ne
 Du kan logga in på ditt konto via den här länken:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

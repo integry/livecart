@@ -35,7 +35,7 @@
 </tr>
 {/foreach}
 {if $shipment.isShippable && $shipment.ShippingService && ($shipment.CustomerOrder.shipments|@count > 1)}
-	{include file="email/blockShippingCost.tpl"}
+	[[ partial("email/blockShippingCost.tpl") ]]
 {/if}
 {if !$noTable}</table>{/if}
 {/if}{*html*}

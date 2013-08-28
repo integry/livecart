@@ -5,7 +5,7 @@
 		<a href="#" id="ratio">{t _conversion_ratio}</a> | <a id="checkout" href="#">{t _checkout_steps}</a> | <a id="created" href="#">{t _carts_created}</a>
 	</div>
 
-	{include file="backend/report/intervalSelect.tpl"}
+	[[ partial("backend/report/intervalSelect.tpl") ]]
 
 	<div class="clear"></div>
 </div>

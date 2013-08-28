@@ -11,4 +11,4 @@
 עליך להשתמש בכתובת הבאה על מנת להתחבר לחשבון שלך:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -1,3 +1,3 @@
 {foreach from=$options item=option}
-	{include file="product/optionItem.tpl"}
+	[[ partial("product/optionItem.tpl") ]]
 {/foreach}

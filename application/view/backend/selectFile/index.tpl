@@ -13,7 +13,7 @@
 
 {% block title %}{t _select_file}{{% endblock %}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 {literal}
 <style>

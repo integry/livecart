@@ -2,11 +2,11 @@
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/Product.js"}
 {includeCss file="backend/Category.css"}
-{include file="backend/category/loadJsTree.tpl"}
+[[ partial("backend/category/loadJsTree.tpl") ]]
 
 {% block title %}{t _select_category}{{% endblock %}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 {literal}
 <style>

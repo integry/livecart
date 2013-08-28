@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _pay}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div id="payTotal">
@@ -20,6 +20,6 @@
 
 	<div class="clear"></div>
 
-	{include file="checkout/orderOverview.tpl"}
+	[[ partial("checkout/orderOverview.tpl") ]]
 
 {% endblock %}

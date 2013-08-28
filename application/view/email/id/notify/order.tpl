@@ -5,8 +5,8 @@ Administrasi order:
 {backendOrderUrl order=$order url=true}
 
 Barang-barang berikut telah dipesan:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/id/signature.tpl"}
+[[ partial("email/id/signature.tpl") ]]

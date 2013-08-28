@@ -1,7 +1,7 @@
 {if 'CC_ENABLE'|config}
 	<h2>{t _pay_securely}</h2>
 
-	{include file="checkout/testHandler.tpl"}
+	[[ partial("checkout/testHandler.tpl") ]]
 
 	{if $id}{assign var=ccId value=" id=`$id`"}{/if}
 	{assign var=controller value=$controller|default:'checkout'}
@@ -59,7 +59,7 @@
 	{/form}
 
 	<div id="cvvHelp" style="display: none;">
-		{include file="checkout/cvvHelp.tpl"}
+		[[ partial("checkout/cvvHelp.tpl") ]]
 	</div>
 
 	<div class="clear"></div>

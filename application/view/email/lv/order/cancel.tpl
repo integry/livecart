@@ -7,6 +7,6 @@ Ja Jums radušies kādi jautājumi sakarā ar šo pasūtījumu, lūdzu sūtiet e
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Produkti atceltajā pasūtījumā:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

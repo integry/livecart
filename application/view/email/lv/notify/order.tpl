@@ -5,8 +5,8 @@ Pasūtījuma administrācija:
 {backendOrderUrl order=$order url=true}
 
 Pasūtītas sekojošas preces:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

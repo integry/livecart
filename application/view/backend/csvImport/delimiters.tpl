@@ -9,7 +9,7 @@
 
 {% block title %}{t _import_csv}{{% endblock %}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="fieldConfigTemplates" class="hidden">
 	<span class="ProductPrice.price ProductPrice.listPrice config">
@@ -138,7 +138,7 @@
 		<legend>{t _map_data|branding}</legend>
 
 		<div id="importProfiles">
-			{include file="backend/csvImport/profiles.tpl"}
+			[[ partial("backend/csvImport/profiles.tpl") ]]
 		</div>
 
 		<div id="fieldsContainer"></div>
@@ -201,4 +201,4 @@
 
 </div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

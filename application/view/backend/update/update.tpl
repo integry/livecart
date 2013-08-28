@@ -2,8 +2,8 @@
 
 {includeCss file="backend/Update.css"}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 {t _update_successful|branding}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

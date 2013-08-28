@@ -7,6 +7,6 @@
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 הפריטים שבוטלו בהזמנה:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

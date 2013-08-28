@@ -2,7 +2,7 @@
 
 {% block title %}{t _personal_info}{{% endblock %}
 
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="personalMenu"}
 {% block content %}
 

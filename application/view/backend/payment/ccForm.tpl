@@ -4,7 +4,7 @@
 {includeJs file="library/form/State.js"}
 
 {% block title %}{t _add_credit_card_payment}{{% endblock %}
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 {literal}
 	<style>

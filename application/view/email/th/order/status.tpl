@@ -13,10 +13,10 @@
 {foreach from=$order.shipments item=shipment}
 สถานะใหม่: {if $shipment.status == 2}รอการจัดส่ง{elseif $shipment.status == 3}ส่งสินค้าเรียบร้อยแล้ว{elseif $shipment.status == 4}ส่งคืน{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

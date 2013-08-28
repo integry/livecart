@@ -12,11 +12,11 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
 
-{include file="backend/category/loadJsTree.tpl"}
+[[ partial("backend/category/loadJsTree.tpl") ]]
 
 {% block title %}{t _select_product}{{% endblock %}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 

@@ -12,7 +12,7 @@
 	{block HOME-PAGE-TOP}
 
 	{if 'HOME_PAGE_SUBCATS'|config}
-		{include file="category/subcategoriesColumns.tpl"}
+		[[ partial("category/subcategoriesColumns.tpl") ]]
 	{/if}
 
 	{if $subCatFeatured}
@@ -21,8 +21,8 @@
 	{/if}
 
 	{if $news}
-		{include file="index/latestNews.tpl"}
+		[[ partial("index/latestNews.tpl") ]]
 	{/if}
 
-	{include file="category/categoryProductList.tpl"}
+	[[ partial("category/categoryProductList.tpl") ]]
 #}

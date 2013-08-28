@@ -1,7 +1,7 @@
 {if $quantityPricing}
 	<div class="row" id="quantityPrices">
 		<div class="col col-lg-12">
-			{include file="product/block/quantityPrice.tpl"}
+			[[ partial("product/block/quantityPrice.tpl") ]]
 		</div>
 	</div>
 {/if}

@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _change_pass}{{% endblock %}
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="passwordMenu"}
 {% block content %}
 

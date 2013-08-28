@@ -5,8 +5,8 @@ Administration de la commande:
 {backendOrderUrl order=$order url=true}
 
 The following items have been ordered:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/fr/signature.tpl"}
+[[ partial("email/fr/signature.tpl") ]]

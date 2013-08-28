@@ -13,10 +13,10 @@ Ja radušies kādi jautājumi par pasūtījumu, lūdzu sūtiet e-pastu vai izman
 {foreach from=$shipments item=shipment}
 Jaunais statuss: {if $shipment.status == 2}gaida sūtījumu{elseif $shipment.status == 3}nosūtīts{elseif $shipment.status == 4}atgriezts{else}tiek apstrādāts{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

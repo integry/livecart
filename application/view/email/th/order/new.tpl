@@ -9,8 +9,8 @@
 ซึ่งหากคุณต้องการติดต่อสอบถามเพิ่มเติมก็สามารถติดต่อเราได้ที่ลิ้งค์ด้านบนเช่นกัน
 
 ด้านล่างนี้คือสินค้าที่คุณสั่งซื้อเข้ามา:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

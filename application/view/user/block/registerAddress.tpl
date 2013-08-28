@@ -6,7 +6,7 @@
 
 	<h3>{t _your_personal_details}</h3>
 
-	{include file="user/block/nameFields.tpl"}
+	[[ partial("user/block/nameFields.tpl") ]]
 
 	{input name="email"}
 		{label}{t _your_email}:{/label}
@@ -18,10 +18,10 @@
 		{label}{t _newsletter_signup}{/label}
 	{/input}
 
-	{include file="user/block/phoneField.tpl"}
+	[[ partial("user/block/phoneField.tpl") ]]
 
 	{if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO'}
-		{include file="user/block/passwordFields.tpl"}
+		[[ partial("user/block/passwordFields.tpl") ]]
 	{/if}
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
@@ -37,6 +37,6 @@
 		<h3>{t _your_address}</h3>
 	{/if}
 
-	{include file="user/block/addressFields.tpl"}
+	[[ partial("user/block/addressFields.tpl") ]]
 
 </div>

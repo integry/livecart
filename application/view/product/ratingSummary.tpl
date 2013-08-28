@@ -7,6 +7,6 @@
 			{/if}
 		</div>
 
-		{include file="product/ratingBreakdown.tpl"}
+		[[ partial("product/ratingBreakdown.tpl") ]]
 	</div>
 {/if}

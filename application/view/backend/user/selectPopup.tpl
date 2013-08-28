@@ -16,10 +16,10 @@
 {includeCss file="backend/User.css"}
 {includeCss file="backend/SelectCustomerPopup.css"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="userGroups"}{t _select_users}{/pageTitle}
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
@@ -34,7 +34,7 @@
 	</div>
 
 	<span id="fromUsersPage">
-		{include file="backend/userGroup/groupContainer.tpl"}
+		[[ partial("backend/userGroup/groupContainer.tpl") ]]
 	</span>
 </div>
 

@@ -42,7 +42,7 @@
 				{/if}
 
 				{if $requireTos}
-					{include file="order/block/tos.tpl"}
+					[[ partial("order/block/tos.tpl") ]]
 				{/if}
 			{/form}
 
@@ -65,7 +65,7 @@
 						</div>
 
 						<div class="completeOrderButton text-right col col-lg-6">
-							{include file="onePageCheckout/block/submitButton.tpl"}
+							[[ partial("onePageCheckout/block/submitButton.tpl") ]]
 						</div>
 					</div>
 				</div>

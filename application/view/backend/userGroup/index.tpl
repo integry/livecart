@@ -25,10 +25,10 @@
 {includeJs file="library/ActiveList.js"}
 {includeCss file="library/ActiveGrid.css"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <script type="text/javascript">
 	Backend.UserGroup.userGroups = [[userGroups]];
@@ -44,9 +44,9 @@
 	</div>
 
 	<span id="fromUsersPage">
-		{include file="backend/customerOrder/orderContainer.tpl"}
-		{include file="backend/userGroup/groupContainer.tpl"}
-		{include file="backend/userGroup/userContainer.tpl"}
+		[[ partial("backend/customerOrder/orderContainer.tpl") ]]
+		[[ partial("backend/userGroup/groupContainer.tpl") ]]
+		[[ partial("backend/userGroup/userContainer.tpl") ]]
 	</span>
 
 {literal}
@@ -89,4 +89,4 @@
 {/literal}
 
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

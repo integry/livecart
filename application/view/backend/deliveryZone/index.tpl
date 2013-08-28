@@ -1,4 +1,4 @@
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/form/Validator.js"}
@@ -16,7 +16,7 @@
 {includeCss file="backend/DeliveryZone.css"}
 
 {pageTitle help="settings.delivery"}{t _livecart_delivery_zones}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <script type="text/javascript">
 	Backend.DeliveryZone.countryGroups = [[countryGroups]];
@@ -123,4 +123,4 @@
 </script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

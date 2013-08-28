@@ -14,7 +14,7 @@
 	{rdelim}
 </script>
 
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 <div class="row">

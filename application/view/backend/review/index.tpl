@@ -1,6 +1,6 @@
 <div class="reviewGrid" id="reviewGrid_[[id]]" class="maxHeight h--50">
 
-	{include file="backend/review/grid.tpl"}
+	[[ partial("backend/review/grid.tpl") ]]
 
 </div>
 

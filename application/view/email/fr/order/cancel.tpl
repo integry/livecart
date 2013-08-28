@@ -7,6 +7,6 @@ Si vous avez des questions concernant cette commande, vous pouvez nous envoyer u
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Items de la comande cancellée:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/fr/signature.tpl"}
+[[ partial("email/fr/signature.tpl") ]]

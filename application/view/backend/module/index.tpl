@@ -6,7 +6,7 @@
 {includeCss file="library/ActiveList.css"}
 {pageTitle help="settings.modules"}{t _modules}{/pageTitle}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <ul class="menu" id="module-menu">
 	<li id="download-modules" class="download-modules"><a href="#">{t _add_modules}</a></li>
@@ -20,7 +20,7 @@
 	new Backend.Module.downloadManager('{json array=$repos}');
 </script>
 
-{include file="block/message.tpl"}
+[[ partial("block/message.tpl") ]]
 
 <ul id="moduleList" class="activeList">
 	<fieldset id="just-installed" class="type_justInstalled" style="display: none;">
@@ -41,4 +41,4 @@
 	</script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

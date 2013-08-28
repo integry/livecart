@@ -1,4 +1,4 @@
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {sect}
 	{header}

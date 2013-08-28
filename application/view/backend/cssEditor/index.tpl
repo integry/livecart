@@ -14,7 +14,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 {pageTitle help="customize.css"}{t _edit_css}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="templatePageContainer">
 	<div class="treeContainer">
@@ -28,7 +28,7 @@
 				</div>
 				<ul class="tabList tabs"></ul>
 				<div class="sectionContainer" style="display:none;"></div>
-				<div class="notabsContainer">{include file="backend/cssEditor/emptyPage.tpl"}</div>
+				<div class="notabsContainer">[[ partial("backend/cssEditor/emptyPage.tpl") ]]</div>
 			</div>
 		</div>
 	</div>
@@ -51,4 +51,4 @@
 </script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

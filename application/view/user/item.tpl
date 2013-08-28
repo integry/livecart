@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _your_files}: [[item.Product.name_lang]]{{% endblock %}
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="homeMenu"}
 {% block content %}
 

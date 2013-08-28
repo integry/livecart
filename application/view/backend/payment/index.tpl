@@ -40,7 +40,7 @@
 
 <form class="paymentSummary">
 
-	{include file="backend/payment/totals.tpl"}
+	[[ partial("backend/payment/totals.tpl") ]]
 
 </form>
 

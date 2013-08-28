@@ -29,10 +29,10 @@
 {includeCss file="library/lightbox/lightbox.css"}
 
 {pageTitle help="cat"}{t _custom_fields}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
-<div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
-<div id="specField_group_blank" class="dom_template">{include file="backend/specField/group.tpl"}</div>
+<div id="specField_item_blank" class="dom_template">[[ partial("backend/specField/form.tpl") ]]</div>
+<div id="specField_group_blank" class="dom_template">[[ partial("backend/specField/group.tpl") ]]</div>
 
 <div id="catgegoryContainer" class="treeContainer  maxHeight h--60">
 	<div id="categoryBrowser" class="treeBrowser"></div>
@@ -68,4 +68,4 @@
 
 <div id="specFieldSection"></div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

@@ -7,10 +7,10 @@
 
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
-{include file="product/layout.tpl"}
+[[ partial("product/layout.tpl") ]]
 {include file="block/content-start.tpl" hideTitle=true}
 
-{include file="product/head.tpl"}
+[[ partial("product/head.tpl") ]]
 
 <div class="row" id="productNavigation">
 	<div class="col col-lg-12">
@@ -24,24 +24,24 @@
 
 <div id="productContent" class="productContent">
 	{if $product.type == 2}
-		{include file="product/bundle.tpl"}
+		[[ partial("product/bundle.tpl") ]]
 	{/if}
 
-	{include file="product/files.tpl"}
+	[[ partial("product/files.tpl") ]]
 
-	{include file="product/details.tpl"}
+	[[ partial("product/details.tpl") ]]
 
 	{if 'PRODUCT_INQUIRY_FORM'|config}
-		{include file="product/contactForm.tpl"}
+		[[ partial("product/contactForm.tpl") ]]
 	{/if}
 
-	{include file="product/ratingForm.tpl"}
-	{include file="product/sendToFriendForm.tpl"}
+	[[ partial("product/ratingForm.tpl") ]]
+	[[ partial("product/sendToFriendForm.tpl") ]]
 
 	{if $reviews}
 		<div id="reviewSection" class="productSection reviewSection">
 			<h2>{t _reviews}<small>{t _tab_reviews}</small></h2>
-			{include file="product/reviewList.tpl"}
+			[[ partial("product/reviewList.tpl") ]]
 
 			{if $product.reviewCount  > $reviews|@count}
 				<a href="{link product/reviews id=$product.ID}" class="readAllReviews">{maketext text="_read_all_reviews" params=$product.reviewCount}</a>

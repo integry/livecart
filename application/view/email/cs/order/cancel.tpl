@@ -7,6 +7,6 @@ Pokud k této objednávce máte nějaký dotaz, můžete nam poslat email nebo p
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Položky zrušené objednávky:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

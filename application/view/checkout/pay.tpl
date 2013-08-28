@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _pay}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div class="checkoutHeader">
@@ -23,8 +23,8 @@
 	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
 
 	<div class="paymentMethods">
-		{include file="checkout/paymentMethods.tpl"}
-		{include file="checkout/offlinePaymentMethods.tpl"}
+		[[ partial("checkout/paymentMethods.tpl") ]]
+		[[ partial("checkout/offlinePaymentMethods.tpl") ]]
 	</div>
 
 	<div class="clear"></div>

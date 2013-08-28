@@ -10,8 +10,8 @@
 	<link rel="alternate" type="application/rss+xml" title="[[storeName]] | {t _all_products_feed}" href="{link controller=rss action=products}"/>
 {/if}
 
-{include file="layout/frontend/header.tpl"}
+[[ partial("layout/frontend/header.tpl") ]]
 {if !$hideLeft}
-	{include file="layout/frontend/leftSide.tpl"}
+	[[ partial("layout/frontend/leftSide.tpl") ]]
 {/if}
 {* include file="layout/frontend/rightSide.tpl" *}

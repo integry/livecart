@@ -36,7 +36,7 @@
 		<li id="productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFileGroup_item">
 			<span class="productFileGroup_title">[[productFile.ProductFileGroup.name_lang]]</span>
 			<div id="activeList_editContainer_productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="activeList_editContainer activeList_container" style="display: none">
-				{include file="backend/productFileGroup/form.tpl"}
+				[[ partial("backend/productFileGroup/form.tpl") ]]
 			</div>
 			<ul id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
 	{/if}

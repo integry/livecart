@@ -18,7 +18,7 @@
 
 	<tbody>
 
-		{include file="order/orderTableDetails.tpl"}
+		[[ partial("order/orderTableDetails.tpl") ]]
 
 		{if !'HIDE_TAXES'|config || $showTaxes}
 			{foreach from=$shipment.taxes item="tax"}

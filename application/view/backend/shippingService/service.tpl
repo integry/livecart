@@ -48,7 +48,7 @@
 
 	<fieldset class="shippingService_rates ">
 		<legend>{t _shipping_service_rates}</legend>
-		{include file="backend/shippingService/rateTable.tpl"}
+		[[ partial("backend/shippingService/rateTable.tpl") ]]
 
 		<fieldset class="error" style="display: none;">
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} shippingService_ratesList" id="shippingService_ratesList_[[service.DeliveryZone.ID]]_[[service.ID]]"></ul>

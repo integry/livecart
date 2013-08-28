@@ -9,7 +9,7 @@
 
 <div class="reviewIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
-{include file="product/layout.tpl"}
+[[ partial("product/layout.tpl") ]]
 
 {% block content %}
 
@@ -20,7 +20,7 @@
 	<h1>{maketext text="_reviews_for" params=$product.name_lang}</h1>
 
 	<div class="resultStats">
-		{include file="product/ratingSummary.tpl"}
+		[[ partial("product/ratingSummary.tpl") ]]
 		<div class="pagingInfo">
 			{maketext text=_showing_reviews params="`$offsetStart`,`$offsetEnd`,`$product.reviewCount`"}
 		</div>
@@ -29,13 +29,13 @@
 
 	<div class="clear"></div>
 
-	{include file="product/reviewList.tpl"}
+	[[ partial("product/reviewList.tpl") ]]
 
 	{if $product.reviewCount > $perPage}
 		{paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
 	{/if}
 
-	{include file="product/ratingForm.tpl"}
+	[[ partial("product/ratingForm.tpl") ]]
 
 {% endblock %}
 

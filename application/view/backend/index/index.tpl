@@ -3,7 +3,7 @@
 {includeCss file="backend/Index.css"}
 {includeCss file="backend/User.css"}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <fieldset>
 	<legend>{t _order_overview}</legend>
@@ -107,7 +107,7 @@
 
 <div class="clear"></div>
 
-{capture assign="tips"}{include file="backend/index/tips.tpl"}{/capture}
+{capture assign="tips"}[[ partial("backend/index/tips.tpl") ]]{/capture}
 {$tips|branding}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

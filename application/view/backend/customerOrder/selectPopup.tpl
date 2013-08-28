@@ -16,10 +16,10 @@
 {includeCss file="backend/User.css"}
 {includeCss file="backend/SelectCustomerPopup.css"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
@@ -44,7 +44,7 @@
 
 	<span id="fromUsersPage">
 		<h2 style="margin-left: 280px;">{t _select_customer}:</h2>
-		{include file="backend/userGroup/groupContainer.tpl"}
+		[[ partial("backend/userGroup/groupContainer.tpl") ]]
 	</span>
 </div>
 

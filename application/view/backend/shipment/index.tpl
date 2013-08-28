@@ -20,9 +20,9 @@
 </fieldset>
 
 <fieldset id="orderShipments_new_[[orderID]]_form" style="display: none;"> </fieldset>
-<div id="orderShipment_[[orderID]]_controls_empty" style="display: none">{include file="backend/shipment/shipmentControls.tpl"}</div>
-<div id="orderShipment_[[orderID]]_total_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
-<div id="orderShipmentItem_[[orderID]]_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl"}</div>
+<div id="orderShipment_[[orderID]]_controls_empty" style="display: none">[[ partial("backend/shipment/shipmentControls.tpl") ]]</div>
+<div id="orderShipment_[[orderID]]_total_empty" style="display: none">[[ partial("backend/shipment/shipmentTotal.tpl") ]]</div>
+<div id="orderShipmentItem_[[orderID]]_empty" style="display: none">[[ partial("backend/shipment/itemAmount.tpl") ]]</div>
 
 <fieldset id="orderShipment_report_[[orderID]]" class="orderShipment_report">
 	<legend>{t _report}</legend>
@@ -126,7 +126,7 @@
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status != 3 && $shipment.isShippable}
 				<li id="orderShipments_list_[[orderID]]_[[shipment.ID]]" class="orderShipment downloadableOrder">
-					{include file="backend/shipment/shipment.tpl"}
+					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_shippableShipments");
 					</script>
@@ -149,7 +149,7 @@
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status == 3 && $shipment.isShippable}
 				<li id="orderShipments_list_[[orderID]]_shipped_[[shipment.ID]]" class="orderShipment">
-					{include file="backend/shipment/shipment.tpl"}
+					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">Element.show("order[[orderID]]_shippedShipments");</script>
 				</li>
 			{/if}

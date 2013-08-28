@@ -7,6 +7,6 @@ Vaše naročilo <b class="orderID">#[[order.invoiceNumber]]</b>, naročeno na [[
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Izdelki s preklicanega naročila:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

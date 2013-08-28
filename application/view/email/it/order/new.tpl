@@ -13,8 +13,8 @@ Nel caso avessi domande in merito a questo ordine, potrai inviarci una comunicaz
 direttamente dalla pagina su indicata.
 
 Ti ricordiamo che hai ordinato i seguenti articoli:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/it/signature.tpl"}
+[[ partial("email/it/signature.tpl") ]]

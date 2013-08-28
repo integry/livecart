@@ -49,7 +49,7 @@
 		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}
 		<li id="[[relationship.ProductRelationshipGroup.ID]]" class="groupContainer">
 			<span class="groupTitle">[[relationship.ProductRelationshipGroup.name]]</span>
-			{include file="backend/productRelationshipGroup/form.tpl"}
+			[[ partial("backend/productRelationshipGroup/form.tpl") ]]
 			<ul id="[[relationship.ProductRelationshipGroup.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 	{/if}
 
@@ -63,7 +63,7 @@
 {/foreach}
 </ul>
 
-<div class="blankItem" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
+<div class="blankItem" class="dom_template">[[ partial("backend/productRelationshipGroup/form.tpl") ]]</div>
 
 <script type="text/javascript">
 	Backend.RelatedProduct.Group.Controller.prototype.index([[productID]], [[type]]);

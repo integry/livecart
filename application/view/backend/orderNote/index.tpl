@@ -37,7 +37,7 @@
 <fieldset class="container orderNoteContainer">
 	<ul class="notes">
 	{foreach from=$notes item=note}
-		{include file="backend/orderNote/view.tpl"}
+		[[ partial("backend/orderNote/view.tpl") ]]
 	{foreachelse}
 		<div class="noRecords"><div style="display: block;">{t _no_messages}</div></div>
 	{/foreach}

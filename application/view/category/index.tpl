@@ -8,24 +8,24 @@
 
 {include file="block/content-start.tpl" hideTitle=true}
 
-	{include file="category/head.tpl"}
+	[[ partial("category/head.tpl") ]]
 
 	{if $allFilters.filters}
-		{include file="category/allFilters.tpl"}
+		[[ partial("category/allFilters.tpl") ]]
 	{/if}
 
 	{if $foundCategories}
-		{include file="category/foundCategories.tpl"}
+		[[ partial("category/foundCategories.tpl") ]]
 	{/if}
 
 	{if $modelSearch}
-		{include file="search/block/allResults.tpl"}
+		[[ partial("search/block/allResults.tpl") ]]
 	{/if}
 
 	{if $categoryNarrow}
-		{include file="category/narrowByCategory.tpl"}
+		[[ partial("category/narrowByCategory.tpl") ]]
 	{elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config}
-		{include file="category/subcategoriesColumns.tpl"}
+		[[ partial("category/subcategoriesColumns.tpl") ]]
 	{/if}
 
 	{if $searchQuery && !$products}
@@ -52,7 +52,7 @@
 
 	{block FILTER_TOP}
 
-	{include file="category/categoryProductList.tpl"}
+	[[ partial("category/categoryProductList.tpl") ]]
 
 	<script type="text/javascript">
 		jQuery(document).ready(Frontend.initCategory);

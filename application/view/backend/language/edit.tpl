@@ -14,7 +14,7 @@
 {includeCss file="backend/Language.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 {literal}
 <script type="text/javascript">
@@ -169,4 +169,4 @@
 	var edit = new Backend.LangEdit(translations, english);
 </script>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

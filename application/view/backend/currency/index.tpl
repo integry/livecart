@@ -13,7 +13,7 @@
 {includeCss file="backend/Currency.css"}
 
 {pageTitle help="settings.currencies"}{t _currencies}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="tabContainer" class="tabContainer maxHeight h--20">
 	<ul class="tabList tabs">
@@ -119,4 +119,4 @@
 </script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

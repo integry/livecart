@@ -1,7 +1,7 @@
 [[subject]]
 [[text]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Pokud již nechcete naše novinky odebírat, klikněte na tento odkaz:

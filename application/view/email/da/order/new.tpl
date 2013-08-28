@@ -9,8 +9,8 @@ Du vil kunne følge din ordrestatus på denne side:
 Hvis du har spørgsmål vedrørende denne ordre, kan dette ligeledes gøres på ovenstående side.
 
 Vi påminder om, at følgende enheder er blevet bestilt:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

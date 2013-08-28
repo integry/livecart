@@ -9,8 +9,8 @@ Rendelésed nyomon követhető a következő oldalon:
 Ha bármilyen kérdésed van a rendeléssel kapcsolatosan, azt szintén felteheted a fenti oldalon.
 
 A következő termékeket rendelted meg:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

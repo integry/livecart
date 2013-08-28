@@ -8,4 +8,4 @@
 תוכל להוסיף תגובה מפאנל הניהול של ההזמנה:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

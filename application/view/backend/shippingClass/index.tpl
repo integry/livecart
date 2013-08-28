@@ -11,7 +11,7 @@
 {includeCss file="library/TabControl.css"}
 
 {pageTitle help="settings.classes"}{t _classes}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <script type="text/javascript">
 	Backend.ShippingClass.prototype.Links.update = "{link controller="backend.shippingClass" action=update}";
@@ -24,6 +24,6 @@
 	Backend.ShippingClass.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_class}";
 </script>
 
-{include file="backend/shippingClass/classes.tpl"}
+[[ partial("backend/shippingClass/classes.tpl") ]]
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

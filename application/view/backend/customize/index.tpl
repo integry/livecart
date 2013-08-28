@@ -1,7 +1,7 @@
 {pageTitle help="customize"}{t _live_customization}{/pageTitle}
 {includeCss file="backend/Customize.css"}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <ul id="customizeMenu">
 
@@ -26,4 +26,4 @@
 
 </ul>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

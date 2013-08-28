@@ -9,7 +9,7 @@
 
 		<fieldset>
 			<legend>{t _create_message|capitalize}</legend>
-			{include file="backend/newsletter/form.tpl"}
+			[[ partial("backend/newsletter/form.tpl") ]]
 		</fieldset>
 
 		<fieldset class="controls">

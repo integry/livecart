@@ -14,10 +14,10 @@ da questa pagina:
 {foreach from=$order.shipments item=shipment}
 Nuovo stato: {if $shipment.status == 2}in attesa di spedizione{elseif $shipment.status == 3}spedito{elseif $shipment.status == 4}rientrato{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/it/signature.tpl"}
+[[ partial("email/it/signature.tpl") ]]

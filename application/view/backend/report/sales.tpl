@@ -15,7 +15,7 @@
 		</select>
 	</div>
 
-	{include file="backend/report/intervalSelect.tpl"}
+	[[ partial("backend/report/intervalSelect.tpl") ]]
 
 	<div class="clear"></div>
 </div>

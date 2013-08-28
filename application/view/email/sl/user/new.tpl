@@ -11,4 +11,4 @@ Z vaše nadzorne strani, lahko preverjate status vašega naročila, pogledate va
 Za prijavo lahko sledite spodnji povezavi:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -5,8 +5,8 @@ Užsakymo adresas:
 {backendOrderUrl order=$order url=true}
 
 Užsisakytas šias prekes:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/lt/signature.tpl"}
+[[ partial("email/lt/signature.tpl") ]]

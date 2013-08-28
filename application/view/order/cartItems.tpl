@@ -22,28 +22,28 @@
 	
 	{if !$hideNav}
 	<tfoot>
-		{include file="order/block/navigation.tpl"}
+		[[ partial("order/block/navigation.tpl") ]]
 	</tfoot>
 	{/if}
 	
 	<tbody>
-		{include file="order/block/items.tpl"}
-		{include file="order/block/discounts.tpl"}
-		{include file="order/block/shipping.tpl"}
+		[[ partial("order/block/items.tpl") ]]
+		[[ partial("order/block/discounts.tpl") ]]
+		[[ partial("order/block/shipping.tpl") ]]
 
 		{if !'HIDE_TAXES'|config}
-			{include file="order/block/taxes.tpl"}
+			[[ partial("order/block/taxes.tpl") ]]
 		{/if}
 
-		{include file="order/block/total.tpl"}
-		{include file="order/block/customFields.tpl"}
-		{include file="order/block/shippingEstimation.tpl"}
-		{include file="order/block/coupons.tpl"}
+		[[ partial("order/block/total.tpl") ]]
+		[[ partial("order/block/customFields.tpl") ]]
+		[[ partial("order/block/shippingEstimation.tpl") ]]
+		[[ partial("order/block/coupons.tpl") ]]
 	</tbody>
 </table>
 <input type="hidden" name="return" value="[[return]]" />
 
-{include file="order/block/expressCheckout.tpl"}
+[[ partial("order/block/expressCheckout.tpl") ]]
 
 <input type="hidden" value="" name="recurringBillingPlan" id="recurringBillingPlan">
 

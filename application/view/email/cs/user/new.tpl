@@ -11,4 +11,4 @@ Zde můžete sledovat stav a historii Vašich objednávek, stahovat objednané s
 Pro přihlášení k Vašemu účtu můžete použít tento odkaz:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

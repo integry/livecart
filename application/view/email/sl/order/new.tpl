@@ -9,8 +9,8 @@ Status vašega naročila lahko spremljate na tej strani:
 Če imate kakršna koli vprašanja glede vašega naročila, nam lahko pošljete sporočilo s klikom na zgornjo povezavo.
 
 Naročili ste naslednje izdelke:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

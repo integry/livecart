@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="ordersMenu"}
 {% block content %}
 
@@ -122,7 +122,7 @@
 		{/if}
 	{/function}
 
-	{include file="order/fieldValues.tpl"}
+	[[ partial("order/fieldValues.tpl") ]]
 
 	<div id="overviewAddresses">$order.shipments
 

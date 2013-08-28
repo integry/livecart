@@ -5,7 +5,7 @@
 	</p>
 
 	{if $quantityPricing}
-		{include file="product/block/quantityPrice.tpl"}
+		[[ partial("product/block/quantityPrice.tpl") ]]
 	{/if}
 {/if}
 
@@ -21,7 +21,7 @@
 			</p>
 
 			{if $quantityPricing}
-				{include file="product/block/quantityPrice.tpl"}
+				[[ partial("product/block/quantityPrice.tpl") ]]
 			{/if}
 		{/if}
 

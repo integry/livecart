@@ -19,10 +19,10 @@
 {includeJs file="library/ActiveList.js"}
 {includeCss file="library/ActiveGrid.css"}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="products"}{t _pricing_rules}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div class="discountGrid" id="discountGrid" class="maxHeight h--50">
 	<ul class="menu">
@@ -34,7 +34,7 @@
 		</li>
 	</ul>
 
-	{include file="backend/discount/grid.tpl"}
+	[[ partial("backend/discount/grid.tpl") ]]
 </div>
 
 <div id="addDiscountContainer" style="display: none;"></div>
@@ -288,4 +288,4 @@
 	{/form}
 </div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

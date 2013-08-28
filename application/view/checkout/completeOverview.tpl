@@ -1,7 +1,7 @@
 <div class="completeOverview">
 <h2>{t _order_overview}</h2>
 
-{include file="checkout/orderOverview.tpl"}
+[[ partial("checkout/orderOverview.tpl") ]]
 
 {function name="address"}
 	{if $address}

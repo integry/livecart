@@ -8,9 +8,9 @@
 			{/if}
 
 			{if $file.isEmbedded}
-				{include file="product/files/embed.tpl"}
+				[[ partial("product/files/embed.tpl") ]]
 			{else}
-				{include file="product/files/link.tpl"}
+				[[ partial("product/files/link.tpl") ]]
 			{/if}
 		{/foreach}
 	</div>

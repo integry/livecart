@@ -9,4 +9,4 @@
 על מנת להתחבר לחשבון שלך , השתמש בכתובת שלהלן:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

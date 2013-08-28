@@ -15,7 +15,7 @@
 {includeCss file="library/TabControl.css"}
 
 {pageTitle help="settings.taxes"}{t _taxes}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <script type="text/javascript">
 	Backend.Tax.prototype.Links.update = "{link controller="backend.tax" action=update}";
@@ -35,7 +35,7 @@
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight tabPageContainer">
-			{include file="backend/tax/taxes.tpl"}
+			[[ partial("backend/tax/taxes.tpl") ]]
 		</div>
 	</div>
 </div>
@@ -44,4 +44,4 @@
 	TabControl.prototype.getInstance('tabContainer', Backend.Currency.prototype.getTabUrl, Backend.Currency.prototype.getContentTabId);
 </script>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

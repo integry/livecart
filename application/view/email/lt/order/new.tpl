@@ -9,8 +9,8 @@ Jūs galite sekti savo užsakymo būseną šiame puslapyje:
 Jei turite klausimų susijusių su užsakymu galite rašyti žinutę taip pat ir šio puslapio aukščiau.
 
 Primename, kad užsisakėte šias prekes:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/lt/signature.tpl"}
+[[ partial("email/lt/signature.tpl") ]]

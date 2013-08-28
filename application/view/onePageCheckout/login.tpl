@@ -1,5 +1,5 @@
 <div class="stepTitle">
-	{include file="onePageCheckout/block/modifyStep.tpl"}
+	[[ partial("onePageCheckout/block/modifyStep.tpl") ]]
 	<h2><span class="step">1</span>{t Checkout Options}</h2>
 </div>
 
@@ -15,7 +15,7 @@
 		Shopping here for the first time? The next step would be to enter your address and contact information.
 	</p>
 
-	{include file="onePageCheckout/block/continueButton.tpl"}
+	[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 </form>
 
 <form method="POST" action="{link controller=onePageCheckout action=doLogin}" id="checkoutLogin" class="form-horizontal">

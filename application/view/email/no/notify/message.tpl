@@ -8,4 +8,4 @@ En kunde har sendt en ny beskjed ang. bestillingsnr. <b class="orderID">#[[order
 Du kan svare på denne fra order management panel:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/no/signature.tpl"}
+[[ partial("email/no/signature.tpl") ]]

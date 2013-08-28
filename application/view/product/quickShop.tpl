@@ -1,5 +1,5 @@
 {capture assign="body"}
-	{include file="product/head.tpl"}
+	[[ partial("product/head.tpl") ]]
 {/capture}
 
 {capture assign="footer"}

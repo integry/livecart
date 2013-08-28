@@ -8,7 +8,7 @@
 
 {% block title %}{t _import_database}{{% endblock %}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <p>{t _import_description|branding}</p>
 
@@ -97,4 +97,4 @@
 	</fieldset>
 </div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

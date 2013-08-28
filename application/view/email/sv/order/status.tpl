@@ -13,10 +13,10 @@ Om du har frågor rörande din order kan du kontakta oss via följande länk:
 {foreach from=$order.shipments item=shipment}
 Ny status: {if $shipment.status == 2}avvaktar leverans {elseif $shipment.status == 3}levererad {elseif $shipment.status == 4}returnerad {else}under behandling{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -6,17 +6,17 @@
 {includeCss file="backend/Settings.css"}
 
 {pageTitle help="settings.configuration"}{t _livecart_settings|branding}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="settingsContainer" ng-controller="SettingsController" ng-init="setTree({$categories|escape});">
 	<div class="treeContainer">
 		{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_settings_search formid="SettingsSearch" classNames="SearchableItem,-SearchableTemplate"}
 
-		{include file="block/backend/tree.tpl"}
+		[[ partial("block/backend/tree.tpl") ]]
 	</div>
 
 	<div id="settingsContent" class="treeManagerContainer">
-		{include file="backend/settings/edit.tpl"}
+		[[ partial("backend/settings/edit.tpl") ]]
 	</div>
 
 </div>
@@ -53,4 +53,4 @@
 
 <iframe id="upload" name="upload"></iframe>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

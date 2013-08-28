@@ -5,7 +5,7 @@
 		<a href="#" id="register_date">{t _registrations}</a> | <a id="top_cust" href="#">{t _top_customers}</a> | <a id="countries" href="#">{t _countries}</a>
 	</div>
 
-	{include file="backend/report/intervalSelect.tpl"}
+	[[ partial("backend/report/intervalSelect.tpl") ]]
 
 	<div class="clear"></div>
 </div>

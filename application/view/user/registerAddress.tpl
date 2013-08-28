@@ -1,1 +1,1 @@
-{include file="user/checkout.tpl"}
+[[ partial("user/checkout.tpl") ]]

@@ -15,18 +15,18 @@
 							{/if}
 
 							{if $shipments|@count > 1}
-								{include file="checkout/shipmentProductList.tpl"}
+								[[ partial("checkout/shipmentProductList.tpl") ]]
 							{/if}
 
 							{if $rates.$key}
-								{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
+								[[ partial("checkout/block/shipmentSelectShippingRateFields.tpl") ]]
 							{else}
 								<span class="text-danger">{t _err_no_rates_for_address}</span>
 							{/if}
 						{/if}
 					{/foreach}
 
-					{include file="onePageCheckout/block/continueButton.tpl"}
+					[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 				{/form}
 				{if !$shipments}
 					<div class="text-danger">{t _err_no_rates_for_address}</div>

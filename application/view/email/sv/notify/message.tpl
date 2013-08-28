@@ -8,4 +8,4 @@ En kund har lagt till ett nytt meddelande angående <b class="orderID">#[[order.
 Du kan svara från kontrollpanelens orderhantering:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

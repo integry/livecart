@@ -68,7 +68,7 @@
 				{/foreach}
 
 				{if $columns.PRICE && 'DISPLAY_PRICES'|config}
-					<td class="productPrice">{include file="product/block/productPrice.tpl"}</td>
+					<td class="productPrice">[[ partial("product/block/productPrice.tpl") ]]</td>
 				{/if}
 
 				{if $columns.DETAILS}

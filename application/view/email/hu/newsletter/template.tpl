@@ -1,7 +1,7 @@
 [[subject]]
 [[text]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Ha nem akarod tovább kapni levelünket, kattints az alábbi linkre:

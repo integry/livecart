@@ -8,7 +8,7 @@
 	<tr>
 		<td class="param">{$attr.$field.name_lang}</td>
 		<td class="value">
-			{include file="product/attributeValue.tpl"}
+			[[ partial("product/attributeValue.tpl") ]]
 		</td>
 	</tr>
 	{% set prevAttr = $attr %}

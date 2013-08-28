@@ -1,9 +1,9 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _cvv}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
-	{include file="checkout/cvvHelp.tpl"}
+	[[ partial("checkout/cvvHelp.tpl") ]]
 
 {% endblock %}

@@ -8,7 +8,7 @@
 		<div class="content">
 			<ul class="list-unstyled">
 			{foreach from=$products item=product}
-				{include file="compare/block/item.tpl"}
+				[[ partial("compare/block/item.tpl") ]]
 			{/foreach}
 			</ul>
 

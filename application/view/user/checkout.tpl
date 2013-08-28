@@ -8,7 +8,7 @@
 	{% block title %}{t _user_registration}{{% endblock %}
 {/if}
 
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div class="returningCustomer">

@@ -10,4 +10,4 @@ E' stato aggiunto un nuovo messagio riguardante il tuo ordine.
 Puoi rispondere a questo messaggio direttamente da questa pagina:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/it/signature.tpl"}
+[[ partial("email/it/signature.tpl") ]]

@@ -1,16 +1,16 @@
 <div class="thumbnail">
 
-{include file="product/block/smallImage.tpl"}
+[[ partial("product/block/smallImage.tpl") ]]
 
 <div class="caption">
-	{include file="category/block/productTitle.tpl"}
+	[[ partial("category/block/productTitle.tpl") ]]
 
 	<p class="pricingInfo">
-		{include file="product/block/productPrice.tpl"}
-		{include file="product/block/cartButton.tpl"}
+		[[ partial("product/block/productPrice.tpl") ]]
+		[[ partial("product/block/cartButton.tpl") ]]
 	</p>
 
-	{include file="category/block/itemActions.tpl"}
+	[[ partial("category/block/itemActions.tpl") ]]
 </div>
 
 </div>

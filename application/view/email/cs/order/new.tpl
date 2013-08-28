@@ -10,8 +10,8 @@ Stav objednávky můžete sledovat zde:
 Kontaktovat nás můžete použitím odkazu nahoře.
 
 We remind that the following items have been ordered:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

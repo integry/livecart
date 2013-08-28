@@ -18,7 +18,7 @@
 </fieldset>
 
 <div class="newForm">
-	{include file="backend/productRelationshipGroup/form.tpl"}
+	[[ partial("backend/productRelationshipGroup/form.tpl") ]]
 </div>
 
 <div class="total">

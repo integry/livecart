@@ -8,4 +8,4 @@ Zákazník poslal vzkaz k objednávce č.: [[order.invoiceNumber]]
 Můžete mu odpovědět zde:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

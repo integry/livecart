@@ -9,8 +9,8 @@ Jūs varat sekot līdzi pasūtījuma izpildes gaitai no šīs lapas:
 Ja radušies kādi jautājumi sakarā ar pasūtījumu, no šīs pašas lapas varat tos mums arī nosūtīt.
 
 Atgādinām, ka pasūtījāt sekojošos produktus:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

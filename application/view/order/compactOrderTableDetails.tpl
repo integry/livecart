@@ -7,7 +7,7 @@
 		{/if}
 
 		<td class="productName">
-			{include file="order/itemProductInfo.tpl"}
+			[[ partial("order/itemProductInfo.tpl") ]]
 		</td>
 
 		<td class="itemPrice {if (string)$item.itemBasePrice > (string)$item.itemPrice}discount{/if}">

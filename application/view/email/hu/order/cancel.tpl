@@ -7,6 +7,6 @@ Ha bármilyen kérdése van a rendeléssel kapcsolatban, üzenetet írhat nekün
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 A visszavont rendelés a következő termékeket tartalmazta:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

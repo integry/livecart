@@ -9,8 +9,8 @@
 إذا كان لديك أي أسئلة بخصوص هذا الطلب ، يمكنك أن ترسل لنا رسالة من الصفحة المذكورة أعلاه وكذلك اى اسئلة اخرى
 
 ونذكركم بأن البنود التالية قد طلبتها
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

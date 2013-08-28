@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _compare_products}{{% endblock %}
-{include file="layout/frontend/header.tpl"}
+[[ partial("layout/frontend/header.tpl") ]]
 {% block content %}
 
 <a href="{link route=$return}" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
@@ -15,7 +15,7 @@
 				{foreach from=$category.products item=product}
 					<th>
 						<a href="{productUrl product=$product}">[[product.name_lang]]</a>
-						{include file="product/block/smallImage.tpl"}
+						[[ partial("product/block/smallImage.tpl") ]]
 					</th>
 				{/foreach}
 			</tr>
@@ -25,9 +25,9 @@
 				<td>{t _price}</td>
 				{foreach from=$category.products item="product"}
 					<td class="value price">
-						{include file="product/block/productPrice.tpl"}
+						[[ partial("product/block/productPrice.tpl") ]]
 						<div class="cartButton">
-							{include file="product/block/cartButton.tpl"}
+							[[ partial("product/block/cartButton.tpl") ]]
 						</div>
 					</td>
 				{/foreach}

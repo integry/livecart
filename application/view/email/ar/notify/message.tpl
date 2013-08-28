@@ -8,4 +8,4 @@
 يمكنك إضافة أي رد من لوحةإدارة الطلب:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -26,7 +26,7 @@
 
 		<p class="text-muted">{t _not_registered}</p>
 
-		{include file="user/regForm.tpl"}
+		[[ partial("user/regForm.tpl") ]]
 	</div>
 
 	<div class="clear"></div>

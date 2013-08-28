@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _select_addresses}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 
 <div class="step-[[step]]">
 {% block content %}
@@ -61,7 +61,7 @@
 
 	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired)) || 'REQUIRE_SAME_ADDRESS'|config}
 		<div class="clear"></div>
-		{include file="checkout/orderFields.tpl"}
+		[[ partial("checkout/orderFields.tpl") ]]
 	{/if}
 
 	{literal}

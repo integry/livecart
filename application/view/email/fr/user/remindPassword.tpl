@@ -9,4 +9,4 @@ Mot de passe: <b>[[user.newPassword]]</b>
 Vous pouvez utiliser cette adresse pour vous connecter a votre compte:
 {link controller=user action=login url=true}
 
-{include file="email/fr/signature.tpl"}
+[[ partial("email/fr/signature.tpl") ]]

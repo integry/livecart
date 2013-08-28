@@ -13,10 +13,10 @@ Hvis du har spørgsmål vedrørende denne ordre, er du velkommen til at kontakte
 {foreach from=$order.shipments item=shipment}
 Ny status: {if $shipment.status == 2}afventer forsendelse{elseif $shipment.status == 3}afstedt{elseif $shipment.status == 4}returneret{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

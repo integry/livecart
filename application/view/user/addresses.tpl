@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _manage_addresses}{{% endblock %}
-{include file="user/layout.tpl"}
+[[ partial("user/layout.tpl") ]]
 {include file="user/userMenu.tpl" current="addressMenu"}
 {% block content %}
 
@@ -13,7 +13,7 @@
 
 	<table class="addressSelector">
 	{foreach from=$billingAddresses item="item"}
-		{include file="user/address.tpl"}
+		[[ partial("user/address.tpl") ]]
 		<div class="addressControl">
 			<a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
 			|
@@ -31,7 +31,7 @@
 	</a>
 
 	{foreach from=$shippingAddresses item="item"}
-		{include file="user/address.tpl"}
+		[[ partial("user/address.tpl") ]]
 		<div class="addressControl">
 			<a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
 			|

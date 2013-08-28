@@ -5,6 +5,6 @@
 					PRODUCT-RATING-SUMMARY"}
 	</div>
 	<div class="col col-lg-4">
-		{include file="product/block/actions.tpl"}
+		[[ partial("product/block/actions.tpl") ]]
 	</div>
 </div>

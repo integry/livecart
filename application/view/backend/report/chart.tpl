@@ -7,7 +7,7 @@
 </script>
 
 {if ($chartType > 100) && $reportData}
-	{include file="backend/report/table.tpl"}
+	[[ partial("backend/report/table.tpl") ]]
 {/if}
 
 <div id="flashChart"></div>

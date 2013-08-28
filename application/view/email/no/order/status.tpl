@@ -13,10 +13,10 @@ Hvis du har spørsmål ang. denne bestillingen, kan du sende oss en mail eller k
 {foreach from=$shipments item=shipment}
 Ny status: {if $shipment.status == 2}Forventet levering{elseif $shipment.status == 3}sendt{elseif $shipment.status == 4}returnert{else}under behandling {/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/no/signature.tpl"}
+[[ partial("email/no/signature.tpl") ]]

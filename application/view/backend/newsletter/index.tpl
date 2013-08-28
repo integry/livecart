@@ -20,7 +20,7 @@
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
 {pageTitle help="tools.newsletter"}{t _newsletters}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="newsletterTabContainer" class="tabContainer maxHeight h--20">
 
@@ -134,4 +134,4 @@
 {literal}
 </script>
 {/literal}
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

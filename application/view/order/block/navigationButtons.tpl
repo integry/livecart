@@ -6,7 +6,7 @@
 		<div class="clear"></div>
 
 		{if 'REQUIRE_TOS'|config && !'TOS_OPC_ONLY'|config && !$hideTos}
-			{include file="order/block/tos.tpl"}
+			[[ partial("order/block/tos.tpl") ]]
 		{/if}
 
 		{if 'ENABLE_MULTIADDRESS'|config}

@@ -23,18 +23,18 @@
 	</thead>
 	<tbody>
 
-		{include file="order/block/items.tpl"}
-		{include file="order/block/discounts.tpl"}
-		{include file="order/block/shipping.tpl"}
+		[[ partial("order/block/items.tpl") ]]
+		[[ partial("order/block/discounts.tpl") ]]
+		[[ partial("order/block/shipping.tpl") ]]
 
 		{if !'HIDE_TAXES'|config}
-			{include file="order/block/taxes.tpl"}
+			[[ partial("order/block/taxes.tpl") ]]
 		{/if}
 
 		{include file="order/block/total.tpl" extraColspanSize=$extraColspanSize}
 
-		{include file="order/block/customFields.tpl"}
-		{include file="order/block/coupons.tpl"}
+		[[ partial("order/block/customFields.tpl") ]]
+		[[ partial("order/block/coupons.tpl") ]]
 
 	</tbody>
 </table>

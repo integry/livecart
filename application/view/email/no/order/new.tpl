@@ -9,8 +9,8 @@ Du kan følge din bestilling på denne siden:
 Om du har spørmaål ang. denne bestillingen, kan du også sende en beskjed på linken over.
 
 Vi minner om at følgende produkter er bestilt:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/no/signature.tpl"}
+[[ partial("email/no/signature.tpl") ]]

@@ -9,8 +9,8 @@ Anda dapat melacak order Anda di halaman ini:
 Jika Anda memiliki pertanyaan seputar order ini, Anda dapat mengirimkan pesan kepada kami di halaman tersebut diatas pula.
 
 Berikut adalah barang yang Anda order dari kami:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/id/signature.tpl"}
+[[ partial("email/id/signature.tpl") ]]

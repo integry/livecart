@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _your_basket}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div class="checkoutHeader">
@@ -10,7 +10,7 @@
 		{/if}
 	</div>
 
-	{include file="order/changeMessages.tpl"}
+	[[ partial("order/changeMessages.tpl") ]]
 
 	{if !$cart.cartItems && !$cart.wishListItems}
 		<div style="clear: left;">
@@ -19,12 +19,12 @@
 	{else}
 
 	{if $cart.cartItems}
-		{include file="order/cartItems.tpl"}
+		[[ partial("order/cartItems.tpl") ]]
 	{/if}
 
 	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
 		<div style="clear: left;">
-			{include file="order/wishList.tpl"}
+			[[ partial("order/wishList.tpl") ]]
 		</div>
 	{/if}
 

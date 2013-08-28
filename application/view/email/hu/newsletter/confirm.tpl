@@ -4,7 +4,7 @@ Hello,
 Hogy megerősítsd e-mail címedet, és elkezd kapni hírlevelünkett kattints a következő linkre:
 {link controller=newsletter action=confirm query="email=`$email`&code=`$subscriber.confirmationCode`" url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Ha nem akarod tovább kapni hírlevelünket, kattints az alábbi linkre:

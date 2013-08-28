@@ -7,6 +7,6 @@ Hvis du har spørgsmål vedrørende denne ordre, er du velkommen til at kontakte
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Enheder på den annullerede ordre:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -38,18 +38,18 @@
 
 {includeJs file="frontend/Frontend.js"} {*variations*}
 
-{include file="backend/eav/includes.tpl"}
+[[ partial("backend/eav/includes.tpl") ]]
 
 {pageTitle help="order"}{t _livecart_orders}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="orderGroupsWrapper" class="treeContainer">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 </div>
 
-{include file="backend/customerOrder/orderContainer.tpl"}
-{include file="backend/customerOrder/groupContainer.tpl"}
-{include file="backend/userGroup/userContainer.tpl"}
+[[ partial("backend/customerOrder/orderContainer.tpl") ]]
+[[ partial("backend/customerOrder/groupContainer.tpl") ]]
+[[ partial("backend/userGroup/userContainer.tpl") ]]
 
 
 {literal}
@@ -81,4 +81,4 @@
 {/literal}
 
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

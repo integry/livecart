@@ -25,7 +25,7 @@
 </fieldset>
 
 <div class="newForm">
-	{include file="backend/productList/form.tpl"}
+	[[ partial("backend/productList/form.tpl") ]]
 </div>
 
 <ul class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit groupList">
@@ -34,7 +34,7 @@
 		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}
 		<li id="[[item.ProductList.ID]]" class="groupContainer">
 			<span class="groupTitle">[[item.ProductList.name]]</span>
-			{include file="backend/productList/form.tpl"}
+			[[ partial("backend/productList/form.tpl") ]]
 			<ul id="[[item.ProductList.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 	{/if}
 
@@ -49,7 +49,7 @@
 </ul>
 
 <div class="blankItem" class="dom_template">
-	{include file="backend/productList/form.tpl"}
+	[[ partial("backend/productList/form.tpl") ]]
 </div>
 
 <div class="addProductToListMenu dom_template">

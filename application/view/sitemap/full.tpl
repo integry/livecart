@@ -1,1 +1,1 @@
-{include file="sitemap/sitemap.tpl"}
+[[ partial("sitemap/sitemap.tpl") ]]

@@ -1,4 +1,4 @@
-{include file="checkout/block/ccForm.tpl"}
+[[ partial("checkout/block/ccForm.tpl") ]]
 
 {if $otherMethods}
 	{if 'CC_ENABLE'|config}

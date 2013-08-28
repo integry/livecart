@@ -5,8 +5,8 @@ Order administration:
 {backendOrderUrl order=$order url=true}
 
 Følgende produkter er bestilt:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/no/signature.tpl"}
+[[ partial("email/no/signature.tpl") ]]

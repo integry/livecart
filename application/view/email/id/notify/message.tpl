@@ -8,4 +8,4 @@ Seorang pelanggan mengirimkan pesan mengenai order <b class="orderID">#[[order.i
 Anda dapat memberi respons melalui panel manajemen order:
 {backendOrderUrl order=$order url=true}#tabOrderCommunication__
 
-{include file="email/id/signature.tpl"}
+[[ partial("email/id/signature.tpl") ]]

@@ -46,7 +46,7 @@
 		{/foreach}
 		</ul>
 
-		{include file="backend/shipment/shipmentTotal.tpl"}
+		[[ partial("backend/shipment/shipmentTotal.tpl") ]]
 	</div>
 
 </fieldset>

@@ -5,7 +5,7 @@
 		{* <a href="#" id="number_items">{t _num_items}</a> | <a id="total_items" href="#">{t _item_totals}</a> *}
 	</div>
 
-	{include file="backend/report/intervalSelect.tpl"}
+	[[ partial("backend/report/intervalSelect.tpl") ]]
 
 	<div class="clear"></div>
 </div>

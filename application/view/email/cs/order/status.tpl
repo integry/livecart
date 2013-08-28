@@ -13,10 +13,10 @@ Pokud k této objednávce máte nějaké dotazy, můžete nám poslat email nebo
 {foreach from=$order.shipments item=shipment}
 Nový stav: {if $shipment.status == 2}čeká na odeslání{elseif $shipment.status == 3}odeslána{elseif $shipment.status == 4}vrácena{else}vyřizuje se{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

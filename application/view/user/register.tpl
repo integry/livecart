@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	{include file="user/regForm.tpl"}
+	[[ partial("user/regForm.tpl") ]]
 
 {% endblock %}
 

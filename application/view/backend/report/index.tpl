@@ -6,7 +6,7 @@
 {includeCss file="backend/Report.css"}
 
 {pageTitle help="content.pages"}{t _reports}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="staticPageContainer">
 	<div class="treeContainer">
@@ -67,4 +67,4 @@
 	window.report = new Backend.Report.Controller();
 </script>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

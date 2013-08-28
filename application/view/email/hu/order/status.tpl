@@ -13,10 +13,10 @@ Ha bármilyen kérdésed van a rendeléssel kapcsolatosan, azt felteheted az al�
 {foreach from=$order.shipments item=shipment}
 Új státusz: {if $shipment.status == 2}szállításra vár{elseif $shipment.status == 3}elküldve{elseif $shipment.status == 4}visszaérkezett{else}feldolgozás alatt{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -9,8 +9,8 @@ Vous pourrez suivre l'évolution de votre commande sur cette page:
 Si vous avez des questions concernant cette commande, vous pouvez nous envoyer un message de la page ci-dessus.
 
 Nous vous rappelons que l'item a été commandé:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/fr/signature.tpl"}
+[[ partial("email/fr/signature.tpl") ]]

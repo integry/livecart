@@ -8,6 +8,6 @@
 			{/if}
 		</td>
 		<td class="amount shippingAmount">[[cart.formatted_shippingSubtotal]]</td>
-		{include file="order/block/cartUpdate.tpl"}
+		[[ partial("order/block/cartUpdate.tpl") ]]
 	</tr>
 {/if}

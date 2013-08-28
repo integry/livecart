@@ -10,4 +10,4 @@ Jūsu pasūtījumam pievienots jauns paziņojums.
 Jūs varat atbildēt no šīs lapas:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

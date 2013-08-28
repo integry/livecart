@@ -14,7 +14,7 @@
 			</span>
 			{/if}
 
-			{include file="category/block/switchListLayout.tpl"}
+			[[ partial("category/block/switchListLayout.tpl") ]]
 		</div>
 	</div>
 

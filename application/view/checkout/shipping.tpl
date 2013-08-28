@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _shipping}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div class="checkoutHeader">
@@ -23,17 +23,17 @@
 					<h2>[[shipment.ShippingAddress.compact]]</h2>
 				{/if}
 
-				{include file="checkout/shipmentProductList.tpl"}
+				[[ partial("checkout/shipmentProductList.tpl") ]]
 
 				{if $shipment.isShippable}
-					{include file="checkout/shipmentSelectShipping.tpl"}
+					[[ partial("checkout/shipmentSelectShipping.tpl") ]]
 
 				{/if}
 
 			{/foreach}
 
 		{if 'SHIPPING_METHOD_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config}
-			{include file="checkout/orderFields.tpl"}
+			[[ partial("checkout/orderFields.tpl") ]]
 		{/if}
 
 		{include file="block/submit.tpl" caption="_continue"}

@@ -37,7 +37,7 @@
 {/if}
 
 {if $additionalCategories}
-	{include file="product/block/additionalCategories.tpl"}
+	[[ partial("product/block/additionalCategories.tpl") ]]
 {/if}
 
 {if $together}

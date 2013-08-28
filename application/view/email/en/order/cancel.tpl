@@ -7,6 +7,6 @@ If you have any questions regarding this order, you can send us an email message
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Items in the cancelled order:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

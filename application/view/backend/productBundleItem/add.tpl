@@ -1,2 +1,2 @@
-{include file="backend/productRelationship/addRelated.tpl"}
+[[ partial("backend/productRelationship/addRelated.tpl") ]]
 <span class="newTotal">[[total]]</span>

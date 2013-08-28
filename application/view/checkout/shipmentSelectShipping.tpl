@@ -6,7 +6,7 @@
 
 	<fieldset class="error">
 
-		{include file="checkout/block/shipmentSelectShippingRateFields.tpl"}
+		[[ partial("checkout/block/shipmentSelectShippingRateFields.tpl") ]]
 
 	</fieldset>
 

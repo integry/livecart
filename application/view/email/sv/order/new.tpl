@@ -9,8 +9,8 @@ Du kan följa status på din order via den här länken:
 Om du har några frågor rörande din order kan du också använda länken ovan.
 
 Du har beställt följande varor:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

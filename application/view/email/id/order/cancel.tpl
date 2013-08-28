@@ -7,6 +7,6 @@ Jika Anda memiliki pertanyaan seputar order anda, maka Anda dapat mengirimkan e-
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Barang pada order yang dibatalkan:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/id/signature.tpl"}
+[[ partial("email/id/signature.tpl") ]]

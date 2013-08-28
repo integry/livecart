@@ -9,4 +9,4 @@ Heslo: <b>[[user.newPassword]]</b>
 Pro přihlášení k Vašemu účtu můžete použít tento odkaz:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -11,4 +11,4 @@ Felhasználói felületedről láthatod: rendelésed aktuális státuszát, rég
 Ezt a címet használhatod, hogy bejelentkezz felhasználói felületedre:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

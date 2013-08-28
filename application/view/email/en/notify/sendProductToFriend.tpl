@@ -8,4 +8,4 @@ He also added:
 [[notes]]
 {/if}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

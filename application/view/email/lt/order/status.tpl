@@ -13,10 +13,10 @@ Jei turite klausimų, susijusių su šiuo užsakymu, galite siųsti laišką ar 
 {foreach from=$shipments item=shipment}
 Nauja būsena: {if $shipment.status == 2}laukia siuntimo{elseif $shipment.status == 3}išsiųstas{elseif $shipment.status == 4}grąžintas{else}processing{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/lt/signature.tpl"}
+[[ partial("email/lt/signature.tpl") ]]

@@ -1,5 +1,5 @@
 {capture assign="body"}
-	{include file="order/changeMessages.tpl"}
+	[[ partial("order/changeMessages.tpl") ]]
 
 	{if $error}
 		<div class="errorMessage">[[error]]</div>

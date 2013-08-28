@@ -9,4 +9,4 @@ Parole: <b>[[user.newPassword]]</b>
 Piekļūt savam lietotāja kontam varat no šejienes:
 {link controller=user action=login url=true}
 
-{include file="email/lv/signature.tpl"}
+[[ partial("email/lv/signature.tpl") ]]

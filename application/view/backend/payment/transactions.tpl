@@ -2,7 +2,7 @@
 
 	{foreach from=$transactions item="transaction"}
 		
-		{include file="backend/payment/transaction.tpl"}
+		[[ partial("backend/payment/transaction.tpl") ]]
 	
 	{/foreach}
 

@@ -11,4 +11,4 @@
 คุณสามารถเข้าสู่ระบบได้โดยการคลิกลิ้งค์ด้านล่าง:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

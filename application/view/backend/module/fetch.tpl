@@ -1,1 +1,1 @@
-{include file="backend/module/node.tpl"}
+[[ partial("backend/module/node.tpl") ]]

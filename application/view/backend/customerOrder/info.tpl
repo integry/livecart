@@ -167,7 +167,7 @@
 
 {if $specFieldList}
 <div class="customFields">
-	{include file="backend/customerOrder/saveFields.tpl"}
+	[[ partial("backend/customerOrder/saveFields.tpl") ]]
 </div>
 {/if}
 
@@ -297,7 +297,7 @@
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status != 3 && $shipment.isShippable}
 				<li id="orderShipments_list_[[orderID]]_[[shipment.ID]]" class="orderShipment downloadableOrder">
-					{include file="backend/shipment/shipment.tpl"}
+					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_shippableShipments");
 					</script>
@@ -321,7 +321,7 @@
 		{foreach item="shipment" from=$shipments}
 			{if $shipment.status == 3 && $shipment.isShippable}
 				<li id="orderShipments_list_[[orderID]]_shipped_[[shipment.ID]]" class="orderShipment">
-					{include file="backend/shipment/shipment.tpl"}
+					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">Element.show("order[[orderID]]_shippedShipments");</script>
 				</li>
 			{/if}

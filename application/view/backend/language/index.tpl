@@ -7,7 +7,7 @@
 {includeCss file="backend/Language.css"}
 {pageTitle help="settings.languages"}{t _admin_languages}{/pageTitle}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();
@@ -76,4 +76,4 @@
 </script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

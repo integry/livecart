@@ -8,6 +8,6 @@ oppure contattarci direttamente da questa pagina:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Articoli contenuti nell'ordine cancellato:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/it/signature.tpl"}
+[[ partial("email/it/signature.tpl") ]]

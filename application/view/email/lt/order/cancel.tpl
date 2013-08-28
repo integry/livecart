@@ -7,6 +7,6 @@ Jei turite klausimų susijusių su šiuo užsakymu, galite siųsti mums laišką
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Prekės, kurias užsisakėte:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/lt/signature.tpl"}
+[[ partial("email/lt/signature.tpl") ]]

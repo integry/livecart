@@ -9,4 +9,4 @@
 คุณสามารถเข้าสู่ระบบของทางร้านได้โดยการคลิกลิ้งค์ด้านล่าง:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

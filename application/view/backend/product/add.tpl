@@ -1,7 +1,7 @@
 <dialog fullHeight=true class="col-lg-11" cancel="cancel()">
 	<dialog-header>{{product.name}}</dialog-header>
 	<dialog-body>
-		{include file="backend/product/basicData.tpl"}
+		[[ partial("backend/product/basicData.tpl") ]]
 	</dialog-body>
 	<dialog-footer>
 		<dialog-cancel>{t _cancel}</dialog-cancel>

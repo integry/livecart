@@ -5,7 +5,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/editarea/edit_area_full.js"}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 {literal}
 <style type="text/css">

@@ -15,7 +15,7 @@
 
 {pageTitle help="content.site"}{t _site_news}{/pageTitle}
 
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 {allowed role="news.create"}
 
@@ -280,4 +280,4 @@ $scope.isSelected = false;
 
 </script>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

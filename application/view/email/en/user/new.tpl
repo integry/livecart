@@ -11,4 +11,4 @@ From your customer account you can instantly see the status of your order, view 
 You can use this address to login into your account:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

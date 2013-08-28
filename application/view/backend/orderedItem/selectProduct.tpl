@@ -18,7 +18,7 @@
 
 {% block title %}{t _select_product}{{% endblock %}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 <div id="catgegoryContainer" class="treeContainer">

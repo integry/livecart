@@ -10,4 +10,4 @@ Dostal jste novou zprávu ohledně Vaší objednávky.
 Odpovědět můžete pomocí tohoto odkazu:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _select_shipping_addresses}{{% endblock %}
-{include file="checkout/layout.tpl"}
+[[ partial("checkout/layout.tpl") ]]
 {% block content %}
 
 	<div class="checkoutHeader">
@@ -21,7 +21,7 @@
 	{/if}
 
 	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
-		{include file="order/wishList.tpl"}
+		[[ partial("order/wishList.tpl") ]]
 	{/if}
 
 	{/if}

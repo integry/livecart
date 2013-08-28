@@ -7,6 +7,6 @@ Hvis du har noen spørmål rundt dette, kan du sende en email eller kontakte oss
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 Produkter som er kansellert:
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
-{include file="email/no/signature.tpl"}
+[[ partial("email/no/signature.tpl") ]]

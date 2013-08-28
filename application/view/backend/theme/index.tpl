@@ -23,7 +23,7 @@
 
 
 {pageTitle help="content.pages"}{t _themes}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="themeContainer">
 	<div class="treeContainer">
@@ -138,4 +138,4 @@
 
 <div class="clear"></div>
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]

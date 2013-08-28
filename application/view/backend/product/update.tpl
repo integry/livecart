@@ -1,7 +1,7 @@
 {capture}
 	{form handle=$productForm}
 	{capture assign="specField"}
-		{include file="backend/product/form/specFieldList.tpl"}
+		[[ partial("backend/product/form/specFieldList.tpl") ]]
 	{/capture}
 	{/form}
 {/capture}

@@ -1,7 +1,7 @@
 {if !$html}
-{include file="email/blockItemHeader.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
 {foreach from=$order.shipments item=shipment}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockShipment.tpl") ]]
 {/foreach}
 ------------------------------------------------------------{if 'SHOW_SKU_EMAIL'|config}----------{/if}
 {/if}{*html*}

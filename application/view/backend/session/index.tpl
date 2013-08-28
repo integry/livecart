@@ -1,7 +1,7 @@
 {includeCss file="backend/Session.css"}
 {% block title %}{t _backend_login|branding}{{% endblock %}
 
-{include file="layout/backend/meta.tpl"}
+[[ partial("layout/backend/meta.tpl") ]]
 
 <h1 id="loginHeader">{t _backend_login|branding}</h1>
 

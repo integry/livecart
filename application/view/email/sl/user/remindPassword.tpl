@@ -9,4 +9,4 @@ Geslo: <b>[[user.newPassword]]</b>
 V spletno trgovino se lahko prijavite tukaj:
 {link controller=user action=login url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

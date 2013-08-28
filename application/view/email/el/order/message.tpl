@@ -10,4 +10,4 @@
 Μπορείτε να απαντήσετε σ'αυτό το μήνυμα μέσω της επομένης σελίδας:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

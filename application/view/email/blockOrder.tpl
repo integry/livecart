@@ -1,5 +1,5 @@
 {if 'SHOW_SKU_EMAIL'|config}{% set SHOW_SKU = true %}{/if}{if !$html}
-{include file="email/blockOrderItems.tpl"}
+[[ partial("email/blockOrderItems.tpl") ]]
 
 {if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config}
 {t _subtotal|@str_pad_left:49}: [[order.formatted_itemSubtotalWithoutTax]]

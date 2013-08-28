@@ -1,1 +1,1 @@
-{include file="backend/staticPage/edit.tpl"}
+[[ partial("backend/staticPage/edit.tpl") ]]

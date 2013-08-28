@@ -9,8 +9,8 @@ You will be able to track the progress of your order at this page:
 If you have any questions regarding this order, you can send us a message from the above page as well.
 
 We remind you that the following items have been ordered:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/en/signature.tpl"}
+[[ partial("email/en/signature.tpl") ]]

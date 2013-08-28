@@ -13,10 +13,10 @@ Jika Anda memiliki pertanyaan seputar order anda, maka Anda dapat mengirimkan e-
 {foreach from=$shipments item=shipment}
 Status baru: {if $shipment.status == 2}menunggu pengiriman{elseif $shipment.status == 3}terkirim{elseif $shipment.status == 4}dikembalikan{else}sedang disiapkan{/if}
 
-{include file="email/blockItemHeader.tpl"}
-{include file="email/blockShipment.tpl"}
+[[ partial("email/blockItemHeader.tpl") ]]
+[[ partial("email/blockShipment.tpl") ]]
 ------------------------------------------------------------
 
 {/foreach}
 
-{include file="email/id/signature.tpl"}
+[[ partial("email/id/signature.tpl") ]]

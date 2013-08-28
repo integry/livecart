@@ -5,8 +5,8 @@ Pannello di Amministrazione Ordine:
 {backendOrderUrl order=$order url=true}
 
 Sono stati ordinati i seguenti articoli:
-{include file="email/blockOrder.tpl"}
+[[ partial("email/blockOrder.tpl") ]]
 
-{include file="email/blockOrderAddresses.tpl"}
+[[ partial("email/blockOrderAddresses.tpl") ]]
 
-{include file="email/it/signature.tpl"}
+[[ partial("email/it/signature.tpl") ]]

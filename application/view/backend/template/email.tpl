@@ -14,7 +14,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 {pageTitle help="customize.templates"}{t _edit_email_templates}{/pageTitle}
-{include file="layout/backend/header.tpl"}
+[[ partial("layout/backend/header.tpl") ]]
 
 <div id="templatePageContainer">
 	<div class="treeContainer">
@@ -32,7 +32,7 @@
 				<div class="sectionContainer" style="display:none;">
 				</div>
 				<div class="notabsContainer">
-					{include file="backend/template/emptyPage.tpl"}
+					[[ partial("backend/template/emptyPage.tpl") ]]
 				</div>
 			</div>
 		</div>
@@ -60,4 +60,4 @@
 </script>
 {/literal}
 
-{include file="layout/backend/footer.tpl"}
+[[ partial("layout/backend/footer.tpl") ]]
