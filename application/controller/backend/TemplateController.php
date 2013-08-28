@@ -11,13 +11,13 @@
  */
 class TemplateController extends StoreManagementController
 {
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 		$this->application->setTheme('');
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$files = Template::getFiles();
 
@@ -37,7 +37,7 @@ class TemplateController extends StoreManagementController
 		return new ActionResponse('categories', json_encode($files));
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$template = new Template($this->getFileName());
 		$response = new ActionResponse();
@@ -52,7 +52,7 @@ class TemplateController extends StoreManagementController
 		return $response;
 	}
 
-	public function templateData()
+	public function templateDataAction()
 	{
 		$request = $this->getRequest();
 		$theme = $request->gget('theme');
@@ -62,7 +62,7 @@ class TemplateController extends StoreManagementController
 	}
 	
 
-	public function add()
+	public function addAction()
 	{
 		$response = $this->edit();
 		$response->get('form')->getValidator()->addCheck('fileName', new IsNotEmptyCheck($this->translate('_file_name_empty')));
@@ -70,7 +70,7 @@ class TemplateController extends StoreManagementController
 		return $response;
 	}
 
-	public function editEmail()
+	public function editEmailAction()
 	{
 		$template = new EmailTemplate($this->getFileName());
 
@@ -103,12 +103,12 @@ class TemplateController extends StoreManagementController
 		return $response;
 	}
 
-	public function editPopup()
+	public function editPopupAction()
 	{
 	   return $this->edit();
 	}
 
-	public function email()
+	public function emailAction()
 	{
 		$files = Template::getFiles();
 
@@ -151,7 +151,7 @@ class TemplateController extends StoreManagementController
 	/**
 	 * @role save
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$request = $this->getRequest();
 		$code = $request->gget('code');
@@ -193,7 +193,7 @@ class TemplateController extends StoreManagementController
 		}
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$template = new Template($this->getFileName());
 		$template->delete();
@@ -205,7 +205,7 @@ class TemplateController extends StoreManagementController
 	/**
 	 * @role saveEmail
 	 */
-	public function saveEmail()
+	public function saveEmailAction()
 	{
 		$file = str_replace('\\', '/', $this->getFileName());
 		$template = new EmailTemplate($file);
@@ -250,7 +250,7 @@ class TemplateController extends StoreManagementController
 		}
 	}
 
-	public function emptyPage()
+	public function emptyPageAction()
 	{
 		return new ActionResponse();
 	}

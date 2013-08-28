@@ -11,7 +11,7 @@
  */
 class ProductQuickImageController extends ObjectImageController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->loadLanguageFile('backend/ProductImage');
 		return parent::index();
@@ -20,7 +20,7 @@ class ProductQuickImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function upload()
+	public function uploadAction()
 	{
 		$result = parent::upload();
 		$request = $this->getRequest();
@@ -47,12 +47,12 @@ class ProductQuickImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		return parent::save();
 	}
 
-	public function resizeImages()
+	public function resizeImagesAction()
 	{
 		return parent::resizeImages();
 	}
@@ -60,7 +60,7 @@ class ProductQuickImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if(parent::delete())
 		{
@@ -75,7 +75,7 @@ class ProductQuickImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 		return parent::saveOrder();
 	}

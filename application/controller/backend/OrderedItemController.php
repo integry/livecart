@@ -10,13 +10,13 @@
  */
 class OrderedItemController extends StoreManagementController
 {
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 		CustomerOrder::allowEmpty();
 	}
 
-	public function create()
+	public function createAction()
 	{
 		$request = $this->getRequest();
 		$query = $request->gget('query');
@@ -153,7 +153,7 @@ class OrderedItemController extends StoreManagementController
 		return ActiveRecordModel::getRecordSet('Product', $searchable->getSelectFilter($query));
 	}
 
-	public function update()
+	public function updateAction()
 	{
 
 	}
@@ -222,7 +222,7 @@ class OrderedItemController extends StoreManagementController
 	 *
 	 * @role update
 	 */
-	public function selectProduct()
+	public function selectProductAction()
 	{
 
 		$response = new ActionResponse();
@@ -240,7 +240,7 @@ class OrderedItemController extends StoreManagementController
 		return $response;
 	}
 
-	public function shipments()
+	public function shipmentsAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'), true, true);
 		return new ActionResponse("shipments", $this->getOrderShipments($order));
@@ -304,7 +304,7 @@ class OrderedItemController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -362,7 +362,7 @@ class OrderedItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function changeShipment()
+	public function changeShipmentAction()
 	{
 		if(($id = (int)$this->request->gget("id", false)) && ($fromID = (int)$this->request->gget("from", false)) && ($toID = (int)$this->request->gget("to", false)))
 		{
@@ -461,7 +461,7 @@ class OrderedItemController extends StoreManagementController
 		}
 	}
 
-	public function changeCount()
+	public function changeCountAction()
 	{
 		if(($id = (int)$this->request->gget("id", false)) )
 		{
@@ -519,7 +519,7 @@ class OrderedItemController extends StoreManagementController
 		}
 	}
 
-	public function optionForm()
+	public function optionFormAction()
 	{
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->gget('id'), true, true);
 		$item->customerOrder->loadAll();
@@ -531,7 +531,7 @@ class OrderedItemController extends StoreManagementController
 		return $response;
 	}
 
-	public function variationForm()
+	public function variationFormAction()
 	{
 		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('Product');
@@ -547,7 +547,7 @@ class OrderedItemController extends StoreManagementController
 		return $response;
 	}
 
-	public function saveOptions()
+	public function saveOptionsAction()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->gget('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->loadAll();
@@ -565,7 +565,7 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
-	public function saveVariations()
+	public function saveVariationsAction()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->gget('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->loadAll();
@@ -589,7 +589,7 @@ class OrderedItemController extends StoreManagementController
 		return $this->getItemResponse($item);
 	}
 
-	public function items()
+	public function itemsAction()
 	{
 		$request = $this->getRequest();
 		$ids = explode(',', $request->gget('item_ids'));
@@ -618,13 +618,13 @@ class OrderedItemController extends StoreManagementController
 		return $response;
 	}
 
-	public function item()
+	public function itemAction()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->gget('id'), OrderedItem::LOAD_DATA);
 		return $this->getItemResponse($item);
 	}
 
-	public function downloadOptionFile()
+	public function downloadOptionFileAction()
 	{
 				$f = select(eq('OrderedItem.ID', $this->request->gget('id')),
 					eq('ProductOptionChoice.optionID', $this->request->gget('option')));

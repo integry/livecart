@@ -10,7 +10,7 @@
  */
 class CategoryRelationshipController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$category = Category::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA);
 
@@ -31,7 +31,7 @@ class CategoryRelationshipController extends StoreManagementController
 		return $response;
 	}
 
-	public function addCategory()
+	public function addCategoryAction()
 	{
 		$category = Category::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$relatedCategory = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
@@ -50,7 +50,7 @@ class CategoryRelationshipController extends StoreManagementController
 		return new JSONResponse(array('data' => $relation->toFlatArray()));
 	}
 
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 	  	$order = $this->request->gget('relatedCategories_' . $this->request->gget('id'));
 		foreach ($order as $key => $value)
@@ -64,7 +64,7 @@ class CategoryRelationshipController extends StoreManagementController
 		return new JSONResponse(false, 'success');
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->gget('categoryId'));
 		$relation->delete();

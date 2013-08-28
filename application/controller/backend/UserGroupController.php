@@ -12,7 +12,7 @@ class UserGroupController extends ActiveGridController
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$userGroups = array();
 		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
@@ -26,7 +26,7 @@ class UserGroupController extends ActiveGridController
 		return new ActionResponse('userGroups', $userGroups);
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$group = UserGroup::getInstanceByID((int)$this->request->gget('id'), true);
 		$form = $this->createUserGroupForm($group);
@@ -40,14 +40,14 @@ class UserGroupController extends ActiveGridController
 		return $response;
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 
 		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->gget('id')));
 	}
 
-	public function users()
+	public function usersAction()
 	{
 		$id = (int)$this->request->gget("id");
 
@@ -78,7 +78,7 @@ class UserGroupController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		if($id = $this->request->gget('id'))
 		{
@@ -106,7 +106,7 @@ class UserGroupController extends ActiveGridController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$userGroup = UserGroup::getNewInstance($this->translate('_new_user_group'));
 		$userGroup->save();
@@ -117,7 +117,7 @@ class UserGroupController extends ActiveGridController
 	/**
 	 * @role remove
 	 */
-	public function remove()
+	public function removeAction()
 	{
 		$userGroup = UserGroup::getInstanceByID((int)$this->request->gget("id"), true);
 		$userGroupArray = $userGroup->toArray();
@@ -148,7 +148,7 @@ class UserGroupController extends ActiveGridController
 		return $validator;
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumnsAction()
 	{
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));

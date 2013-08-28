@@ -14,7 +14,7 @@ abstract class ObjectImageController extends StoreManagementController
 	abstract protected function getOwnerClass();
 	abstract protected function getForeignKeyName();
 
-	public function index()
+	public function indexAction()
 	{
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->gget('id'));
 		$filter = new ARSelectFilter();
@@ -31,7 +31,7 @@ abstract class ObjectImageController extends StoreManagementController
 		return $response;
 	}
 
-	public function upload()
+	public function uploadAction()
 	{
 		$ownerId = $this->request->gget('ownerId');
 
@@ -82,7 +82,7 @@ abstract class ObjectImageController extends StoreManagementController
 		return $response;
 	}
 
-	public function save()
+	public function saveAction()
 	{
 		ActiveRecord::beginTransaction();
 		$image = null;
@@ -146,7 +146,7 @@ abstract class ObjectImageController extends StoreManagementController
 	 * Remove an image
 	 * @return RawResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		try
 		{
@@ -163,7 +163,7 @@ abstract class ObjectImageController extends StoreManagementController
 	 * Save image order
 	 * @return RawResponse
 	 */
-	public function saveOrder($order=null)
+	public function saveOrderAction($order=null)
 	{
 		$ownerId = $this->request->gget('ownerId');
 		if($order === null)
@@ -198,7 +198,7 @@ abstract class ObjectImageController extends StoreManagementController
 		return trim($item);
 	}
 
-	public function resizeImages()
+	public function resizeImagesAction()
 	{
 		set_time_limit(0);
 

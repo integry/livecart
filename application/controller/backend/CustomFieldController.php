@@ -10,14 +10,14 @@
  */
 class CustomFieldController extends StoreManagementController
 {
-	public function init()
+	public function initAction()
 	{
 		$this->loadLanguageFile('backend/Category');
 		$this->loadLanguageFile('backend/CustomField');
 		return parent::init();
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$nodes = array();
 		foreach (EavField::getEavClasses() as $class => $id)

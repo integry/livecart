@@ -16,12 +16,12 @@ class ApiController extends BaseController
 
 	private $modelApi = null;
 
-	public function index()
+	public function indexAction()
 	{
 		return new ActionRedirectResponse('api', 'doc');
 	}
 
-	public function xml()
+	public function xmlAction()
 	{
 		$this->user->allowBackendAccess();
 
@@ -90,7 +90,7 @@ class ApiController extends BaseController
 	/**
 	 *	@role backend
 	 */
-	public function doc()
+	public function docAction()
 	{
 		$this->loadLanguageFile('backend/Settings/API');
 
@@ -103,7 +103,7 @@ class ApiController extends BaseController
 	/**
 	 *	@role backend
 	 */
-	public function docview()
+	public function docviewAction()
 	{
 		$docinfo = $this->getDocInfo();
 		$className = $this->request->gget('class');
@@ -122,7 +122,7 @@ class ApiController extends BaseController
 		return $response;
 	}
 
-	public function docaction()
+	public function docactionAction()
 	{
 		$response = $this->docview();
 
@@ -200,7 +200,7 @@ class ApiController extends BaseController
 		return $response;
 	}
 
-	public function docAuth()
+	public function docAuthAction()
 	{
 		$this->loadLanguageFile('backend/Settings/API');
 

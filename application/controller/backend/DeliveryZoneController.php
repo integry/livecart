@@ -14,7 +14,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * Main settings page
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$zones = array(
 			0 => array('ID' => -1, 'name' => $this->translate('_default_zone')),
@@ -37,7 +37,7 @@ class DeliveryZoneController extends StoreManagementController
 		return $response;
 	}
 
-	public function countriesAndStates()
+	public function countriesAndStatesAction()
 	{
 		if(($id = (int)$this->getId()) <= 0)
 		{
@@ -91,7 +91,7 @@ class DeliveryZoneController extends StoreManagementController
 		return $response;
 	}
 
-	public function loadStates()
+	public function loadStatesAction()
 	{
 		$zone = DeliveryZone::getInstanceByID($this->getId(), true);
 		$states = $this->getStates($zone, $this->request->gget('country'));
@@ -123,7 +123,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveStates()
+	public function saveStatesAction()
 	{
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneState::removeByZone($zone);
@@ -141,7 +141,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveCountries()
+	public function saveCountriesAction()
 	{
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneCountry::removeByZone($zone);
@@ -158,7 +158,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$zone = DeliveryZone::getNewInstance();
 		$zone->name->set($this->translate('_new_delivery_zone'));
@@ -170,7 +170,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		$zone->name->set($this->request->gget('name'));
@@ -188,7 +188,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveCityMask()
+	public function saveCityMaskAction()
 	{
 		if(($errors = $this->isValidMask()) === true)
 		{
@@ -217,7 +217,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role remove
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		DeliveryZone::getInstanceByID((int)$this->getId())->delete();
 
@@ -227,7 +227,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function deleteCityMask()
+	public function deleteCityMaskAction()
 	{
 		DeliveryZoneCityMask::getInstanceByID((int)$this->getId())->delete();
 
@@ -237,7 +237,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveZipMask()
+	public function saveZipMaskAction()
 	{
    		if(($errors = $this->isValidMask()) === true)
 		{
@@ -266,7 +266,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function deleteZipMask()
+	public function deleteZipMaskAction()
 	{
 		DeliveryZoneZipMask::getInstanceByID((int)$this->getId())->delete();
 
@@ -276,7 +276,7 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveAddressMask()
+	public function saveAddressMaskAction()
 	{
    		if(($errors = $this->isValidMask()) === true)
 		{
@@ -305,14 +305,14 @@ class DeliveryZoneController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function deleteAddressMask()
+	public function deleteAddressMaskAction()
 	{
 		DeliveryZoneAddressMask::getInstanceByID((int)$this->request->gget('id'))->delete();
 
 		return new JSONResponse(false, 'success');
 	}
 
-	public function testAddress()
+	public function testAddressAction()
 	{
 		$address = UserAddress::getNewInstance();
 		$address->loadRequestData($this->request);

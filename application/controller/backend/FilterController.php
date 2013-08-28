@@ -21,7 +21,7 @@ class FilterController extends StoreManagementController
 	 * 
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -41,7 +41,7 @@ class FilterController extends StoreManagementController
 	 * 
 	 * @return JSONResponse
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
@@ -64,7 +64,7 @@ class FilterController extends StoreManagementController
 	 * 
 	 * @return JSONResponse
 	 */
-	public function generate()
+	public function generateAction()
 	{		
 		$filters = array();   
 		foreach(SpecField::getInstanceByID((int)$this->request->gget('specFieldID'), true)->getValuesList() as $value)

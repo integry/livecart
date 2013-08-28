@@ -13,7 +13,7 @@ class TaxController extends StoreManagementController
 	 * List all system currencies
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 
@@ -35,7 +35,7 @@ class TaxController extends StoreManagementController
 		return $this->appendTaxRates($response);
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$tax = Tax::getInstanceByID((int)$this->request->gget('id'), true);
 		$form = $this->createTaxForm($tax);
@@ -49,7 +49,7 @@ class TaxController extends StoreManagementController
 	/**
 	 * @role remove
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$service = Tax::getInstanceByID((int)$this->request->gget('id'));
 		$service->delete();
@@ -60,7 +60,7 @@ class TaxController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$request = $this->getRequest();
 		$tax = Tax::getInstanceByID((int)$request->gget('id'));
@@ -70,7 +70,7 @@ class TaxController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$tax = Tax::getNewInstance($this->request->gget('name'));
 		$tax->position->set(1000);
@@ -110,7 +110,7 @@ class TaxController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-	public function createTaxFormValidator(Tax $tax)
+	public function createTaxFormValidatorAction(Tax $tax)
 	{
 		$validator = $this->getValidator("taxForm_" . $tax->isExistingRecord() ? $tax->getID() : '', $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
@@ -133,7 +133,7 @@ class TaxController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{

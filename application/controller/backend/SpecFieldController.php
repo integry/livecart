@@ -20,7 +20,7 @@ class SpecFieldController extends EavFieldControllerCommon
 		return 'SpecField';
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		return parent::index();
 	}
@@ -30,7 +30,7 @@ class SpecFieldController extends EavFieldControllerCommon
 	 *
 	 * @return ActionResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$specFieldList = parent::item()->getValue();
 
@@ -44,7 +44,7 @@ class SpecFieldController extends EavFieldControllerCommon
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
@@ -52,7 +52,7 @@ class SpecFieldController extends EavFieldControllerCommon
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		return parent::create();
 	}
@@ -68,7 +68,7 @@ class SpecFieldController extends EavFieldControllerCommon
 	 * @role update
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -79,7 +79,7 @@ class SpecFieldController extends EavFieldControllerCommon
 	 * @role update
 	 * @return JSONResponse
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}

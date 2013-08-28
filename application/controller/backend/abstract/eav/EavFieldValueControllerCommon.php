@@ -16,7 +16,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse Indicates status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget('id', false))
 		{
@@ -34,7 +34,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 	 *
 	 * return JSONResponse Indicates status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
@@ -50,7 +50,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 		return new JSONResponse(false, 'success');
 	}
 
-	public function mergeValues()
+	public function mergeValuesAction()
 	{
 		$mergedIntoValue = $this->getInstanceByID($this->request->gget('mergeIntoValue'), true);
 

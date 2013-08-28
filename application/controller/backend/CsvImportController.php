@@ -23,7 +23,7 @@ class CsvImportController extends StoreManagementController
 									'_del_tab' => "\t"
 								);
 
-	public function index()
+	public function indexAction()
 	{
 		$classes = array_diff($this->application->getPluginClasses('application.model.datasync.import'), array('ProductImport'));
 		$classes = array_merge(array('ProductImport'), $classes);
@@ -46,7 +46,7 @@ class CsvImportController extends StoreManagementController
 		return $response;
 	}
 
-	public function setFile()
+	public function setFileAction()
 	{
 		$filePath = '';
 
@@ -75,7 +75,7 @@ class CsvImportController extends StoreManagementController
 		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => array('file' => $filePath, 'category' => $this->request->gget('category'), 'type' => $this->request->gget('type'), 'options' => base64_encode(serialize($this->request->gget('options'))))));
 	}
 
-	public function delimiters()
+	public function delimitersAction()
 	{
 		$file = $this->request->gget('file');
 		if (!file_exists($file))
@@ -158,12 +158,12 @@ class CsvImportController extends StoreManagementController
 		return $response;
 	}
 
-	public function preview()
+	public function previewAction()
 	{
 		return new ActionResponse('preview', $this->getPreview(new CsvFile($this->request->gget('file'), $this->request->gget('delimiter'))));
 	}
 
-	public function fields()
+	public function fieldsAction()
 	{
 		$import = $this->getImportInstance();
 
@@ -177,7 +177,7 @@ class CsvImportController extends StoreManagementController
 		return $response;
 	}
 
-	public function loadProfile()
+	public function loadProfileAction()
 	{
 		$import = $this->getImportInstance();
 		$file = $this->getProfileDirectory($import) . $this->request->gget('profile') . '.ini';
@@ -185,7 +185,7 @@ class CsvImportController extends StoreManagementController
 		return new JSONResponse($profile->toArray());
 	}
 
-	public function deleteProfile()
+	public function deleteProfileAction()
 	{
 		$import = $this->getImportInstance();
 		$file = $this->getProfileDirectory($import) . $this->request->gget('profile') . '.ini';
@@ -194,7 +194,7 @@ class CsvImportController extends StoreManagementController
 		return new JSONResponse(array('profile' => $this->request->gget('profile')), 'success', $this->translate('_profile_deleted'));
 	}
 
-	public function import()
+	public function importAction()
 	{
 		$options = unserialize(base64_decode($this->request->gget('options')));
 
@@ -350,7 +350,7 @@ class CsvImportController extends StoreManagementController
 		exit;
 	}
 
-	public function isCancelled()
+	public function isCancelledAction()
 	{
 		$k = 0;
 		$ret = false;

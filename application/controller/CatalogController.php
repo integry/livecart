@@ -40,7 +40,7 @@ abstract class CatalogController extends FrontendController
 		return $context;
 	}
 
-	public function getSelectFilter()
+	public function getSelectFilterAction()
 	{
 		$selectFilter = new ARSelectFilter();
 		$this->application->processInstancePlugins('productFilter', $selectFilter);
@@ -82,7 +82,7 @@ abstract class CatalogController extends FrontendController
 		return $productFilter;
 	}
 
-	public function getAppliedFilters(FrontendController $controller = null)
+	public function getAppliedFiltersAction(FrontendController $controller = null)
 	{
 		if (!$controller)
 		{

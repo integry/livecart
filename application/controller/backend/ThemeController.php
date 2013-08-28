@@ -14,7 +14,7 @@ class ThemeController extends StoreManagementController
 	private $fromTheme;
 	private $toTheme;
 
-	public function index()
+	public function indexAction()
 	{
 		$themes = array_merge(array('barebone' => 'barebone'), array_diff($this->application->getRenderer()->getThemeList(), array('barebone')));
 		unset($themes['default'], $themes['default-3column'], $themes['light'], $themes['light-3column']);
@@ -28,7 +28,7 @@ class ThemeController extends StoreManagementController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$theme = new Theme($this->request->gget('id'), $this->application);
 		$arr = $theme->toArray();
@@ -48,7 +48,7 @@ class ThemeController extends StoreManagementController
 		return $response;
 	}
 
-	public function saveSettings()
+	public function saveSettingsAction()
 	{
 		$themes = array();
 		for ($k = 1; $k <= 3; $k++)
@@ -66,7 +66,7 @@ class ThemeController extends StoreManagementController
 		return new JSONResponse(false, 'success', $this->translate('_theme_saved'));
 	}
 
-	public function add()
+	public function addAction()
 	{
 		$inst = new Theme($this->request->gget('name'), $this->application);
 
@@ -90,7 +90,7 @@ class ThemeController extends StoreManagementController
 		}
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$inst = new Theme($this->request->gget('id'), $this->application);
 		if ($inst->isCoreTheme())
@@ -104,7 +104,7 @@ class ThemeController extends StoreManagementController
 		}
 	}
 
-	public function colors()
+	public function colorsAction()
 	{
 		$inst = new Theme($this->request->gget('id'), $this->application);
 
@@ -131,7 +131,7 @@ class ThemeController extends StoreManagementController
 		return $out;
 	}
 
-	public function saveColors()
+	public function saveColorsAction()
 	{
 		$theme = $this->request->gget('id');
 		$css = new EditedCssFile($theme);
@@ -165,7 +165,7 @@ class ThemeController extends StoreManagementController
 		return new ActionRedirectResponse('backend.theme', 'cssIframe', array('query' => array('theme' => $theme, 'saved' => true)));
 	}
 
-	public function cssIframe()
+	public function cssIframeAction()
 	{
 		$this->setLayout('empty');
 
@@ -227,7 +227,7 @@ class ThemeController extends StoreManagementController
 		return $conf;
 	}
 
-	public function copyTheme()
+	public function copyThemeAction()
 	{
 		$res = $this->doCopyTheme();
 		return new JSONResponse
@@ -272,7 +272,7 @@ class ThemeController extends StoreManagementController
 			'message'=>$this->maketext('_theme_copied', array($this->fromTheme, $this->toTheme)));
 	}
 
-	public function onThemeFileCopied($file)
+	public function onThemeFileCopiedAction($file)
 	{
 		if (preg_match('/\.(tpl|css)$/i',$file))
 		{
@@ -286,7 +286,7 @@ class ThemeController extends StoreManagementController
 		}
 	}
 
-	public function import()
+	public function importAction()
 	{
 		$this->setLayout('iframeJs');
 		$response = new ActionResponse();
@@ -425,7 +425,7 @@ class ThemeController extends StoreManagementController
 		return $files;
 	}
 
-	public function export()
+	public function exportAction()
 	{
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
 		$id = $this->getRequest()->get('id');

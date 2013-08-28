@@ -15,7 +15,7 @@ abstract class FrontendController extends ControllerBase
 	 */
 	protected $order;
 
-	public function ___construct(LiveCart $application)
+	public function ___constructAction(LiveCart $application)
 	{
 		parent::__construct($application);
 
@@ -49,7 +49,7 @@ abstract class FrontendController extends ControllerBase
 		}
 	}
 
-	public function init()
+	public function initAction()
 	{
 		$initRes = parent::init();
 
@@ -83,7 +83,7 @@ abstract class FrontendController extends ControllerBase
 		return $initRes;
 	}
 
-	public function getRequestCurrency()
+	public function getRequestCurrencyAction()
 	{
 		$currencyCode = $this->request->gget('currency', $this->application->getDefaultCurrencyCode());
 
@@ -100,12 +100,12 @@ abstract class FrontendController extends ControllerBase
 		}
 	}
 
-	public function setOrder(CustomerOrder $order)
+	public function setOrderAction(CustomerOrder $order)
 	{
 		$this->order = $order;
 	}
 
-	public function addBreadCrumb($title, $url)
+	public function addBreadCrumbAction($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}
@@ -169,7 +169,7 @@ abstract class FrontendController extends ControllerBase
 		$address->save();
 	}
 
-	public function quickLoginBlock()
+	public function quickLoginBlockAction()
 	{
 		if (!$this->user->isAnonymous())
 		{
@@ -636,7 +636,7 @@ abstract class FrontendController extends ControllerBase
 		}
 	}
 
-	public function bestsellingProductsBlock()
+	public function bestsellingProductsBlockAction()
 	{
 
 		$cache = $this->application->getCache();
@@ -713,7 +713,7 @@ abstract class FrontendController extends ControllerBase
 		return new BlockResponse('code', $code);
 	}
 
-	public function latestNewsBlock()
+	public function latestNewsBlockAction()
 	{
 		$this->application->logStat('Starting latestNewsBlock');
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
@@ -733,7 +733,7 @@ abstract class FrontendController extends ControllerBase
 		return $response;
 	}
 
-	public function blockQuickNavBlock()
+	public function blockQuickNavBlockAction()
 	{
 		$response = new BlockResponse();
 
@@ -804,7 +804,7 @@ abstract class FrontendController extends ControllerBase
 	}
 
 	/*
-	public function __get($name)
+	public function __getAction($name)
 	{
 		if ($inst = parent::__get($name))
 		{

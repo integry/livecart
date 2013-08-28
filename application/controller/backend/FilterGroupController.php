@@ -22,7 +22,7 @@ class FilterGroupController extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 
@@ -51,7 +51,7 @@ class FilterGroupController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->gget('specFieldID', false)));
 
@@ -66,7 +66,7 @@ class FilterGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$filterGroup = FilterGroup::getInstanceByID((int)$this->request->gget('ID'));
 
@@ -117,7 +117,7 @@ class FilterGroupController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$groupID = $this->request->gget('id');
 		$categoryID = $this->request->gget('categoryID');
@@ -156,7 +156,7 @@ class FilterGroupController extends StoreManagementController
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -176,7 +176,7 @@ class FilterGroupController extends StoreManagementController
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{

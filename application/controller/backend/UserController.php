@@ -9,7 +9,7 @@
  */
 class UserController extends StoreManagementController
 {
-	public function info()
+	public function infoAction()
 	{
 		$user = User::getInstanceById((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
 
@@ -35,7 +35,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		return $this->save(null);
 	}
@@ -43,7 +43,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$user = User::getInstanceByID((int)$this->request->gget('id'), true);
 
@@ -85,7 +85,7 @@ class UserController extends StoreManagementController
 		return $validator;
 	}
 
-	public function generatePassword()
+	public function generatePasswordAction()
 	{
 				return new RawResponse(Password::create(10, Password::MIX));
 	}
@@ -162,7 +162,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @role mass
 	 */
-	public function processMass()
+	public function processMassAction()
 	{
 
 		$filter = new ARSelectFilter();
@@ -186,7 +186,7 @@ class UserController extends StoreManagementController
 		return $mass->process(User::LOAD_REFERENCES);
 	}
 
-	public function isMassCancelled()
+	public function isMassCancelledAction()
 	{
 
 		return new JSONResponse(array('isCancelled' => UserMassActionProcessor::isCancelled($this->request->gget('pid'))));
@@ -196,13 +196,13 @@ class UserController extends StoreManagementController
 	 *  Return a list of states for the selected country
 	 *  @return JSONResponse
 	 */
-	public function states()
+	public function statesAction()
 	{
 		$states = State::getStatesByCountry($this->request->gget('country'));
 		return new JSONResponse($states);
 	}
 
-	public function selectPopup()
+	public function selectPopupAction()
 	{
 		$userGroups = array();
 		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);

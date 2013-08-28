@@ -12,7 +12,7 @@ class UserController extends FrontendController
 
  	const COUNT_RECENT_FILES = 5;
 
- 	public function init()
+ 	public function initAction()
  	{
  		$initRes = parent::init();
 
@@ -45,7 +45,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$this->addAccountBreadcrumb();
 
@@ -97,7 +97,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function orders()
+	public function ordersAction()
 	{
 		$this->addAccountBreadcrumb();
 		$this->addBreadCrumb($this->translate('_your_orders'), '');
@@ -112,7 +112,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function invoices()
+	public function invoicesAction()
 	{
 		$page = $this->request->gget('id', 1);
 		$perPage = $this->getOrdersPerPage();
@@ -130,7 +130,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function pendingInvoices()
+	public function pendingInvoicesAction()
 	{
 		$page = $this->request->gget('id', 1);
 		$perPage = $this->getOrdersPerPage();
@@ -240,7 +240,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function files()
+	public function filesAction()
 	{
 		$this->addAccountBreadcrumb();
 		$this->addFilesBreadcrumb();
@@ -254,7 +254,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->get()->loadAll();
@@ -296,7 +296,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function changePassword()
+	public function changePasswordAction()
 	{
 		$this->addAccountBreadcrumb();
 
@@ -310,7 +310,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doChangePassword()
+	public function doChangePasswordAction()
 	{
 		if (!$this->buildPasswordChangeValidator()->isValid())
 		{
@@ -328,7 +328,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function changeEmail()
+	public function changeEmailAction()
 	{
 		$this->addAccountBreadcrumb();
 
@@ -342,7 +342,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doChangeEmail()
+	public function doChangeEmailAction()
 	{
 		if (!$this->buildEmailChangeValidator()->isValid())
 		{
@@ -360,7 +360,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function personal()
+	public function personalAction()
 	{
 		$this->addAccountBreadcrumb();
 		$this->addBreadcrumb($this->translate('_personal_info'), '');
@@ -375,7 +375,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function savePersonal()
+	public function savePersonalAction()
 	{
 		$validator = $this->buildPersonalDataValidator($this->user);
 		if (!$validator->isValid())
@@ -394,7 +394,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function addresses()
+	public function addressesAction()
 	{
 		$this->addAccountBreadcrumb();
 		$this->addAddressBreadcrumb();
@@ -409,7 +409,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function viewOrder()
+	public function viewOrderAction()
 	{
 		$id = $this->request->gget('id');
 		if ($order = $this->user->getOrder($id))
@@ -485,7 +485,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function reorder()
+	public function reorderAction()
 	{
 		$order = $this->user->getOrder($this->request->gget('id'));
 		if ($order)
@@ -503,7 +503,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function addNote()
+	public function addNoteAction()
 	{
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->gget('id')));
@@ -539,7 +539,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function orderInvoice()
+	public function orderInvoiceAction()
 	{
 		$this->addAccountBreadcrumb();
 		$this->application->setTheme('');
@@ -557,7 +557,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function register()
+	public function registerAction()
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
@@ -572,7 +572,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function registerAddress()
+	public function registerAddressAction()
 	{
 		$this->request->set('return', 'user/index');
 		$response = $this->checkout();
@@ -580,7 +580,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function doRegister()
+	public function doRegisterAction()
 	{
 		if (!$this->buildRegValidator()->isValid())
 		{
@@ -610,12 +610,12 @@ class UserController extends FrontendController
 		}
 	}
 
-	public function unconfirmed()
+	public function unconfirmedAction()
 	{
 		return new ActionResponse();
 	}
 
-	public function confirm()
+	public function confirmAction()
 	{
 		$success = false;
 
@@ -642,7 +642,7 @@ class UserController extends FrontendController
 	/**
 	 *  Login form
 	 */
-	public function login()
+	public function loginAction()
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
@@ -666,7 +666,7 @@ class UserController extends FrontendController
 	/**
 	 *  Process actual login
 	 */
-	public function doLogin()
+	public function doLoginAction()
 	{
 		$user = User::getInstanceByLogin($this->request->gget('email'), $this->request->gget('password'));
 		if (!$user)
@@ -730,7 +730,7 @@ class UserController extends FrontendController
 		}
 	}
 
-	public function remindPassword()
+	public function remindPasswordAction()
 	{
 		$this->addBreadCrumb($this->translate('_remind_password'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
@@ -740,7 +740,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function doRemindPassword()
+	public function doRemindPasswordAction()
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('User', 'email'), $this->request->gget('email')));
 		$s = ActiveRecordModel::getRecordSet('User', $f);
@@ -759,20 +759,20 @@ class UserController extends FrontendController
 		return new ActionRedirectResponse('user', 'remindComplete', array('query' => 'email=' . $this->request->gget('email')));
 	}
 
-	public function remindComplete()
+	public function remindCompleteAction()
 	{
 		$response = new ActionResponse();
 		$response->set('email', $this->request->gget('email'));
 		return $response;
 	}
 
-	public function logout()
+	public function logoutAction()
 	{
 		SessionUser::destroy();
 		return new ActionRedirectResponse('index', 'index');
 	}
 
-	public function checkout()
+	public function checkoutAction()
 	{
 		if ($this->config->get('DISABLE_GUEST_CHECKOUT') && !$this->config->get('REQUIRE_REG_ADDRESS'))
 		{
@@ -799,7 +799,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function processCheckoutRegistration()
+	public function processCheckoutRegistrationAction()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -892,7 +892,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function deleteShippingAddress()
+	public function deleteShippingAddressAction()
 	{
 		try
 		{
@@ -907,7 +907,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function deleteBillingAddress()
+	public function deleteBillingAddressAction()
 	{
 		try
 		{
@@ -928,7 +928,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function editShippingAddress()
+	public function editShippingAddressAction()
 	{
 		try
 		{
@@ -945,7 +945,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function editBillingAddress()
+	public function editBillingAddressAction()
 	{
 		try
 		{
@@ -992,7 +992,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function saveShippingAddress()
+	public function saveShippingAddressAction()
 	{
 		try
 		{
@@ -1009,7 +1009,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function saveBillingAddress()
+	public function saveBillingAddressAction()
 	{
 		try
 		{
@@ -1040,7 +1040,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function addBillingAddress($shipping = false)
+	public function addBillingAddressAction($shipping = false)
 	{
 		$this->addAccountBreadcrumb();
 		$this->addAddressBreadcrumb();
@@ -1081,7 +1081,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function addShippingAddress()
+	public function addShippingAddressAction()
 	{
 		$response = $this->addBillingAddress(true);
 		$this->addBreadCrumb($this->translate('_add_shipping_address'), '');
@@ -1091,7 +1091,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doAddBillingAddress()
+	public function doAddBillingAddressAction()
 	{
 		return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->gget('return')))));
 	}
@@ -1099,7 +1099,7 @@ class UserController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doAddShippingAddress()
+	public function doAddShippingAddressAction()
 	{
 		return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->gget('return')))));
 	}
@@ -1108,7 +1108,7 @@ class UserController extends FrontendController
 	 *  Return a list of states for the selected country
 	 *  @return JSONResponse
 	 */
-	public function states()
+	public function statesAction()
 	{
 		$states = State::getStatesByCountry($this->request->gget('country'));
 		return new JSONResponse($states);
@@ -1121,7 +1121,7 @@ class UserController extends FrontendController
 	 *  @return ActionRedirectResponse
 	 *	@role login
 	 */
-	public function download()
+	public function downloadAction()
 	{
 		// get and validate OrderedItem instance first
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->gget('id')));
@@ -1160,7 +1160,7 @@ class UserController extends FrontendController
 	 *	Make payment for unpaid or partially paid order
 	 *	@role login
 	 */
-	public function pay()
+	public function payAction()
 	{
 		$this->loadLanguageFile('Checkout');
 		$this->addAccountBreadcrumb();
@@ -1227,7 +1227,7 @@ class UserController extends FrontendController
 		return $user;
 	}
 
-	public function sendWelcomeEmail(User $user)
+	public function sendWelcomeEmailAction(User $user)
 	{
 		// send welcome email with user account details
 		if ($this->config->get('EMAIL_NEW_USER'))
@@ -1419,7 +1419,7 @@ class UserController extends FrontendController
 		$validator->addCheck('email', new IsUniqueEmailCheck($emailErr));
 	}
 
-	public function validateAddress(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
+	public function validateAddressAction(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
 	{
 		$this->validateName($validator, $fieldPrefix, $orCheck);
 
@@ -1537,7 +1537,7 @@ class UserController extends FrontendController
 		}
 	}
 
-	public function invoicesMenuBlock()
+	public function invoicesMenuBlockAction()
 	{
 		if ($this->user->isAnonymous())
 		{
@@ -1551,7 +1551,7 @@ class UserController extends FrontendController
 		return $response;
 	}
 
-	public function cancelFurtherRebills()
+	public function cancelFurtherRebillsAction()
 	{
 												$request = $this->getRequest();
 		$id = $request->gget('id');
@@ -1585,7 +1585,7 @@ class UserController extends FrontendController
 		return new ActionRedirectResponse('user', 'viewOrder', $params);
 	}
 
-	public function generateTestInvoices()
+	public function generateTestInvoicesAction()
 	{
 		return ;
 

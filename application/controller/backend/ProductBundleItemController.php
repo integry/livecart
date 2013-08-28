@@ -15,7 +15,7 @@ class ProductBundleItemController extends StoreManagementController
 	 *
 	 * @role update
 	 */
-	public function add()
+	public function addAction()
 	{
 		$productID = $this->request->gget('relatedownerID');
 		$ownerID = $this->request->gget('id');
@@ -53,7 +53,7 @@ class ProductBundleItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$relatedProductID = (int)$this->request->gget('id');
 		$productID = (int)$this->request->gget('relatedProductID');
@@ -67,7 +67,7 @@ class ProductBundleItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function setCount()
+	public function setCountAction()
 	{
 		$productID = (int)$this->request->gget('id');
 		$relatedProductID = (int)$this->request->gget('relatedownerID');
@@ -88,7 +88,7 @@ class ProductBundleItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.

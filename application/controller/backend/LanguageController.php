@@ -16,7 +16,7 @@ class LanguageController extends StoreManagementController
 	 * @role language
 	 * @return ActionResponse
 	 */
-	public function export()
+	public function exportAction()
 	{
 		// preload current locale
 		$this->locale;
@@ -92,7 +92,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.update
 	 * @return ActionResponse
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$enLocale = Locale::getInstance('en');
 		$enLocale->translationManager()->updateDefinitions();
@@ -105,7 +105,7 @@ class LanguageController extends StoreManagementController
 	 * @return ActionResponse
 	 * @role language
 	 */
-	public function edit()
+	public function editAction()
 	{
 		// preload current locale
 		$this->locale;
@@ -213,7 +213,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.update
 	 * @return ActionRedirectResponse
 	 */
-	public function save()
+	public function saveAction()
 	{
 		// preload current locale
 		$this->locale;
@@ -260,7 +260,7 @@ class LanguageController extends StoreManagementController
 	 * @return ActionResponse
 	 * @role language
 	 */
-	public function index()
+	public function indexAction()
 	{
 		// get all added languages
 		$list = $this->getLanguages()->toArray();
@@ -274,7 +274,7 @@ class LanguageController extends StoreManagementController
 	/**
 	 * @role language.create
 	 */
-	public function addForm()
+	public function addFormAction()
 	{
 		// get all Locale languages
 		$languagesSelect = $this->locale->info()->getAllLanguages();
@@ -299,7 +299,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.remove
 	 * @return RawResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$langId = $this->request->gget('id');
 
@@ -319,7 +319,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.sort
 	 * @return RawResponse
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 	  	$order = $this->request->gget('languageList');
 		foreach ($order as $key => $value)
@@ -340,7 +340,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.status
 	 * @return ActionRedirectResponse
 	 */
-	public function setDefault()
+	public function setDefaultAction()
 	{
 		try
 		{
@@ -370,7 +370,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.status
 	 * @return JSONResponse
 	 */
-	public function setEnabled()
+	public function setEnabledAction()
 	{
 		$id = $this->request->gget('id');
 		$lang = Language::getInstanceById($id);
@@ -385,7 +385,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.create
 	 * @return JSONResponse
 	 */
-	public function add()
+	public function addAction()
 	{
 		$lang = ActiveRecord::getNewInstance('Language');
 		$lang->setID($this->request->gget("id"));
@@ -398,7 +398,7 @@ class LanguageController extends StoreManagementController
 	 * Displays system menu for switching active language
 	 * @return ActionResponse
 	 */
-	public function langSwitchMenu()
+	public function langSwitchMenuAction()
 	{
 		$response = new ActionResponse();
 
@@ -421,7 +421,7 @@ class LanguageController extends StoreManagementController
 	 * @return RedirectResponse
 	 * @todo Save language preference in User Settings, so the language would be selected automatically for subsequent visits
 	 */
-	public function changeLanguage()
+	public function changeLanguageAction()
 	{
 		$returnRoute = base64_decode($this->request->gget('returnRoute'));
 
@@ -447,7 +447,7 @@ class LanguageController extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function translationDialog()
+	public function translationDialogAction()
 	{
 	  	$id = $this->request->gget('id');
 	  	$file = base64_decode($this->request->gget('file'));
@@ -470,7 +470,7 @@ class LanguageController extends StoreManagementController
 	 * @role language.update
 	 * @return ActionResponse
 	 */
-	public function saveTranslationDialog()
+	public function saveTranslationDialogAction()
 	{
 	  	$file = $this->request->gget('file');
 

@@ -17,7 +17,7 @@ class RssController extends FrontendController
 {
 	private $enabledFeeds = null;
 
-	public function products()
+	public function productsAction()
 	{
 		$this->setLayout('empty');
 		set_time_limit(0);
@@ -46,7 +46,7 @@ class RssController extends FrontendController
 		return $response;
 	}
 
-	public function news()
+	public function newsAction()
 	{
 		$this->shouldBeEnabledFeed('NEWS_POSTS');
 		$this->setLayout('empty');

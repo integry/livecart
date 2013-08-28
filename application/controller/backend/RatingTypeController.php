@@ -8,7 +8,7 @@
  */
 class RatingTypeController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$category = Category::getInstanceByID($this->request->gget('id'), Category::LOAD_DATA);
 		$types = ProductRatingType::getCategoryRatingTypes($category)->toArray();
@@ -21,7 +21,7 @@ class RatingTypeController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function edit()
+	public function editAction()
 	{
 		$form = $this->buildForm();
 		$type = ActiveRecordModel::getInstanceByID('ProductRatingType', $this->request->gget('id'), ProductRatingType::LOAD_DATA);
@@ -32,7 +32,7 @@ class RatingTypeController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
@@ -51,7 +51,7 @@ class RatingTypeController extends StoreManagementController
 	 * Create new record
 	 * @role create
 	 */
-	public function add()
+	public function addAction()
 	{
 		return $this->save();
 	}
@@ -62,7 +62,7 @@ class RatingTypeController extends StoreManagementController
 	 * @role delete
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		try
 	  	{
@@ -80,7 +80,7 @@ class RatingTypeController extends StoreManagementController
 	 * @role sort
 	 * @return RawResponse
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 		$order = array_reverse($this->request->gget('typeList_' . $this->request->gget('id')));
 

@@ -10,7 +10,7 @@
  */
 class ProductRelationshipController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$productID = (int)$this->request->gget('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
@@ -30,7 +30,7 @@ class ProductRelationshipController extends StoreManagementController
 	 *
 	 * @role update
 	 */
-	public function selectProduct()
+	public function selectProductAction()
 	{
 		$response = new ActionResponse();
 
@@ -46,7 +46,7 @@ class ProductRelationshipController extends StoreManagementController
 	 *
 	 * @role update
 	 */
-	public function addRelated()
+	public function addRelatedAction()
 	{
 		$productID = (int)$this->request->gget('id');
 		$relatedProductID = (int)$this->request->gget('relatedownerID');
@@ -82,7 +82,7 @@ class ProductRelationshipController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$productID = (int)$this->request->gget('id');
 		$relatedProductID = (int)$this->request->gget('relatedownerID');
@@ -99,7 +99,7 @@ class ProductRelationshipController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 

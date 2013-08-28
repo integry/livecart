@@ -9,7 +9,7 @@
  */
 class ManufacturersController extends FrontendController
 {
-	public function index()
+	public function indexAction()
 	{
 /*
 MANUFACTURER_PAGE_LIST_STYLE
@@ -64,7 +64,7 @@ MANUFACTURER_PAGE_PER_PAGE
 		return $response;
 	}
 
-	public function view()
+	public function viewAction()
 	{
 		$manufacturer = Manufacturer::getInstanceByID($this->request->gget('id'), true);
 		$manufacturer->load();

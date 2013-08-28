@@ -25,17 +25,17 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		return new JSONResponse($this->getInstanceByID($this->request->gget('id'), true)->toArray());
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		return $this->save($this->getInstanceByID($this->request->gget('id')));
 	}
 
-	public function create()
+	public function createAction()
 	{
 		$specFieldGroup = call_user_func_array(array($this->getClassName(), 'getNewInstance'), array($this->getParent($this->request->gget('categoryID'))));
 		return $this->save($specFieldGroup);
@@ -46,7 +46,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -64,7 +64,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{

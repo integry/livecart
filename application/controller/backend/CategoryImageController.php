@@ -11,7 +11,7 @@
  */
 class CategoryImageController extends ObjectImageController
 {
-	public function index()
+	public function indexAction()
 	{
 		return parent::index();
 	}
@@ -19,7 +19,7 @@ class CategoryImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function upload()
+	public function uploadAction()
 	{
 		return parent::upload();
 	}
@@ -27,12 +27,12 @@ class CategoryImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		return parent::save();
 	}
 
-	public function resizeImages()
+	public function resizeImagesAction()
 	{
 		return parent::resizeImages();
 	}
@@ -40,7 +40,7 @@ class CategoryImageController extends ObjectImageController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if(parent::delete())
 		{
@@ -55,7 +55,7 @@ class CategoryImageController extends ObjectImageController
 	/**
 	 * @role sort
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 		parent::saveOrder();
 

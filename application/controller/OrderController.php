@@ -15,7 +15,7 @@ class OrderController extends FrontendController
 	/**
 	 *  View shopping cart contents
 	 */
-	public function index()
+	public function indexAction()
 	{
 		if ($this->order->isMultiAddress->get())
 		{
@@ -46,7 +46,7 @@ class OrderController extends FrontendController
 	/**
 	 *  View shopping cart contents
 	 */
-	public function cartPopup()
+	public function cartPopupAction()
 	{
 		if (!$this->user->isAnonymous())
 		{
@@ -70,7 +70,7 @@ class OrderController extends FrontendController
 	/**
 	 *  View shopping cart contents
 	 */
-	public function addConfirmation()
+	public function addConfirmationAction()
 	{
 		if (!$this->user->isAnonymous())
 		{
@@ -95,7 +95,7 @@ class OrderController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function multi()
+	public function multiAction()
 	{
 		if (!$this->order->isMultiAddress->get())
 		{
@@ -303,14 +303,14 @@ class OrderController extends FrontendController
 		return array('visible' => $optionsArray, 'more' => $moreOptions);
 	}
 
-	public function options()
+	public function optionsAction()
 	{
 		$response = $this->index();
 		$response->set('editOption', $this->request->gget('id'));
 		return $response;
 	}
 
-	public function optionForm(CustomerOrder $order = null, $filter = 'isDisplayed')
+	public function optionFormAction(CustomerOrder $order = null, $filter = 'isDisplayed')
 	{
 		$order = $order ? $order : $this->order;
 
@@ -329,7 +329,7 @@ class OrderController extends FrontendController
 		return $response;
 	}
 
-	public function variationForm(CustomerOrder $order = null)
+	public function variationFormAction(CustomerOrder $order = null)
 	{
 		$order = $order ? $order : $this->order;
 
@@ -367,7 +367,7 @@ class OrderController extends FrontendController
 	/**
 	 *  Update product quantities
 	 */
-	public function update()
+	public function updateAction()
 	{
 		// TOS
 		if ($this->isTosInCartPage())
@@ -533,7 +533,7 @@ class OrderController extends FrontendController
 	/**
 	 *  Remove a product from shopping cart
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
 		$this->setMessage($this->makeText('_removed_from_cart', array($item->getProduct()->getName($this->getRequestLanguage()))));
@@ -546,7 +546,7 @@ class OrderController extends FrontendController
 	/**
 	 *  Add a new product to shopping cart
 	 */
-	public function addToCart()
+	public function addToCartAction()
 	{
 		// avoid search engines adding items to cart...
 		if ($this->request->gget('csid') && ($this->request->gget('csid') != session_id()))
@@ -634,7 +634,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function cartUpdate()
+	public function cartUpdateAction()
 	{
 		if ($this->order->isMultiAddress->get())
 		{
@@ -658,7 +658,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function miniCartBlock()
+	public function miniCartBlockAction()
 	{
 		$this->loadLanguageFile('Order');
 		$this->order->loadAll();
@@ -666,7 +666,7 @@ class OrderController extends FrontendController
 		return new BlockResponse('order', $this->order->toArray());
 	}
 
-	public function ajaxCart()
+	public function ajaxCartAction()
 	{
 		$this->loadLanguageFile('Order');
 		$this->order->loadAll();
@@ -787,7 +787,7 @@ class OrderController extends FrontendController
 		return $item;
 	}
 
-	public function moveToCart()
+	public function moveToCartAction()
 	{
 		$item = $this->order->getItemByID($this->request->gget('id'));
 		$item->isSavedForLater->set(false);
@@ -800,7 +800,7 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
 	}
 
-	public function moveToWishList()
+	public function moveToWishListAction()
 	{
 		$item = $this->order->getItemByID($this->request->gget('id'));
 		$item->isSavedForLater->set(true);
@@ -816,7 +816,7 @@ class OrderController extends FrontendController
 	/**
 	 *  Add a new product to wish list (save items for buying later)
 	 */
-	public function addToWishList()
+	public function addToWishListAction()
 	{
 		// avoid search engines adding items to cart...
 		if ($this->request->gget('csid') && ($this->request->gget('csid') != session_id()))
@@ -843,7 +843,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function modifyItemOption(OrderedItem $item, ProductOption $option, Request $request, $varName)
+	public function modifyItemOptionAction(OrderedItem $item, ProductOption $option, Request $request, $varName)
 	{
 		if ($option->isBool() && $request->isValueSet('checkbox_' . $varName))
 		{
@@ -895,7 +895,7 @@ class OrderController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function setMultiAddress()
+	public function setMultiAddressAction()
 	{
 		if (!$this->config->get('ENABLE_MULTIADDRESS'))
 		{
@@ -924,7 +924,7 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'multi');
 	}
 
-	public function setSingleAddress()
+	public function setSingleAddressAction()
 	{
 		$f = new ARUpdateFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'customerOrderID'), $this->order->getID()));
 		$f->addModifier('OrderedItem.shipmentID', new ARExpressionHandle('NULL'));
@@ -940,7 +940,7 @@ class OrderController extends FrontendController
 		return new ActionRedirectResponse('order', 'index');
 	}
 
-	public function getVariationFromRequest(array $variations)
+	public function getVariationFromRequestAction(array $variations)
 	{
 		$ids = array();
 		foreach ($variations['variations'] as $variation)
@@ -957,7 +957,7 @@ class OrderController extends FrontendController
 		return Product::getInstanceByID($variations['products'][$hash]['ID'], Product::LOAD_DATA);
 	}
 
-	public function downloadOptionFile()
+	public function downloadOptionFileAction()
 	{
 
 		$f = select(eq('CustomerOrder.userID', $this->user->getID()),
@@ -971,7 +971,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function uploadOptionFile()
+	public function uploadOptionFileAction()
 	{
 
 		$field = 'upload_' . $this->request->gget('field');
@@ -1073,7 +1073,7 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public function getFormFieldName(OrderedItem $item, $option)
+	public function getFormFieldNameAction(OrderedItem $item, $option)
 	{
 		$optionID = $option instanceof ProductOption ? $option->getID() : $option['ID'];
 		return 'itemOption_' . $item->getID() . '_' . $optionID;
@@ -1105,7 +1105,7 @@ class OrderController extends FrontendController
 		return $validator;
 	}
 
-	public function changeRecurringProductPeriod()
+	public function changeRecurringProductPeriodAction()
 	{
 		$request = $this->getRequest();
 		$orderedItemID = $request->gget('id');
@@ -1134,7 +1134,7 @@ class OrderController extends FrontendController
 		return $validator;
 	}
 
-	public function buildVariationsValidator(OrderedItem $item, $variations)
+	public function buildVariationsValidatorAction(OrderedItem $item, $variations)
 	{
 		$validator = $this->getValidator('variationValidator', $this->request);
 		foreach ($variations['variations'] as $variation)

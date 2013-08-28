@@ -8,7 +8,7 @@
  */
 class PaymentController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 		$transactions = $this->appendOfflineTransactionData($this->getTransactionArray($order));
@@ -38,7 +38,7 @@ class PaymentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function void()
+	public function voidAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 
@@ -61,7 +61,7 @@ class PaymentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function capture()
+	public function captureAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 
@@ -90,7 +90,7 @@ class PaymentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function deleteCcNumber()
+	public function deleteCcNumberAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$transaction->truncateCcNumber();
@@ -102,7 +102,7 @@ class PaymentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function addOffline()
+	public function addOfflineAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
@@ -122,7 +122,7 @@ class PaymentController extends StoreManagementController
 		return $this->getTransactionUpdateResponse();
 	}
 
-	public function totals()
+	public function totalsAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$response = new ActionResponse();
@@ -135,7 +135,7 @@ class PaymentController extends StoreManagementController
 	 *
 	 *  @return ActionResponse
 	 */
-	public function transaction()
+	public function transactionAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->gget('id'));
 		$transactions = $this->getTransactionArray($transaction->order->get());
@@ -150,7 +150,7 @@ class PaymentController extends StoreManagementController
 		return $response;
 	}
 
-	public function ccForm()
+	public function ccFormAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
@@ -188,7 +188,7 @@ class PaymentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function processCreditCard()
+	public function processCreditCardAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
@@ -247,7 +247,7 @@ class PaymentController extends StoreManagementController
 		}
 	}
 
-	public function changeOrderPaidStatus()
+	public function changeOrderPaidStatusAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 		if (0 == $this->request->gget('status'))
@@ -270,7 +270,7 @@ class PaymentController extends StoreManagementController
 		return new RawResponse();
 	}
 	
-	public function changeOfflinePaymentMethod()
+	public function changeOfflinePaymentMethodAction()
 	{
 		try {
 			$request = $this->getRequest();

@@ -9,12 +9,12 @@
  */
 class ManufacturerController extends ActiveGridController
 {
-	public function index()
+	public function indexAction()
 	{
 		return $this->getGridResponse();
 	}
 
-	public function add()
+	public function addAction()
 	{
 		$manufacturer = Manufacturer::getNewInstance('test');
 
@@ -26,7 +26,7 @@ class ManufacturerController extends ActiveGridController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->gget('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
 		$manufacturer->getSpecification();
@@ -41,12 +41,12 @@ class ManufacturerController extends ActiveGridController
 		return $response;
 	}
 
-	public function create()
+	public function createAction()
 	{
 		return $this->save(Manufacturer::getNewInstance(''));
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		return $this->save(ActiveRecordModel::getInstanceById('Manufacturer', $this->request->gget('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
 	}
@@ -67,13 +67,13 @@ class ManufacturerController extends ActiveGridController
 		}
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 		return $this->getGridResponse();
 	}
 
-	public function selectPopup()
+	public function selectPopupAction()
 	{
 		return $this->index();
 	}
@@ -107,7 +107,7 @@ class ManufacturerController extends ActiveGridController
 		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'name'), 'ASC');
 	}
 
-	public function autoComplete()
+	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
 	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->gget('manufacturer') . '%');

@@ -12,7 +12,7 @@
  */
 class RecurringProductPeriodController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->loadLanguageFile('backend/Product');
 		$productID = (int)$this->request->gget('id');
@@ -31,7 +31,7 @@ class RecurringProductPeriodController extends StoreManagementController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$this->loadLanguageFile('backend/Product');
 		$rpp = RecurringProductPeriod::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
@@ -51,7 +51,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$request = $this->getRequest();
 		$rpp = RecurringProductPeriod::getInstanceByID($request->gget('id'), true);
@@ -62,7 +62,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$request = $this->getRequest();
 		$rpp = RecurringProductPeriod::getNewInstance(
@@ -73,7 +73,7 @@ class RecurringProductPeriodController extends StoreManagementController
 		return $this->save($rpp);
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$request = $this->getRequest();
 		$rpp = RecurringProductPeriod::getInstanceByID($request->gget('id'));
@@ -139,7 +139,7 @@ class RecurringProductPeriodController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-	public function createFormValidator($rpp)
+	public function createFormValidatorAction($rpp)
 	{
 		$validator = $this->getValidator(
 			'RecurringProductPeriodForm_'.( $rpp['ID'] ? $rpp['ID'] : ''), $this->request);

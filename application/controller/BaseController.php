@@ -68,7 +68,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @param LiveCart $application Application instance
 	 * @throws AccessDeniedExeption
 	 */
-	public function __construct(LiveCart $application)
+	public function __constructAction(LiveCart $application)
 	{
 		parent::__construct($application);
 
@@ -107,7 +107,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	public function getBlockResponse(&$block)
+	public function getBlockResponseAction(&$block)
 	{
 		if ('getGenericBlock' == $block['call'][1])
 		{
@@ -117,7 +117,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return parent::getBlockResponse($block);
 	}
 
-	public function getGenericBlock()
+	public function getGenericBlockAction()
 	{
 		return new BlockResponse();
 	}
@@ -125,7 +125,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	/**
 	 * @return RolesParser
 	 */
-	public function getRoles()
+	public function getRolesAction()
 	{
 		return $this->roles;
 	}
@@ -143,17 +143,17 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	public function allowCache()
+	public function allowCacheAction()
 	{
 		$this->getCacheHandler()->enable();
 	}
 
-	public function setCache(OutputCache $cache)
+	public function setCacheAction(OutputCache $cache)
 	{
 		$this->cacheHandler = $cache;
 	}
 
-	public function getCacheHandler()
+	public function getCacheHandlerAction()
 	{
 		return $this->cacheHandler;
 	}
@@ -174,7 +174,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @param string $key
 	 * @return string
 	 */
-	public function translate($key)
+	public function translateAction($key)
 	{
 		return $this->locale->translator()->translate($key);
 	}
@@ -185,7 +185,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @see BaseController::translate
 	 * @return array
 	 */
-	public function translateArray($array)
+	public function translateArrayAction($array)
 	{
 		array_walk_recursive($array, array(&$this, 'translateByReference'));
 
@@ -198,12 +198,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @param array $params
 	 * @return string
 	 */
-	public function makeText($key, $params)
+	public function makeTextAction($key, $params)
 	{
 		return $this->locale->translator()->makeText($key, $params);
 	}
 
-	public function getUser()
+	public function getUserAction()
 	{
 		if (empty($this->user))
 		{
@@ -214,17 +214,17 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->user;
 	}
 
-	public function setUser(User $user)
+	public function setUserAction(User $user)
 	{
 		$this->user = $user;
 	}
 
-	public function loadLanguageFile($langFile)
+	public function loadLanguageFileAction($langFile)
 	{
 		$this->application->loadLanguageFile($langFile);
 	}
 
-	public function getApplication()
+	public function getApplicationAction()
 	{
 		return $this->application;
 	}
@@ -254,7 +254,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$this->session->set('controllerMessage', $message);
 	}
 
-	public function getMessage()
+	public function getMessageAction()
 	{
 		$msg = $this->session->get('controllerMessage');
 		$this->setMessage('');
@@ -274,7 +274,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$this->setSessionData('errorMessage', $message);
 	}
 
-	public function getErrorMessage()
+	public function getErrorMessageAction()
 	{
 		$msg = $this->getSessionData('errorMessage');
 		$this->setErrorMessage('');
@@ -285,7 +285,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * 	Automatically preloads language files
 	 *
 	 */
-	public function getConfigFiles()
+	public function getConfigFilesAction()
 	{
 		$controllerRoot = $this->application->getConfigContainer()->getControllerDirectories();
 
@@ -326,22 +326,22 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $files;
 	}
 
-	public function invalidateCacheOnUpdate($class)
+	public function invalidateCacheOnUpdateAction($class)
 	{
 		//return $this->getCache()->invalidateCacheOnUpdate($class);
 	}
 
-	public function setCacheVar($param, $value)
+	public function setCacheVarAction($param, $value)
 	{
 		//return $this->getCache()->setCacheVar($param, $value);
 	}
 	
-	public function setRequestVar($key)
+	public function setRequestVarAction($key)
 	{
 		
 	}
 
-	public function __get($name)
+	public function __getAction($name)
 	{
 		switch ($name)
 	  	{
@@ -369,7 +369,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		}
 	}
 
-	public function recheckAccess(LiveCart $application)
+	public function recheckAccessAction(LiveCart $application)
 	{
 		$this->checkAccess();
 	}
@@ -377,7 +377,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	/**
 	 *  Permanent redirect for URLs changed with category/product names
 	 */
-	public function redirect301($oldHandle, $newHandle)
+	public function redirect301Action($oldHandle, $newHandle)
 	{
 		$oldHandle = urlencode($oldHandle);
 		$newHandle = urlencode($newHandle);

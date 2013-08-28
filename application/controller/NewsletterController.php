@@ -3,7 +3,7 @@
 
 class NewsletterController extends FrontendController
 {
-	public function unsubscribe()
+	public function unsubscribeAction()
 	{
 		$email = $this->request->gget('email');
 
@@ -22,7 +22,7 @@ class NewsletterController extends FrontendController
 		return new ActionResponse();
 	}
 
-	public function subscribe()
+	public function subscribeAction()
 	{
 		$email = $this->request->gget('email');
 
@@ -55,12 +55,12 @@ class NewsletterController extends FrontendController
 		return new ActionResponse('subscriber', $instance->toArray());
 	}
 
-	public function alreadySubscribed()
+	public function alreadySubscribedAction()
 	{
 		return new ActionResponse();
 	}
 
-	public function confirm()
+	public function confirmAction()
 	{
 		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->gget('email'));
 		if ($instance && ($instance->confirmationCode->get() == $this->request->gget('code')))
@@ -72,7 +72,7 @@ class NewsletterController extends FrontendController
 		return new ActionResponse('subscriber', $instance->toArray());
 	}
 
-	public function getSubscribeValidator()
+	public function getSubscribeValidatorAction()
 	{
 		$this->loadLanguageFile('Newsletter');
 		$validator = $this->getValidator("newsletterSubscribe", $this->getRequest());

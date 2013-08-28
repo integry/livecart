@@ -10,7 +10,7 @@
  */
 class SessionController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->loadLanguageFile('User');
 		$response = new ActionResponse('email', $this->request->gget('email'));
@@ -22,7 +22,7 @@ class SessionController extends StoreManagementController
 	/**
 	 *  Process actual login
 	 */
-	public function doLogin()
+	public function doLoginAction()
 	{
 		$user = User::getInstanceByLogin($this->request->gget('email'), $this->request->gget('password'));
 		if (!$user)
@@ -43,7 +43,7 @@ class SessionController extends StoreManagementController
 		}
 	}
 
-	public function logout()
+	public function logoutAction()
 	{
 		SessionUser::destroy();
 		return new ActionRedirectResponse('backend.session', 'index');

@@ -15,7 +15,7 @@ class ProductListItemController extends StoreManagementController
 	 *
 	 * @role update
 	 */
-	public function add()
+	public function addAction()
 	{
 		$productID = $this->request->gget('relatedownerID');
 		$ownerID = $this->request->gget('id');
@@ -41,7 +41,7 @@ class ProductListItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$item = ActiveRecordModel::getInstanceByID('ProductListItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
@@ -52,7 +52,7 @@ class ProductListItemController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.

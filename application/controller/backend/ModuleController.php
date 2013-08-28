@@ -12,7 +12,7 @@ class ModuleController extends StoreManagementController
 {
 	private $repos = array();
 
-	public function init()
+	public function initAction()
 	{
 		$this->initRepos();
 
@@ -47,7 +47,7 @@ class ModuleController extends StoreManagementController
 	/**
 	 * Main settings page
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$repos = array();
 		foreach ($this->repos as $repo)
@@ -159,28 +159,28 @@ class ModuleController extends StoreManagementController
 		}
 	}
 
-	public function setStatus()
+	public function setStatusAction()
 	{
 		$module = $this->getModule();
 		$module->setStatus($this->request->gget('state') == 'true', $this->application);
 		return $this->statusResponse($this->request->gget('state') == 'true' ? '_enable_confirm' : '_disable_confirm', $module);
 	}
 
-	public function install()
+	public function installAction()
 	{
 		$module = $this->getModule();
 		$module->install($this->application);
 		return $this->statusResponse('_install_confirm', $module);
 	}
 
-	public function deinstall()
+	public function deinstallAction()
 	{
 		$module = $this->getModule();
 		$module->deinstall($this->application);
 		return $this->statusResponse('_deinstall_confirm', $module);
 	}
 
-	public function updateMenu()
+	public function updateMenuAction()
 	{
 		$moduleInfo = $this->getModule()->getInfo();
 		$moduleLine = isset($moduleInfo['Module']['line']) ? $moduleInfo['Module']['line'] : 'current';
@@ -195,19 +195,19 @@ class ModuleController extends StoreManagementController
 		return $response;
 	}
 
-	public function listVersions()
+	public function listVersionsAction()
 	{
 		return new JSONResponse($this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $this->request->gget('channel')))));
 	}
 
-	public function node()
+	public function nodeAction()
 	{
 		$module = $this->toArray($this->getModule());
 		$module['repo'] = array('repo' => $this->request->gget('repo'), 'handshake' => $this->request->gget('handshake'));
 		return new ActionResponse('module', $module);
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		$this->config->set('MODULE_STATS_UPDATED', null);
 		$this->config->save();
@@ -266,7 +266,7 @@ class ModuleController extends StoreManagementController
 		$response->flushChunk(array('final' => $this->makeText('_update_complete', array($this->translate($module->getName())))));
 	}
 
-	public function repoStatus()
+	public function repoStatusAction()
 	{
 		$repo = $this->request->gget('repo');
 		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
@@ -279,7 +279,7 @@ class ModuleController extends StoreManagementController
 		return new RawResponse(file_get_contents($fetch->getTmpFile()) == 'OK' ? 'OK' : 'fail');
 	}
 
-	public function repoDescription()
+	public function repoDescriptionAction()
 	{
 		$repo = $this->request->gget('repo');
 		if (!preg_match('/^http[s]{0,1}\:\/\//', $repo))
@@ -292,7 +292,7 @@ class ModuleController extends StoreManagementController
 		return new RawResponse(file_get_contents($fetch->getTmpFile()));
 	}
 
-	public function packageList()
+	public function packageListAction()
 	{
 		$resp = array();
 		$conf = $this->application->getConfigContainer();
@@ -322,7 +322,7 @@ class ModuleController extends StoreManagementController
 		return $response;
 	}
 
-	public function fetch()
+	public function fetchAction()
 	{
 		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
 

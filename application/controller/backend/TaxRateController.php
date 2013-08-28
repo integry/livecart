@@ -14,7 +14,7 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
  */
 class TaxRateController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		if(($zoneID = (int)$this->request->gget('id')) <= 0)
 		{
@@ -49,7 +49,7 @@ class TaxRateController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$taxes = Tax::getAllTaxes();
 		$classes = TaxClass::getAllClasses();

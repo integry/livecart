@@ -9,7 +9,7 @@
  */
 class EavFieldController extends EavFieldControllerCommon
 {
-	public function init()
+	public function initAction()
 	{
 		$this->loadLanguageFile('backend/SpecField');
 		return parent::init();
@@ -25,7 +25,7 @@ class EavFieldController extends EavFieldControllerCommon
 		return 'EavField';
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$response = parent::index();
 
@@ -48,7 +48,7 @@ class EavFieldController extends EavFieldControllerCommon
 	 *
 	 * @return ActionResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$specFieldList = parent::item()->getValue();
 
@@ -57,12 +57,12 @@ class EavFieldController extends EavFieldControllerCommon
 		return new JSONResponse($specFieldList);
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
 
-	public function create()
+	public function createAction()
 	{
 		return parent::create();
 	}
@@ -81,7 +81,7 @@ class EavFieldController extends EavFieldControllerCommon
 	 *
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -91,7 +91,7 @@ class EavFieldController extends EavFieldControllerCommon
 	 *
 	 * @return JSONResponse
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}

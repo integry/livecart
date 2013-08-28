@@ -7,13 +7,13 @@
  */
 class ErrController extends FrontendController
 {
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 		$this->loadLanguageFile('Err');
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$response->set('id', $this->request->gget('id'));
@@ -25,7 +25,7 @@ class ErrController extends FrontendController
 		return $response;
 	}
 
-	public function redirect()
+	public function redirectAction()
 	{
 		$id = $this->request->gget('id');
 		$params = array();
@@ -49,12 +49,12 @@ class ErrController extends FrontendController
 		}
 	}
 
-	public function backendBrowser()
+	public function backendBrowserAction()
 	{
 		return new ActionResponse();
 	}
 
-	public function database()
+	public function databaseAction()
 	{
 		$this->setLayout('empty');
 		return new ActionResponse('error', $_REQUEST['exception']->getMessage());

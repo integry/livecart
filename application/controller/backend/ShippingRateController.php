@@ -12,7 +12,7 @@ class ShippingRateController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = (int)$this->request->gget('id'))
 		{

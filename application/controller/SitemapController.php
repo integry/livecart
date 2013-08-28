@@ -16,7 +16,7 @@ class SitemapController extends FrontendController
 {
 	const MAX_URLS = 5000;
 
-	public function init()
+	public function initAction()
 	{
 		$this->setLayout('empty');
 
@@ -26,7 +26,7 @@ class SitemapController extends FrontendController
 		}
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$languages = $this->application->getLanguageArray(true);
 		$defaultLanguage = $this->application->getDefaultLanguageCode();
@@ -53,7 +53,7 @@ class SitemapController extends FrontendController
 		return new ActionResponse('maps', $maps);
 	}
 
-	public function sitemap()
+	public function sitemapAction()
 	{
 		$class = $this->request->gget('type');
 		$page = $this->request->gget('id', 0);
@@ -82,7 +82,7 @@ class SitemapController extends FrontendController
 		return new ActionResponse('entries', $entries);
 	}
 
-	public function full()
+	public function fullAction()
 	{
 		$languages = $this->application->getLanguageArray(true);
 		$defaultLanguage = $this->application->getDefaultLanguageCode();
@@ -117,7 +117,7 @@ class SitemapController extends FrontendController
 		return new ActionResponse('entries', $entries);
 	}
 
-	public function ping()
+	public function pingAction()
 	{
 		if (!$this->user->hasBackendAccess())
 		{

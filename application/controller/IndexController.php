@@ -8,7 +8,7 @@
  */
 class IndexController extends ControllerBase
 {
-    public function indexAction()
+    public function indexActionAction()
     {
 		$test = new StaticpageController();
 		echo 'HOME PAGE';
@@ -18,7 +18,7 @@ class IndexController extends ControllerBase
 /*
 class IndexController extends ControllerBase
 {
-	public function index()
+	public function indexAction()
 	{
 		ClassLoader::import('application.controller.CategoryController');
 

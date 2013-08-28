@@ -10,7 +10,7 @@
  */
 class OrderNoteController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'));
 
@@ -31,12 +31,12 @@ class OrderNoteController extends StoreManagementController
 		return $response;
 	}
 
-	public function view()
+	public function viewAction()
 	{
 		return new ActionResponse('note', ActiveRecordModel::getInstanceById('OrderNote', $this->request->gget('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
 	}
 
-	public function add()
+	public function addAction()
 	{
 		if ($this->buildOrderNoteValidator()->isValid())
 		{

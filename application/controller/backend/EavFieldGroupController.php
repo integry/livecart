@@ -10,7 +10,7 @@
  */
 class EavFieldGroupController extends EavFieldGroupControllerCommon
 {
-	public function init()
+	public function initAction()
 	{
 		$this->loadLanguageFile('backend/SpecFieldGroup');
 		return parent::init();
@@ -31,7 +31,7 @@ class EavFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		return parent::item();
 	}
@@ -39,7 +39,7 @@ class EavFieldGroupController extends EavFieldGroupControllerCommon
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
@@ -47,7 +47,7 @@ class EavFieldGroupController extends EavFieldGroupControllerCommon
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		return parent::create();
 	}
@@ -59,7 +59,7 @@ class EavFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -71,7 +71,7 @@ class EavFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}

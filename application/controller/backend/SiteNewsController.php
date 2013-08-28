@@ -8,7 +8,7 @@
  */
 class SiteNewsController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
@@ -20,7 +20,7 @@ class SiteNewsController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function edit()
+	public function editAction()
 	{
 		$form = $this->buildForm();
 		$form->loadData(NewsPost::getInstanceById($this->request->gget('id'), NewsPost::LOAD_DATA)->toArray());
@@ -30,7 +30,7 @@ class SiteNewsController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$validator = $this->buildValidator();
 		if (!$validator->isValid())
@@ -49,7 +49,7 @@ class SiteNewsController extends StoreManagementController
 	 * Create new record
 	 * @role create
 	 */
-	public function add()
+	public function addAction()
 	{
 		return $this->save();
 	}
@@ -60,7 +60,7 @@ class SiteNewsController extends StoreManagementController
 	 * @role delete
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		try
 	  	{
@@ -78,7 +78,7 @@ class SiteNewsController extends StoreManagementController
 	 * @role sort
 	 * @return RawResponse
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 	  	$order = array_reverse($this->request->gget('newsList'));
 
@@ -99,7 +99,7 @@ class SiteNewsController extends StoreManagementController
 	 * @role status
 	 * @return JSONResponse
 	 */
-	public function setEnabled()
+	public function setEnabledAction()
 	{
 		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->gget('id'), NewsPost::LOAD_DATA);
 		$post->isEnabled->set($this->request->gget("status"));

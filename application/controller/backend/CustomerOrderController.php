@@ -30,7 +30,7 @@ class CustomerOrderController extends ActiveGridController
 
 	private $extraDisplayedColumns = array();
 
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 		CustomerOrder::allowEmpty();
@@ -40,7 +40,7 @@ class CustomerOrderController extends ActiveGridController
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$orderGroups = array(
 			array('ID' => self::TYPE_ALL, 'rootID' => self::TYPE_ROOT, 'name' => $this->translate('_all_orders')),
@@ -93,7 +93,7 @@ class CustomerOrderController extends ActiveGridController
 		);
 	}
 
-	public function assignStatuses(ActionResponse $response)
+	public function assignStatusesAction(ActionResponse $response)
 	{
 
 		$response->set('statuses', array(
@@ -106,7 +106,7 @@ class CustomerOrderController extends ActiveGridController
 		return $response;
 	}
 
-	public function info()
+	public function infoAction()
 	{
 		$this->loadLanguageFile('backend/Shipment');
 		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, array('User', 'Currency'));
@@ -371,7 +371,7 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 
-	public function updateDate()
+	public function updateDateAction()
 	{
 		$request = $this->getRequest();
 
@@ -444,7 +444,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	public function selectCustomer()
+	public function selectCustomerAction()
 	{
 		$userGroups = array();
 		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
@@ -458,7 +458,7 @@ class CustomerOrderController extends ActiveGridController
 		return new ActionResponse('userGroups', $userGroups);
 	}
 
-	public function orders()
+	public function ordersAction()
 	{
 		if (!$this->request->isValueSet('id'))
 		{
@@ -489,7 +489,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function switchCancelled()
+	public function switchCancelledAction()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 
@@ -520,7 +520,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function finalize()
+	public function finalizeAction()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 		$order->loadAll();
@@ -531,7 +531,7 @@ class CustomerOrderController extends ActiveGridController
 		return new RedirectResponse($url);
 	}
 
-	public function sendCancelNotifyEmail(CustomerOrder $order)
+	public function sendCancelNotifyEmailAction(CustomerOrder $order)
 	{
 		if ($order->isCancelled->get() && $this->config->get('EMAIL_ORDER_CANCELLATION'))
 		{
@@ -544,7 +544,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	public function sendStatusNotifyEmail(CustomerOrder $order)
+	public function sendStatusNotifyEmailAction(CustomerOrder $order)
 	{
 		$status = $order->status->get();
 		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
@@ -581,7 +581,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role mass
 	 */
-	public function processMass()
+	public function processMassAction()
 	{
 
 		$filter = new ARSelectFilter();
@@ -604,12 +604,12 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	public function getHavingClauseColumnTypes()
+	public function getHavingClauseColumnTypesAction()
 	{
 		return array_merge($this->getAvailableColumns(), $this->getAdvancedSearchFields());
 	}
 
-	public function printLabels()
+	public function printLabelsAction()
 	{
 
 		if (isset($GLOBALS['filter']) && ($filter = $GLOBALS['filter']))
@@ -625,20 +625,20 @@ class CustomerOrderController extends ActiveGridController
 		return new ActionResponse('feed', new ShipmentFeed($filter, array('User')));
 	}
 
-	public function isMassCancelled()
+	public function isMassCancelledAction()
 	{
 
 		return new JSONResponse(array('isCancelled' => OrderMassActionProcessor::isCancelled($this->request->gget('pid'))));
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 
 		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->gget('id')));
 	}
 
-	public function exportDetailed()
+	public function exportDetailedAction()
 	{
 		@set_time_limit(0);
 
@@ -895,7 +895,7 @@ class CustomerOrderController extends ActiveGridController
 		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
-	public function processDataArray($orders, $displayedColumns)
+	public function processDataArrayAction($orders, $displayedColumns)
 	{
 		$orders = parent::processDataArray($orders, $displayedColumns);
 		$ids = array();
@@ -1151,7 +1151,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function saveFields()
+	public function saveFieldsAction()
 	{
 		$order = CustomerOrder::getInstanceByID($this->request->gget('id'), true);
 		$order->loadAll();
@@ -1171,7 +1171,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('ID'), true);
 		$order->loadAll();
@@ -1196,7 +1196,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function setMultiAddress()
+	public function setMultiAddressAction()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('id'), true);
 		$order->isMultiAddress->set($this->request->gget('status'));
@@ -1206,7 +1206,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		ActiveRecord::beginTransaction();
 		$user = User::getInstanceByID((int)$this->request->gget('customerID'), true, true);
@@ -1241,7 +1241,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function updateAddress()
+	public function updateAddressAction()
 	{
 		$validator = $this->createUserAddressFormValidator();
 
@@ -1289,7 +1289,7 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	public function recalculateDiscounts()
+	public function recalculateDiscountsAction()
 	{
 		$order = CustomerOrder::getInstanceById((int)$this->request->gget('id'), true, true);
 		$order->deleteRelatedRecordSet('OrderDiscount');
@@ -1305,7 +1305,7 @@ class CustomerOrderController extends ActiveGridController
 		return new RedirectResponse($redirectUrl);
 	}
 
-	public function printInvoice()
+	public function printInvoiceAction()
 	{
 		$this->application->setTheme('');
 		$order = CustomerOrder::getInstanceById($this->request->gget('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
@@ -1379,7 +1379,7 @@ class CustomerOrderController extends ActiveGridController
 		return trim($item);
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumnsAction()
 	{
 		// get available columns
 		$availableColumns = parent::getAvailableColumns();
@@ -1396,7 +1396,7 @@ class CustomerOrderController extends ActiveGridController
 		return $availableColumns;
 	}
 
-	public function getAdvancedSearchFields()
+	public function getAdvancedSearchFieldsAction()
 	{
 		return $this->translateFieldArray(
 			array
@@ -1451,7 +1451,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return RequestValidator
 	 */
-	public function createUserAddressFormValidator()
+	public function createUserAddressFormValidatorAction()
 	{
 		$validator = $this->getValidator("userAddress", $this->request);
 
@@ -1469,7 +1469,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @return Form
 	 */
-	public function createUserAddressForm($addressArray = array(), ActionResponse $response)
+	public function createUserAddressFormAction($addressArray = array(), ActionResponse $response)
 	{
 		$form = new Form($this->createUserAddressFormValidator());
 
@@ -1531,7 +1531,7 @@ class CustomerOrderController extends ActiveGridController
 		return new Form($this->createFieldsFormValidator($order));
 	}
 
-	public function addCoupon()
+	public function addCouponAction()
 	{
 				$response = $this->getRequest();
 		$code = $this->request->gget('coupon');
@@ -1576,7 +1576,7 @@ class CustomerOrderController extends ActiveGridController
 			$error ? 'failure' : 'success', $this->makeText($msg, array($code)));
 	}
 
-	public function invoices()
+	public function invoicesAction()
 	{
 		$this->invoiceRequestPreFilter();
 		$response = new ActionResponse();
@@ -1585,7 +1585,7 @@ class CustomerOrderController extends ActiveGridController
 		return $response;
 	}
 
-	public function listInvoices()
+	public function listInvoicesAction()
 	{
 		$this->invoiceRequestPreFilter();
 		return $this->lists();
@@ -1600,7 +1600,7 @@ class CustomerOrderController extends ActiveGridController
 		$request->set('parentID', $parentID); // and also parent id.
 	}
 
-	public function cancelSubscription()
+	public function cancelSubscriptionAction()
 	{
 		try {
 			$request = $this->getRequest();
@@ -1627,7 +1627,7 @@ class CustomerOrderController extends ActiveGridController
 		return new JSONResponse(null, 'failure', $this->translate('_cannot_cancel_subscription'));
 	}
 
-	public function stopRebills($order=null)
+	public function stopRebillsAction($order=null)
 	{
 		if ($order === null)
 		{

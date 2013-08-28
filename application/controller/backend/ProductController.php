@@ -10,14 +10,14 @@
  */
 class ProductController extends ActiveGridController implements MassActionInterface
 {
-    public function index()
+    public function indexAction()
 	{
 		$response = new ActionResponse();
 
 		return $response;
 	}
 
-    public function category()
+    public function categoryAction()
 	{
 
 		$category = Category::getInstanceByID($this->request->gget("id"), Category::LOAD_DATA);
@@ -37,14 +37,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return new JSONResponse($response);
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$response = $this->productForm(true);
 
 		return $response;
 	}
 
-	public function get()
+	public function getAction()
 	{
 		if ((int)$this->request->gget('id'))
 		{
@@ -69,7 +69,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return new JSONResponse($arr);
 	}
 
-	public function getPresentation()
+	public function getPresentationAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), true);
 		return new JSONResponse(CategoryPresentation::getInstance($product)->toArray());
@@ -136,7 +136,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $this->userGroups;
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 
@@ -320,7 +320,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	/**
 	 * @role mass
 	 */
-	public function processMass()
+	public function processMassAction()
 	{
 		$filter = $this->getSelectFilter();
 
@@ -454,7 +454,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function getAvailableColumns(Category $category, $specField = true)
+	public function getAvailableColumnsAction(Category $category, $specField = true)
 	{
 		$availableColumns = parent::getAvailableColumns();
 
@@ -513,7 +513,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $availableColumns;
 	}
 
-	public function export()
+	public function exportAction()
 	{
 		$category = Category::getInstanceByID($this->getRequestCategory());
 		$category->load();
@@ -583,7 +583,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return array('Product.ID','Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
 	}
 
-	public function autoComplete()
+	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
 		$f->setLimit(20);
@@ -660,7 +660,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return new AutoCompleteResponse($resp);
 	}
 
-	public function old_add()
+	public function old_addAction()
 	{
 		$this->loadLanguageFile('backend/ProductPrice');
 
@@ -684,7 +684,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 *
 	 * @return ActionResponse
 	 */
-	public function add()
+	public function addAction()
 	{
 		$response = $this->productForm(false);
 		return $response;
@@ -693,7 +693,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$product = Product::getNewInstance(Category::getInstanceByID($this->request->gget('categoryID')), $this->translate('_new_product'));
 
@@ -714,7 +714,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 	  	$product = Product::getRequestInstance($this->request);
 	  	$product->loadPricing();
@@ -723,7 +723,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	  	return $this->save($product);
 	}
 
-	public function basicData()
+	public function basicDataAction()
 	{
 		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$product->loadSpecification();
@@ -761,7 +761,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
-	public function specFields()
+	public function specFieldsAction()
 	{
 		$form = new Form($this->getValidator('specField'));
 
@@ -783,7 +783,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $response;
 	}
 
-	public function countTabsItems()
+	public function countTabsItemsAction()
 	{
 	  		  	$product = Product::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
 
@@ -800,7 +800,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		));
 	}
 
-	public function info()
+	public function infoAction()
 	{
 		ClassLoader::importNow("application.helper.getDateFromString");
 
@@ -1040,7 +1040,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 *
 	 * @return RequestValidator
 	 */
-	public function buildValidator($isExisting)
+	public function buildValidatorAction($isExisting)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
 		//Product::setValidation($validator);
@@ -1068,7 +1068,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function massActionField()
+	public function massActionFieldAction()
 	{
 		$field = SpecField::getInstanceByID($this->request->gget('id'), true);
 		$array = $field->toArray();
@@ -1158,7 +1158,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return array_reverse($ret);
 	}
 
-	public function addShippingValidator(RequestValidator $validator)
+	public function addShippingValidatorAction(RequestValidator $validator)
 	{
 		// shipping related numeric field validations
 		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
@@ -1179,7 +1179,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addPricesValidator(RequestValidator $validator, $prefix = '')
+	public function addPricesValidatorAction(RequestValidator $validator, $prefix = '')
 	{
 		// price in base currency
 		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
@@ -1198,7 +1198,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addInventoryValidator(RequestValidator $validator)
+	public function addInventoryValidatorAction(RequestValidator $validator)
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
@@ -1221,7 +1221,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function uploadProductImage()
+	public function uploadProductImageAction()
 	{
 						$field = 'upload_' . $this->request->gget('field');
 

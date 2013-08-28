@@ -10,7 +10,7 @@
  */
 class ProductCategoryController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$product->category->get()->getPathNodeSet();
@@ -31,7 +31,7 @@ class ProductCategoryController extends StoreManagementController
 		return $response;
 	}
 
-	public function saveMainCategory()
+	public function saveMainCategoryAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
@@ -43,7 +43,7 @@ class ProductCategoryController extends StoreManagementController
 		return new RawResponse($category->getID());
 	}
 
-	public function addCategory()
+	public function addCategoryAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
@@ -60,7 +60,7 @@ class ProductCategoryController extends StoreManagementController
 		return new JSONResponse(array('data' => $relation->toFlatArray()));
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$category = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);

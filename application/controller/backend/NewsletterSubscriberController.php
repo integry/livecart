@@ -10,7 +10,7 @@
  */
 class NewsletterSubscriberController extends ActiveGridController
 {
-	public function index()
+	public function indexAction()
 	{
 		return $this->setGridResponse(new ActionResponse());
 	}

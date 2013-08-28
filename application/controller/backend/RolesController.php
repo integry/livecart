@@ -9,7 +9,7 @@
  */
 class RolesController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		Role::cleanUp();
 
@@ -125,7 +125,7 @@ class RolesController extends StoreManagementController
 	 *
 	 * @role permissions
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$userGroupID = (int)$this->request->gget('id');
 		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);

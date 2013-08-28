@@ -11,7 +11,7 @@ class QuickSearchController extends StoreManagementController
 	const LIMIT = 5;
 	private $query;
 
-	public function resultBlockPriority()
+	public function resultBlockPriorityAction()
 	{
 		return array
 		(
@@ -23,7 +23,7 @@ class QuickSearchController extends StoreManagementController
 		);
 	}
 
-	public function search()
+	public function searchAction()
 	{
 		$request = $this->getRequest();
 		$this->query = $request->gget('q');

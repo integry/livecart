@@ -9,7 +9,7 @@
  */
 class ErrController extends BackendController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$response->set('id', $this->request->gget('id'));
@@ -19,7 +19,7 @@ class ErrController extends BackendController
 		return $response;
 	}
 
-	public function redirect()
+	public function redirectAction()
 	{
 		$id = $this->request->gget('id');
 		$params = array();

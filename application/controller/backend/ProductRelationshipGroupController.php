@@ -23,7 +23,7 @@ class ProductRelationshipGroupController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		$group = ProductRelationshipGroup::getNewInstance($this->getOwnerInstanceByID($this->request->gget('ownerID')), $this->request->gget('type'));
 		return $this->save($group);
@@ -32,7 +32,7 @@ class ProductRelationshipGroupController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
@@ -40,7 +40,7 @@ class ProductRelationshipGroupController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -48,12 +48,12 @@ class ProductRelationshipGroupController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		return parent::edit();
 	}

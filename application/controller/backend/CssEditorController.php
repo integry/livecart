@@ -11,7 +11,7 @@
  */
 class CssEditorController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$themes = $this->application->getRenderer()->getThemeList();
 
@@ -26,7 +26,7 @@ class CssEditorController extends StoreManagementController
 		return new ActionResponse('categories', json_encode($files));
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$css = new EditedCssFile($this->request->gget('file'));
 
@@ -52,7 +52,7 @@ class CssEditorController extends StoreManagementController
 	/**
 	 * @role save
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$code = $this->request->gget('code');
 
@@ -71,7 +71,7 @@ class CssEditorController extends StoreManagementController
 		}
 	}
 
-	public function emptyPage()
+	public function emptyPageAction()
 	{
 		return new ActionResponse();
 	}
@@ -86,7 +86,7 @@ class CssEditorController extends StoreManagementController
 		return $form;
 	}
 
-	public function templateData()
+	public function templateDataAction()
 	{
 		$request = $this->getRequest();
 		$version = $request->gget('version');

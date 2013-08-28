@@ -8,7 +8,7 @@
  */
 class UpdateController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 	// get the newest version
 		$f = fsockopen('update.livecart.com', '80', $err);
@@ -42,7 +42,7 @@ class UpdateController extends StoreManagementController
 	/**
 	 *  Handles LiveCart update process
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$dir = ClassLoader::getRealPath('update') . '/' . $this->getCurrentVersion();
 		if (!is_dir($dir))
@@ -93,7 +93,7 @@ class UpdateController extends StoreManagementController
 		return $response;
 	}
 
-	public function testCopy()
+	public function testCopyAction()
 	{
 		$handler = new UpdateHelper($this->application);
 		$tmpName = 'test-update-copy' . rand(1, 5000000);

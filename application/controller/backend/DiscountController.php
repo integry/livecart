@@ -9,7 +9,7 @@
  */
 class DiscountController extends ActiveGridController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = $this->getGridResponse();
 
@@ -105,14 +105,14 @@ class DiscountController extends ActiveGridController
 		return $handlers;
 	}
 
-	public function add()
+	public function addAction()
 	{
 		$response = new ActionResponse('form', $this->buildForm());
 		$this->setEditResponse($response);
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
 		$condition->loadAll();
@@ -168,7 +168,7 @@ class DiscountController extends ActiveGridController
 					  ));
 	}
 
-	public function save()
+	public function saveAction()
 	{
 		$validator = $this->buildValidator();
 
@@ -187,7 +187,7 @@ class DiscountController extends ActiveGridController
 		}
 	}
 
-	public function addCondition()
+	public function addConditionAction()
 	{
 		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$child = DiscountCondition::getNewInstance($parent);
@@ -197,7 +197,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse($child->toArray());
 	}
 
-	public function deleteCondition()
+	public function deleteConditionAction()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$condition->delete();
@@ -205,7 +205,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse(true);
 	}
 
-	public function updateConditionField()
+	public function updateConditionFieldAction()
 	{
 		list($fieldName, $id) = explode('_', $this->request->gget('field'));
 
@@ -245,7 +245,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse($fieldName);
 	}
 
-	public function addRecord()
+	public function addRecordAction()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$condition->conditionClass->set($this->request->gget('type'));
@@ -261,7 +261,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse(array('className' => get_class($object), 'data' => $record->toArray()));
 	}
 
-	public function deleteRecord()
+	public function deleteRecordAction()
 	{
 		$record = ActiveRecordModel::getInstanceByID('DiscountConditionRecord', $this->request->gget('id'), DiscountConditionRecord::LOAD_DATA);
 		$record->delete();
@@ -269,7 +269,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse(true);
 	}
 
-	public function saveSelectRecord()
+	public function saveSelectRecordAction()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$condition->serializedCondition->setNull();
@@ -293,7 +293,7 @@ class DiscountController extends ActiveGridController
 		}
 	}
 
-	public function saveSelectValue()
+	public function saveSelectValueAction()
 	{
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$condition->conditionClass->set($this->request->gget('type'));
@@ -325,7 +325,7 @@ class DiscountController extends ActiveGridController
 		$condition->save();
 	}
 
-	public function setSerializedValue()
+	public function setSerializedValueAction()
 	{
 		$parts = explode('_', $this->request->gget('field'));
 		$type = array_shift($parts);
@@ -368,7 +368,7 @@ class DiscountController extends ActiveGridController
 		}
 	}
 
-	public function addAction()
+	public function addActionAction()
 	{
 		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
 		$child = DiscountAction::getNewInstance($parent);
@@ -378,7 +378,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse($child->toArray());
 	}
 
-	public function deleteAction()
+	public function deleteActionAction()
 	{
 		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $this->request->gget('id'), DiscountAction::LOAD_DATA);
 		$action->delete();
@@ -386,7 +386,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse(true);
 	}
 
-	public function updateActionField()
+	public function updateActionFieldAction()
 	{
 		list($fieldName, $id) = explode('_', $this->request->gget('field'));
 		$value = $this->request->gget('value');
@@ -441,7 +441,7 @@ class DiscountController extends ActiveGridController
 		return new JSONResponse($fieldName);
 	}
 
-	public function sortActions()
+	public function sortActionsAction()
 	{
 	  	$order = $this->request->gget('actionContainer_' . $this->request->gget('conditionId'));
 		foreach ($order as $key => $value)
@@ -457,7 +457,7 @@ class DiscountController extends ActiveGridController
 		return $resp;
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 		return $this->getGridResponse();
@@ -485,7 +485,7 @@ class DiscountController extends ActiveGridController
 		return array('DiscountCondition.ID', 'DiscountCondition.isEnabled', 'DiscountCondition.name', 'DiscountCondition.couponCode', 'DiscountCondition.position');
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumnsAction()
 	{
 		$availableColumns = parent::getAvailableColumns();
 		$validColumns = array('DiscountCondition.name', 'DiscountCondition.isEnabled', 'DiscountCondition.couponCode', 'DiscountCondition.validFrom', 'DiscountCondition.validTo', 'DiscountCondition.position');

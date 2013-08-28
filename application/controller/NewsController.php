@@ -9,7 +9,7 @@
  */	
 class NewsController extends FrontendController
 {
-	public function view()
+	public function viewAction()
 	{	   		
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->gget('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
@@ -28,7 +28,7 @@ class NewsController extends FrontendController
 		return new ActionResponse('news', $newsPost);
 	}	
 	
-	public function index()
+	public function indexAction()
 	{
 		$this->addIndexBreadCrumb();
 		

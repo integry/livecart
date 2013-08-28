@@ -13,7 +13,7 @@ class SettingsController extends StoreManagementController
 	/**
 	 *	Main settings page
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$this->config->updateSettings();
 		$tree = array('children' => $this->config->getTree());
@@ -73,7 +73,7 @@ class SettingsController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$values = $layouts = array();
 
@@ -141,7 +141,7 @@ class SettingsController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function disablePrivateLabel()
+	public function disablePrivateLabelAction()
 	{
 		file_put_contents($this->getPrivateLabelFile(), '');
 	}

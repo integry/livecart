@@ -9,7 +9,7 @@
  */
 class InstallController extends FrontendController
 {
-	public function init()
+	public function initAction()
 	{
 		if ($writeFail = Installer::getUnwritableDirectories())
 		{
@@ -41,7 +41,7 @@ class InstallController extends FrontendController
 	  	$this->setLayout('install');
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$requirements = Installer::checkRequirements($this->application);
 		foreach ($requirements as $req)
@@ -58,7 +58,7 @@ class InstallController extends FrontendController
 		return new ActionRedirectResponse('install', 'license');
 	}
 
-	public function license()
+	public function licenseAction()
 	{
 		if ($lastStep = $this->verifyStep())
 		{
@@ -70,7 +70,7 @@ class InstallController extends FrontendController
 		return $response;
 	}
 
-	public function acceptLicense()
+	public function acceptLicenseAction()
 	{
 		if (!$this->buildLicenseValidator()->isValid())
 		{
@@ -80,7 +80,7 @@ class InstallController extends FrontendController
 		return new ActionRedirectResponse('install', 'database');
 	}
 
-	public function database()
+	public function databaseAction()
 	{
 		if ($lastStep = $this->verifyStep())
 		{
@@ -92,7 +92,7 @@ class InstallController extends FrontendController
 		return $response;
 	}
 
-	public function setDatabase()
+	public function setDatabaseAction()
 	{
 		set_time_limit(0);
 
@@ -174,7 +174,7 @@ class InstallController extends FrontendController
 		}
 	}
 
-	public function admin()
+	public function adminAction()
 	{
 		if ($lastStep = $this->verifyStep())
 		{
@@ -184,7 +184,7 @@ class InstallController extends FrontendController
 		return new ActionResponse('form', $this->buildAdminForm());
 	}
 
-	public function setAdmin()
+	public function setAdminAction()
 	{
 		if (!$this->buildAdminValidator()->isValid())
 		{
@@ -220,7 +220,7 @@ class InstallController extends FrontendController
 		return new ActionRedirectResponse('install', 'config');
 	}
 
-	public function config()
+	public function configAction()
 	{
 		if ($lastStep = $this->verifyStep())
 		{
@@ -248,7 +248,7 @@ class InstallController extends FrontendController
 		return $response;
 	}
 
-	public function setConfig()
+	public function setConfigAction()
 	{
 		if (!$this->buildConfigValidator()->isValid())
 		{
@@ -331,7 +331,7 @@ class InstallController extends FrontendController
 		return new ActionRedirectResponse('install', 'finish');
 	}
 
-	public function finish()
+	public function finishAction()
 	{
 		if ($lastStep = $this->verifyStep())
 		{

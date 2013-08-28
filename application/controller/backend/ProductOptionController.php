@@ -24,7 +24,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 
@@ -58,7 +58,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$response = new ActionResponse();
 		$option = ProductOption::getInstanceByID($this->request->gget('id'), true);
@@ -83,7 +83,7 @@ class ProductOptionController extends StoreManagementController
 		return new JSONResponse($productOptionList);
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		try
 		{
@@ -101,7 +101,7 @@ class ProductOptionController extends StoreManagementController
 		return $this->save($productOption);
 	}
 
-	public function create()
+	public function createAction()
 	{
 		$parentId = $this->request->gget('parentID', false);
 		if (substr($parentId, 0, 1) == 'c')
@@ -214,7 +214,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -232,7 +232,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function deleteChoice()
+	public function deleteChoiceAction()
 	{
 		if($id = $this->request->gget("id", false))
 		{
@@ -250,7 +250,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 
@@ -272,7 +272,7 @@ class ProductOptionController extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function sortChoice()
+	public function sortChoiceAction()
 	{
 		$target = $this->request->gget('target');
 

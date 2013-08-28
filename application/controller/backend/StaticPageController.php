@@ -13,7 +13,7 @@ class StaticPageController extends StoreManagementController
 	/**
 	 *	Main settings page
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
@@ -52,7 +52,7 @@ class StaticPageController extends StoreManagementController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$page = StaticPage::getInstanceById($this->request->gget('id'), StaticPage::LOAD_DATA);
 		$page->getSpecification();
@@ -62,7 +62,7 @@ class StaticPageController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->gget('id'), StaticPage::LOAD_DATA);
 		return $this->save($page);
@@ -71,7 +71,7 @@ class StaticPageController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function move()
+	public function moveAction()
 	{
 		$page = StaticPage::getInstanceById((int)$this->request->gget('id'), StaticPage::LOAD_DATA);
 
@@ -123,7 +123,7 @@ class StaticPageController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$page = StaticPage::getNewInstance();
 
@@ -133,7 +133,7 @@ class StaticPageController extends StoreManagementController
 	/**
 	 * @role remove
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		try
 		{
@@ -147,12 +147,12 @@ class StaticPageController extends StoreManagementController
 		}
 	}
 
-	public function emptyPage()
+	public function emptyPageAction()
 	{
 		return new ActionResponse();
 	}
 
-	public function save()
+	public function saveAction()
 	{
 		$data = $this->request->getJSON();
 		$page = StaticPage::getInstanceByID($data['ID'], true);

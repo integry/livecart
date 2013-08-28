@@ -21,7 +21,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 	 * @role update
 	 * @return JSONResponse Indicates status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -32,7 +32,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 	 * @role update
 	 * return JSONResponse Indicates status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}
@@ -40,12 +40,12 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 	/**
 	 * @role update
 	 */
-	public function mergeValues()
+	public function mergeValuesAction()
 	{
 		return parent::mergeValues();
 	}
 
-	public function autoComplete()
+	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
 		$f->setLimit(20);

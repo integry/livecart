@@ -13,7 +13,7 @@ class ProductFileGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		$product = Product::getInstanceByID((int)$this->request->gget('productID'));
 		$fileGroup = ProductFileGroup::getNewInstance($product);
@@ -23,7 +23,7 @@ class ProductFileGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->gget('ID'));
 		return $this->save($fileGroup);
@@ -55,7 +55,7 @@ class ProductFileGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		ProductFileGroup::getInstanceByID((int)$this->request->gget('id'))->delete();
 		return new JSONResponse(false, 'success');
@@ -64,7 +64,7 @@ class ProductFileGroupController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{
@@ -77,7 +77,7 @@ class ProductFileGroupController extends StoreManagementController
 		return new JSONResponse(false, 'success');
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$group = ProductFileGroup::getInstanceByID((int)$this->request->gget('id'), true);
 

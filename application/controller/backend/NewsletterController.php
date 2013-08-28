@@ -18,7 +18,7 @@ class NewsletterController extends ActiveGridController
 	const FORMAT_HTML = 3;
 	const FORMAT_TEXT = 4;
 
-	public function index()
+	public function indexAction()
 	{
 		return $this->setGridResponse(new ActionResponse());
 	}
@@ -33,7 +33,7 @@ class NewsletterController extends ActiveGridController
 		return array('NewsletterMessage.ID', 'NewsletterMessage.subject', 'NewsletterMessage.status'/*, 'NewsletterMessage.time'*/);
 	}
 
-	public function add()
+	public function addAction()
 	{
 		return new ActionResponse('form', $this->getForm());
 	}
@@ -43,7 +43,7 @@ class NewsletterController extends ActiveGridController
 		return strcmp($a['name'], $b['name']);
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$newsletter = ActiveRecordModel::getInstanceById('NewsletterMessage', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA);
 
@@ -81,12 +81,12 @@ class NewsletterController extends ActiveGridController
 		return $response;
 	}
 
-	public function recipientCount()
+	public function recipientCountAction()
 	{
 		return new ActionResponse('count', $this->getRecipientCount($this->request->toArray()));
 	}
 
-	public function save()
+	public function saveAction()
 	{
 		$validator = $this->createValidator();
 		if (!$validator->isValid())
@@ -264,7 +264,7 @@ class NewsletterController extends ActiveGridController
 		return implode(' UNION ', $queries);
 	}
 	
-	public function plaintext()
+	public function plaintextAction()
 	{
 		$h2t = new HtmlToText(
 			$this->getRequest()->get('html'),

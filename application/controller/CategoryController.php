@@ -36,7 +36,7 @@ class CategoryController extends CatalogController
 
 	protected $hasProducts = false;
 
-	public function init()
+	public function initAction()
   	{
 	  	parent::init();
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
@@ -46,7 +46,7 @@ class CategoryController extends CatalogController
 	  	$this->addBlock('QUICK-SHOP', 'quickShopMenu', 'category/block/quickShopMenu');
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
@@ -303,7 +303,7 @@ class CategoryController extends CatalogController
 	/**
 	 *	Display a list of all categories
 	 */
-	public function all()
+	public function allAction()
 	{
 		$root = Category::getRootNode();
 		$f = new ARSelectFilter(new MoreThanCond(new ARFieldHandle('Category', $root->getProductCountField()), 0));
@@ -329,7 +329,7 @@ class CategoryController extends CatalogController
 	/**
 	 *	Display a list of all products
 	 */
-	public function allProducts()
+	public function allProductsAction()
 	{
 		$this->request = 'page', $this->request->gget('id', 1));
 		$this->request = 'id', 1);
@@ -750,7 +750,7 @@ class CategoryController extends CatalogController
 		return $filterArray;
 	}
 
-	public function boxFilterTopBlock()
+	public function boxFilterTopBlockAction()
 	{
 		if (!$this->productFilter)
 		{
@@ -1015,12 +1015,12 @@ class CategoryController extends CatalogController
 		return $priceFilters;
 	}
 
-	public function getCategoryId()
+	public function getCategoryIdAction()
 	{
 		return $this->getCategory()->getID();
 	}
 
-	public function getProductFilter()
+	public function getProductFilterAction()
 	{
 		return $this->productFilter;
 	}

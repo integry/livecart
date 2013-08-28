@@ -14,7 +14,7 @@ ClassLoader::importNow("application.helper.getDateFromString");
  */
 class IndexController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->updateApplicationUri();
 
@@ -77,7 +77,7 @@ class IndexController extends StoreManagementController
 		return $response;
 	}
 
-	public function totalOrders()
+	public function totalOrdersAction()
 	{
 		// "January 1 | now" - this year
 		// or
@@ -134,14 +134,14 @@ class IndexController extends StoreManagementController
 		return ActiveRecordModel::getRecordCount('CustomerOrder', $f);
 	}
 
-	public function setUserPreference()
+	public function setUserPreferenceAction()
 	{
 		$user = $this->user;
 		$user->setPreference($this->request->gget('key'), $this->request->gget('value'));
 		$user->save();
 	}
 
-	public function keepAlive()
+	public function keepAliveAction()
 	{
 		return new RawResponse('OK');
 	}

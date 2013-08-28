@@ -11,7 +11,7 @@
  */
 class CustomizeController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$response->set('isCustomizationModeEnabled', $this->application->isCustomizationMode());
@@ -19,7 +19,7 @@ class CustomizeController extends StoreManagementController
 		return $response;
 	}
 
-	public function translationMode()
+	public function translationModeAction()
 	{
 	  	if ($this->application->isTranslationMode())
 	  	{
@@ -33,7 +33,7 @@ class CustomizeController extends StoreManagementController
 		return new ActionRedirectResponse('backend.customize', 'index');
 	}
 
-	public function mode()
+	public function modeAction()
 	{
 
 	  	if (($this->application->isCustomizationMode() && !$this->request->isValueSet('mode')) || ('exit' == $this->request->gget('mode')))
@@ -56,7 +56,7 @@ class CustomizeController extends StoreManagementController
 		}
 	}
 
-	public function saveCss()
+	public function saveCssAction()
 	{
 		$params = json_decode($this->request->gget('result'), true);
 
@@ -100,7 +100,7 @@ class CustomizeController extends StoreManagementController
 		}
 	}
 
-	public function changeTheme()
+	public function changeThemeAction()
 	{
 		$this->session->set('customizationTheme', $this->getRequest()->get('theme'));
 		return new JSONResponse(null, "success");

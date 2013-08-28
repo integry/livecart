@@ -10,13 +10,13 @@
  */
 class ShipmentController extends StoreManagementController
 {
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 		CustomerOrder::allowEmpty();
 	}
 
-	public function changeService()
+	public function changeServiceAction()
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->gget('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 		$shipment->loadItems();
@@ -67,7 +67,7 @@ class ShipmentController extends StoreManagementController
 		);
 	}
 
-	public function changeStatus()
+	public function changeStatusAction()
 	{
 		$status = (int)$this->request->gget('status');
 
@@ -118,7 +118,7 @@ class ShipmentController extends StoreManagementController
 		return new JSONResponse(false, 'success');
 	}
 
-	public function getAvailableServices()
+	public function getAvailableServicesAction()
 	{
 		$this->loadLanguageFile('Checkout');
 
@@ -167,7 +167,7 @@ class ShipmentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('orderID'), true, array('BillingAddress', 'ShippingAddress'));
 
@@ -179,7 +179,7 @@ class ShipmentController extends StoreManagementController
 		return $response;
 	}
 
-	public function editAddress()
+	public function editAddressAction()
 	{
 		$this->loadLanguageFile('backend/CustomerOrder');
 
@@ -215,7 +215,7 @@ class ShipmentController extends StoreManagementController
 		return $response;
 	}
 
-	public function saveAddress()
+	public function saveAddressAction()
 	{
 		$this->loadLanguageFile('backend/Shipment');
 
@@ -257,7 +257,7 @@ class ShipmentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('ID'));
 		return $this->save($order);
@@ -266,7 +266,7 @@ class ShipmentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function updateShippingAmount()
+	public function updateShippingAmountAction()
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
 		$order = $shipment->order->get();
@@ -345,7 +345,7 @@ class ShipmentController extends StoreManagementController
 		}
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$group = ProductFileGroup::getInstanceByID((int)$this->request->gget('id'), true);
 
@@ -355,7 +355,7 @@ class ShipmentController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->gget('id'), true, array('Order' => 'CustomerOrder'));
 		$shipment->order->get()->loadAll();

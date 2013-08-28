@@ -10,7 +10,7 @@
  */
 class ShippingServiceController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		if(($zoneID = (int)$this->request->gget('id')) <= 0)
 		{
@@ -61,7 +61,7 @@ class ShippingServiceController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$service = ShippingService::getInstanceByID((int)$this->request->gget('id'));
 		$service->delete();
@@ -69,7 +69,7 @@ class ShippingServiceController extends StoreManagementController
 		return new JSONResponse(false, 'success');
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$shippingService = ShippingService::getInstanceByID($this->request->gget('id'), true);
 		$spec = $shippingService->getSpecification();
@@ -91,7 +91,7 @@ class ShippingServiceController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		if(($deliveryZoneId = (int)$this->request->gget('deliveryZoneID')) > 0)
 		{
@@ -110,7 +110,7 @@ class ShippingServiceController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$shippingService = ShippingService::getInstanceByID((int)$this->request->gget('serviceID'), ShippingService::LOAD_DATA, ShippingService::LOAD_REFERENCES);
 		return $this->save($shippingService);
@@ -119,7 +119,7 @@ class ShippingServiceController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function validateRates()
+	public function validateRatesAction()
 	{
 		$ratesData = $this->getRatesFromRequest();
 		$errors = $this->validateRate('', $ratesData['']);
@@ -131,7 +131,7 @@ class ShippingServiceController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{

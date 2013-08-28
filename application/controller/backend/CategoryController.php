@@ -11,7 +11,7 @@
  */
 class CategoryController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		Category::loadTree();
 		$response = new ActionResponse();
@@ -32,7 +32,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function form()
+	public function formAction()
 	{
 
 		$this->loadLanguageFile('backend/Settings');
@@ -55,7 +55,7 @@ class CategoryController extends StoreManagementController
 		return $response;
 	}
 
-	public function category()
+	public function categoryAction()
 	{
 		$category = Category::getInstanceByID($this->request->gget('id'), true);
 		$category->loadSpecification();
@@ -77,7 +77,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return ActionRedirectResponse
 	 */
-	public function add()
+	public function addAction()
 	{
 		$response = new BlockResponse();
 		$response->set('form', $this->buildAddForm());
@@ -91,7 +91,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return ActionRedirectResponse
 	 */
-	public function create()
+	public function createAction()
 	{
 		$parent = Category::getRequestInstance($this->request, 'parent');
 
@@ -109,7 +109,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @return ActionRedirectResponse
 	 */
-	public function update()
+	public function updateAction()
 	{
 
 		$categoryNode = Category::getRequestInstance($this->request);
@@ -133,7 +133,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @role !category.remove
 	 */
-	public function remove()
+	public function removeAction()
 	{
 		try
 		{
@@ -215,7 +215,7 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @role !category.sort
 	 */
-	public function move()
+	public function moveAction()
 	{
 		$targetNode = Category::getInstanceByID((int)$this->request->gget("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->gget("parent"));
@@ -235,7 +235,7 @@ class CategoryController extends StoreManagementController
 		}
 	}
 
-	public function countTabsItems()
+	public function countTabsItemsAction()
 	{
 		return new JSONResponse($this->getTabCounts((int)$this->request->gget('id')));
 	}
@@ -260,7 +260,7 @@ class CategoryController extends StoreManagementController
 		);
 	}
 
-	public function branch()
+	public function branchAction()
 	{
 		$xmlResponse = new XMLResponse();
 		$rootID = (int)$this->request->gget("id", 1);
@@ -311,7 +311,7 @@ class CategoryController extends StoreManagementController
 		return $jscat;
 	}
 
-	public function getRecursiveJson($root)
+	public function getRecursiveJsonAction($root)
 	{
 		$jscat = $this->getCategoryJson($root);
 
@@ -326,7 +326,7 @@ class CategoryController extends StoreManagementController
 		return $jscat;
 	}
 
-	public function recursivePath()
+	public function recursivePathAction()
 	{
 		$root = Category::getRootNode()->toArray();
 
@@ -340,17 +340,17 @@ class CategoryController extends StoreManagementController
 		return new JSONResponse($this->getRecursiveJson($root));
 	}
 
-	public function popup()
+	public function popupAction()
 	{
 		return new ActionResponse('categoryList', $this->getRootCategoryJson());
 	}
 
-	public function productSelectPopup()
+	public function productSelectPopupAction()
 	{
 		return $this->popup();
 	}
 
-	public function reindex()
+	public function reindexAction()
 	{
 		ActiveTreeNode::reindex("Category");
 	}

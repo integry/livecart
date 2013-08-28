@@ -15,7 +15,7 @@ class XmlController extends FrontendController
 	const CHUNK_SIZE = 100;
 
 	/*
-	public function getCacheControl($action)
+	public function getCacheControlAction($action)
 	{
 		$control = new CacheControl();
 
@@ -29,7 +29,7 @@ class XmlController extends FrontendController
 	}
 	*/
 
-	public function export()
+	public function exportAction()
 	{
 		$module = $this->request->gget('module');
 		$enabledFeeds = $this->config->get('ENABLED_FEEDS');

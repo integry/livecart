@@ -8,7 +8,7 @@
  */
 class StaticpageController extends ControllerBase
 {
-	public function viewAction()
+	public function viewActionAction()
 	{
 		$pages = \staticpage\StaticPage::query()->execute();
 		//var_dump($pages->toArray());

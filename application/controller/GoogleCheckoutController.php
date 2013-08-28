@@ -9,7 +9,7 @@
  */
 class GoogleCheckoutController extends CheckoutController
 {
-	public function index()
+	public function indexAction()
 	{
 		$handler = $this->application->getPaymentHandler('GoogleCheckout')->getHandler();
 		$array = $origArray = $this->getPostData();

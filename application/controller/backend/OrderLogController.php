@@ -10,7 +10,7 @@
  */
 class OrderLogController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$customerOrder = CustomerOrder::getInstanceById($this->request->gget('id'), true, array('User', 'Currency'));

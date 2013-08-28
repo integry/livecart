@@ -15,7 +15,7 @@ class ReportController extends StoreManagementController
 	/**
 	 *	Main settings page
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$response->set('thisMonth', date('m'));
@@ -23,7 +23,7 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
-	public function sales()
+	public function salesAction()
 	{
 		$report = new SalesReport();
 		$this->initReport($report);
@@ -83,7 +83,7 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
-	public function bestsellers()
+	public function bestsellersAction()
 	{
 		$report = new BestsellerReport();
 		$this->initReport($report);
@@ -106,7 +106,7 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
-	public function customers()
+	public function customersAction()
 	{
 		$report = new CustomerReport();
 		$this->initReport($report);
@@ -133,7 +133,7 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
-	public function conversion()
+	public function conversionAction()
 	{
 		$report = new ConversionReport();
 		$this->initReport($report);
@@ -162,7 +162,7 @@ class ReportController extends StoreManagementController
 		return $response;
 	}
 
-	public function search()
+	public function searchAction()
 	{
 		$report = new SearchReport();
 		$this->initReport($report);

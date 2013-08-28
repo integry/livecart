@@ -10,7 +10,7 @@
  */
 class DatabaseImportController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 		$response->set('form', $this->getForm());
@@ -20,7 +20,7 @@ class DatabaseImportController extends StoreManagementController
 		return $response;
 	}
 
-	public function import()
+	public function importAction()
 	{
 		//ignore_user_abort(true);
 		set_time_limit(0);

@@ -9,7 +9,7 @@
  */
 class SearchController extends FrontendController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->loadLanguageFile('Category');
 
@@ -35,7 +35,7 @@ class SearchController extends FrontendController
 		return $response;
 	}
 
-	public function searchAll($searchTerm)
+	public function searchAllAction($searchTerm)
 	{
 		$res = array();
 

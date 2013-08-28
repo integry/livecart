@@ -9,7 +9,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	abstract protected function getDefaultColumns();
 
-	public function export()
+	public function exportAction()
 	{
 		@set_time_limit(0);
 		$count = ActiveRecordModel::getRecordCount($this->getClassName(), $this->getListFilter(), $this->getReferencedData());
@@ -37,7 +37,7 @@ abstract class ActiveGridController extends StoreManagementController
 		exit;
 	}
 
-	public function lists($dataOnly = false, $displayedColumns = null, $exportBufferIndex = 0)
+	public function listsAction($dataOnly = false, $displayedColumns = null, $exportBufferIndex = 0)
 	{
 		$filter = $this->getListFilter();
 		$this->setDefaultSortOrder($filter);
@@ -146,7 +146,7 @@ abstract class ActiveGridController extends StoreManagementController
 		return $dataArray;
 	}
 
-	public function processMass($params = array())
+	public function processMassAction($params = array())
 	{
 		$processorClass = $this->getMassActionProcessor();
 		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName(), $this->getHavingClauseColumnTypes());
@@ -267,12 +267,12 @@ abstract class ActiveGridController extends StoreManagementController
 		return $availableColumns;
 	}
 
-	public function getHavingClauseColumnTypes()
+	public function getHavingClauseColumnTypesAction()
 	{
 		return array();
 	}
 
-	public function getAvailableColumns($schemaName = null)
+	public function getAvailableColumnsAction($schemaName = null)
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
 		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
@@ -528,13 +528,13 @@ abstract class ActiveGridController extends StoreManagementController
 				return 'MassActionProcessor';
 	}
 
-	public function isMassCancelled()
+	public function isMassCancelledAction()
 	{
 		$isCancelled = call_user_func_array(array($this->getMassActionProcessor(), 'isCancelled'), array($this->request->gget('pid')));
 		return new JSONResponse(array('isCancelled' => $isCancelled));
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		$columns = array_keys($this->request->gget('col', array()));
 		$this->setSessionData('columns', $columns);
@@ -542,7 +542,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$this->user->save();
 	}
 
-	public function sortColumns()
+	public function sortColumnsAction()
 	{
 		$columns = json_decode($this->request->gget('columns'));
 		$this->setSessionData('columns', $columns);
@@ -550,7 +550,7 @@ abstract class ActiveGridController extends StoreManagementController
 		$this->user->save();
 	}
 
-	public function saveColumnWidth()
+	public function saveColumnWidthAction()
 	{
 		$columns = json_decode($this->request->gget('width'));
 		$this->setSessionData('columnWidth', $columns);

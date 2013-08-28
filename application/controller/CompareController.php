@@ -9,7 +9,7 @@
  */
 class CompareController extends FrontendController
 {
-	public function index()
+	public function indexAction()
 	{
 		$compare = new ProductCompare($this->application);
 		return new ActionResponse(
@@ -18,7 +18,7 @@ class CompareController extends FrontendController
 					);
 	}
 
-	public function add()
+	public function addAction()
 	{
 		$this->setLayout('empty');
 		$compare = new ProductCompare($this->application);
@@ -38,7 +38,7 @@ class CompareController extends FrontendController
 		}
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$compare = new ProductCompare($this->application);
 		$compare->removeProductById($this->request->gget('id'));
@@ -53,7 +53,7 @@ class CompareController extends FrontendController
 		}
 	}
 
-	public function compareMenuBlock()
+	public function compareMenuBlockAction()
 	{
 		$compare = new ProductCompare($this->application);
 		return new BlockResponse('products', $compare->getComparedProductInfo());

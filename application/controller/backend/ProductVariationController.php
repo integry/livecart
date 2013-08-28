@@ -14,7 +14,7 @@ class ProductVariationController extends StoreManagementController
 	/**
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 
@@ -36,7 +36,7 @@ class ProductVariationController extends StoreManagementController
 		return $response;
 	}
 
-	public function save()
+	public function saveAction()
 	{
 		ActiveRecordModel::beginTransaction();
 

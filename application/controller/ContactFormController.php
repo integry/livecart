@@ -2,13 +2,13 @@
 
 class ContactFormController extends FrontendController
 {
-	public function index()
+	public function indexAction()
 	{
 		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
 		return new ActionResponse('form', $this->buildForm());
 	}
 
-	public function send()
+	public function sendAction()
 	{
 		if (!$this->buildValidator()->isValid())
 		{
@@ -25,7 +25,7 @@ class ContactFormController extends FrontendController
 		return new ActionRedirectResponse('contactForm', 'sent');
 	}
 
-	public function sent()
+	public function sentAction()
 	{
 		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
 		$this->addBreadCrumb($this->translate('_form_sent'), '');
@@ -33,12 +33,12 @@ class ContactFormController extends FrontendController
 		return new ActionResponse();
 	}
 
-	public function buildForm()
+	public function buildFormAction()
 	{
 		return new Form($this->buildValidator());
 	}
 
-	public function buildValidator(Request $request = null)
+	public function buildValidatorAction(Request $request = null)
 	{
 		$request = $request ? $request : $this->request;
 

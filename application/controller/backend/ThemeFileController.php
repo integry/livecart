@@ -9,7 +9,7 @@
  */
 class ThemeFileController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$request = $this->getRequest();
 		$theme = $request->gget('id');
@@ -22,7 +22,7 @@ class ThemeFileController extends StoreManagementController
 		return $response;
 	}
 
-	public function upload()
+	public function uploadAction()
 	{
 		$request = $this->getRequest();
 		$theme = $request->gget('theme');
@@ -39,7 +39,7 @@ class ThemeFileController extends StoreManagementController
 		return $response;
 	}
 
-	public function delete()
+	public function deleteAction()
 	{
 		$request = $this->getRequest();
 		$tfh = ThemeFile::getNewInstance($request->gget('theme'));

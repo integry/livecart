@@ -10,7 +10,7 @@
  */
 class ProductFileController extends StoreManagementController
 {
-	public function index()
+	public function indexAction()
 	{
 		$product = Product::getInstanceByID((int)$this->request->gget('id'));
 
@@ -28,7 +28,7 @@ class ProductFileController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$productFile = ProductFile::getInstanceByID((int)$this->request->gget('ID'), ActiveRecord::LOAD_DATA);
 		$productFile->fileName->set($this->request->gget('fileName'));
@@ -51,7 +51,7 @@ class ProductFileController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		$product = Product::getInstanceByID((int)$this->request->gget('productID'));
 		if ($uploadFile = $this->request->gget('uploadFile'))
@@ -112,7 +112,7 @@ class ProductFileController extends StoreManagementController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$productFile = ProductFile::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
 
@@ -122,7 +122,7 @@ class ProductFileController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		ProductFile::getInstanceByID((int)$this->request->gget('id'))->delete();
 
@@ -132,7 +132,7 @@ class ProductFileController extends StoreManagementController
 	/**
 	 * @role download
 	 */
-	public function download()
+	public function downloadAction()
 	{
 		$productFile = ProductFile::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
 
@@ -142,7 +142,7 @@ class ProductFileController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.

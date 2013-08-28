@@ -27,7 +27,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 *
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$categoryID = $this->request->gget('id');
 
@@ -59,7 +59,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		$specFieldList = $this->getFieldInstanceByID($this->request->gget('id'), true, true)->toArray(false, false);
 
@@ -78,7 +78,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 *
 	 * @return JSONResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$id = $this->request->gget("id", false);
 		if(ActiveRecordModel::objectExists($this->getFieldClass(), $id))
@@ -92,14 +92,14 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 		}
 	}
 
-	public function create()
+	public function createAction()
 	{
 		$specField = call_user_func_array(array($this->getFieldClass(), 'getNewInstance'), array($this->getParent($this->request->gget('categoryID'))));
 
 		return $this->save($specField);
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		if(ActiveRecordModel::objectExists($this->getFieldClass(), $this->request->gget('ID')))
 		{
@@ -125,7 +125,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 * @role update
 	 * @return JSONResponse
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		$target = $this->request->gget('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.

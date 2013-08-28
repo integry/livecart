@@ -9,7 +9,7 @@
  */
 class ReviewController extends ActiveGridController
 {
-	public function index()
+	public function indexAction()
 	{
 		$response = $this->getGridResponse();
 		$response->set('id', ($this->isCategory() ? 'c' : '') . $this->getID());
@@ -17,7 +17,7 @@ class ReviewController extends ActiveGridController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
 		//$manufacturer->getSpecification();
@@ -44,7 +44,7 @@ class ReviewController extends ActiveGridController
 		return $response;
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
 		$validator = $this->buildValidator($review);
@@ -70,7 +70,7 @@ class ReviewController extends ActiveGridController
 		}
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		parent::changeColumns();
 		return $this->getGridResponse();
@@ -105,7 +105,7 @@ class ReviewController extends ActiveGridController
 		return parent::getDisplayedColumns(null, array('Product.ID' => 'numeric'));
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumnsAction()
 	{
 		$availableColumns = parent::getAvailableColumns();
 

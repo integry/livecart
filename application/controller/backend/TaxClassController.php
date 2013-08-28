@@ -13,7 +13,7 @@ class TaxClassController extends StoreManagementController
 	 * List all system currencies
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$response = new ActionResponse();
 
@@ -35,7 +35,7 @@ class TaxClassController extends StoreManagementController
 		return $response;
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$class = TaxClass::getInstanceByID((int)$this->request->gget('id'), true);
 
@@ -52,7 +52,7 @@ class TaxClassController extends StoreManagementController
 	/**
 	 * @role remove
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		$service = TaxClass::getInstanceByID((int)$this->request->gget('id'));
 		$service->delete();
@@ -63,7 +63,7 @@ class TaxClassController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		$class = TaxClass::getInstanceByID((int)$this->request->gget('id'));
 
@@ -73,7 +73,7 @@ class TaxClassController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function create()
+	public function createAction()
 	{
 		$class = TaxClass::getNewInstance($this->request->gget('name'));
 		$class->position->set(1000);
@@ -115,7 +115,7 @@ class TaxClassController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-	public function createClassFormValidator(TaxClass $class)
+	public function createClassFormValidatorAction(TaxClass $class)
 	{
 		$validator = $this->getValidator("classForm_" . $class->isExistingRecord() ? $class->getID() : '', $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
@@ -126,7 +126,7 @@ class TaxClassController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
 		{

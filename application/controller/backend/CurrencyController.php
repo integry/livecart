@@ -14,7 +14,7 @@ class CurrencyController extends StoreManagementController
 	 * List all system currencies
 	 * @return ActionResponse
 	 */
-	public function index()
+	public function indexAction()
 	{
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'ASC');
@@ -33,7 +33,7 @@ class CurrencyController extends StoreManagementController
 	 * @role create
 	 * @return ActionRedirectResponse
 	 */
-	public function addForm()
+	public function addFormAction()
 	{
 		$currencies = $this->locale->info()->getAllCurrencies();
 
@@ -59,7 +59,7 @@ class CurrencyController extends StoreManagementController
 	/**
 	 * @role create
 	 */
-	public function add()
+	public function addAction()
 	{
 		try
 		{
@@ -92,7 +92,7 @@ class CurrencyController extends StoreManagementController
 	 * @role status
 	 * @return ActionRedirectResponse
 	 */
-	public function setDefault()
+	public function setDefaultAction()
 	{
 		try
 		{
@@ -140,7 +140,7 @@ class CurrencyController extends StoreManagementController
 	 * @role sort
 	 * @return RawResponse
 	 */
-	public function saveOrder()
+	public function saveOrderAction()
 	{
 	  	$order = $this->request->gget('currencyList');
 		foreach ($order as $key => $value)
@@ -159,7 +159,7 @@ class CurrencyController extends StoreManagementController
 	 * @role status
 	 * @return ActionResponse
 	 */
-	public function setEnabled()
+	public function setEnabledAction()
 	{
 		$id = $this->request->gget('id');
 		$curr = ActiveRecord::getInstanceById('Currency', $id, true);
@@ -175,7 +175,7 @@ class CurrencyController extends StoreManagementController
 	 * @role remove
 	 * @return RawResponse
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		try
 	  	{
@@ -188,7 +188,7 @@ class CurrencyController extends StoreManagementController
 		}
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		$currency = Currency::getInstanceByID($this->request->gget('id'), Currency::LOAD_DATA);
 
@@ -205,7 +205,7 @@ class CurrencyController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function save()
+	public function saveAction()
 	{
 		$currency = Currency::getInstanceByID($this->request->gget('id'), Currency::LOAD_DATA);
 		$currency->loadRequestData($this->request);
@@ -219,7 +219,7 @@ class CurrencyController extends StoreManagementController
 	 * Currency rates form
 	 * @return ActionResponse
 	 */
-	public function rates()
+	public function ratesAction()
 	{
 		$currencies = $this->getCurrencySet()->toArray();
 		$form = $this->buildForm($currencies);
@@ -242,7 +242,7 @@ class CurrencyController extends StoreManagementController
 	 * @role update
 	 * @return ActionResponse
 	 */
-	public function options()
+	public function optionsAction()
 	{
 		$form = new Form($this->buildOptionsValidator());
 		$form->set('updateCb', $this->config->get('currencyAutoUpdate'));
@@ -295,7 +295,7 @@ class CurrencyController extends StoreManagementController
 	/**
 	 * @role update
 	 */
-	public function saveOptions()
+	public function saveOptionsAction()
 	{
 		$val = $this->buildOptionsValidator();
 
@@ -330,7 +330,7 @@ class CurrencyController extends StoreManagementController
 	 * @role update
 	 * @return JSONResponse
 	 */
-	public function saveRates()
+	public function saveRatesAction()
 	{
 		$currencies = $this->getCurrencySet();
 

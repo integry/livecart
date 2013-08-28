@@ -15,7 +15,7 @@ class OnePageCheckoutController extends CheckoutController
 
 	const CUSTOM_FIELDS_STEP = 'SHIPPING_ADDRESS_STEP';
 
-	public function init()
+	public function initAction()
 	{
 		static $isInitialized = false;
 
@@ -104,7 +104,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$this->order->loadAll();
 
@@ -135,7 +135,7 @@ class OnePageCheckoutController extends CheckoutController
 		return $response;
 	}
 
-	public function login()
+	public function loginAction()
 	{
 		if (!$this->user->isAnonymous())
 		{
@@ -153,7 +153,7 @@ class OnePageCheckoutController extends CheckoutController
 		return $response;
 	}
 
-	public function shippingAddress()
+	public function shippingAddressAction()
 	{
 		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
 		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
@@ -226,7 +226,7 @@ class OnePageCheckoutController extends CheckoutController
 		return $this->postProcessResponse($response);
 	}
 
-	public function billingAddress()
+	public function billingAddressAction()
 	{
 		$this->request->set('step', 'billing');
 
@@ -242,7 +242,7 @@ class OnePageCheckoutController extends CheckoutController
 		return $response;
 	}
 
-	public function shippingMethods()
+	public function shippingMethodsAction()
 	{
 		// shipping methods won't be displayed if custom fields are not filled
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
@@ -310,12 +310,12 @@ class OnePageCheckoutController extends CheckoutController
 		return $this->postProcessResponse($response);
 	}
 
-	public function cart()
+	public function cartAction()
 	{
 		return $this->postProcessResponse($this->getOrderController()->index());
 	}
 
-	public function overview()
+	public function overviewAction()
 	{
 		if (!$this->order->isShippingRequired())
 		{
@@ -333,7 +333,7 @@ class OnePageCheckoutController extends CheckoutController
 		return $this->postProcessResponse(new ActionResponse('order', $array));
 	}
 
-	public function payment()
+	public function paymentAction()
 	{
 		if ($this->config->get('REQUIRE_SAME_ADDRESS'))
 		{
@@ -370,14 +370,14 @@ class OnePageCheckoutController extends CheckoutController
 		return $validator;
 	}
 
-	public function doProceedRegistration()
+	public function doProceedRegistrationAction()
 	{
 		$this->setSessionData('isProceeded', true);
 
 		return $this->getUpdateResponse();
 	}
 
-	public function doLogin()
+	public function doLoginAction()
 	{
 		$this->setSessionData('isProceeded', false);
 		$res = $this->getUserController()->doLogin();
@@ -390,19 +390,19 @@ class OnePageCheckoutController extends CheckoutController
 		return new ActionRedirectResponse('onePageCheckout', 'index', $params);
 	}
 
-	public function doSelectShippingMethod()
+	public function doSelectShippingMethodAction()
 	{
 		parent::doSelectShippingMethod();
 
 		return new ActionRedirectResponse('onePageCheckout', 'update');
 	}
 
-	public function update()
+	public function updateAction()
 	{
 		return $this->getUpdateResponse('shippingMethods', 'billingAddress', 'shippingAddress');
 	}
 
-	public function doSelectShippingAddress()
+	public function doSelectShippingAddressAction()
 	{
 		$sameAddress = $this->config->get('REQUIRE_SAME_ADDRESS');
 		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', false);
@@ -501,7 +501,7 @@ class OnePageCheckoutController extends CheckoutController
 		//return $this->getUpdateResponse('shippingMethods', 'shippingAddress', 'billingAddress');
 	}
 
-	public function doSelectBillingAddress()
+	public function doSelectBillingAddressAction()
 	{
 		$this->order->loadAll();
 		$this->request->set('step', 'billing');
@@ -591,7 +591,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 	}
 
-	public function updateCart()
+	public function updateCartAction()
 	{
 		$response = $this->getOrderController()->update();
 		$this->shipping();
@@ -608,13 +608,13 @@ class OnePageCheckoutController extends CheckoutController
 		return $response;
 	}
 
-	public function fallback()
+	public function fallbackAction()
 	{
 		$this->session->set('noJS', true);
 		return new ActionRedirectResponse('checkout', 'index');
 	}
 
-	public function setPaymentMethod()
+	public function setPaymentMethodAction()
 	{
 		$this->order->loadAll();
 
@@ -635,21 +635,21 @@ class OnePageCheckoutController extends CheckoutController
 		return $this->getUpdateResponse();
 	}
 
-	public function payCreditCard()
+	public function payCreditCardAction()
 	{
 		$this->session->set('paymentMethod', 'cc');
 		$this->beforePayment();
 		return parent::payCreditCard();
 	}
 
-	public function redirect()
+	public function redirectAction()
 	{
 		$this->session->set('paymentMethod', $this->request->gget('id'));
 		$this->beforePayment();
 		return parent::redirect();
 	}
 
-	public function payOffline()
+	public function payOfflineAction()
 	{
 		$this->session->set('paymentMethod', $this->request->gget('id'));
 		$this->beforePayment();

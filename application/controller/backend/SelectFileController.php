@@ -15,7 +15,7 @@ class SelectFileController extends ActiveGridController
 		return null;
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$dir = getcwd();
 
@@ -41,7 +41,7 @@ class SelectFileController extends ActiveGridController
 		return $response;
 	}
 
-	public function xmlRecursivePath()
+	public function xmlRecursivePathAction()
 	{
 		$targetID = $this->request->gget("id");
 
@@ -109,7 +109,7 @@ class SelectFileController extends ActiveGridController
 		return $xmlResponse;
 	}
 
-	public function xmlBranch()
+	public function xmlBranchAction()
 	{
 		$rootID = $this->request->gget("id");
 
@@ -120,14 +120,14 @@ class SelectFileController extends ActiveGridController
 		return $xmlResponse;
 	}
 
-	public function changeColumns()
+	public function changeColumnsAction()
 	{
 		$columns = array_keys($this->request->gget('col', array()));
 		$this->setSessionData('columns', $columns);
 		return new ActionRedirectResponse('backend.selectFile', 'index', array('id' => $this->request->gget('id')));
 	}
 
-	public function lists($dataOnly = false, $displayedColumns = null)
+	public function listsAction($dataOnly = false, $displayedColumns = null)
 	{
 		$filters = $this->request->gget('filters');
 
@@ -250,7 +250,7 @@ class SelectFileController extends ActiveGridController
 		return strnatcasecmp($a[$this->sortColumn], $b[$this->sortColumn]);
 	}
 
-	public function getAvailableColumns()
+	public function getAvailableColumnsAction()
 	{
 		$availableColumns = array();
 

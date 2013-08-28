@@ -9,7 +9,7 @@
  */
 abstract class BackendController extends BaseController
 {
-	public function __construct(LiveCart $application)
+	public function __constructAction(LiveCart $application)
 	{
 		if ($application->getConfig()->get('SSL_BACKEND'))
 		{
@@ -48,7 +48,7 @@ abstract class BackendController extends BaseController
 		}
 	}
 
-	public function init()
+	public function initAction()
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
@@ -84,17 +84,17 @@ abstract class BackendController extends BaseController
 		}
 	}
 
-	public function boxUserMenuBlock()
+	public function boxUserMenuBlockAction()
 	{
 		return $this->translationsBlock();
 	}
 
-	public function translationsBlock()
+	public function translationsBlockAction()
 	{
 		return new BlockResponse('languageData', json_encode($this->locale->translationManager()->getLoadedDefinitions()));
 	}
 
-	public function toolbarBlock()
+	public function toolbarBlockAction()
 	{
 		$response = new BlockResponse();
 		$response->set('dropButtons',

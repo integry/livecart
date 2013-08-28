@@ -56,7 +56,7 @@ class CheckoutController extends FrontendController
 	const STEP_SHIPPING = 4;
 	const STEP_PAYMENT = 5;
 
-	public function init()
+	public function initAction()
 	{
 		if ('CheckoutController' == get_class($this) && ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE'))
 		{
@@ -101,7 +101,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *  1. Determine user status
 	 */
-	public function index()
+	public function indexAction()
 	{
 		if ($this->user->isLoggedIn())
 		{
@@ -117,7 +117,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *  Redirect to an external site to acquire customer information and initiate payment (express checkout)
 	 */
-	public function express()
+	public function expressAction()
 	{
 		// redirect to external site
 		$class = $this->request->gget('id');
@@ -133,7 +133,7 @@ class CheckoutController extends FrontendController
 		return new RedirectResponse($url);
 	}
 
-	public function expressReturn()
+	public function expressReturnAction()
 	{
 		$class = $this->request->gget('id');
 		$this->order->setPaymentMethod($class);
@@ -190,7 +190,7 @@ class CheckoutController extends FrontendController
 	 *  3. Select or enter billing and shipping addresses
 	 *	@role login
 	 */
-	public function selectAddress()
+	public function selectAddressAction()
 	{
 		$this->user->loadAddresses();
 
@@ -343,7 +343,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doSelectAddress()
+	public function doSelectAddressAction()
 	{
 		$this->user->loadAddresses();
 
@@ -500,7 +500,7 @@ class CheckoutController extends FrontendController
 	 *  4. Select shipping methods
 	 *	@role login
 	 */
-	public function shipping()
+	public function shippingAction()
 	{
 		$shipments = $this->order->getShipments();
 
@@ -674,7 +674,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function doSelectShippingMethod()
+	public function doSelectShippingMethodAction()
 	{
 		$shipments = $this->order->getShipments();
 
@@ -727,7 +727,7 @@ class CheckoutController extends FrontendController
 	 *  5. Make payment
 	 *	@role login
 	 */
-	public function pay()
+	public function payAction()
 	{
 		$this->order->loadAll();
 		$this->order->getSpecification();
@@ -809,7 +809,7 @@ class CheckoutController extends FrontendController
 		return $response;
 	}
 
-	public function setPaymentMethodResponse(ActionResponse $response, CustomerOrder $order)
+	public function setPaymentMethodResponseAction(ActionResponse $response, CustomerOrder $order)
 	{
 		$ccHandler = $this->application->getCreditCardHandler();
 		$ccForm = $this->buildCreditCardForm($ccHandler);
@@ -880,7 +880,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function payCreditCard()
+	public function payCreditCardAction()
 	{
 		if ($id = $this->request->gget('id'))
 		{
@@ -983,7 +983,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function payOffline()
+	public function payOfflineAction()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -1017,7 +1017,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function payExpress()
+	public function payExpressAction()
 	{
 		$res = $this->validateExpressCheckout();
 		if ($res instanceof Response)
@@ -1035,7 +1035,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function payExpressComplete()
+	public function payExpressCompleteAction()
 	{
 		$res = $this->validateExpressCheckout();
 		if ($res instanceof Response)
@@ -1091,7 +1091,7 @@ class CheckoutController extends FrontendController
 	 *
 	 *	@role login
 	 */
-	public function redirect()
+	public function redirectAction()
 	{
 		$order = $this->getPaymentOrder();
 		if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
@@ -1134,7 +1134,7 @@ class CheckoutController extends FrontendController
 	 *  Payment confirmation post-back URL for 3rd party payment processors
 	 *  (Paypal IPN, 2Checkout, Moneybookers, etc)
 	 */
-	public function notify()
+	public function notifyAction()
 	{
 		$handler = $this->application->getPaymentHandler($this->request->gget('id'));
 		$orderId = $handler->getOrderIdFromRequest($this->request->toArray());
@@ -1194,7 +1194,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function completeExternal()
+	public function completeExternalAction()
 	{
 		if (SessionOrder::getOrder()->getID() != $this->request->gget('id'))
 		{
@@ -1214,7 +1214,7 @@ class CheckoutController extends FrontendController
 	/**
 	 *	@role login
 	 */
-	public function completed()
+	public function completedAction()
 	{
 		if ($this->request->isValueSet('id'))
 		{
@@ -1240,7 +1240,7 @@ class CheckoutController extends FrontendController
 		return $response;
 	}
 
-	public function cvv()
+	public function cvvAction()
 	{
 		$this->addBreadCrumb($this->translate('_cvv'), '');
 
@@ -1557,7 +1557,7 @@ class CheckoutController extends FrontendController
 		}
 	}
 
-	public function buildCreditCardForm(CreditCardPayment $ccHandler)
+	public function buildCreditCardFormAction(CreditCardPayment $ccHandler)
 	{
 		$form = new Form($this->buildCreditCardValidator($ccHandler));
 		$form->set('ccExpiryMonth', date('n'));

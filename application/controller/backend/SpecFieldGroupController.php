@@ -25,7 +25,7 @@ class SpecFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse
 	 */
-	public function item()
+	public function itemAction()
 	{
 		return parent::item();
 	}
@@ -33,7 +33,7 @@ class SpecFieldGroupController extends EavFieldGroupControllerCommon
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
@@ -41,7 +41,7 @@ class SpecFieldGroupController extends EavFieldGroupControllerCommon
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		return parent::create();
 	}
@@ -53,7 +53,7 @@ class SpecFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -65,7 +65,7 @@ class SpecFieldGroupController extends EavFieldGroupControllerCommon
 	 *
 	 * @return JSONResponse Status
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}

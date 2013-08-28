@@ -10,7 +10,7 @@ class ProductController extends CatalogController
 {
 	public $filters = array();
 
-	public function init()
+	public function initAction()
 	{
 		parent::init();
 
@@ -34,7 +34,7 @@ class ProductController extends CatalogController
 		$this->addBlock('PRODUCT-PURCHASE-VARIATIONS', 'purchaseVariations', 'product/block/purchaseVariations');
 	}
 
-	public function index()
+	public function indexAction()
 	{
 		$this->loadLanguageFile('Category');
 
@@ -283,7 +283,7 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function quickShop()
+	public function quickShopAction()
 	{
 		$response = $this->index();
 		if (!($response instanceof ActionResponse))
@@ -302,12 +302,12 @@ class ProductController extends CatalogController
 		return $bResponse;
 	}
 
-	public function priceBlock()
+	public function priceBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function recurringBlock()
+	public function recurringBlockAction()
 	{
 		$response = new BlockResponse();
 		if ($this->product->type->get() == Product::TYPE_RECURRING)
@@ -320,12 +320,12 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function addToCartBlock()
+	public function addToCartBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function optionsBlock()
+	public function optionsBlockAction()
 	{
 		$response = new BlockResponse();
 		$response->set('allOptions', $this->getOptions(true));
@@ -333,12 +333,12 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function variationsBlock()
+	public function variationsBlockAction()
 	{
 		return new BlockResponse('variations', $this->getVariations());
 	}
 
-	public function upSellBlock()
+	public function upSellBlockAction()
 	{
 		// upsell products
 		$upsell = $this->getRelatedProducts($this->product, /*type:*/ 1);
@@ -358,47 +358,47 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function overviewBlock()
+	public function overviewBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function purchaseBlock()
+	public function purchaseBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function imagesBlock()
+	public function imagesBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function summaryBlock()
+	public function summaryBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function mainInfoBlock()
+	public function mainInfoBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function ratingSummaryBlock()
+	public function ratingSummaryBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function attributeSummaryBlock()
+	public function attributeSummaryBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function navigationBlock()
+	public function navigationBlockAction()
 	{
 		return new BlockResponse();
 	}
 
-	public function purchaseVariationsBlock()
+	public function purchaseVariationsBlockAction()
 	{
 		$variations = $this->getVariations();
 
@@ -461,7 +461,7 @@ class ProductController extends CatalogController
 		return $all ? $this->allOptions : $this->options;
 	}
 
-	public function getVariations()
+	public function getVariationsAction()
 	{
 		// variations
 		if (!isset($this->variations))
@@ -472,12 +472,12 @@ class ProductController extends CatalogController
 		return $this->variations;
 	}
 
-	public function publicFilesBlock()
+	public function publicFilesBlockAction()
 	{
 
 	}
 
-	public function sendToFriend()
+	public function sendToFriendAction()
 	{
 		$request = $this->getRequest();
 		$product = Product::getInstanceByID($request->gget('id'), Product::LOAD_DATA);
@@ -520,7 +520,7 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function rate()
+	public function rateAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA);
 		$ratingTypes = ProductRatingType::getProductRatingTypes($product);
@@ -586,7 +586,7 @@ class ProductController extends CatalogController
 		}
 	}
 
-	public function reviews()
+	public function reviewsAction()
 	{
 		if (!$this->config->get('ENABLE_REVIEWS'))
 		{
@@ -617,7 +617,7 @@ class ProductController extends CatalogController
 		return $response;
 	}
 
-	public function sendContactForm()
+	public function sendContactFormAction()
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA);
 		$redirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID()));
@@ -659,12 +659,12 @@ class ProductController extends CatalogController
 		}
 	}
 
-	public function next()
+	public function nextAction()
 	{
 		return $this->previous(1);
 	}
 
-	public function previous($diff = -1)
+	public function previousAction($diff = -1)
 	{
 		$product = Product::getInstanceByID($this->request->gget('id'), true, array('Category'));
 		$this->category = (!$this->request->gget('category') ? $product->category->get() : Category::getInstanceByID($this->request->gget('category'), true));
@@ -709,7 +709,7 @@ class ProductController extends CatalogController
 		}
 	}
 
-	public function buildAddToCartValidator($options, $variations, $prefix = '')
+	public function buildAddToCartValidatorAction($options, $variations, $prefix = '')
 	{
 		$validator = $this->getValidator("addToCart", $this->getRequest());
 
@@ -984,7 +984,7 @@ class ProductController extends CatalogController
 		return new Form($this->buildContactValidator());
 	}
 
-	public function buildContactValidator(Request $request = null)
+	public function buildContactValidatorAction(Request $request = null)
 	{
 		$this->loadLanguageFile('ContactForm');
 
@@ -999,7 +999,7 @@ class ProductController extends CatalogController
 		return $validator;
 	}
 
-	public function getProduct()
+	public function getProductAction()
 	{
 		return $this->product;
 	}

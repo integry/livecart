@@ -8,7 +8,7 @@
 
 class BackendToolbarController extends StoreManagementController
 {
-	public function lastViewed()
+	public function lastViewedAction()
 	{
 		$request = $this->getRequest();
 		$where = $request->gget('where');
@@ -27,7 +27,7 @@ class BackendToolbarController extends StoreManagementController
 		return $response;
 	}
 
-	public function addIcon()
+	public function addIconAction()
 	{
 		$request = $this->getRequest();
 		$menuID = $request->gget('id');
@@ -61,7 +61,7 @@ class BackendToolbarController extends StoreManagementController
 		}
 	}
 
-	public function removeIcon()
+	public function removeIconAction()
 	{
 		$request = $this->getRequest();
 
@@ -76,7 +76,7 @@ class BackendToolbarController extends StoreManagementController
 		}
 	}
 
-	public function sortIcons()
+	public function sortIconsAction()
 	{
 		$order = $this->getRequest()->get('order');
 		$order = explode(',',$order);

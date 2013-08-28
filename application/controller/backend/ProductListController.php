@@ -10,7 +10,7 @@
  */
 class ProductListController extends ProductListControllerCommon
 {
-	public function index()
+	public function indexAction()
 	{
 		$categoryID = (int)$this->request->gget('id');
 		$category = Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA);
@@ -54,7 +54,7 @@ class ProductListController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function create()
+	public function createAction()
 	{
 		return parent::create();
 	}
@@ -62,7 +62,7 @@ class ProductListController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function update()
+	public function updateAction()
 	{
 		return parent::update();
 	}
@@ -70,7 +70,7 @@ class ProductListController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function delete()
+	public function deleteAction()
 	{
 		return parent::delete();
 	}
@@ -78,12 +78,12 @@ class ProductListController extends ProductListControllerCommon
 	/**
 	 * @role update
 	 */
-	public function sort()
+	public function sortAction()
 	{
 		return parent::sort();
 	}
 
-	public function edit()
+	public function editAction()
 	{
 		return parent::edit();
 	}
