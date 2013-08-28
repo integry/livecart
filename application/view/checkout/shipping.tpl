@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _shipping}{/pageTitle}
 {include file="checkout/layout.tpl"}
 {include file="block/content-start.tpl"}

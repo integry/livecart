@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _remind_pass}{/pageTitle}
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}

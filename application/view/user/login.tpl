@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _login}{/pageTitle}
 {include file="layout/frontend/layout.tpl" hideLeft=true}
 {include file="block/content-start.tpl"}

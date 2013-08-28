@@ -1,4 +1,3 @@
-{loadJs form=true}
 {includeJs file="frontend/OnePageCheckout.js"}
 {pageTitle}{t _checkout}{/pageTitle}
 

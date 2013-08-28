@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _your_basket}{/pageTitle}
 {include file="checkout/layout.tpl"}
 {include file="block/content-start.tpl"}

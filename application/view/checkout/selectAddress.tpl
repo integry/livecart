@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _select_addresses}{/pageTitle}
 {include file="checkout/layout.tpl"}
 

@@ -1,5 +1,4 @@
 {pageTitle}{t _pay} #[[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){/pageTitle}
-{loadJs form=true}
 {include file="checkout/layout.tpl"}
 {include file="block/content-start.tpl"}
 

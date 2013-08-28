@@ -1,5 +1,4 @@
 {pageTitle}{t _personal_info}{/pageTitle}
-{loadJs form=true}
 
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="personalMenu"}

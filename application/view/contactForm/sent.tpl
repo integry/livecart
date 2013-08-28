@@ -1,5 +1,4 @@
 {pageTitle}{t _form_sent}{/pageTitle}
-{loadJs form=true}
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}
 

@@ -1,5 +1,4 @@
 {pageTitle}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){/pageTitle}
-{loadJs form=true}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="ordersMenu"}
 {include file="block/content-start.tpl"}

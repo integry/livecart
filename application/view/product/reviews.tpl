@@ -1,4 +1,3 @@
-{loadJs form=true}
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 

@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _add_billing_address}{/pageTitle}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="addressMenu"}

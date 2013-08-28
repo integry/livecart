@@ -1,4 +1,3 @@
-{loadJs form=true}
 {includeJs file="frontend/Product.js"}
 
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}

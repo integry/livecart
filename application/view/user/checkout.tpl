@@ -1,6 +1,5 @@
 {assign var="fields" value='USER_FIELDS'|config}
 
-{loadJs form=true}
 {if $request.action == 'checkout'}
 	{pageTitle}{t _order_checkout}{/pageTitle}
 {else}

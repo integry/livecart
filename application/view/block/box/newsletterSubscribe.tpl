@@ -1,4 +1,3 @@
-{loadJs form=true}
 <div class="panel newsletter">
 	<div class="panel-heading">
 		<span class="glyphicon glyphicon-envelope"></span>

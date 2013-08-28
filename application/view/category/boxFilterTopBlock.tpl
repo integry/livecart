@@ -1,4 +1,3 @@
-{loadJs}
 {sect}{header}
 <div class="filterTop" id="filterTop_{uniqid}">
 <form action="{categoryUrl data=$category filters=$filters}" method="post" id="{uniqid last=true}" class="form-horizontal">

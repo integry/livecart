@@ -56,7 +56,6 @@
 	<![endif]-->
 
 	<!-- JavaScript includes -->
-	{loadJs form=true}
 
 	{compiledJs glue=true nameMethod=hash}
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
@@ -89,8 +88,7 @@
 	{if !'DISABLE_AJAX'|config}
 		<script type="text/javascript">
 			new Frontend.AjaxInit(document.body);
-			{loadJs}
-		</script>
+					</script>
 	{/if}
 
 

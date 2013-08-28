@@ -1,4 +1,3 @@
-{loadJs}
 {if $products}
 	<div class="panel panel-danger compare" id="compareMenu">
 		<div class="panel-heading">

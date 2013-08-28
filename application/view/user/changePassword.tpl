@@ -1,4 +1,3 @@
-{loadJs form=true}
 {pageTitle}{t _change_pass}{/pageTitle}
 {include file="user/layout.tpl"}
 {include file="user/userMenu.tpl" current="passwordMenu"}

@@ -1,5 +1,4 @@
 {pageTitle}{t _contact_us}{/pageTitle}
-{loadJs form=true}
 {include file="layout/frontend/layout.tpl"}
 {include file="block/content-start.tpl"}
 
