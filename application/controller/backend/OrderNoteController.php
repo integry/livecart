@@ -1,7 +1,4 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.order.OrderNote");
 
 /**
  * Manage order notes (communication with customer)

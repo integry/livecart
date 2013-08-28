@@ -12,8 +12,7 @@ function smarty_block_tab($params, $content, Smarty_Internal_Template $smarty, &
 {
 	if (!$repeat)
 	{
-		ClassLoader::import('application.helper.AccessStringParser');
-		if(!empty($params['role']) && !AccessStringParser::run($params['role']))
+				if(!empty($params['role']) && !AccessStringParser::run($params['role']))
 		{
 			return false;
 		}

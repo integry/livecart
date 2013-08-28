@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.report.*");
 
 ClassLoader::importNow("application.helper.getDateFromString");
 ClassLoader::importNow("library.openFlashChart.open-flash-chart");

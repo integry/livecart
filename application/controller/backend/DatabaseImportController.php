@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import('library.import.LiveCartImporter');
 
 /**
  * Import data from other shopping cart programs
@@ -42,8 +40,7 @@ class DatabaseImportController extends StoreManagementController
 		try
 		{
 			$cart = $this->request->gget('cart');
-			ClassLoader::import('library.import.driver.' . $cart);
-			$driver = new $cart($dsn, $this->request->gget('filePath'));
+						$driver = new $cart($dsn, $this->request->gget('filePath'));
 		}
 		catch (SQLException $e)
 		{
@@ -143,7 +140,6 @@ class DatabaseImportController extends StoreManagementController
 
 	private function buildValidator()
 	{
-		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		$val = $this->getValidator('databaseImport', $this->request);
 		$val->addCheck('cart', new IsNotEmptyCheck($this->translate('_err_no_cart_selected')));

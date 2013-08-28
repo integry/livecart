@@ -11,12 +11,10 @@ chdir('..');
 
 // initialize LiveCart
 include_once('application/Initialize.php');
-ClassLoader::import('application.LiveCart');
 session_start();
 $livecart = new LiveCart;
 
 // process update
-ClassLoader::import('application.controller.backend.UpdateController');
 
 $user = SessionUser::getUser();
 $user->allowBackendAccess();

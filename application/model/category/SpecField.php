@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eavcommon.EavFieldCommon');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.SpecFieldValue');
-ClassLoader::import('application.model.category.SpecFieldGroup');
-ClassLoader::import('application.model.specification.*');
 
 /**
  * Specification attributes allow to define specific product models with a specific set of features or parameters.

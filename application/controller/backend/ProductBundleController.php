@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.ProductListControllerCommon");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.ProductBundle");
 
 /**
  * Product bundles

@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.template.Theme');
-ClassLoader::import('application.model.template.ThemeFile');
-ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
  * Manage design themes

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.InvoiceNumberGenerator");
 
 /**
  * Sequential invoice numbers

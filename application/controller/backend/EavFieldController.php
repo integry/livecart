@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.eav.EavFieldControllerCommon');
-ClassLoader::import('application.model.eav.EavField');
-ClassLoader::import('application.model.eav.EavFieldGroup');
-ClassLoader::import('application.model.eav.EavFieldManager');
 
 /**
  * Custom fields controller

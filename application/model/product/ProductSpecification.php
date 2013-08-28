@@ -1,11 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.eavcommon.EavSpecificationManagerCommon");
-ClassLoader::import("application.model.specification.SpecificationItem");
-ClassLoader::import("application.model.specification.MultiValueSpecificationItem");
-ClassLoader::import("application.model.specification.SpecificationStringValue");
-ClassLoader::import("application.model.specification.SpecificationNumericValue");
-ClassLoader::import("application.model.specification.SpecificationDateValue");
 
 /**
  * Product specification wrapper class. Loads/modifies product specification data.

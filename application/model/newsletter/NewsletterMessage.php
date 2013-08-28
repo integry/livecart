@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.newsletter.NewsletterSentMessage');
-ClassLoader::import('application.model.Email');
 
 /**
  * Newsletter message

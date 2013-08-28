@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.eav.EavField");
-ClassLoader::import("application.model.eavcommon.EavFieldGroupCommon");
 
 /**
  * EavFieldGroups allow to group related attributes (EavFields) together.

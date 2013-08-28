@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.delivery.State");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Customer billing or shipping address

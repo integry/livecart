@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductOptionChoice');
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('library.image.ImageManipulator');
 
 /**
  * Represents a shopping basket item configuration value

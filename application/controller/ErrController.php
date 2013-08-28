@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.FrontendController");
 
 /**
  * @author Integry Systems

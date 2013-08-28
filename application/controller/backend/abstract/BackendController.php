@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.BaseController");
-ClassLoader::import("library.json.json");
-ClassLoader::import('application.controller.backend.BackendToolbarController');
-ClassLoader::import('application.controller.backend.ModuleController');
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
@@ -30,8 +26,7 @@ abstract class BackendController extends BaseController
 		// no IE yet
 		if (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT']))
 		{
-			ClassLoader::import('application.controller.backend.UnsupportedBrowserException');
-			throw new UnsupportedBrowserException();
+						throw new UnsupportedBrowserException();
 		}
 
 		if (!$this->user->hasBackendAccess() && !($this instanceof SessionController))

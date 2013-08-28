@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('library.payment.TransactionPayment');
-ClassLoader::import('library.payment.TransactionResult');
 
 /**
  *

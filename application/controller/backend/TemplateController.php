@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.template.Template');
-ClassLoader::import('application.model.template.EmailTemplate');
 
 /**
  * Template modification

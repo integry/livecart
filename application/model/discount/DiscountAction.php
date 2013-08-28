@@ -1,11 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.discount.DiscountCondition');
-ClassLoader::import('application.model.discount.DiscountActionSet');
-ClassLoader::import('application.model.order.OrderDiscount');
-ClassLoader::import('application.model.businessrule.interface.*');
-ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
 /**
  *
@@ -54,8 +48,7 @@ class DiscountAction extends ActiveRecordModel
 
 	private function loadActionRuleClass($className)
 	{
-		ClassLoader::import('application.model.businessrule.action.' . $className);
-		if (!class_exists($className, false))
+				if (!class_exists($className, false))
 		{
 			foreach (self::getApplication()->getPlugins('businessrule/action/' . $className) as $plugin)
 			{

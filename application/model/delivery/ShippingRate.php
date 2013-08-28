@@ -1,7 +1,4 @@
 <?php
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.delivery.*");
 
 /**
  * Define rules for shipping cost calculation, which can be based on shipment weight, subtotal,

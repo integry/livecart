@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 
 /**
  * Product list management - related products, category lists, etc.

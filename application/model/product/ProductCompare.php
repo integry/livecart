@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
 
 /**
  * Logic for product comparison feature

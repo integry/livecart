@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.user.UserAddressType');
 
 /**
  * Customer shipping address

@@ -14,8 +14,7 @@ function smarty_function_pageName($params, Smarty_Internal_Template $smarty)
 {
 	if (!class_exists('StaticPage', false))
 	{
-		ClassLoader::import('application.model.staticpage.StaticPage');
-	}
+			}
 
 	if (!isset($params['id']))
 	{

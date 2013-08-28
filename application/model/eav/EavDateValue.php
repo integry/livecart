@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eav.EavValueSpecification');
 
 /**
  * Date attribute value assigned to a particular product.

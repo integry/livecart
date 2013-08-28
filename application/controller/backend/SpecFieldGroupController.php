@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.eav.EavFieldGroupControllerCommon');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.SpecFieldGroup');
 
 /**
  * Category specification group controller

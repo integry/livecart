@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eav.EavValueSpecification');
 
 /**
  * Numeric attribute value assigned to a particular product.

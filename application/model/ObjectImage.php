@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("library.image.ImageManipulator");
 
 /**
  * Generic associated image handler. Images can be associated to products, categories and possibly

@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.role.*");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * All users can be assigned to a group. Assigning users to a group is necessary to provide admin

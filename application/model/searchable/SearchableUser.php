@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search user
@@ -17,8 +16,7 @@ class SearchableUser extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.user.User');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

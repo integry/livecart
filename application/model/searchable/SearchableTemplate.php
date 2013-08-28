@@ -4,8 +4,6 @@
  * @package application.model.searchable
  * @author Integry Systems
  */
-ClassLoader::import('application.model.template.Template');
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 class SearchableTemplate extends SearchableModel
 {

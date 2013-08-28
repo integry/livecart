@@ -1,6 +1,6 @@
-{% set layoutspanLeft = 3 %}
+[[ global('layoutspanLeft', 3) ]]
 
-<div class="col col-lg-[[layoutspanLeft]]" id="leftSide">
+<div class="col col-lg-[[ global('layoutspanLeft') ]]" id="leftSide">
 
 	{block LEFT_SIDE}
 

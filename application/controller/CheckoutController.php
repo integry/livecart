@@ -1,14 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.order.ExpressCheckout');
-ClassLoader::import('application.model.order.Transaction');
-ClassLoader::import('application.model.order.LiveCartTransaction');
-ClassLoader::import('application.model.order.SessionOrder');
-ClassLoader::import('application.model.order.OfflineTransactionHandler');
-ClassLoader::import('application.model.eav.EavSpecificationManager');
-ClassLoader::import('application.model.eav.EavObject');
 
 /**
  *  Handles order checkout process
@@ -635,8 +626,7 @@ class CheckoutController extends FrontendController
 		if (count($recurringIDs))
 		{
 			$this->loadLanguageFile('Product'); // contains translations for recurring product pricing.
-			ClassLoader::import('application.model.product.RecurringProductPeriod');
-			$recurringPlans = RecurringProductPeriod::getRecordSetArrayByIDs($recurringIDs);
+						$recurringPlans = RecurringProductPeriod::getRecordSetArrayByIDs($recurringIDs);
 			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
 			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
 		}
@@ -1555,8 +1545,7 @@ class CheckoutController extends FrontendController
 	protected function validateAddress(RequestValidator $validator, $prefix)
 	{
 		$someValidator = $this->getValidator('foo', $this->request);
-		ClassLoader::import('application.controller.UserController');
-		$con = new UserController($this->application);
+				$con = new UserController($this->application);
 		$con->validateAddress($someValidator, $prefix, 'shipping_' == $prefix);
 
 		foreach ($someValidator->getValidatorVars() as $field => $var)
@@ -1607,7 +1596,6 @@ class CheckoutController extends FrontendController
 	}
 }
 
-ClassLoader::import('framework.request.validator.check.CheckCondition');
 
 class CheckoutBillingAddressCheckCondition extends CheckCondition
 {

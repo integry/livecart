@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.session.BaseSessionHandler');
-ClassLoader::import('application.model.session.SessionData');
 
 /**
  * Session storage and retrieval from database

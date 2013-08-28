@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import("application.model.newsletter.*");
-ClassLoader::import("application.helper.HtmlToText");
 
 
 /**

@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.system.Config');
-ClassLoader::import('framework.request.validator.check.*');
-ClassLoader::import('framework.request.validator.filter.*');
 
 /**
  * Application settings management
@@ -134,8 +130,7 @@ class SettingsController extends StoreManagementController
 			$this->config->save();
 			$this->config->setAutoSave(true);
 
-			ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
-			SearchableConfigurationIndexing::buildIndexIfNeeded();
+						SearchableConfigurationIndexing::buildIndexIfNeeded();
 //			$sc = new SearchableConfigurationIndexing($this->config, $this->application);
 //			$sc->buildIndex($this->request->gget('id'));
 

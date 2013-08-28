@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
  * Roles allow to fine-grain user (UserGroup) access to controller classes and methods.
@@ -132,8 +131,7 @@ class Role extends ActiveRecordModel
 
 	public static function cleanUp()
 	{
-		ClassLoader::import('framework.roles.RolesDirectoryParser');
-		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+				$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			mkdir($rolesCacheDir, 0777, true);

@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductReview');
 
 /**
  *

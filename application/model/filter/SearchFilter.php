@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.filter.FilterInterface');
 
 /**
  * Filter product list by search keyword.

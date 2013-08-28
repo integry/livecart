@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.newsletter.NewsletterSubscriber');
-ClassLoader::import('application.model.newsletter.NewsletterMessage');
 
 /**
  * Registers which newsletter messages have been sent to which newsletter subscribers

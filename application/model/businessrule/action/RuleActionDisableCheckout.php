@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleAction');
 
 /**
  *

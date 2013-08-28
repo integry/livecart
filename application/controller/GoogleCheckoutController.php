@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.CheckoutController');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('library.payment.method.express.GoogleCheckout');
-ClassLoader::import('library.shipping.library.usps.xmlparser');
 
 /**
  *  Handles Google Checkout callbacks

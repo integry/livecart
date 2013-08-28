@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.CategoryRelationship');
 
 /**
  * Controller for handling category based actions performed by store administrators

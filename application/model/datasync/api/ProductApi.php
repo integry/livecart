@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for Product model
@@ -186,8 +182,6 @@ class ProductApi extends ModelApi
 	}
 }
 
-ClassLoader::import('application.model.datasync.import.ProductImport');
-ClassLoader::import('application/model.datasync.CsvImportProfile');
 // misc things
 // @todo: in seperate file!
 class ApiProductImport extends ProductImport

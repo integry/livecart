@@ -1,6 +1,4 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.tax.TaxRate");
 
 /**
  * Application settings management

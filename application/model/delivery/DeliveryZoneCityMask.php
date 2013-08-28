@@ -1,5 +1,4 @@
 <?php
-ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
  * Match an address to delivery zone by city name mask string. For example, "New Y*k" or "New Y" would

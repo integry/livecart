@@ -1,10 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.delivery.State");
-ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
-ClassLoader::import("application.model.delivery.DeliveryZoneState");
 
 /**
  *

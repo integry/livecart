@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.ProductFile");
 
 /**
  * Controller for handling product based actions performed by store administrators

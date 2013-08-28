@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.category.ProductRatingType');
-ClassLoader::import('application.model.product.Product');
 
 /**
  *

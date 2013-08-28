@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.helper.MenuLoader');
-ClassLoader::import('application.helper.AccessStringParser');
 
 /**
  * Displays backend navigation menu

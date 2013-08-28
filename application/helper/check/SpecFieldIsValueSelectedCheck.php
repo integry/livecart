@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("framework.request.validator.check.Check");
 
 /**
  * Checks if a value has been selected or entered for a specField in product form

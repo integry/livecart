@@ -2,11 +2,6 @@
 
 require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.user.User");
-ClassLoader::import("application.model.discount.DiscountCondition");
-ClassLoader::import("application.model.businessrule.BusinessRuleController");
 
 /**
  *
@@ -670,8 +665,7 @@ class DiscountConditionTest extends LiveCartTest
 		$this->assertEquals(0, count($this->order->getDiscountConditions(true)));
 
 		// test finalized order
-		ClassLoader::import('library.payment.TransactionResult');
-		$transResult = new TransactionResult();
+				$transResult = new TransactionResult();
 		$transResult->setTransactionType(TransactionResult::TYPE_SALE);
 		$transResult->amount->set(10000);
 		$transResult->currency->set('USD');

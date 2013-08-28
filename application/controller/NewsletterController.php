@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.FrontendController');
-ClassLoader::import('application.model.newsletter.*');
 
 class NewsletterController extends FrontendController
 {

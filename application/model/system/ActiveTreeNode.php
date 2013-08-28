@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
  * A node of a hierarchial database record structure (preorder tree traversal implementation)

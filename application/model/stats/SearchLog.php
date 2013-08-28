@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
 
 class SearchLog extends ActiveRecordModel
 {

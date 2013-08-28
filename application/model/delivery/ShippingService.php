@@ -1,9 +1,4 @@
 <?php
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.delivery.*");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
 
 /**
  * Pre-defined shipping service plan, that is assigned to a particular DeliveryZone.

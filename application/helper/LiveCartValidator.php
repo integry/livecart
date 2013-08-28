@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('framework.request.validator.RequestValidator');
 
 /**
  *
@@ -37,8 +36,7 @@ class LiveCartValidator extends RequestValidator
 			{
 				if (!class_exists('ValidatorPlugin', false))
 				{
-					ClassLoader::import('application.ValidatorPlugin');
-				}
+									}
 
 				include_once $plugin['path'];
 				$inst = new $plugin['class']($this, $this->application);

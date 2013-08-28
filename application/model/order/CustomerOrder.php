@@ -1,26 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.user.UserAddress');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.product.ProductSet');
-ClassLoader::import('application.model.order.OrderCoupon');
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('application.model.order.Shipment');
-ClassLoader::import('application.model.order.OrderDiscount');
-ClassLoader::import('application.model.delivery.ShipmentDeliveryRate');
-ClassLoader::import('application.model.eav.EavAble');
-ClassLoader::import('application.model.eav.EavObject');
-ClassLoader::import('application.model.order.Transaction');
-ClassLoader::import('application.model.order.InvoiceNumberGenerator');
-ClassLoader::import('application.model.order.OfflineTransactionHandler');
-ClassLoader::import('application.model.discount.DiscountActionSet');
-ClassLoader::import('application.model.businessrule.BusinessRuleController');
-ClassLoader::import('application.model.businessrule.BusinessRuleContext');
-ClassLoader::import('application.model.businessrule.interface.BusinessRuleOrderInterface');
-ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -1459,7 +1438,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$this->processBusinessRules();
 		}
 
-		ClassLoader::import('application.model.order.OrderException');
 
 		$app = $this->getApplication();
 		$c = $app->getConfig();
@@ -2091,7 +2069,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				if (!$this->shipments || !$this->shipments->size())
 				{
-					ClassLoader::import("application.model.order.Shipment");
 
 					$this->shipments = new ARSet();
 
@@ -2253,8 +2230,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function getTaxZone($forceReset = false)
 	{
-		ClassLoader::import("application.model.delivery.DeliveryZone");
-		if (!$this->taxZone || $forceReset)
+				if (!$this->taxZone || $forceReset)
 		{
 			if ($this->isShippingRequired() && $this->shippingAddress->get())
 			{
@@ -2270,8 +2246,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function getDeliveryZone($forceReset = false)
 	{
-		ClassLoader::import("application.model.delivery.DeliveryZone");
-		if (!$this->deliveryZone || $forceReset)
+				if (!$this->deliveryZone || $forceReset)
 		{
 			if ($this->isShippingRequired() && $this->shippingAddress->get())
 			{
@@ -2305,8 +2280,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function getTransactions(ARSelectFilter $filter = null)
 	{
-		ClassLoader::import('application.model.order.Transaction');
-		if (is_null($filter))
+				if (is_null($filter))
 		{
 			$filter = new ARSelectFilter();
 		}
@@ -2594,8 +2568,6 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public static function hasRecurringOrder()
 	{
-		ClassLoader::import('application.model.product.RecurringItem');
-		ClassLoader::import('application.model.product.RecurringProductPeriod');
 
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isRecurring'), 1));

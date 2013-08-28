@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('framework.request.Router');
 
 /**
  *  Implements LiveCart-specific routing logic

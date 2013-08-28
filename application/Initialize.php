@@ -49,19 +49,10 @@ if (file_exists($classLoaderCacheFile))
 
 if (isset($_REQUEST['stat']))
 {
-	ClassLoader::import('library.stat.Stat');
-	$stat = new Stat(true);
+		$stat = new Stat(true);
 	$GLOBALS['stat'] = $stat;
 }
 
-ClassLoader::import('framework.request.Request');
-ClassLoader::import('framework.request.Router');
-ClassLoader::import('framework.controller.*');
-ClassLoader::import('framework.response.*');
-ClassLoader::import('application.controller.*');
-ClassLoader::import('application.model.*');
-ClassLoader::import('application.model.system.*');
-ClassLoader::import('application.LiveCart');
 
 date_default_timezone_set('Europe/Riga');
 

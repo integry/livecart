@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.system.BackendToolbarItem');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.order.CustomerOrder');
 
 /**
  *

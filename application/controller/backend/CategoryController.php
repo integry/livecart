@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.presentation.CategoryPresentation");
-ClassLoader::import("application.model.product.Product");
 
 /**
  * Product Category controller
@@ -38,8 +34,6 @@ class CategoryController extends StoreManagementController
 	 */
 	public function form()
 	{
-		ClassLoader::import('application.LiveCartRenderer');
-		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$this->loadLanguageFile('backend/Settings');
 
@@ -117,7 +111,6 @@ class CategoryController extends StoreManagementController
 	 */
 	public function update()
 	{
-		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$categoryNode = Category::getRequestInstance($this->request);
 		$validator = $this->buildValidator($categoryNode);
@@ -249,9 +242,6 @@ class CategoryController extends StoreManagementController
 
 	private function getTabCounts($categoryId)
 	{
-		ClassLoader::import('application.model.category.*');
-	  	ClassLoader::import('application.model.filter.*');
-	  	ClassLoader::import('application.model.product.*');
 
 		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
 

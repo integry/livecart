@@ -1,10 +1,4 @@
 <?php
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.controller.OrderController');
-ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("application.model.product.*");
-ClassLoader::import("library.*");
 
 /**
  * ...
@@ -152,8 +146,7 @@ class OrderedItemController extends StoreManagementController
 
 	private function getProductsFromSearchQuery($query)
 	{
-		ClassLoader::import('application.model.searchable.SearchableModel');
-		$request = $this->getRequest();
+				$request = $this->getRequest();
 		$searchable  = SearchableModel::getInstanceByModelClass('Product',SearchableModel::BACKEND_SEARCH_MODEL);
 		$searchable->setOption('BACKEND_QUICK_SEARCH', true);
 
@@ -231,7 +224,6 @@ class OrderedItemController extends StoreManagementController
 	 */
 	public function selectProduct()
 	{
-		ClassLoader::import("application.model.category.Category");
 
 		$response = new ActionResponse();
 
@@ -634,8 +626,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function downloadOptionFile()
 	{
-		ClassLoader::import('application.model.product.ProductOptionChoice');
-		$f = select(eq('OrderedItem.ID', $this->request->gget('id')),
+				$f = select(eq('OrderedItem.ID', $this->request->gget('id')),
 					eq('ProductOptionChoice.optionID', $this->request->gget('option')));
 
 		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));

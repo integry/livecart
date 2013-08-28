@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.filter.FilterInterface');
 ClassLoader::importNow('application.helper.CreateHandleString');
 
 /**

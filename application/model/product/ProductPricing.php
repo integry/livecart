@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.Currency');
 
 /**
  * Product pricing logic. Allows to modify product prices and calculates prices for other currencies

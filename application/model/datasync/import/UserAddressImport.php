@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.user.UserAddress');
 
 /**
  *  Handles user address import logic

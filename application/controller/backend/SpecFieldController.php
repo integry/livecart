@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.eav.EavFieldControllerCommon');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.SpecField');
-ClassLoader::import('library.*');
 
 /**
  * Category specification field ("extra field") controller

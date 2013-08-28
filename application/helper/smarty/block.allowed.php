@@ -12,8 +12,7 @@ function smarty_block_allowed($params, $content, Smarty_Internal_Template $smart
 {
 	if (!$repeat)
 	{
-		ClassLoader::import('application.helper.AccessStringParser');
-		if(AccessStringParser::run($params['role']))
+				if(AccessStringParser::run($params['role']))
 		{
 			return $content;
 		}

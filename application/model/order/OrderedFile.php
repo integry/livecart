@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('application.model.product.ProductFile');
 
 /**
  *

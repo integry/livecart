@@ -2,10 +2,6 @@
 
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.datasync.CsvImportProfile");
-ClassLoader::import("application.model.datasync.import.ProductImport");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.parser.CsvFile");
 
 /**
  * @author Integry Systems

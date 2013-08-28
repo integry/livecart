@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ObjectImageController');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.product.ManufacturerImage');
 
 /**
  * Manufacturer image controller

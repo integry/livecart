@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('library.activerecord.ARFeed');
-ClassLoader::import('application.model.order.Shipment');
 
 /**
  * Order data feed

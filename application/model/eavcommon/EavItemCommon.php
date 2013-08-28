@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eavcommon.EavSpecificationCommon');
 
 /**
  * Links a pre-defined attribute value to a product

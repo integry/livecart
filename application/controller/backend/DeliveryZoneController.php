@@ -1,8 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::importNow("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.State");
 
 /**
  * Application settings management

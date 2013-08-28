@@ -1,13 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('application.model.order.OrderNote');
-ClassLoader::import('application.model.order.OrderedFile');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.delivery.State');
-ClassLoader::import('application.model.user.*');
-
 /**
  *  Handles user account related logic
  *
@@ -88,8 +80,7 @@ class UserController extends FrontendController
 		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 
 		// get unread messages
-		ClassLoader::import('application.model.order.OrderNote');
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
 		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
@@ -225,7 +216,6 @@ class UserController extends FrontendController
 			$ids[$order['ID']] = $key;
 		}
 
-		ClassLoader::import('application.model.order.OrderNote');
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), empty($ids) ? array(-1) : array_keys($ids)));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
@@ -300,8 +290,7 @@ class UserController extends FrontendController
 
 	private function loadDownloadableItems(ARSelectFilter $f)
 	{
-		ClassLoader::import('application.model.product.ProductFile');
-		return ProductFile::getOrderFiles($f);
+				return ProductFile::getOrderFiles($f);
 	}
 
 	/**
@@ -466,9 +455,7 @@ class UserController extends FrontendController
 						$recurringProductPeriods[$orderedItem->getID()] =  RecurringItem::getInstanceByOrderedItem($orderedItem) -> toArray();
 					}
 				}
-				ClassLoader::import('application.model.product.RecurringProductPeriod');
-				ClassLoader::import('application.model.product.RecurringItem');
-				$response->set('nextRebillDate', $order->getNextRebillDate());
+												$response->set('nextRebillDate', $order->getNextRebillDate());
 				$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
 				$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
 				$response->set('recurringProductPeriodsByItemId', $recurringProductPeriods);
@@ -503,8 +490,7 @@ class UserController extends FrontendController
 		$order = $this->user->getOrder($this->request->gget('id'));
 		if ($order)
 		{
-			ClassLoader::import('application.model.order.SessionOrder');
-			$newOrder = clone $order;
+						$newOrder = clone $order;
 			SessionOrder::save($newOrder);
 			return new ActionRedirectResponse('order', 'index');
 		}
@@ -519,7 +505,6 @@ class UserController extends FrontendController
 	 */
 	public function addNote()
 	{
-		ClassLoader::import('application.model.order.OrderNote');
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->gget('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
@@ -1316,7 +1301,6 @@ class UserController extends FrontendController
 
 	private function buildPasswordChangeValidator()
 	{
-		ClassLoader::import("application.helper.check.IsPasswordCorrectCheck");
 
 		$validator = $this->getValidator("passwordChange", $this->request);
 		$validator->addCheck('currentpassword', new IsNotEmptyCheck($this->translate('_err_enter_current_password')));
@@ -1426,7 +1410,6 @@ class UserController extends FrontendController
 
 	private function validateEmail(RequestValidator $validator, $uniqueError = '_err_not_unique_email')
 	{
-		ClassLoader::import("application.helper.check.IsUniqueEmailCheck");
 
 		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));
 		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));
@@ -1513,8 +1496,7 @@ class UserController extends FrontendController
 
 	private function validatePassword(RequestValidator $validator)
 	{
-		ClassLoader::import("application.helper.check.PasswordMatchCheck");
-		$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH));
+				$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH));
 		$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password')));
 		$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password')));
 		$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));
@@ -1571,12 +1553,7 @@ class UserController extends FrontendController
 
 	public function cancelFurtherRebills()
 	{
-		ClassLoader::import('application.model.Currency');
-		ClassLoader::import('application.model.order.CustomerOrder');
-		ClassLoader::import('application.model.order.ExpressCheckout');
-		ClassLoader::import('application.model.order.Transaction');
-		ClassLoader::import('application.model.order.LiveCartTransaction');
-		$request = $this->getRequest();
+												$request = $this->getRequest();
 		$id = $request->gget('id');
 
 		$page = $request->gget('page');
@@ -1612,8 +1589,6 @@ class UserController extends FrontendController
 	{
 		return ;
 
-		ClassLoader::import('application.model.category.*');
-		ClassLoader::import('application.model.product.*');
 
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$config->set('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS', 7);

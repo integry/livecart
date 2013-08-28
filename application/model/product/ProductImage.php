@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ObjectImage');
 
 /**
  * Product image (icon). One product can have multiple images.

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataExport');
 
 /**
  * Handle data export in CSV format

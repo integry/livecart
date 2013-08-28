@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('library.payment.TransactionDetails');
 
 /**
  * Create a new transaction to be passed to payment gateway for authorization based on LiveCart order data

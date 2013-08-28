@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search products
@@ -17,8 +16,7 @@ class SearchableCategory extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.category.Category');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

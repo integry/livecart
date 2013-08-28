@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 /**
  * Web service access layer model base
@@ -41,7 +39,6 @@ abstract class ModelApi
 	{
 		foreach($parserClassNames as $parserClassName)
 		{
-			ClassLoader::import('application.model.datasync.api.reader.'.$parserClassName);
 
 			if(call_user_func_array(array($parserClassName, "canParse"), array($request, $parserClassName)))
 			{

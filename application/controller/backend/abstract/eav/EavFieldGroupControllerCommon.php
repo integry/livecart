@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 
 /**
  * Custom EAV field group controller

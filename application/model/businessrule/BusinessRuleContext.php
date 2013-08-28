@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.businessrule.RuleProductContainer');
-ClassLoader::import('application.model.businessrule.RuleOrderContainer');
 
 /**
  * Defines context for evaluating business rules

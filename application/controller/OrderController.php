@@ -1,14 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('application.model.order.SessionOrder');
-ClassLoader::import('application.model.discount.DiscountCondition');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductOption');
-ClassLoader::import('application.model.product.RecurringItem');
-ClassLoader::import('application.model.product.RecurringProductPeriod');
 
 /**
  * @author Integry Systems
@@ -701,7 +692,6 @@ class OrderController extends FrontendController
 
 		$variations = !$product->parent->get() ? $product->getVariationData($this->application) : array();
 
-		ClassLoader::import('application.controller.ProductController');
 
 		// add first variations by default?
 		$autoVariation = false;
@@ -969,7 +959,6 @@ class OrderController extends FrontendController
 
 	public function downloadOptionFile()
 	{
-		ClassLoader::import('application.model.product.ProductOptionChoice');
 
 		$f = select(eq('CustomerOrder.userID', $this->user->getID()),
 					eq('OrderedItem.ID', $this->request->gget('id')),
@@ -984,7 +973,6 @@ class OrderController extends FrontendController
 
 	public function uploadOptionFile()
 	{
-		ClassLoader::import('application.model.order.OrderedItemOption');
 
 		$field = 'upload_' . $this->request->gget('field');
 		$option = ActiveRecordModel::getInstanceById('ProductOption', $this->request->gget('id'), true);

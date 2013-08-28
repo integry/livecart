@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.system.MultilingualObject');
-ClassLoader::import('application.model.product.ProductVariationTypeSet', true);
 
 /**
  * Defines a product variation (parameter) type.

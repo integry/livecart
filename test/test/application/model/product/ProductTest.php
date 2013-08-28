@@ -1,9 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.category.*");
-ClassLoader::import("application.model.product.*");
 
 /**
  *	Test Product and Product Specification model for the following scenarios:

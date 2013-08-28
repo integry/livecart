@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.controller.backend.UserGroupController');
-ClassLoader::import('application.model.datasync.import.UserAddressImport');
 
 /**
  *  Handles user data import logic

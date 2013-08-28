@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleCondition');
 
 /**
  * Main condition constraints - check if enabled, date interval, order coupons

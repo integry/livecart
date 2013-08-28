@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.user.UserAddress");
 
 /**
  * Express checkout data container

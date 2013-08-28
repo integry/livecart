@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.model.newsletter.*');
 
 /**
  * Manage newsletters subscribers

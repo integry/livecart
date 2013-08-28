@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search static pages
@@ -19,8 +18,7 @@ class SearchableStaticPage extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.staticpage.StaticPage');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

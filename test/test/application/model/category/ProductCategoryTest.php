@@ -2,8 +2,6 @@
 
 require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import('application.model.category.ProductCategory');
-ClassLoader::import('application.model.category.Category');
 
 /**
  *  @author Integry Systems

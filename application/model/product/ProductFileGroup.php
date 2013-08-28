@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.product.ProductParametersGroup");
 
 /**
  * Related ProductFiles can be grouped together using ProductFileGroup, which is useful if there

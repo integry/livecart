@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.action.RuleActionPercentageDiscount');
-ClassLoader::import('application.model.businessrule.interface.RuleItemAction');
-ClassLoader::import('application.model.businessrule.interface.RuleOrderAction');
 
 /**
  *

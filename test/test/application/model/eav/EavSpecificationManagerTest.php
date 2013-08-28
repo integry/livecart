@@ -2,11 +2,6 @@
 
 require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import('application.model.eav.EavObject');
-ClassLoader::import('application.model.eav.EavField');
-ClassLoader::import('application.model.tax.Tax');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.user.User');
 
 /**
  *

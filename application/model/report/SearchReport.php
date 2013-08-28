@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.report.Report");
-ClassLoader::import("application.model.category.SearchLog");
 
 /**
  * Generate customer data reports

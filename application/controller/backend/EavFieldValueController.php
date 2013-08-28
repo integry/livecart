@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.eav.EavFieldValueControllerCommon');
-ClassLoader::import('application.model.eav.EavValue');
-ClassLoader::import('application.model.eav.EavStringValue');
-ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Category specification field value controller

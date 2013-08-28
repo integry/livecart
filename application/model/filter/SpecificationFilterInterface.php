@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.filter.FilterInterface');
 
 /**
  * Defines a common interface for different types of specification (attribute) value based filters.

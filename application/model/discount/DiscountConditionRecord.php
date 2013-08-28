@@ -1,14 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.discount.DiscountCondition');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.user.UserGroup');
-ClassLoader::import('application.model.delivery.DeliveryZone');
-ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
 class DiscountConditionRecord extends ActiveRecordModel
 {

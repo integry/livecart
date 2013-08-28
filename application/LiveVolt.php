@@ -4,6 +4,7 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 {
 	protected $paths = array();
 	protected $cachedTemplatePath = array();
+	protected $globals = array();
 
 	public function getCompiler()
 	{
@@ -15,6 +16,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 			$this->_compiler->addFunction('config', function($resolvedArgs, $exprArgs) {
 				return '$this->getDI()->get(\'config\')->get(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('global', function($resolvedArgs, $exprArgs) {
+				return '$this->setOrReturnGlobal(' . $resolvedArgs . ')';
 			});
 		}
 
@@ -30,7 +35,24 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 	public function partial($partialPath)
 	{
-		return parent::render($this->getTemplatePath($partialPath), array());
+		return parent::render($this->getTemplatePath($partialPath), $this->globals);
+	}
+
+	public function setOrReturnGlobal($key, $value = null)
+	{
+		if ($value)
+		{
+			$this->globals[$key] = $value;
+		}
+		else
+		{
+			return isset($this->globals[$key]) ? $this->globals[$key] : '';
+		}
+	}
+
+	public function getGlobals()
+	{
+		return $this->globals;
 	}
 
 	public function getTemplatePaths($template = '')
@@ -185,6 +207,8 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 
 		$source = str_replace('[[', '{{', $source);
 		$source = str_replace(']]', '}}', $source);
+
+		//$source = '<' . '?php extract($this->getGlobals()); ?' . '>' . $source;
 
 		return parent::_compileSource($source, $something);
 	}

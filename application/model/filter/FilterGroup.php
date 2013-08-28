@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Filters allow to filter the product list by specific product attribute values.

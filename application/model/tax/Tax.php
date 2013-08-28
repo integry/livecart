@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.tax.*");
-ClassLoader::import("application.model.delivery.*");
 
 /**
  * Defines a tax. Actual tax rates have to be defined for each DeliveryZone separately.

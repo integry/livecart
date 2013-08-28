@@ -46,8 +46,7 @@ class Cron
 	{
 		if ($plugins && !class_exists('CronPlugin', false))
 		{
-			ClassLoader::import('application.CronPlugin');
-		}
+					}
 
 		foreach ($plugins as $plugin)
 		{

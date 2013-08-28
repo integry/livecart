@@ -1,10 +1,8 @@
 <?php
 
 include '../application/Initialize.php';
-ClassLoader::import('application.LiveCart');
 new LiveCart();
 
-ClassLoader::import('application.model.product.ProductImage');
 
 $dir = ClassLoader::getRealPath('public.upload.productimage');
 if (!file_exists($dir))

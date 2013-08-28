@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductFile');
-ClassLoader::import('application.controller.FrontendController');
 
 /**
  *

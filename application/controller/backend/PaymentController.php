@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.Currency");
 
 /**
  * @package application.controller.backend

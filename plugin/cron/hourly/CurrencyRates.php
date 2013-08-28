@@ -3,7 +3,6 @@
 /**
  * @author Integry Systems
  */
-ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
 
 class CurrencyRates extends CronPlugin
 {

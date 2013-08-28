@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.user.User");
 
 /**
  * Handles session data storage in database

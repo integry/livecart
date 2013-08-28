@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.delivery.*');
-ClassLoader::import('application.model.tax.TaxRate');
-ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
  * Delivery zones are used to classify shipping locations, which allows to define different

@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.action.RuleActionFixedDiscount');
-ClassLoader::import('application.model.businessrule.action.RuleActionPercentageDiscount');
 
 /**
  *

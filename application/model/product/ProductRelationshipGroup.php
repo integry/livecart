@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.product.ProductParametersGroup");
 
 /**
  * Groups related products. This is useful when there are several different related products assigned

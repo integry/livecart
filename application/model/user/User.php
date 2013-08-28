@@ -1,13 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.user.BillingAddress");
-ClassLoader::import("application.model.user.ShippingAddress");
-ClassLoader::import("application.model.user.UserGroup");
-ClassLoader::import("application.model.eav.EavAble");
-ClassLoader::import("application.model.eav.EavObject");
-ClassLoader::import("application.model.user.UserAddress");
-ClassLoader::import("application.model.newsletter.NewsletterSubscriber");
 
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking

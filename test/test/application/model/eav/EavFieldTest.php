@@ -2,7 +2,6 @@
 
 require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import('application.model.eav.EavField');
 
 /**
  *

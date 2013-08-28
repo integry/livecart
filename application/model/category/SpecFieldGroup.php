@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.category.SpecField");
-ClassLoader::import("application.model.eavcommon.EavFieldGroupCommon");
-ClassLoader::import("application.model.category.Category");
 
 /**
  * SpecFieldGroups allow to group related attributes (SpecFields) together.

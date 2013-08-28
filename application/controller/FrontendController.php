@@ -1,17 +1,12 @@
 <?php
 
-ClassLoader::import('application.controller.BaseController');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.ProductPrice');
-
 /**
  * Base class for all front-end related controllers
  *
  * @author Integry Systems
  * @package application.controller
  */
-abstract class FrontendController extends BaseController
+abstract class FrontendController extends ControllerBase
 {
 	protected $breadCrumb = array();
 
@@ -20,7 +15,7 @@ abstract class FrontendController extends BaseController
 	 */
 	protected $order;
 
-	public function __construct(LiveCart $application)
+	public function ___construct(LiveCart $application)
 	{
 		parent::__construct($application);
 
@@ -187,8 +182,7 @@ abstract class FrontendController extends BaseController
 
 	protected function boxInformationMenuBlock()
 	{
-		ClassLoader::import('application.model.staticpage.StaticPage');
-		$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
+				$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 		$response = new BlockResponse();
 		$response->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
@@ -203,14 +197,12 @@ abstract class FrontendController extends BaseController
 			//return false;
 		}
 
-		ClassLoader::import('application.controller.NewsletterController');
-		return new BlockResponse('form', new Form(NewsletterController::getSubscribeValidator()));
+				return new BlockResponse('form', new Form(NewsletterController::getSubscribeValidator()));
 	}
 
 	protected function boxShoppingCartBlock()
 	{
-		ClassLoader::import('application.model.order.SessionOrder');
-		$response = new BlockResponse();
+				$response = new BlockResponse();
 
 		$orderData = $this->session->get('orderData');
 		if (!$orderData && $this->session->get('CustomerOrder'))
@@ -331,7 +323,6 @@ abstract class FrontendController extends BaseController
 
 	protected function boxSearchBlock()
 	{
-		ClassLoader::import('application.model.category.Category');
 
 		$category = $this->getCategory();
 		$search = $this->getCategory()->getPathNodeArray();
@@ -392,7 +383,6 @@ abstract class FrontendController extends BaseController
 
 	private function getTopCategories()
 	{
-		ClassLoader::import('application.model.category.Category');
 
 		if (!isset($this->topCategories))
 		{
@@ -440,7 +430,6 @@ abstract class FrontendController extends BaseController
 		$this->setRequestVar('id');
 		$this->allowCache();
 
-		ClassLoader::import('application.model.category.Category');
 
 		// get top categories
 		$topCategories = $this->getTopCategories();
@@ -534,7 +523,6 @@ abstract class FrontendController extends BaseController
 
 	protected function boxRootCategoryBlock()
 	{
-		ClassLoader::import('application.model.staticpage.StaticPage');
 
 		if ($this->config->get('TOP_MENU_HIDE'))
 		{
@@ -598,7 +586,6 @@ abstract class FrontendController extends BaseController
 
 	protected function saleItemsBlock($useRoot = false)
 	{
-		ClassLoader::import('application.model.product.ProductFilter');
 
 		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
@@ -625,7 +612,6 @@ abstract class FrontendController extends BaseController
 
 	protected function newestProductsBlock($useRoot = false)
 	{
-		ClassLoader::import('application.model.product.ProductFilter');
 
 		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
 		$filter = new ProductFilter($category, new ARSelectFilter());
@@ -652,7 +638,6 @@ abstract class FrontendController extends BaseController
 
 	public function bestsellingProductsBlock()
 	{
-		ClassLoader::import('application.model.product.ProductFilter');
 
 		$cache = $this->application->getCache();
 		$key = array('bestsellers', $this->getCategory()->getID() . '_'/* . $days*/);
@@ -711,7 +696,6 @@ abstract class FrontendController extends BaseController
 
 		foreach ($this->config->get('TRACKING_SERVICES') as $class => $enabled)
 		{
-			ClassLoader::import('library.tracking.method.' . $class);
 
 			$data = array();
 
@@ -732,8 +716,7 @@ abstract class FrontendController extends BaseController
 	public function latestNewsBlock()
 	{
 		$this->application->logStat('Starting latestNewsBlock');
-		ClassLoader::import('application.model.sitenews.NewsPost');
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
 
@@ -755,8 +738,7 @@ abstract class FrontendController extends BaseController
 		$response = new BlockResponse();
 
 		// manufacturer list
-		ClassLoader::import('application.controller.ManufacturersController');
-		$controller = new ManufacturersController($this->application);
+				$controller = new ManufacturersController($this->application);
 		$man = $controller->index();
 		$response->set('manufacturers', $man->get('manufacturers'));
 		$response->set('rootCat', $man->get('rootCat'));
@@ -821,6 +803,7 @@ abstract class FrontendController extends BaseController
 		return $cat;
 	}
 
+	/*
 	public function __get($name)
 	{
 		if ($inst = parent::__get($name))
@@ -831,8 +814,7 @@ abstract class FrontendController extends BaseController
 		switch ($name)
 	  	{
 			case 'order':
-				ClassLoader::import('application.model.order.SessionOrder');
-				$this->order = SessionOrder::getOrder();
+								$this->order = SessionOrder::getOrder();
 
 				// check if order currency matches the request currency
 				if (!$this->order->currency->get() || ($this->order->currency->get()->getID() != $this->getRequestCurrency()))
@@ -847,29 +829,7 @@ abstract class FrontendController extends BaseController
 			break;
 		}
 	}
-
-	public function __destruct()
-	{
-		if (isset($this->order))
-		{
-			//$this->order->__destruct();
-			unset($this->order);
-		}
-	}
-
-	public function toolbarBlock()
-	{
-		static $called = false;
-		if ( $called)
-		{
-			// pp('<script>alert("called");</script>');
-			return; // TODO: fix why from module controllers this block is called 2 times.
-		}
-		$called = true;
-		$response = new BlockResponse();
-
-		return $response;
-	}
+	*/
 }
 
 ?>

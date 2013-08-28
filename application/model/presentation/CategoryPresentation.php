@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.Product');
 
 /**
  * Store entity presentation configuration (products, categories)

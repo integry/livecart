@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eavcommon.EavItemCommon');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.category.SpecField');
-ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
  * Links a pre-defined attribute value to a product

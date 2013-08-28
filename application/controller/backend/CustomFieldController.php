@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.eav.EavField');
-ClassLoader::import('application.model.order.OfflineTransactionHandler');
 
 /**
  * Manage custom EAV fields

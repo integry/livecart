@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.Currency");
 
 /**
  * Product price class. Prices can be entered in different currencies.
@@ -623,7 +621,6 @@ class ProductPrice extends ActiveRecordModel
 	 */
 	private static function getProductPricesFilter(Product $product)
 	{
-		ClassLoader::import("application.model.Currency");
 
 		return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
 	}

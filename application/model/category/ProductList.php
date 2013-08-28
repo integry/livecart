@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.system.MultilingualObject');
-ClassLoader::import('application.model.category.Category');
 
 /**
  *

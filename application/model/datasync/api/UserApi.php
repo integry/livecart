@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.datasync.api.reader.XmlUserApiReader');
-ClassLoader::import('application/model.datasync.CsvImportProfile');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for User model
@@ -239,7 +235,6 @@ class UserApi extends ModelApi
 	}
 }
 
-ClassLoader::import("application.model.datasync.import.UserImport");
 // misc things
 // @todo: in seperate file!
 

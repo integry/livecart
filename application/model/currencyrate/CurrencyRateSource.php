@@ -49,8 +49,7 @@ abstract class CurrencyRateSource
 			$fn = $item->getFileName();
 			$cn = substr($fn, 0, -4);
 
-			ClassLoader::import('application.model.currencyrate.'.$cn);
-			if(!is_subclass_of($cn, __CLASS__))
+						if(!is_subclass_of($cn, __CLASS__))
 			{
 				continue;
 			}
@@ -74,8 +73,7 @@ abstract class CurrencyRateSource
 		{
 			$dataSourceName = $application->getConfig()->get('CURRENCY_DATA_SOURCE');
 		}
-		ClassLoader::import('application.model.currencyrate.'.$dataSourceName);
-		$source = new $dataSourceName($defaultCurrencyCode, $currencyArray);
+				$source = new $dataSourceName($defaultCurrencyCode, $currencyArray);
 
 		return $source;
 	}

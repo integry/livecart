@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('library.activerecord.ARSet');
 
 /**
  *

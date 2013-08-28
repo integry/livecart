@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("framework.request.Router");
 
 /**
  * Smarty helper function for creating hyperlinks in application.

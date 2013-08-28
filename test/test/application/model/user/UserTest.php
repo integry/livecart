@@ -1,8 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.user.UserGroup");
-ClassLoader::import("application.model.user.User");
 
 /**
  * @author Integry Systems

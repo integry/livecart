@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.template.CommonFile');
 
 class EditedCssFile extends CommonFile
 {

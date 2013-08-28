@@ -1,16 +1,8 @@
 <?php
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.product.RecurringProductPeriod');
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
 
 
-ClassLoader::import('application.controller.backend.ProductController'); // for price validator
 
 // why depends from??:
-ClassLoader::import('application.model.delivery.ShippingClass');
-ClassLoader::import('application.model.tax.TaxClass');
-ClassLoader::import('application.model.category.CategoryImage');
 
 /**
  *

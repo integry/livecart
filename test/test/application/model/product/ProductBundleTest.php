@@ -1,9 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.order.CustomerOrder");
 
 /**
  *  @author Integry Systems

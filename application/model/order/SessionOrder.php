@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.user.SessionUser');
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.user.UserAddress');
-ClassLoader::import('application.model.businessrule.RuleProductContainer');
 
 /**
  *

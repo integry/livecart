@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
 
 /**
  * Implements setItemPrice and getItemPrice methods of OrderedItem

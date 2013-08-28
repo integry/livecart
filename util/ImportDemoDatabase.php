@@ -1,11 +1,8 @@
 <?php
 
 include '../application/Initialize.php';
-ClassLoader::import('application.LiveCart');
 new LiveCart();
 
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.system.Installer');
 
 $file = ClassLoader::getRealPath('installdata.demo') . '.sql';
 //$file = 'alter.sql';

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
 
 abstract class DataImport
 {

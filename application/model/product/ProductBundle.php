@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
 
 /**
  * Assigns a bundled product to a parent product (bundle container)

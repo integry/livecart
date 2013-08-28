@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import('library.image.ImageManipulator');
 
 /**
  *	Implements common logic for handling image uploads and management for various business objects

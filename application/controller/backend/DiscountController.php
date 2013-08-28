@@ -1,16 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.ActiveGridController");
-ClassLoader::import("application.model.discount.DiscountCondition");
-ClassLoader::import("application.model.discount.DiscountConditionRecord");
-ClassLoader::import("application.model.discount.DiscountAction");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.Manufacturer");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.user.User");
-ClassLoader::import("application.model.user.UserGroup");
-ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import('application.model.order.OfflineTransactionHandler');
 
 /**
  *
@@ -85,8 +74,7 @@ class DiscountController extends ActiveGridController
 
 	private function getShippingMethods()
 	{
-		ClassLoader::import('application.model.delivery.ShippingService');
-		$methods = array();
+				$methods = array();
 		$f = select();
 		$f->setOrder(f('DeliveryZone.ID'));
 		$f->setOrder(f('ShippingService.position'));

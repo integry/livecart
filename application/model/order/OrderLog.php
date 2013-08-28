@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("application.model.user.User");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.order.OrderedItem");
-ClassLoader::import("application.model.order.Shipment");
 
 /**
  *

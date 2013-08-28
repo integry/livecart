@@ -458,7 +458,6 @@ abstract class EavSpecificationManagerCommon
 
 	public function isValid($validatorName = 'eavValidator')
 	{
-		ClassLoader::import('framework.request.validator.RequestValidator');
 
 		$request = new Request();
 		$request->setValueArray($this->getFormData());
@@ -570,8 +569,7 @@ abstract class EavSpecificationManagerCommon
 				}
 				else
 				{
-					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
-					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($application->translate('_err_specfield_multivaluerequired'), $field, $application->getRequest()));
+										$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($application->translate('_err_specfield_multivaluerequired'), $field, $application->getRequest()));
 				}
 			}
 		}

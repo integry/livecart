@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.tax.Tax");
-ClassLoader::import("application.model.tax.TaxClass");
 
 /**
  * Defines a tax rate for a DeliveryZone. Tax rates are applied to order totals and shipping charges as well.

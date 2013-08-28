@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.ObjectImageController");
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import("application.model.category.CategoryImage");
 
 /**
  * Product Category Image controller

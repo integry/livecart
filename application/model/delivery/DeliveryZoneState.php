@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
  * State assignment to a DeliveryZone

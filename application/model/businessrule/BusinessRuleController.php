@@ -1,13 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.discount.DiscountCondition');
-ClassLoader::import('application.model.discount.DiscountAction');
-ClassLoader::import('application.model.businessrule.RuleCondition');
-ClassLoader::import('application.model.businessrule.condition.RuleConditionRoot');
-ClassLoader::import('application.model.businessrule.interface.*');
-ClassLoader::import('application.model.discount.DiscountConditionRecord');
 
 
 /**

@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.newsletter.NewsletterSubscriber');
-ClassLoader::import('application.controller.backend.UserGroupController');
 
 /**
  *  Handles user data import logic

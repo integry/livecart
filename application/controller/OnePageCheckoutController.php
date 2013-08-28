@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.CheckoutController');
-ClassLoader::import('application.controller.UserController');
 
 /**
  *  Handles order checkout process in one page

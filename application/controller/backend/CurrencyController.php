@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("library.*");
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.Currency");
-ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
 
 /**
  *

@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.user.UserAddress');
 
 abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 {

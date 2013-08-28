@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.system.MultilingualObject");
 
 class ObjectFileException extends ApplicationException { }
 

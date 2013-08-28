@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.helper.UpdateHelper');
 
 /**
  * @package application.controller.backend

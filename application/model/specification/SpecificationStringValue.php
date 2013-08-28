@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.specification.ValueSpecification');
 
 /**
  * String attribute value assigned to a particular product.

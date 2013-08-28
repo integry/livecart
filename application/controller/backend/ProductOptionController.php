@@ -1,11 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.ProductOption");
-ClassLoader::import("application.model.product.ProductOptionChoice");
-ClassLoader::import("library.*");
 
 
 /**

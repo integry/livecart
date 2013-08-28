@@ -295,8 +295,7 @@ class LiveCartSmarty extends Smarty
 	{
 		if (!class_exists('ViewPlugin', false))
 		{
-			ClassLoader::import('application.ViewPlugin');
-		}
+					}
 
 		if ('/' == $path[0])
 		{

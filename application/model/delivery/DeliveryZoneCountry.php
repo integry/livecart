@@ -1,5 +1,4 @@
 <?php
-ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
  * Country assignment to a DeliveryZone

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eavcommon.EavValueSpecificationCommon');
 
 /**
  * An attribute value that is assigned to a particular product.

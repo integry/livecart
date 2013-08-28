@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.controller.CatalogController');
-ClassLoader::import('application.controller.CategoryController');
-ClassLoader::import('application.model.presentation.CategoryPresentation', true);
 
 /**
  *
@@ -120,12 +116,10 @@ class ProductController extends CatalogController
 			if ($product->ratingCount->get() > 0)
 			{
 				// rating summaries
-				ClassLoader::import('application.model.product.ProductRatingSummary');
-				$response->set('rating', ProductRatingSummary::getProductRatingsArray($product));
+								$response->set('rating', ProductRatingSummary::getProductRatingsArray($product));
 			}
 
-			ClassLoader::import('application.model.category.ProductRatingType');
-			$ratingTypes = ProductRatingType::getProductRatingTypeArray($product);
+						$ratingTypes = ProductRatingType::getProductRatingTypeArray($product);
 			$response->set('ratingTypes', $ratingTypes);
 			$response->set('ratingForm', $this->buildRatingForm($ratingTypes, $product));
 			$response->set('isRated', $this->isRated($product));
@@ -318,9 +312,7 @@ class ProductController extends CatalogController
 		$response = new BlockResponse();
 		if ($this->product->type->get() == Product::TYPE_RECURRING)
 		{
-			ClassLoader::import('application.model.product.RecurringProductPeriod');
-			ClassLoader::import('application.model.product.RecurringItem');
-			$response->set('isRecurring', true);
+									$response->set('isRecurring', true);
 			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
 			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
 			$response->set('recurringProductPeriods', RecurringProductPeriod::getRecordSetByProduct($this->product)->toArray());
@@ -838,8 +830,7 @@ class ProductController extends CatalogController
 
 	private function buildSharingValidator(Product $product)
 	{
-		ClassLoader::import('application.helper.check.IsUniqueEmailCheck');
-		$validator = $this->getValidator('productSharingValidator', $this->getRequest());
+				$validator = $this->getValidator('productSharingValidator', $this->getRequest());
 		if (!$this->config->get('ENABLE_PRODUCT_SHARING'))
 		{
 			$validator->addCheck(md5(time().mt_rand()), new IsNotEmptyCheck($this->translate('_feature_disabled')));
@@ -924,8 +915,7 @@ class ProductController extends CatalogController
 
 			if (is_null($this->isPurchaseRequiredToRate))
 			{
-				ClassLoader::import('application.model.order.CustomerOrder');
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+								$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID()));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 				$f->setLimit(1);

@@ -11,7 +11,6 @@ function rglob($pattern='*', $flags = 0, $path='')
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 include '../application/Initialize.php';
-ClassLoader::import('application.LiveCart');
 $application = new LiveCart();
 
 chdir(ClassLoader::getRealPath('storage.language'));

@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.eav.EavFieldManager');
 
 abstract class ActiveGridController extends StoreManagementController
 {
@@ -527,8 +525,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getMassActionProcessor()
 	{
-		ClassLoader::import('application.helper.massAction.MassActionProcessor');
-		return 'MassActionProcessor';
+				return 'MassActionProcessor';
 	}
 
 	public function isMassCancelled()

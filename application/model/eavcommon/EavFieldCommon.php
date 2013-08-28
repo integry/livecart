@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Specification attributes allow to define specific product models with a specific set of features or parameters.

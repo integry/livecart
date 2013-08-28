@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
-ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
 
 /**
  * Search static pages
@@ -18,9 +16,7 @@ class SearchableConfiguration extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.searchable.item.SearchableItem');
-		ClassLoader::import('application.model.searchable.index.SearchableConfigurationIndexing');
-		SearchableConfigurationIndexing::buildIndexIfNeeded();
+						SearchableConfigurationIndexing::buildIndexIfNeeded();
 	}
 
 	public function getSelectFilter($searchTerm)

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search orders
@@ -17,8 +16,7 @@ class SearchableOrder extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.order.CustomerOrder');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

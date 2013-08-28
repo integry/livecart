@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.controller.backend.*');
-ClassLoader::import('application.model.user.*');
-ClassLoader::import('application.helper.massAction.MassActionInterface');
-ClassLoader::import('application.model.delivery.State');
 
 /**
  *
@@ -92,8 +87,7 @@ class UserController extends StoreManagementController
 
 	public function generatePassword()
 	{
-		ClassLoader::import("library.text.Password");
-		return new RawResponse(Password::create(10, Password::MIX));
+				return new RawResponse(Password::create(10, Password::MIX));
 	}
 
 	/**
@@ -170,7 +164,6 @@ class UserController extends StoreManagementController
 	 */
 	public function processMass()
 	{
-		ClassLoader::import('application.helper.massAction.UserMassActionProcessor');
 
 		$filter = new ARSelectFilter();
 
@@ -195,7 +188,6 @@ class UserController extends StoreManagementController
 
 	public function isMassCancelled()
 	{
-		ClassLoader::import('application.helper.massAction.UserMassActionProcessor');
 
 		return new JSONResponse(array('isCancelled' => UserMassActionProcessor::isCancelled($this->request->gget('pid'))));
 	}

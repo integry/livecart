@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import("application.controller.backend.*");
-ClassLoader::import("application.model.user.*");
 
 /**
  * @package application.controller.backend

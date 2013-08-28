@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.Shipment");
-ClassLoader::import("application.model.tax.TaxRate");
 
 /**
  * Tax amount for a particular shipment. One shipment can have multiple taxes, depending on

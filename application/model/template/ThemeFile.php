@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('library.image.ImageManipulator');
 
 
 /**

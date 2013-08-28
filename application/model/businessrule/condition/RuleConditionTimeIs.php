@@ -1,6 +1,4 @@
 <?php
-ClassLoader::import('application.model.businessrule.RuleCondition');
-ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition');
 
 /**
  *

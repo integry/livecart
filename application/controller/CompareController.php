@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.FrontendController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductCompare');
 
 /**
  * Compare products

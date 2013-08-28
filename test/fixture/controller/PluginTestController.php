@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.BaseController');
 
 class PluginTestController extends BaseController
 {

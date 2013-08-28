@@ -58,8 +58,7 @@ class SearchableConfigurationIndexing
 
 	public static function getSearchableItemCount($locale)
 	{
-		ClassLoader::import('application.model.searchable.item.SearchableItem');
-		return SearchableItem::getRecordCount($locale);
+				return SearchableItem::getRecordCount($locale);
 	}
 
 	public function buildIndex($id=null)
@@ -203,7 +202,6 @@ class SearchableConfigurationIndexing
 
 	private function initLocales()
 	{
-		ClassLoader::import('library.locale.Locale');
 
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);

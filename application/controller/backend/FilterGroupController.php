@@ -1,8 +1,4 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.*");
-ClassLoader::import("application.model.filter.*");
-ClassLoader::import("library.*");
 
 /**
  * Filter group controller

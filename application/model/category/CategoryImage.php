@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ObjectImage');
 
 /**
  * Category image (icon)

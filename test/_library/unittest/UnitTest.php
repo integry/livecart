@@ -87,8 +87,6 @@ abstract class UnitTest extends PHPUnit_Framework_TestCase
 
 		if ($this instanceof BackendControllerTestCase)
 		{
-			ClassLoader::import('application.model.user.SessionUser');
-			ClassLoader::import('application.model.user.UserGroup');
 
 			// set up user
 			$group = UserGroup::getNewInstance('Unit tester');

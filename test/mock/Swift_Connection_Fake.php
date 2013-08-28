@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('library.swiftmailer.lib.classes.Swift.Transport', true);
 
 /**
  *  Simulates email transport connection

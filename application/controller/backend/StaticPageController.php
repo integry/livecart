@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.staticpage.StaticPage");
 
 /**
  * Static page management
@@ -185,7 +183,6 @@ class StaticPageController extends StoreManagementController
 
 	private function buildValidator()
 	{
-		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		$val = $this->getValidator('staticPage', $this->request);
 		$val->addCheck('title', new IsNotEmptyCheck($this->translate('_err_title_empty')));

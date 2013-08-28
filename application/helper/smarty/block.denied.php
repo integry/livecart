@@ -11,8 +11,7 @@ function smarty_block_denied($params, $content, Smarty_Internal_Template $smarty
 {
 	if (!$repeat)
 	{
-		ClassLoader::import('application.helper.AccessStringParser');
-		if(!AccessStringParser::run($params['role']))
+				if(!AccessStringParser::run($params['role']))
 		{
 			return $content;
 		}

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.system.ActiveRecordGroup");
 
 /**
  * EavFieldGroupCommon allow to group related EavFieldCommon (fields) together.

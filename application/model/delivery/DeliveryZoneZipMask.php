@@ -1,5 +1,4 @@
 <?php
-ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
  * Match an address to delivery zone by postal code mask string. For example, "90*" would match "90210".

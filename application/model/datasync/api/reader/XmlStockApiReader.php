@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.api.reader.ApiReader');
 
 /**
  * Stock API XML format request parsing

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Attribute selector value. The same selector value can be assigned to multiple products and usually

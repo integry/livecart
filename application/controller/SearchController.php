@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.FrontendController');
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search for non-products

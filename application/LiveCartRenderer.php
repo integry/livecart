@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('framework.renderer.SmartyRenderer');
-ClassLoader::import('application.LiveCartSmarty');
 
 /**
  *  Implements LiveCart-specific view renderer logic
@@ -368,8 +366,7 @@ class LiveCartRenderer extends SmartyRenderer
 
 		if (empty($res['call']))
 		{
-			ClassLoader::import('application.controller.IndexController');
-			$res['call'] = array('index', 'getGenericBlock');
+						$res['call'] = array('index', 'getGenericBlock');
 		}
 
 		return $res;

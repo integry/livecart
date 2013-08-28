@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
 
 /**
  * Represents an order level discount (discount that applies to the subtotal of the whole order)

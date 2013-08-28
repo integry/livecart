@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.ActiveGridController");
 
 /**
  * Server side file select dialog

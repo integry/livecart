@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.CustomerOrder");
 
 /**
  * Defines abstract interface for invoice ID number generator classes
@@ -21,7 +20,6 @@ abstract class InvoiceNumberGenerator
 	{
 		$class = ActiveRecordModel::getApplication()->getConfig()->get('INVOICE_NUMBER_GENERATOR');
 		self::loadGeneratorClass($class);
-		ClassLoader::import('application.model.order.invoiceNumber.' . $class);
 
 		return new $class($order);
 	}

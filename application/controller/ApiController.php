@@ -8,11 +8,6 @@
  *
  */
 
-ClassLoader::import('application.controller.BaseController');
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.datasync.XmlApiRequest');
-ClassLoader::import('application.helper.datasync.XmlApiResponse');
-ClassLoader::import('application.model.datasync.ModelApi');
 
 class ApiController extends BaseController
 {

@@ -1,8 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import('application.model.system.*');
-ClassLoader::import('application.model.user.User');
 
 /**
  * Test Email class

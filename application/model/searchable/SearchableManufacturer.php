@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search site news
@@ -17,8 +16,7 @@ class SearchableManufacturer extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.product.Manufacturer');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

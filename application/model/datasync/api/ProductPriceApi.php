@@ -1,11 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.datasync.api.reader.XmlPriceApiReader');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
-	
+
 /**
  * Web service access layer for ProductPrice
  *

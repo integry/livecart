@@ -1,17 +1,7 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('application.helper.massAction.MassActionInterface');
-ClassLoader::import('application.model.product.ProductSet');
-ClassLoader::import('application.model.product.ProductOption');
 
-ClassLoader::import('application.model.product.RecurringItem');
-ClassLoader::import('application.model.product.RecurringProductPeriod');
 
-ClassLoader::import('application.controller.backend.*');
-ClassLoader::import('application.model.order.*');
-ClassLoader::import('application.model.delivery.*');
 
 /**
  * @package application.controller.backend
@@ -593,8 +583,6 @@ class CustomerOrderController extends ActiveGridController
 	 */
 	public function processMass()
 	{
-		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
-		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		$filter = new ARSelectFilter();
 		$grid = new ActiveGrid($this->application, $filter, 'CustomerOrder', $this->getHavingClauseColumnTypes());
@@ -623,7 +611,6 @@ class CustomerOrderController extends ActiveGridController
 
 	public function printLabels()
 	{
-		ClassLoader::import('application.model.feed.ShipmentFeed');
 
 		if (isset($GLOBALS['filter']) && ($filter = $GLOBALS['filter']))
 		{
@@ -640,7 +627,6 @@ class CustomerOrderController extends ActiveGridController
 
 	public function isMassCancelled()
 	{
-		ClassLoader::import('application.helper.massAction.OrderMassActionProcessor');
 
 		return new JSONResponse(array('isCancelled' => OrderMassActionProcessor::isCancelled($this->request->gget('pid'))));
 	}
@@ -1547,8 +1533,7 @@ class CustomerOrderController extends ActiveGridController
 
 	public function addCoupon()
 	{
-		ClassLoader::import('application.model.discount.DiscountCondition');
-		$response = $this->getRequest();
+				$response = $this->getRequest();
 		$code = $this->request->gget('coupon');
 
 		$msg = '_coupon_not_found';

@@ -1,13 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.filter.FilterGroup');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductSpecification');
-ClassLoader::import('application.helper.ActiveGrid');
-ClassLoader::import('application.helper.massAction.MassActionInterface');
 
 /**
  * Controller for handling product based actions performed by store administrators

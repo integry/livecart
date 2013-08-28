@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("framework.request.validator.check.Check");
 
 /**
  * Checks if product SKU is unique

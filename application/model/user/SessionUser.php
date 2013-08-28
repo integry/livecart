@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.user.User');
 
 /**
  * User session handler (set user as logged in / logout)

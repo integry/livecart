@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.FrontendController');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.product.ProductFilter');
-ClassLoader::import('application.model.filter.ManufacturerFilter');
-ClassLoader::import('application.model.category.Category');
 
 /**
  * Manufacturer list

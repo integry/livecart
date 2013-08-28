@@ -1,10 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.datasync.api.reader.XmlStockApiReader');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
-	
+
 /**
  * Web service access layer for Stock
  *

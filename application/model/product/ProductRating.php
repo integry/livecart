@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.category.ProductRatingType');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductReview');
-ClassLoader::import('application.model.user.User');
 
 /**
  *

@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.product.ProductBundle");
 
 /**
  * Manage category product list items

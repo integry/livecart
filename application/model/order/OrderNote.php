@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.user.User");
 
 /**
  * Customer-administration (support) message regarding an order

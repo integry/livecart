@@ -1,11 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.datasync.api.reader.XmlCustomerOrderApiReader');
-ClassLoader::import('application.model.datasync.import.CustomerOrderImport');
-ClassLoader::import('application/model.datasync.CsvImportProfile');
-ClassLoader::import('application/model.order.CustomerOrder');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for CustomerOrder model
@@ -196,7 +190,6 @@ class CustomerOrderApi extends ModelApi
 }
 
 // misc things
-ClassLoader::import("application.model.datasync.import.UserImport");
 
 class ApiCustomerOrderImport extends CustomerOrderImport
 {

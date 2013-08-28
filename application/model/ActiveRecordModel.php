@@ -199,7 +199,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function loadSpecification($specificationData = null)
 	{
-		ClassLoader::import("application.model.eav.EavObject");
 
 		if ($this->isSpecificationLoaded() && !$specificationData)
 		{
@@ -211,7 +210,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
 		}
 
-		ClassLoader::import("application.model.eav.EavSpecificationManager");
 
 		$obj = $this instanceof EavObject ? $this : EavObject::getInstance($this);
 
@@ -442,8 +440,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			return false;
 		}
 
-		ClassLoader::import('application.model.eav.EavObject');
-		ClassLoader::import('application.model.eav.EavSpecificationManager');
 
 		// create array of EavObject gateway objects for all queued records
 		$eavObjects = array();
@@ -498,8 +494,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 		if (!class_exists('ModelPlugin'))
 		{
-			ClassLoader::import('application.model.ModelPlugin');
-		}
+					}
 
 		// get plugins
 		$path = 'model/' . strtolower($className) . '/' . $action;
@@ -544,8 +539,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function unserialize($serialized)
 	{
-		ClassLoader::import('application.model.eav.EavSpecificationManager');
-		$res = parent::unserialize($serialized);
+				$res = parent::unserialize($serialized);
 
 		if (!empty($this->specificationInstance))
 		{

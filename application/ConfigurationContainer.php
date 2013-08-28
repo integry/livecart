@@ -423,7 +423,6 @@ class ConfigurationContainer
 
 	protected function loadSQL($file)
 	{
-		ClassLoader::import('application.model.system.Installer');
 
 		if (file_exists($file))
 		{

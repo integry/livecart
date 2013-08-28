@@ -1,9 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/Initialize.php';
 
-ClassLoader::import('application.LiveCart');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('test.fixture.controller.PluginTestController');
 
 /**
  *

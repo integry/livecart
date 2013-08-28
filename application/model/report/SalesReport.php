@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.report.Report");
 
 /**
  * Generate sales reports

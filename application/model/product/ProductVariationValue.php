@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductVariation');
 
 /**
  * Relates a product variation to particular product.

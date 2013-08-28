@@ -1,19 +1,5 @@
 <?php
 /*
-ClassLoader::import('framework.Application');
-ClassLoader::import('framework.response.ActionResponse');
-ClassLoader::import('application.ConfigurationContainer');
-ClassLoader::import('application.LiveCartRouter');
-ClassLoader::import('application.model.Currency');
-ClassLoader::import('library.payment.TransactionDetails');
-ClassLoader::import('application.model.businessrule.BusinessRuleContext');
-ClassLoader::import('application.model.businessrule.BusinessRuleController');
-ClassLoader::import('application.model.order.SessionOrder');
-ClassLoader::import('application.model.user.SessionUser');
-ClassLoader::import('application.model.session.DatabaseSessionHandler');
-ClassLoader::import('application.model.system.Cron');
-ClassLoader::import('application.model.businessrule.RuleOrderContainer');
-ClassLoader::import('application.ControllerPlugin');
 */
 
 // experimental feature
@@ -351,8 +337,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (is_null($this->renderer))
 		{
-			ClassLoader::import('application.LiveCartRenderer');
-			$this->renderer = new LiveCartRenderer($this);
+						$this->renderer = new LiveCartRenderer($this);
 
 			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
 			{
@@ -696,8 +681,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 			if (!class_exists('ProcessPlugin', false))
 			{
-				ClassLoader::import('application.plugin.ProcessPlugin');
-			}
+							}
 
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this);
@@ -711,8 +695,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 			if (!class_exists('InstancePlugin', false))
 			{
-				ClassLoader::import('application.plugin.InstancePlugin');
-			}
+							}
 
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this, $instance, $params);
@@ -850,7 +833,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 	private function loadSession()
 	{
-	  	ClassLoader::import("framework.request.Session");
 
 		// avoid unserialize failures (3rd party application instances, etc.)
 		ClassLoader::ignoreMissingClasses(true);
@@ -887,7 +869,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (empty($this->locale))
 		{
-			ClassLoader::import('library.locale.Locale');
 
 			$this->locale =	Locale::getInstance($this->localeName);
 			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
@@ -1194,8 +1175,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 		if (!$this->config->get('INCLUDE_BASE_TAXES'))
 		{
-			ClassLoader::import('application.model.order.OrderedItem');
-			$price = OrderedItem::reduceBaseTaxes($price, $product);
+						$price = OrderedItem::reduceBaseTaxes($price, $product);
 		}
 		/*
 		else
@@ -1212,8 +1192,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	public function getCreditCardHandlerList()
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');
-		return PaymentMethodManager::getCreditCardHandlerList();
+				return PaymentMethodManager::getCreditCardHandlerList();
 	}
 
 	/**
@@ -1221,8 +1200,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	public function getExpressPaymentHandlerList($enabledOnly = false)
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');
-		if (!$enabledOnly)
+				if (!$enabledOnly)
 		{
 			return PaymentMethodManager::getExpressPaymentHandlerList();
 		}
@@ -1262,8 +1240,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 				if ('OfflineTransactionHandler' == $className)
 				{
-						ClassLoader::import('application.model.order.OfflineTransactionHandler');
-				}
+										}
 				else
 				{
 					ClassLoader::importNow('library.payment.method.*');
@@ -1311,8 +1288,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	public function getPaymentHandlerList($enabledOnly = false)
 	{
-		ClassLoader::import('library.payment.PaymentMethodManager');
-		if (!$enabledOnly)
+				if (!$enabledOnly)
 		{
 			return PaymentMethodManager::getRegularPaymentHandlerList();
 		}
@@ -1352,8 +1328,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	public function getAllRealTimeShippingServices()
 	{
-		ClassLoader::import('library.shipping.ShippingMethodManager');
-		return ShippingMethodManager::getHandlerList();
+				return ShippingMethodManager::getHandlerList();
 	}
 
 	/**
@@ -1370,7 +1345,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	public function getShippingHandler($className)
 	{
-		ClassLoader::import('library.shipping.method.' . $className);
 
 		$inst = new $className();
 
@@ -1540,15 +1514,13 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 			if ($class)
 			{
-				ClassLoader::import("application.model.cache." . $class);
-				$this->cache = new $class($this);
+								$this->cache = new $class($this);
 			}
 
 			// default to file cache
 			if (!$class || !$this->cache->isValid())
 			{
-				ClassLoader::import("application.model.cache.FileCache");
-				$this->cache = new FileCache($this);
+								$this->cache = new FileCache($this);
 			}
 		}
 
@@ -1559,7 +1531,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (!$this->cron)
 		{
-			ClassLoader::import("application.model.system.Cron");
 
 			$this->cron = new Cron($this);
 		}

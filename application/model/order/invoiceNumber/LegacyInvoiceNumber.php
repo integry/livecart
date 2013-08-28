@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.model.order.InvoiceNumberGenerator");
 
 /**
  * Legacy invoice numbers (pre 1.3.0)

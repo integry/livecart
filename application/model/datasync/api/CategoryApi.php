@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.ModelApi');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.helper.LiveCartSimpleXMLElement');
 
 /**
  * Web service access layer for Category model

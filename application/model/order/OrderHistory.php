@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("library.locale.I18Nv2.Country");
 
 /**
  *

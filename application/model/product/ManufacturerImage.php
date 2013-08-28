@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.ObjectImage');
 
 /**
  * Manufacturer image (logo). One manufacturer can have multiple images.

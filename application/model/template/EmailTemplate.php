@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.template.Template');
 
 /**
  * E-mail template file logic - saving and retrieving template code.

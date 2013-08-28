@@ -1,8 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.product.ProductReview');
-ClassLoader::import('application.controller.backend.ReviewController');
 
 /**
  *  Handles user data import logic

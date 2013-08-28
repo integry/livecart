@@ -4,8 +4,7 @@
  * BankOfLatviaCurrencyRateSource
  * @author Integry Systems
  */
- ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
-class BankOfLatviaCurrencyRateSource extends CurrencyRateSource
+ class BankOfLatviaCurrencyRateSource extends CurrencyRateSource
 {
 	public function getSourceName()
 	{

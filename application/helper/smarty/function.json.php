@@ -15,8 +15,7 @@ function smarty_function_json($params, Smarty_Internal_Template $smarty)
 	$array = $params['array'];
 	$assign = isset($params['assign']) ? $params['assign'] : false;
 
-	ClassLoader::import('library.json.json');
-	$javaObject = @json_encode($array);
+		$javaObject = @json_encode($array);
 
 	if (!empty($params['escape']))
 	{

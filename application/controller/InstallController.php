@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.system.Installer');
 
 /**
  * LiveCart installer
@@ -110,8 +109,7 @@ class InstallController extends FrontendController
 				   			'@' . $this->request->gget('server') .
 				   				'/' . $this->request->gget('name');
 
-		ClassLoader::import('library.activerecord.ActiveRecord');
-		ActiveRecord::resetDBConnection();
+				ActiveRecord::resetDBConnection();
 		ActiveRecord::setDSN($dsn);
 
 		try
@@ -193,9 +191,6 @@ class InstallController extends FrontendController
 			return new ActionRedirectResponse('install', 'admin');
 		}
 
-		ClassLoader::import('application.model.user.UserGroup');
-		ClassLoader::import('application.model.user.User');
-		ClassLoader::import('application.model.user.SessionUser');
 
 		ActiveRecordModel::beginTransaction();
 
@@ -266,7 +261,6 @@ class InstallController extends FrontendController
 		$this->config->setValueByLang('STORE_NAME', $this->request->gget('language'), $this->request->gget('name'));
 		$this->config->save();
 
-		ClassLoader::import('application.model.Currency');
 
 		// create currency
 		if (ActiveRecord::objectExists('Currency', $this->request->gget('curr')))
@@ -282,7 +276,6 @@ class InstallController extends FrontendController
 			$currency->save(ActiveRecord::PERFORM_INSERT);
 		}
 
-		ClassLoader::import('application.model.system.Language');
 
 		// create language
 		if (ActiveRecord::objectExists('Language', $this->request->gget('language')))
@@ -301,15 +294,11 @@ class InstallController extends FrontendController
 		}
 
 		// set root category name to "LiveCart"
-		ClassLoader::import('application.model.category.Category');
-		$root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
+				$root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
 		$root->setValueByLang('name', $language->getID(), 'LiveCart');
 		$root->save();
 
 	 	// create a default shipping service
-		ClassLoader::import('application.model.delivery.DeliveryZone');
-		ClassLoader::import('application.model.delivery.ShippingService');
-		ClassLoader::import('application.model.delivery.ShippingRate');
 
 		$service = ShippingService::getNewInstance(DeliveryZone::getDefaultZoneInstance(), 'Default Service', ShippingService::SUBTOTAL_BASED);
 		$service->save();
@@ -319,8 +308,7 @@ class InstallController extends FrontendController
 	 	$rate->save();
 
 		// create a couple of blank static pages
-		ClassLoader::import('application.model.staticpage.StaticPage');
-		$page = StaticPage::getNewInstance();
+				$page = StaticPage::getNewInstance();
 		$page->setValueByLang('title', $language->getID(), 'Contact Info');
 		$page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
 		$page->menu->set(array('INFORMATION' => true));
@@ -333,8 +321,7 @@ class InstallController extends FrontendController
 		$page->save();
 
 		// create an example site news post
-		ClassLoader::import('application.model.sitenews.NewsPost');
-		$news = ActiveRecordModel::getNewInstance('NewsPost');
+				$news = ActiveRecordModel::getNewInstance('NewsPost');
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
 		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="../backend">the backend area</a> and add some categories and products first...');
 		$news->setValueByLang('moreText', $language->getID(), 'Do not forget to delete this post when you actually go live :)');
@@ -434,7 +421,6 @@ class InstallController extends FrontendController
 	 */
 	private function buildAdminValidator()
 	{
-		ClassLoader::import('application.helper.check.IsUniqueEmailCheck');
 
 		$validator = $this->getValidator("createAdmin", $this->request);
 		$validator->addCheck("firstName", new IsNotEmptyCheck($this->translate("Please enter the admin first name")));

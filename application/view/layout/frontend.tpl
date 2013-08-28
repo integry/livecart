@@ -14,13 +14,13 @@
 		<base href="/livecart2/public/"></base>
 	</head>
 	<body>
-		{% block header %}{% include "layout/frontend/header.tpl" %}{% endblock %}
-		{% block left %}{% include "layout/frontend/leftSide.tpl" %}{% endblock %}
-		{% block right %}{% include "layout/frontend/rightSide.tpl" %}{% endblock %}
+		{% block header %}[[ partial("layout/frontend/header.tpl") ]]{% endblock %}
+		{% block left %}[[ partial("layout/frontend/leftSide.tpl") ]]{% endblock %}
+		{% block right %}[[ partial("layout/frontend/rightSide.tpl") ]]{% endblock %}
 
-		{% block contentstart %}{% include "block/content-start.tpl" %}{% endblock %}
+		{% block contentstart %}[[ partial("block/content-start.tpl") ]]{% endblock %}
 			{% block content %}{% endblock %}
-		{% block contentend %}{% include "block/content-stop.tpl" %}{% endblock %}
+		{% block contentend %}[[ partial("block/content-stop.tpl") ]]{% endblock %}
 
 		{% block footer %}{% endblock %}
 	</body>

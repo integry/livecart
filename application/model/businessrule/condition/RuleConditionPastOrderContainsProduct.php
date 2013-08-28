@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.condition.RuleConditionContainsProduct');
-ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition');
 
 /**
  *

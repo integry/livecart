@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.delivery.*");
-ClassLoader::import("application.model.Currency");
-ClassLoader::import("application.model.product.ProductSet");
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -188,8 +183,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$this->loadLanguageFile('backend/CustomerOrder');
 
-		ClassLoader::import('application.controller.backend.CustomerOrderController');
-		$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
+				$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
 
 		if (!$shipment->shippingAddress->get())
 		{
@@ -225,8 +219,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$this->loadLanguageFile('backend/Shipment');
 
-		ClassLoader::import('application.controller.backend.CustomerOrderController');
-		$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
+				$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
 		$address = $shipment->shippingAddress->get();
 
 		if (!$address)

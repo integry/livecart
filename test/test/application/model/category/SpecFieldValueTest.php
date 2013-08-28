@@ -1,10 +1,6 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.category.SpecField");
-ClassLoader::import("application.model.category.SpecFieldValue");
-ClassLoader::import("application.model.product.Product");
 
 /**
  *

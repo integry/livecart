@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.datasync.api.ApiAuthorization');
 
 /**
  * Secret key authorization is a simple method of creating a hash of client and server API keys.

@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleAction');
-ClassLoader::import('application.model.tax.TaxClass');
 
 /**
  *

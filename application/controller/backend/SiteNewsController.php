@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.StoreManagementController');
-ClassLoader::import('application.model.sitenews.NewsPost');
 
 /**
  * @package application.controller.backend

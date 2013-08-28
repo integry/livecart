@@ -1,17 +1,5 @@
 <?php
 
-ClassLoader::import('application.controller.backend.abstract.ActiveGridController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.filter.FilterGroup');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.category.ProductCategory');
-ClassLoader::import('application.model.product.ProductSpecification');
-ClassLoader::import('application.helper.ActiveGrid');
-ClassLoader::import('application.helper.massAction.MassActionInterface');
-ClassLoader::import('application.model.order.OrderedItem');
-ClassLoader::import('application.model.delivery.ShippingClass');
-ClassLoader::import('application.model.tax.TaxClass');
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -31,7 +19,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
     public function category()
 	{
-		ClassLoader::import('application.LiveCartRenderer');
 
 		$category = Category::getInstanceByID($this->request->gget("id"), Category::LOAD_DATA);
 
@@ -362,8 +349,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// remove design themes
 		if (('theme' == $act) && !$this->request->gget('theme'))
 		{
-			ClassLoader::import('application.model.presentation.CategoryPresentation');
-			ActiveRecord::deleteRecordSet('CategoryPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
+						ActiveRecord::deleteRecordSet('CategoryPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
 
 			return new JSONResponse(array('act' => $this->request->gget('act')), 'success', $this->translate('_themes_removed'));
 		}
@@ -423,8 +409,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 		else if ('theme' == $act)
 		{
-			ClassLoader::import('application.model.presentation.CategoryPresentation');
-			$params['theme'] = $this->request->gget('theme');
+						$params['theme'] = $this->request->gget('theme');
 		}
 		else if ('shippingClass' == $act)
 		{
@@ -447,8 +432,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getMassActionProcessor()
 	{
-		 ClassLoader::import('application.helper.massAction.ProductMassActionProcessor');
-		 return 'ProductMassActionProcessor';
+		 		 return 'ProductMassActionProcessor';
 	}
 
 	protected function getMassCompletionMessage()
@@ -801,8 +785,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function countTabsItems()
 	{
-	  	ClassLoader::import('application.model.product.*');
-	  	$product = Product::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
+	  		  	$product = Product::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
 
 	  	return new JSONResponse(array(
 			'tabProductBundle' => count(ProductBundle::getBundledProductArray($product)),
@@ -892,8 +875,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function save(Product $product)
 	{
-		ClassLoader::import('application.model.presentation.CategoryPresentation');
-		$validator = $this->buildValidator(true);
+				$validator = $this->buildValidator(true);
 		if ($validator->isModelValid())
 		{
 			$product->loadRequestModel($this->request);
@@ -993,8 +975,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	private function productForm($isExisting)
 	{
-		ClassLoader::import('application.LiveCartRenderer');
-		ClassLoader::import('application.model.presentation.CategoryPresentation');
 
 		$response = new BlockResponse();
 		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
@@ -1076,8 +1056,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// check if entered SKU is unique
 		if ($this->request->gget('sku') && $this->request->gget('save') && (!$isExisting || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->gget('sku'))))
 		{
-			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
-			//$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
+						//$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
 		}
 
 		//$product->getSpecification()->setValidation($validator);
@@ -1244,9 +1223,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function uploadProductImage()
 	{
-		ClassLoader::import('application.model.product.ProductImage');
-		ClassLoader::import('library.image.ImageManipulator');
-		$field = 'upload_' . $this->request->gget('field');
+						$field = 'upload_' . $this->request->gget('field');
 
 		$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
 

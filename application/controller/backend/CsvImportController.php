@@ -1,11 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.parser.CsvFile");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.product.Product");
-ClassLoader::import("application.model.category.SpecField");
-ClassLoader::import("application.model.datasync.CsvImportProfile");
 
 /**
  * Handles product importing through a CSV file
@@ -440,7 +434,6 @@ class CsvImportController extends StoreManagementController
 
 	private function buildValidator()
 	{
-		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return $this->getValidator('csvFile', $this->request);
 	}
@@ -452,7 +445,6 @@ class CsvImportController extends StoreManagementController
 
 	private function getDelimiterValidator()
 	{
-		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvDelimiters', $this->request);
 	}
@@ -464,7 +456,6 @@ class CsvImportController extends StoreManagementController
 
 	private function getFieldsValidator()
 	{
-		ClassLoader::import('application.helper.filter.HandleFilter');
 
 		return new RequestValidator('csvFields', $this->request);
 	}

@@ -1,9 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.*");
-ClassLoader::import("application.model.system.*");
-ClassLoader::import("library.*");
 
 /**
  * Language management

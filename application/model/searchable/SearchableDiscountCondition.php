@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
 
 /**
  * Search orders
@@ -17,8 +16,7 @@ class SearchableDiscountCondition extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.discount.DiscountCondition');
-	}
+			}
 
 	public function getSelectFilter($searchTerm)
 	{

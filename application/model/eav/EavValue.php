@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.eavcommon.EavValueCommon');
-ClassLoader::import('application.model.eav.EavItem');
 
 /**
  * Attribute selector value. The same selector value can be assigned to multiple products and usually

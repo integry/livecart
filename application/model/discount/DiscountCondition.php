@@ -1,10 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.system.ActiveTreeNode');
-ClassLoader::import('application.model.system.MultilingualObject');
-ClassLoader::import('application.model.discount.DiscountAction');
-ClassLoader::import('application.model.discount.DiscountConditionRecord');
-ClassLoader::import('application.model.businessrule.BusinessRuleController');
 
 /**
  *

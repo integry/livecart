@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
 
 /**
  * Category product filter. Generates ARSelectFilter object for selecting products

@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('framework.request.validator.filter.RegexFilter');
 
 /**
  * Generic handle field value filter

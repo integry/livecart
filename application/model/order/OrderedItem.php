@@ -1,14 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.order.Shipment');
-ClassLoader::import('application.model.order.OrderedFile');
-ClassLoader::import('application.model.product.RecurringItem');
-ClassLoader::import('application.model.order.OrderedItemOption');
-ClassLoader::import('application.model.delivery.DeliveryZone');
-ClassLoader::import('application.model.businessrule.interface.BusinessRuleProductInterface');
-ClassLoader::import('application.model.system.MultilingualObject');
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)

@@ -5,7 +5,6 @@
  * @author Integry Systems
  */
 
-ClassLoader::import('application.model.currencyrate.CurrencyRateSource');
 
 class YahooCurrencyRateSource extends CurrencyRateSource
 {

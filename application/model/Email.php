@@ -1,12 +1,9 @@
 <?php
 
-ClassLoader::import('library.smarty.libs.Smarty#class', true);
 
 ClassLoader::ignoreMissingClasses();
-ClassLoader::import('library.swiftmailer.lib.swift_required', true);
 ClassLoader::ignoreMissingClasses(false);
 
-ClassLoader::import('application.model.template.EditedCssFile');
 
 /**
  * E-mail handler

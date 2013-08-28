@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import('application.model.sitenews.NewsPost');
 
 /**
  * Site news controller

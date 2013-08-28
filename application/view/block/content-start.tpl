@@ -1,4 +1,4 @@
-<div id="content" class="col col-lg-[[12 - layoutspanLeft - layoutspanRight]]">
+<div id="content" class="col col-lg-[[12 - global('layoutspanLeft') - global('layoutspanRight')]]">
 
 {block BREADCRUMB}
 
@@ -6,4 +6,4 @@
 	<h1>[[ content('title') ]]</h1>
 {/if}
 
-{# {% include "block/message.tpl" %} #}
+[[ partial("block/message.tpl") ]]

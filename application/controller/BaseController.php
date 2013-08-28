@@ -1,13 +1,5 @@
 <?php
 
-ClassLoader::import("framework.controller.exception.*");
-ClassLoader::import("framework.controller.Controller");
-ClassLoader::import("application.helper.*");
-ClassLoader::import("application.model.system.Language");
-ClassLoader::import("library.locale.*");
-ClassLoader::import("library.locale.LCiTranslator");
-ClassLoader::import("framework.request.validator.Form");
-ClassLoader::import("application.helper.LiveCartValidator");
 
 /**
  * Base controller for the whole application
@@ -215,8 +207,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		if (empty($this->user))
 		{
-			ClassLoader::import('application.model.user.SessionUser');
-			$sessionUser = new SessionUser();
+						$sessionUser = new SessionUser();
 			$this->user = $sessionUser->getUser();
 		}
 
@@ -369,8 +360,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 			break;
 
 			case 'session':
-				ClassLoader::import("framework.request.Session");
-				$this->session = new Session();
+								$this->session = new Session();
 				return $this->session;
 			break;
 
@@ -422,14 +412,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 
-		ClassLoader::import("framework.roles.RolesDirectoryParser");
-		ClassLoader::import("framework.roles.RolesParser");
 
 		$this->roles = new RolesParser($controllerPath, $cachePath);
 		if($this->roles->wereExpired())
 		{
-			ClassLoader::import('application.model.role.Role');
-			Role::addNewRolesNames($this->roles->getRolesNames());
+						Role::addNewRolesNames($this->roles->getRolesNames());
 		}
 
 		$role = $this->roles->getRole($this->request->getActionName());

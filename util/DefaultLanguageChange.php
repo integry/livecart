@@ -3,12 +3,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 include '../application/Initialize.php';
-ClassLoader::import('application.LiveCart');
 $application = new LiveCart();
 
 define('BUFFER', 50);
 
-ClassLoader::import('application.model.product.Product');
 
 $languages = $application->getLanguageArray();
 $default = $application->getDefaultLanguageCode();

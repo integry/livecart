@@ -1,6 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.BackendController");
 
 /**
  * Backend error pages
