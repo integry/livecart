@@ -131,9 +131,9 @@ class RecurringProductPeriod extends MultilingualObject
 
 	public static function getNewInstance(Product $product)
 	{
-		$instance = ActiveRecord::getNewInstance(__CLASS__);
+		$instance = new __CLASS__();
 		//$instance->setValueByLang('name', null, $defaultLanguageName);
-		$instance->productID = $product);
+		$instance->productID = $product;
 		return $instance;
 	}
 

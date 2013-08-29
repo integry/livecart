@@ -25,9 +25,9 @@ class ProductRatingSummary extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, ProductRatingType $type = null)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
-		$instance->ratingType = $type);
+		$instance = new __CLASS__();
+		$instance->product = $product;
+		$instance->ratingType = $type;
 		return $instance;
 	}
 

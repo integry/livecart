@@ -89,8 +89,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public static function getNewInstance(User $user)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->user = $user);
+		$instance = new __CLASS__();
+		$instance->user = $user;
 		$instance->currency = self::getApplication()->getDefaultCurrency());
 
 		if ($user->getID())
@@ -297,7 +297,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$shipments = $this->getShipments();
 		$shipments->removeRecord($shipment);
 
-		$shipment->order = $this);
+		$shipment->order = $this;
 		$shipments->add($shipment);
 
 		foreach ($shipment->getItems() as $item)
@@ -442,7 +442,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function addItem(OrderedItem $orderedItem)
 	{
-		$orderedItem->customerOrder = $this);
+		$orderedItem->customerOrder = $this;
 		$this->orderedItems[] = $orderedItem;
 
 		if ($orderedItem->shipment->get())
@@ -516,7 +516,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$shipment->deleteRecordSet('ShipmentTax', new ARDeleteFilter());
 			}
 
-			$shipment->order = $this);
+			$shipment->order = $this;
 			$shipment->save();
 
 			// clone shipping addresses
@@ -524,7 +524,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				$shippingAddress = clone $shipment->shippingAddress->get();
 				$shippingAddress->save();
-				$shipment->shippingAddress = $shippingAddress);
+				$shipment->shippingAddress = $shippingAddress;
 			}
 		}
 
@@ -553,7 +553,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				foreach ($item->getProduct()->getBundledProducts() as $bundled)
 				{
 					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), $bundled->getCount());
-					$bundledItem->parent = $item);
+					$bundledItem->parent = $item;
 					$bundledItem->save();
 				}
 			}
@@ -644,7 +644,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$cloned = clone $this->$address->get();
 					$cloned->save();
 					$cloned->loadEav();
-					$this->$address = $cloned);
+					$this->$address = $cloned;
 				}
 			}
 		}
@@ -719,7 +719,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			if ($rebillsLeft != $this->rebillsLeft->get())
 			{
-				$this->rebillsLeft = $rebillsLeft);
+				$this->rebillsLeft = $rebillsLeft;
 				$changed = true;
 			}
 
@@ -866,7 +866,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 							$count += $item->count->get();
 							$this->removeItem($item);
 						}
-						$mainItem->count = $count);
+						$mainItem->count = $count;
 					}
 				}
 			}
@@ -880,7 +880,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return;
 		}
 
-		$this->user = $user);
+		$this->user = $user;
 		$this->setCheckoutStep(self::CHECKOUT_USER);
 
 		foreach (array(array('defaultBillingAddress' => 'billingAddress'),
@@ -908,7 +908,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			return false;
 		}
 
-		$this->checkoutStep = $step);
+		$this->checkoutStep = $step;
 		$this->save();
 	}
 
@@ -1040,7 +1040,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function setStatus($status)
 	{
-		$this->status = $status);
+		$this->status = $status;
 		$this->save();
 		$this->updateShipmentStatuses();
 	}
@@ -1075,7 +1075,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		if($this->status->get() != $status)
 		{
-			$this->status = $status);
+			$this->status = $status;
 		}
 	}
 
@@ -1275,7 +1275,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$this->getTaxes();
 			foreach ($this->shipments as $shipment)
 			{
-				$shipment->order = $this);
+				$shipment->order = $this;
 				$total += $shipment->getTotal($recalculateAmounts);
 				//echo '['.$shipment->getID() , ' ('.$shipment->getTotal($recalculateAmounts).')] ';
 			}
@@ -1582,7 +1582,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function changeCurrency(Currency $currency, $save = true)
 	{
-		$this->currency = $currency);
+		$this->currency = $currency;
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$item->price = $item->getProduct()->getItemPrice($item, true, $currency));
@@ -2425,7 +2425,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
                 foreach ($original->getShipments() as $shipment)
                 {
                         $cloned = clone $shipment;
-                        $cloned->order = $this);
+                        $cloned->order = $this;
 
                         if ($this->isMultiAddress->get())
                         {
@@ -2463,7 +2463,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 				foreach ($shipment->getItems() as $item)
 				{
-					$item->shipment = $shipment);
+					$item->shipment = $shipment;
 					$item->save();
 				}
 			}
@@ -2807,7 +2807,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$recurringItemIDs = array();
 
 				$newOrder = clone $mainOrder;
-				$newOrder->parentID = $mainOrder);
+				$newOrder->parentID = $mainOrder;
 				$newOrder->isFinalized = false);
 				$newOrder->invoiceNumber = $newOrder->getCalculatedRecurringInvoiceNumber());
 				$newOrder->dateDue = date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', $ts)));
@@ -2836,7 +2836,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$periodType = $recurringItem->periodType->get();
 					$recurringItemIDs[] = $recurringItem->getID(); // collect IDs for batch processedRebillCount update.
 					$clone = clone $item;
-					$clone->recurringParentID = $item);
+					$clone->recurringParentID = $item;
 					$clone->shipmentID = null);
 					$clone->save();
 					$newOrderShipment->addItem($clone);

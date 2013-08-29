@@ -29,8 +29,8 @@ class ExpressCheckout extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order, ExpressPayment $handler)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order = $order);
+		$instance = new __CLASS__();
+		$instance->order = $order;
 		$instance->method = get_class($handler));
 		return $instance;
 	}

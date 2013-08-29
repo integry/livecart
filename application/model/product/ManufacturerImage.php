@@ -21,8 +21,8 @@ class ManufacturerImage extends ObjectImage
 
 	public static function getNewInstance(Manufacturer $manufacturer)
 	{
-	  	$image = ActiveRecord::getNewInstance(__CLASS__);
-	  	$image->manufacturer = $manufacturer);
+	  	$image = new __CLASS__();
+	  	$image->manufacturer = $manufacturer;
 	  	return $image;
 	}
 

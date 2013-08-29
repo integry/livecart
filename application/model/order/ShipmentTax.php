@@ -34,9 +34,9 @@ class ShipmentTax extends ActiveRecordModel
 	public static function getNewInstance(TaxRate $taxRate, Shipment $shipment, $type)
 	{
 	  	$instance = ActiveRecordModel::getNewInstance(__CLASS__);
-	  	$instance->taxRate = $taxRate);
-	  	$instance->shipment = $shipment);
-	  	$instance->type = $type);
+	  	$instance->taxRate = $taxRate;
+	  	$instance->shipment = $shipment;
+	  	$instance->type = $type;
 	  	$instance->recalculateAmount(null);
 
 	  	return $instance;
@@ -115,7 +115,7 @@ class ShipmentTax extends ActiveRecordModel
 			}
 		}
 
-		$this->amount = $taxAmount);
+		$this->amount = $taxAmount;
 	}
 
 	public function getAmount($amount = null)

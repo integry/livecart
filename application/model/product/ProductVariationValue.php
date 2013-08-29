@@ -21,9 +21,9 @@ class ProductVariationValue extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, ProductVariation $variation)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
-		$instance->variation = $variation);
+		$instance = new __CLASS__();
+		$instance->product = $product;
+		$instance->variation = $variation;
 		return $instance;
 	}
 }

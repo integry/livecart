@@ -48,7 +48,7 @@ class Currency extends ActiveRecordModel
 
 	public static function getNewInstance($id)
 	{
-		$inst = parent::getNewInstance(__class__);
+		$inst = new __CLASS__();
 		$inst->setID($id);
 		return $inst;
 	}

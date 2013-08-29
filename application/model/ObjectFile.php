@@ -79,7 +79,7 @@ class ObjectFile extends MultilingualObject
 
 		$this->setBaseName($fileName ? $fileName : $pathOrUrl);
 		$this->sourceFilePath = $sourceFilePath;
-		$this->filePath = $pathOrUrl);
+		$this->filePath = $pathOrUrl;
 	}
 
 	public function save($forceOperation = false)

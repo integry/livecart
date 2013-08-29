@@ -95,8 +95,8 @@ abstract class EavFieldCommon extends MultilingualObject
 
 		if ($dataType)
 		{
-			$field->dataType = $dataType);
-			$field->type = $type);
+			$field->dataType = $dataType;
+			$field->type = $type;
 		}
 
 		return $field;
@@ -123,7 +123,7 @@ abstract class EavFieldCommon extends MultilingualObject
 	 */
 	public function addValue(EavValueCommon $value)
 	{
-		$value->getField() = $this);
+		$value->getField() = $this;
 		$value->save();
 	}
 
@@ -308,7 +308,7 @@ abstract class EavFieldCommon extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position = $position);
+		$this->position = $position;
 
 		return parent::insert();
 	}

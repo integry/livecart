@@ -58,10 +58,10 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->customerOrder = $order);
-		$instance->product = $product);
-		$instance->count = $count);
+		$instance = new __CLASS__();
+		$instance->customerOrder = $order;
+		$instance->product = $product;
+		$instance->count = $count;
 
 		if ($order->isFinalized->get())
 		{
@@ -175,7 +175,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 	public function setCustomPrice($price)
 	{
 		$this->isCustomPrice = true;
-		$this->price = $price);
+		$this->price = $price;
 	}
 
 	public function isCustomPrice()
@@ -894,7 +894,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		foreach ($this->optionChoices as $key => $option)
 		{
 			$newOpt = clone $option;
-			$newOpt->orderedItem = $this);
+			$newOpt->orderedItem = $this;
 			$newOpt->choice->setAsModified();
 			$this->optionChoices[$key] = $newOpt;
 		}

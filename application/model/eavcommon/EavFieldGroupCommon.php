@@ -35,7 +35,7 @@ class EavFieldGroupCommon extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position = $position);
+		$this->position = $position;
 
 		return parent::insert();
 	}

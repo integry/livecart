@@ -28,9 +28,9 @@ class OrderedFile extends ActiveRecordModel
 
 	public static function getNewInstance(OrderedItem $item, ProductFile $file)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->orderedItem = $item);
-		$instance->productFile = $file);
+		$instance = new __CLASS__();
+		$instance->orderedItem = $item;
+		$instance->productFile = $file;
 		return $instance;
 	}
 

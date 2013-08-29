@@ -21,7 +21,7 @@ class ProductImage extends ObjectImage
 
 	public static function getNewInstance(Product $product)
 	{
-	  	$image = ActiveRecord::getNewInstance(__CLASS__);
+	  	$image = new __CLASS__();
 	  	$image->product->set($product);
 	  	return $image;
 	}

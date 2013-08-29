@@ -47,15 +47,15 @@ class TaxRate extends MultilingualObject
 	 */
 	public static function getNewInstance(DeliveryZone $deliveryZone = null, Tax $tax, $rate)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
+	  	$instance = new __CLASS__();
 
 		if($deliveryZone)
 		{
-			$instance->deliveryZone = $deliveryZone);
+			$instance->deliveryZone = $deliveryZone;
 		}
 
-	  	$instance->tax = $tax);
-	  	$instance->rate = $rate);
+	  	$instance->tax = $tax;
+	  	$instance->rate = $rate;
 
 	  	return $instance;
 	}

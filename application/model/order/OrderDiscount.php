@@ -27,8 +27,8 @@ class OrderDiscount extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order = $order);
+		$instance = new __CLASS__();
+		$instance->order = $order;
 		return $instance;
 	}
 

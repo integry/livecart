@@ -54,8 +54,8 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	 */
 	public static function getNewInstance(FilterGroup $filterGroup)
 	{
-		$inst = parent::getNewInstance(__CLASS__);
-		$inst->filterGroup = $filterGroup);
+		$inst = new __CLASS__();
+		$inst->filterGroup = $filterGroup;
 		return $inst;
 	}
 

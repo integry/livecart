@@ -1,5 +1,7 @@
 <?php
 
+namespace role;
+
 /**
  * Intermediate entity for assigning Roles to UserGroups.
  *
@@ -41,9 +43,9 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getNewInstance(UserGroup $userGroup, Role $role)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->userGroup = $userGroup);
-		$instance->role = $role);
+	  	$instance = new __CLASS__();
+	  	$instance->userGroup = $userGroup;
+		$instance->role = $role;
 
 	  	return $instance;
 	}

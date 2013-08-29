@@ -24,9 +24,9 @@ class ProductListItem extends ActiveRecordModel
 
 	public static function getNewInstance(ProductList $productList, Product $product)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->productList = $productList);
-		$instance->product = $product);
+		$instance = new __CLASS__();
+		$instance->productList = $productList;
+		$instance->product = $product;
 		return $instance;
 	}
 

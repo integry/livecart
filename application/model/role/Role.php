@@ -1,5 +1,6 @@
 <?php
 
+namespace role;
 
 /**
  * Roles allow to fine-grain user (UserGroup) access to controller classes and methods.
@@ -10,14 +11,8 @@
  */
 class Role extends ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Role");
-
-		public $ID;
-		public $name;
-	}
+	public $ID;
+	public $name;
 
 	/**
 	 * Gets an existing record instance (persisted on a database).
@@ -59,8 +54,8 @@ class Role extends ActiveRecordModel
 	 */
 	public static function getNewInstance($name)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->name = $name);
+	  	$instance = new __CLASS__();
+	  	$instance->name = $name;
 
 	  	return $instance;
 	}

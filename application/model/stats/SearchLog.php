@@ -15,8 +15,8 @@ class SearchLog extends ActiveRecordModel
 
 	public static function getNewInstance($keywords, $ipAddress)
 	{
-		$instance = parent::getNewInstance(__class__);
-		$instance->keywords = $keywords);
+		$instance = new __CLASS__();
+		$instance->keywords = $keywords;
 		$instance->ip = ip2long($ipAddress));
 		return $instance;
 	}

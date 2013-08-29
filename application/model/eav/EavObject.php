@@ -48,19 +48,19 @@ class EavObject extends ActiveRecordModel
 	public static function getNewInstance(EavAble $parent)
 	{
 		$field = self::getInstanceField($parent);
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->$field = $parent);
+		$instance = new __CLASS__();
+		$instance->$field = $parent;
 		$instance->classID = EavField::getClassID($parent));
 
 		$instance->parent = $parent;
-		$parent->eavObject = $instance);
+		$parent->eavObject = $instance;
 
 		return $instance;
 	}
 
 	public static function getInstanceByIdentifier($stringIdentifier)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
+		$instance = new __CLASS__();
 		$instance->classID = 0);
 		$instance->setStringIdentifier($stringIdentifier);
 		return $instance;

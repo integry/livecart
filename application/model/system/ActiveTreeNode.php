@@ -297,7 +297,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function setParentNode(ActiveTreeNode $parentNode)
 	{
-		$this->getField(self::PARENT_NODE_FIELD_NAME) = $parentNode);
+		$this->getField(self::PARENT_NODE_FIELD_NAME) = $parentNode;
 	}
 
 	/**
@@ -592,8 +592,8 @@ class ActiveTreeNode extends ActiveRecordModel
 				self::executeUpdate($update);
 			}
 
-			$this->getField(self::RIGHT_NODE_FIELD_NAME) = $nodeRightValue);
-			$this->getField(self::LEFT_NODE_FIELD_NAME) = $nodeLeftValue);
+			$this->getField(self::RIGHT_NODE_FIELD_NAME) = $nodeRightValue;
+			$this->getField(self::LEFT_NODE_FIELD_NAME) = $nodeLeftValue;
 
 			ActiveRecordModel::commit();
 

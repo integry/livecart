@@ -23,10 +23,10 @@ class DeliveryZoneCountry extends ActiveRecordModel
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $countryCode)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
+	  	$instance = new __CLASS__();
 
-	  	$instance->deliveryZone = $zone);
-	  	$instance->countryCode = $countryCode);
+	  	$instance->deliveryZone = $zone;
+	  	$instance->countryCode = $countryCode;
 
 	  	return $instance;
 	}

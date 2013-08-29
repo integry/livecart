@@ -23,8 +23,8 @@ class ProductRatingType extends MultilingualObject
 
 	public static function getNewInstance(Category $category)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category = $category);
+		$instance = new __CLASS__();
+		$instance->category = $category;
 		return $instance;
 	}
 
@@ -106,7 +106,7 @@ class ProductRatingType extends MultilingualObject
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
-		$this->position = $position);
+		$this->position = $position;
 
 		return parent::insert();
 	}

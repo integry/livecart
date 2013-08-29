@@ -26,8 +26,8 @@ class ProductList extends MultilingualObject
 
 	public static function getNewInstance(Category $category)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->category = $category);
+		$instance = new __CLASS__();
+		$instance->category = $category;
 		return $instance;
 	}
 

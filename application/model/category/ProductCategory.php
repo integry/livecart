@@ -30,9 +30,9 @@ class ProductCategory extends ActiveRecordModel
 	 */
 	public static function getNewInstance(Product $product, Category $category)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
-		$instance->category = $category);
+		$instance = new __CLASS__();
+		$instance->product = $product;
+		$instance->category = $category;
 
 		return $instance;
 	}

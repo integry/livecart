@@ -64,8 +64,8 @@ class Shipment extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order)
 	{
-		$instance = parent::getNewInstance(__class__);
-		$instance->order = $order);
+		$instance = new __CLASS__();
+		$instance->order = $order;
 		return $instance;
 	}
 
@@ -98,7 +98,7 @@ class Shipment extends ActiveRecordModel
 		}
 
 		$this->items[] = $item;
-		$item->shipment = $this);
+		$item->shipment = $this;
 
 		$this->markAsModified();
 	}
@@ -438,7 +438,7 @@ class Shipment extends ActiveRecordModel
 		}
 
 		$this->amount = $this->amount + ($this->shippingAmount - $origShippingAmount));
-		$this->shippingAmount = $origShippingAmount);
+		$this->shippingAmount = $origShippingAmount;
 	}
 
 	public function applyTaxesToShippingAmount($amount)
@@ -488,7 +488,7 @@ class Shipment extends ActiveRecordModel
 		$currency = $this->order->getCurrency();
 
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
-		$this->amount = $itemAmount);
+		$this->amount = $itemAmount;
 
 		// total taxes
 		if ($calculateTax)
@@ -557,7 +557,7 @@ class Shipment extends ActiveRecordModel
 				$totalTaxes += $tax->getAmount();
 			}
 
-			$this->taxAmount = $totalTaxes);
+			$this->taxAmount = $totalTaxes;
 		}
 
 		// shipping rate
@@ -578,7 +578,7 @@ class Shipment extends ActiveRecordModel
 
 	public function addFixedTax(ShipmentTax $tax)
 	{
-		$tax->shipment = $this);
+		$tax->shipment = $this;
 
 		if ($this->taxes)
 		{
@@ -666,7 +666,7 @@ class Shipment extends ActiveRecordModel
 		{
 			if(!$item->isDeleted())
 			{
-				$item->shipment = $this);
+				$item->shipment = $this;
 				$item->customerOrder = $this->order);
 				$item->save();
 			}

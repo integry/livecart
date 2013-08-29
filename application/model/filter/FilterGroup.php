@@ -42,8 +42,8 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function getNewInstance(SpecField $specField)
 	{
-		$inst = parent::getNewInstance(__CLASS__);
-		$inst->specField = $specField);
+		$inst = new __CLASS__();
+		$inst->specField = $specField;
 		return $inst;
 	}
 
@@ -102,7 +102,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public function addFilter(Filter $filter)
 	{
-		$filter->filterGroup = $this);
+		$filter->filterGroup = $this;
 		$filter->save();
 	}
 
@@ -165,7 +165,7 @@ class FilterGroup extends MultilingualObject
 				$filter->rangeEnd = $value['rangeEnd']);
 			}
 
-			$filter->filterGroup = $this);
+			$filter->filterGroup = $this;
 			$filter->position = $position++);
 			$filter->save();
 

@@ -25,8 +25,8 @@ class ProductVariationType extends MultilingualObject
 
 	public static function getNewInstance(Product $product)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
+		$instance = new __CLASS__();
+		$instance->product = $product;
 		return $instance;
 	}
 

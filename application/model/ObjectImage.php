@@ -129,7 +129,7 @@ abstract class ObjectImage extends MultilingualObject
 		  	$maxPos = 0;
 		}
 
-		$this->position = $maxPos);
+		$this->position = $maxPos;
 
 		return parent::insert();
 	}
@@ -190,7 +190,7 @@ abstract class ObjectImage extends MultilingualObject
 		if ($this->position->get() == 0)
 		{
 			$owner = $this->getOwner();
-			$owner->defaultImage = $this);
+			$owner->defaultImage = $this;
 			$owner->save();
 		}
 	}

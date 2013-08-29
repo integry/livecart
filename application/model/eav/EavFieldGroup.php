@@ -30,7 +30,7 @@ class EavFieldGroup extends EavFieldGroupCommon
 			$className = $className->getClassName();
 		}
 
-		$inst = parent::getNewInstance(__CLASS__);
+		$inst = new __CLASS__();
 		$inst->classID->set(EavField::getClassID($className));
 
 		return $inst;

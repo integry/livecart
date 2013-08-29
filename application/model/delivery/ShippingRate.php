@@ -64,8 +64,8 @@ class ShippingRate extends MultilingualObject
 	 */
 	public static function getNewInstance(ShippingService $shippingService, $rangeStart, $rangeEnd)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->shippingService = $shippingService);
+	  	$instance = new __CLASS__();
+	  	$instance->shippingService = $shippingService;
 
 	  	$instance->setRangeStart($rangeStart);
 	  	$instance->setRangeEnd($rangeEnd);
@@ -109,12 +109,12 @@ class ShippingRate extends MultilingualObject
 
 	public function setRangeStart($rangeStart)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart = $rangeStart) : $this->subtotalRangeStart = $rangeStart);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart = $rangeStart) : $this->subtotalRangeStart = $rangeStart;
 	}
 
 	public function setRangeEnd($rangeEnd)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd = $rangeEnd) : $this->subtotalRangeEnd = $rangeEnd);
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd = $rangeEnd) : $this->subtotalRangeEnd = $rangeEnd;
 	}
 
 	public function getRangeStart()

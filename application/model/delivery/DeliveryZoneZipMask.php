@@ -40,7 +40,7 @@ class DeliveryZoneZipMask extends ActiveRecordModel
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $mask)
 	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
+	  	$instance = new __CLASS__();
 	  	
 	  	$instance->deliveryZone->set($zone);
 	  	$instance->mask->set($mask);

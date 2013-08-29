@@ -23,8 +23,8 @@ class SearchLog extends ActiveRecordModel
 
 	public static function getNewInstance($query)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->keywords = $query);
+		$instance = new __CLASS__();
+		$instance->keywords = $query;
 		return $instance;
 	}
 

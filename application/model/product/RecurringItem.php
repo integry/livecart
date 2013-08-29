@@ -52,24 +52,24 @@ class RecurringItem extends ActiveRecordModel
 	public static function getNewInstance(RecurringProductPeriod $recurringProductPeriod,
 		OrderedItem $item, $setupPrice = null, $periodPrice = null, $rebillCount = null)
 	{
-		$instance = ActiveRecord::getNewInstance(__CLASS__);
-		$instance->orderedItem = $item);
+		$instance = new __CLASS__();
+		$instance->orderedItem = $item;
 		$instance->setRecurringProductPeriod($recurringProductPeriod); // call after orderedItem is added!
 		$instance->periodLength = $recurringProductPeriod->periodLength);
 		$instance->periodType = $recurringProductPeriod->periodType);
 		if ($setupPrice !== null)
 		{
-			$instance->setupPrice = $setupPrice);
+			$instance->setupPrice = $setupPrice;
 		}
 
 		if ($periodPrice !== null)
 		{
-			$instance->periodPrice = $periodPrice);
+			$instance->periodPrice = $periodPrice;
 		}
 
 		if ($rebillCount !== null)
 		{
-			$instance->rebillCount = $rebillCount);
+			$instance->rebillCount = $rebillCount;
 		}
 
 		return $instance;
@@ -97,7 +97,7 @@ class RecurringItem extends ActiveRecordModel
 		$order = $this->orderedItem->customerOrder;
 		$order->load();
 		$currencyID = $order->currencyID->getID();
-		$this->recurring = $recurringProductPeriod);
+		$this->recurring = $recurringProductPeriod;
 		if ($recurringProductPeriod->isLoaded() == false)
 		{
 			$recurringProductPeriod->load();
@@ -144,7 +144,7 @@ class RecurringItem extends ActiveRecordModel
 
 	public function saveLastInvoice(CustomerOrder $order)
 	{
-		$this->lastInvoiceID = $order);
+		$this->lastInvoiceID = $order;
 		$this->save();
 	}
 

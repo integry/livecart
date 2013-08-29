@@ -32,9 +32,9 @@ class OrderedItemOption extends ActiveRecordModel
 
 	public static function getNewInstance(OrderedItem $item, ProductOptionChoice $choice)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->orderedItem = $item);
-		$instance->choice = $choice);
+		$instance = new __CLASS__();
+		$instance->orderedItem = $item;
+		$instance->choice = $choice;
 
 		return $instance;
 	}
@@ -117,7 +117,7 @@ class OrderedItemOption extends ActiveRecordModel
 		}
 
 		move_uploaded_file($fileArray['tmp_name'], $path);
-		$this->optionText = $fileName);
+		$this->optionText = $fileName;
 
 		// create thumbnails for images
 		if ($paths = self::getImagePaths($path))

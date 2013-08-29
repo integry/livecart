@@ -79,8 +79,8 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order = $order);
+		$instance = new __CLASS__();
+		$instance->order = $order;
 		$instance->gatewayTransactionID = $result->gatewayTransactionID->get());
 
 		// determine currency
@@ -109,7 +109,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 				$largerAmount = $order->currency->get()->convertAmount($instance->realCurrency->get(), 0.01 + $instance->realAmount->get());
 				if ($largerAmount >= $total)
 				{
-					$instance->amount = $total);
+					$instance->amount = $total;
 				}
 			}
 		}
@@ -138,20 +138,20 @@ class Transaction extends ActiveRecordModel implements EavAble
 	public static function getNewSubTransaction(Transaction $transaction, TransactionResult $result)
 	{
 		$instance = self::getNewInstance($transaction->order->get(), $result);
-		$instance->parentTransaction = $transaction);
+		$instance->parentTransaction = $transaction;
 		$instance->method = $transaction->method->get());
 		return $instance;
 	}
 
 	public static function getNewOfflineTransactionInstance(CustomerOrder $order, $amount)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order = $order);
+		$instance = new __CLASS__();
+		$instance->order = $order;
 		$instance->realCurrency = $order->currency->get());
 		$instance->type = self::TYPE_SALE);
 		$instance->methodType = self::METHOD_OFFLINE);
 		$instance->isCompleted = true);
-		$instance->realAmount = $amount);
+		$instance->realAmount = $amount;
 
 		return $instance;
 	}
@@ -337,7 +337,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		}
 
 		$handler = $this->getSubTransactionHandler($amount);
-		$handler->getDetails()->isCompleted = $isCompleted);
+		$handler->getDetails()->isCompleted = $isCompleted;
 		$result = $handler->capture();
 
 		if (!($result instanceof TransactionResult))

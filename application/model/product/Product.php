@@ -124,8 +124,8 @@ class Product extends MultilingualObject
 	 */
 	public static function getNewInstance(Category $category, $name = '')
 	{
-		$product = parent::getNewInstance(__CLASS__);
-		$product->category = $category);
+		$product = new __CLASS__();
+		$product->category = $category;
 		$product->setValueByLang('name', null, $name);
 
 		return $product;
@@ -187,8 +187,8 @@ class Product extends MultilingualObject
 
 	public function createChildProduct()
 	{
-		$child = ActiveRecord::getNewInstance(__CLASS__);
-		$child->parent = $this);
+		$child = new __CLASS__();
+		$child->parent = $this;
 		return $child;
 	}
 
@@ -559,7 +559,7 @@ class Product extends MultilingualObject
 	public function addRelatedProduct(Product $product, $type = 0)
 	{
 		$relationship = ProductRelationship::getNewInstance($this, $product);
-		$relationship->type = $type);
+		$relationship->type = $type;
 		$this->getRelationships($type)->add($relationship);
 		$this->getRemovedRelationships()->removeRecord($relationship);
 	}
@@ -833,7 +833,7 @@ class Product extends MultilingualObject
 				$sku .= $k;
 			}
 
-			$this->sku = $sku);
+			$this->sku = $sku;
 			parent::save();
 		}
 
@@ -1613,7 +1613,7 @@ class Product extends MultilingualObject
 		foreach (ProductOption::getProductOptions($original) as $option)
 		{
 			$clonedOpt = clone $option;
-			$clonedOpt->product = $this);
+			$clonedOpt->product = $this;
 			$clonedOpt->save();
 		}
 
@@ -1626,7 +1626,7 @@ class Product extends MultilingualObject
 			if ($id)
 			{
 				$groups[$id] = clone $group;
-				$groups[$id]->product = $this);
+				$groups[$id]->product = $this;
 				$groups[$id]->save();
 			}
 

@@ -46,7 +46,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getNewInstance()
 	{
-	  	return ActiveRecord::getNewInstance(__CLASS__);
+	  	return new __CLASS__();
 	}
 
 	/**

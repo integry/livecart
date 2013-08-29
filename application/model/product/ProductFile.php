@@ -37,7 +37,7 @@ class ProductFile extends ObjectFile
 	public static function getNewInstance(Product $product, $filePath, $fileName, $pathOrUrl = null)
 	{
 		$productFileInstance = parent::getNewInstance(__CLASS__, $filePath, $fileName, $pathOrUrl);
-		$productFileInstance->product = $product);
+		$productFileInstance->product = $product;
 
 		return $productFileInstance;
 	}

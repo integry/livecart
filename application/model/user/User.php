@@ -48,13 +48,13 @@ class User extends ActiveRecordModel implements EavAble
 	 */
 	public static function getNewInstance($email, $password = null, UserGroup $userGroup = null)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->email = $email);
+		$instance = new __CLASS__();
+		$instance->email = $email;
 		$instance->dateCreated = new ARSerializableDateTime());
 
 		if($userGroup)
 		{
-			$instance->userGroup = $userGroup);
+			$instance->userGroup = $userGroup;
 		}
 
 		if($password)
@@ -391,7 +391,7 @@ class User extends ActiveRecordModel implements EavAble
 
 		if ($subscriber = NewsletterSubscriber::getInstanceByEmail($this->email))
 		{
-			$subscriber->user = $this);
+			$subscriber->user = $this;
 		}
 		else
 		{

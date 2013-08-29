@@ -56,15 +56,15 @@ class ProductOption extends MultilingualObject
 	 */
 	public static function getNewInstance(ActiveRecordModel $parent)
 	{
-		$option = parent::getNewInstance(__CLASS__);
+		$option = new __CLASS__();
 
 		if ($parent instanceof Product)
 		{
-			$option->product = $parent);
+			$option->product = $parent;
 		}
 		else if ($parent instanceof Category)
 		{
-			$option->category = $parent);
+			$option->category = $parent;
 		}
 		else
 		{
@@ -349,12 +349,12 @@ class ProductOption extends MultilingualObject
 		foreach ($this->originalRecord->getChoiceSet() as $choice)
 		{
 			$newChoice = clone $choice;
-			$newChoice->option = $this);
+			$newChoice->option = $this;
 			$newChoice->save();
 
 			if ($defaultChoice && ($choice->getID() == $defaultChoice->getID()))
 			{
-				$this->defaultChoice = $newChoice);
+				$this->defaultChoice = $newChoice;
 			}
 		}
 

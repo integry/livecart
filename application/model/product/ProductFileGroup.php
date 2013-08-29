@@ -56,8 +56,8 @@ class ProductFileGroup extends ProductParametersGroup
 	 */
 	public static function getNewInstance(Product $product)
 	{
-		$group = parent::getNewInstance(__CLASS__);
-		$group->product = $product);
+		$group = new __CLASS__();
+		$group->product = $product;
 
 		return $group;
 	}

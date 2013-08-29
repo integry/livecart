@@ -31,9 +31,9 @@ class OrderNote extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order, User $user)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->order = $order);
-		$instance->user = $user);
+		$instance = new __CLASS__();
+		$instance->order = $order;
+		$instance->user = $user;
 
 		return $instance;
 	}

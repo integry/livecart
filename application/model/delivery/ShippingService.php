@@ -61,13 +61,13 @@ class ShippingService extends MultilingualObject implements EavAble
 	 */
 	public static function getNewInstance(DeliveryZone $deliveryZone = null, $defaultLanguageName, $calculationCriteria)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
+		$instance = new __CLASS__();
 		if($deliveryZone)
 		{
-			$instance->deliveryZone = $deliveryZone);
+			$instance->deliveryZone = $deliveryZone;
 		}
 		$instance->setValueByLang('name', null, $defaultLanguageName);
-		$instance->rangeType = $calculationCriteria);
+		$instance->rangeType = $calculationCriteria;
 
 		return $instance;
 	}
@@ -121,7 +121,7 @@ class ShippingService extends MultilingualObject implements EavAble
 		{
 			foreach ($services as $service)
 			{
-				$service->deliveryZone = $deliveryZone);
+				$service->deliveryZone = $deliveryZone;
 			}
 		}
 

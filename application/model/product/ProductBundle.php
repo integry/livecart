@@ -56,10 +56,10 @@ class ProductBundle extends ActiveRecordModel
 			return null;
 		}
 
-		$relationship = parent::getNewInstance(__CLASS__);
+		$relationship = new __CLASS__();
 
-		$relationship->product = $product);
-		$relationship->relatedProduct = $related);
+		$relationship->product = $product;
+		$relationship->relatedProduct = $related;
 
 		return $relationship;
 	}
@@ -127,7 +127,7 @@ class ProductBundle extends ActiveRecordModel
 	  	$f->setLimit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-		$this->position = $position);
+		$this->position = $position;
 
 		return parent::insert();
 	}

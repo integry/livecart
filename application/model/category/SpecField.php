@@ -101,7 +101,7 @@ class SpecField extends EavFieldCommon
 	public static function getNewInstance(Category $category, $dataType = false, $type = false)
 	{
 		$specField = parent::getNewInstance(__CLASS__, $dataType, $type);
-		$specField->category = $category);
+		$specField->category = $category;
 
 		return $specField;
 	}

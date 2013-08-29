@@ -23,8 +23,8 @@ class DiscountConditionRecord extends ActiveRecordModel
 
 	public static function getNewInstance(DiscountCondition $condition, ActiveRecordModel $record)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->condition = $condition);
+		$instance = new __CLASS__();
+		$instance->condition = $condition;
 
 		$class = get_class($record);
 		$field = strtolower(substr($class, 0, 1)) . substr($class, 1);
@@ -33,7 +33,7 @@ class DiscountConditionRecord extends ActiveRecordModel
 			throw new ApplicationException($class . ' is not a valid instance for '  . __CLASS__);
 		}
 
-		$instance->$field = $record);
+		$instance->$field = $record;
 
 		return $instance;
 	}

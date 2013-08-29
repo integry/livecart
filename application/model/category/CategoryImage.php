@@ -19,8 +19,8 @@ class CategoryImage extends ObjectImage
 
 	public static function getNewInstance(Category $category)
 	{
-	  	$catImage = ActiveRecord::getNewInstance(__CLASS__);
-	  	$catImage->category = $category);
+	  	$catImage = new __CLASS__();
+	  	$catImage->category = $category;
 	  	return $catImage;
 	}
 

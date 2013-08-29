@@ -31,14 +31,14 @@ class ProductReview extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, User $user)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
+		$instance = new __CLASS__();
+		$instance->product = $product;
 
 		if ($user && $user->isAnonymous())
 		{
 			$user = null;
 		}
-		$instance->user = $user);
+		$instance->user = $user;
 
 		return $instance;
 	}

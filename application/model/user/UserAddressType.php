@@ -27,8 +27,8 @@ abstract class UserAddressType extends ActiveRecordModel
 	public static function getNewInstance($className, User $user, UserAddress $userAddress)
 	{
 		$instance = parent::getNewInstance($className);
-		$instance->user = $user);
-		$instance->userAddress = $userAddress);
+		$instance->user = $user;
+		$instance->userAddress = $userAddress;
 		return $instance;
 	}
 

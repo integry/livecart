@@ -60,9 +60,9 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	 */
 	public static function getNewInstance(Product $product, $type)
 	{
-		$group = parent::getNewInstance(__CLASS__);
-		$group->product = $product);
-		$group->type = $type);
+		$group = new __CLASS__();
+		$group->product = $product;
+		$group->type = $type;
 
 		return $group;
 	}

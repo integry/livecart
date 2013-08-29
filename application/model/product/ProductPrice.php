@@ -32,13 +32,13 @@ class ProductPrice extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
 	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->product = $product);
-		$instance->currency = $currency);
-		$instance->type = $type);
+		$instance = new __CLASS__();
+		$instance->product = $product;
+		$instance->currency = $currency;
+		$instance->type = $type;
 		if ($recurring != null)
 		{
-			$instance->recurring = $recurring);
+			$instance->recurring = $recurring;
 		}
 		return $instance;
 	}

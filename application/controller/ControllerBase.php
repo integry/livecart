@@ -103,7 +103,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		*/
 	}
 
-	public function getBlockResponseAction(&$block)
+	public function getBlockResponse(&$block)
 	{
 		if ('getGenericBlock' == $block['call'][1])
 		{
@@ -113,7 +113,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		return parent::getBlockResponse($block);
 	}
 
-	public function getGenericBlockAction()
+	public function getGenericBlock()
 	{
 		return new BlockResponse();
 	}
@@ -121,7 +121,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	/**
 	 * @return RolesParser
 	 */
-	public function getRolesAction()
+	public function getRoles()
 	{
 		return $this->roles;
 	}
@@ -139,17 +139,17 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		}
 	}
 
-	public function allowCacheAction()
+	public function allowCache()
 	{
 		$this->getCacheHandler()->enable();
 	}
 
-	public function setCacheAction(OutputCache $cache)
+	public function setCache(OutputCache $cache)
 	{
 		$this->cacheHandler = $cache;
 	}
 
-	public function getCacheHandlerAction()
+	public function getCacheHandler()
 	{
 		return $this->cacheHandler;
 	}
@@ -170,7 +170,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	 * @param string $key
 	 * @return string
 	 */
-	public function translateAction($key)
+	public function translate($key)
 	{
 		return $this->locale->translator()->translate($key);
 	}
@@ -181,7 +181,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	 * @see BaseController::translate
 	 * @return array
 	 */
-	public function translateArrayAction($array)
+	public function translateArray($array)
 	{
 		array_walk_recursive($array, array(&$this, 'translateByReference'));
 
@@ -194,12 +194,12 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	 * @param array $params
 	 * @return string
 	 */
-	public function makeTextAction($key, $params)
+	public function makeText($key, $params)
 	{
 		return $this->locale->translator()->makeText($key, $params);
 	}
 
-	public function getUserAction()
+	public function getUser()
 	{
 		if (empty($this->user))
 		{
@@ -210,17 +210,17 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		return $this->user;
 	}
 
-	public function setUserAction(User $user)
+	public function setUser(User $user)
 	{
 		$this->user = $user;
 	}
 
-	public function loadLanguageFileAction($langFile)
+	public function loadLanguageFile($langFile)
 	{
 		$this->application->loadLanguageFile($langFile);
 	}
 
-	public function getApplicationAction()
+	public function getApplication()
 	{
 		return $this->application;
 	}
@@ -250,7 +250,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->session->set('controllerMessage', $message);
 	}
 
-	public function getMessageAction()
+	public function getMessage()
 	{
 		$msg = $this->session->get('controllerMessage');
 		$this->setMessage('');
@@ -270,7 +270,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->setSessionData('errorMessage', $message);
 	}
 
-	public function getErrorMessageAction()
+	public function getErrorMessage()
 	{
 		$msg = $this->getSessionData('errorMessage');
 		$this->setErrorMessage('');
@@ -281,7 +281,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	 * 	Automatically preloads language files
 	 *
 	 */
-	public function getConfigFilesAction()
+	public function getConfigFiles()
 	{
 		$controllerRoot = $this->application->getConfigContainer()->getControllerDirectories();
 
@@ -322,22 +322,17 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		return $files;
 	}
 
-	public function invalidateCacheOnUpdateAction($class)
+	public function invalidateCacheOnUpdate($class)
 	{
 		//return $this->getCache()->invalidateCacheOnUpdate($class);
 	}
 
-	public function setCacheVarAction($param, $value)
+	public function setCacheVar($param, $value)
 	{
 		//return $this->getCache()->setCacheVar($param, $value);
 	}
 
-	public function setRequestVarAction($key)
-	{
-
-	}
-
-	public function __getAction($name)
+	public function __get($name)
 	{
 		switch ($name)
 	  	{
@@ -356,16 +351,17 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			break;
 
 			case 'session':
-								$this->session = new Session();
+				$this->session = new Session();
 				return $this->session;
 			break;
 
 			default:
+				return parent::__get($name);
 			break;
 		}
 	}
 
-	public function recheckAccessAction(LiveCart $application)
+	public function recheckAccess(LiveCart $application)
 	{
 		$this->checkAccess();
 	}
@@ -373,7 +369,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	/**
 	 *  Permanent redirect for URLs changed with category/product names
 	 */
-	public function redirect301Action($oldHandle, $newHandle)
+	public function redirect301($oldHandle, $newHandle)
 	{
 		$oldHandle = urlencode($oldHandle);
 		$newHandle = urlencode($newHandle);
@@ -408,11 +404,10 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 
-
-		$this->roles = new RolesParser($controllerPath, $cachePath);
+		$this->roles = new \role\RolesParser($controllerPath, $cachePath);
 		if($this->roles->wereExpired())
 		{
-						Role::addNewRolesNames($this->roles->getRolesNames());
+			\role\Role::addNewRolesNames($this->roles->getRolesNames());
 		}
 
 		$role = $this->roles->getRole($this->request->getActionName());
