@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Base controller for the whole application
  *
@@ -10,7 +9,7 @@
  * @package application.controller
  * @author Integry Systems
  */
-abstract class BaseController extends Controller implements LCiTranslator
+abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiTranslator
 {
 	/**
 	 * System user
@@ -335,10 +334,10 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		//return $this->getCache()->setCacheVar($param, $value);
 	}
-	
+
 	public function setRequestVarAction($key)
 	{
-		
+
 	}
 
 	public function __getAction($name)
