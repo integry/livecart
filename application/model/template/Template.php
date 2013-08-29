@@ -214,7 +214,7 @@ class Template extends CommonFile
 			return true;
 		}
 
-		$cacheDir = $this->config->getPath('cache/templates_c.customize');
+		$cacheDir = $this->config->getPath('cache/templates/customize');
 		if (is_dir($cacheDir))
 		{
 			foreach (new DirectoryIterator($cacheDir) as $file)

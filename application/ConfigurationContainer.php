@@ -106,7 +106,7 @@ class ConfigurationContainer
 			file_put_contents($dir . '/.htaccess', 'Deny from all');
 		}
 
-		foreach (array('cache/templates_c', 'cache/templates_c.customize') as $path)
+		foreach (array('cache/templates', 'cache/templates/customize') as $path)
 		{
 			$tplDir = $this->config->getPath($path);
 			mkdir($tplDir, 0777);

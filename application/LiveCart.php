@@ -155,7 +155,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 			ini_set('display_errors', 'On');
 		}
 
-		$compileDir = $this->isTemplateCustomizationMode() ? 'cache/templates_c.customize' : 'cache/templates_c';
+		$compileDir = $this->isTemplateCustomizationMode() ? 'cache/templates/customize' : 'cache/templates';
 		SmartyRenderer::setCompileDir($this->config->getPath($compileDir));
 
 		// mod_rewrite disabled?
