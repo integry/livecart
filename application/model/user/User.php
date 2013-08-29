@@ -377,7 +377,7 @@ class User extends ActiveRecordModel implements EavAble
 
 	public function loadRequestData(Request $request)
 	{
-		if (!$request->gget('password'))
+		if (!$request->get('password'))
 		{
 			$request->remove('password');
 		}

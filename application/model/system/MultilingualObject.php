@@ -79,7 +79,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 				}
 				if ($request->isValueSet($requestVarName))
 				{
-					$this->setValueByLang($fieldName, $langCode, $request->gget($requestVarName));
+					$this->setValueByLang($fieldName, $langCode, $request->get($requestVarName));
 				}
 			}
 		}

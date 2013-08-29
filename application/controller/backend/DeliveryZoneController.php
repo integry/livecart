@@ -94,7 +94,7 @@ class DeliveryZoneController extends StoreManagementController
 	public function loadStatesAction()
 	{
 		$zone = DeliveryZone::getInstanceByID($this->getId(), true);
-		$states = $this->getStates($zone, $this->request->gget('country'));
+		$states = $this->getStates($zone, $this->request->get('country'));
 
 		return new JSONResponse($states['all']);
 	}
@@ -128,7 +128,7 @@ class DeliveryZoneController extends StoreManagementController
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneState::removeByZone($zone);
 
-		foreach((array)$this->request->gget('active') as $activeStateID)
+		foreach((array)$this->request->get('active') as $activeStateID)
 		{
 			$state = State::getInstanceByID((int)$activeStateID);
 			$deliveryZoneState = DeliveryZoneState::getNewInstance($zone, $state);
@@ -146,7 +146,7 @@ class DeliveryZoneController extends StoreManagementController
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
 		DeliveryZoneCountry::removeByZone($zone);
 
-		foreach((array)$this->request->gget('active') as $countryCode)
+		foreach((array)$this->request->get('active') as $countryCode)
 		{
 			$deliveryZoneState = DeliveryZoneCountry::getNewInstance($zone, $countryCode);
 			$deliveryZoneState->save();
@@ -173,12 +173,12 @@ class DeliveryZoneController extends StoreManagementController
 	public function saveAction()
 	{
 		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
-		$zone->name->set($this->request->gget('name'));
-		$zone->type->set((int)$this->request->gget('type'));
+		$zone->name->set($this->request->get('name'));
+		$zone->type->set((int)$this->request->get('type'));
 
-		$zone->isEnabled->set((int)$this->request->gget('isEnabled'));
-		$zone->isFreeShipping->set((int)$this->request->gget('isFreeShipping'));
-		$zone->isRealTimeDisabled->set((int)$this->request->gget('isRealTimeDisabled'));
+		$zone->isEnabled->set((int)$this->request->get('isEnabled'));
+		$zone->isFreeShipping->set((int)$this->request->get('isFreeShipping'));
+		$zone->isRealTimeDisabled->set((int)$this->request->get('isRealTimeDisabled'));
 
 		$zone->save();
 
@@ -192,7 +192,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 		if(($errors = $this->isValidMask()) === true)
 		{
-			$maskValue = $this->request->gget('mask');
+			$maskValue = $this->request->get('mask');
 			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneCityMask::getInstanceByID($id);
@@ -200,7 +200,7 @@ class DeliveryZoneController extends StoreManagementController
 			}
 			else
 			{
-				$zone = DeliveryZone::getInstanceByID((int)$this->request->gget('zoneID'));
+				$zone = DeliveryZone::getInstanceByID((int)$this->request->get('zoneID'));
 				$mask = DeliveryZoneCityMask::getNewInstance($zone, $maskValue);
 			}
 
@@ -241,7 +241,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
    		if(($errors = $this->isValidMask()) === true)
 		{
-			$maskValue = $this->request->gget('mask');
+			$maskValue = $this->request->get('mask');
 			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneZipMask::getInstanceByID($id);
@@ -249,7 +249,7 @@ class DeliveryZoneController extends StoreManagementController
 			}
 			else
 			{
-				$zone = DeliveryZone::getInstanceByID((int)$this->request->gget('zoneID'));
+				$zone = DeliveryZone::getInstanceByID((int)$this->request->get('zoneID'));
 				$mask = DeliveryZoneZipMask::getNewInstance($zone, $maskValue);
 			}
 
@@ -280,7 +280,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
    		if(($errors = $this->isValidMask()) === true)
 		{
-			$maskValue = $this->request->gget('mask');
+			$maskValue = $this->request->get('mask');
 			if($id = (int)$this->getId())
 			{
 				$mask = DeliveryZoneAddressMask::getInstanceByID($id);
@@ -288,7 +288,7 @@ class DeliveryZoneController extends StoreManagementController
 			}
 			else
 			{
-				$zone = DeliveryZone::getInstanceByID((int)$this->request->gget('zoneID'));
+				$zone = DeliveryZone::getInstanceByID((int)$this->request->get('zoneID'));
 				$mask = DeliveryZoneAddressMask::getNewInstance($zone, $maskValue);
 			}
 
@@ -307,7 +307,7 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function deleteAddressMaskAction()
 	{
-		DeliveryZoneAddressMask::getInstanceByID((int)$this->request->gget('id'))->delete();
+		DeliveryZoneAddressMask::getInstanceByID((int)$this->request->get('id'))->delete();
 
 		return new JSONResponse(false, 'success');
 	}
@@ -316,7 +316,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 		$address = UserAddress::getNewInstance();
 		$address->loadRequestData($this->request);
-		$zone = DeliveryZone::getZoneByAddress($address, $this->request->gget('type'));
+		$zone = DeliveryZone::getZoneByAddress($address, $this->request->get('type'));
 
 		return new JSONResponse($zone->toArray());
 	}
@@ -334,7 +334,7 @@ class DeliveryZoneController extends StoreManagementController
 	}
 
 	private function isValidMask() {
-		if($this->request->gget('mask'))
+		if($this->request->get('mask'))
 		{
 			return true;
 		}
@@ -356,7 +356,7 @@ class DeliveryZoneController extends StoreManagementController
 	private function getId()
 	{
 		$request = $this->getRequest();
-		$id = $request->gget('id');
+		$id = $request->get('id');
 		if(strpos($id, '_') !== false)
 		{
 			$chunks = explode('_', $id);

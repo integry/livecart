@@ -11,7 +11,7 @@ class UserController extends StoreManagementController
 {
 	public function infoAction()
 	{
-		$user = User::getInstanceById((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
+		$user = User::getInstanceById((int)$this->request->get('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
 
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
 		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
@@ -45,7 +45,7 @@ class UserController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$user = User::getInstanceByID((int)$this->request->gget('id'), true);
+		$user = User::getInstanceByID((int)$this->request->get('id'), true);
 
 		$user->loadAddresses();
 
@@ -167,7 +167,7 @@ class UserController extends StoreManagementController
 
 		$filter = new ARSelectFilter();
 
-		$id = (int)$this->request->gget('id');
+		$id = (int)$this->request->get('id');
 		if($id > 0)
 		{
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('User', 'userGroupID'), $id));
@@ -189,7 +189,7 @@ class UserController extends StoreManagementController
 	public function isMassCancelledAction()
 	{
 
-		return new JSONResponse(array('isCancelled' => UserMassActionProcessor::isCancelled($this->request->gget('pid'))));
+		return new JSONResponse(array('isCancelled' => UserMassActionProcessor::isCancelled($this->request->get('pid'))));
 	}
 
 	/**
@@ -198,7 +198,7 @@ class UserController extends StoreManagementController
 	 */
 	public function statesAction()
 	{
-		$states = State::getStatesByCountry($this->request->gget('country'));
+		$states = State::getStatesByCountry($this->request->get('country'));
 		return new JSONResponse($states);
 	}
 
@@ -221,8 +221,8 @@ class UserController extends StoreManagementController
    		$validator = self::createUserFormValidator($this, $user);
 		if ($validator->isValid())
 		{
-			$email = $this->request->gget('email');
-			$password = $this->request->gget('password');
+			$email = $this->request->get('email');
+			$password = $this->request->get('password');
 
 			if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) ||
 			   (!$user && User::getInstanceByEmail($email)))
@@ -230,7 +230,7 @@ class UserController extends StoreManagementController
 				return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
 			}
 
-			if($groupID = (int)$this->request->gget('UserGroup'))
+			if($groupID = (int)$this->request->get('UserGroup'))
 			{
 				$group = UserGroup::getInstanceByID((int)$groupID);
 			}
@@ -276,14 +276,14 @@ class UserController extends StoreManagementController
 			$address->loadRequestData($this->request, $prefix . '_');
 
 			// get address state
-			if ($stateID = $this->request->gget($prefix . '_stateID'))
+			if ($stateID = $this->request->get($prefix . '_stateID'))
 			{
 				$address->state->set(ActiveRecordModel::getInstanceByID('State', $stateID, ActiveRecordModel::LOAD_DATA));
 				$address->stateName->setNull();
 			}
 			else
 			{
-				$address->stateName->set($this->request->gget($prefix . '_stateName'));
+				$address->stateName->set($this->request->get($prefix . '_stateName'));
 				$address->state->setNull();
 			}
 
@@ -308,7 +308,7 @@ class UserController extends StoreManagementController
 			}
 		}
 
-		if($this->request->gget('sameAddresses') && $user->defaultBillingAddress->get())
+		if($this->request->get('sameAddresses') && $user->defaultBillingAddress->get())
 		{
 			$shippingAddress = ShippingAddress::getNewInstance($user, clone $user->defaultBillingAddress->get()->userAddress->get());
 			$shippingAddress->save();

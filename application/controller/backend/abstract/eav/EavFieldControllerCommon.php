@@ -29,7 +29,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 */
 	public function indexAction()
 	{
-		$categoryID = $this->request->gget('id');
+		$categoryID = $this->request->get('id');
 
 		$defaultSpecFieldValues = array
 		(
@@ -61,7 +61,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 */
 	public function itemAction()
 	{
-		$specFieldList = $this->getFieldInstanceByID($this->request->gget('id'), true, true)->toArray(false, false);
+		$specFieldList = $this->getFieldInstanceByID($this->request->get('id'), true, true)->toArray(false, false);
 
 		$valueClass = call_user_func(array(call_user_func(array($this->getFieldClass(), 'getSelectValueClass')), 'getValueClass'));
 		$values = call_user_func_array(array($valueClass, 'getRecordSetArray'), array($specFieldList['ID']));
@@ -80,7 +80,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$id = $this->request->gget("id", false);
+		$id = $this->request->get("id", null, false);
 		if(ActiveRecordModel::objectExists($this->getFieldClass(), $id))
 		{
 			ActiveRecordModel::deleteById($this->getFieldClass(), $id);
@@ -94,22 +94,22 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 
 	public function createAction()
 	{
-		$specField = call_user_func_array(array($this->getFieldClass(), 'getNewInstance'), array($this->getParent($this->request->gget('categoryID'))));
+		$specField = call_user_func_array(array($this->getFieldClass(), 'getNewInstance'), array($this->getParent($this->request->get('categoryID'))));
 
 		return $this->save($specField);
 	}
 
 	public function updateAction()
 	{
-		if(ActiveRecordModel::objectExists($this->getFieldClass(), $this->request->gget('ID')))
+		if(ActiveRecordModel::objectExists($this->getFieldClass(), $this->request->get('ID')))
 		{
-			$specField = $this->getFieldInstanceByID($this->request->gget('ID'));
+			$specField = $this->getFieldInstanceByID($this->request->get('ID'));
 		}
 		else
 		{
 			return new JSONResponse(array(
 					'errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')),
-					'ID' => (int)$this->request->gget('ID')
+					'ID' => (int)$this->request->get('ID')
 				)/*,
 				'failure',
 				$this->translate('_could_not_save_attribute') */
@@ -127,10 +127,10 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		$target = $this->request->gget('target');
+		$target = $this->request->get('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.
 
-		foreach($this->request->gget($target, array()) as $position => $key)
+		foreach($this->request->get($target, null, array()) as $position => $key)
 		{
 			if(!empty($key))
 			{
@@ -208,20 +208,20 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 
 		if(!$errors)
 		{
-			$type = $this->request->gget('advancedText') ? EavFieldCommon::TYPE_TEXT_ADVANCED : (int)$this->request->gget('type');
+			$type = $this->request->get('advancedText') ? EavFieldCommon::TYPE_TEXT_ADVANCED : (int)$this->request->get('type');
 			$dataType = EavFieldCommon::getDataTypeFromType($type);
-			$categoryID = $this->request->gget('categoryID');
+			$categoryID = $this->request->get('categoryID');
 
-			$values = $this->request->gget('values');
+			$values = $this->request->get('values');
 			$images = !empty($_FILES['images']) ? $_FILES['images'] : array();
-			$delImg = $this->request->gget('delete');
+			$delImg = $this->request->get('delete');
 
 			$specField->loadRequestData($this->request);
 
 			foreach ($specField->getSchema()->getFieldsByType('ARBool') as $field)
 			{
 				$name = $field->getName();
-				$specField->setFieldValue($name, $this->request->gget($name, 0));
+				$specField->setFieldValue($name, $this->request->get($name, null, 0));
 			}
 
 			$specField->setFieldValue('dataType', $dataType);

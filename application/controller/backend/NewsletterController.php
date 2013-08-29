@@ -45,7 +45,7 @@ class NewsletterController extends ActiveGridController
 
 	public function editAction()
 	{
-		$newsletter = ActiveRecordModel::getInstanceById('NewsletterMessage', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA);
+		$newsletter = ActiveRecordModel::getInstanceById('NewsletterMessage', $this->request->get('id'), ActiveRecordModel::LOAD_DATA);
 
 		$form = $this->getForm();
 		$form->setData($newsletter->toArray());
@@ -94,7 +94,7 @@ class NewsletterController extends ActiveGridController
 			return new JSONResponse(array('errors' => $validator->getErrorList(), 'failure'));
 		}
 
-		if ($id = $this->request->gget('id'))
+		if ($id = $this->request->get('id'))
 		{
 			$newsletter = ActiveRecordModel::getInstanceByID('NewsletterMessage', $id);
 		}
@@ -103,7 +103,7 @@ class NewsletterController extends ActiveGridController
 			$newsletter = ActiveRecordModel::getNewInstance('NewsletterMessage');
 		}
 		
-		$format = $this->request->gget('newsletter_'.$id.'_format');
+		$format = $this->request->get('newsletter_'.$id.'_format');
 		if($format == self::FORMAT_TEXT)
 		{
 			$this->request->set('html', '');
@@ -116,7 +116,7 @@ class NewsletterController extends ActiveGridController
 		$newsletter->loadRequestData($this->request);
 		$newsletter->save();
 
-		if ($this->request->gget('sendFlag'))
+		if ($this->request->get('sendFlag'))
 		{
 			return $this->send($newsletter);
 		}

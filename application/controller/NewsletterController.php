@@ -5,7 +5,7 @@ class NewsletterController extends FrontendController
 {
 	public function unsubscribeAction()
 	{
-		$email = $this->request->gget('email');
+		$email = $this->request->get('email');
 
 		// delete from subscriber table
 		$f = new ARDeleteFilter(new EqualsCond(new ARFieldHandle('NewsletterSubscriber', 'email'), $email));
@@ -24,7 +24,7 @@ class NewsletterController extends FrontendController
 
 	public function subscribeAction()
 	{
-		$email = $this->request->gget('email');
+		$email = $this->request->get('email');
 
 		if (!$this->user->isAnonymous() || User::getInstanceByEmail($email))
 		{
@@ -62,8 +62,8 @@ class NewsletterController extends FrontendController
 
 	public function confirmAction()
 	{
-		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->gget('email'));
-		if ($instance && ($instance->confirmationCode->get() == $this->request->gget('code')))
+		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->get('email'));
+		if ($instance && ($instance->confirmationCode->get() == $this->request->get('code')))
 		{
 			$instance->isEnabled->set(true);
 			$instance->save();

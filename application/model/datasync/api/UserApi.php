@@ -65,7 +65,7 @@ class UserApi extends ModelApi
 		//
 		$request = $this->application->getRequest();
 		$id = $this->getRequestID(true);
-		if($id != '' && $request->gget('email') != '')
+		if($id != '' && $request->get('email') != '')
 		{
 			$users = ActiveRecordModel::getRecordSetArray('User',
 				select(eq(f('User.ID'), $id))

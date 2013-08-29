@@ -114,14 +114,14 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	{
 		parent::loadRequestData($request, $prefix);
 
-		if ($request->gget($prefix . 'stateID'))
+		if ($request->get($prefix . 'stateID'))
 		{
-			$this->state = State::getInstanceByID((int)$request->gget($prefix . 'stateID'), true));
+			$this->state = State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
 			$this->stateName = null);
 		}
 		else if ($request->isValueSet($prefix . 'stateName'))
 		{
-			$this->stateName = $request->gget($prefix . 'stateName'));
+			$this->stateName = $request->get($prefix . 'stateName'));
 			$this->state = null);
 		}
 	}

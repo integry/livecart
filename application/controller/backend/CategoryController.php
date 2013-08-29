@@ -57,7 +57,7 @@ class CategoryController extends StoreManagementController
 
 	public function categoryAction()
 	{
-		$category = Category::getInstanceByID($this->request->gget('id'), true);
+		$category = Category::getInstanceByID($this->request->get('id'), true);
 		$category->loadSpecification();
 		$arr = $category->toArray();
 
@@ -137,8 +137,8 @@ class CategoryController extends StoreManagementController
 	{
 		try
 		{
-			$categoryID = $this->request->gget("id");
-			$confirmed = $this->request->gget("confirmed");
+			$categoryID = $this->request->get("id");
+			$confirmed = $this->request->get("confirmed");
 			$category = Category::getInstanceByID($categoryID, true);
 
 			if($category->getActiveProductCount())
@@ -217,9 +217,9 @@ class CategoryController extends StoreManagementController
 	 */
 	public function moveAction()
 	{
-		$targetNode = Category::getInstanceByID((int)$this->request->gget("id"));
-		$parentNode = Category::getInstanceByID((int)$this->request->gget("parent"));
-		$next = $this->request->gget("next") ? Category::getInstanceByID((int)$this->request->gget("next")) : null;
+		$targetNode = Category::getInstanceByID((int)$this->request->get("id"));
+		$parentNode = Category::getInstanceByID((int)$this->request->get("parent"));
+		$next = $this->request->get("next") ? Category::getInstanceByID((int)$this->request->get("next")) : null;
 
 		try
 		{
@@ -237,7 +237,7 @@ class CategoryController extends StoreManagementController
 
 	public function countTabsItemsAction()
 	{
-		return new JSONResponse($this->getTabCounts((int)$this->request->gget('id')));
+		return new JSONResponse($this->getTabCounts((int)$this->request->get('id')));
 	}
 
 	private function getTabCounts($categoryId)
@@ -263,7 +263,7 @@ class CategoryController extends StoreManagementController
 	public function branchAction()
 	{
 		$xmlResponse = new XMLResponse();
-		$rootID = (int)$this->request->gget("id", 1);
+		$rootID = (int)$this->request->get("id", null, 1);
 		$category = Category::getInstanceByID($rootID, true);
 
 		return new JSONResponse($this->getCategoryChildrenJson($category));
@@ -330,12 +330,12 @@ class CategoryController extends StoreManagementController
 	{
 		$root = Category::getRootNode()->toArray();
 
-		if ($this->request->gget("id") == $root['ID'])
+		if ($this->request->get("id") == $root['ID'])
 		{
 			return;
 		}
 
-		$root['children'] = array(Category::getInstanceByID((int)$this->request->gget("id"), true)->getPathBranchesArray());
+		$root['children'] = array(Category::getInstanceByID((int)$this->request->get("id"), true)->getPathBranchesArray());
 
 		return new JSONResponse($this->getRecursiveJson($root));
 	}

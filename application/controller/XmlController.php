@@ -31,10 +31,10 @@ class XmlController extends FrontendController
 
 	public function exportAction()
 	{
-		$module = $this->request->gget('module');
+		$module = $this->request->get('module');
 		$enabledFeeds = $this->config->get('ENABLED_FEEDS');
 
-		if (!isset($enabledFeeds[$module]) || ($this->request->gget('key') != $this->config->get('FEED_KEY')))
+		if (!isset($enabledFeeds[$module]) || ($this->request->get('key') != $this->config->get('FEED_KEY')))
 		{
 			return;
 		}

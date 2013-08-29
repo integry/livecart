@@ -24,11 +24,11 @@ class ProductQuickImageController extends ObjectImageController
 	{
 		$result = parent::upload();
 		$request = $this->getRequest();
-		if($request->gget('setAsMainImage'))
+		if($request->get('setAsMainImage'))
 		{
 			$data = json_decode($result->get('result'));
 			$imageID = $data->ID;
-			$filter = select(eq(f('ProductImage.productID'), $request->gget('ownerId')));
+			$filter = select(eq(f('ProductImage.productID'), $request->get('ownerId')));
 			$filter->setOrder(f('ProductImage.position'));
 			$r = ActiveRecordModel::getRecordSetArray('ProductImage', $filter, true);
 			$order = array($imageID);

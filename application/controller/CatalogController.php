@@ -27,13 +27,13 @@ abstract class CatalogController extends FrontendController
 		{
 			$contextFilters[] = filterHandle($filter);
 		}
-		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->request->getActionName());
+		$context = array('filters' => implode(',', $contextFilters), 'originalAction' => $this->router->getActionName());
 
 		foreach (array('category', 'quickShopSequence', 'includeSub') as $key)
 		{
-			if ($this->request->gget($key))
+			if ($this->request->get($key))
 			{
-				$context[$key] = $this->request->gget($key);
+				$context[$key] = $this->request->get($key);
 			}
 		}
 
@@ -45,7 +45,7 @@ abstract class CatalogController extends FrontendController
 		$selectFilter = new ARSelectFilter();
 		$this->application->processInstancePlugins('productFilter', $selectFilter);
 
-		$order = $this->request->gget('sort');
+		$order = $this->request->get('sort');
 		$defOrder = strtolower($this->config->get('SORT_ORDER'));
 		if (!$order)
 		{
@@ -74,7 +74,7 @@ abstract class CatalogController extends FrontendController
 			}
 		}
 
-		if (($this->getCategory()->isRoot() && $this->filters) || $this->filters || $this->request->gget('includeSub'))
+		if (($this->getCategory()->isRoot() && $this->filters) || $this->filters || $this->request->get('includeSub'))
 		{
 			$productFilter->includeSubcategories();
 		}
@@ -100,7 +100,7 @@ abstract class CatalogController extends FrontendController
 		if($controller->config->get('FILTER_STYLE') == 'FILTER_STYLE_CHECKBOXES')
 		{
 			$delimiter = ',';
-			$filters = explode($delimiter, $request->gget('filters'));
+			$filters = explode($delimiter, $request->get('filters'));
 			foreach($request->getRawRequest() as $key=>$value)
 			{
 				if(strtolower($value) == 'on') // could be a filter
@@ -111,7 +111,7 @@ abstract class CatalogController extends FrontendController
 			$request = 'filters', implode($delimiter, array_filter($filters)));
 		}
 
-		if ($request->gget('filters'))
+		if ($request->get('filters'))
 		{
 			$filterGroups = $this->getCategory()->getFilterGroupSet();
 
@@ -121,7 +121,7 @@ abstract class CatalogController extends FrontendController
 			$priceFilterIds = array();
 			$searchFilters = array();
 
-			$filters = explode(',', $request->gget('filters'));
+			$filters = explode(',', $request->get('filters'));
 
 			foreach ($filters as $filter)
 			{

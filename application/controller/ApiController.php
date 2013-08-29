@@ -106,7 +106,7 @@ class ApiController extends BaseController
 	public function docviewAction()
 	{
 		$docinfo = $this->getDocInfo();
-		$className = $this->request->gget('class');
+		$className = $this->request->get('class');
 
 		if (!empty($docinfo[$className]))
 		{
@@ -127,7 +127,7 @@ class ApiController extends BaseController
 		$response = $this->docview();
 
 		$info = $response->get('info');
-		$action = $this->request->gget('actn');
+		$action = $this->request->get('actn');
 
 		$xmlSamples = $this->getXMLSamples();
 		if (isset($xmlSamples[$info['path']][$action]))
@@ -204,7 +204,7 @@ class ApiController extends BaseController
 	{
 		$this->loadLanguageFile('backend/Settings/API');
 
-		$class = $this->request->gget('class');
+		$class = $this->request->get('class');
 		$this->application->loadPluginClass('application/model/datasync/api/auth', $class);
 
 		$reflection = new ReflectionClass($class);

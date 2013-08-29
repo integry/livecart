@@ -12,7 +12,7 @@ class CategoryRelationshipController extends StoreManagementController
 {
 	public function indexAction()
 	{
-		$category = Category::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA);
+		$category = Category::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA);
 
 		$f = select();
 		$f->setOrder(f('CategoryRelationship.position'));
@@ -33,8 +33,8 @@ class CategoryRelationshipController extends StoreManagementController
 
 	public function addCategoryAction()
 	{
-		$category = Category::getInstanceByID($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('Category'));
-		$relatedCategory = Category::getInstanceByID($this->request->gget('categoryId'), ActiveRecord::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
+		$relatedCategory = Category::getInstanceByID($this->request->get('categoryId'), ActiveRecord::LOAD_DATA);
 
 		// check if the category is not assigned to this category already
 		$f = select(eq('CategoryRelationship.relatedCategoryID', $relatedCategory->getID()));
@@ -52,7 +52,7 @@ class CategoryRelationshipController extends StoreManagementController
 
 	public function saveOrderAction()
 	{
-	  	$order = $this->request->gget('relatedCategories_' . $this->request->gget('id'));
+	  	$order = $this->request->get('relatedCategories_' . $this->request->get('id'));
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
@@ -66,7 +66,7 @@ class CategoryRelationshipController extends StoreManagementController
 
 	public function deleteAction()
 	{
-		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->gget('categoryId'));
+		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->get('categoryId'));
 		$relation->delete();
 
 		return new JSONResponse(array('data' => $relation->toFlatArray()));

@@ -100,10 +100,10 @@ class SettingsController extends StoreManagementController
 			{
 				if (($this->config->isMultiLingual($key) && 'string' == $value['type']) || 'longtext' == $value['type'])
 				{
-					$this->config->setValueByLang($key, $defLang, $this->request->gget($key));
+					$this->config->setValueByLang($key, $defLang, $this->request->get($key));
 					foreach ($languages as $lang)
 					{
-						$this->config->setValueByLang($key, $lang, $this->request->gget($key . '_' . $lang));
+						$this->config->setValueByLang($key, $lang, $this->request->get($key . '_' . $lang));
 					}
 				}
 				else if ('image' == $value['type'])
@@ -117,11 +117,11 @@ class SettingsController extends StoreManagementController
 				}
 				else if ('bool' == $value['type'])
 				{
-					$this->config->set($key, $this->request->gget($key, 0));
+					$this->config->set($key, $this->request->get($key, null, 0));
 				}
 				else
 				{
-					$this->config->set($key, $this->request->gget($key));
+					$this->config->set($key, $this->request->get($key));
 				}
 
 				$data[$key] = $this->config->get($key);
@@ -132,7 +132,7 @@ class SettingsController extends StoreManagementController
 
 						SearchableConfigurationIndexing::buildIndexIfNeeded();
 //			$sc = new SearchableConfigurationIndexing($this->config, $this->application);
-//			$sc->buildIndex($this->request->gget('id'));
+//			$sc->buildIndex($this->request->get('id'));
 
 			return new JSONResponse($data, 'success', $this->translate('_save_conf'));
 		}

@@ -25,7 +25,7 @@ class ProductRelationshipGroupController extends ProductListControllerCommon
 	 */
 	public function createAction()
 	{
-		$group = ProductRelationshipGroup::getNewInstance($this->getOwnerInstanceByID($this->request->gget('ownerID')), $this->request->gget('type'));
+		$group = ProductRelationshipGroup::getNewInstance($this->getOwnerInstanceByID($this->request->get('ownerID')), $this->request->get('type'));
 		return $this->save($group);
 	}
 

@@ -63,7 +63,7 @@ class CategoryApi extends ModelApi
 		$request = $this->application->getRequest();
 		$parser->loadDataInRequest($request);
 
-		$parentId = $request->gget(Category::PARENT_NODE_FIELD_NAME);
+		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
 		$parentCategory = $parentId > 0
 			? $this->_getCategoryById($parentId, true)
 			: $this->root;
@@ -79,7 +79,7 @@ class CategoryApi extends ModelApi
 		$parser = $this->getParser();
 		$request = $this->application->getRequest();
 		$parser->loadDataInRequest($request);
-		$category = $this->_getCategoryById($request->gget('ID'));
+		$category = $this->_getCategoryById($request->get('ID'));
 		$category->loadRequestData($request);
 		$this->_attachCategoryToParentNode($category)->save();
 
@@ -102,7 +102,7 @@ class CategoryApi extends ModelApi
 		$apiFieldNames = $parser->getApiFieldNames();
 		$parser->loadDataInRequest($request);
 		$f = new ARSelectFilter();
-		$id = $request->gget('ID');
+		$id = $request->get('ID');
 		if(intval($id) > 0) // get action
 		{
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'ID'), $id));
@@ -133,7 +133,7 @@ class CategoryApi extends ModelApi
 	private function _attachCategoryToParentNode($category)
 	{
 		$request =  $this->application->getRequest();
-		$parentId = $request->gget(Category::PARENT_NODE_FIELD_NAME);
+		$parentId = $request->get(Category::PARENT_NODE_FIELD_NAME);
 		$id = $category->getID();
 		if(intval($parentId) > 0) {
 			$parentCategory = $this->_getCategoryById($parentId, /* don't throw exception, i promise, i will not change root node, honestly! */ true);

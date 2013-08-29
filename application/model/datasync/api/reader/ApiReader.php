@@ -368,7 +368,7 @@ abstract class ApiReader implements Iterator
 
 	public function getAuthCredentials(Request $request)
 	{
-		$xml = $request->gget(ApiReader::API_PARSER_DATA);
+		$xml = $request->get(ApiReader::API_PARSER_DATA);
 		if($xml != null)
 		{
 			$auth = array_shift($xml->xpath($this->getXMLPath() . '/auth'));

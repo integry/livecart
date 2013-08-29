@@ -37,7 +37,7 @@ class TaxController extends StoreManagementController
 
 	public function editAction()
 	{
-		$tax = Tax::getInstanceByID((int)$this->request->gget('id'), true);
+		$tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
 		$form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
 		$response = new ActionResponse();
@@ -51,7 +51,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$service = Tax::getInstanceByID((int)$this->request->gget('id'));
+		$service = Tax::getInstanceByID((int)$this->request->get('id'));
 		$service->delete();
 
 		return new JSONResponse(false, 'success');
@@ -63,7 +63,7 @@ class TaxController extends StoreManagementController
 	public function updateAction()
 	{
 		$request = $this->getRequest();
-		$tax = Tax::getInstanceByID((int)$request->gget('id'));
+		$tax = Tax::getInstanceByID((int)$request->get('id'));
 		return $this->saveTax($tax);
 	}
 
@@ -72,7 +72,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function createAction()
 	{
-		$tax = Tax::getNewInstance($this->request->gget('name'));
+		$tax = Tax::getNewInstance($this->request->get('name'));
 		$tax->position->set(1000);
 
 		return $this->saveTax($tax);
@@ -135,7 +135,7 @@ class TaxController extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 		   $tax = Tax::getInstanceByID((int)$key);
 		   $tax->position->set((int)$position);
@@ -223,7 +223,7 @@ class TaxController extends StoreManagementController
 
 	private function saveRate(DeliveryZone $zone, Tax $tax, TaxClass $class = null)
 	{
-		$value = $this->request->gget($this->getFieldName($zone, $class));
+		$value = $this->request->get($this->getFieldName($zone, null, $class));
 		if (!is_null($value) && ($value !== ''))
 		{
 			$taxRate = TaxRate::getNewInstance($zone, $tax, $value);

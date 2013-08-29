@@ -30,7 +30,7 @@ abstract class ControllerPlugin
 		$this->application = $controller->getApplication();
 		$this->config = $this->application->getConfig();
 		$this->controllerName = $this->request->getControllerName();
-		$this->actionName = $this->request->getActionName();
+		$this->actionName = $this->router->getActionName();
 	}
 
 	public function getResponse()

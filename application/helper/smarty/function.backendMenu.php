@@ -16,8 +16,8 @@ function smarty_function_backendMenu($params, Smarty_Internal_Template $smarty)
 	$smarty = $smarty->smarty;
 	$locale = $smarty->getApplication()->getLocale();
 	$request = $smarty->getApplication()->getRequest();
-	$controller = $request->gget('controller');
-	$action = $request->gget('action');
+	$controller = $request->get('controller');
+	$action = $request->get('action');
 
 	// load language file for menu
 	$locale->translationManager()->loadFile('backend/menu');

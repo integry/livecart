@@ -16,7 +16,7 @@ abstract class ObjectImageController extends StoreManagementController
 
 	public function indexAction()
 	{
-		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->gget('id'));
+		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
 		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
@@ -33,7 +33,7 @@ abstract class ObjectImageController extends StoreManagementController
 
 	public function uploadAction()
 	{
-		$ownerId = $this->request->gget('ownerId');
+		$ownerId = $this->request->get('ownerId');
 
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 
@@ -88,7 +88,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$image = null;
 	  	try
 		{
-			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->gget('imageId'), true);
+			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->get('imageId'), true);
 
 			$multilingualFields = array("title");
 			$image->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
@@ -136,8 +136,8 @@ abstract class ObjectImageController extends StoreManagementController
 		}
 
 		$this->setLayout('iframeJs');
-		$response->set('ownerId', $this->request->gget('ownerId'));
-		$response->set('imageId', $this->request->gget('imageId'));
+		$response->set('ownerId', $this->request->get('ownerId'));
+		$response->set('imageId', $this->request->get('imageId'));
 	  	$response->set('result', @json_encode($result));
 		return $response;
 	}
@@ -150,7 +150,7 @@ abstract class ObjectImageController extends StoreManagementController
 	{
 		try
 		{
-			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->gget('id')));
+			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->get('id')));
 		  	return true;
 		}
 		catch (ARNotFoundException $exc)
@@ -165,11 +165,11 @@ abstract class ObjectImageController extends StoreManagementController
 	 */
 	public function saveOrderAction($order=null)
 	{
-		$ownerId = $this->request->gget('ownerId');
+		$ownerId = $this->request->get('ownerId');
 		if($order === null)
 		{
-			$varName = array_shift(explode('_', $this->request->gget('draggedID')));
-			$order = array_filter($this->request->gget($varName . '_' . $ownerId), array($this, 'filterOrder'));
+			$varName = array_shift(explode('_', $this->request->get('draggedID')));
+			$order = array_filter($this->request->get($varName . '_' . $ownerId), array($this, 'filterOrder'));
 			$order = array_values($order);
 		}
 		foreach ($order as $key => $value)
@@ -189,7 +189,7 @@ abstract class ObjectImageController extends StoreManagementController
 		}
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->gget('draggedId'));
+	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;
 	}
 

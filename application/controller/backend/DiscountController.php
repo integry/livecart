@@ -114,7 +114,7 @@ class DiscountController extends ActiveGridController
 
 	public function editAction()
 	{
-		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
+		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
 		$condition->loadAll();
 
 		$response = new ActionResponse('condition', $condition->toArray());
@@ -174,7 +174,7 @@ class DiscountController extends ActiveGridController
 
 		if ($validator->isValid())
 		{
-			$instance = ($id = $this->request->gget('id')) ? ActiveRecordModel::getInstanceByID('DiscountCondition', $id, ActiveRecordModel::LOAD_REFERENCES) : DiscountCondition::getNewInstance();
+			$instance = ($id = $this->request->get('id')) ? ActiveRecordModel::getInstanceByID('DiscountCondition', $id, ActiveRecordModel::LOAD_REFERENCES) : DiscountCondition::getNewInstance();
 			$instance->loadRequestData($this->request);
 			$instance->conditionClass->setNull();
 			$instance->save();
@@ -189,7 +189,7 @@ class DiscountController extends ActiveGridController
 
 	public function addConditionAction()
 	{
-		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
+		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$child = DiscountCondition::getNewInstance($parent);
 		$child->isEnabled->set(true);
 		$child->save();
@@ -199,7 +199,7 @@ class DiscountController extends ActiveGridController
 
 	public function deleteConditionAction()
 	{
-		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$condition->delete();
 
 		return new JSONResponse(true);
@@ -207,32 +207,32 @@ class DiscountController extends ActiveGridController
 
 	public function updateConditionFieldAction()
 	{
-		list($fieldName, $id) = explode('_', $this->request->gget('field'));
+		list($fieldName, $id) = explode('_', $this->request->get('field'));
 
-		$field = 'comparisonValue' == $fieldName ? ($this->request->gget('type') == 'RuleConditionOrderItemCount' ? 'count' : 'subTotal') : $fieldName;
+		$field = 'comparisonValue' == $fieldName ? ($this->request->get('type') == 'RuleConditionOrderItemCount' ? 'count' : 'subTotal') : $fieldName;
 
 		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $id, DiscountCondition::LOAD_DATA);
 
 		if ('isAllSubconditions' != $fieldName)
 		{
-			$condition->conditionClass->set($this->request->gget('type'));
+			$condition->conditionClass->set($this->request->get('type'));
 		}
 
 		$condition->serializedCondition->setNull();
 
-		if ($this->request->gget('type') == 'RuleConditionContainsProduct' && 'comparisonValue' == $fieldName)
+		if ($this->request->get('type') == 'RuleConditionContainsProduct' && 'comparisonValue' == $fieldName)
 		{
-			$field = $this->request->gget('productField');
+			$field = $this->request->get('productField');
 		}
 
 		if (('count' == $field) || ('subTotal' == $field))
 		{
-			$condition->comparisonType->set($this->request->gget('comparisonType'));
+			$condition->comparisonType->set($this->request->get('comparisonType'));
 			$condition->count->set(null);
 			$condition->subTotal->set(null);
 		}
 
-		$value = $this->request->gget('value');
+		$value = $this->request->get('value');
 
 		if ('isAnyRecord' == $field)
 		{
@@ -247,12 +247,12 @@ class DiscountController extends ActiveGridController
 
 	public function addRecordAction()
 	{
-		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
-		$condition->conditionClass->set($this->request->gget('type'));
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
 		$condition->serializedCondition->setNull();
 		$condition->save();
 
-		$object = DiscountConditionRecord::getOwnerInstance($this->request->gget('class'), $this->request->gget('recordID'));
+		$object = DiscountConditionRecord::getOwnerInstance($this->request->get('class'), $this->request->get('recordID'));
 		$record = DiscountConditionRecord::getNewInstance($condition, $object);
 		$record->save();
 
@@ -263,7 +263,7 @@ class DiscountController extends ActiveGridController
 
 	public function deleteRecordAction()
 	{
-		$record = ActiveRecordModel::getInstanceByID('DiscountConditionRecord', $this->request->gget('id'), DiscountConditionRecord::LOAD_DATA);
+		$record = ActiveRecordModel::getInstanceByID('DiscountConditionRecord', $this->request->get('id'), DiscountConditionRecord::LOAD_DATA);
 		$record->delete();
 
 		return new JSONResponse(true);
@@ -271,13 +271,13 @@ class DiscountController extends ActiveGridController
 
 	public function saveSelectRecordAction()
 	{
-		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$condition->serializedCondition->setNull();
-		$condition->conditionClass->set($this->request->gget('type'));
+		$condition->conditionClass->set($this->request->get('type'));
 		$condition->save();
 
 		// delete existing record
-		$record = ActiveRecordModel::getInstanceByID($this->request->gget('class'), $this->request->gget('recordID'));
+		$record = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'));
 		foreach ($record->getRelatedRecordSet('DiscountConditionRecord', new ARSelectFilter(new EqualsCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $condition->getID()))) as $existing)
 		{
 			$existing->delete();
@@ -286,7 +286,7 @@ class DiscountController extends ActiveGridController
 		$this->deleteOtherTypeRecords($condition, $record);
 
 		// create
-		if ($this->request->gget('state') == 'true')
+		if ($this->request->get('state') == 'true')
 		{
 			$rec = DiscountConditionRecord::getNewInstance($condition, $record);
 			$rec->save();
@@ -295,8 +295,8 @@ class DiscountController extends ActiveGridController
 
 	public function saveSelectValueAction()
 	{
-		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
-		$condition->conditionClass->set($this->request->gget('type'));
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
 		$condition->save();
 
 		if ($condition->recordCount->get())
@@ -311,9 +311,9 @@ class DiscountController extends ActiveGridController
 		$condition->subTotal->setNull();
 		$condition->comparisonType->setNull();
 
-		$condition->setType($this->request->gget('type'));
-		$value = $this->request->gget('value');
-		if ('true' == $this->request->gget('state'))
+		$condition->setType($this->request->get('type'));
+		$value = $this->request->get('value');
+		if ('true' == $this->request->get('state'))
 		{
 			$condition->addValue($value);
 		}
@@ -327,15 +327,15 @@ class DiscountController extends ActiveGridController
 
 	public function setSerializedValueAction()
 	{
-		$parts = explode('_', $this->request->gget('field'));
+		$parts = explode('_', $this->request->get('field'));
 		$type = array_shift($parts);
 		$key = array_shift($parts);
-		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
-		$condition->conditionClass->set($this->request->gget('type'));
-		$condition->setSerializedValue($type, $key, $this->request->gget('value'));
+		$condition = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
+		$condition->conditionClass->set($this->request->get('type'));
+		$condition->setSerializedValue($type, $key, $this->request->get('value'));
 		$condition->save();
 
-		return new JSONResponse($this->request->gget('field'));
+		return new JSONResponse($this->request->get('field'));
 	}
 
 	private function deleteOtherTypeRecords(DiscountCondition $condition, ActiveRecordModel $record)
@@ -370,7 +370,7 @@ class DiscountController extends ActiveGridController
 
 	public function addActionAction()
 	{
-		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->gget('id'), DiscountCondition::LOAD_DATA);
+		$parent = ActiveRecordModel::getInstanceByID('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA);
 		$child = DiscountAction::getNewInstance($parent);
 		$child->isEnabled->set(true);
 		$child->save();
@@ -380,7 +380,7 @@ class DiscountController extends ActiveGridController
 
 	public function deleteActionAction()
 	{
-		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $this->request->gget('id'), DiscountAction::LOAD_DATA);
+		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $this->request->get('id'), DiscountAction::LOAD_DATA);
 		$action->delete();
 
 		return new JSONResponse(true);
@@ -388,8 +388,8 @@ class DiscountController extends ActiveGridController
 
 	public function updateActionFieldAction()
 	{
-		list($fieldName, $id) = explode('_', $this->request->gget('field'));
-		$value = $this->request->gget('value');
+		list($fieldName, $id) = explode('_', $this->request->get('field'));
+		$value = $this->request->get('value');
 
 		$action = ActiveRecordModel::getInstanceByID('DiscountAction', $id, DiscountAction::LOAD_DATA, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
 
@@ -425,7 +425,7 @@ class DiscountController extends ActiveGridController
 		}
 		else
 		{
-			if ($this->request->gget('isParam') != 'false')
+			if ($this->request->get('isParam') != 'false')
 			{
 				$action->setParamValue($fieldName, $value);
 				$fieldName .= '_' . $action->getID();
@@ -443,7 +443,7 @@ class DiscountController extends ActiveGridController
 
 	public function sortActionsAction()
 	{
-	  	$order = $this->request->gget('actionContainer_' . $this->request->gget('conditionId'));
+	  	$order = $this->request->get('actionContainer_' . $this->request->get('conditionId'));
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
@@ -453,7 +453,7 @@ class DiscountController extends ActiveGridController
 		}
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->gget('draggedId'));
+	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;
 	}
 

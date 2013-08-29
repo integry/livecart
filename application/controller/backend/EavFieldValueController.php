@@ -52,7 +52,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 
 		$resp = array();
 
-		$field = $this->request->gget('field');
+		$field = $this->request->get('field');
 
 		if ('specField_' == substr($field, 0, 10))
 		{
@@ -63,8 +63,8 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 			$searchHandle = MultilingualObject::getLangSearchHandle($handle, $locale);
 
 		  	$f->setCondition(new EqualsCond(new ARFieldHandle('EavStringValue', 'fieldID'), $id));
-			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->gget($field) . '%'));
-			$f->mergeCondition(new LikeCond($searchHandle, $this->request->gget($field) . '%'));
+			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
+			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
 		  	$f->setOrder($searchHandle, 'ASC');
 

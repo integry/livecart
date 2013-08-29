@@ -15,7 +15,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function createAction()
 	{
-		$product = Product::getInstanceByID((int)$this->request->gget('productID'));
+		$product = Product::getInstanceByID((int)$this->request->get('productID'));
 		$fileGroup = ProductFileGroup::getNewInstance($product);
 		return $this->save($fileGroup);
 	}
@@ -25,7 +25,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->gget('ID'));
+		$fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->get('ID'));
 		return $this->save($fileGroup);
 	}
 
@@ -38,7 +38,7 @@ class ProductFileGroupController extends StoreManagementController
 			{
 				if ($this->request->isValueSet('name_' . $lang))
 				{
-					$fileGroup->setValueByLang('name', $lang, $this->request->gget('name_' . $lang));
+					$fileGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
 				}
 			}
 
@@ -57,7 +57,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		ProductFileGroup::getInstanceByID((int)$this->request->gget('id'))->delete();
+		ProductFileGroup::getInstanceByID((int)$this->request->get('id'))->delete();
 		return new JSONResponse(false, 'success');
 	}
 
@@ -66,7 +66,7 @@ class ProductFileGroupController extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 			if(empty($key)) continue;
 			$fileGroup = ProductFileGroup::getInstanceByID((int)$key);
@@ -79,7 +79,7 @@ class ProductFileGroupController extends StoreManagementController
 
 	public function editAction()
 	{
-		$group = ProductFileGroup::getInstanceByID((int)$this->request->gget('id'), true);
+		$group = ProductFileGroup::getInstanceByID((int)$this->request->get('id'), true);
 
 		return new JSONResponse($group->toArray());
 	}

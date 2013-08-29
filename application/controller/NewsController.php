@@ -11,13 +11,13 @@ class NewsController extends FrontendController
 {
 	public function viewAction()
 	{	   		
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->gget('id')));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->get('id')));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		
 		$s = ActiveRecordModel::getRecordSet('NewsPost', $f);
 		if (!$s->size())
 		{
-			throw new ARNotFoundException('NewsPost', $this->request->gget('id'));
+			throw new ARNotFoundException('NewsPost', $this->request->get('id'));
 		}
 
 		$newsPost = $s->get(0)->toArray();

@@ -86,8 +86,8 @@ class OrderController extends FrontendController
 		}
 
 		$response = new BlockResponse();
-		$response->set('msg', $this->request->gget('message'));
-		$response->set('error', $this->request->gget('err'));
+		$response->set('msg', $this->request->get('message'));
+		$response->set('error', $this->request->get('err'));
 		$response->set('cart', $this->order->toArray());
 		return $response;
 	}
@@ -128,7 +128,7 @@ class OrderController extends FrontendController
 
 	private function getCartPageResponse()
 	{
-		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->gget('return'), true));
+		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
 		$this->order->setUser($this->user);
 		$this->order->loadItemData();
@@ -140,7 +140,7 @@ class OrderController extends FrontendController
 		}
 
 		$options = $this->getItemOptions();
-		$currency = Currency::getValidInstanceByID($this->request->gget('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
+		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 		$form = $this->buildCartForm($this->order, $options);
 
 		if ($this->isTosInCartPage())
@@ -212,7 +212,7 @@ class OrderController extends FrontendController
 		$response->set('cart', $orderArray);
 		$response->set('itemsById', $itemsById);
 		$response->set('form', $form);
-		$response->set('return', $this->request->gget('return'));
+		$response->set('return', $this->request->get('return'));
 		$response->set('currency', $currency->getID());
 		$response->set('options', $options['visible']);
 		$response->set('moreOptions', $options['more']);
@@ -306,7 +306,7 @@ class OrderController extends FrontendController
 	public function optionsAction()
 	{
 		$response = $this->index();
-		$response->set('editOption', $this->request->gget('id'));
+		$response->set('editOption', $this->request->get('id'));
 		return $response;
 	}
 
@@ -314,7 +314,7 @@ class OrderController extends FrontendController
 	{
 		$order = $order ? $order : $this->order;
 
-		$item = $order->getItemByID($this->request->gget('id'));
+		$item = $order->getItemByID($this->request->get('id'));
 		$options = $optionsArray = array();
 		$product = $item->getProduct();
 		$options[$product->getID()] = $product->getOptions(true);
@@ -333,7 +333,7 @@ class OrderController extends FrontendController
 	{
 		$order = $order ? $order : $this->order;
 
-		$item = $order->getItemByID($this->request->gget('id'));
+		$item = $order->getItemByID($this->request->get('id'));
 		$variations = $item->getProduct()->getVariationData($this->application);
 
 		$this->setLayout('empty');
@@ -372,13 +372,13 @@ class OrderController extends FrontendController
 		// TOS
 		if ($this->isTosInCartPage())
 		{
-			$this->session->set('tos', $this->request->gget('tos'));
+			$this->session->set('tos', $this->request->get('tos'));
 		}
 
 		// coupon code
-		if ($this->request->gget('coupon'))
+		if ($this->request->get('coupon'))
 		{
-			$code = $this->request->gget('coupon');
+			$code = $this->request->get('coupon');
 
 			if ($condition = DiscountCondition::getInstanceByCoupon($code))
 			{
@@ -426,7 +426,7 @@ class OrderController extends FrontendController
 
 				$item->save();
 
-				$this->order->updateCount($item, $this->request->gget('item_' . $item->getID(), 0));
+				$this->order->updateCount($item, $this->request->get('item_' . $item->getID(), 0));
 			}
 		}
 
@@ -437,7 +437,7 @@ class OrderController extends FrontendController
 
 			foreach ($this->order->getOrderedItems() as $item)
 			{
-				if ($addressId = $this->request->gget('address_' . $item->getID()))
+				if ($addressId = $this->request->get('address_' . $item->getID()))
 				{
 					if (!$item->shipment->get() || !$item->shipment->get()->shippingAddress->get() || ($item->shipment->get()->shippingAddress->get()->getID() != $addressId))
 					{
@@ -490,38 +490,38 @@ class OrderController extends FrontendController
 		SessionOrder::save($this->order);
 
 		// proceed with the checkout
-		if ($this->request->gget('proceed'))
+		if ($this->request->get('proceed'))
 		{
 			return new ActionRedirectResponse('checkout', 'index');
 		}
 
 		// redirect to payment gateway
-		if ($url = $this->request->gget('redirect'))
+		if ($url = $this->request->get('redirect'))
 		{
 			return new RedirectResponse($url);
 		}
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	private function updateEstimateAddress()
 	{
 		if ($this->config->get('ENABLE_SHIPPING_ESTIMATE'))
 		{
-			if ($this->request->gget('estimate_state_select'))
+			if ($this->request->get('estimate_state_select'))
 			{
-				$this->request->set('estimate_stateID', $this->request->gget('estimate_state_select'));
+				$this->request->set('estimate_stateID', $this->request->get('estimate_state_select'));
 			}
 
-			if ($this->request->gget('estimate_state_text'))
+			if ($this->request->get('estimate_state_text'))
 			{
-				$this->request->set('estimate_stateName', $this->request->gget('estimate_state_text'));
+				$this->request->set('estimate_stateName', $this->request->get('estimate_state_text'));
 			}
 
 			$address = SessionOrder::getDefaultEstimateAddress();
 			$address->loadRequestData($this->request, 'estimate_');
 
-			if ($country = $this->request->gget('estimate_country'))
+			if ($country = $this->request->get('estimate_country'))
 			{
 				$address->countryID->set($country);
 			}
@@ -535,12 +535,12 @@ class OrderController extends FrontendController
 	 */
 	public function deleteAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->gget('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
+		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
 		$this->setMessage($this->makeText('_removed_from_cart', array($item->getProduct()->getName($this->getRequestLanguage()))));
 		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	/**
@@ -549,18 +549,18 @@ class OrderController extends FrontendController
 	public function addToCartAction()
 	{
 		// avoid search engines adding items to cart...
-		if ($this->request->gget('csid') && ($this->request->gget('csid') != session_id()))
+		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
 		{
 			return new RawResponse();
 		}
 		ActiveRecordModel::beginTransaction();
 
-		if (!$this->request->gget('count'))
+		if (!$this->request->get('count'))
 		{
 			$this->request->set('count', 1);
 		}
 
-		if ($id = $this->request->gget('id'))
+		if ($id = $this->request->get('id'))
 		{
 			$res = $this->addProductToCart($id);
 
@@ -576,15 +576,15 @@ class OrderController extends FrontendController
 				}
 			}
 
-			if ($res->count->get() < $this->request->gget('count'))
+			if ($res->count->get() < $this->request->get('count'))
 			{
-				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count->get(), $this->request->gget('count'))));
+				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count->get(), $this->request->get('count'))));
 			}
 
 			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));
 		}
 
-		if ($ids = $this->request->gget('productIDs'))
+		if ($ids = $this->request->get('productIDs'))
 		{
 			$added = false;
 			foreach ($ids as $id)
@@ -625,7 +625,7 @@ class OrderController extends FrontendController
 			}
 			else
 			{
-				return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+				return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 			}
 		}
 		else
@@ -676,13 +676,13 @@ class OrderController extends FrontendController
 
 	private function addProductToCart($id, $prefix = '')
 	{
-		if ($prefix && !$this->request->gget($prefix . 'count'))
+		if ($prefix && !$this->request->get($prefix . 'count'))
 		{
 			return '"';
 		}
 
 		$product = Product::getInstanceByID($id, true, array('Category'));
-		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->gget('return')));
+		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
 		{
 			$productController = new ProductController($this->application);
@@ -698,7 +698,7 @@ class OrderController extends FrontendController
 		if ($variations && $this->config->get('DEF_FIRST_VARIATION'))
 		{
 			$first = reset($variations['variations']);
-			if (!$this->request->gget($prefix . 'variation_' . $first['ID']))
+			if (!$this->request->get($prefix . 'variation_' . $first['ID']))
 			{
 				$autoVariation = true;
 			}
@@ -737,7 +737,7 @@ class OrderController extends FrontendController
 			}
 		}
 
-		$count = $this->request->gget($prefix . 'count', 1);
+		$count = $this->request->get($prefix . 'count', 1);
 		if ($count < $product->getMinimumQuantity())
 		{
 			$count = $product->getMinimumQuantity();
@@ -789,7 +789,7 @@ class OrderController extends FrontendController
 
 	public function moveToCartAction()
 	{
-		$item = $this->order->getItemByID($this->request->gget('id'));
+		$item = $this->order->getItemByID($this->request->get('id'));
 		$item->isSavedForLater->set(false);
 		$this->order->mergeItems();
 		$this->order->resetShipments();
@@ -797,12 +797,12 @@ class OrderController extends FrontendController
 
 		$this->setMessage($this->makeText('_moved_to_cart', array($item->getProduct()->getName('name', $this->getRequestLanguage()))));
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	public function moveToWishListAction()
 	{
-		$item = $this->order->getItemByID($this->request->gget('id'));
+		$item = $this->order->getItemByID($this->request->get('id'));
 		$item->isSavedForLater->set(true);
 		$this->order->mergeItems();
 		$this->order->resetShipments();
@@ -810,7 +810,7 @@ class OrderController extends FrontendController
 
 		$this->setMessage($this->makeText('_moved_to_wishlist', array($item->getProduct()->getName('name', $this->getRequestLanguage()))));
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	/**
@@ -819,12 +819,12 @@ class OrderController extends FrontendController
 	public function addToWishListAction()
 	{
 		// avoid search engines adding items to cart...
-		if ($this->request->gget('csid') && ($this->request->gget('csid') != session_id()))
+		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
 		{
 			return new RawResponse();
 		}
 
-		$product = Product::getInstanceByID($this->request->gget('id'), Product::LOAD_DATA);
+		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
 
 		$this->order->addToWishList($product);
 		$this->order->mergeItems();
@@ -834,7 +834,7 @@ class OrderController extends FrontendController
 
 		if (!$this->isAjax())
 		{
-			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+			return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 		}
 		else
 		{
@@ -847,7 +847,7 @@ class OrderController extends FrontendController
 	{
 		if ($option->isBool() && $request->isValueSet('checkbox_' . $varName))
 		{
-			if ($request->gget($varName))
+			if ($request->get($varName))
 			{
 				$item->addOptionChoice($option->defaultChoice->get());
 			}
@@ -869,15 +869,15 @@ class OrderController extends FrontendController
 				}
 			}
 		}
-		else if ($request->gget($varName))
+		else if ($request->get($varName))
 		{
 			if ($option->isSelect())
 			{
-				$item->addOptionChoice($option->getChoiceByID($request->gget($varName)));
+				$item->addOptionChoice($option->getChoiceByID($request->get($varName)));
 			}
 			else if ($option->isText())
 			{
-				$text = $request->gget($varName);
+				$text = $request->get($varName);
 
 				if ($text)
 				{
@@ -945,7 +945,7 @@ class OrderController extends FrontendController
 		$ids = array();
 		foreach ($variations['variations'] as $variation)
 		{
-			$ids[] = $this->request->gget('variation_' . $variation['ID']);
+			$ids[] = $this->request->get('variation_' . $variation['ID']);
 		}
 
 		$hash = implode('-', $ids);
@@ -961,8 +961,8 @@ class OrderController extends FrontendController
 	{
 
 		$f = select(eq('CustomerOrder.userID', $this->user->getID()),
-					eq('OrderedItem.ID', $this->request->gget('id')),
-					eq('ProductOptionChoice.optionID', $this->request->gget('option')));
+					eq('OrderedItem.ID', $this->request->get('id')),
+					eq('ProductOptionChoice.optionID', $this->request->get('option')));
 
 		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
 		if ($set->size())
@@ -974,8 +974,8 @@ class OrderController extends FrontendController
 	public function uploadOptionFileAction()
 	{
 
-		$field = 'upload_' . $this->request->gget('field');
-		$option = ActiveRecordModel::getInstanceById('ProductOption', $this->request->gget('id'), true);
+		$field = 'upload_' . $this->request->get('field');
+		$option = ActiveRecordModel::getInstanceById('ProductOption', $this->request->get('id'), true);
 		$validator = $this->getValidator('optionFile');
 		$this->addOptionValidation($validator, $option->toArray(), $field);
 
@@ -1108,9 +1108,9 @@ class OrderController extends FrontendController
 	public function changeRecurringProductPeriodAction()
 	{
 		$request = $this->getRequest();
-		$orderedItemID = $request->gget('id');
-		$billingPlandropdownName = $request->gget('recurringBillingPlan');
-		$recurringID = $request->gget($billingPlandropdownName);
+		$orderedItemID = $request->get('id');
+		$billingPlandropdownName = $request->get('recurringBillingPlan');
+		$recurringID = $request->get($billingPlandropdownName);
 		$orderedItem = ActiveRecordModel::getInstanceByID('OrderedItem', $orderedItemID, true);
 		$recurringItem = RecurringItem::getInstanceByOrderedItem($orderedItem);
 		if ($recurringItem)
@@ -1123,7 +1123,7 @@ class OrderController extends FrontendController
 		$this->order->mergeItems();
 		$this->order->save();
 
-		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->gget('return')));
+		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	private function buildOptionsValidator(OrderedItem $item, $options)
@@ -1178,7 +1178,7 @@ class OrderController extends FrontendController
 						/*
 						$validator->addCheck($field, new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
 						*/
-						if (!$this->request->gget($field))
+						if (!$this->request->get($field))
 						{
 							$_SESSION['optionError'][$item->getID()][$option['ID']] = true;
 						}

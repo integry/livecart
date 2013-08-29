@@ -196,7 +196,7 @@ class LiveCartRenderer extends SmartyRenderer
 						{
 							foreach ($block['params']['variables'] as $key => $value)
 							{
-								if ($request->gget($key) != $value)
+								if ($request->get($key) != $value)
 								{
 									unset($byContainer[$index]);
 									break;

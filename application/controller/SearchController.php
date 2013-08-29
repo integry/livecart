@@ -13,17 +13,17 @@ class SearchController extends FrontendController
 	{
 		$this->loadLanguageFile('Category');
 
-		$inst = SearchableModel::getInstanceByModelClass($this->request->gget('type'));
+		$inst = SearchableModel::getInstanceByModelClass($this->request->get('type'));
 		if (!$inst)
 		{
 			return null;
 		}
 
-		$query = $this->request->gget('q');
+		$query = $this->request->get('q');
 		$f = $inst->getSelectFilter($query);
 
 		$perPage = $this->config->get('SEARCH_MODEL_PER_PAGE');
-		$page = $this->request->gget('page', 1);
+		$page = $this->request->get('page', 1);
 		$f->setLimit($perPage, $perPage * ($page - 1));
 
 		$response = new ActionResponse();

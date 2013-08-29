@@ -18,7 +18,7 @@ class ShipmentController extends StoreManagementController
 
 	public function changeServiceAction()
 	{
-		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->gget('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 		$shipment->loadItems();
 		$order = $shipment->order->get();
 		$shipment->order->get()->loadAll();
@@ -32,14 +32,14 @@ class ShipmentController extends StoreManagementController
 		$selectedRate = null;
 		foreach($shipment->getAvailableRates() as $rate)
 		{
-			if($rate->getServiceID() == $this->request->gget('serviceID'))
+			if($rate->getServiceID() == $this->request->get('serviceID'))
 			{
 				$selectedRate = $rate;
 				break;
 			}
 		}
 
-		$shipment->setRateId($this->request->gget('serviceID'));
+		$shipment->setRateId($this->request->get('serviceID'));
 
 		$shipment->recalculateAmounts();
 		$order->save();
@@ -48,7 +48,7 @@ class ShipmentController extends StoreManagementController
 		$history->saveLog();
 
 		$shipmentArray = $shipment->toArray();
-		$shipmentArray['ShippingService']['ID'] = $this->request->gget('serviceID');
+		$shipmentArray['ShippingService']['ID'] = $this->request->get('serviceID');
 
 		return new JSONResponse(array(
 				'shipment' => array(
@@ -69,9 +69,9 @@ class ShipmentController extends StoreManagementController
 
 	public function changeStatusAction()
 	{
-		$status = (int)$this->request->gget('status');
+		$status = (int)$this->request->get('status');
 
-		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->gget('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 		$shipment->loadItems();
 
 		$zone = $shipment->getDeliveryZone();
@@ -122,7 +122,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$this->loadLanguageFile('Checkout');
 
-		if($shipmentID = (int)$this->request->gget('id'))
+		if($shipmentID = (int)$this->request->get('id'))
 		{
 			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));
 			$shipment->loadItems();
@@ -169,7 +169,7 @@ class ShipmentController extends StoreManagementController
 	 */
 	public function createAction()
 	{
-		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('orderID'), true, array('BillingAddress', 'ShippingAddress'));
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress', 'ShippingAddress'));
 
 		$shipment = Shipment::getNewInstance($order);
 		$history = new OrderHistory($order, $this->user);
@@ -183,7 +183,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$this->loadLanguageFile('backend/CustomerOrder');
 
-				$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
+				$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 
 		if (!$shipment->shippingAddress->get())
 		{
@@ -219,7 +219,7 @@ class ShipmentController extends StoreManagementController
 	{
 		$this->loadLanguageFile('backend/Shipment');
 
-				$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
+				$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 		$address = $shipment->shippingAddress->get();
 
 		if (!$address)
@@ -259,7 +259,7 @@ class ShipmentController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$order = CustomerOrder::getInstanceByID((int)$this->request->gget('ID'));
+		$order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'));
 		return $this->save($order);
 	}
 
@@ -268,12 +268,12 @@ class ShipmentController extends StoreManagementController
 	 */
 	public function updateShippingAmountAction()
 	{
-		$shipment = Shipment::getInstanceByID('Shipment', $this->request->gget('id'), true, array('CustomerOrder', 'User'));
+		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 		$order = $shipment->order->get();
 
 		$order->loadAll();
 
-		$shipment->shippingAmount->set($shipment->reduceTaxesFromShippingAmount($this->request->gget('amount')));
+		$shipment->shippingAmount->set($shipment->reduceTaxesFromShippingAmount($this->request->get('amount')));
 		$shipment->recalculateAmounts(true);
 		$shipment->save();
 
@@ -295,7 +295,7 @@ class ShipmentController extends StoreManagementController
 		$validator = $this->createShipmentFormValidator();
 		if ($validator->isValid())
 		{
-			if($shippingServiceID = $this->request->gget('shippingServiceID'))
+			if($shippingServiceID = $this->request->get('shippingServiceID'))
 			{
 				$shippingService = ShippingService::getInstanceByID($shippingServiceID);
 
@@ -304,13 +304,13 @@ class ShipmentController extends StoreManagementController
 				$shipment->setRateId($shippingService->getID());
 			}
 
-			if($this->request->gget('noStatus'))
+			if($this->request->get('noStatus'))
 			{
 				$shipment->status->set($shipment->order->get()->status->get());
 			}
-			else if($this->request->gget('shippingServiceID') || ((int)$this->request->gget('status') < 3))
+			else if($this->request->get('shippingServiceID') || ((int)$this->request->get('status') < 3))
 			{
-				$shipment->status->set((int)$this->request->gget('status'));
+				$shipment->status->set((int)$this->request->get('status'));
 			}
 
 			$shipment->save();
@@ -330,7 +330,7 @@ class ShipmentController extends StoreManagementController
 					)
 				),
 				'success',
-				($this->request->gget('noStatus') ? false : $this->translate('_new_shipment_has_been_successfully_created'))
+				($this->request->get('noStatus') ? false : $this->translate('_new_shipment_has_been_successfully_created'))
 			);
 		}
 		else
@@ -347,7 +347,7 @@ class ShipmentController extends StoreManagementController
 
 	public function editAction()
 	{
-		$group = ProductFileGroup::getInstanceByID((int)$this->request->gget('id'), true);
+		$group = ProductFileGroup::getInstanceByID((int)$this->request->get('id'), true);
 
 		return new JSONResponse($group->toArray());
 	}
@@ -357,7 +357,7 @@ class ShipmentController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->gget('id'), true, array('Order' => 'CustomerOrder'));
+		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder'));
 		$shipment->order->get()->loadAll();
 
 		$history = new OrderHistory($shipment->order->get(), $this->user);

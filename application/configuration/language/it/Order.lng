@@ -8,5 +8,5 @@ _proceed_checkout=Vai in Cassa
 _update=Aggiorna
 _empty_basket=Il Tuo carrello è vuoto
 _your_basket=Il Tuo Carrello
-_item_count=Ci sono  [quant,_1,oggetto,oggetti,vuoto] nel tuo carrello.
+_item_count=Ci sono  [quant,_1,ogetto,ogetti,vuoto] nel tuo carrello.
 _edit_options=Modifica opzioni

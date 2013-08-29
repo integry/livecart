@@ -31,16 +31,16 @@ class DatabaseImportController extends StoreManagementController
 			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 
-		$dsn = $this->request->gget('dbType') . '://' .
-				   $this->request->gget('dbUser') .
-				   		($this->request->gget('dbPass') ? ':' . $this->request->gget('dbPass') : '') .
-				   			'@' . $this->request->gget('dbServer') .
-				   				'/' . $this->request->gget('dbName');
+		$dsn = $this->request->get('dbType') . '://' .
+				   $this->request->get('dbUser') .
+				   		($this->request->get('dbPass') ? ':' . $this->request->get('dbPass') : '') .
+				   			'@' . $this->request->get('dbServer') .
+				   				'/' . $this->request->get('dbName');
 
 		try
 		{
-			$cart = $this->request->gget('cart');
-						$driver = new $cart($dsn, $this->request->gget('filePath'));
+			$cart = $this->request->get('cart');
+						$driver = new $cart($dsn, $this->request->get('filePath'));
 		}
 		catch (SQLException $e)
 		{

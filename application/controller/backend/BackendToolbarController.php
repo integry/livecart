@@ -11,7 +11,7 @@ class BackendToolbarController extends StoreManagementController
 	public function lastViewedAction()
 	{
 		$request = $this->getRequest();
-		$where = $request->gget('where');
+		$where = $request->get('where');
 		$response = new ActionResponse();
 		$response->set('randomToken', substr(md5(time().mt_rand(1,9999999999)),0,8));
 		$response->set('where', $where);
@@ -30,8 +30,8 @@ class BackendToolbarController extends StoreManagementController
 	public function addIconAction()
 	{
 		$request = $this->getRequest();
-		$menuID = $request->gget('id');
-		$position = $request->gget('position');
+		$menuID = $request->get('id');
+		$position = $request->get('position');
 		$items = BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU);
 		$itemArray = array();
 		$previousPosition = -1;
@@ -65,7 +65,7 @@ class BackendToolbarController extends StoreManagementController
 	{
 		$request = $this->getRequest();
 
-		if (BackendToolbarItem::deleteMenuItem($request->gget('id'), $request->gget('position')))
+		if (BackendToolbarItem::deleteMenuItem($request->get('id'), $request->get('position')))
 		{
 			$this->fixSortOrder();
 			return new JSONResponse(null, 'success', $this->translate('_button_removed'));

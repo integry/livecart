@@ -10,7 +10,7 @@ class ProductFileController extends FrontendController
 {
 	public function downloadAction()
 	{
-		$file = ProductFile::getInstanceByID($this->request->gget('id'), true);
+		$file = ProductFile::getInstanceByID($this->request->get('id'), true);
 		if ($file->isPublic->get())
 		{
 			return new ObjectFileResponse($file);

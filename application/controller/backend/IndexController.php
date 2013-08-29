@@ -82,7 +82,7 @@ class IndexController extends StoreManagementController
 		// "January 1 | now" - this year
 		// or
 		// "w:Monday ~ -1 week | w:Monday" - last week
-		list($from, $to) = explode(' | ', $this->request->gget('period'));
+		list($from, $to) = explode(' | ', $this->request->get('period'));
 
 		$count = $this->getOrderCount($from, $to);
 		if (!$count)
@@ -137,7 +137,7 @@ class IndexController extends StoreManagementController
 	public function setUserPreferenceAction()
 	{
 		$user = $this->user;
-		$user->setPreference($this->request->gget('key'), $this->request->gget('value'));
+		$user->setPreference($this->request->get('key'), $this->request->get('value'));
 		$user->save();
 	}
 
@@ -148,7 +148,7 @@ class IndexController extends StoreManagementController
 
 	private function updateApplicationUri()
 	{
-		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => !$this->request->gget('noRewrite', false));
+		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => !$this->request->get('noRewrite', false));
 		file_put_contents($this->config->getPath('storage/configuration/') . 'url.php', '<?php return ' . var_export($data, true) . '; ?>');
 	}
 }

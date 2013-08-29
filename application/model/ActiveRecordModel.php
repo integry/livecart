@@ -146,19 +146,19 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 						break;
 
 						case 'ARBool':
-							$this->setFieldValue($name, in_array(strtolower($request->gget($reqName)), array('on', 1, 'yes', 'true')));
+							$this->setFieldValue($name, in_array(strtolower($request->get($reqName)), array('on', 1, 'yes', 'true')));
 						break;
 
 						case 'ARInteger':
 						case 'ARFloat':
-							if (is_numeric($request->gget($reqName)))
+							if (is_numeric($request->get($reqName)))
 							{
-								$this->setFieldValue($name, $request->gget($reqName));
+								$this->setFieldValue($name, $request->get($reqName));
 							}
 						break;
 
 						default:
-							$this->setFieldValue($name, $request->gget($reqName));
+							$this->setFieldValue($name, $request->get($reqName));
 						break;
 					}
 				}

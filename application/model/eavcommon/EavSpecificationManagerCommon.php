@@ -302,7 +302,7 @@ abstract class EavSpecificationManagerCommon
 		// create new select values
 		if ($request->isValueSet($prefix . 'other'))
 		{
-			foreach ($request->gget($prefix . 'other') as $fieldID => $values)
+			foreach ($request->get($prefix . 'other') as $fieldID => $values)
 			{
 				$field = call_user_func_array(array($this->getFieldClass(), 'getInstanceByID'), array($fieldID, ActiveRecordModel::LOAD_DATA));
 
@@ -324,7 +324,7 @@ abstract class EavSpecificationManagerCommon
 				else
 				{
 					// single select
-					if ('other' == $request->gget($prefix . 'specField_' . $fieldID))
+					if ('other' == $request->get($prefix . 'specField_' . $fieldID))
 					{
 						$fieldValue = $field->getNewValueInstance();
 						$fieldValue->setValueByLang('value', $application->getDefaultLanguageCode(), $values);
@@ -346,11 +346,11 @@ abstract class EavSpecificationManagerCommon
 			{
 				if (!$field->isMultiValue->get())
 				{
-					if ($request->isValueSet($fieldName) && !in_array($request->gget($fieldName), array('other')))
+					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other')))
 				  	{
-				  		if ($request->gget($fieldName))
+				  		if ($request->get($fieldName))
 				  		{
-				  			$this->setAttributeValue($field, $field->getValueInstanceByID($request->gget($fieldName), ActiveRecordModel::LOAD_DATA));
+				  			$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
 				  			$field->resetModifiedStatus(true);
 				  		}
 				  		else
@@ -367,7 +367,7 @@ abstract class EavSpecificationManagerCommon
 					{
 						if ($request->isValueSet($prefix . $value->getFormFieldName()) || $request->isValueSet($prefix . 'removeEmpty_' . $field->getID()))
 						{
-						  	if ($request->gget($prefix . $value->getFormFieldName()))
+						  	if ($request->get($prefix . $value->getFormFieldName()))
 						  	{
 								$this->setAttributeValue($field, $value);
 							}
@@ -389,15 +389,15 @@ abstract class EavSpecificationManagerCommon
 						{
 							if ($request->isValueSet($prefix . $field->getFormFieldName($language)))
 							{
-								$this->setAttributeValueByLang($field, $language, $request->gget($prefix . $field->getFormFieldName($language)));
+								$this->setAttributeValueByLang($field, $language, $request->get($prefix . $field->getFormFieldName($language)));
 							}
 						}
 					}
 					else
 					{
-						if (strlen($request->gget($fieldName)))
+						if (strlen($request->get($fieldName)))
 						{
-							$this->setAttributeValue($field, $request->gget($fieldName));
+							$this->setAttributeValue($field, $request->get($fieldName));
 						}
 						else
 						{

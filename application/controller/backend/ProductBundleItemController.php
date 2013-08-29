@@ -17,8 +17,8 @@ class ProductBundleItemController extends StoreManagementController
 	 */
 	public function addAction()
 	{
-		$productID = $this->request->gget('relatedownerID');
-		$ownerID = $this->request->gget('id');
+		$productID = $this->request->get('relatedownerID');
+		$ownerID = $this->request->get('id');
 
 		$owner = Product::getInstanceByID($ownerID, Product::LOAD_DATA);
 		$product = Product::getInstanceByID($productID, Product::LOAD_DATA, array('ProductImage'));
@@ -55,8 +55,8 @@ class ProductBundleItemController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$relatedProductID = (int)$this->request->gget('id');
-		$productID = (int)$this->request->gget('relatedProductID');
+		$relatedProductID = (int)$this->request->get('id');
+		$productID = (int)$this->request->get('relatedProductID');
 
 		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
@@ -69,12 +69,12 @@ class ProductBundleItemController extends StoreManagementController
 	 */
 	public function setCountAction()
 	{
-		$productID = (int)$this->request->gget('id');
-		$relatedProductID = (int)$this->request->gget('relatedownerID');
+		$productID = (int)$this->request->get('id');
+		$relatedProductID = (int)$this->request->get('relatedownerID');
 
 		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
 
-		$count = $this->request->gget('count');
+		$count = $this->request->get('count');
 		if ($count < 0 || !$count)
 		{
 			$count = 1;
@@ -90,11 +90,11 @@ class ProductBundleItemController extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		$target = $this->request->gget('target');
+		$target = $this->request->get('target');
 		preg_match('/_(\d+)$/', $target, $match); // Get group.
 		$productID = $match[1];
 
-		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $id)
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $id)
 		{
 			$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $id), ActiveRecord::LOAD_DATA);
 			$item->position->set($position);

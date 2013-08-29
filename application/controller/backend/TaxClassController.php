@@ -37,7 +37,7 @@ class TaxClassController extends StoreManagementController
 
 	public function editAction()
 	{
-		$class = TaxClass::getInstanceByID((int)$this->request->gget('id'), true);
+		$class = TaxClass::getInstanceByID((int)$this->request->get('id'), true);
 
 		$form = $this->createClassForm($class);
 		$form->setData($class->toArray());
@@ -54,7 +54,7 @@ class TaxClassController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$service = TaxClass::getInstanceByID((int)$this->request->gget('id'));
+		$service = TaxClass::getInstanceByID((int)$this->request->get('id'));
 		$service->delete();
 
 		return new JSONResponse(false, 'success');
@@ -65,7 +65,7 @@ class TaxClassController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$class = TaxClass::getInstanceByID((int)$this->request->gget('id'));
+		$class = TaxClass::getInstanceByID((int)$this->request->get('id'));
 
 		return $this->saveClass($class);
 	}
@@ -75,7 +75,7 @@ class TaxClassController extends StoreManagementController
 	 */
 	public function createAction()
 	{
-		$class = TaxClass::getNewInstance($this->request->gget('name'));
+		$class = TaxClass::getNewInstance($this->request->get('name'));
 		$class->position->set(1000);
 
 		return $this->saveClass($class);
@@ -128,7 +128,7 @@ class TaxClassController extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 		   $class = TaxClass::getInstanceByID((int)$key);
 		   $class->position->set((int)$position);

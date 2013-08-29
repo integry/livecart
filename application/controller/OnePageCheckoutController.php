@@ -143,7 +143,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 
 		$response = new ActionResponse();
-		if ($this->request->gget('failedLogin'))
+		if ($this->request->get('failedLogin'))
 		{
 			$response->set('failedLogin', true);
 		}
@@ -468,7 +468,7 @@ class OnePageCheckoutController extends CheckoutController
 					$this->order->billingAddress->set($this->order->shippingAddress);
 					$this->order->save();
 				}
-				else if ($this->request->gget('sameAsShipping') &&
+				else if ($this->request->get('sameAsShipping') &&
 						((!$this->order->billingAddress && $this->order->shippingAddress && $this->order->isShippingRequired()) ||
 						($this->order->billingAddress && $this->order->shippingAddress && ($this->order->billingAddress->toString() != $this->order->shippingAddress->toString()))))
 				{
@@ -513,7 +513,7 @@ class OnePageCheckoutController extends CheckoutController
 		{
 			$shipping = $this->user->defaultShippingAddress;
 
-			$this->session->set('newsletter', $this->request->gget('newsletter'));
+			$this->session->set('newsletter', $this->request->get('newsletter'));
 			$this->request->set('sameAsBilling', true);
 
 			$controller = $this->getUserController();
@@ -621,7 +621,7 @@ class OnePageCheckoutController extends CheckoutController
 		// @todo: in case only one shipping rate is available, it is unselected when setting payment method unless the shipping() method is called
 		$this->shipping();
 
-		$method = $this->request->gget('payMethod');
+		$method = $this->request->get('payMethod');
 		if ('cc' == $method)
 		{
 			$method = $this->config->get('CC_HANDLER');
@@ -644,14 +644,14 @@ class OnePageCheckoutController extends CheckoutController
 
 	public function redirectAction()
 	{
-		$this->session->set('paymentMethod', $this->request->gget('id'));
+		$this->session->set('paymentMethod', $this->request->get('id'));
 		$this->beforePayment();
 		return parent::redirect();
 	}
 
 	public function payOfflineAction()
 	{
-		$this->session->set('paymentMethod', $this->request->gget('id'));
+		$this->session->set('paymentMethod', $this->request->get('id'));
 		$this->beforePayment();
 		return parent::payOffline();
 	}
@@ -845,7 +845,7 @@ class OnePageCheckoutController extends CheckoutController
 		$response->addAction('overview', 'onePageCheckout', 'overview');
 		$response->addAction('cart', 'onePageCheckout', 'cart');
 
-		if ($this->request->getActionName() != 'setPaymentMethod')
+		if ($this->router->getActionName() != 'setPaymentMethod')
 		{
 			$response->addAction('payment', 'onePageCheckout', 'payment');
 		}

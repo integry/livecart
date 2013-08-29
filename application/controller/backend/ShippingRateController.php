@@ -14,7 +14,7 @@ class ShippingRateController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		if($id = (int)$this->request->gget('id'))
+		if($id = (int)$this->request->get('id'))
 		{
 			ShippingRate::getInstanceByID($id)->delete();
 		}

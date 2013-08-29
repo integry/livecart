@@ -77,7 +77,7 @@ abstract class ModelApi
 	public function loadRequest($loadData = true)
 	{
 		$request = $this->getApplication()->getRequest();
-		$cn = $request->gget(ApiReader::API_PARSER_CLASS_NAME);
+		$cn = $request->get(ApiReader::API_PARSER_CLASS_NAME);
 
 		if($cn == null || class_exists($cn) == false)
 		{
@@ -92,7 +92,7 @@ abstract class ModelApi
 		}
 		$this->setParserClassName($cn);
 
-		$this->setParser(new $cn($request->gget(ApiReader::API_PARSER_DATA), $modelFieldNames));
+		$this->setParser(new $cn($request->get(ApiReader::API_PARSER_DATA), $modelFieldNames));
 
 		// read and put data from api request format (that could be wahatever custom parser can read) in  Requst object as key=>value pairs.
 		if ($loadData)
@@ -226,10 +226,10 @@ abstract class ModelApi
 	protected function getRequestID($allowNonNumeric = false)
 	{
 		$request = $this->getApplication()->getRequest();
-		$id = $request->gget('ID');
+		$id = $request->get('ID');
 		if(false == is_numeric($id))
 		{
-			$id = $request->gget('id');
+			$id = $request->get('id');
 		}
 		if(!$allowNonNumeric && !is_numeric($id))
 		{

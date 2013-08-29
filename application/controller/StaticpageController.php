@@ -21,7 +21,7 @@ class StaticpageController extends ControllerBase
 		/*
 		$this->loadLanguageFile('Frontend');
 
-		$page = StaticPage::getInstanceByHandle($this->request->gget('handle'));
+		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 
 		if ($parent = $page->parent->get())
 		{

@@ -17,9 +17,9 @@ class ContactFormController extends FrontendController
 
 		$email = new Email($this->application);
 		$email->setTemplate('contactForm/contactForm');
-		$email->setFrom($this->request->gget('email'), $this->request->gget('name'));
+		$email->setFrom($this->request->get('email'), $this->request->get('name'));
 		$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
-		$email->set('message', $this->request->gget('msg'));
+		$email->set('message', $this->request->get('msg'));
 		$email->send();
 
 		return new ActionRedirectResponse('contactForm', 'sent');

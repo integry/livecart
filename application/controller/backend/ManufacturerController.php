@@ -28,7 +28,7 @@ class ManufacturerController extends ActiveGridController
 
 	public function editAction()
 	{
-		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->gget('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
+		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
 		$manufacturer->getSpecification();
 
 		$response = new ActionResponse('manufacturer', $manufacturer->toArray());
@@ -48,7 +48,7 @@ class ManufacturerController extends ActiveGridController
 
 	public function updateAction()
 	{
-		return $this->save(ActiveRecordModel::getInstanceById('Manufacturer', $this->request->gget('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
+		return $this->save(ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
 	}
 
 	protected function save(Manufacturer $manufacturer)
@@ -110,7 +110,7 @@ class ManufacturerController extends ActiveGridController
 	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
-	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->gget('manufacturer') . '%');
+	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->get('manufacturer') . '%');
 	  	$f->setCondition($c);
 
 	  	$results = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);

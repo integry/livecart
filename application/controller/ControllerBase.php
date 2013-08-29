@@ -26,13 +26,6 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	protected $session = null;
 
 	/**
-	 * Router instance
-	 *
-	 * @var Router
-	 */
-	protected $router = null;
-
-	/**
 	 * Locale
 	 *
 	 * @var Locale
@@ -81,7 +74,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 
 		$this->checkAccess();
 
-		$this->application->setRequestLanguage($this->request->gget('requestLanguage'));
+		$this->application->setRequestLanguage($this->request->get('requestLanguage'));
 		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
 
@@ -95,7 +88,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		}
 
 		// verify that the action is accessed via HTTPS if it is required
-		if ($this->router->isSSL($this->request->getControllerName(), $this->request->getActionName()) && !$this->router->isHttps())
+		if ($this->router->isSSL($this->request->getControllerName(), $this->router->getActionName()) && !$this->router->isHttps())
 		{
 			header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));
 			exit;
@@ -237,7 +230,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 
 	protected function isAjax()
 	{
-		return $this->request->gget('ajax');
+		return $this->request->get('ajax');
 	}
 
 	protected function getRequestLanguage()
@@ -410,7 +403,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			\role\Role::addNewRolesNames($this->roles->getRolesNames());
 		}
 
-		$role = $this->roles->getRole($this->request->getActionName());
+		$role = $this->roles->getRole($this->router->getActionName());
 
 		if ($role)
 		{

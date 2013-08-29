@@ -13,7 +13,7 @@ class RolesController extends StoreManagementController
 	{
 		Role::cleanUp();
 
-		$userGroupID = (int)$this->request->gget('id');
+		$userGroupID = (int)$this->request->get('id');
 
 
 		$userGroup = UserGroup::getInstanceByID($userGroupID);
@@ -127,7 +127,7 @@ class RolesController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$userGroupID = (int)$this->request->gget('id');
+		$userGroupID = (int)$this->request->get('id');
 		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);
 
 		// disabled roles
@@ -167,7 +167,7 @@ class RolesController extends StoreManagementController
 		$validator = $this->createRolesFormValidator($userGroup);
 		if($validator->isValid())
 		{
-			foreach(explode(',', $this->request->gget('checked')) as $roleID)
+			foreach(explode(',', $this->request->get('checked')) as $roleID)
 			{
 				if (preg_match('/smart/', $roleID) || isset($disabled[$roleID]))
 				{
@@ -182,7 +182,7 @@ class RolesController extends StoreManagementController
 				$userGroup->applyRole($role);
 			}
 
-			foreach(explode(',', $this->request->gget('unchecked')) as $roleID)
+			foreach(explode(',', $this->request->get('unchecked')) as $roleID)
 			{
 				if (preg_match('/smart/', $roleID) || isset($disabled[$roleID]))
 				{

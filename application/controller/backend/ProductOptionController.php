@@ -28,9 +28,9 @@ class ProductOptionController extends StoreManagementController
 	{
 		$response = new ActionResponse();
 
-		$parentId = $this->request->gget('id');
-		$parent = $this->request->gget('category') ? Category::getInstanceByID($parentId) : Product::getInstanceByID($parentId);
-		$parentId = ($this->request->gget('category') ? 'c' : '') . $parentId;
+		$parentId = $this->request->get('id');
+		$parent = $this->request->get('category') ? Category::getInstanceByID($parentId) : Product::getInstanceByID($parentId);
+		$parentId = ($this->request->get('category') ? 'c' : '') . $parentId;
 
 		$defaultProductOptionValues = array
 		(
@@ -61,7 +61,7 @@ class ProductOptionController extends StoreManagementController
 	public function itemAction()
 	{
 		$response = new ActionResponse();
-		$option = ProductOption::getInstanceByID($this->request->gget('id'), true);
+		$option = ProductOption::getInstanceByID($this->request->get('id'), true);
 
 		if ($option->defaultChoice)
 		{
@@ -87,13 +87,13 @@ class ProductOptionController extends StoreManagementController
 	{
 		try
 		{
-			$productOption = ProductOption::getInstanceByID((int)$this->request->gget('ID'), ProductOption::LOAD_DATA, array('DefaultChoice' => 'ProductOptionChoice'));
+			$productOption = ProductOption::getInstanceByID((int)$this->request->get('ID'), ProductOption::LOAD_DATA, array('DefaultChoice' => 'ProductOptionChoice'));
 		}
 		catch (ARNotFoundException $e)
 		{
 			return new JSONResponse(array(
 					'errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')),
-					'ID' => (int)$this->request->gget('ID')
+					'ID' => (int)$this->request->get('ID')
 				)
 			);
 		}
@@ -103,7 +103,7 @@ class ProductOptionController extends StoreManagementController
 
 	public function createAction()
 	{
-		$parentId = $this->request->gget('parentID', false);
+		$parentId = $this->request->get('parentID', false);
 		if (substr($parentId, 0, 1) == 'c')
 		{
 			$parent = Category::getInstanceByID(substr($parentId, 1));
@@ -156,8 +156,8 @@ class ProductOptionController extends StoreManagementController
 				}
 			}
 
-			$parentID = (int)$this->request->gget('parentID');
-			$values = $this->request->gget('values');
+			$parentID = (int)$this->request->get('parentID');
+			$values = $this->request->get('values');
 
 			// save specification field values in database
 			$newIDs = array();
@@ -167,7 +167,7 @@ class ProductOptionController extends StoreManagementController
 				$countValues = count($values);
 				$i = 0;
 
-				$prices = $this->request->gget('prices');
+				$prices = $this->request->get('prices');
 
 				foreach ($values as $key => $value)
 				{
@@ -191,7 +191,7 @@ class ProductOptionController extends StoreManagementController
 					$productOptionValues->setLanguageField('name', $value, $this->productOptionConfig['languageCodes']);
 					$productOptionValues->priceDiff->set($prices[$key]);
 					$productOptionValues->position->set($position++);
-					$productOptionValues->setColor($this->request->gget(array('color', $key)));
+					$productOptionValues->setColor($this->request->get(array('color', $key)));
 					$productOptionValues->save();
 
 	   				if(preg_match('/^new/', $key))
@@ -216,7 +216,7 @@ class ProductOptionController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		if($id = $this->request->gget("id", false))
+		if($id = $this->request->get("id", null, false))
 		{
 			ProductOption::deleteById($id);
 			return new JSONResponse(false, 'success');
@@ -234,7 +234,7 @@ class ProductOptionController extends StoreManagementController
 	 */
 	public function deleteChoiceAction()
 	{
-		if($id = $this->request->gget("id", false))
+		if($id = $this->request->get("id", null, false))
 		{
 			ProductOptionChoice::deleteById($id);
 			return new JSONResponse(false, 'success');
@@ -252,9 +252,9 @@ class ProductOptionController extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		$target = $this->request->gget('target');
+		$target = $this->request->get('target');
 
-		foreach($this->request->gget($target, array()) as $position => $key)
+		foreach($this->request->get($target, null, array()) as $position => $key)
 		{
 			if(!empty($key))
 			{
@@ -274,9 +274,9 @@ class ProductOptionController extends StoreManagementController
 	 */
 	public function sortChoiceAction()
 	{
-		$target = $this->request->gget('target');
+		$target = $this->request->get('target');
 
-		foreach($this->request->gget($target, array()) as $position => $key)
+		foreach($this->request->get($target, null, array()) as $position => $key)
 		{
 			if(!empty($key))
 			{

@@ -104,10 +104,10 @@ class InstallController extends FrontendController
 		$type = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
 
 		$dsn = $type . '://' .
-				   $this->request->gget('username') .
-				   		($this->request->gget('password') ? ':' . $this->request->gget('password') : '') .
-				   			'@' . $this->request->gget('server') .
-				   				'/' . $this->request->gget('name');
+				   $this->request->get('username') .
+				   		($this->request->get('password') ? ':' . $this->request->get('password') : '') .
+				   			'@' . $this->request->get('server') .
+				   				'/' . $this->request->get('name');
 
 				ActiveRecord::resetDBConnection();
 		ActiveRecord::setDSN($dsn);
@@ -200,9 +200,9 @@ class InstallController extends FrontendController
 		$group->save();
 
 		// create administrator account
-		$user = User::getNewInstance($this->request->gget('email'), null, $group);
+		$user = User::getNewInstance($this->request->get('email'), null, $group);
 		$user->loadRequestData($this->request);
-		$user->setPassword($this->request->gget('password'));
+		$user->setPassword($this->request->get('password'));
 		$user->isEnabled->set(true);
 		$user->save();
 
@@ -212,9 +212,9 @@ class InstallController extends FrontendController
 		SessionUser::setUser($user);
 
 		// set store email
-		$this->config->set('MAIN_EMAIL', $this->request->gget('email'));
-		$this->config->set('NOTIFICATION_EMAIL', $this->request->gget('email'));
-		$this->config->set('NEWSLETTER_EMAIL', $this->request->gget('email'));
+		$this->config->set('MAIN_EMAIL', $this->request->get('email'));
+		$this->config->set('NOTIFICATION_EMAIL', $this->request->get('email'));
+		$this->config->set('NEWSLETTER_EMAIL', $this->request->get('email'));
 		$this->config->save();
 
 		return new ActionRedirectResponse('install', 'config');
@@ -258,19 +258,19 @@ class InstallController extends FrontendController
 		Language::deleteCache();
 
 		// site name
-		$this->config->setValueByLang('STORE_NAME', $this->request->gget('language'), $this->request->gget('name'));
+		$this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
 		$this->config->save();
 
 
 		// create currency
-		if (ActiveRecord::objectExists('Currency', $this->request->gget('curr')))
+		if (ActiveRecord::objectExists('Currency', $this->request->get('curr')))
 		{
-			$currency = Currency::getInstanceByID($this->request->gget('curr'), Currency::LOAD_DATA);
+			$currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
 		}
 		else
 		{
 			$currency = ActiveRecord::getNewInstance('Currency');
-			$currency->setID($this->request->gget('curr'));
+			$currency->setID($this->request->get('curr'));
 			$currency->isEnabled->set(true);
 			$currency->isDefault->set(true);
 			$currency->save(ActiveRecord::PERFORM_INSERT);
@@ -278,14 +278,14 @@ class InstallController extends FrontendController
 
 
 		// create language
-		if (ActiveRecord::objectExists('Language', $this->request->gget('language')))
+		if (ActiveRecord::objectExists('Language', $this->request->get('language')))
 		{
-			$language = Language::getInstanceByID($this->request->gget('language'), Language::LOAD_DATA);
+			$language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
 		}
 		else
 		{
 			$language = ActiveRecord::getNewInstance('Language');
-			$language->setID($this->request->gget('language'));
+			$language->setID($this->request->get('language'));
 			$language->save(ActiveRecord::PERFORM_INSERT);
 
 			$language->isEnabled->set(true);
@@ -369,13 +369,13 @@ class InstallController extends FrontendController
 		if (file_exists($lastStepFile))
 		{
 			$lastStep = include $lastStepFile;
-			if ($steps[$lastStep] > $steps[$this->request->getActionName()])
+			if ($steps[$lastStep] > $steps[$this->router->getActionName()])
 			{
 				return new ActionRedirectResponse('install', $lastStep);
 			}
 		}
 
-		file_put_contents($lastStepFile, '<?php return ' . var_export($this->request->getActionName(), true) . '; ?>');
+		file_put_contents($lastStepFile, '<?php return ' . var_export($this->router->getActionName(), true) . '; ?>');
 	}
 
 	/**
@@ -429,7 +429,7 @@ class InstallController extends FrontendController
 		$validator->addCheck("email", new IsUniqueEmailCheck($this->translate("The e-mail address is already assigned to an existing user account")));
 		$validator->addCheck("password", new IsNotEmptyCheck($this->translate("Please enter the password")));
 		$validator->addCheck("confirmPassword", new IsNotEmptyCheck($this->translate("Please enter the password")));
-		$validator->addCheck("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->gget('password'), 'password'));
+		$validator->addCheck("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->get('password'), 'password'));
 		return $validator;
 	}
 

@@ -45,7 +45,7 @@ class MassActionProcessor
 		$totalCount = count($ids);
 		$progress = 0;
 
-		$response = new JSONResponse(array('act' => $this->request->gget('act')), 'success', $this->completionMessage);
+		$response = new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->completionMessage);
 
 		ActiveRecord::beginTransaction();
 
@@ -130,7 +130,7 @@ class MassActionProcessor
 
 	protected function getAction()
 	{
-		return $this->request->gget('act');
+		return $this->request->get('act');
 	}
 
 	protected function getField()
@@ -153,7 +153,7 @@ class MassActionProcessor
 		}
 		else if (substr($act, 0, 4) == 'set_')
 		{
-			$record->setFieldValue($field, $this->request->gget('set_' . $field));
+			$record->setFieldValue($field, $this->request->get('set_' . $field));
 		}
 	}
 

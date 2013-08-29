@@ -21,8 +21,8 @@ class PasswordMatchCheck extends Check
 	
 	public function isValid($value)
 	{
-		return $this->request->gget($this->getParam("fieldName"))
-				== $this->request->gget($this->getParam("confFieldName"));
+		return $this->request->get($this->getParam("fieldName"))
+				== $this->request->get($this->getParam("confFieldName"));
 	}
 }
 

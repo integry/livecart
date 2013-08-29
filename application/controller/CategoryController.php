@@ -69,7 +69,7 @@ class CategoryController extends CatalogController
 		}
 
 		// pagination
-		$currentPage = $this->request->gget('page', 1);
+		$currentPage = $this->request->get('page', 1);
 		$listLayout = $this->getListLayout();
 		$perPage = $this->getProductLimitCount($listLayout);
 
@@ -77,7 +77,7 @@ class CategoryController extends CatalogController
 		$offsetEnd = $currentPage * $perPage;
 
 		// create new search filter
-		$query = $this->request->gget('q');
+		$query = $this->request->get('q');
 		if ($query)
 		{
 			$searchFilter = new SearchFilter($query);
@@ -109,7 +109,7 @@ class CategoryController extends CatalogController
 		}
 
 		// root category?
-		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->gget('includeSub') && ($currentPage > 1))
+		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage > 1))
 		{
 			return new ActionRedirectResponse('index', 'index');
 		}
@@ -135,7 +135,7 @@ class CategoryController extends CatalogController
 			}
 		}
 
-		$order = $this->request->gget('sort');
+		$order = $this->request->get('sort');
 
 		$products = $this->getProductsArray($productFilter);
 		$this->hasProducts = count($products) > 0;
@@ -159,7 +159,7 @@ class CategoryController extends CatalogController
 
 		if (!$this->getCategory()->isRoot())
 		{
-			$this->redirect301($this->request->gget('cathandle'), createHandleString($categoryArray['name_lang']));
+			$this->redirect301($this->request->get('cathandle'), createHandleString($categoryArray['name_lang']));
 		}
 
 		// if all the results come from one category, redirect to this category
@@ -331,7 +331,7 @@ class CategoryController extends CatalogController
 	 */
 	public function allProductsAction()
 	{
-		$this->request = 'page', $this->request->gget('id', 1));
+		$this->request = 'page', $this->request->get('id', 1));
 		$this->request = 'id', 1);
 		$this->request = 'includeSub', true);
 		$this->removeBlock('PRODUCT_LISTS');
@@ -357,8 +357,8 @@ class CategoryController extends CatalogController
 		}
 
 		$urlParams = array('controller' => 'category', 'action' => 'index',
-				   'id' => $this->request->gget('id'),
-				   'cathandle' => $this->request->gget('cathandle'),
+				   'id' => $this->request->get('id'),
+				   'cathandle' => $this->request->get('cathandle'),
 				   );
 
 		$urlParams = array_merge($urlParams, $params);
@@ -617,7 +617,7 @@ class CategoryController extends CatalogController
 
 		// remove empty filter groups
 		$maxCriteria = $this->config->get('MAX_FILTER_CRITERIA_COUNT');
-		$showAll = $this->request->gget('showAll');
+		$showAll = $this->request->get('showAll');
 
 		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute(), true);
 		$url = $this->router->addQueryParams($url);
@@ -1034,7 +1034,7 @@ class CategoryController extends CatalogController
 
 	private function getListLayout()
 	{
-		$layout = $this->request->gget('layout');
+		$layout = $this->request->get('layout');
 		return $layout && $this->config->get('ALLOW_SWITCH_LAYOUT') ?
 						(in_array($layout, array('grid', 'list', 'table')) ? strtoupper($layout) : 'LIST') :
 						$this->config->get('LIST_LAYOUT');
@@ -1115,7 +1115,7 @@ class CategoryController extends CatalogController
 	{
 		if (!$this->category)
 		{
-			$this->category = Category::getInstanceById($this->request->gget('id', 1), Category::LOAD_DATA);
+			$this->category = Category::getInstanceById($this->request->get('id', 1), Category::LOAD_DATA);
 		}
 
 		return $this->category;

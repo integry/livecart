@@ -159,7 +159,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		SmartyRenderer::setCompileDir($this->config->getPath($compileDir));
 
 		// mod_rewrite disabled?
-		if ($this->request->gget('noRewrite'))
+		if ($this->request->get('noRewrite'))
 		{
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 			//$this->router->enableURLRewrite(false);
@@ -222,9 +222,9 @@ class LiveCart extends \Phalcon\Mvc\Application
 				}
 				else
 				{
-					if ($this->request->gget('sid'))
+					if ($this->request->get('sid'))
 					{
-						session_id($this->request->gget('sid'));
+						session_id($this->request->get('sid'));
 					}
 				}
 

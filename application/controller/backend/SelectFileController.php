@@ -43,7 +43,7 @@ class SelectFileController extends ActiveGridController
 
 	public function xmlRecursivePathAction()
 	{
-		$targetID = $this->request->gget("id");
+		$targetID = $this->request->get("id");
 
 		if (1 == $targetID)
 		{
@@ -111,7 +111,7 @@ class SelectFileController extends ActiveGridController
 
 	public function xmlBranchAction()
 	{
-		$rootID = $this->request->gget("id");
+		$rootID = $this->request->get("id");
 
 		$xmlResponse = new XMLResponse();
 		$xmlResponse->set("rootID", $rootID);
@@ -122,14 +122,14 @@ class SelectFileController extends ActiveGridController
 
 	public function changeColumnsAction()
 	{
-		$columns = array_keys($this->request->gget('col', array()));
+		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.selectFile', 'index', array('id' => $this->request->gget('id')));
+		return new ActionRedirectResponse('backend.selectFile', 'index', array('id' => $this->request->get('id')));
 	}
 
 	public function listsAction($dataOnly = false, $displayedColumns = null)
 	{
-		$filters = $this->request->gget('filters');
+		$filters = $this->request->get('filters');
 
 		if (!$filters)
 		{
@@ -157,9 +157,9 @@ class SelectFileController extends ActiveGridController
 		}
 
 		// searching
-		if (is_array($this->request->gget('filters')))
+		if (is_array($this->request->get('filters')))
 		{
-			foreach ($this->request->gget('filters') as $column => $filter)
+			foreach ($this->request->get('filters') as $column => $filter)
 			{
 				if ($filter && isset($displayedColumns[$column]))
 				{
@@ -219,10 +219,10 @@ class SelectFileController extends ActiveGridController
 			$this->request->set('sort_col', 'name');
 		}
 
-		$this->sortColumn = array_search($this->request->gget('sort_col'), array_keys($displayedColumns));
+		$this->sortColumn = array_search($this->request->get('sort_col'), array_keys($displayedColumns));
 		usort($data, array($this, 'sortFileList'));
 
-		if ('DESC' == $this->request->gget('sort_dir'))
+		if ('DESC' == $this->request->get('sort_dir'))
 		{
 			$data = array_reverse($data);
 		}

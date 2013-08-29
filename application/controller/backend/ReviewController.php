@@ -13,13 +13,13 @@ class ReviewController extends ActiveGridController
 	{
 		$response = $this->getGridResponse();
 		$response->set('id', ($this->isCategory() ? 'c' : '') . $this->getID());
-		$response->set('container', $this->request->gget('category') ? 'tabReviews' : 'tabProductReviews');
+		$response->set('container', $this->request->get('category') ? 'tabReviews' : 'tabProductReviews');
 		return $response;
 	}
 
 	public function editAction()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
 		//$manufacturer->getSpecification();
 
 		$response = new ActionResponse('review', $review->toArray());
@@ -46,7 +46,7 @@ class ReviewController extends ActiveGridController
 
 	public function updateAction()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->gget('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
 		$validator = $this->buildValidator($review);
 
 		if ($validator->isValid())
@@ -58,7 +58,7 @@ class ReviewController extends ActiveGridController
 			foreach ($review->getRelatedRecordSet('ProductRating', new ARSelectFilter()) as $rating)
 			{
 				$typeId = $rating->ratingType ? $rating->ratingType->getID() : '';
-				$rating->rating->set($this->request->gget('rating_' . $typeId));
+				$rating->rating->set($this->request->get('rating_' . $typeId));
 				$rating->save();
 			}
 
@@ -156,13 +156,13 @@ class ReviewController extends ActiveGridController
 
 	private function isCategory()
 	{
-		$id = array_pop(explode('_', $this->request->gget('id')));
-		return (substr($id, 0, 1) == 'c') || $this->request->gget('category');
+		$id = array_pop(explode('_', $this->request->get('id')));
+		return (substr($id, 0, 1) == 'c') || $this->request->get('category');
 	}
 
 	private function getID()
 	{
-		$id = array_pop(explode('_', $this->request->gget('id')));
+		$id = array_pop(explode('_', $this->request->get('id')));
 
 		if ($this->isCategory() && (substr($id, 0, 1) == 'c'))
 		{

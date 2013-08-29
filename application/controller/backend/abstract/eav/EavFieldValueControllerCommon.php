@@ -18,7 +18,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		if($id = $this->request->gget('id', false))
+		if($id = $this->request->get('id', false))
 		{
 			ActiveRecordModel::deleteById($this->getClassName(), $id);
 			return new JSONResponse(false, 'success');
@@ -36,7 +36,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 	 */
 	public function sortAction()
 	{
-		foreach($this->request->gget($this->request->gget('target'), array()) as $position => $key)
+		foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
 		{
 			// Except new fields, because they are not yet in database
 			if(!empty($key) && !preg_match('/^new/', $key))
@@ -52,9 +52,9 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 
 	public function mergeValuesAction()
 	{
-		$mergedIntoValue = $this->getInstanceByID($this->request->gget('mergeIntoValue'), true);
+		$mergedIntoValue = $this->getInstanceByID($this->request->get('mergeIntoValue'), true);
 
-		foreach($this->request->gget('mergedValues') as $mergedValueId)
+		foreach($this->request->get('mergedValues') as $mergedValueId)
 		{
 			$mergedValue = $this->getInstanceByID($mergedValueId, true);
 			$mergedIntoValue->mergeWith($mergedValue);

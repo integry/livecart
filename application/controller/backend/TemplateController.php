@@ -47,7 +47,7 @@ class TemplateController extends StoreManagementController
 		$response->set('code', base64_encode($template->getCode()));
 		$response->set('template', $template->toArray());
 		$response->set('themes', $this->application->getRenderer()->getThemeList());
-		$response->set('theme', $this->request->gget('theme'));
+		$response->set('theme', $this->request->get('theme'));
 
 		return $response;
 	}
@@ -55,8 +55,8 @@ class TemplateController extends StoreManagementController
 	public function templateDataAction()
 	{
 		$request = $this->getRequest();
-		$theme = $request->gget('theme');
-		$version = $request->gget('version');
+		$theme = $request->get('theme');
+		$version = $request->get('version');
 		$template = new Template($this->getFileName(), strlen($theme) ? $theme : '', $version);
 		return new JSONResponse($template->toArray());
 	}
@@ -154,24 +154,24 @@ class TemplateController extends StoreManagementController
 	public function saveAction()
 	{
 		$request = $this->getRequest();
-		$code = $request->gget('code');
+		$code = $request->get('code');
 
-		if ($this->request->gget('fileName'))
+		if ($this->request->get('fileName'))
 		{
-			$fileName = $this->request->gget('fileName');
+			$fileName = $this->request->get('fileName');
 			if (strtolower(substr($fileName, -4)) != '.tpl')
 			{
 				$fileName .= '.tpl';
 			}
-			$template = new Template($fileName, $this->request->gget('theme'));
+			$template = new Template($fileName, $this->request->get('theme'));
 		}
 		else
 		{
-			$template = new Template($this->getFileName(), $this->request->gget('theme'));
+			$template = new Template($this->getFileName(), $this->request->get('theme'));
 		}
 
 		$origPath = $this->getFileName();
-		if ($template->isCustomFile() && !$this->request->gget('new') && ($template->getFileName() != $origPath) && !$this->request->gget('theme'))
+		if ($template->isCustomFile() && !$this->request->get('new') && ($template->getFileName() != $origPath) && !$this->request->get('theme'))
 		{
 			$origPath = Template::getCustomizedFilePath($origPath);
 			if (file_exists($origPath))
@@ -185,7 +185,7 @@ class TemplateController extends StoreManagementController
 
 		if($res)
 		{
-			return new JSONResponse(array('template' => $template->toArray(), 'isNew' => $this->request->gget('new')), 'success', $this->translate('_template_has_been_successfully_updated'));
+			return new JSONResponse(array('template' => $template->toArray(), 'isNew' => $this->request->get('new')), 'success', $this->translate('_template_has_been_successfully_updated'));
 		}
 		else
 		{
@@ -210,9 +210,9 @@ class TemplateController extends StoreManagementController
 		$file = str_replace('\\', '/', $this->getFileName());
 		$template = new EmailTemplate($file);
 		$template = $template->getLangTemplate($this->application->getDefaultLanguageCode());
-		$template->setSubject($this->request->gget('subject'));
-		$template->setBody($this->request->gget('body'));
-		$template->setHTML($this->request->gget('html'));
+		$template->setSubject($this->request->get('subject'));
+		$template->setBody($this->request->get('body'));
+		$template->setHTML($this->request->get('html'));
 		$res = $template->save();
 
 		if (substr($file, 0, 11) != 'email/block')
@@ -221,11 +221,11 @@ class TemplateController extends StoreManagementController
 			{
 				$langTemplate = $template->getLangTemplate($lang);
 
-				if ($this->request->gget('body_' . $lang) || $this->request->gget('subject_' . $lang))
+				if ($this->request->get('body_' . $lang) || $this->request->get('subject_' . $lang))
 				{
-					$langTemplate->setSubject($this->request->gget('subject_' . $lang, $this->request->gget('subject')));
-					$langTemplate->setBody($this->request->gget('body_' . $lang, $this->request->gget('body')));
-					$langTemplate->setHTML($this->request->gget('html_' . $lang));
+					$langTemplate->setSubject($this->request->get('subject_' . $lang, $this->request->get('subject')));
+					$langTemplate->setBody($this->request->get('body_' . $lang, $this->request->get('body')));
+					$langTemplate->setHTML($this->request->get('html_' . $lang));
 					$langTemplate->save();
 				}
 				else
@@ -257,7 +257,7 @@ class TemplateController extends StoreManagementController
 
 	private function getFileName()
 	{
-		return array_shift(explode(',', $this->request->gget('file')));
+		return array_shift(explode(',', $this->request->get('file')));
 	}
 
 	private function getTemplateForm(Template $template)

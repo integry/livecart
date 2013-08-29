@@ -48,7 +48,7 @@ class ProductMassActionProcessor extends MassActionProcessor
 		}
 		else if ('inc_stock' == $act)
 		{
-			$product->stockCount->set($product->stockCount + $this->request->gget($act));
+			$product->stockCount->set($product->stockCount + $this->request->get($act));
 		}
 		else if ('addRelated' == $act)
 		{

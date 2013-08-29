@@ -372,7 +372,7 @@ class Product extends MultilingualObject
 
 	private function loadPricingFromRequest(Request $request, $listPrice = false, $removeMissing = false)
 	{
-		$prices = $request->gget('defined' . ($listPrice ? 'listPrice' : ''));
+		$prices = $request->get('defined' . ($listPrice ? 'listPrice' : ''));
 		foreach (self::getApplication()->getCurrencyArray() as $currency)
 		{
 			if (isset($prices[$currency]) && strlen($prices[$currency]))
@@ -397,7 +397,7 @@ class Product extends MultilingualObject
 		}
 
 		// set manufacturer
-		if ($man = $request->gget('Manufacturer'))
+		if ($man = $request->get('Manufacturer'))
 		{
 			$this->manufacturer = !empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
 		}
@@ -408,7 +408,7 @@ class Product extends MultilingualObject
 		$this->loadPricingFromRequest($request, false, $removeMissingPrices);
 		$this->loadPricingFromRequest($request, true, $removeMissingPrices);
 
-		if ($quantities = $request->gget('quantityPrice'))
+		if ($quantities = $request->get('quantityPrice'))
 		{
 			foreach ($this->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
 			{

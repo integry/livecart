@@ -12,7 +12,7 @@ class ProductListController extends ProductListControllerCommon
 {
 	public function indexAction()
 	{
-		$categoryID = (int)$this->request->gget('id');
+		$categoryID = (int)$this->request->get('id');
 		$category = Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA);
 
 		// get lists

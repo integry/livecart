@@ -12,7 +12,7 @@ class ThemeFileController extends StoreManagementController
 	public function indexAction()
 	{
 		$request = $this->getRequest();
-		$theme = $request->gget('id');
+		$theme = $request->get('id');
 		$tfh = ThemeFile::getNewInstance($theme);
 		$response = new ActionResponse();
 		$response->set('form',$this->buildForm());
@@ -25,9 +25,9 @@ class ThemeFileController extends StoreManagementController
 	public function uploadAction()
 	{
 		$request = $this->getRequest();
-		$theme = $request->gget('theme');
-		$tfh = ThemeFile::getNewInstance($request->gget('theme'));
-		$res = $tfh->processFileUpload('file', $request->gget('filename'), $request->gget('orginalFileName'));
+		$theme = $request->get('theme');
+		$tfh = ThemeFile::getNewInstance($request->get('theme'));
+		$res = $tfh->processFileUpload('file', $request->get('filename'), $request->get('orginalFileName'));
 		$this->setLayout('iframeJs');
 		$response = new ActionResponse();
 		$response->set('theme', $theme);
@@ -42,8 +42,8 @@ class ThemeFileController extends StoreManagementController
 	public function deleteAction()
 	{
 		$request = $this->getRequest();
-		$tfh = ThemeFile::getNewInstance($request->gget('theme'));
-		$tfh->removeFile($request->gget('file'));
+		$tfh = ThemeFile::getNewInstance($request->get('theme'));
+		$tfh->removeFile($request->get('file'));
 	}
 
 	/**

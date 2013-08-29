@@ -27,7 +27,7 @@ class XmlCategoryApiReader extends ApiReader
 		if(in_array($apiActionName, $shortFormatActions))
 		{
 			$request = parent::loadDataInRequest($request, '//', $shortFormatActions);
-			$request->set('ID',$request->gget($apiActionName));
+			$request->set('ID',$request->get($apiActionName));
 			$request->remove($apiActionName);
 		} else {
 			$request = parent::loadDataInRequest($request, self::getXMLPath().'//', $this->getApiFieldNames());

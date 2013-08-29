@@ -34,7 +34,7 @@ class SpecFieldIsValueSelectedCheck extends Check
 	{
 		if ($this->specField->isMultiValue)
 		{
-			$other = $this->request->gget('other');
+			$other = $this->request->get('other');
 
 			if(isset($other[$this->specField->getID()][0]) && "" != $other[$this->specField->getID()][0])
 			{
@@ -57,7 +57,7 @@ class SpecFieldIsValueSelectedCheck extends Check
 
 		else if ('other' == $value)
 		{
-			$other = $this->request->gget('other');
+			$other = $this->request->get('other');
 			return !empty($other[$this->specField->getID()]);
 		}
 

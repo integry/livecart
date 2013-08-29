@@ -20,7 +20,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
     public function categoryAction()
 	{
 
-		$category = Category::getInstanceByID($this->request->gget("id"), Category::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 
 		$response = array();
 		$response = $this->lists()->getValue();
@@ -46,9 +46,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function getAction()
 	{
-		if ((int)$this->request->gget('id'))
+		if ((int)$this->request->get('id'))
 		{
-			$product = Product::getInstanceByID($this->request->gget('id'), true, array('Manufacturer'));
+			$product = Product::getInstanceByID($this->request->get('id'), true, array('Manufacturer'));
 			$product->loadSpecification();
 			$product->loadPricing();
 
@@ -61,7 +61,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 		else
 		{
-			$cat = Category::getInstanceByID($this->request->gget('categoryID'), true);
+			$cat = Category::getInstanceByID($this->request->get('categoryID'), true);
 			$product = Product::getNewInstance($cat);
 			$arr = $product->toArray();
 		}
@@ -71,7 +71,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function getPresentationAction()
 	{
-		$product = Product::getInstanceByID($this->request->gget('id'), true);
+		$product = Product::getInstanceByID($this->request->get('id'), true);
 		return new JSONResponse(CategoryPresentation::getInstance($product)->toArray());
 	}
 
@@ -140,7 +140,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		parent::changeColumns();
 
-		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->gget('id')));
+		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('id')));
 	}
 
 	protected function getClassName()
@@ -260,7 +260,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				}
 				else
 				{
-					$values = is_array($this->request->gget('filters')) ? $this->request->gget('filters') : json_decode($this->request->gget('filters'), true);
+					$values = is_array($this->request->get('filters')) ? $this->request->get('filters') : json_decode($this->request->get('filters'), true);
 					$values = isset($values[$column]) ? $values[$column] : null;
 
 					if ($values)
@@ -324,14 +324,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		$filter = $this->getSelectFilter();
 
-		$act = $this->request->gget('act');
+		$act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
 
 		if ('move' == $act)
 		{
 			new ActiveGrid($this->application, $filter, $this->getClassName());
 
-			$cat = Category::getInstanceById($this->request->gget('categoryID'), Category::LOAD_DATA);
+			$cat = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
 			$update = new ARUpdateFilter();
 
 			$update->setCondition($filter->getCondition());
@@ -343,33 +343,33 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			Category::recalculateProductsCount();
 			ActiveRecord::commit();
 
-			return new JSONResponse(array('act' => $this->request->gget('act')), 'success', $this->translate('_move_succeeded'));
+			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_move_succeeded'));
 		}
 
 		// remove design themes
-		if (('theme' == $act) && !$this->request->gget('theme'))
+		if (('theme' == $act) && !$this->request->get('theme'))
 		{
 						ActiveRecord::deleteRecordSet('CategoryPresentation', new ARDeleteFilter($filter->getCondition()), null, array('Product', 'Category'));
 
-			return new JSONResponse(array('act' => $this->request->gget('act')), 'success', $this->translate('_themes_removed'));
+			return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_themes_removed'));
 		}
 
 		$params = array();
 		if ('manufacturer' == $act)
 		{
-			$params['manufacturer'] = Manufacturer::getInstanceByName($this->request->gget('manufacturer'));
+			$params['manufacturer'] = Manufacturer::getInstanceByName($this->request->get('manufacturer'));
 		}
 		else if (in_array($act, array('price', 'inc_price', 'multi_price', 'div_price')))
 		{
 			$params['baseCurrency'] = $this->application->getDefaultCurrencyCode();
-			$params['price'] = $this->request->gget($act);
+			$params['price'] = $this->request->get($act);
 			$params['currencies'] = $this->application->getCurrencySet();
-			$params['inc_price_value'] = $this->request->gget($act . '_value');
-			$params['inc_quant_price'] = $this->request->gget($act . '_price');
+			$params['inc_price_value'] = $this->request->get($act . '_value');
+			$params['inc_quant_price'] = $this->request->get($act . '_price');
 		}
 		else if ('addRelated' == $act)
 		{
-			$params['relatedProduct'] = Product::getInstanceBySKU($this->request->gget('related'));
+			$params['relatedProduct'] = Product::getInstanceBySKU($this->request->get('related'));
 			if (!$params['relatedProduct'])
 			{
 				return new JSONResponse(0);
@@ -403,26 +403,26 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$params['field'] = $field;
 			$params['request'] = $request;
 		}
-		else if ($this->request->gget('categoryID'))
+		else if ($this->request->get('categoryID'))
 		{
-			$params['category'] = Category::getInstanceById($this->request->gget('categoryID'), Category::LOAD_DATA);
+			$params['category'] = Category::getInstanceById($this->request->get('categoryID'), Category::LOAD_DATA);
 		}
 		else if ('theme' == $act)
 		{
-						$params['theme'] = $this->request->gget('theme');
+						$params['theme'] = $this->request->get('theme');
 		}
 		else if ('shippingClass' == $act)
 		{
-			$params['shippingClass'] = $this->request->gget('shippingClass');
+			$params['shippingClass'] = $this->request->get('shippingClass');
 		}
 		else if ('taxClass' == $act)
 		{
-			$params['taxClass'] = $this->request->gget('taxClass');
+			$params['taxClass'] = $this->request->get('taxClass');
 		}
 
 		$response = parent::processMass($params);
 
-		if ($this->request->gget('categoryID'))
+		if ($this->request->get('categoryID'))
 		{
 			Category::recalculateProductsCount();
 		}
@@ -532,7 +532,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getExportColumns()
 	{
-		$category = Category::getInstanceByID($this->request->gget('id'), Category::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
 		$columns = array();
 		$available = $this->getAvailableColumns($category);
 
@@ -590,11 +590,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$resp = array();
 
-		$field = $this->request->gget('field');
+		$field = $this->request->get('field');
 
 		if (in_array($field, array('sku', 'URL', 'keywords')))
 		{
-		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->gget($field) . '%');
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->get($field) . '%');
 		  	$f->setCondition($c);
 
 			$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
@@ -614,11 +614,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		else if ('name' == $field)
 		{
-		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->gget($field) . '%');
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->get($field) . '%');
 		  	$f->setCondition($c);
 
 			$locale = $this->locale->getLocaleCode();
-			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->gget($field) . '%');
+			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->get($field) . '%');
 			$c->addAND($langCond);
 
 		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
@@ -642,8 +642,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
 
 		  	$f->setCondition(new EqualsCond(new ARFieldHandle('SpecificationStringValue', 'specFieldID'), $id));
-			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->gget($field) . '%'));
-			$f->mergeCondition(new LikeCond($searchHandle, $this->request->gget($field) . '%'));
+			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
+			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
 		  	$f->setOrder($searchHandle, 'ASC');
 
@@ -664,7 +664,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		$this->loadLanguageFile('backend/ProductPrice');
 
-		$category = Category::getInstanceByID($this->request->gget("categoryID"), ActiveRecordModel::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get("categoryID"), ActiveRecordModel::LOAD_DATA);
 
 		$response = $this->productForm(Product::getNewInstance($category, ''));
 		if ($this->config->get('AUTO_GENERATE_SKU'))
@@ -695,7 +695,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 */
 	public function createAction()
 	{
-		$product = Product::getNewInstance(Category::getInstanceByID($this->request->gget('categoryID')), $this->translate('_new_product'));
+		$product = Product::getNewInstance(Category::getInstanceByID($this->request->get('categoryID')), $this->translate('_new_product'));
 
 		$response = $this->save($product);
 
@@ -725,7 +725,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function basicDataAction()
 	{
-		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$product->loadSpecification();
 
 		$set = $product->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
@@ -765,13 +765,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		$form = new Form($this->getValidator('specField'));
 
-		if ($this->request->gget('id'))
+		if ($this->request->get('id'))
 		{
-			$product = Product::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
+			$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 		}
 		else
 		{
-			$cat = Category::getInstanceByID((int)$this->request->gget('categoryID'), ActiveRecord::LOAD_DATA);
+			$cat = Category::getInstanceByID((int)$this->request->get('categoryID'), ActiveRecord::LOAD_DATA);
 			$product = Product::getNewInstance($cat);
 		}
 
@@ -785,7 +785,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function countTabsItemsAction()
 	{
-	  		  	$product = Product::getInstanceByID((int)$this->request->gget('id'), ActiveRecord::LOAD_DATA);
+	  		  	$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 
 	  	return new JSONResponse(array(
 			'tabProductBundle' => count(ProductBundle::getBundledProductArray($product)),
@@ -804,7 +804,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		ClassLoader::importNow("application/helper/getDateFromString");
 
-		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 
 		$thisMonth = date('m');
 		$lastMonth = date('Y-m', strtotime(date('m') . '/15 -1 month'));
@@ -882,7 +882,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 			foreach (array('ShippingClass' => 'shippingClassID', 'TaxClass' => 'taxClassID') as $class => $field)
 			{
-				$value = $this->request->gget($field, null);
+				$value = $this->request->get($field, null, null);
 				$instance = $value ? ActiveRecordModel::getInstanceByID($class, $value) : null;
 				$product->setFieldValue($field, $instance);
 			}
@@ -897,7 +897,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			// save pricing
 			$product->loadSpecification();
 			$product->loadPricing();
-			if ($quantities = $this->request->gget('quantityPricing'))
+			if ($quantities = $this->request->get('quantityPricing'))
 			{
 				foreach ($product->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
 				{
@@ -935,7 +935,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			}
 
 			// save product images
-			$inputImages = $this->request->gget('productImage');
+			$inputImages = $this->request->get('productImage');
 			$tmpImages = array();
 			if (is_array($inputImages))
 			{
@@ -1048,13 +1048,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
 
 		// check if SKU is entered if not autogenerating
-		if ($this->request->gget('save') && !$isExisting && !$this->request->gget('autosku'))
+		if ($this->request->get('save') && !$isExisting && !$this->request->get('autosku'))
 		{
 			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));
 		}
 
 		// check if entered SKU is unique
-		if ($this->request->gget('sku') && $this->request->gget('save') && (!$isExisting || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->gget('sku'))))
+		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
 		{
 						//$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
 		}
@@ -1070,7 +1070,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function massActionFieldAction()
 	{
-		$field = SpecField::getInstanceByID($this->request->gget('id'), true);
+		$field = SpecField::getInstanceByID($this->request->get('id'), true);
 		$array = $field->toArray();
 
 		if ($field->isSelector())
@@ -1223,7 +1223,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function uploadProductImageAction()
 	{
-						$field = 'upload_' . $this->request->gget('field');
+						$field = 'upload_' . $this->request->get('field');
 
 		$dir = $this->config->getPath('public/upload/tmpimage/');
 
@@ -1281,7 +1281,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getRequestCategory()
 	{
-		return $this->request->gget("id");
+		return $this->request->get("id");
 	}
 }
 

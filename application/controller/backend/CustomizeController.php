@@ -36,14 +36,14 @@ class CustomizeController extends StoreManagementController
 	public function modeAction()
 	{
 
-	  	if (($this->application->isCustomizationMode() && !$this->request->isValueSet('mode')) || ('exit' == $this->request->gget('mode')))
+	  	if (($this->application->isCustomizationMode() && !$this->request->isValueSet('mode')) || ('exit' == $this->request->get('mode')))
 	  	{
 			$this->session->unsetValue('customizationMode');
 		}
 		else
 		{
 			$this->session->set('customizationMode', true);
-			$this->session->set('customizationModeType', $this->request->gget('mode', 'template'));
+			$this->session->set('customizationModeType', $this->request->get('mode', 'template'));
 		}
 
 		if (!$this->request->isValueSet('return'))
@@ -52,13 +52,13 @@ class CustomizeController extends StoreManagementController
 		}
 		else
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->gget('return')));
+			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
 		}
 	}
 
 	public function saveCssAction()
 	{
-		$params = json_decode($this->request->gget('result'), true);
+		$params = json_decode($this->request->get('result'), true);
 
 		$theme = $params['theme'];
 
