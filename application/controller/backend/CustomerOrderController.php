@@ -30,9 +30,9 @@ class CustomerOrderController extends ActiveGridController
 
 	private $extraDisplayedColumns = array();
 
-	public function initAction()
+	public function initialize()
 	{
-		parent::init();
+		parent::initialize();
 		CustomerOrder::allowEmpty();
 	}
 

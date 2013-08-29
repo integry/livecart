@@ -7,9 +7,9 @@
  */
 class ErrController extends FrontendController
 {
-	public function initAction()
+	public function initialize()
 	{
-		parent::init();
+		parent::initialize();
 		$this->loadLanguageFile('Err');
 	}
 

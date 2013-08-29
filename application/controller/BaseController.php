@@ -132,7 +132,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 	protected function init()
 	{
-		parent::init();
+		parent::initialize();
 
 		$pluginRes = $this->application->processInitPlugins($this);
 		$this->application->logStat('Init BaseController');

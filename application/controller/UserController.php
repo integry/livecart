@@ -6,15 +6,15 @@
  *  @author Integry Systems
  *  @package application.controller
  */
-class UserController extends FrontendController
+class UserController extends ControllerBase
 {
  	const PASSWORD_MIN_LENGTH = 5;
 
  	const COUNT_RECENT_FILES = 5;
 
- 	public function initAction()
+ 	public function initialize()
  	{
- 		$initRes = parent::init();
+ 		parent::initialize();
 
  		$this->loadLanguageFile('Frontend');
  		$this->loadLanguageFile('User');
@@ -23,8 +23,6 @@ class UserController extends FrontendController
  		{
 			$this->user->load();
 		}
-
-		return $initRes;
 	}
 
 	private function addAccountBreadcrumb()
@@ -1328,7 +1326,7 @@ class UserController extends FrontendController
 
 	private function buildRegForm()
 	{
-		return new Form($this->buildRegValidator());
+//		return new Form($this->buildRegValidator());
 	}
 
 	private function buildRegValidator()

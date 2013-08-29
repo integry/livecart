@@ -11,9 +11,9 @@
  */
 class TemplateController extends StoreManagementController
 {
-	public function initAction()
+	public function initialize()
 	{
-		parent::init();
+		parent::initialize();
 		$this->application->setTheme('');
 	}
 

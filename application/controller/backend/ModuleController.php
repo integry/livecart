@@ -12,11 +12,11 @@ class ModuleController extends StoreManagementController
 {
 	private $repos = array();
 
-	public function initAction()
+	public function initialize()
 	{
 		$this->initRepos();
 
-		parent::init();
+		parent::initialize();
 	}
 
 	protected function initRepos()

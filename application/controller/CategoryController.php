@@ -36,9 +36,9 @@ class CategoryController extends CatalogController
 
 	protected $hasProducts = false;
 
-	public function initAction()
+	public function initialize()
   	{
-	  	parent::init();
+	  	parent::initialize();
 	  	$this->addBlock('FILTER_BOX', 'boxFilter', 'block/box/filter');
 	  	$this->addBlock('FILTER_TOP', 'boxFilterTop', 'category/boxFilterTopBlock');
 	  	$this->addBlock('PRODUCT_LISTS', 'productList', 'block/productList');

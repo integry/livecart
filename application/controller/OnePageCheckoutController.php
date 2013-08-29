@@ -15,7 +15,7 @@ class OnePageCheckoutController extends CheckoutController
 
 	const CUSTOM_FIELDS_STEP = 'SHIPPING_ADDRESS_STEP';
 
-	public function initAction()
+	public function initialize()
 	{
 		static $isInitialized = false;
 
@@ -33,7 +33,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		$this->isTosRequired = $this->config->get('REQUIRE_TOS');
 
-		parent::init();
+		parent::initialize();
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 		$this->config->setRuntime('ENABLE_CHECKOUTDELIVERYSTEP', true);
 		$this->config->setRuntime('DISABLE_CHECKOUT_ADDRESS_STEP', false);

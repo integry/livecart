@@ -10,11 +10,11 @@
  */
 class CustomFieldController extends StoreManagementController
 {
-	public function initAction()
+	public function initialize()
 	{
 		$this->loadLanguageFile('backend/Category');
 		$this->loadLanguageFile('backend/CustomField');
-		return parent::init();
+		return parent::initialize();
 	}
 
 	public function indexAction()

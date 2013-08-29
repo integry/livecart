@@ -16,7 +16,7 @@ class SitemapController extends FrontendController
 {
 	const MAX_URLS = 5000;
 
-	public function initAction()
+	public function initialize()
 	{
 		$this->setLayout('empty');
 

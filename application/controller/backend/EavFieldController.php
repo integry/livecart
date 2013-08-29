@@ -9,10 +9,10 @@
  */
 class EavFieldController extends EavFieldControllerCommon
 {
-	public function initAction()
+	public function initialize()
 	{
 		$this->loadLanguageFile('backend/SpecField');
-		return parent::init();
+		return parent::initialize();
 	}
 
 	protected function getParent($id)

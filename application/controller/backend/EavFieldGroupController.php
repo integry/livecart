@@ -10,10 +10,10 @@
  */
 class EavFieldGroupController extends EavFieldGroupControllerCommon
 {
-	public function initAction()
+	public function initialize()
 	{
 		$this->loadLanguageFile('backend/SpecFieldGroup');
-		return parent::init();
+		return parent::initialize();
 	}
 
 	protected function getClassName()

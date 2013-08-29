@@ -9,7 +9,7 @@
  */
 class InstallController extends FrontendController
 {
-	public function initAction()
+	public function initialize()
 	{
 		if ($writeFail = Installer::getUnwritableDirectories())
 		{

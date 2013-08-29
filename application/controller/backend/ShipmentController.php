@@ -10,9 +10,9 @@
  */
 class ShipmentController extends StoreManagementController
 {
-	public function initAction()
+	public function initialize()
 	{
-		parent::init();
+		parent::initialize();
 		CustomerOrder::allowEmpty();
 	}
 

@@ -56,7 +56,7 @@ class CheckoutController extends FrontendController
 	const STEP_SHIPPING = 4;
 	const STEP_PAYMENT = 5;
 
-	public function initAction()
+	public function initialize()
 	{
 		if ('CheckoutController' == get_class($this) && ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE'))
 		{
@@ -71,7 +71,7 @@ class CheckoutController extends FrontendController
 
 		$this->loadLanguageFile('User');
 
-		parent::init();
+		parent::initialize();
 		$this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index'), true));
 
 		$action = $this->request->getActionName();

@@ -48,7 +48,7 @@ abstract class BackendController extends BaseController
 		}
 	}
 
-	public function initAction()
+	public function initialize()
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
@@ -58,7 +58,7 @@ abstract class BackendController extends BaseController
 
 		$this->getPendingModuleUpdateStats($this->application);
 
-		return parent::init();
+		return parent::initialize();
 	}
 
 	protected function getPendingModuleUpdateStats(LiveCart $application)

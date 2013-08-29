@@ -10,9 +10,9 @@ class ProductController extends CatalogController
 {
 	public $filters = array();
 
-	public function initAction()
+	public function initialize()
 	{
-		parent::init();
+		parent::initialize();
 
 		$this->addBlock('PRODUCT-ATTRIBUTE-SUMMARY', 'attributeSummary', 'product/block/attributeSummary');
 		$this->addBlock('PRODUCT-PURCHASE', 'purchase', 'product/block/purchase');

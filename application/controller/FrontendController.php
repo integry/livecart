@@ -49,9 +49,9 @@ abstract class FrontendController extends ControllerBase
 		}
 	}
 
-	public function initAction()
+	public function initialize()
 	{
-		$initRes = parent::init();
+		$initRes = parent::initialize();
 
 		$this->setLayout('frontend');
 		$this->addBlock('FOOTER_TOOLBAR', 'toolbar', 'block/toolbar');
