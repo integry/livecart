@@ -98,7 +98,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 
 	public function getRoleCacheFile()
 	{
-		return ClassLoader::getRealPath('cache/roles/') . $this->getID() . '.php';
+		return $this->config->getPath('cache/roles/') . $this->getID() . '.php';
 	}
 
 	public function setAllRoles()

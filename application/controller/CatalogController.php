@@ -5,7 +5,7 @@ ClassLoader::import('application/model/Currency');
 ClassLoader::import('application/model/category/Category');
 ClassLoader::import('application/model/product/ProductPrice');
 ClassLoader::importNow('application/helper/CreateHandleString');
-include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 
 /**
  * Base class for all front-end related controllers
@@ -271,7 +271,7 @@ abstract class CatalogController extends FrontendController
 
 	protected function addCategoriesToBreadCrumb($path, $addLast = false)
 	{
-		include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+		include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 
 		$i = 0;
 		$max = $this->config->get('BREADCRUMB_DEPTH') ? $this->config->get('BREADCRUMB_DEPTH') : count($path);
@@ -299,7 +299,7 @@ abstract class CatalogController extends FrontendController
 
 	protected function addFiltersToBreadCrumb($category, $page = 1)
 	{
-		include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+		include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 
 		// add filters to breadcrumb
 		if (!isset($category))

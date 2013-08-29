@@ -224,14 +224,14 @@ class ModuleController extends StoreManagementController
 			return $response;
 		}
 
-		require_once(ClassLoader::getRealPath('library/pclzip') . '/pclzip.lib.php');
+		require_once($this->config->getPath('library/pclzip') . '/pclzip.lib.php');
 
 		// process update
 		$module = $this->application->getConfigContainer()->getModule($this->request->gget('id'));
 
 		foreach ($updatePath as $key => $package)
 		{
-			$tmpFile = ClassLoader::getRealPath('cache/') . 'update' . rand(1, 5000000) . '.zip';
+			$tmpFile = $this->config->getPath('cache/') . 'update' . rand(1, 5000000) . '.zip';
 			$tmpDir = substr($tmpFile, 0, -4);
 
 			$response->flushChunk(array('package' => $package, 'status' => $this->translate('_status_fetch')));
@@ -324,7 +324,7 @@ class ModuleController extends StoreManagementController
 
 	public function fetchAction()
 	{
-		require_once(ClassLoader::getRealPath('library/pclzip') . '/pclzip.lib.php');
+		require_once($this->config->getPath('library/pclzip') . '/pclzip.lib.php');
 
 		$id = unserialize(base64_decode($this->request->gget('module')));
 		$repos = json_decode(base64_decode($this->request->gget('repos')), true);
@@ -334,7 +334,7 @@ class ModuleController extends StoreManagementController
 		$this->request->set('handshake', $repo['handshake']);
 		$this->request->set('id', $id[1]);
 
-		$tmpFile = ClassLoader::getRealPath('cache/') . 'install' . rand(1, 5000000) . '.zip';
+		$tmpFile = $this->config->getPath('cache/') . 'install' . rand(1, 5000000) . '.zip';
 		file_put_contents($tmpFile, $this->getRepoResponse('package/downloadInstall', array(), true));
 
 		if (!filesize($tmpFile))
@@ -349,7 +349,7 @@ class ModuleController extends StoreManagementController
 		unlink($tmpFile);
 
 		$update = new UpdateHelper($this->application);
-		$moduleDir = ClassLoader::getRealPath('module/' . $id[1]);
+		$moduleDir = $this->config->getPath('module/' . $id[1]);
 		$copy = $update->copyDirectory($tmpDir, $moduleDir);
 
 		if ($copy !== true)

@@ -30,7 +30,7 @@ class RolesController extends StoreManagementController
 		}
 
 		// disabled roles
-		$disable = ClassLoader::getRealPath('storage/configuration/DisabledRoles') . '.php';
+		$disable = $this->config->getPath('storage/configuration/DisabledRoles') . '.php';
 		if (file_exists($disable))
 		{
 			$disabledRoles = include $disable;
@@ -131,7 +131,7 @@ class RolesController extends StoreManagementController
 		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);
 
 		// disabled roles
-		$disable = ClassLoader::getRealPath('storage/configuration/DisabledRoles') . '.php';
+		$disable = $this->config->getPath('storage/configuration/DisabledRoles') . '.php';
 		if (file_exists($disable))
 		{
 			$disabledRoles = include $disable;

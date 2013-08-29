@@ -15,7 +15,7 @@ class UpdateHelper
 		switch ($settings->get('UPDATE_COPY_METHOD'))
 		{
 			case 'UPDATE_COPY':
-				return @copy($source, ClassLoader::getRealPath('.') . $target);
+				return @copy($source, $this->config->getPath('.') . $target);
 			break;
 
 			case 'UPDATE_FTP':
@@ -43,7 +43,7 @@ class UpdateHelper
 			case 'UPDATE_FTP':
 				if ($conn = $this->getFTPConnection())
 				{
-					$root = ClassLoader::getRealPath('.');
+					$root = $this->config->getPath('.');
 					$ftpRoot = '/' . $settings->get('UPDATE_FTP_DIRECTORY') . '/' . substr($target, strlen($root) - 1);
 
 					return $this->ftp_uploaddirectory($conn, $source, $ftpRoot);

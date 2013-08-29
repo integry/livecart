@@ -30,7 +30,7 @@ class ProductImportTest extends LiveCartTest
 		$profile->setField(3, 'Product.shippingWeight');
 		$profile->setParam('delimiter', ';');
 
-		$csvFile = ClassLoader::getRealPath('cache/') . 'testDataImport.csv';
+		$csvFile = $this->config->getPath('cache/') . 'testDataImport.csv';
 		file_put_contents($csvFile, 'test; "Test Product"; "Parbaudes Produkts"; 15' . "\n" .
 									'another; "Another Test"; "Vel Viens"; 12.44');
 

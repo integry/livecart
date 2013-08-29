@@ -118,7 +118,7 @@ class DatabaseImportController extends StoreManagementController
 	{
 		$drivers = array();
 
-		foreach (new DirectoryIterator(ClassLoader::getRealPath('library/import.driver')) as $file)
+		foreach (new DirectoryIterator($this->config->getPath('library/import.driver')) as $file)
 		{
 			if (!$file->isDot())
 			{

@@ -117,7 +117,7 @@ class Language extends \ActiveRecordModel
 		$array['name'] = $info->getLanguageName($array['ID']);
 	  	$array['originalName'] = $info->getOriginalLanguageName($array['ID']);
 
-		if (file_exists(ClassLoader::getRealPath('public/image.localeflag') . '/' . $array['ID'] . '.png'))
+		if (file_exists($this->config->getPath('public/image.localeflag') . '/' . $array['ID'] . '.png'))
 		{
 		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
 		}

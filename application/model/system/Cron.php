@@ -68,7 +68,7 @@ class Cron
 
 	private function getCronFile()
 	{
-		return ClassLoader::getRealPath('cache/cronExecTime') . '.php';
+		return $this->config->getPath('cache/cronExecTime') . '.php';
 	}
 }
 

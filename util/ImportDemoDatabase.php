@@ -4,7 +4,7 @@ include '../application/Initialize.php';
 new LiveCart();
 
 
-$file = ClassLoader::getRealPath('installdata.demo') . '.sql';
+$file = $this->config->getPath('installdata.demo') . '.sql';
 //$file = 'alter.sql';
 
 if (!file_exists($file))

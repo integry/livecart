@@ -146,7 +146,7 @@ abstract class EavValueCommon extends MultilingualObject
 	{
 		$path = self::getRelativeImagePath(get_class($this), $this->getID());
 		
-		return $isFullPath ? ClassLoader::getRealPath('public/') . $path : $path;
+		return $isFullPath ? $this->config->getPath('public/') . $path : $path;
 	}
 
 	public function save($forceOperation = false)

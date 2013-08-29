@@ -248,7 +248,7 @@ class Currency extends ActiveRecordModel
 
 	public static function getCacheFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/currencies.php';
+		return $this->config->getPath('cache') . '/currencies.php';
 	}
 
 	public function save($forceOperation = 0)
@@ -269,7 +269,7 @@ class Currency extends ActiveRecordModel
 	  	// check currency symbol
 	  	if (!$this->pricePrefix && !$this->priceSuffix)
 	  	{
-			$prefixes = include ClassLoader::getRealPath('installdata.currency.signs') . '.php';
+			$prefixes = include $this->config->getPath('installdata.currency.signs') . '.php';
 			if (isset($prefixes[$this->getID()]))
 			{
 				$signs = $prefixes[$this->getID()];

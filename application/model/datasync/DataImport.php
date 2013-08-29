@@ -302,7 +302,7 @@ abstract class DataImport
 
 	public function getImportIDFileName()
 	{
-		$path = ClassLoader::getRealPath('cache/csvImport/') . $this->uid;
+		$path = $this->config->getPath('cache/csvImport/') . $this->uid;
 		if (!file_exists(dirname($path)))
 		{
 			mkdir(dirname($path));

@@ -518,7 +518,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	private function getEncryptionPassword()
 	{
-		$file = ClassLoader::getRealPath('storage/configuration/ccEncryptKey') . '.php';
+		$file = $this->config->getPath('storage/configuration/ccEncryptKey') . '.php';
 		if (!file_exists($file))
 		{
 			ClassLoader::import('application/model/user/User');

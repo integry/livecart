@@ -65,7 +65,7 @@ class InstallController extends FrontendController
 			return $lastStep;
 		}
 
-		$response = new ActionResponse('license', file_get_contents(ClassLoader::getRealPath('.') . 'license.txt'));
+		$response = new ActionResponse('license', file_get_contents($this->config->getPath('.') . 'license.txt'));
 		$response->set('form', $this->buildLicenseForm());
 		return $response;
 	}
@@ -148,13 +148,13 @@ class InstallController extends FrontendController
 			//ActiveRecord::executeUpdate('DROP TABLE `AccessControlAssociation`, `AdAdvertiser`, `AdAdvertiserUser`, `AdBanner`, `AdBannerStats`, `AdCampaign`, `AdCampaignCondition`, `AdZone`, `Author`, `AuthorImage`, `BillingAddress`, `Category`, `CategoryImage`, `CategoryPresentation`, `CategorySubscribeCategory`, `CategorySubscribeQueue`, `CategorySubscribeUser`, `Currency`, `CustomerOrder`, `DeliveryZone`, `DeliveryZoneAddressMask`, `DeliveryZoneCityMask`, `DeliveryZoneCountry`, `DeliveryZoneRealTimeService`, `DeliveryZoneState`, `DeliveryZoneWarehouse`, `DeliveryZoneZipMask`, `Discount`, `DiscountAction`, `DiscountCondition`, `DiscountConditionRecord`, `EavDateValue`, `EavField`, `EavFieldGroup`, `EavItem`, `EavNumericValue`, `EavObject`, `EavStringValue`, `EavValue`, `ExpressCheckout`, `Filter`, `FilterGroup`, `HelpComment`, `Language`, `Manufacturer`, `ManufacturerImage`, `NewsletterMessage`, `NewsletterSentMessage`, `NewsletterSubscriber`, `NewsPost`, `OrderCoupon`, `OrderDiscount`, `OrderedItem`, `OrderedItemOption`, `OrderLog`, `OrderNote`, `PostalCode`, `Product`, `ProductBundle`, `ProductCategory`, `ProductFile`, `ProductFileGroup`, `ProductImage`, `ProductList`, `ProductListItem`, `ProductOption`, `ProductOptionChoice`, `ProductPrice`, `ProductRating`, `ProductRatingSummary`, `ProductRatingType`, `ProductRelationship`, `ProductRelationshipGroup`, `ProductReview`, `ProductVariation`, `ProductVariationTemplate`, `ProductVariationType`, `ProductVariationValue`, `ProductWarehouse`, `PurchasePointsItemOrder`, `PurchasePointsOrder`, `PurchasePointsUser`, `RecurringProductPeriod`, `RewardPointsOrder`, `RewardPointsUser`, `Role`, `SearchLog`, `SessionData`, `Shipment`, `ShipmentTax`, `ShipmentWarehouse`, `ShippingAddress`, `ShippingRate`, `ShippingService`, `SpecField`, `SpecFieldGroup`, `SpecFieldValue`, `SpecificationDateValue`, `SpecificationItem`, `SpecificationNumericValue`, `SpecificationStringValue`, `State`, `StaticPage`, `Tax`, `TaxRate`, `Transaction`, `User`, `UserAddress`, `UserGroup`, `Warehouse`');
 
 			// import schema
-			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/create.sql'), true);
+			Installer::loadDatabaseDump(file_get_contents($this->config->getPath('installdata.sql') . '/create.sql'), true);
 
 			// create root category
-			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'), true);
+			Installer::loadDatabaseDump(file_get_contents($this->config->getPath('installdata.sql') . '/initialData.sql'), true);
 
 			// states
-			Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql.state') . '/all.sql'), true);
+			Installer::loadDatabaseDump(file_get_contents($this->config->getPath('installdata.sql.state') . '/all.sql'), true);
 
 			file_put_contents($dsnFile, '<?php return ' . var_export($dsn, true) . '; ?>');
 
@@ -351,12 +351,12 @@ class InstallController extends FrontendController
 
 	private function getDsnFile()
 	{
-		return ClassLoader::getRealPath('storage/configuration') . '/database.php';
+		return $this->config->getPath('storage/configuration') . '/database.php';
 	}
 
 	private function getStepFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/installStep.php';
+		return $this->config->getPath('cache') . '/installStep.php';
 	}
 
 	private function verifyStep()

@@ -93,7 +93,7 @@ class OutputCache
 			$hash = md5($this->params);
 		}
 
-		return ClassLoader::getRealPath('cache/output/' . $this->type . '.') . $hash;
+		return $this->config->getPath('cache/output/' . $this->type . '.') . $hash;
 	}
 
 	public function setCacheVar($param, $value)

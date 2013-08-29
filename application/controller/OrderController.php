@@ -987,7 +987,7 @@ class OrderController extends FrontendController
 		// create tmp file
 		$file = $_FILES[$field];
 		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
-		$dir = ClassLoader::getRealPath('public/upload/optionImage/');
+		$dir = $this->config->getPath('public/upload/optionImage/');
 		$path = $dir . $tmp;
 
 		if (!file_exists($dir))

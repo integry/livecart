@@ -52,7 +52,7 @@ class CsvImportController extends StoreManagementController
 
 		if (!empty($_FILES['upload']['tmp_name']))
 		{
-			$filePath = ClassLoader::getRealPath('cache') . '/upload.csv';
+			$filePath = $this->config->getPath('cache') . '/upload.csv';
 			move_uploaded_file($_FILES['upload']['tmp_name'], $filePath);
 		}
 		else
@@ -393,7 +393,7 @@ class CsvImportController extends StoreManagementController
 
 	private function getCancelFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/.csvImportCancel';
+		return $this->config->getPath('cache') . '/.csvImportCancel';
 	}
 
 	private function getResponse($data)
@@ -480,12 +480,12 @@ class CsvImportController extends StoreManagementController
 
 	private function getProgressFile()
 	{
-		return ClassLoader::getRealPath('cache/') . 'csvProgress';
+		return $this->config->getPath('cache/') . 'csvProgress';
 	}
 
 	private function getProfileDirectory(DataImport $import)
 	{
-		return ClassLoader::getRealPath('storage/importProfiles/' . get_class($import) . '.');
+		return $this->config->getPath('storage/importProfiles/' . get_class($import) . '.');
 	}
 }
 

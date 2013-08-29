@@ -19,7 +19,7 @@ class CssFileTest extends LiveCartTest
 	function testPatching()
 	{
 		$file = 'stylesheet/backend/stat.css';
-		$path = ClassLoader::getRealPath('public/') . $file;
+		$path = $this->config->getPath('public/') . $file;
 		$css = new CssFile($file);
 		$css->clearPatchRules();
 

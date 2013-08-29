@@ -39,7 +39,7 @@ if (defined('CACHE_DIR'))
 	ClassLoader::mountPath('cache', CACHE_DIR);
 }
 
-$classLoaderCacheFile = ClassLoader::getRealPath('cache/') . 'classloader.php';
+$classLoaderCacheFile = $this->config->getPath('cache/') . 'classloader.php';
 if (file_exists($classLoaderCacheFile))
 {
 	$classLoaderCache = include $classLoaderCacheFile;

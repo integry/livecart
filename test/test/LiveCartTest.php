@@ -27,7 +27,7 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 	{
 		parent::tearDown();
 
-		@unlink(ClassLoader::getRealPath('cache/') . 'currencies.php');
+		@unlink($this->config->getPath('cache/') . 'currencies.php');
 		$this->setUpCurrency();
 
 		ActiveRecordModel::rollback();

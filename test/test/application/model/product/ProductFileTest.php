@@ -34,7 +34,7 @@ class ProductFileTest extends LiveCartTest
 	{
 		parent::__construct('Product files tests');
 
-		$this->tmpFilePath = ClassLoader::getRealPath('cache/') . 'somefile.txt';
+		$this->tmpFilePath = $this->config->getPath('cache/') . 'somefile.txt';
 
 		$this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
 	}
@@ -76,7 +76,7 @@ class ProductFileTest extends LiveCartTest
 
 		$this->assertEqual($productFile->fileName->get(), 'some_file');
 		$this->assertEqual($productFile->extension->get(), $extension);
-		$this->assertEqual($productFile->getPath(), ClassLoader::getRealPath('storage/productfile') . DIRECTORY_SEPARATOR . $productFile->getID());
+		$this->assertEqual($productFile->getPath(), $this->config->getPath('storage/productfile') . DIRECTORY_SEPARATOR . $productFile->getID());
 
 		$productFile->delete();
 	}
@@ -97,7 +97,7 @@ class ProductFileTest extends LiveCartTest
 		$productFilesO = array();
 		foreach(range(1, 2) as $i)
 		{
-			file_put_contents($productFiles[$i] = ClassLoader::getRealPath('cache/') . md5($i), $this->fileBody);
+			file_put_contents($productFiles[$i] = $this->config->getPath('cache/') . md5($i), $this->fileBody);
 			$productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
 			$productFilesO[$i]->save();
 		}
@@ -115,7 +115,7 @@ class ProductFileTest extends LiveCartTest
 
 		$this->assertEqual(file_get_contents($productFile->getPath()), $this->fileBody);
 
-   		$reuploadedFile = ClassLoader::getRealPath('cache/') . 'reuploaded_file.txt';
+   		$reuploadedFile = $this->config->getPath('cache/') . 'reuploaded_file.txt';
 		file_put_contents($reuploadedFile, $reuploadedFileBody = 'Reupload file');
 		$productFile->storeFile($reuploadedFile, 'some_file.txt');
 		$productFile->save();

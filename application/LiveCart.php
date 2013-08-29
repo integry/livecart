@@ -143,20 +143,20 @@ class LiveCart extends \Phalcon\Mvc\Application
 		// LiveCart request routing rules
 		$this->initRouter();
 
-		if (file_exists(ClassLoader::getRealPath('cache/dev')))
+		if (file_exists($this->config->getPath('cache/dev')))
 		{
 			$this->setDevMode(true);
 		}
 
 		if ($this->isDevMode())
 		{
-			ActiveRecordModel::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
+			ActiveRecordModel::getLogger()->setLogFileName($this->config->getPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
 			error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 			ini_set('display_errors', 'On');
 		}
 
 		$compileDir = $this->isTemplateCustomizationMode() ? 'cache/templates_c.customize' : 'cache/templates_c';
-		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
+		SmartyRenderer::setCompileDir($this->config->getPath($compileDir));
 
 		// mod_rewrite disabled?
 		if ($this->request->gget('noRewrite'))
@@ -374,8 +374,8 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 
 /*
-		$paths = array(ClassLoader::getRealPath('storage/customize/view'),
-					   ClassLoader::getRealPath('application/view'));
+		$paths = array($this->config->getPath('storage/customize/view'),
+					   $this->config->getPath('application/view'));
 
 		foreach ($paths as $path)
 		{
@@ -871,14 +871,14 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 
 			$this->locale =	Locale::getInstance($this->localeName);
-			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage/language'));
+			$this->locale->translationManager()->setCacheFileDir($this->config->getPath('storage/language'));
 
 			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
 			{
 				$this->locale->translationManager()->setDefinitionFileDir($dir);
 			}
 
-			$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage/language'));
+			$this->locale->translationManager()->setDefinitionFileDir($this->config->getPath('storage/language'));
 			Locale::setCurrentLocale($this->localeName);
 
 			$this->loadLanguageFiles();
@@ -911,7 +911,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		if (!$cacheFile)
 		{
 			$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-			$cacheFile = ClassLoader::getRealPath('cache/') . 'router-' . $host . '.php';
+			$cacheFile = $this->config->getPath('cache/') . 'router-' . $host . '.php';
 		}
 
 		return $cacheFile;
@@ -1542,7 +1542,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (!$this->configContainer)
 		{
-			$path = ClassLoader::getRealPath('cache/configurationContainer') . '.php';
+			$path = $this->config->getPath('cache/configurationContainer') . '.php';
 			if (file_exists($path))
 			{
 				$this->configContainer = include $path;

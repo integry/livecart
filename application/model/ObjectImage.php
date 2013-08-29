@@ -136,7 +136,7 @@ abstract class ObjectImage extends MultilingualObject
 
 	protected static function getImageRoot($className)
 	{
-		return ClassLoader::getRealPath('public/upload/' . strtolower($className) . '.');
+		return $this->config->getPath('public/upload/' . strtolower($className) . '.');
 	}
 
 	protected static function getRelativePath($path, &$urlPrefix = null)
@@ -144,7 +144,7 @@ abstract class ObjectImage extends MultilingualObject
 		$origPath = $path;
 
 		// path located within the /public directory - as default
-		$path = str_replace(ClassLoader::getRealPath('public/'), '', $path);
+		$path = str_replace($this->config->getPath('public/'), '', $path);
 		if ($path != $origPath)
 		{
 			$urlPrefix = '/public/';
@@ -152,7 +152,7 @@ abstract class ObjectImage extends MultilingualObject
 		}
 
 		// path within application web root directory
-		$path = str_replace(ClassLoader::getRealPath('.'), '', $path);
+		$path = str_replace($this->config->getPath('.'), '', $path);
 		$path = self::fixSlashes($path);
 		if ($path != $origPath)
 		{

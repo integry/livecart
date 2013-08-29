@@ -193,7 +193,7 @@ class CategoryController extends CatalogController
 					$categoryNarrow = $this->getSubCategoriesBySearchQuery($productFilter->getBaseFilter(), $subCategories);
 				}
 
-				include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+				include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 
 				if (!$this->getCategory()->isRoot())
 				{
@@ -226,7 +226,7 @@ class CategoryController extends CatalogController
 		// no products found, but found one category name - redirect to this category
 		if (isset($foundCategories) && (1 == $foundCategories->size()) && !$products)
 		{
-			include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+			include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 			return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
 		}
 

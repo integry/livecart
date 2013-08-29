@@ -85,7 +85,7 @@ MANUFACTURER_PAGE_PER_PAGE
 
 	private function getFilterUrlTemplate()
 	{
-		include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
+		include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
 		$params = array('filters' => array(new ManufacturerFilter(999, '___')), 'data' => Category::getRootNode()->toArray());
 		$templateUrl = createCategoryUrl($params, $this->application);
 		return strtr($templateUrl, array(999 => '#', '___' => '|'));

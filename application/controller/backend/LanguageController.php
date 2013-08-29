@@ -21,11 +21,11 @@ class LanguageController extends StoreManagementController
 		// preload current locale
 		$this->locale;
 
-		$tempDir = ClassLoader::getRealPath('cache/tmp/' . rand(1, 10000000));
+		$tempDir = $this->config->getPath('cache/tmp/' . rand(1, 10000000));
 
 		$locale = Locale::getInstance($this->request->gget('id'));
 
-		$fileDir = ClassLoader::getRealPath('application/configuration/language/en');
+		$fileDir = $this->config->getPath('application/configuration/language/en');
 		$files = $locale->translationManager()->getDefinitionFiles($fileDir);
 
 		// prepare language files
@@ -66,7 +66,7 @@ class LanguageController extends StoreManagementController
 		}
 
 		// put the files in zip archive
-		require_once(ClassLoader::getRealPath('library/pclzip') . '/pclzip.lib.php');
+		require_once($this->config->getPath('library/pclzip') . '/pclzip.lib.php');
 
 		if (!is_dir($tempDir))
 		{

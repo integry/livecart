@@ -14,13 +14,13 @@ function smarty_function_includeJs($params, Smarty_Internal_Template $smarty)
 	static $jsPath;
 	if (!$jsPath)
 	{
-		$jsPath = ClassLoader::getRealPath('public/javascript/');
+		$jsPath = $this->config->getPath('public/javascript/');
 	}
 
 	$fileName = $params['file'];
 	$filePath = substr($fileName, 0, 1) != '/' ?
 					$jsPath .  $fileName :
-					ClassLoader::getRealPath('public') .  $fileName;
+					$this->config->getPath('public') .  $fileName;
 
 	$fileName = substr($fileName, 0, 1) != '/' ? 'javascript/' . $fileName : substr($fileName, 1);
 
@@ -87,7 +87,7 @@ function smarty_function_includeJs($params, Smarty_Internal_Template $smarty)
 			continue;
 		}
 
-		$file = substr($file, strlen(ClassLoader::getRealPath('public')));
+		$file = substr($file, strlen($this->config->getPath('public')));
 		$params['file'] = $file;
 		smarty_function_includeJs($params, $smarty);
 	}

@@ -394,7 +394,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	{
 		// If backend controller is being used then we should
 		// check for user permissions to use role assigned to current controller and action
-		$rolesCacheDir = ClassLoader::getRealPath('cache/roles');
+		$rolesCacheDir = $this->config->getPath('cache/roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			if (!@mkdir($rolesCacheDir, 0777, true))

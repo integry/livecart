@@ -939,7 +939,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$tmpImages = array();
 			if (is_array($inputImages))
 			{
-				$dir = ClassLoader::getRealPath('public/upload/tmpimage/');
+				$dir = $this->config->getPath('public/upload/tmpimage/');
 				foreach($inputImages as $tmpImage)
 				{
 					if (strlen(trim($tmpImage)) == 0 || strpos($tmpImage, '/'))
@@ -1225,7 +1225,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 						$field = 'upload_' . $this->request->gget('field');
 
-		$dir = ClassLoader::getRealPath('public/upload/tmpimage/');
+		$dir = $this->config->getPath('public/upload/tmpimage/');
 
 		// delete old tmp files
 		chdir($dir);

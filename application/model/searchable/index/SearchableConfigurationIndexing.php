@@ -221,12 +221,12 @@ class SearchableConfigurationIndexing
 		foreach($languages as $language)
 		{
 			$locale = Locale::getInstance($language['ID']);
-			$locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage/language'));
+			$locale->translationManager()->setCacheFileDir($this->config->getPath('storage/language'));
 			foreach ($this->application->getConfigContainer()->getLanguageDirectories() as $dir)
 			{
 				$locale->translationManager()->setDefinitionFileDir($dir);
 			}
-			$locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage/language'));
+			$locale->translationManager()->setDefinitionFileDir($this->config->getPath('storage/language'));
 			$locale->translationManager()->loadFile('backend/Settings');
 			$this->locales[$language['ID']] = $locale;
 		}

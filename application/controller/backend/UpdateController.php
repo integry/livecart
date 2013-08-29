@@ -44,7 +44,7 @@ class UpdateController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$dir = ClassLoader::getRealPath('update') . '/' . $this->getCurrentVersion();
+		$dir = $this->config->getPath('update') . '/' . $this->getCurrentVersion();
 		if (!is_dir($dir))
 		{
 			return new RawResponse('Update directory not found');
@@ -97,11 +97,11 @@ class UpdateController extends StoreManagementController
 	{
 		$handler = new UpdateHelper($this->application);
 		$tmpName = 'test-update-copy' . rand(1, 5000000);
-		$tmp = ClassLoader::getRealPath('cache/') . $tmpName;
+		$tmp = $this->config->getPath('cache/') . $tmpName;
 		file_put_contents($tmp, 'test');
 
 		$res = $handler->copyFile($tmp, 'module/' . $tmpName);
-		$expected = ClassLoader::getRealPath('module/') . $tmpName;
+		$expected = $this->config->getPath('module/') . $tmpName;
 
 		if (file_exists($expected))
 		{
@@ -120,7 +120,7 @@ class UpdateController extends StoreManagementController
 
 	private function getCurrentVersion()
 	{
-		return trim(file_get_contents(ClassLoader::getRealPath('.') . '/.version'));
+		return trim(file_get_contents($this->config->getPath('.') . '/.version'));
 	}
 }
 

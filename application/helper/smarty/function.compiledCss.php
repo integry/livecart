@@ -65,14 +65,14 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 			$compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.css';
 		}
 
-		$compiledFilePath = ClassLoader::getRealPath('public/cache/stylesheet/') .  $compiledFileName;
-		$baseDir = ClassLoader::getRealPath('public/stylesheet/');
-		$publicDir = ClassLoader::getRealPath('public/');
+		$compiledFilePath = $this->config->getPath('public/cache/stylesheet/') .  $compiledFileName;
+		$baseDir = $this->config->getPath('public/stylesheet/');
+		$publicDir = $this->config->getPath('public/');
 
 		$compiledFileTimestamp = 0;
 		if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedStylesheetTimestamp)
 		{
-			if(!is_dir(ClassLoader::getRealPath('public/cache/stylesheet'))) mkdir(ClassLoader::getRealPath('public/cache/stylesheet'), 0777, true);
+			if(!is_dir($this->config->getPath('public/cache/stylesheet'))) mkdir($this->config->getPath('public/cache/stylesheet'), 0777, true);
 
 			// compile
 			$compiledFileContent = "";
@@ -129,7 +129,7 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 	else if ($includedStylesheetFiles)
 	{
 		$includeString = "";
-		$publicPath = ClassLoader::getRealPath('public/');
+		$publicPath = $this->config->getPath('public/');
 
 		foreach($includedStylesheetFiles as $cssFile)
 		{

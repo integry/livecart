@@ -29,14 +29,14 @@ class TestRolesParser extends UnitTestCase
 	
 	public function setUp()
 	{
-		$this->clearDirectory(ClassLoader::getRealPath('test.framework.roles.cache'));
+		$this->clearDirectory($this->config->getPath('test.framework.roles.cache'));
 	}
 
 	public function testGetRoleByAction()
 	{
 		$dumpControllerRoles = new RolesParser(
-			ClassLoader::getRealPath("test.framework.roles.controllers.DumpController") . ".php", 
-			ClassLoader::getRealPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
+			$this->config->getPath("test.framework.roles.controllers.DumpController") . ".php",
+			$this->config->getPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
 		);
 		
 		$this->assertEqual($dumpControllerRoles->getRole('test'), 'test.subtest');
@@ -45,8 +45,8 @@ class TestRolesParser extends UnitTestCase
 	public function testGerRoleNames()
 	{
 		$dumpControllerRoles = new RolesParser(
-			ClassLoader::getRealPath("test.framework.roles.controllers.DumpController") . ".php", 
-			ClassLoader::getRealPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
+			$this->config->getPath("test.framework.roles.controllers.DumpController") . ".php",
+			$this->config->getPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
 		);
 		$roleNames = $dumpControllerRoles->getRolesNames();
 		$this->assertEqual(count($roleNames), 4);

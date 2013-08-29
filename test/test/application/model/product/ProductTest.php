@@ -553,7 +553,7 @@ class ProductTest extends LiveCartTest
 	{
 		$productFiles = array();
 		$productFilesO = array();
-		$dir = ClassLoader::getRealPath('cache') . '/';
+		$dir = $this->config->getPath('cache') . '/';
 		foreach(range(1, 2) as $i)
 		{
 			file_put_contents($productFiles[$i] = $dir . md5($i), 'All Your Base Are Belong To Us');
@@ -582,7 +582,7 @@ class ProductTest extends LiveCartTest
 		// create files
 		$productFile = array();
 		$productFiles = array();
-		$dir = ClassLoader::getRealPath('cache') . '/';
+		$dir = $this->config->getPath('cache') . '/';
 		foreach(range(1, 2) as $i)
 		{
 			file_put_contents($productFiles[$i] = $dir . md5($i), "file $i");

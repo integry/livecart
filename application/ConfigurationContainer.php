@@ -35,7 +35,7 @@ class ConfigurationContainer
 	public function __construct($mountPath, LiveCart $application)
 	{
 		$this->mountPath = $mountPath;
-		$this->directory = ClassLoader::getRealPath($mountPath);
+		$this->directory = $this->config->getPath($mountPath);
 		$this->application = $application;
 
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
@@ -46,7 +46,7 @@ class ConfigurationContainer
 						'controllerDirectory' => 'application/controller',
 						'pluginDirectory' => 'plugin') as $var => $path)
 		{
-			$dir = ClassLoader::getRealPath($mountPath . '.' . $path);
+			$dir = $this->config->getPath($mountPath . '.' . $path);
 			$this->$var = is_dir($dir) ? realpath($dir) : null;
 		}
 
@@ -54,7 +54,7 @@ class ConfigurationContainer
 		{
 			foreach (array('ini', 'php') as $ext)
 			{
-				$path = ClassLoader::getRealPath($mountPath . '.' . $dir) . '/block.' . $ext;
+				$path = $this->config->getPath($mountPath . '.' . $dir) . '/block.' . $ext;
 				if (file_exists($path))
 				{
 					$this->blockConfiguration[] = $path;
@@ -83,7 +83,7 @@ class ConfigurationContainer
 
 	public function clearConfigurationCache()
 	{
-		$dir = ClassLoader::getRealPath('cache/');
+		$dir = $this->config->getPath('cache/');
 		foreach (array('configurationContainer.php', 'classloader.php') as $file)
 		{
 			if (file_exists($dir . $file))
@@ -96,19 +96,19 @@ class ConfigurationContainer
 	public function clearCache()
 	{
 		// clear cache
-		$this->delTree(ClassLoader::getRealPath('cache'));
-		$this->delTree(ClassLoader::getRealPath('public/cache'));
-		$this->delTree(ClassLoader::getRealPath('public/upload/css/patched'));
+		$this->delTree($this->config->getPath('cache'));
+		$this->delTree($this->config->getPath('public/cache'));
+		$this->delTree($this->config->getPath('public/upload/css/patched'));
 
 		foreach (array('cache', 'storage') as $secured)
 		{
-			$dir = ClassLoader::getRealPath($secured);
+			$dir = $this->config->getPath($secured);
 			file_put_contents($dir . '/.htaccess', 'Deny from all');
 		}
 
 		foreach (array('cache/templates_c', 'cache/templates_c.customize') as $path)
 		{
-			$tplDir = ClassLoader::getRealPath($path);
+			$tplDir = $this->config->getPath($path);
 			mkdir($tplDir, 0777);
 			chmod($tplDir, 0777);
 		}
@@ -187,7 +187,7 @@ class ConfigurationContainer
 	{
 		$directories = array();
 
-		$dir = ClassLoader::getRealPath($this->mountPath . '.' . $mountPath);
+		$dir = $this->config->getPath($this->mountPath . '.' . $mountPath);
 		if (file_exists($dir))
 		{
 			$directories[] = $dir;
@@ -259,7 +259,7 @@ class ConfigurationContainer
 		$modulePath = $this->mountPath . '.module';
 		$modulePath = preg_replace('/^\.+/', '', $modulePath);
 
-		$moduleDir = ClassLoader::getRealPath($modulePath);
+		$moduleDir = $this->config->getPath($modulePath);
 		$modules = array();
 		if (is_dir($moduleDir))
 		{
@@ -407,7 +407,7 @@ class ConfigurationContainer
 
 	private function getPublicDirectoryLink()
 	{
-		return ClassLoader::getRealPath('public/module/') . basename($this->directory);
+		return $this->config->getPath('public/module/') . basename($this->directory);
 	}
 
 	protected function installDatabase()

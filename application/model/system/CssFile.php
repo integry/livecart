@@ -72,7 +72,7 @@ class CssFile
 
 	public function getPatchedFilePath()
 	{
-		return ClassLoader::getRealPath('public/upload/css/patched/') . $this->theme . '-' . md5($this->relPath) . '.css';
+		return $this->config->getPath('public/upload/css/patched/') . $this->theme . '-' . md5($this->relPath) . '.css';
 	}
 
 	public function getPatchedFileRelativePath()
@@ -108,7 +108,7 @@ class CssFile
 	{
 		if (!is_null($this->source))
 		{
-			$this->saveFile(ClassLoader::getRealPath('public/') . $this->relPath, $this->source);
+			$this->saveFile($this->config->getPath('public/') . $this->relPath, $this->source);
 			return true;
 		}
 
@@ -123,7 +123,7 @@ class CssFile
 			$this->saveFile($this->getPatchFile(), '<?php return ' . var_export($this->rules, true) . '; ?>');
 		}
 
-		$patched = $orig = file_get_contents(ClassLoader::getRealPath('public/') . $this->relPath);
+		$patched = $orig = file_get_contents($this->config->getPath('public/') . $this->relPath);
 
 		if (isset($this->rules['selectors']))
 		{
@@ -185,7 +185,7 @@ class CssFile
 
 	public function getPatchFile($patchedName = null)
 	{
-		return ClassLoader::getRealPath('public/upload/css/delete/') . ($patchedName ? $patchedName : $this->theme . '-' . md5($this->relPath)) . '.php';
+		return $this->config->getPath('public/upload/css/delete/') . ($patchedName ? $patchedName : $this->theme . '-' . md5($this->relPath)) . '.php';
 	}
 
 	public function clearPatchRules()

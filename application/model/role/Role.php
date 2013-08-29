@@ -131,13 +131,13 @@ class Role extends ActiveRecordModel
 
 	public static function cleanUp()
 	{
-				$rolesCacheDir = ClassLoader::getRealPath('cache/roles');
+				$rolesCacheDir = $this->config->getPath('cache/roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			mkdir($rolesCacheDir, 0777, true);
 		}
 
-		$rolesDirectoryParser = new RolesDirectoryParser(ClassLoader::getRealPath('application/controller/backend'), $rolesCacheDir);
+		$rolesDirectoryParser = new RolesDirectoryParser($this->config->getPath('application/controller/backend'), $rolesCacheDir);
 		$roleNames = array();
 		foreach($rolesDirectoryParser->getClassParsers() as $classParser)
 		{

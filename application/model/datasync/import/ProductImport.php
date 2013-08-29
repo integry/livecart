@@ -667,7 +667,7 @@ class ProductImport extends DataImport
 		{
 			if (!file_exists($path))
 			{
-				foreach (array('/tmp/import/', ClassLoader::getRealPath('public/import/')) as $loc)
+				foreach (array('/tmp/import/', $this->config->getPath('public/import/')) as $loc)
 				{
 					$p = $loc . $path;
 					if (file_exists($p))

@@ -81,7 +81,7 @@ class StaticPage extends \ActiveRecordModel // MultilingualObject implements Eav
 
 	public function getFileName()
 	{
-		return ClassLoader::getRealPath('cache/staticpage') . '/' . $this->getID() . '.php';
+		return $this->config->getPath('cache/staticpage') . '/' . $this->getID() . '.php';
 	}
 
 	/*

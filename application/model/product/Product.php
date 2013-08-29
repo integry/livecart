@@ -1572,7 +1572,7 @@ class Product extends MultilingualObject
 
 	public function updateSalesRank()
 	{
-		$cacheFile = ClassLoader::getRealPath('cache/salesrank');
+		$cacheFile = $this->config->getPath('cache/salesrank');
 		if (!file_exists($cacheFile) || (filemtime($cacheFile) < time() - 3600))
 		{
 			touch($cacheFile);

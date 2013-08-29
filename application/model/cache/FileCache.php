@@ -119,7 +119,7 @@ class FileCache extends ValueCache
 	{
 		if (!$this->root)
 		{
-			$this->root = ClassLoader::getRealPath('cache/value/');
+			$this->root = $this->config->getPath('cache/value/');
 		}
 
 		return $this->root;

@@ -15,8 +15,8 @@ function smarty_function_includeCss($params, Smarty_Internal_Template $smarty)
 {
 	$fileName = $params['file'];
 	$filePath = substr($fileName, 0, 1) != '/' ?
-					ClassLoader::getRealPath('public/stylesheet/') .  $fileName :
-					ClassLoader::getRealPath('public') .  $fileName;
+					$this->config->getPath('public/stylesheet/') .  $fileName :
+					$this->config->getPath('public') .  $fileName;
 
 	// fix slashes
 	$filePath = str_replace('\\', DIRECTORY_SEPARATOR, $filePath);
@@ -97,7 +97,7 @@ function smarty_function_includeCss($params, Smarty_Internal_Template $smarty)
 			continue;
 		}
 
-		$file = substr($file, strlen(ClassLoader::getRealPath('public')));
+		$file = substr($file, strlen($this->config->getPath('public')));
 		$params['file'] = $file;
 		smarty_function_includeCss($params, $smarty);
 	}

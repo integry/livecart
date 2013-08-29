@@ -107,7 +107,7 @@ class CsvImportProfile
 
 	public function setName($name)
 	{
-		$this->setFileName(ClassLoader::getRealPath('storage/configuration/csvImportProfile/') . $name . '.ini');
+		$this->setFileName($this->config->getPath('storage/configuration/csvImportProfile/') . $name . '.ini');
 	}
 
 	public function setFileName($fileName)

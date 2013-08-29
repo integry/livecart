@@ -59,10 +59,10 @@ class Template extends CommonFile
 	{
 	  	if (!$dir)
 	  	{
-			$dir = ClassLoader::getRealPath('application/view/');
+			$dir = $this->config->getPath('application/view/');
 
 			// get user created template files
-			$customFiles = self::getTree(ClassLoader::getRealPath('storage/customize/view/'));
+			$customFiles = self::getTree($this->config->getPath('storage/customize/view/'));
 		}
 
 		if (!file_exists(realpath($dir)))
@@ -133,12 +133,12 @@ class Template extends CommonFile
 
 	public static function getOriginalFilePath($fileName)
 	{
-		return ClassLoader::getRealPath('application/view/') . $fileName;
+		return $this->config->getPath('application/view/') . $fileName;
 	}
 
 	public static function getCustomizedFilePath($fileName)
 	{
-		return ClassLoader::getRealPath('storage/customize/view/') . $fileName;
+		return $this->config->getPath('storage/customize/view/') . $fileName;
 	}
 
 	public function setCode($code)
@@ -214,7 +214,7 @@ class Template extends CommonFile
 			return true;
 		}
 
-		$cacheDir = ClassLoader::getRealPath('cache/templates_c.customize');
+		$cacheDir = $this->config->getPath('cache/templates_c.customize');
 		if (is_dir($cacheDir))
 		{
 			foreach (new DirectoryIterator($cacheDir) as $file)
@@ -303,7 +303,7 @@ class Template extends CommonFile
 		$result = array('' => $application->translate('_other_themes'));
 		foreach($application->getRenderer()->getThemeList() as $themename)
 		{
-			$fn = ClassLoader::getRealPath('storage/customize/view.theme/'.$themename.'.'). $fileName;
+			$fn = $this->config->getPath('storage/customize/view.theme/'.$themename.'.'). $fileName;
 			if(file_exists($fn))
 			{
 				$result[$themename] = $themename;
@@ -388,7 +388,7 @@ class Template extends CommonFile
 
 	protected function getBackupPath()
 	{
-		return ClassLoader::getRealPath('storage/backup.template/');
+		return $this->config->getPath('storage/backup.template/');
 	}
 }
 

@@ -19,7 +19,7 @@ class LiveCartApplicationTest extends LiveCartTest
 		$this->assertFalse($response->get('success'));
 
 		// with plugin
-		$app->registerPluginDirectory(ClassLoader::getRealPath('test.fixture.plugin'));
+		$app->registerPluginDirectory($this->config->getPath('test.fixture.plugin'));
 		$app->loadPlugins();
 		$controller = new PluginTestController($app);
 		$response = $app->execute($controller, 'index');
@@ -27,12 +27,12 @@ class LiveCartApplicationTest extends LiveCartTest
 		$this->assertTrue($controller->testValue);
 		$this->assertTrue($controller->baseInitValue);
 
-		$app->unregisterPluginDirectory(ClassLoader::getRealPath('test.fixture.plugin'));
+		$app->unregisterPluginDirectory($this->config->getPath('test.fixture.plugin'));
 	}
 
 	public function ztestModelPlugins()
 	{
-		$this->getApplication()->registerPluginDirectory(ClassLoader::getRealPath('test.fixture.plugin'));
+		$this->getApplication()->registerPluginDirectory($this->config->getPath('test.fixture.plugin'));
 
 		$currency = Currency::getNewInstance('ZZZ');
 		$currency->save();
@@ -47,7 +47,7 @@ class LiveCartApplicationTest extends LiveCartTest
 		$array = $currency->toArray();
 		$this->assertTrue($array['testValue']);
 
-		$this->getApplication()->unregisterPluginDirectory(ClassLoader::getRealPath('test.fixture.plugin'));
+		$this->getApplication()->unregisterPluginDirectory($this->config->getPath('test.fixture.plugin'));
 	}
 
 }

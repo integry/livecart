@@ -28,7 +28,7 @@ class EditedCssFile extends CommonFile
 
 	public function getRealPath()
 	{
-		return ClassLoader::getRealPath('public/upload/css/') . $this->getFileName();
+		return $this->config->getPath('public/upload/css/') . $this->getFileName();
 	}
 
 	public function getFileName()
@@ -89,7 +89,7 @@ class EditedCssFile extends CommonFile
 
 	protected function getBackupPath()
 	{
-		return ClassLoader::getRealPath('storage/backup.cssfile/');
+		return $this->config->getPath('storage/backup.cssfile/');
 	}
 
 }

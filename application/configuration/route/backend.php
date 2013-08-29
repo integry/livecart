@@ -61,7 +61,7 @@ $routes = array(
 				);
 
 // custom routes
-$routeDir = ClassLoader::getRealPath('storage/configuration/route');
+$routeDir = $this->config->getPath('storage/configuration/route');
 foreach ((array)glob($routeDir . '/*.php') as $file)
 {
 	if ($file)

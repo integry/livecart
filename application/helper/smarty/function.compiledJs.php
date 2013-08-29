@@ -31,15 +31,15 @@ function smarty_function_compiledJs($params, Smarty_Internal_Template $smarty)
 			$compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.js';
 		}
 
-		$compiledFilePath = ClassLoader::getRealPath('public/cache/javascript/') .  $compiledFileName;
-		$baseDir = ClassLoader::getRealPath('public/javascript/');
+		$compiledFilePath = $this->config->getPath('public/cache/javascript/') .  $compiledFileName;
+		$baseDir = $this->config->getPath('public/javascript/');
 
 		$compiledFileTimestamp = 0;
 		if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedJavascriptTimestamp)
 		{
-			if(!is_dir(ClassLoader::getRealPath('public/cache/javascript')))
+			if(!is_dir($this->config->getPath('public/cache/javascript')))
 			{
-				mkdir(ClassLoader::getRealPath('public/cache/javascript'), 0777, true);
+				mkdir($this->config->getPath('public/cache/javascript'), 0777, true);
 			}
 
 			// compile
@@ -70,7 +70,7 @@ function smarty_function_compiledJs($params, Smarty_Internal_Template $smarty)
 	else if ($includedJavascriptFiles)
 	{
 		$includeString = "";
-		$publicPath = ClassLoader::getRealPath('public/');
+		$publicPath = $this->config->getPath('public/');
 		foreach($includedJavascriptFiles as $path => $jsFile)
 		{
 			$urlPath = str_replace('\\', '/', str_replace($publicPath, '', $jsFile));

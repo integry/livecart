@@ -263,7 +263,7 @@ class ApiController extends BaseController
 	{
 		$samples = array();
 		$levelPointers = array();
-		$contents = explode("\n", file_get_contents(ClassLoader::getRealPath('doc.api') . '.txt'));
+		$contents = explode("\n", file_get_contents($this->config->getPath('doc.api') . '.txt'));
 		foreach ($contents as $line)
 		{
 			$level = 0;
@@ -342,7 +342,7 @@ class ApiController extends BaseController
 		$classes = array();
 		foreach($this->loadModelsFrom as $classLoaderPath)
 		{
-			$modelFilenames = glob(ClassLoader::getRealPath($classLoaderPath.'.').'*Api.php');
+			$modelFilenames = glob($this->config->getPath($classLoaderPath.'.').'*Api.php');
 
 			foreach($modelFilenames as $modelFilename)
 			{

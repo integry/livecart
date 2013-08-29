@@ -274,22 +274,22 @@ class LiveCartImporter
 
 	private function getOffsetsFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/currentIdOffsets.php';
+		return $this->config->getPath('cache') . '/currentIdOffsets.php';
 	}
 
 	private function getTypeFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/currentImportType.php';
+		return $this->config->getPath('cache') . '/currentImportType.php';
 	}
 
 	private function getProgressFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/currentImportProgress.php';
+		return $this->config->getPath('cache') . '/currentImportProgress.php';
 	}
 
 	private function getCountFile()
 	{
-		return ClassLoader::getRealPath('cache') . '/currentImportCount.php';
+		return $this->config->getPath('cache') . '/currentImportCount.php';
 	}
 }
 

@@ -188,7 +188,7 @@ class BusinessRuleController
 
 	private function getRuleFile()
 	{
-		return ClassLoader::getRealPath('cache/') . 'businessrules.php';
+		return $this->config->getPath('cache/') . 'businessrules.php';
 	}
 }
 

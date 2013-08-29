@@ -32,8 +32,8 @@ class Theme
 		if (is_null($this->parentThemes))
 		{
 			$inheritConf = array();
-			$inheritConf[] = ClassLoader::getRealPath('storage/customize/view.theme/' . $this->name . '.inherit') . '.php';
-			$inheritConf[] = ClassLoader::getRealPath('application/view/theme/' . $this->name . '.inherit') . '.php';
+			$inheritConf[] = $this->config->getPath('storage/customize/view.theme/' . $this->name . '.inherit') . '.php';
+			$inheritConf[] = $this->config->getPath('application/view/theme/' . $this->name . '.inherit') . '.php';
 
 			$this->parentThemes = array();
 
@@ -60,7 +60,7 @@ class Theme
 
 	public function isCoreTheme()
 	{
-		return file_exists(ClassLoader::getRealPath('application/view/theme/' . $this->name));
+		return file_exists($this->config->getPath('application/view/theme/' . $this->name));
 	}
 
 	public function isExistingTheme()
@@ -71,7 +71,7 @@ class Theme
 
 	public function saveConfig()
 	{
-		$file = ClassLoader::getRealPath('storage/customize/view.theme/' . $this->name . '.inherit') . '.php';
+		$file = $this->config->getPath('storage/customize/view.theme/' . $this->name . '.inherit') . '.php';
 		$dir = dirname($file);
 		if (!file_exists($dir))
 		{
@@ -99,8 +99,8 @@ class Theme
 
 	public function getThemeDirectories()
 	{
-		return array(ClassLoader::getRealPath('storage/customize/view.theme/' . $this->name),
-					 ClassLoader::getRealPath('public/upload/theme/' . $this->name));
+		return array($this->config->getPath('storage/customize/view.theme/' . $this->name),
+					 $this->config->getPath('public/upload/theme/' . $this->name));
 	}
 
 	public function getStyleConfig()

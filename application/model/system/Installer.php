@@ -40,7 +40,7 @@ class Installer
 		$failed = array();
 		foreach ($writable as $dir)
 		{
-			$path = ClassLoader::getRealPath($dir);
+			$path = $this->config->getPath($dir);
 			$testFile = $path . '/test.txt';
 
 			// try a couple of permissions
@@ -165,12 +165,12 @@ class Installer
 		$writeFail = array();
 		foreach (array('cache', 'storage', 'public/cache', 'public/upload', 'public/module') as $dir)
 		{
-			$file = ClassLoader::getRealPath($dir) . '/.writeTest';
+			$file = $this->config->getPath($dir) . '/.writeTest';
 			if (!file_exists($file))
 			{
 				if (!@file_put_contents($file, 'OK'))
 				{
-					$writeFail[] = ClassLoader::getRealPath($dir);
+					$writeFail[] = $this->config->getPath($dir);
 				}
 			}
 		}

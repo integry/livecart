@@ -166,7 +166,7 @@ class MassActionProcessor
 
 	private function getCancelFile($pid = null)
 	{
-		return ClassLoader::getRealPath('cache') . '/.massCancel-' . ($pid ? $pid : $this->pid);
+		return $this->config->getPath('cache') . '/.massCancel-' . ($pid ? $pid : $this->pid);
 	}
 
 	private function deleteCancelFile()

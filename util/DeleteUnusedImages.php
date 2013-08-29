@@ -4,7 +4,7 @@ include '../application/Initialize.php';
 new LiveCart();
 
 
-$dir = ClassLoader::getRealPath('public/upload/productimage');
+$dir = $this->config->getPath('public/upload/productimage');
 if (!file_exists($dir))
 {
 	return false;
