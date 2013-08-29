@@ -5,7 +5,7 @@
  *  Handles Google Checkout callbacks
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class GoogleCheckoutController extends CheckoutController
 {

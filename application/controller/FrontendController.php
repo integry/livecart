@@ -4,7 +4,7 @@
  * Base class for all front-end related controllers
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 abstract class FrontendController extends ControllerBase
 {

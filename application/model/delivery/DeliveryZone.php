@@ -13,7 +13,7 @@
  * or states or by defining mask strings, that allow to recognize addresses by city names, postal
  * codes or even street addresses.
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class DeliveryZone extends MultilingualObject

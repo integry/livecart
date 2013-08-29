@@ -1,14 +1,14 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.delivery.ShippingRate');
-ClassLoader::import('application.model.delivery.ShippingService');
-ClassLoader::import('application.model.delivery.DeliveryZone');
+ClassLoader::import('application/model/datasync/DataImport');
+ClassLoader::import('application/model/delivery/ShippingRate');
+ClassLoader::import('application/model/delivery/ShippingService');
+ClassLoader::import('application/model/delivery/DeliveryZone');
 
 /**
  *  Handles shipping rate import
  *
- *  @package application.model.datasync.import
+ *  @package application/model/datasync/import
  *  @author Integry Systems
  */
 class ShippingRateImport extends DataImport

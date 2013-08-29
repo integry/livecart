@@ -5,7 +5,7 @@
  * Product data feed
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class ProductFeed extends ARFeed
 {

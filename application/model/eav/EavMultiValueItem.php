@@ -4,7 +4,7 @@
 /**
  * Links multiple pre-defined attribute values (of the same attribute) to a product
  *
- * @package application.model.specification
+ * @package application/model/specification
  * @author Integry Systems <http://integry.com>
  */
 class EavMultiValueItem extends EavMultiValueItemCommon

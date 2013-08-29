@@ -1,13 +1,13 @@
 <?php
 
 
-ClassLoader::importNow("application.helper.getDateFromString");
-ClassLoader::importNow("library.openFlashChart.open-flash-chart");
+ClassLoader::importNow("application/helper/getDateFromString");
+ClassLoader::importNow("library/openFlashChart/open-flash-chart");
 
 /**
  * Generate reports and stats
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author	Integry Systems
  */
 class ReportController extends StoreManagementController

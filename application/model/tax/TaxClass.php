@@ -3,7 +3,7 @@
 /**
  * Defines a tax class
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class TaxClass extends MultilingualObject

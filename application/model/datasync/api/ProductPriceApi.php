@@ -4,7 +4,7 @@
 /**
  * Web service access layer for ProductPrice
  *
- * @package application.model.datasync
+ * @package application/model/datasync
  * @author Integry Systems <http://integry.com>
  * 
  */

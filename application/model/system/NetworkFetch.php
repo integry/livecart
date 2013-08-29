@@ -9,7 +9,7 @@ class NetworkFetch
 	public function __construct($url)
 	{
 		$this->url = $url;
-		$this->tmpFile = ClassLoader::getRealPath('cache.') . uniqid();
+		$this->tmpFile = ClassLoader::getRealPath('cache/') . uniqid();
 	}
 
 	public function fetch()

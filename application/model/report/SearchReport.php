@@ -4,7 +4,7 @@
 /**
  * Generate customer data reports
  *
- * @package application.model.report
+ * @package application/model/report
  * @author	Integry Systems
  */
 class SearchReport extends Report

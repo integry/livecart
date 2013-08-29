@@ -4,7 +4,7 @@
 /**
  * A generic class for grouping assigned product entities (files, related products, etc.)
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 abstract class ProductParametersGroup extends MultilingualObject

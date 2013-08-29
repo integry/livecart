@@ -57,7 +57,7 @@ class LiveCartRendererTest extends LiveCartTest
 
 	private function setConfig($iniString)
 	{
-		$file = ClassLoader::getRealPath('cache.block') . '.ini';
+		$file = ClassLoader::getRealPath('cache/block') . '.ini';
 		file_put_contents($file, $iniString);
 		$this->renderer->getBlockConfiguration(null, $file);
 	}

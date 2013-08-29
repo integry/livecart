@@ -8,7 +8,7 @@
  * In addition to pre-defined rates, it is also possible to use real-time shipping
  * rate calculation with integrated postal company web services.
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class ShippingService extends MultilingualObject implements EavAble

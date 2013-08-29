@@ -4,7 +4,7 @@
 /**
  * Checks if entered passwords match
  *
- * @package application.helper.check
+ * @package application/helper/check
  * @author Integry Systems 
  */
 class PasswordMatchCheck extends Check

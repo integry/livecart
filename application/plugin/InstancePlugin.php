@@ -3,7 +3,7 @@
 /**
  * Application run-time event plugin (startup, shutdown, etc.)
  *
- * @package application.plugin
+ * @package application/plugin
  * @author Integry Systems
  */
 abstract class InstancePlugin

@@ -3,7 +3,7 @@
 /**
  * Generate reports and stats
  *
- * @package application.model.report
+ * @package application/model/report
  * @author	Integry Systems
  */
 abstract class Report

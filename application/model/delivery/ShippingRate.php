@@ -14,7 +14,7 @@
  * subtotal based rates:
  *	 rate = flatCharge + (itemCount * perItemCharge) + (shipmentSubtotal * subtotalPercentCharge)
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class ShippingRate extends MultilingualObject

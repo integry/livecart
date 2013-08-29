@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class ProductController extends CatalogController
 {
@@ -697,7 +697,7 @@ class ProductController extends CatalogController
 			$prevIndex = 0;
 		}
 
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
+		include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.productUrl.php');
 
 		if ('quickShop' == $this->request->gget('originalAction'))
 		{
@@ -853,7 +853,7 @@ class ProductController extends CatalogController
 
 	private function setupBreadcrumb($productArray)
 	{
-		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.productUrl.php');
+		include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.productUrl.php');
 
 		$nodeArray = $this->addCategoriesToBreadCrumb($this->product->category->get()->getPathNodeArray());
 		$this->addFiltersToBreadCrumb($nodeArray);
@@ -875,7 +875,7 @@ class ProductController extends CatalogController
 
 		if ($isRating)
 		{
-			ClassLoader::importNow("application.helper.getDateFromString");
+			ClassLoader::importNow("application/helper/getDateFromString");
 
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductRating', 'productID'), $product->getID()));
 			if (!$this->user->isAnonymous())

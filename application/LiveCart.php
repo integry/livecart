@@ -143,7 +143,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		// LiveCart request routing rules
 		$this->initRouter();
 
-		if (file_exists(ClassLoader::getRealPath('cache.dev')))
+		if (file_exists(ClassLoader::getRealPath('cache/dev')))
 		{
 			$this->setDevMode(true);
 		}
@@ -155,7 +155,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 			ini_set('display_errors', 'On');
 		}
 
-		$compileDir = $this->isTemplateCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+		$compileDir = $this->isTemplateCustomizationMode() ? 'cache/templates_c.customize' : 'cache/templates_c';
 		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 
 		// mod_rewrite disabled?
@@ -374,8 +374,8 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 
 /*
-		$paths = array(ClassLoader::getRealPath('storage.customize.view'),
-					   ClassLoader::getRealPath('application.view'));
+		$paths = array(ClassLoader::getRealPath('storage/customize/view'),
+					   ClassLoader::getRealPath('application/view'));
 
 		foreach ($paths as $path)
 		{
@@ -871,14 +871,14 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 
 			$this->locale =	Locale::getInstance($this->localeName);
-			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
+			$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage/language'));
 
 			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
 			{
 				$this->locale->translationManager()->setDefinitionFileDir($dir);
 			}
 
-			$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
+			$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage/language'));
 			Locale::setCurrentLocale($this->localeName);
 
 			$this->loadLanguageFiles();
@@ -911,7 +911,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		if (!$cacheFile)
 		{
 			$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-			$cacheFile = ClassLoader::getRealPath('cache.') . 'router-' . $host . '.php';
+			$cacheFile = ClassLoader::getRealPath('cache/') . 'router-' . $host . '.php';
 		}
 
 		return $cacheFile;
@@ -1217,7 +1217,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 			throw new Exception('Invalid express checkout handler');
 		}
 
-		ClassLoader::importNow('library.payment.method.express.' . $handlerName);
+		ClassLoader::importNow('library/payment/method/express.' . $handlerName);
 
 		return $this->getPaymentHandler($handlerName, $details);
 	}
@@ -1229,7 +1229,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		$handler = $this->config->get('CC_HANDLER');
 
-		ClassLoader::importNow('library.payment.method.cc.' . $handler);
+		ClassLoader::importNow('library/payment/method/cc.' . $handler);
 
 		return $this->getPaymentHandler($handler, $details);
 	}
@@ -1243,9 +1243,9 @@ class LiveCart extends \Phalcon\Mvc\Application
 										}
 				else
 				{
-					ClassLoader::importNow('library.payment.method.*');
-					ClassLoader::importNow('library.payment.method.cc.*');
-					ClassLoader::importNow('library.payment.method.express.*');
+					ClassLoader::importNow('library/payment/method.*');
+					ClassLoader::importNow('library/payment/method/cc.*');
+					ClassLoader::importNow('library/payment/method/express.*');
 				}
 		}
 
@@ -1542,7 +1542,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (!$this->configContainer)
 		{
-			$path = ClassLoader::getRealPath('cache.configurationContainer') . '.php';
+			$path = ClassLoader::getRealPath('cache/configurationContainer') . '.php';
 			if (file_exists($path))
 			{
 				$this->configContainer = include $path;

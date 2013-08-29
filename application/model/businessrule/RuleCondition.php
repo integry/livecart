@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 abstract class RuleCondition
 {
@@ -171,7 +171,7 @@ abstract class RuleCondition
 			$array['conditionClass'] = 'RuleConditionRoot';
 		}
 
-		ActiveRecordModel::getApplication()->loadPluginClass('application.model.businessrule.condition', $array['conditionClass']);
+		ActiveRecordModel::getApplication()->loadPluginClass('application/model/businessrule/condition', $array['conditionClass']);
 		$inst = new $array['conditionClass'];
 		$array['instance'] = $inst;
 

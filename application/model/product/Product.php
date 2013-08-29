@@ -1,25 +1,25 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductSet', true);
-ClassLoader::import('application.model.product.ProductVariationTypeSet', true);
-ClassLoader::import('application.model.product.ProductSpecification');
-ClassLoader::import('application.model.product.ProductPricing');
-ClassLoader::import('application.model.product.ProductImage');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.system.Language');
-ClassLoader::import('application.model.system.MultilingualObject');
-ClassLoader::import('application.model.category.*');
-ClassLoader::import('application.model.specification.*');
-ClassLoader::import('application.model.product.*');
-ClassLoader::import('application.model.delivery.ShippingClass');
-ClassLoader::import('application.model.tax.TaxClass');
-ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+ClassLoader::import('application/model/product/ProductSet', true);
+ClassLoader::import('application/model/product/ProductVariationTypeSet', true);
+ClassLoader::import('application/model/product/ProductSpecification');
+ClassLoader::import('application/model/product/ProductPricing');
+ClassLoader::import('application/model/product/ProductImage');
+ClassLoader::import('application/model/product/Manufacturer');
+ClassLoader::import('application/model/system/Language');
+ClassLoader::import('application/model/system/MultilingualObject');
+ClassLoader::import('application/model/category.*');
+ClassLoader::import('application/model/specification.*');
+ClassLoader::import('application/model/product.*');
+ClassLoader::import('application/model/delivery/ShippingClass');
+ClassLoader::import('application/model/tax/TaxClass');
+ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
  * This class allows to assign or change product attribute values, product files, images, related products, etc.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class Product extends MultilingualObject
@@ -798,7 +798,7 @@ class Product extends MultilingualObject
 		// generate SKU automatically if not set
 		if (!$this->sku->get())
 		{
-			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+			ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
 
 			if (!$this->parent->get())
 			{
@@ -1167,7 +1167,7 @@ class Product extends MultilingualObject
 
 	public function loadRelationships($loadReferencedRecords = false, $type = 0)
 	{
-		ClassLoader::import('application.model.product.ProductRelationship');
+		ClassLoader::import('application/model/product/ProductRelationship');
 		if (empty($this->relationships[$type]))
 		{
 			$this->relationships[$type] = ProductRelationship::getRelationships($this, $loadReferencedRecords, $type);
@@ -1206,7 +1206,7 @@ class Product extends MultilingualObject
 		{
 			$this->additionalCategories = array();
 
-			ClassLoader::import('application.model.category.ProductCategory');
+			ClassLoader::import('application/model/category/ProductCategory');
 
 			$categories = new ARSet();
 			$filter = new ARSelectFilter();
@@ -1284,7 +1284,7 @@ class Product extends MultilingualObject
 	 */
 	public function getRelationshipsArray($type, $loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup', 'Category'))
 	{
-		ClassLoader::import('application.model.product.ProductRelationship');
+		ClassLoader::import('application/model/product/ProductRelationship');
 		return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords, $type);
 	}
 
@@ -1314,7 +1314,7 @@ class Product extends MultilingualObject
 	 */
 	public function getRelationshipGroups($type)
 	{
-		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		ClassLoader::import('application/model/product/ProductRelationshipGroup');
 		return ProductRelationshipGroup::getProductGroups($this, $type);
 	}
 
@@ -1323,13 +1323,13 @@ class Product extends MultilingualObject
 	 */
 	public function getRelationshipGroupArray($type = 0)
 	{
-		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		ClassLoader::import('application/model/product/ProductRelationshipGroup');
 		return ProductRelationshipGroup::getProductGroupArray($this, $type);
 	}
 
 	public function getRelatedProductsWithGroupsArray($type = 0)
 	{
-		ClassLoader::import('application.model.product.ProductRelationshipGroup');
+		ClassLoader::import('application/model/product/ProductRelationshipGroup');
 		return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray($type), $this->getRelationshipsArray($type));
 	}
 
@@ -1338,7 +1338,7 @@ class Product extends MultilingualObject
 	 */
 	public function getFileGroups()
 	{
-		ClassLoader::import('application.model.product.ProductFileGroup');
+		ClassLoader::import('application/model/product/ProductFileGroup');
 		return ProductFileGroup::getProductGroups($this);
 	}
 
@@ -1347,20 +1347,20 @@ class Product extends MultilingualObject
 	 */
 	public function getFiles()
 	{
-		ClassLoader::import('application.model.product.ProductFile');
+		ClassLoader::import('application/model/product/ProductFile');
 		return ProductFile::getFilesByProduct($this);
 	}
 
 	public function getFilesMergedWithGroupsArray()
 	{
-		ClassLoader::import('application.model.product.ProductFileGroup');
+		ClassLoader::import('application/model/product/ProductFileGroup');
 		return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 
 	public function getOptions($includeInheritedOptions = false)
 	{
 		$parent = $this->getParent();
-		ClassLoader::import('application.model.product.ProductOption');
+		ClassLoader::import('application/model/product/ProductOption');
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
@@ -1490,7 +1490,7 @@ class Product extends MultilingualObject
 	{
 		if (is_null($this->bundledProducts))
 		{
-			ClassLoader::import('application.model.product.ProductBundle');
+			ClassLoader::import('application/model/product/ProductBundle');
 			$this->bundledProducts = ProductBundle::getBundledProductSet($this);
 		}
 
@@ -1499,7 +1499,7 @@ class Product extends MultilingualObject
 
 	public function createVariation($variationArray)
 	{
-		ClassLoader::import('application.model.product.ProductVariationValue');
+		ClassLoader::import('application/model/product/ProductVariationValue');
 
 		$child = $this->createChildProduct();
 		$child->save();
@@ -1572,7 +1572,7 @@ class Product extends MultilingualObject
 
 	public function updateSalesRank()
 	{
-		$cacheFile = ClassLoader::getRealPath('cache.salesrank');
+		$cacheFile = ClassLoader::getRealPath('cache/salesrank');
 		if (!file_exists($cacheFile) || (filemtime($cacheFile) < time() - 3600))
 		{
 			touch($cacheFile);

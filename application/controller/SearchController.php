@@ -5,7 +5,7 @@
  * Search for non-products
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class SearchController extends FrontendController
 {

@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Filter product list by price. Price intervals are pre-defined (for now).
  *
- * @package application.model.filter
+ * @package application/model/filter
  * @author Integry Systems <http://integry.com>
  */
 class PriceFilter implements FilterInterface

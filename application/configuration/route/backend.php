@@ -3,7 +3,7 @@
 /**
  * Application request routing configuration
  *
- * @package application.configuration.route
+ * @package application/configuration/route
  * @author Integry Systems
  */
 
@@ -61,7 +61,7 @@ $routes = array(
 				);
 
 // custom routes
-$routeDir = ClassLoader::getRealPath('storage.configuration.route');
+$routeDir = ClassLoader::getRealPath('storage/configuration/route');
 foreach ((array)glob($routeDir . '/*.php') as $file)
 {
 	if ($file)

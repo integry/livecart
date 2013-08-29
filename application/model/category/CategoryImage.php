@@ -4,7 +4,7 @@
 /**
  * Category image (icon)
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems
  */
 class CategoryImage extends ObjectImage

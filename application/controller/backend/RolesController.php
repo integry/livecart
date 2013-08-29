@@ -3,7 +3,7 @@
 /**
  * Application settings management
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role userGroup
  */
@@ -30,7 +30,7 @@ class RolesController extends StoreManagementController
 		}
 
 		// disabled roles
-		$disable = ClassLoader::getRealPath('storage.configuration.DisabledRoles') . '.php';
+		$disable = ClassLoader::getRealPath('storage/configuration/DisabledRoles') . '.php';
 		if (file_exists($disable))
 		{
 			$disabledRoles = include $disable;
@@ -131,7 +131,7 @@ class RolesController extends StoreManagementController
 		$userGroup = UserGroup::getInstanceByID($userGroupID, UserGroup::LOAD_DATA);
 
 		// disabled roles
-		$disable = ClassLoader::getRealPath('storage.configuration.DisabledRoles') . '.php';
+		$disable = ClassLoader::getRealPath('storage/configuration/DisabledRoles') . '.php';
 		if (file_exists($disable))
 		{
 			$disabledRoles = include $disable;

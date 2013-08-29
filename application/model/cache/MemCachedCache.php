@@ -4,7 +4,7 @@
 /**
  *
  *
- * @package application.model.cache
+ * @package application/model/cache
  * @author Integry Systems <http://integry.com>
  */
 class MemCachedCache extends ValueCache

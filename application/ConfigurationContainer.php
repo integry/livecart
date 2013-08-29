@@ -40,17 +40,17 @@ class ConfigurationContainer
 
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
 
-		foreach (array( 'configDirectory' => 'application.configuration.registry',
-		 				'routeDirectory' => 'application.configuration.route',
-						'languageDirectory' => 'application.configuration.language',
-						'controllerDirectory' => 'application.controller',
+		foreach (array( 'configDirectory' => 'application/configuration/registry',
+		 				'routeDirectory' => 'application/configuration/route',
+						'languageDirectory' => 'application/configuration/language',
+						'controllerDirectory' => 'application/controller',
 						'pluginDirectory' => 'plugin') as $var => $path)
 		{
 			$dir = ClassLoader::getRealPath($mountPath . '.' . $path);
 			$this->$var = is_dir($dir) ? realpath($dir) : null;
 		}
 
-		foreach (array('storage.customize.view', 'application.view') as $dir)
+		foreach (array('storage/customize/view', 'application/view') as $dir)
 		{
 			foreach (array('ini', 'php') as $ext)
 			{
@@ -83,7 +83,7 @@ class ConfigurationContainer
 
 	public function clearConfigurationCache()
 	{
-		$dir = ClassLoader::getRealPath('cache.');
+		$dir = ClassLoader::getRealPath('cache/');
 		foreach (array('configurationContainer.php', 'classloader.php') as $file)
 		{
 			if (file_exists($dir . $file))
@@ -97,8 +97,8 @@ class ConfigurationContainer
 	{
 		// clear cache
 		$this->delTree(ClassLoader::getRealPath('cache'));
-		$this->delTree(ClassLoader::getRealPath('public.cache'));
-		$this->delTree(ClassLoader::getRealPath('public.upload.css.patched'));
+		$this->delTree(ClassLoader::getRealPath('public/cache'));
+		$this->delTree(ClassLoader::getRealPath('public/upload/css/patched'));
 
 		foreach (array('cache', 'storage') as $secured)
 		{
@@ -106,7 +106,7 @@ class ConfigurationContainer
 			file_put_contents($dir . '/.htaccess', 'Deny from all');
 		}
 
-		foreach (array('cache.templates_c', 'cache.templates_c.customize') as $path)
+		foreach (array('cache/templates_c', 'cache/templates_c.customize') as $path)
 		{
 			$tplDir = ClassLoader::getRealPath($path);
 			mkdir($tplDir, 0777);
@@ -407,7 +407,7 @@ class ConfigurationContainer
 
 	private function getPublicDirectoryLink()
 	{
-		return ClassLoader::getRealPath('public.module.') . basename($this->directory);
+		return ClassLoader::getRealPath('public/module/') . basename($this->directory);
 	}
 
 	protected function installDatabase()

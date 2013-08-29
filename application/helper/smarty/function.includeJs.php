@@ -6,7 +6,7 @@
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_includeJs($params, Smarty_Internal_Template $smarty)
@@ -14,7 +14,7 @@ function smarty_function_includeJs($params, Smarty_Internal_Template $smarty)
 	static $jsPath;
 	if (!$jsPath)
 	{
-		$jsPath = ClassLoader::getRealPath('public.javascript.');
+		$jsPath = ClassLoader::getRealPath('public/javascript/');
 	}
 
 	$fileName = $params['file'];

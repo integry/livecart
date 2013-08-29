@@ -5,7 +5,7 @@
  * Implements setItemPrice and getItemPrice methods of OrderedItem
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 class RuleOrderContainer implements BusinessRuleOrderInterface
 {

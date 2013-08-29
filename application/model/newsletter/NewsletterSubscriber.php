@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::import('application.model.user.User');
+ClassLoader::import('application/model/user/User');
 
 /**
  * Newsletter subscriber
  *
- * @package application.model.newsletter
+ * @package application/model/newsletter
  * @author Integry Systems <http://integry.com>
  */
 class NewsletterSubscriber extends ActiveRecordModel

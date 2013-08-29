@@ -2,7 +2,7 @@
 
 /**
  *
- * @package application.model.system
+ * @package application/model/system
  * @author Integry Systems <http://integry.com>
  */
 class ActiveRecordGroup

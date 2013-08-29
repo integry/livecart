@@ -3,7 +3,7 @@
 /**
  * Intermediate entity for assigning Roles to UserGroups.
  *
- * @package application.model.role
+ * @package application/model/role
  * @author Integry Systems <http://integry.com>
  */
 class AccessControlAssociation extends ActiveRecordModel

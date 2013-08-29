@@ -7,7 +7,7 @@
  * This class usually should not be used directly as most of the attribute manipulations
  * can be done with Product class itself.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductSpecification extends EavSpecificationManagerCommon

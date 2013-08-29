@@ -2,7 +2,7 @@
 
 /**
  *
- * @package application.model.system
+ * @package application/model/system
  * @author Integry Systems <http://integry.com>
  */
 class Installer
@@ -32,8 +32,8 @@ class Installer
 
 				'cache',
 				'storage',
-				'public.cache',
-				'public.upload',
+				'public/cache',
+				'public/upload',
 
 			);
 
@@ -163,7 +163,7 @@ class Installer
 	{
 		// check writability of temporary directories
 		$writeFail = array();
-		foreach (array('cache', 'storage', 'public.cache', 'public.upload', 'public.module') as $dir)
+		foreach (array('cache', 'storage', 'public/cache', 'public/upload', 'public/module') as $dir)
 		{
 			$file = ClassLoader::getRealPath($dir) . '/.writeTest';
 			if (!file_exists($file))

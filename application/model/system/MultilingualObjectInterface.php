@@ -4,7 +4,7 @@
  * Interface for multilingual record manipulation
  *
  * @author Integry Systems <http://integry.com>  
- * @package application.model.system
+ * @package application/model/system
  */
 interface MultilingualObjectInterface
 {

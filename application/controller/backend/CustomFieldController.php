@@ -4,7 +4,7 @@
 /**
  * Manage custom EAV fields
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  *
  */

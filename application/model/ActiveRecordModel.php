@@ -4,7 +4,7 @@
  * Base class for all ActiveRecord based models of application (single entry point in
  * application specific model class hierarchy)
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 abstract class ActiveRecordModel extends \Phalcon\Mvc\Model

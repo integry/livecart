@@ -8,7 +8,7 @@
  *  (accidently overwritten customizations, etc.), also there would be no need to make the original templates
  *  directory writable to enable template modification from admin interface.
  *
- *  @package application.helper.smarty
+ *  @package application/helper/smarty
  *  @author Integry Systems
  */
 

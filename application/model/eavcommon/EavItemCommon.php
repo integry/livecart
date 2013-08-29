@@ -4,7 +4,7 @@
 /**
  * Links a pre-defined attribute value to a product
  *
- * @package application.model.specification
+ * @package application/model/specification
  * @author Integry Systems <http://integry.com>
  */
 abstract class EavItemCommon extends EavSpecificationCommon

@@ -5,7 +5,7 @@
 /**
  * Manage design themes
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  */
 class ThemeController extends StoreManagementController
@@ -138,7 +138,7 @@ class ThemeController extends StoreManagementController
 		$code = $this->request->gget('css');
 
 		// process uploaded files
-		$filePath = ClassLoader::getRealPath('public.upload.theme.' . $theme . '.');
+		$filePath = ClassLoader::getRealPath('public/upload/theme/' . $theme . '.');
 		if (!file_exists($filePath))
 		{
 			mkdir($filePath, 0777, true);
@@ -240,7 +240,7 @@ class ThemeController extends StoreManagementController
 
 	private function doCopyTheme()
 	{
-		ClassLoader::importNow('application.helper.CopyRecursive');
+		ClassLoader::importNow('application/helper/CopyRecursive');
 
 		$request = $this->getRequest();
 		$this->fromTheme = $request->gget('id');
@@ -300,7 +300,7 @@ class ThemeController extends StoreManagementController
 
 	private function doImport()
 	{
-		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+		require_once(ClassLoader::getRealPath('library/pclzip') . '/pclzip.lib.php');
 		$request = $this->getRequest();
 		$validator = $this->buildImportValidator($request);
 		if($validator->isValid() == false)
@@ -315,7 +315,7 @@ class ThemeController extends StoreManagementController
 		}
 		do
 		{
-			$path = ClassLoader::getRealPath('cache.tmp.theme_import_' . rand(1, 10000000));
+			$path = ClassLoader::getRealPath('cache/tmp.theme_import_' . rand(1, 10000000));
 		} while(is_dir($path));
 
 		mkdir($path, 0777, true);
@@ -390,11 +390,11 @@ class ThemeController extends StoreManagementController
 		}
 		$files =  array_merge(
 			array(
-				'A' => ClassLoader::getRealPath('public.upload.theme.'.$id),
-				'B' => ClassLoader::getRealPath('public.upload.css.'.$id).'.css',
-				'C' => ClassLoader::getRealPath('storage.customize.view.theme.'.$id)
+				'A' => ClassLoader::getRealPath('public/upload/theme/'.$id),
+				'B' => ClassLoader::getRealPath('public/upload/css/'.$id).'.css',
+				'C' => ClassLoader::getRealPath('storage/customize/view.theme/'.$id)
 			),
-			glob(ClassLoader::getRealPath('public.upload.css.delete.').$id.'-*.php')
+			glob(ClassLoader::getRealPath('public/upload/css/delete/').$id.'-*.php')
 		);
 
 		// Make paths relative
@@ -427,7 +427,7 @@ class ThemeController extends StoreManagementController
 
 	public function exportAction()
 	{
-		require_once(ClassLoader::getRealPath('library.pclzip') . '/pclzip.lib.php');
+		require_once(ClassLoader::getRealPath('library/pclzip') . '/pclzip.lib.php');
 		$id = $this->getRequest()->get('id');
 		$files = $this->getThemeFiles($id);
 		if ($files === null)
@@ -437,7 +437,7 @@ class ThemeController extends StoreManagementController
 
 		do
 		{
-			$path = ClassLoader::getRealPath('cache.tmp.theme_export_' . rand(1, 10000000));
+			$path = ClassLoader::getRealPath('cache/tmp.theme_export_' . rand(1, 10000000));
 		} while(file_exists($path));
 		$zipFilePath = $path.'_archive.zip';
 		$confFilePath = $path.DIRECTORY_SEPARATOR .'theme.conf';

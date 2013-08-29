@@ -3,7 +3,7 @@
 /**
  * Data export profiles
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 

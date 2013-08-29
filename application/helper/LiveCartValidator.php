@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.helper
+ * @package application/helper
  * @author Integry Systems
  */
 class LiveCartValidator extends RequestValidator

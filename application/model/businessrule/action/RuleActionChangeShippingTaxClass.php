@@ -1,12 +1,12 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleAction');
-ClassLoader::import('application.model.tax.TaxClass');
+ClassLoader::import('application/model/businessrule/RuleAction');
+ClassLoader::import('application/model/tax/TaxClass');
 
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule.action
+ * @package application/model/businessrule/action
  */
 class RuleActionChangeShippingTaxClass extends RuleAction implements RuleOrderAction
 {

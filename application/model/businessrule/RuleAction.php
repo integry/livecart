@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 abstract class RuleAction
 {
@@ -32,7 +32,7 @@ abstract class RuleAction
 
 	public static function createFromArray(array $array)
 	{
-		ActiveRecordModel::getApplication()->loadPluginClass('application.model.businessrule.action', $array['actionClass']);
+		ActiveRecordModel::getApplication()->loadPluginClass('application/model/businessrule/action', $array['actionClass']);
 		$inst = new $array['actionClass'];
 		if (!empty($array['condition']))
 		{

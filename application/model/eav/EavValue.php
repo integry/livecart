@@ -7,7 +7,7 @@
  * input values (numeric or string) that are related to one product only. The advantage of selector values
  * is that they can be used to create product Filters, while input string (SpecificationStringValues) can not.
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 class EavValue extends EavValueCommon

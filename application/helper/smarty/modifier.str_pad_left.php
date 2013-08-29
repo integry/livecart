@@ -3,7 +3,7 @@
 /**
  *
  *
- *  @package application.helper.smarty
+ *  @package application/helper/smarty
  *  @author Integry Systems
  */
 function smarty_modifier_str_pad_left($string, $count, $pad = ' ')

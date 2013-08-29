@@ -4,7 +4,7 @@
 /**
  * Searchable item entry
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems <http://integry.com>
  */
 class SearchableItem extends ActiveRecordModel

@@ -4,7 +4,7 @@
 /**
  * Manage design themes
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  */
 class ThemeFileController extends StoreManagementController

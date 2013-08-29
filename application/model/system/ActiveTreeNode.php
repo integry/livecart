@@ -48,7 +48,7 @@
  *
  * @link http://www.sitepoint.com/article/hierarchical-data-database/
  * @author Integry Systems <http://integry.com>
- * @package application.model.system
+ * @package application/model/system
  *
  */
 class ActiveTreeNode extends ActiveRecordModel

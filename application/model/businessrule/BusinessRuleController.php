@@ -6,7 +6,7 @@
  * Determines which rules and actions are applicable
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 class BusinessRuleController
 {
@@ -136,7 +136,7 @@ class BusinessRuleController
 		$app = ActiveRecordModel::getApplication();
 		foreach (array('condition', 'action') as $type)
 		{
-			$path = 'application.model.businessrule.' . $type;
+			$path = 'application/model/businessrule.' . $type;
 			foreach ($app->getPluginClasses($path) as $class)
 			{
 				$paths[$class] = $app->getPluginClassPath($path, $class);
@@ -188,7 +188,7 @@ class BusinessRuleController
 
 	private function getRuleFile()
 	{
-		return ClassLoader::getRealPath('cache.') . 'businessrules.php';
+		return ClassLoader::getRealPath('cache/') . 'businessrules.php';
 	}
 }
 

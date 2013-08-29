@@ -9,7 +9,7 @@
  *	  w:Monday ~ -1 week - last week's Monday
  *
  *  @param string $date Date string
- *  @package application.helper
+ *  @package application/helper
  *  @author Integry Systems
  */
 function getDateFromString($date, $now = null)

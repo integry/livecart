@@ -5,7 +5,7 @@
  * Roles allow to fine-grain user (UserGroup) access to controller classes and methods.
  * For the time being the roles are only used for the backend area.
  *
- * @package application.model.roles
+ * @package application/model/roles
  * @author Integry Systems <http://integry.com>
  */
 class Role extends ActiveRecordModel
@@ -131,13 +131,13 @@ class Role extends ActiveRecordModel
 
 	public static function cleanUp()
 	{
-				$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+				$rolesCacheDir = ClassLoader::getRealPath('cache/roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			mkdir($rolesCacheDir, 0777, true);
 		}
 
-		$rolesDirectoryParser = new RolesDirectoryParser(ClassLoader::getRealPath('application.controller.backend'), $rolesCacheDir);
+		$rolesDirectoryParser = new RolesDirectoryParser(ClassLoader::getRealPath('application/controller/backend'), $rolesCacheDir);
 		$roleNames = array();
 		foreach($rolesDirectoryParser->getClassParsers() as $classParser)
 		{

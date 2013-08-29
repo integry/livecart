@@ -1,16 +1,16 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
-ClassLoader::import("application.model.delivery.DeliveryZoneState");
-ClassLoader::import("application.model.delivery.DeliveryZoneCityMask");
-ClassLoader::import("application.model.delivery.DeliveryZoneZipMask");
-ClassLoader::import("application.model.delivery.DeliveryZoneAddressMask");
-ClassLoader::import("application.model.delivery.State");
-ClassLoader::import("application.model.tax.Tax");
-ClassLoader::import("application.model.tax.TaxRate");
-ClassLoader::import("application.model.user.UserAddress");
+ClassLoader::import("application/model/delivery/DeliveryZone");
+ClassLoader::import("application/model/delivery/DeliveryZoneCountry");
+ClassLoader::import("application/model/delivery/DeliveryZoneState");
+ClassLoader::import("application/model/delivery/DeliveryZoneCityMask");
+ClassLoader::import("application/model/delivery/DeliveryZoneZipMask");
+ClassLoader::import("application/model/delivery/DeliveryZoneAddressMask");
+ClassLoader::import("application/model/delivery/State");
+ClassLoader::import("application/model/tax/Tax");
+ClassLoader::import("application/model/tax/TaxRate");
+ClassLoader::import("application/model/user/UserAddress");
 
 /**
  *

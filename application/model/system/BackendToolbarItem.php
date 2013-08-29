@@ -1,9 +1,9 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import('application.model.user.User');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import("application/model/ActiveRecordModel");
+ClassLoader::import('application/model/user/User');
+ClassLoader::import('application/model/product/Product');
+ClassLoader::import('application/model/order/CustomerOrder');
 
 /**
  * BackendToolbarItem - buttons, last viewed

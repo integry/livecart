@@ -3,7 +3,7 @@
 /**
  * Text searching functionality for models (other than Products in frontend)
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  */
 abstract class SearchableModel

@@ -4,7 +4,7 @@
 /**
  * Assigns a product to additional category
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductCategory extends ActiveRecordModel

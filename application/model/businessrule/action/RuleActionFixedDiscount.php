@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule.action
+ * @package application/model/businessrule/action
  */
 class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements RuleOrderAction, RuleItemAction
 {

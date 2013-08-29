@@ -3,7 +3,7 @@
 /**
  * Generic interface implemented by all attribute (specification) value classes
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 interface iEavSpecification

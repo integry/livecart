@@ -4,7 +4,7 @@
 /**
  * Import data from other shopping cart programs
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role dbmigration
  */
@@ -118,7 +118,7 @@ class DatabaseImportController extends StoreManagementController
 	{
 		$drivers = array();
 
-		foreach (new DirectoryIterator(ClassLoader::getRealPath('library.import.driver')) as $file)
+		foreach (new DirectoryIterator(ClassLoader::getRealPath('library/import.driver')) as $file)
 		{
 			if (!$file->isDot())
 			{

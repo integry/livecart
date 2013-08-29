@@ -38,14 +38,14 @@ if (!defined('TEST_INITIALIZED'))
 
 	define('TEST_INITIALIZED', true);
 
-	ClassLoader::import('application.LiveCart');
+	ClassLoader::import('application/LiveCart');
 	UnitTest::setApplication(new LiveCart);
 	UnitTest::getApplication()->getConfig()->setAutoSave(false);
 	UnitTest::getApplication()->getConfig()->set('EMAIL_METHOD', 'FAKE');
 }
 
-ClassLoader::import('application.system.*');
-ClassLoader::import('library.locale.Locale');
+ClassLoader::import('application/system.*');
+ClassLoader::import('library/locale/Locale');
 ClassLoader::import('test.mock.Swift_Connection_Fake');
 
 require_once('LiveCartTest.php');

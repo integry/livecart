@@ -4,7 +4,7 @@
 /**
  * Session storage and retrieval from database
  *
- * @package application.model.session
+ * @package application/model/session
  * @author Integry Systems
  */
 class DatabaseSessionHandler extends BaseSessionHandler

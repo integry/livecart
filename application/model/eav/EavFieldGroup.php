@@ -4,7 +4,7 @@
 /**
  * EavFieldGroups allow to group related attributes (EavFields) together.
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 class EavFieldGroup extends EavFieldGroupCommon

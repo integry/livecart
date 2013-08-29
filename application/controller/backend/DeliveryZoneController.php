@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::importNow("application.model.delivery.DeliveryZone");
+ClassLoader::importNow("application/model/delivery/DeliveryZone");
 
 /**
  * Application settings management
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role delivery
  */

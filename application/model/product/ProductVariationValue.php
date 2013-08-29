@@ -4,7 +4,7 @@
 /**
  * Relates a product variation to particular product.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductVariationValue extends ActiveRecordModel

@@ -4,7 +4,7 @@
 /**
  * Manufacturer image (logo). One manufacturer can have multiple images.
  *
- * @package application.model.manufacturer
+ * @package application/model/manufacturer
  * @author Integry Systems <http://integry.com>
  */
 class ManufacturerImage extends ObjectImage

@@ -5,7 +5,7 @@
  * Main condition constraints - check if enabled, date interval, order coupons
  *
  * @author Integry Systems
- * @package application.model.businessrule.condition
+ * @package application/model/businessrule/condition
  */
 class RuleConditionRoot extends RuleCondition
 {

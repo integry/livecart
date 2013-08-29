@@ -4,7 +4,7 @@
 /**
  * Newsletter message
  *
- * @package application.model.newsletter
+ * @package application/model/newsletter
  * @author Integry Systems <http://integry.com>
  */
 class NewsletterMessage extends ActiveRecordModel

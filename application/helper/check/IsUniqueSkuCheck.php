@@ -4,7 +4,7 @@
 /**
  * Checks if product SKU is unique
  *
- * @package application.helper.check
+ * @package application/helper/check
  * @author Integry Systems 
  */
 class IsUniqueSkuCheck extends Check

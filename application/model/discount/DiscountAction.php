@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.discount
+ * @package application/model/discount
  */
 class DiscountAction extends ActiveRecordModel
 {

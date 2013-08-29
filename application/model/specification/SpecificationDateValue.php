@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::import('application.model.specification.ValueSpecification');
+ClassLoader::import('application/model/specification/ValueSpecification');
 
 /**
  * Date attribute value assigned to a particular product.
  *
- * @package application.model.specification
+ * @package application/model/specification
  * @author Integry Systems <http://integry.com>
  */
 class SpecificationDateValue extends ValueSpecification

@@ -7,7 +7,7 @@
  * This class usually should not be used directly as most of the attribute manipulations
  * can be done with Product class itself.
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 class EavSpecificationManager extends EavSpecificationManagerCommon

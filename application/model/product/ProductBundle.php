@@ -4,7 +4,7 @@
 /**
  * Assigns a bundled product to a parent product (bundle container)
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductBundle extends ActiveRecordModel

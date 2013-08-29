@@ -4,7 +4,7 @@
 /**
  * Generate list of best selling products
  *
- * @package application.model.report
+ * @package application/model/report
  * @author	Integry Systems
  */
 class BestsellerReport extends Report

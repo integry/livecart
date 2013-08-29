@@ -6,7 +6,7 @@
  * <code>
  * </code>
  *
- * @package application.helper.smarty.form
+ * @package application/helper/smarty/form
  * @author Integry Systems
  *
  * @todo Include javascript validator source

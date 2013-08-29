@@ -4,7 +4,7 @@
 /**
  * Sequential invoice numbers
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class SequentialInvoiceNumber extends InvoiceNumberGenerator

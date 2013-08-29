@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.template.CommonFile');
+ClassLoader::import('application/model/template/CommonFile');
 
 
 /**
@@ -8,12 +8,12 @@ ClassLoader::import('application.model.template.CommonFile');
  *
  * There are two sets of template files active at the same time:
  *
- *		1) application.view - default view template files
- *		2) storage.customize - edited template files.
+ *		1) application/view - default view template files
+ *		2) storage/customize - edited template files.
  *
  * This system allows to modify template files without overwriting the existing ones, among other benefits.
  *
- * @package application.model.template
+ * @package application/model/template
  * @author Integry Systems <http://integry.com>
  */
 class Template extends CommonFile
@@ -59,10 +59,10 @@ class Template extends CommonFile
 	{
 	  	if (!$dir)
 	  	{
-			$dir = ClassLoader::getRealPath('application.view.');
+			$dir = ClassLoader::getRealPath('application/view/');
 
 			// get user created template files
-			$customFiles = self::getTree(ClassLoader::getRealPath('storage.customize.view.'));
+			$customFiles = self::getTree(ClassLoader::getRealPath('storage/customize/view/'));
 		}
 
 		if (!file_exists(realpath($dir)))
@@ -133,12 +133,12 @@ class Template extends CommonFile
 
 	public static function getOriginalFilePath($fileName)
 	{
-		return ClassLoader::getRealPath('application.view.') . $fileName;
+		return ClassLoader::getRealPath('application/view/') . $fileName;
 	}
 
 	public static function getCustomizedFilePath($fileName)
 	{
-		return ClassLoader::getRealPath('storage.customize.view.') . $fileName;
+		return ClassLoader::getRealPath('storage/customize/view/') . $fileName;
 	}
 
 	public function setCode($code)
@@ -214,7 +214,7 @@ class Template extends CommonFile
 			return true;
 		}
 
-		$cacheDir = ClassLoader::getRealPath('cache.templates_c.customize');
+		$cacheDir = ClassLoader::getRealPath('cache/templates_c.customize');
 		if (is_dir($cacheDir))
 		{
 			foreach (new DirectoryIterator($cacheDir) as $file)
@@ -303,7 +303,7 @@ class Template extends CommonFile
 		$result = array('' => $application->translate('_other_themes'));
 		foreach($application->getRenderer()->getThemeList() as $themename)
 		{
-			$fn = ClassLoader::getRealPath('storage.customize.view.theme.'.$themename.'.'). $fileName;
+			$fn = ClassLoader::getRealPath('storage/customize/view.theme/'.$themename.'.'). $fileName;
 			if(file_exists($fn))
 			{
 				$result[$themename] = $themename;
@@ -388,7 +388,7 @@ class Template extends CommonFile
 
 	protected function getBackupPath()
 	{
-		return ClassLoader::getRealPath('storage.backup.template.');
+		return ClassLoader::getRealPath('storage/backup.template/');
 	}
 }
 

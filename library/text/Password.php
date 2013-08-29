@@ -2,7 +2,7 @@
 
 /**
  *
- * @package library.text
+ * @package library/text
  * @author Integry Systems 
  */
 class Password {

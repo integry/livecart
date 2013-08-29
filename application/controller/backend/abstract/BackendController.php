@@ -5,7 +5,7 @@
  * Generic backend controller for administrative tools (actions, modules etc.)
  *
  * @author Integry Systems
- * @package application.backend.controller.abstract
+ * @package application/backend/controller/abstract
  */
 abstract class BackendController extends BaseController
 {

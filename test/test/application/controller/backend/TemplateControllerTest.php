@@ -25,7 +25,7 @@ class TemplateControllerTest extends LiveCartTest implements BackendControllerTe
 	{
 		parent::tearDown();
 
-		$dir = ClassLoader::getRealPath('storage.customize.view.theme.sometheme');
+		$dir = ClassLoader::getRealPath('storage/customize/view.theme.sometheme');
 		if (file_exists($dir))
 		{
 			rmdir($dir);

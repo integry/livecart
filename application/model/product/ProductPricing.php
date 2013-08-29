@@ -6,7 +6,7 @@
  * if a price is not defined for a particular currency. This class usually should not be used directly
  * as the Product class provides most of the methods necessary for pricing manipulation.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductPricing

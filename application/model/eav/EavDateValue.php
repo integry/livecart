@@ -4,7 +4,7 @@
 /**
  * Date attribute value assigned to a particular product.
  *
- * @package application.model.specification
+ * @package application/model/specification
  * @author Integry Systems <http://integry.com>
  */
 class EavDateValue extends EavValueSpecification

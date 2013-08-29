@@ -8,7 +8,7 @@
  * horsepowers for cars, etc. Since SpecFields are linked to categories, products from different categories can
  * have different set of attributes.
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems <http://integry.com>
  */
 class SpecField extends EavFieldCommon

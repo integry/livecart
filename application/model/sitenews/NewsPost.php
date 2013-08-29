@@ -4,7 +4,7 @@
 /**
  * News post entry
  *
- * @package application.model.news
+ * @package application/model/news
  * @author Integry Systems <http://integry.com>
  */
 class NewsPost extends MultilingualObject

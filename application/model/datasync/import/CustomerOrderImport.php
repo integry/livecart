@@ -1,13 +1,13 @@
 <?php
 
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.order.CustomerOrder');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.controller.backend.CustomerOrderController');
+ClassLoader::import('application/model/datasync/DataImport');
+ClassLoader::import('application/model/order/CustomerOrder');
+ClassLoader::import('application/model/product/Product');
+ClassLoader::import('application/controller/backend/CustomerOrderController');
 
 /**
  *
- *  @package application.model.datasync.import
+ *  @package application/model/datasync/import
  *  @author Integry Systems
  */
 class CustomerOrderImport extends DataImport

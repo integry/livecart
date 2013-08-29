@@ -1,15 +1,15 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.order.OrderNote");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::importNow("application.helper.getDateFromString");
+ClassLoader::import("application/controller/backend/abstract/StoreManagementController");
+ClassLoader::import("application/model/order/CustomerOrder");
+ClassLoader::import("application/model/order/OrderNote");
+ClassLoader::import("application/model/category/Category");
+ClassLoader::importNow("application/helper/getDateFromString");
 
 /**
  * Main backend controller which stands as an entry point to administration functionality
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems <http://integry.com>
  */
 class IndexController extends StoreManagementController
@@ -149,7 +149,7 @@ class IndexController extends StoreManagementController
 	private function updateApplicationUri()
 	{
 		$data = array('url' => $this->router->createFullUrl($this->router->createUrl(array())), 'rewrite' => !$this->request->gget('noRewrite', false));
-		file_put_contents(ClassLoader::getRealPath('storage.configuration.') . 'url.php', '<?php return ' . var_export($data, true) . '; ?>');
+		file_put_contents(ClassLoader::getRealPath('storage/configuration/') . 'url.php', '<?php return ' . var_export($data, true) . '; ?>');
 	}
 }
 

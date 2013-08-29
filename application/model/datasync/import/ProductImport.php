@@ -1,14 +1,14 @@
 <?php
 
-ClassLoader::import('application.controller.backend.ProductController');
-ClassLoader::import('application.model.datasync.DataImport');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application/controller/backend/ProductController');
+ClassLoader::import('application/model/datasync/DataImport');
+ClassLoader::import('application/model/category/Category');
+ClassLoader::import('application/model/product/Product');
 
 /**
  *  Handles product import logic
  *
- *  @package application.model.datasync.import
+ *  @package application/model/datasync/import
  *  @author Integry Systems
  */
 class ProductImport extends DataImport
@@ -667,7 +667,7 @@ class ProductImport extends DataImport
 		{
 			if (!file_exists($path))
 			{
-				foreach (array('/tmp/import/', ClassLoader::getRealPath('public.import.')) as $loc)
+				foreach (array('/tmp/import/', ClassLoader::getRealPath('public/import/')) as $loc)
 				{
 					$p = $loc . $path;
 					if (file_exists($p))

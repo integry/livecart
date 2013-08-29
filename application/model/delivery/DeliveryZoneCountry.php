@@ -3,7 +3,7 @@
 /**
  * Country assignment to a DeliveryZone
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class DeliveryZoneCountry extends ActiveRecordModel

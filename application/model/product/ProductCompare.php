@@ -4,7 +4,7 @@
 /**
  * Logic for product comparison feature
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductCompare

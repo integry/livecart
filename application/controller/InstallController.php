@@ -5,7 +5,7 @@
  * LiveCart installer
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class InstallController extends FrontendController
 {
@@ -351,7 +351,7 @@ class InstallController extends FrontendController
 
 	private function getDsnFile()
 	{
-		return ClassLoader::getRealPath('storage.configuration') . '/database.php';
+		return ClassLoader::getRealPath('storage/configuration') . '/database.php';
 	}
 
 	private function getStepFile()

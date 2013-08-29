@@ -2,7 +2,7 @@
 
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::importNow("application.helper.smarty.prefilter#config");
+ClassLoader::importNow("application/helper/smarty/prefilter#config");
 
 /**
  *  @author Integry Systems

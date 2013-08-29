@@ -4,7 +4,7 @@
 /**
  * Category specification field value controller
  *
- * @package application.controller.abstract.eav
+ * @package application/controller/abstract/eav
  * @author	Integry Systems
  */
 abstract class EavFieldValueControllerCommon extends StoreManagementController

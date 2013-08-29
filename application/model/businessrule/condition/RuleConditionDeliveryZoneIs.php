@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule.condition
+ * @package application/model/businessrule/condition
  */
 class RuleConditionDeliveryZoneIs extends RuleCondition
 {

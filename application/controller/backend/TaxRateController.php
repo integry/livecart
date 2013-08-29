@@ -1,14 +1,14 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.tax.Tax");
-ClassLoader::import("application.model.tax.TaxRate");
-ClassLoader::import("application.model.delivery.DeliveryZone");
+ClassLoader::import("application/controller/backend/abstract/StoreManagementController");
+ClassLoader::import("application/model/tax/Tax");
+ClassLoader::import("application/model/tax/TaxRate");
+ClassLoader::import("application/model/delivery/DeliveryZone");
 
 /**
  * Application settings management
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author	Integry Systems
  * @role delivery
  */

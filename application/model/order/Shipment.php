@@ -4,7 +4,7 @@
 /**
  * Represents a collection of ordered items that are shipped in the same package
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class Shipment extends ActiveRecordModel

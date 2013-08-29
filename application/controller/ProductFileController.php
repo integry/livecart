@@ -4,7 +4,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class ProductFileController extends FrontendController
 {

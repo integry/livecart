@@ -21,7 +21,7 @@
  *  {/pageMenu}
  * </code>
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_block_menuCaption($params, $content, Smarty_Internal_Template $smarty, &$repeat)

@@ -4,7 +4,7 @@
 /**
  *  Handles user address import logic
  *
- *  @package application.model.datasync.import
+ *  @package application/model/datasync/import
  *  @author Integry Systems
  */
 class UserAddressImport extends DataImport

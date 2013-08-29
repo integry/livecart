@@ -4,7 +4,7 @@
 /**
  * Handles product importing through a CSV file
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role csvimport
  */
@@ -25,7 +25,7 @@ class CsvImportController extends StoreManagementController
 
 	public function indexAction()
 	{
-		$classes = array_diff($this->application->getPluginClasses('application.model.datasync.import'), array('ProductImport'));
+		$classes = array_diff($this->application->getPluginClasses('application/model/datasync/import'), array('ProductImport'));
 		$classes = array_merge(array('ProductImport'), $classes);
 		$types = array();
 
@@ -377,7 +377,7 @@ class CsvImportController extends StoreManagementController
 		if (!$this->importInstance)
 		{
 			$class = $this->request->gget('type');
-			$this->application->loadPluginClass('application.model.datasync.import', $class);
+			$this->application->loadPluginClass('application/model/datasync/import', $class);
 			$this->importInstance = new $class($this->application);
 		}
 
@@ -480,12 +480,12 @@ class CsvImportController extends StoreManagementController
 
 	private function getProgressFile()
 	{
-		return ClassLoader::getRealPath('cache.') . 'csvProgress';
+		return ClassLoader::getRealPath('cache/') . 'csvProgress';
 	}
 
 	private function getProfileDirectory(DataImport $import)
 	{
-		return ClassLoader::getRealPath('storage.importProfiles.' . get_class($import) . '.');
+		return ClassLoader::getRealPath('storage/importProfiles/' . get_class($import) . '.');
 	}
 }
 

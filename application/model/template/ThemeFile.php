@@ -4,7 +4,7 @@
 
 /**
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems
  */
 class ThemeFile
@@ -96,8 +96,8 @@ class ThemeFile
 			throw new Exception('Illegal theme name');
 		}
 		$this->theme = $theme;
-		$this->path = ClassLoader::getRealPath('public.upload.theme.'.$this->theme.'.');
-		$this->thumbnailPath = ClassLoader::getRealPath('public.upload.theme.'.$this->theme.'.thumbs.');
+		$this->path = ClassLoader::getRealPath('public/upload/theme/'.$this->theme.'.');
+		$this->thumbnailPath = ClassLoader::getRealPath('public/upload/theme/'.$this->theme.'.thumbs.');
 
 		if(file_exists($this->path) == false)
 		{

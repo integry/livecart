@@ -4,7 +4,7 @@
 /**
  *  Handles user data import logic
  *
- *  @package application.model.datasync.import
+ *  @package application/model/datasync/import
  *  @author Integry Systems
  */
 class NewsPostImport extends DataImport

@@ -4,7 +4,7 @@
 /**
  * CSV import profiles
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 class CsvImportProfile
@@ -107,7 +107,7 @@ class CsvImportProfile
 
 	public function setName($name)
 	{
-		$this->setFileName(ClassLoader::getRealPath('storage.configuration.csvImportProfile.') . $name . '.ini');
+		$this->setFileName(ClassLoader::getRealPath('storage/configuration/csvImportProfile/') . $name . '.ini');
 	}
 
 	public function setFileName($fileName)

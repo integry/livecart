@@ -4,7 +4,7 @@
 /**
  * Handle data export in CSV format
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 abstract class DataExport

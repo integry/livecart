@@ -1,28 +1,28 @@
 <?php
 
-ClassLoader::import('application.controller.CatalogController');
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.SpecField');
-ClassLoader::import('application.model.category.ProductList');
-ClassLoader::import('application.model.category.ProductListItem');
-ClassLoader::import('application.model.filter.*');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.product.Manufacturer');
-ClassLoader::import('application.model.product.ProductFilter');
-ClassLoader::import('application.model.product.ProductCount');
-ClassLoader::import('application.model.product.ProductPrice');
-ClassLoader::import('application.model.product.ProductCompare');
-ClassLoader::import('application.model.category.SpecFieldValue');
-ClassLoader::import('application.model.category.SearchLog');
-ClassLoader::import('application.model.product.ProductSpecification');
-ClassLoader::import('application.model.category.CategoryRelationship');
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::import('application/controller/CatalogController');
+ClassLoader::import('application/model/category/Category');
+ClassLoader::import('application/model/category/SpecField');
+ClassLoader::import('application/model/category/ProductList');
+ClassLoader::import('application/model/category/ProductListItem');
+ClassLoader::import('application/model/filter.*');
+ClassLoader::import('application/model/product/Product');
+ClassLoader::import('application/model/product/Manufacturer');
+ClassLoader::import('application/model/product/ProductFilter');
+ClassLoader::import('application/model/product/ProductCount');
+ClassLoader::import('application/model/product/ProductPrice');
+ClassLoader::import('application/model/product/ProductCompare');
+ClassLoader::import('application/model/category/SpecFieldValue');
+ClassLoader::import('application/model/category/SearchLog');
+ClassLoader::import('application/model/product/ProductSpecification');
+ClassLoader::import('application/model/category/CategoryRelationship');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Index controller for frontend
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class CategoryController extends CatalogController
 {
@@ -48,7 +48,7 @@ class CategoryController extends CatalogController
 
 	public function indexAction()
 	{
-		ClassLoader::import('application.model.presentation.CategoryPresentation');
+		ClassLoader::import('application/model/presentation/CategoryPresentation');
 
 		$this->getAppliedFilters();
 
@@ -193,7 +193,7 @@ class CategoryController extends CatalogController
 					$categoryNarrow = $this->getSubCategoriesBySearchQuery($productFilter->getBaseFilter(), $subCategories);
 				}
 
-				include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+				include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
 
 				if (!$this->getCategory()->isRoot())
 				{
@@ -226,7 +226,7 @@ class CategoryController extends CatalogController
 		// no products found, but found one category name - redirect to this category
 		if (isset($foundCategories) && (1 == $foundCategories->size()) && !$products)
 		{
-			include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
+			include_once(ClassLoader::getRealPath('application/helper/smarty') . '/function.categoryUrl.php');
 			return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
 		}
 

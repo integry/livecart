@@ -5,7 +5,7 @@
  * Order data feed
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class ShipmentFeed extends ARFeed
 {

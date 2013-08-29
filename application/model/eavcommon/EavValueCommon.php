@@ -7,7 +7,7 @@
  * input values (numeric or string) that are related to one product only. The advantage of selector values
  * is that they can be used to create product Filters, while input string (SpecificationStringValues) can not.
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems <http://integry.com>
  */
 abstract class EavValueCommon extends MultilingualObject
@@ -146,7 +146,7 @@ abstract class EavValueCommon extends MultilingualObject
 	{
 		$path = self::getRelativeImagePath(get_class($this), $this->getID());
 		
-		return $isFullPath ? ClassLoader::getRealPath('public.') . $path : $path;
+		return $isFullPath ? ClassLoader::getRealPath('public/') . $path : $path;
 	}
 
 	public function save($forceOperation = false)

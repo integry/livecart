@@ -133,7 +133,7 @@ abstract class DataImport
 	protected function getImporterInstance($type)
 	{
 		$class = $type . 'Import';
-		$this->application->loadPluginClass('application.model.datasync.import', $class);
+		$this->application->loadPluginClass('application/model/datasync/import', $class);
 		return new $class($this->application);
 	}
 
@@ -302,7 +302,7 @@ abstract class DataImport
 
 	public function getImportIDFileName()
 	{
-		$path = ClassLoader::getRealPath('cache.csvImport.') . $this->uid;
+		$path = ClassLoader::getRealPath('cache/csvImport/') . $this->uid;
 		if (!file_exists(dirname($path)))
 		{
 			mkdir(dirname($path));

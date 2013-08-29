@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::import('application.model.searchable.SearchableModel');
+ClassLoader::import('application/model/searchable/SearchableModel');
 
 /**
  * Search site news
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  */
 class SearchableNewsPost extends SearchableModel
@@ -17,7 +17,7 @@ class SearchableNewsPost extends SearchableModel
 
 	public function loadClass()
 	{
-		ClassLoader::import('application.model.sitenews.NewsPost');
+		ClassLoader::import('application/model/sitenews/NewsPost');
 	}
 
 	public function getSelectFilter($searchTerm)

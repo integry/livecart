@@ -4,7 +4,7 @@
 /**
  * EavFieldGroupCommon allow to group related EavFieldCommon (fields) together.
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 class EavFieldGroupCommon extends MultilingualObject

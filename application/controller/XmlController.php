@@ -8,7 +8,7 @@ set_time_limit(0);
  * Export product data to XML feeds
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class XmlController extends FrontendController
 {

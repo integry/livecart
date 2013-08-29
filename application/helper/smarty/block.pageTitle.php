@@ -3,7 +3,7 @@
 /**
  * Set page title
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_block_pageTitle($params, $content, Smarty_Internal_Template $smarty, &$repeat)

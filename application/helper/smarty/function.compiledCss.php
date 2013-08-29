@@ -1,7 +1,7 @@
 <?php
 
-ClassLoader::import('application.model.system.CssFile');
-ClassLoader::import('application.model.template.Theme');
+ClassLoader::import('application/model/system/CssFile');
+ClassLoader::import('application/model/template/Theme');
 
 /**
  * ...
@@ -10,7 +10,7 @@ ClassLoader::import('application.model.template.Theme');
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
@@ -65,14 +65,14 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 			$compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.css';
 		}
 
-		$compiledFilePath = ClassLoader::getRealPath('public.cache.stylesheet.') .  $compiledFileName;
-		$baseDir = ClassLoader::getRealPath('public.stylesheet.');
-		$publicDir = ClassLoader::getRealPath('public.');
+		$compiledFilePath = ClassLoader::getRealPath('public/cache/stylesheet/') .  $compiledFileName;
+		$baseDir = ClassLoader::getRealPath('public/stylesheet/');
+		$publicDir = ClassLoader::getRealPath('public/');
 
 		$compiledFileTimestamp = 0;
 		if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedStylesheetTimestamp)
 		{
-			if(!is_dir(ClassLoader::getRealPath('public.cache.stylesheet'))) mkdir(ClassLoader::getRealPath('public.cache.stylesheet'), 0777, true);
+			if(!is_dir(ClassLoader::getRealPath('public/cache/stylesheet'))) mkdir(ClassLoader::getRealPath('public/cache/stylesheet'), 0777, true);
 
 			// compile
 			$compiledFileContent = "";
@@ -129,7 +129,7 @@ function smarty_function_compiledCss($params, Smarty_Internal_Template $smarty)
 	else if ($includedStylesheetFiles)
 	{
 		$includeString = "";
-		$publicPath = ClassLoader::getRealPath('public.');
+		$publicPath = ClassLoader::getRealPath('public/');
 
 		foreach($includedStylesheetFiles as $cssFile)
 		{

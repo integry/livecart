@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Filter product list by manufacturer. The manufacturer filters are generated automatically.
  *
- * @package application.model.filter
+ * @package application/model/filter
  * @author Integry Systems <http://integry.com>
  */
 class ManufacturerFilter implements FilterInterface

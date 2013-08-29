@@ -8,7 +8,7 @@
  *
  * @param string $str
  * @return string
- * @package application.helper
+ * @package application/helper
  * @author Integry Systems
  * @todo test with multibyte strings
  */

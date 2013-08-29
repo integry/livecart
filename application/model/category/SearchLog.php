@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems <http://integry.com>
  */
 class SearchLog extends ActiveRecordModel

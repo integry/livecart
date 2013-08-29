@@ -4,7 +4,7 @@
 /**
  * Search user
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  */
 class SearchableUser extends SearchableModel

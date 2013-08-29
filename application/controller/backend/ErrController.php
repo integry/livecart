@@ -4,7 +4,7 @@
 /**
  * Backend error pages
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  */
 class ErrController extends BackendController

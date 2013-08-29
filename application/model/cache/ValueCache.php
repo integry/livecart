@@ -2,7 +2,7 @@
 
 /**
  *
- * @package application.model.cache
+ * @package application/model/cache
  * @author Integry Systems <http://integry.com>
  */
 abstract class ValueCache

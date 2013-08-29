@@ -5,7 +5,7 @@ namespace staticpage;
 /**
  * Static site pages (shipping information, contact information, terms of service, etc.)
  *
- * @package application.model.staticpage
+ * @package application/model/staticpage
  * @author Integry Systems <http://integry.com>
  */
 class StaticPage extends \ActiveRecordModel // MultilingualObject implements EavAble
@@ -81,7 +81,7 @@ class StaticPage extends \ActiveRecordModel // MultilingualObject implements Eav
 
 	public function getFileName()
 	{
-		return ClassLoader::getRealPath('cache.staticpage') . '/' . $this->getID() . '.php';
+		return ClassLoader::getRealPath('cache/staticpage') . '/' . $this->getID() . '.php';
 	}
 
 	/*

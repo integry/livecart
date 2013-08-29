@@ -4,7 +4,7 @@
 /**
  * Store entity presentation configuration (products, categories)
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class CategoryPresentation extends ActiveRecordModel

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package application.helper.smarty.form
+ * @package application/helper/smarty/form
  * @author Integry Systems
  */
 function smarty_function_metricsfield($params, Smarty_Internal_Template $smarty)

@@ -4,7 +4,7 @@
 /**
  * Create a new transaction to be passed to payment gateway for authorization based on LiveCart order data
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class LiveCartTransaction extends TransactionDetails

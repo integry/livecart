@@ -3,7 +3,7 @@
 
 /**
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class OrderController extends FrontendController
 {
@@ -987,7 +987,7 @@ class OrderController extends FrontendController
 		// create tmp file
 		$file = $_FILES[$field];
 		$tmp = 'tmp_' . $field . md5($file['tmp_name']) .  '__' . $file['name'];
-		$dir = ClassLoader::getRealPath('public.upload.optionImage.');
+		$dir = ClassLoader::getRealPath('public/upload/optionImage/');
 		$path = $dir . $tmp;
 
 		if (!file_exists($dir))

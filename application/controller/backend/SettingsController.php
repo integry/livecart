@@ -4,7 +4,7 @@
 /**
  * Application settings management
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role settings
  */
@@ -109,7 +109,7 @@ class SettingsController extends StoreManagementController
 				else if ('image' == $value['type'])
 				{
 					$file = 'upload/' . $key . '-' . $_FILES[$key]['name'];
-					$path = ClassLoader::getRealPath('public.') . $file;
+					$path = ClassLoader::getRealPath('public/') . $file;
 					if (@move_uploaded_file($_FILES[$key]['tmp_name'], $path))
 					{
 						$this->config->set($key, $file);
@@ -148,7 +148,7 @@ class SettingsController extends StoreManagementController
 
 	private function getPrivateLabelFile()
 	{
-		return ClassLoader::getRealPath('storage.') . 'privateLabelDisabled';
+		return ClassLoader::getRealPath('storage/') . 'privateLabelDisabled';
 	}
 
 	private function getValidationRules(&$values)

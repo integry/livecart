@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Filters allow to filter the product list by specific product attribute values.
@@ -9,7 +9,7 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  * There are several other types of filters, but Filter class defines filters for attributes
  * that can be filtered by a value range (weight, size, date, etc.)
  *
- * @package application.model.filter
+ * @package application/model/filter
  * @author Integry Systems <http://integry.com>
  */
 class Filter extends MultilingualObject implements SpecificationFilterInterface

@@ -4,7 +4,7 @@
 /**
  * Customer billing address
  *
- * @package application.model.user
+ * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
 class BillingAddress extends UserAddressType

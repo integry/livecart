@@ -1,15 +1,15 @@
 <?php
 
-ClassLoader::import('application.model.category.SpecField');
-ClassLoader::import('application.model.category.SpecFieldGroup');
-ClassLoader::import('application.model.category.ProductCategory');
-ClassLoader::import('application.model.eavcommon.iEavFieldManager');
-ClassLoader::import('application.model.eav.EavAble');
-ClassLoader::import('application.model.eav.EavObject');
-ClassLoader::import('application.model.system.ActiveTreeNode');
-ClassLoader::import('application.model.system.MultilingualObject');
-ClassLoader::import('application.model.category.CategoryImage');
-ClassLoader::import('application.model.filter.*');
+ClassLoader::import('application/model/category/SpecField');
+ClassLoader::import('application/model/category/SpecFieldGroup');
+ClassLoader::import('application/model/category/ProductCategory');
+ClassLoader::import('application/model/eavcommon/iEavFieldManager');
+ClassLoader::import('application/model/eav/EavAble');
+ClassLoader::import('application/model/eav/EavObject');
+ClassLoader::import('application/model/system/ActiveTreeNode');
+ClassLoader::import('application/model/system/MultilingualObject');
+ClassLoader::import('application/model/category/CategoryImage');
+ClassLoader::import('application/model/filter.*');
 
 /**
  * Hierarchial product category structure.
@@ -17,7 +17,7 @@ ClassLoader::import('application.model.filter.*');
  * Each product belongs to one particular category. The category structure has a root node (ID = 1).
  * The category tree is based on a modified preordered tree traversal model (http://www.sitepoint.com/article/hierarchical-data-database/2)
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems
  * @todo Update product counts when category is moved
  */
@@ -518,8 +518,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			return $this->filterSetCache;
 		}
 
-		Classloader::import('application.model.filter.Filter');
-		Classloader::import('application.model.filter.SelectorFilter');
+		Classloader::import('application/model/filter/Filter');
+		Classloader::import('application/model/filter/SelectorFilter');
 
 		// get filter groups
 		$groups = $this->getFilterGroupArray();
@@ -588,7 +588,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getFilterGroupSet($includeParentFields = true)
 	{
-	  	ClassLoader::import('application.model.filter.FilterGroup');
+	  	ClassLoader::import('application/model/filter/FilterGroup');
 		$filter = $this->getFilterGroupFilter($includeParentFields);
 		if (!$filter)
 		{
@@ -607,7 +607,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		if (null === $this->filterGroupArrayCache)
 		{
-		  	ClassLoader::import('application.model.filter.FilterGroup');
+		  	ClassLoader::import('application/model/filter/FilterGroup');
 			$filter = $this->getFilterGroupFilter();
 			if (!$filter)
 			{
@@ -661,7 +661,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getCategoryImagesSet()
 	{
-	  	ClassLoader::import('application.model.category.CategoryImage');
+	  	ClassLoader::import('application/model/category/CategoryImage');
 
 		return ActiveRecord::getRecordSet('CategoryImage', $this->getCategoryImagesFilter());
 	}
@@ -684,7 +684,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getSpecificationFieldGroupArray($loadReferencedRecords = false)
 	{
-		ClassLoader::import("application.model.category.SpecFieldGroup");
+		ClassLoader::import("application/model/category/SpecFieldGroup");
 		return ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $this->getSpecificationGroupFilter(), $loadReferencedRecords);
 	}
 
@@ -697,7 +697,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getSpecificationFieldGroupSet($loadReferencedRecords = false)
 	{
-		ClassLoader::import("application.model.category.SpecFieldGroup");
+		ClassLoader::import("application/model/category/SpecFieldGroup");
 
 		return ActiveRecordModel::getRecordSet('SpecFieldGroup', $this->getSpecificationGroupFilter(), $loadReferencedRecords);
 	}
@@ -714,13 +714,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
 	{
-		ClassLoader::import("application.model.category.SpecField");
+		ClassLoader::import("application/model/category/SpecField");
 		return ActiveRecordModel::getRecordSet('SpecField', $this->getSpecificationFilter($includeParentFields), true);
 	}
 
 	public function getSpecificationFieldArray($includeParentFields = true, $loadReferencedRecords = false)
 	{
-		ClassLoader::import("application.model.category.SpecField");
+		ClassLoader::import("application/model/category/SpecField");
 		return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 	}
 
@@ -731,7 +731,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 	public function getOptions($includeInheritedOptions = false)
 	{
-		ClassLoader::import('application.model.product.ProductOption');
+		ClassLoader::import('application/model/product/ProductOption');
 		$f = new ARSelectFilter();
 
 		if ($includeInheritedOptions)
@@ -790,7 +790,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	private function getSpecificationGroupFilter()
 	{
-		ClassLoader::import("application.model.category.SpecFieldGroup");
+		ClassLoader::import("application/model/category/SpecFieldGroup");
 
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
@@ -814,7 +814,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 	public static function recalculateProductsCount()
 	{
-		ClassLoader::import("application.model.product.Product");
+		ClassLoader::import("application/model/product/Product");
 
 		//self::beginTransaction();
 
@@ -908,7 +908,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 	public static function old_recalculateProductsCount()
 	{
-		ClassLoader::import("application.model.product.Product");
+		ClassLoader::import("application/model/product/Product");
 
 		self::beginTransaction();
 

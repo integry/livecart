@@ -4,7 +4,7 @@
  * Index controller for frontend
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class IndexController extends ControllerBase
 {
@@ -20,7 +20,7 @@ class IndexController extends ControllerBase
 {
 	public function indexAction()
 	{
-		ClassLoader::import('application.controller.CategoryController');
+		ClassLoader::import('application/controller/CategoryController');
 
 		$this->request = 'id', Category::ROOT_ID);
 		$this->request = 'cathandle', '-');

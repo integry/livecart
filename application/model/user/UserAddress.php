@@ -4,7 +4,7 @@
 /**
  * Customer billing or shipping address
  *
- * @package application.model.user
+ * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
 class UserAddress extends ActiveRecordModel implements EavAble

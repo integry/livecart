@@ -4,7 +4,7 @@
 /**
  * SpecFieldGroups allow to group related attributes (SpecFields) together.
  *
- * @package application.model.category
+ * @package application/model/category
  * @author Integry Systems <http://integry.com>
  */
 class SpecFieldGroup extends EavFieldGroupCommon

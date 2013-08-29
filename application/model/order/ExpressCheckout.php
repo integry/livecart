@@ -4,7 +4,7 @@
 /**
  * Express checkout data container
  *
- * @package application.model.user
+ * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
 class ExpressCheckout extends ActiveRecordModel

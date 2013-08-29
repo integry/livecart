@@ -4,7 +4,7 @@
 /**
  * Server side file select dialog
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role serverfile
  */

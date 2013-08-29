@@ -4,7 +4,7 @@
 /**
  * Represents a shopping basket item configuration value
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class OrderedItemOption extends ActiveRecordModel
@@ -149,7 +149,7 @@ class OrderedItemOption extends ActiveRecordModel
 
 	protected static function getFilePath($file)
 	{
-		return ClassLoader::getRealPath('storage.customerUpload.') . $file;
+		return ClassLoader::getRealPath('storage/customerUpload/') . $file;
 	}
 
 	protected static function getFileName($storedFileName)
@@ -173,7 +173,7 @@ class OrderedItemOption extends ActiveRecordModel
 		foreach ($res as $size => $name)
 		{
 			$res[$size . '_url'] = 'upload/optionImage/' . $name;
-			$res[$size . '_path'] = ClassLoader::getRealPath('public.upload.optionImage.') . $name;
+			$res[$size . '_path'] = ClassLoader::getRealPath('public/upload/optionImage/') . $name;
 		}
 
 		return $res;

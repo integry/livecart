@@ -5,7 +5,7 @@
  * All users can be assigned to a group. Assigning users to a group is necessary to provide admin
  * privileges for a user. User access privileges can be modified and fine-grained at the user group level.
  *
- * @package application.model.role
+ * @package application/model/role
  * @author Integry Systems <http://integry.com>
  */
 class UserGroup extends ActiveRecordModel implements EavAble
@@ -98,7 +98,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 
 	public function getRoleCacheFile()
 	{
-		return ClassLoader::getRealPath('cache.roles.') . $this->getID() . '.php';
+		return ClassLoader::getRealPath('cache/roles/') . $this->getID() . '.php';
 	}
 
 	public function setAllRoles()

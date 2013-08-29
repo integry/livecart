@@ -8,7 +8,7 @@ ClassLoader::ignoreMissingClasses(false);
 /**
  * E-mail handler
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 class Email
@@ -207,19 +207,19 @@ class Email
 				$path = $parts[2];
 
 				$paths = array(
-								'storage.customize.view.email.' . $locale . '.' . $templateFile,
-								'module.' . $module . '.application.view.email.' . $locale . '.' . $path,
-								'storage.customize.view.email.en.' . $templateFile,
-								'module.' . $module . '.application.view.email.en.' . $path,
+								'storage/customize/view.email.' . $locale . '.' . $templateFile,
+								'module.' . $module . '.application/view/email.' . $locale . '.' . $path,
+								'storage/customize/view.email.en.' . $templateFile,
+								'module.' . $module . '.application/view/email/en.' . $path,
 							);
 			}
 			else
 			{
 				$paths = array(
-								'storage.customize.view.email.' . $locale . '.' . $templateFile,
-								'application.view.email.' . $locale . '.' . $templateFile,
-								'storage.customize.view.email.en.' . $templateFile,
-								'application.view.email.en.' . $templateFile,
+								'storage/customize/view.email.' . $locale . '.' . $templateFile,
+								'application/view/email.' . $locale . '.' . $templateFile,
+								'storage/customize/view.email.en.' . $templateFile,
+								'application/view/email/en.' . $templateFile,
 							);
 			}
 

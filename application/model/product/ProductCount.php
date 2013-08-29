@@ -5,7 +5,7 @@
  * Calculates the number of products found in categories by filters, manufacturers,
  * price intervals, search queries, etc.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductCount

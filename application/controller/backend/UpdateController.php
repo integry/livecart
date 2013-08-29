@@ -2,7 +2,7 @@
 
 
 /**
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role update
  */
@@ -97,11 +97,11 @@ class UpdateController extends StoreManagementController
 	{
 		$handler = new UpdateHelper($this->application);
 		$tmpName = 'test-update-copy' . rand(1, 5000000);
-		$tmp = ClassLoader::getRealPath('cache.') . $tmpName;
+		$tmp = ClassLoader::getRealPath('cache/') . $tmpName;
 		file_put_contents($tmp, 'test');
 
 		$res = $handler->copyFile($tmp, 'module/' . $tmpName);
-		$expected = ClassLoader::getRealPath('module.') . $tmpName;
+		$expected = ClassLoader::getRealPath('module/') . $tmpName;
 
 		if (file_exists($expected))
 		{

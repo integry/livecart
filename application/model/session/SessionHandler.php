@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package application.model.session
+ * @package application/model/session
  * @author Integry Systems
  */
 abstract class BaseSessionHandler

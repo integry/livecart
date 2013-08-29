@@ -5,7 +5,7 @@
  * within the 5th Avenue. The address mask usually has to be used together with other masks or state/country
  * rules to make sure an address from a wrong country doesn't get matched.
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class DeliveryZoneAddressMask extends ActiveRecordModel

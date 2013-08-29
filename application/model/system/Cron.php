@@ -3,7 +3,7 @@
 /**
  *  Cron (scheduled) tasks manager
  *
- *  @package application.model.system
+ *  @package application/model/system
  *  @author Integry Systems
  */
 class Cron
@@ -68,7 +68,7 @@ class Cron
 
 	private function getCronFile()
 	{
-		return ClassLoader::getRealPath('cache.cronExecTime') . '.php';
+		return ClassLoader::getRealPath('cache/cronExecTime') . '.php';
 	}
 }
 

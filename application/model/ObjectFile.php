@@ -7,7 +7,7 @@ class ObjectFileException extends ApplicationException { }
  * Generic associated file handler. Files can be associated to products, articles and possibly
  * other entities in the future
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 class ObjectFile extends MultilingualObject
@@ -108,13 +108,13 @@ class ObjectFile extends MultilingualObject
 			return $this->filePath->get();
 		}
 
-		return ClassLoader::getRealPath('storage.' . strtolower(get_class($this))) . DIRECTORY_SEPARATOR . $this->getID();
+		return ClassLoader::getRealPath('storage/' . strtolower(get_class($this))) . DIRECTORY_SEPARATOR . $this->getID();
 	}
 
 	public function getMimeType()
 	{
-		$baseMimeTypesFile = ClassLoader::getRealPath('application.configuration.fileType.base') . '.ini';
-		$extendedMimeTypesFile = ClassLoader::getRealPath('application.configuration.fileType.extended') . '.ini';
+		$baseMimeTypesFile = ClassLoader::getRealPath('application/configuration/fileType/base') . '.ini';
+		$extendedMimeTypesFile = ClassLoader::getRealPath('application/configuration/fileType/extended') . '.ini';
 
 		$baseTypes = is_file($baseMimeTypesFile) ? parse_ini_file($baseMimeTypesFile) : array();
 		$extendedTypes = is_file($extendedMimeTypesFile) ? parse_ini_file($extendedMimeTypesFile) : array();
@@ -152,7 +152,7 @@ class ObjectFile extends MultilingualObject
 
 	private function moveFile()
 	{
-		$productFileCategoryPath = ClassLoader::getRealPath('storage.' . strtolower(get_class($this)));
+		$productFileCategoryPath = ClassLoader::getRealPath('storage/' . strtolower(get_class($this)));
 		if(!is_dir($productFileCategoryPath)) mkdir($productFileCategoryPath, 0777, true);
 
 		copy($this->sourceFilePath, $this->getPath());

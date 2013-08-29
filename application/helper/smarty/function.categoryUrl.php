@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Generates category page URL
@@ -9,7 +9,7 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_categoryUrl($params, Smarty_Internal_Template $smarty)

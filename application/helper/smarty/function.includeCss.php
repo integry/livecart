@@ -8,14 +8,14 @@
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_includeCss($params, Smarty_Internal_Template $smarty)
 {
 	$fileName = $params['file'];
 	$filePath = substr($fileName, 0, 1) != '/' ?
-					ClassLoader::getRealPath('public.stylesheet.') .  $fileName :
+					ClassLoader::getRealPath('public/stylesheet/') .  $fileName :
 					ClassLoader::getRealPath('public') .  $fileName;
 
 	// fix slashes

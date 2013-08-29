@@ -3,7 +3,7 @@
 /**
  * Handles imports through a XML file
  *
- * @package application.api
+ * @package application/api
  * @author Integry Systems
  *
  */
@@ -12,7 +12,7 @@
 class ApiController extends BaseController
 {
 	// where to look for API model classes
-	protected $loadModelsFrom = array('application.model.datasync.api');
+	protected $loadModelsFrom = array('application/model/datasync/api');
 
 	private $modelApi = null;
 
@@ -205,7 +205,7 @@ class ApiController extends BaseController
 		$this->loadLanguageFile('backend/Settings/API');
 
 		$class = $this->request->gget('class');
-		$this->application->loadPluginClass('application.model.datasync.api.auth', $class);
+		$this->application->loadPluginClass('application/model/datasync/api/auth', $class);
 
 		$reflection = new ReflectionClass($class);
 		$comment = $reflection->getDocComment();
@@ -305,7 +305,7 @@ class ApiController extends BaseController
 			$classes[$class] = array('file' => $file);
 
 			$reader = 'Xml' . $class . 'Reader';
-			$this->application->loadPluginClass('application.model.datasync.api.reader', 'Xml' . $class . 'Reader');
+			$this->application->loadPluginClass('application/model/datasync/api/reader', 'Xml' . $class . 'Reader');
 			include_once $file;
 			$inst = new $class($this->application);
 

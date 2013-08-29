@@ -4,7 +4,7 @@
 /**
  * Handles dynamic interface customizations
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  *
  * @role customize

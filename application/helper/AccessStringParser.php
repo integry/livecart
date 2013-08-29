@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package application.helper
+ * @package application/helper
  * @author Integry Systems
  */
 class AccessStringParser

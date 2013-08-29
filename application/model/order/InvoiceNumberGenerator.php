@@ -4,7 +4,7 @@
 /**
  * Defines abstract interface for invoice ID number generator classes
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 abstract class InvoiceNumberGenerator
@@ -47,7 +47,7 @@ abstract class InvoiceNumberGenerator
 	private static function getGeneratorFiles()
 	{
 		$files = array();
-		foreach (ActiveRecordModel::getApplication()->getConfigContainer()->getDirectoriesByMountPath('application.model.order.invoiceNumber') as $dir)
+		foreach (ActiveRecordModel::getApplication()->getConfigContainer()->getDirectoriesByMountPath('application/model/order/invoiceNumber') as $dir)
 		{
 			foreach (glob($dir . '/*.php') as $file)
 			{

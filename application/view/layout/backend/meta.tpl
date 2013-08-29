@@ -161,7 +161,7 @@
 <div id="confirmations" class="messagesList" app-messages></div>
 <script type="text/javascript">
 {literal}
-	window.historyStorage.init();
+	window.historystorage/init();
 	window.dhtmlHistory.create();
 {/literal}
 </script>

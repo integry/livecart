@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::importNow("application.model.product.ProductVariationTypeSet");
+ClassLoader::importNow("application/model/product/ProductVariationTypeSet");
 
 /**
  * Product variations
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role option
  */

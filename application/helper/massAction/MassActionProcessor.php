@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package application.helper.massAction
+ * @package application/helper/massAction
  * @author Integry Systems
  */
 class MassActionProcessor

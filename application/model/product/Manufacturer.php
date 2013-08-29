@@ -1,16 +1,16 @@
 <?php
 
-ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.eav.EavAble');
-ClassLoader::import('application.model.eav.EavObject');
-ClassLoader::import('application.model.product.ManufacturerImage');
+ClassLoader::import('application/model/ActiveRecordModel');
+ClassLoader::import('application/model/eav/EavAble');
+ClassLoader::import('application/model/eav/EavObject');
+ClassLoader::import('application/model/product/ManufacturerImage');
 
 /**
  * Defines a product manufacturer. Each product can be assigned to one manufacturer.
  * Keeping manufacturers as a separate entity allows to manipulate them more easily and
  * provide more effective product filtering (search by manufacturers).
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class Manufacturer extends ActiveRecordModel implements EavAble

@@ -1,12 +1,12 @@
 <?php
 
-ClassLoader::import('application.model.businessrule.RuleCondition');
-ClassLoader::import('application.model.businessrule.interface.RuleOrderCondition');
+ClassLoader::import('application/model/businessrule/RuleCondition');
+ClassLoader::import('application/model/businessrule/interface/RuleOrderCondition');
 
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule.condition
+ * @package application/model/businessrule/condition
  */
 class RuleConditionOrderItemCount extends RuleCondition implements RuleOrderCondition
 {

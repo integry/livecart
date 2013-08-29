@@ -5,7 +5,7 @@
  * Compare products
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class CompareController extends FrontendController
 {

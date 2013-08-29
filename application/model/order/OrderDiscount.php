@@ -4,7 +4,7 @@
 /**
  * Represents an order level discount (discount that applies to the subtotal of the whole order)
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class OrderDiscount extends ActiveRecordModel

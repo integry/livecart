@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems <http://integry.com>
  */
 class QuickSearchController extends StoreManagementController

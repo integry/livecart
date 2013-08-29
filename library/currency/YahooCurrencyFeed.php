@@ -2,7 +2,7 @@
 
 /**
  *
- * @package library.currency
+ * @package library/currency
  * @author Integry Systems 
  */
 class YahooCurrencyFeed extends CurrencyRateFeed

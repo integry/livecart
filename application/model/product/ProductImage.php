@@ -4,7 +4,7 @@
 /**
  * Product image (icon). One product can have multiple images.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductImage extends ObjectImage

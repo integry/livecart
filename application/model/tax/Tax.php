@@ -4,7 +4,7 @@
 /**
  * Defines a tax. Actual tax rates have to be defined for each DeliveryZone separately.
  *
- * @package application.model.tax
+ * @package application/model/tax
  * @author Integry Systems <http://integry.com>
  */
 class Tax extends MultilingualObject

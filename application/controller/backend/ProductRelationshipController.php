@@ -4,7 +4,7 @@
 /**
  * Manage related products
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role product
  */

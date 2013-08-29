@@ -4,7 +4,7 @@
  *  Handles user account related logic
  *
  *  @author Integry Systems
- *  @package application.controller
+ *  @package application/controller
  */
 class UserController extends ControllerBase
 {

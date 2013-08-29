@@ -4,7 +4,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 /**
  *
- * @package test.application.controller
+ * @package test.application/controller
  * @author Integry Systems
  */
 class UserControllerTest extends LiveCartTest implements ControllerTestCase

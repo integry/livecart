@@ -4,7 +4,7 @@
 /**
  * Controller for handling category based actions performed by store administrators
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role category
  */

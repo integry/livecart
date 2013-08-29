@@ -6,7 +6,7 @@
  * automatically using the currency rates. In addition to product prices, shipping rates,
  * taxes and other charges can also be converted to other currencies using the currency rates.
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 class Currency extends ActiveRecordModel

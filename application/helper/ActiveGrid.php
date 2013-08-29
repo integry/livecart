@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::importNow("application.helper.getDateFromString");
-ClassLoader::importNow("application.model.eav.EavField");
-ClassLoader::importNow("application.model.category.SpecField");
+ClassLoader::importNow("application/helper/getDateFromString");
+ClassLoader::importNow("application/model/eav/EavField");
+ClassLoader::importNow("application/model/category/SpecField");
 
 /**
- * @package application.helper
+ * @package application/helper
  * @author Integry Systems
  */
 class ActiveGrid

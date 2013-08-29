@@ -4,7 +4,7 @@
 /**
  * Custom field container for a particular EAV type (users, manufacturers, orders, etc)
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 class EavFieldManager implements iEavFieldManager

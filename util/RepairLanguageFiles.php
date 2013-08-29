@@ -13,7 +13,7 @@ ini_set('display_errors', 'On');
 include '../application/Initialize.php';
 $application = new LiveCart();
 
-chdir(ClassLoader::getRealPath('storage.language'));
+chdir(ClassLoader::getRealPath('storage/language'));
 foreach(rglob('*.php') as $file)
 {
 	touch($file, 0);

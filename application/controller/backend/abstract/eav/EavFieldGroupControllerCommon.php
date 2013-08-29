@@ -4,7 +4,7 @@
 /**
  * Custom EAV field group controller
  *
- * @package application.controller.backend.abstract.eav
+ * @package application/controller/backend/abstract/eav
  * @author	Integry Systems
  */
 abstract class EavFieldGroupControllerCommon extends StoreManagementController

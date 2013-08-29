@@ -3,7 +3,7 @@
 /**
  * Set canonical URL
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  * @see http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html
  */

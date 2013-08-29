@@ -5,7 +5,7 @@
  * Generic associated image handler. Images can be associated to products, categories and possibly
  * other entities in the future
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems <http://integry.com>
  */
 abstract class ObjectImage extends MultilingualObject
@@ -136,7 +136,7 @@ abstract class ObjectImage extends MultilingualObject
 
 	protected static function getImageRoot($className)
 	{
-		return ClassLoader::getRealPath('public.upload.' . strtolower($className) . '.');
+		return ClassLoader::getRealPath('public/upload/' . strtolower($className) . '.');
 	}
 
 	protected static function getRelativePath($path, &$urlPrefix = null)
@@ -144,7 +144,7 @@ abstract class ObjectImage extends MultilingualObject
 		$origPath = $path;
 
 		// path located within the /public directory - as default
-		$path = str_replace(ClassLoader::getRealPath('public.'), '', $path);
+		$path = str_replace(ClassLoader::getRealPath('public/'), '', $path);
 		if ($path != $origPath)
 		{
 			$urlPrefix = '/public/';

@@ -4,7 +4,7 @@
 /**
  * Registers which newsletter messages have been sent to which newsletter subscribers
  *
- * @package application.model.newsletter
+ * @package application/model/newsletter
  * @author Integry Systems <http://integry.com>
  */
 class NewsletterSentMessage extends ActiveRecordModel

@@ -4,7 +4,7 @@
 /**
  * Filter product list by search keyword.
  *
- * @package application.model.filter
+ * @package application/model/filter
  * @author Integry Systems <http://integry.com>
  */
 class SearchFilter implements FilterInterface

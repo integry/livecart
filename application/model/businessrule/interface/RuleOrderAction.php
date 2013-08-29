@@ -3,7 +3,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 interface RuleOrderAction
 {

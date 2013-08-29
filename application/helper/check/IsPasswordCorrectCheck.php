@@ -2,7 +2,7 @@
 
 
 /**
- * @package application.helper.check
+ * @package application/helper/check
  * @author Integry Systems
  */
 class IsPasswordCorrectCheck extends Check

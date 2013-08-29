@@ -44,7 +44,7 @@ abstract class CronPlugin
 
 	private function getExecutionTimeFile()
 	{
-		return ClassLoader::getRealPath('storage.configuration.cron.') . md5($this->path) . '.php';
+		return ClassLoader::getRealPath('storage/configuration/cron/') . md5($this->path) . '.php';
 	}
 }
 

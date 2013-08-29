@@ -6,7 +6,7 @@
  * Store controller which implements common operations needed for both frontend and
  * backend
  *
- * @package application.controller
+ * @package application/controller
  * @author Integry Systems
  */
 abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiTranslator
@@ -61,19 +61,14 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	protected $cacheHandler;
 
 	/**
-	 * Bese controller constructor: restores user object by using session data and
+	 * Base controller constructor: restores user object by using session data and
 	 * checks a permission to a requested action
 	 *
-	 * @param LiveCart $application Application instance
 	 * @throws AccessDeniedExeption
 	 */
-	public function __constructAction(LiveCart $application)
+	public function initialize()
 	{
-		parent::__construct($application);
-
-		$this->router = $this->application->getRouter();
-
-		if (!$application->isInstalled() && !($this instanceof InstallController))
+		if (!$this->application->isInstalled() && !($this instanceof InstallController))
 		{
 			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
 			exit;
@@ -90,6 +85,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
 
+		/*
 		$localeCode = $this->application->getLocaleCode();
 
 		// add language code to URL for non-default languages
@@ -104,6 +100,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));
 			exit;
 		}
+		*/
 	}
 
 	public function getBlockResponseAction(&$block)
@@ -397,7 +394,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	{
 		// If backend controller is being used then we should
 		// check for user permissions to use role assigned to current controller and action
-		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+		$rolesCacheDir = ClassLoader::getRealPath('cache/roles');
 		if(!is_dir($rolesCacheDir))
 		{
 			if (!@mkdir($rolesCacheDir, 0777, true))

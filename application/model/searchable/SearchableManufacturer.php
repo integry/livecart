@@ -4,7 +4,7 @@
 /**
  * Search site news
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  */
 class SearchableManufacturer extends SearchableModel

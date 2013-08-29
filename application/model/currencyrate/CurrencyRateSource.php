@@ -40,7 +40,7 @@ abstract class CurrencyRateSource
 	public static function getCurrencyRateSourceList()
 	{
 		$list = array();
-		foreach (new DirectoryIterator(ClassLoader::getRealPath('application.model.currencyrate')) as $item)
+		foreach (new DirectoryIterator(ClassLoader::getRealPath('application/model/currencyrate')) as $item)
 		{
 			if ($item->isDot())
 			{

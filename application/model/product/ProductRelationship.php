@@ -3,7 +3,7 @@
 /**
  * Assigns a related (recommended) product to a particular product
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductRelationship extends ActiveRecordModel

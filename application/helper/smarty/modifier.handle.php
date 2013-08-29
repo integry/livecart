@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  *  Return an alternative value if the primary value is empty.
@@ -11,7 +11,7 @@ ClassLoader::importNow('application.helper.CreateHandleString');
  *  For example:
  *  {$product.shortDescription|@or:$product.longDescription}
  *
- *  @package application.helper.smarty
+ *  @package application/helper/smarty
  *  @author Integry Systems
  */
 function smarty_modifier_handle($string)

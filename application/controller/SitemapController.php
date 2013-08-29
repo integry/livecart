@@ -1,16 +1,16 @@
 <?php
 
 
-ClassLoader::importNow('application.helper.smarty.function#categoryUrl');
-ClassLoader::importNow('application.helper.smarty.function#productUrl');
-ClassLoader::importNow('application.helper.smarty.function#newsUrl');
+ClassLoader::importNow('application/helper/smarty/function#categoryUrl');
+ClassLoader::importNow('application/helper/smarty/function#productUrl');
+ClassLoader::importNow('application/helper/smarty/function#newsUrl');
 
 
 /**
  * Generates XML sitemaps
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class SitemapController extends FrontendController
 {

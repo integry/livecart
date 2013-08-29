@@ -4,7 +4,7 @@
 /**
  * Product list management - related products, category lists, etc.
  *
- * @package application.controller.backend.abstract
+ * @package application/controller/backend/abstract
  * @author Integry Systems
  * @role product
  */

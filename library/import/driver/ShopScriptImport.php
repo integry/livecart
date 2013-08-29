@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.helper.CreateHandleString');
+ClassLoader::import('application/helper/CreateHandleString');
 
 require_once dirname(__file__) . '/../LiveCartImportDriver.php';
 

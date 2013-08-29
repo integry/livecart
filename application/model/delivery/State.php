@@ -6,7 +6,7 @@
  * enter the address manually. It would be a good idea to pre-define states for the countries
  * your store serves (the ones that bring the most orders).
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
 class State extends ActiveRecordModel

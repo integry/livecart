@@ -1,11 +1,11 @@
 <?php
 
-ClassLoader::import('library.activerecord.ARSet');
-ClassLoader::import('application.model.discount.DiscountAction');
+ClassLoader::import('library/activerecord/ARSet');
+ClassLoader::import('application/model/discount/DiscountAction');
 
 /**
  *
- * @package application.model.discount
+ * @package application/model/discount
  * @author Integry Systems <http://integry.com>
  */
 class DiscountActionSet extends ARSet

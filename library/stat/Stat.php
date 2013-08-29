@@ -36,7 +36,7 @@ if( !function_exists('memory_get_usage') )
 /**
  * Helper class for representing stats about resources used during a runtime
  *
- * @package library.stat
+ * @package library/stat
  * @author Integry Systems
  */
 class Stat {

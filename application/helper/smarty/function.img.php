@@ -6,7 +6,7 @@
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_img($params, Smarty_Internal_Template $smarty)
@@ -15,7 +15,7 @@ function smarty_function_img($params, Smarty_Internal_Template $smarty)
 	{
 		if(is_file($params['src']))
 		{
-			$imageTimestamp = @filemtime(ClassLoader::getRealPath('public.') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
+			$imageTimestamp = @filemtime(ClassLoader::getRealPath('public/') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
 			$params['src'] = $smarty->getApplication()->getPublicUrl($params['src']);
 			$params['src'] .= '?' . $imageTimestamp;
 		}

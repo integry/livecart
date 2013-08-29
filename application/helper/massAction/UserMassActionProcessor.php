@@ -3,7 +3,7 @@
 include_once dirname(__file__) . '/MassActionProcessor.php';
 
 /**
- * @package application.helper.massAction
+ * @package application/helper/massAction
  * @author Integry Systems
  */
 class UserMassActionProcessor extends MassActionProcessor

@@ -2,7 +2,7 @@
 /**
  * CSV file read wrapper
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  *
  */

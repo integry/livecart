@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class OrderLog extends ActiveRecordModel

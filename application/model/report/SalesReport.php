@@ -4,7 +4,7 @@
 /**
  * Generate sales reports
  *
- * @package application.model.report
+ * @package application/model/report
  * @author	Integry Systems
  */
 class SalesReport extends Report

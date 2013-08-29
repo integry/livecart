@@ -4,7 +4,7 @@
 /**
  * Checks if user email is unique
  *
- * @package application.helper.check
+ * @package application/helper/check
  * @author Integry Systems 
  */
 class IsUniqueEmailCheck extends Check

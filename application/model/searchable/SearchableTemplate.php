@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  */
 

@@ -3,7 +3,7 @@
 /**
  *
  * @author Integry Systems
- * @package application.model.weight-pricing
+ * @package application/model/weight-pricing
  */
 class RuleConditionTotalOrderWeightIs extends RuleCondition implements RuleOrderCondition
 {

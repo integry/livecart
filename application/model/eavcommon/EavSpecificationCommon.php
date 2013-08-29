@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.model.eav
+ * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
 abstract class EavSpecificationCommon extends ActiveRecordModel implements iEavSpecification

@@ -4,7 +4,7 @@
  * Displays static pages
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class StaticpageController extends ControllerBase
 {

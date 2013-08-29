@@ -1,14 +1,14 @@
 <?php
 
-ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.system.MultilingualObjectInterface");
+ClassLoader::import("application/model/ActiveRecordModel");
+ClassLoader::import("application/model/system/MultilingualObjectInterface");
 
 /**
  * Multilingual data object. Provides facilities to provide field data in various languages
  * as well as data retrieval for the particular language.
  *
  * @author Integry Systems <http://integry.com>
- * @package application.model.system
+ * @package application/model/system
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
 {

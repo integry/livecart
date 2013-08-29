@@ -4,7 +4,7 @@
 /**
  * Manage newsletters subscribers
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role newsletter
  */

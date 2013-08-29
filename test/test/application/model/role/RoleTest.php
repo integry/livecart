@@ -1,7 +1,7 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.role.Role");
+ClassLoader::import("application/model/role/Role");
 
 /**
  *  @author Integry Systems

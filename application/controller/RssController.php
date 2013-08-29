@@ -1,15 +1,15 @@
 <?php
 
-ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.product.ProductFilter');
-ClassLoader::import('application.model.product.Product');
-ClassLoader::import('application.model.feed.ProductFeed');
-ClassLoader::import('application.model.sitenews.NewsPost');
+ClassLoader::import('application/model/category/Category');
+ClassLoader::import('application/model/product/ProductFilter');
+ClassLoader::import('application/model/product/Product');
+ClassLoader::import('application/model/feed/ProductFeed');
+ClassLoader::import('application/model/sitenews/NewsPost');
 
 /**
  * 
  *
- * @package application.rss
+ * @package application/rss
  * @author Integry Systems <http://integry.com>
  */
 

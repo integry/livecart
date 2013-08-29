@@ -4,7 +4,7 @@
 /**
  * Represents customers order - products placed in shopping basket or wish list
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOrderInterface

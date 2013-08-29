@@ -12,7 +12,7 @@
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty
+ * @package application/helper/smarty
  * @author Integry Systems
  */
 function smarty_function_maketext($params, Smarty_Internal_Template $smarty)

@@ -5,7 +5,7 @@
  * Defines context for evaluating business rules
  *
  * @author Integry Systems
- * @package application.model.businessrule
+ * @package application/model/businessrule
  */
 class BusinessRuleContext
 {

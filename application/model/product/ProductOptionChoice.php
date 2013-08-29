@@ -1,13 +1,13 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductOption');
-ClassLoader::import('application.model.product.ProductPrice');
+ClassLoader::import('application/model/product/ProductOption');
+ClassLoader::import('application/model/product/ProductPrice');
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
  * This class allows to assign or change product attribute values, product files, images, related products, etc.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductOptionChoice extends MultilingualObject

@@ -4,7 +4,7 @@
 /**
  *
  *
- * @package application.model.cache
+ * @package application/model/cache
  * @author Integry Systems <http://integry.com>
  */
 class FileCache extends ValueCache
@@ -119,7 +119,7 @@ class FileCache extends ValueCache
 	{
 		if (!$this->root)
 		{
-			$this->root = ClassLoader::getRealPath('cache.value.');
+			$this->root = ClassLoader::getRealPath('cache/value/');
 		}
 
 		return $this->root;

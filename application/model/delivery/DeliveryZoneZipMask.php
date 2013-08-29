@@ -5,7 +5,7 @@
  * The postal code mask usually has to be used together with state/country
  * rules to make sure an address from a wrong country doesn't get matched.
  *
- * @package application.model.delivery
+ * @package application/model/delivery
  * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneZipMask extends ActiveRecordModel 

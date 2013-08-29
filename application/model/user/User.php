@@ -4,7 +4,7 @@
 /**
  * Store user logic (including frontend and backend), including authorization and access control checking
  *
- * @package application.model.user
+ * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
 class User extends ActiveRecordModel implements EavAble

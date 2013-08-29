@@ -4,7 +4,7 @@
 /**
  * Controller for handling product based actions performed by store administrators
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role product
  */
@@ -802,7 +802,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function infoAction()
 	{
-		ClassLoader::importNow("application.helper.getDateFromString");
+		ClassLoader::importNow("application/helper/getDateFromString");
 
 		$product = Product::getInstanceById($this->request->gget('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 
@@ -939,7 +939,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$tmpImages = array();
 			if (is_array($inputImages))
 			{
-				$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+				$dir = ClassLoader::getRealPath('public/upload/tmpimage/');
 				foreach($inputImages as $tmpImage)
 				{
 					if (strlen(trim($tmpImage)) == 0 || strpos($tmpImage, '/'))
@@ -1225,7 +1225,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 						$field = 'upload_' . $this->request->gget('field');
 
-		$dir = ClassLoader::getRealPath('public.upload.tmpimage.');
+		$dir = ClassLoader::getRealPath('public/upload/tmpimage/');
 
 		// delete old tmp files
 		chdir($dir);

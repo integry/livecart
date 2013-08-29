@@ -4,7 +4,7 @@
 /**
  * User session handler (set user as logged in / logout)
  *
- * @package application.model.user
+ * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
 class SessionUser

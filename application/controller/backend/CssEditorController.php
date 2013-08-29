@@ -4,7 +4,7 @@
 /**
  * CSS file modification
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  *
  * @role template

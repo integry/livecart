@@ -3,7 +3,7 @@
 /**
  * Model plugin base class
  *
- * @package application.model
+ * @package application/model
  * @author Integry Systems
  */
 abstract class ModelPlugin

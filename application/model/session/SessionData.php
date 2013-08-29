@@ -4,7 +4,7 @@
 /**
  * Handles session data storage in database
  *
- * @package application.model.session
+ * @package application/model/session
  * @author Integry Systems <http://integry.com>
  */
 class SessionData extends ActiveRecordModel

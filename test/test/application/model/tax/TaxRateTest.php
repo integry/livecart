@@ -1,12 +1,12 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import("application.model.user.*");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.delivery.*");
-ClassLoader::import("application.model.tax.Tax");
-ClassLoader::import("application.model.tax.TaxRate");
-ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application/model/user.*");
+ClassLoader::import("application/model/order/CustomerOrder");
+ClassLoader::import("application/model/delivery.*");
+ClassLoader::import("application/model/tax/Tax");
+ClassLoader::import("application/model/tax/TaxRate");
+ClassLoader::import("application/model/product/Product");
 
 /**
  * @author Integry Systems

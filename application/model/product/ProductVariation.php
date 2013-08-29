@@ -1,14 +1,14 @@
 <?php
 
-ClassLoader::import('application.model.product.ProductVariationType');
-ClassLoader::import('application.model.system.MultilingualObject');
+ClassLoader::import('application/model/product/ProductVariationType');
+ClassLoader::import('application/model/system/MultilingualObject');
 
 /**
  * Defines a product variation selection.
  *
  * For example, if "size" is ProductVariationType, then ProductVariation would be "small", "normal", "large", etc.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductVariation extends MultilingualObject

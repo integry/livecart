@@ -76,7 +76,7 @@ class ProductFileGroupTest extends LiveCartTest
 		$group->setValueByLang('name', 'en', 'TEST_GROUP');
 		$group->save();
 
-		$file = ClassLoader::getRealPath('cache.') . 'blabla';
+		$file = ClassLoader::getRealPath('cache/') . 'blabla';
 		file_put_contents($file, 'asdsad');
 		$productFile = ProductFile::getNewInstance($this->product, $file, 'movedFile.txt');
 		$productFile->productFileGroup->set($group);

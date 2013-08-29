@@ -6,7 +6,7 @@
  *
  * This can be "size", "color", "weight", etc.
  *
- * @package application.model.product
+ * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
 class ProductVariationType extends MultilingualObject

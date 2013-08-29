@@ -26,8 +26,8 @@ class LiveCartRenderer extends SmartyRenderer
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
-		$this->registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
-		$this->registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
+		$this->registerHelperDirectory(ClassLoader::getRealPath('application/helper/smarty'));
+		$this->registerHelperDirectory(ClassLoader::getRealPath('application/helper/smarty/form'));
 
 		parent::__construct($application);
 	}
@@ -37,7 +37,7 @@ class LiveCartRenderer extends SmartyRenderer
 		$themes = array('default' => 'default', 'barebone' => 'barebone');
 
 		$otherThemes = array();
-		foreach (array(ClassLoader::getRealPath('application.view.theme'), ClassLoader::getRealPath('storage.customize.view.theme')) as $themeDir)
+		foreach (array(ClassLoader::getRealPath('application/view/theme'), ClassLoader::getRealPath('storage/customize/view.theme')) as $themeDir)
 		{
 			if (file_exists($themeDir))
 			{

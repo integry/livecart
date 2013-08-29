@@ -4,7 +4,7 @@
 /**
  * Web service access layer model base
  *
- * @package application.model.datasync
+ * @package application/model/datasync
  * @author Integry Systems <http://integry.com>
  *
  */
@@ -65,7 +65,7 @@ abstract class ModelApi
 		$class = 'Api' . $this->getClassName() . 'Import';
 		if (!class_exists($class, false))
 		{
-			$this->application->loadPluginClass('application.model.datasync.api.import', $class);
+			$this->application->loadPluginClass('application/model/datasync/api/import', $class);
 		}
 
 		if (class_exists($class, false))
@@ -118,7 +118,7 @@ abstract class ModelApi
 			throw new Exception('Unknown authorization method "' . $method . '"');
 		}
 
-		$this->getApplication()->loadPluginClass('application.model.datasync.api.auth', $authClass);
+		$this->getApplication()->loadPluginClass('application/model/datasync/api/auth', $authClass);
 		$inst = new $authClass($this->getApplication(), $auth);
 
 		return $inst->isAuthorized();
@@ -126,7 +126,7 @@ abstract class ModelApi
 
 	public static function getAuthMethods(LiveCart $application)
 	{
-		return $application->getPluginClasses('application.model.datasync.api.auth');
+		return $application->getPluginClasses('application/model/datasync/api/auth');
 	}
 
 	public function setApplication($application)

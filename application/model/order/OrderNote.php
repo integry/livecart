@@ -4,7 +4,7 @@
 /**
  * Customer-administration (support) message regarding an order
  *
- * @package application.model.order
+ * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
 class OrderNote extends ActiveRecordModel

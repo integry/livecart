@@ -1,6 +1,6 @@
 <?php
 
-require_once ClassLoader::getRealPath('library.smarty.libs.') . 'Smarty.class.php';
+require_once ClassLoader::getRealPath('library/smarty.libs/') . 'Smarty.class.php';
 
 /*
 class LiveCartSmarty_Security_Policy extends Smarty_Security
@@ -230,7 +230,7 @@ class LiveCartSmarty extends Smarty
         {
         	if (!function_exists('smarty_custom_get_path'))
         	{
-        		include ClassLoader::getRealPath('application.helper.smarty.') . 'resource.custom.php';
+        		include ClassLoader::getRealPath(application/helper/smarty/') . 'resource.custom.php';
 			}
 
         	$resource_name = smarty_custom_get_path(substr($resource_name, 7), $this);

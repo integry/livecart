@@ -3,7 +3,7 @@
 
 /**
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class ErrController extends FrontendController
 {

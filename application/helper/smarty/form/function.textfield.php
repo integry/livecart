@@ -15,7 +15,7 @@
  * @param Smarty $smarty
  * @return string
  *
- * @package application.helper.smarty.form
+ * @package application/helper/smarty/form
  * @author Integry Systems
  */
 function smarty_function_textfield($params, Smarty_Internal_Template $smarty)

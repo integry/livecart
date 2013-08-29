@@ -3,7 +3,7 @@
 /**
  * Index configuration for searching
  *
- * @package application.model.searchable
+ * @package application/model/searchable
  * @author Integry Systems
  * 
  * 
@@ -221,12 +221,12 @@ class SearchableConfigurationIndexing
 		foreach($languages as $language)
 		{
 			$locale = Locale::getInstance($language['ID']);
-			$locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
+			$locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage/language'));
 			foreach ($this->application->getConfigContainer()->getLanguageDirectories() as $dir)
 			{
 				$locale->translationManager()->setDefinitionFileDir($dir);
 			}
-			$locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
+			$locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage/language'));
 			$locale->translationManager()->loadFile('backend/Settings');
 			$this->locales[$language['ID']] = $locale;
 		}

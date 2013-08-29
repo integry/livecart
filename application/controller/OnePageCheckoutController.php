@@ -5,7 +5,7 @@
  *  Handles order checkout process in one page
  *
  * @author Integry Systems
- * @package application.controller
+ * @package application/controller
  */
 class OnePageCheckoutController extends CheckoutController
 {

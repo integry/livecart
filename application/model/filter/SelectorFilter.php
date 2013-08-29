@@ -1,12 +1,12 @@
 <?php
 
-ClassLoader::importNow('application.helper.CreateHandleString');
+ClassLoader::importNow('application/helper/CreateHandleString');
 
 /**
  * Filter product list by selector attribute value. SelectorFilters are being generated automatically based on
  * the available attribute values.
  *
- * @package application.model.filter
+ * @package application/model/filter
  * @author Integry Systems <http://integry.com>
  */
 class SelectorFilter implements SpecificationFilterInterface

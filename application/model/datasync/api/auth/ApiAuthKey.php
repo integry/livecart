@@ -22,7 +22,7 @@
  *		</auth>
  * </price>
  *
- * @package application.model.datasync.api.auth
+ * @package application/model/datasync/api/auth
  * @author Integry Systems <http://integry.com>
  */
 class ApiAuthKey extends ApiAuthorization

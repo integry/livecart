@@ -6,7 +6,7 @@
  *	like products and product categories.
  *
  *  @author Integry Systems
- *  @package application.backend.controller.abstract
+ *  @package application/backend/controller/abstract
  */
 abstract class ObjectImageController extends StoreManagementController
 {

@@ -4,7 +4,7 @@
 /**
  * Web service access layer for User model
  *
- * @package application.model.datasync
+ * @package application/model/datasync
  * @author Integry Systems <http://integry.com>
  *
  */

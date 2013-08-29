@@ -3,7 +3,7 @@
 
 /**
  *
- * @package application.controller.backend
+ * @package application/controller/backend
  * @author Integry Systems
  * @role product
  */
@@ -31,10 +31,10 @@ class DiscountController extends ActiveGridController
 						'subTotal' => $this->translate('_with_subTotal'),
 						));
 
-		$conditions = $this->getClasses('application.model.businessrule.condition');
+		$conditions = $this->getClasses('application/model/businessrule/condition');
 		unset($conditions['RuleConditionRoot']);
 		$response->set('conditionTypes', $conditions);
-		$response->set('actionTypes', $this->getClasses('application.model.businessrule.action'));
+		$response->set('actionTypes', $this->getClasses('application/model/businessrule/action'));
 
 		$response->set('applyToChoices', array(
 						DiscountAction::TYPE_ORDER_DISCOUNT => $this->translate('_apply_order'),

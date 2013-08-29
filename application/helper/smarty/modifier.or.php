@@ -9,7 +9,7 @@
  *  For example:
  *  {$product.shortDescription|@or:$product.longDescription}
  *
- *  @package application.helper.smarty
+ *  @package application/helper/smarty
  *  @author Integry Systems
  */
 function smarty_modifier_or($string, $alternative)
