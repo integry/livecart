@@ -25,7 +25,7 @@ function smarty_block_language($params, $content, Smarty_Internal_Template $smar
 		$smarty->assign('lang', array_shift($app->languageBlock));
 		$app->langHeadDisplayed = false;
 
-		$user = SessionUser::getUser();
+		$user = $this->sessionUser->getUser();
 		foreach ($app->getLanguageSetArray() as $lang)
 		{
 			$userPref = $user->getPreference('tab_lang_' . $lang['ID']);

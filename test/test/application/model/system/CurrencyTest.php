@@ -171,7 +171,7 @@ class CurrencyTest extends LiveCartTest
 		$product->setPrice($currency, 1.26);
 		$product->save();
 
-		$order = CustomerOrder::getNewInstance(SessionUser::getAnonymousUser());
+		$order = CustomerOrder::getNewInstance($this->sessionUser->getAnonymousUser());
 		$order->addProduct($product);
 		$order->save(true);
 		$item = array_shift($order->getItemsByProduct($product));

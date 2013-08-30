@@ -165,7 +165,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$man = ActiveRecordModel::getNewInstance('Manufacturer');
+		$man = new Manufacturer;
 		$man->setID($data['manufacturers_id']);
 		$man->name->set($data['manufacturers_name']);
 
@@ -511,7 +511,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 			if ($order->rawData['taxAmount'] > 0)
 			{
-				$tax = ActiveRecordModel::getNewInstance('ShipmentTax');
+				$tax = new ShipmentTax;
 				$tax->shipment->set($shipment);
 				$tax->amount->set($order->rawData['taxAmount']);
 				$tax->save();

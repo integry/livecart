@@ -9,7 +9,7 @@
  *  @package application
  *  @author Integry Systems
  */
-class ConfigurationContainer
+class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializable
 {
 	protected $mountPath;
 	protected $directory;
@@ -26,17 +26,16 @@ class ConfigurationContainer
 	protected $childPlugins;
 	protected $info = array();
 	protected $enabled = false;
-	protected $application;
 
 	const ERR_COPY = 0;
 	const ERR_DB = 1;
 	const ERR_CUSTOM = 2;
 
-	public function __construct($mountPath, LiveCart $application)
+	public function __construct($mountPath, \Phalcon\DI\FactoryDefault $di)
 	{
+		$this->setDI($di);
 		$this->mountPath = $mountPath;
 		$this->directory = $this->config->getPath($mountPath);
-		$this->application = $application;
 
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
 
@@ -65,15 +64,6 @@ class ConfigurationContainer
 		}
 
 		$this->loadInfo();
-	}
-
-	public function setApplication(LiveCart $application)
-	{
-		$this->application = $application;
-		foreach ($this->getModules() as $module)
-		{
-			$module->setApplication($application);
-		}
 	}
 
 	public function disableModules()
@@ -267,7 +257,7 @@ class ConfigurationContainer
 			{
 				if ($node->isDir() && !$node->isDot())
 				{
-					$module = new ConfigurationContainer($modulePath . '.' . $node->getFileName(), $this->application);
+					$module = new ConfigurationContainer($modulePath . '.' . $node->getFileName(), $this->getDI());
 					$modules[$module->getMountPath()] = $module;
 					$modules = array_merge($modules, $module->getAvailableModules());
 				}
@@ -287,7 +277,7 @@ class ConfigurationContainer
 		if (is_null($this->enabledModules))
 		{
 			$modules = $this->modules;
-			$conf = $this->getApplication()->getConfig();
+			$conf = $this->config;
 			foreach (array('enabledModules', 'installedModules') as $var)
 			{
 				$confModules = $conf->isValueSet($var) ? $conf->get($var) : array();
@@ -452,8 +442,7 @@ class ConfigurationContainer
 
 	private function setConfig($var, $status)
 	{
-		$config = $this->getApplication()->getConfig();
-
+		$config = $this->config;
 		$activeModules = $config->isValueSet($var) ? $config->get($var) : array();
 
 		if ($status)
@@ -494,11 +483,6 @@ class ConfigurationContainer
 		}
 
 		$this->info['path'] = $this->mountPath;
-	}
-
-	public function getApplication()
-	{
-		return $this->application ? $this->application : ActiveRecordModel::getApplication();
 	}
 
 	public function getPlugins($path)
@@ -592,6 +576,21 @@ class ConfigurationContainer
 
 		return true;
 	}
+
+    public function serialize()
+    {
+        $vars = get_object_vars($this);
+        unset($vars['_dependencyInjector'], $vars['_eventsManager'], $vars['di'], $vars['config']);
+        return serialize($vars);
+    }
+
+    public function unserialize($data)
+    {
+        foreach (unserialize($data) as $key => $value)
+        {
+        	$this->$key = $value;
+		}
+    }
 
 	private function findPlugins($dir, $root = '')
 	{

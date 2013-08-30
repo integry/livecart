@@ -95,7 +95,7 @@ abstract class UnitTest extends PHPUnit_Framework_TestCase
 			$group->save();
 			$user = User::getNewInstance('unittest@test.com', null, $group);
 			$user->save();
-			SessionUser::setUser($user);
+			$this->sessionUser->setUser($user);
 		}
 
 		if ($this instanceof ControllerTestCase)

@@ -144,7 +144,7 @@ class ShopScriptImport extends LiveCartImportDriver
 
 		if (!$lang = ActiveRecordModel::getInstanceByIdIfExists('Language', $id, false))
 		{
-			$lang = ActiveRecordModel::getNewInstance('Language');
+			$lang = new Language;
 			$lang->setID($id);
 			$lang->isEnabled->set(true);
 			$lang->isDefault->set(true);
@@ -162,7 +162,7 @@ class ShopScriptImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = ActiveRecordModel::getNewInstance('State');
+		$rec = new State;
 
 		foreach (array(
 					'countryID' => 'country_code',

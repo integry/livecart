@@ -10,7 +10,7 @@ class OrderMassActionProcessor extends MassActionProcessor
 {
 	protected function processRecord(CustomerOrder $order)
 	{
-		$order->processMass_history = new OrderHistory($order, SessionUser::getUser());
+		$order->processMass_history = new OrderHistory($order, $this->sessionUser->getUser());
 
 		switch($this->getAction())
 		{

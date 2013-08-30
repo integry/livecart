@@ -129,7 +129,7 @@ class XCartImport extends LiveCartImportDriver
 			$this->defLang = $data['code'];
 		}
 
-		$lang = ActiveRecordModel::getNewInstance('Language');
+		$lang = new Language;
 		$lang->setID($data['code']);
 		$lang->isEnabled->set(true);
 
@@ -145,7 +145,7 @@ class XCartImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$man = ActiveRecordModel::getNewInstance('Manufacturer');
+		$man = new Manufacturer;
 		$man->setID($data['manufacturerid']);
 		$man->name->set($data['manufacturer']);
 
@@ -159,7 +159,7 @@ class XCartImport extends LiveCartImportDriver
 			return null;
 		}
 
-		$rec = ActiveRecordModel::getNewInstance('State');
+		$rec = new State;
 
 		foreach (array(
 					'countryID' => 'country_code',
@@ -532,7 +532,7 @@ class XCartImport extends LiveCartImportDriver
 
 		if ($order->rawData['tax'] > 0)
 		{
-			$tax = ActiveRecordModel::getNewInstance('ShipmentTax');
+			$tax = new ShipmentTax;
 			$tax->shipment->set($shipment);
 			$tax->amount->set($order->rawData['tax']);
 			$tax->save();

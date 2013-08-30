@@ -89,7 +89,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEqual($response->getActionName(), 'shipping');
 
 		// verify user data
-		$user = SessionUser::getUser();
+		$user = $this->sessionUser->getUser();
 		$user->reload(true);
 		$this->assertEquals($user->firstName, 'First');
 		$this->assertEquals($user->defaultBillingAddress->userAddress->countryID, 'LV');
@@ -151,7 +151,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEqual($response->getActionName(), 'shipping');
 
 		// verify user data
-		$user = SessionUser::getUser();
+		$user = $this->sessionUser->getUser();
 		$user->reload(true);
 		$this->assertEquals($user->firstName, 'First');
 		$this->assertEquals($user->defaultShippingAddress->userAddress->firstName, 'Recipient');

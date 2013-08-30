@@ -13,7 +13,7 @@ define('ROUTE_CACHE', 0);
  */
 class LiveCart extends \Phalcon\Mvc\Application
 {
-	protected $routerClass = 'LiveCartRouter';
+	protected $configContainer;
 
 	private $isBackend = false;
 
@@ -107,7 +107,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		parent::__construct($di);
 
-		unset($this->session, $this->config, $this->locale, $this->localeName);
+		unset($this->session, $this->locale, $this->localeName);
 
 		$dsnPath = $this->config->getPath("storage/configuration/database") . '.php';
 		$this->isInstalled = file_exists($dsnPath);
@@ -869,8 +869,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (empty($this->locale))
 		{
-
-			$this->locale =	Locale::getInstance($this->localeName);
+			$this->locale =	\locale\Locale::getInstance($this->localeName);
 			$this->locale->translationManager()->setCacheFileDir($this->config->getPath('storage/language'));
 
 			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
@@ -879,7 +878,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 			}
 
 			$this->locale->translationManager()->setDefinitionFileDir($this->config->getPath('storage/language'));
-			Locale::setCurrentLocale($this->localeName);
+			\locale\Locale::setCurrentLocale($this->localeName);
 
 			$this->loadLanguageFiles();
 		}
@@ -921,21 +920,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		switch ($name)
 	  	{
-			case 'router':
-				$cache = $this->getRouterCacheFile();
-				if (ROUTE_CACHE && file_exists($cache))
-				{
-					$this->router = include $cache;
-					$this->router->setRequest($this->request);
-				}
-				else
-				{
-					$this->router = new $this->routerClass($this->request);
-				}
-
-				return $this->router;
-			break;
-
 			case 'locale':
 				return $this->loadLocale();
 			break;
@@ -1395,9 +1379,9 @@ class LiveCart extends \Phalcon\Mvc\Application
 				$context->setOrder($items);
 			}
 
-			if (SessionUser::getUser())
+			if ($this->sessionUser->getUser())
 			{
-				$context->setUser(SessionUser::getUser());
+				$context->setUser($this->sessionUser->getUser());
 			}
 
 			$this->businessRuleController = new BusinessRuleController($context);
@@ -1546,16 +1530,16 @@ class LiveCart extends \Phalcon\Mvc\Application
 			if (file_exists($path))
 			{
 				$this->configContainer = include $path;
-				$this->configContainer->setApplication($this);
+				$this->configContainer->setDI($this->getDI());
 			}
 			else
 			{
-				$this->configContainer = new ConfigurationContainer('.', $this);
+				$this->configContainer = new ConfigurationContainer('.', $this->getDI());
 				$this->configContainer->getModules();
 				$this->configContainer->getChildPlugins();
 				$serialized = serialize($this->configContainer);
 
-				if (!@file_put_contents($path, '<?php return unserialize("' . addslashes($serialized) . '"); ?>'))
+				if (!@file_put_contents($path, '<?php return unserialize(' . var_export($serialized, true) . '); ?>'))
 				{
 					ini_set('display_errors', 'Off');
 				}

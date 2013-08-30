@@ -21,7 +21,8 @@ try
 	$loader->registerDirs(array(
 		__ROOT__ . 'application/controller/',
 		__ROOT__ . 'application/model/',
-		__ROOT__ . 'application/'
+		__ROOT__ . 'application/',
+		__ROOT__ . 'library/',
 	))->register();
 
 	//Create a DI
@@ -65,6 +66,28 @@ try
 	$di->set('modelCache', function() use ($di)
 	{
 		return $di->get('cache');
+	});
+
+	$di->set('url', function(){
+		$url = new Phalcon\Mvc\Url();
+
+		$URI = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+		$path = parse_url($URI,  PHP_URL_PATH);
+
+		var_dump($_REQUEST['_url']);
+		//die($base);
+
+		$url->setBaseUri('/livecart2/');
+
+		return $url;
+	});
+
+	$di->set('sessionUser', function() use ($di) {
+		return new \user\SessionUser($di);
+	});
+
+	$di->set('user', function() use ($di) {
+		return $di->get('sessionUser')->getUser();
 	});
 
 	//Handle the request

@@ -16,10 +16,10 @@ $livecart = new LiveCart;
 
 // process update
 
-$user = SessionUser::getUser();
+$user = $this->sessionUser->getUser();
 $user->allowBackendAccess();
 $user->setID(1);
-SessionUser::setUser($user);
+$this->sessionUser->setUser($user);
 
 $controller = new UpdateController($livecart);
 $response = $controller->update();

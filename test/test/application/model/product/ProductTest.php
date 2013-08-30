@@ -59,7 +59,7 @@ class ProductTest extends LiveCartTest
 		$this->product->setFieldValue("isEnabled", true);
 		$this->product->save();
 
-		$this->usd = ActiveRecordModel::getNewInstance('Currency');
+		$this->usd = new Currency;
 		$this->usd->setID('ZZZ');
 		$this->usd->save(ActiveRecord::PERFORM_INSERT);
 	}
@@ -368,7 +368,7 @@ class ProductTest extends LiveCartTest
 
 	public function testMultipleProductsWithPrices()
 	{
-		$usd = ActiveRecordModel::getNewInstance('Currency');
+		$usd = new Currency;
 		$usd->setID('XXX');
 		$usd->save(ActiveRecord::PERFORM_INSERT);
 
@@ -645,7 +645,7 @@ class ProductTest extends LiveCartTest
 
 	public function testClone()
 	{
-		$image = ActiveRecordModel::getNewInstance('ProductImage');
+		$image = new ProductImage;
 		$image->product->set($this->product);
 		$image->save();
 

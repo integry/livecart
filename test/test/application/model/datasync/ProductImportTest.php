@@ -19,7 +19,7 @@ class ProductImportTest extends LiveCartTest
 
 	public function testSimpleImport()
 	{
-		$lv = ActiveRecordModel::getNewInstance('Language');
+		$lv = new Language;
 		$lv->setID('xx');
 		$lv->save();
 

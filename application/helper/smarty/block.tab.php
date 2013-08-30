@@ -17,7 +17,7 @@ function smarty_block_tab($params, $content, Smarty_Internal_Template $smarty, &
 			return false;
 		}
 
-		$user = SessionUser::getUser();
+		$user = $this->sessionUser->getUser();
 		$userPref = $user->getPreference('tab_' . $params['id']);
 		$isHidden = is_null($userPref) ? !empty($params['hidden']) : $userPref == 'false';
 
