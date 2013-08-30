@@ -7,24 +7,24 @@
 </style>
 {assign var=columns value=0}
 {foreach from=$manufacturers item=manufacturer key=index}
-	{if $lastLetter != $manufacturer.name.0|@capitalize}
-		{if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns )}
-			{if $columns}
+	{% if $lastLetter != $manufacturer.name.0|@capitalize %}
+		{% if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns ) %}
+			{% if $columns %}
 				{assign var=opened value=false}
 				</div>
-			{/if}
+			{% endif %}
 			<div class="manufacturerColumn">
 			{assign var=opened value=true}
 			{assign var=columns value=$columns+1}
-		{/if}
+		{% endif %}
 		<h2>[[manufacturer.name.0]]</h2>
-	{/if}
+	{% endif %}
 	<ul>
 		<li><a href="[[manufacturer.url]]">[[manufacturer.name]]</a>
 		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 	{assign var=lastLetter value=$manufacturer.name.0|@capitalize}
 {/foreach}
-{if $opened}
+{% if $opened %}
 	</div>
-{/if}
+{% endif %}

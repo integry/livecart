@@ -2,8 +2,8 @@
 
 {block BREADCRUMB}
 
-{if $title && !$hideTitle}
+{% if $title && !$hideTitle %}
 	<h1>[[ content('title') ]]</h1>
-{/if}
+{% endif %}
 
 [[ partial("block/message.tpl") ]]

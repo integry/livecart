@@ -1,4 +1,4 @@
-{if $sectionFilters.filters}
+{% if $sectionFilters.filters %}
 	<div class="filterGroup filterTypeCheckbox" id="filterGroup_[[sectionFilters.ID]]">
 		<div class="nav-header">{translate text=$title}</div>
 		{foreach from=$sectionFilters.filters item="filter" name="filters"}
@@ -7,12 +7,12 @@
 					<input
 						class="checkbox" type="checkbox"
 						name="[[filter.handle]]-[[filter.ID]]"
-						{if in_array($filter.ID, $filtersIDs)}checked="checked"{/if}
+						{% if in_array($filter.ID, $filtersIDs) %}checked="checked"{% endif %}
 					/>
 					[[filter.name_lang]]
-					{if 'DISPLAY_NUM_FILTER'|config}
+					{% if 'DISPLAY_NUM_FILTER'|config %}
 						{include file="block/count.tpl" count=$filter.count}
-					{/if}
+					{% endif %}
 				</label>
 			</div>
 		{/foreach}
@@ -36,4 +36,4 @@
 			}
 		</script>
 	{/literal}
-{/if}
+{% endif %}

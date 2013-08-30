@@ -5,11 +5,11 @@
 {% block content %}
 
 	<p>
-	{if $subscriber.isEnabled}
+	{% if $subscriber.isEnabled %}
 		{t _confirm_successful}
-	{else}
+	{% else %}
 		{t _confirm_unsuccessful}
-	{/if}
+	{% endif %}
 	</p>
 
 {% endblock %}

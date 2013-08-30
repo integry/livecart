@@ -1,7 +1,7 @@
-{if $status == 'success'}
+{% if $status == 'success' %}
 	{literal}
 	parent.pageHandler.hideImportForm();
-	parent.LiveCart.AjaxRequest.prototype.showConfirmation({status:'success', message:'{/literal}{if $message}{$message|escape}{else}{maketext text=_theme_imported params=$id}{/if}{literal}'});
+	parent.LiveCart.AjaxRequest.prototype.showConfirmation({status:'success', message:'{/literal}{% if $message %}{$message|escape}{% else %}{maketext text=_theme_imported params=$id}{% endif %}{literal}'});
 	var id = "{/literal}{$id|escape}{literal}";
 	if (parent.pageHandler.treeBrowser.selectItem(id) === 0)
 	{
@@ -15,8 +15,8 @@
 	parent.pageHandler.activateCategory(id);
 	parent.pageHandler.showControls();
 	{/literal}
-{else}
+{% else %}
 	{literal}
-	parent.LiveCart.AjaxRequest.prototype.showConfirmation({status:'failure', message:'{/literal}{if $message}{$message|escape}{else}{t _failed_to_import_theme}{/if}{literal}'});
+	parent.LiveCart.AjaxRequest.prototype.showConfirmation({status:'failure', message:'{/literal}{% if $message %}{$message|escape}{% else %}{t _failed_to_import_theme}{% endif %}{literal}'});
 	{/literal}
-{/if}
+{% endif %}

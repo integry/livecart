@@ -2,27 +2,27 @@
 
 <fieldset class="allFilters">
 
-	{if 'brand' == $showAll}
+	{% if 'brand' == $showAll %}
 		<legend>{t _by_brand}</legend>
-	{else}
+	{% else %}
 		<legend>[[allFilters.name_lang]]</legend>
-	{/if}
+	{% endif %}
 
 	{foreach from=$allFilters.filters item=filter name="filters"}
 
-		{if $smarty.foreach.filters.iteration % $perColumn == 1}
+		{% if $smarty.foreach.filters.iteration % $perColumn == 1 %}
 			<div class="filterGroup">
 				<ul>
-		{/if}
+		{% endif %}
 
 		<li>
 			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">[[filter.name_lang]]</a>&nbsp;{include file="block/count.tpl" count=$filter.count}
 		</li>
 
-		{if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last}
+		{% if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last %}
 				</ul>
 			</div>
-		{/if}
+		{% endif %}
 
 	{/foreach}
 

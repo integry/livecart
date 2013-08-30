@@ -1,13 +1,13 @@
-{if $cart.shippingSubtotal|@strlen}
+{% if $cart.shippingSubtotal|@strlen %}
 	<tr>
 		<td colspan="{math equation="$extraColspanSize + 3"}" class="subTotalCaption">
-			{if $isShippingEstimated}
+			{% if $isShippingEstimated %}
 				{t _estimated_shipping}:
-			{else}
+			{% else %}
 				{t _shipping}:
-			{/if}
+			{% endif %}
 		</td>
 		<td class="amount shippingAmount">[[cart.formatted_shippingSubtotal]]</td>
 		[[ partial("order/block/cartUpdate.tpl") ]]
 	</tr>
-{/if}
+{% endif %}

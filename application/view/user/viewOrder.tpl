@@ -21,80 +21,80 @@
 	<label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
 	<div class="clear"></div>
 
-	{if $order.isRecurring}
+	{% if $order.isRecurring %}
 		<label class="title"></label>
 		<label class="text">
-			{if $subscriptionStatus > 0}
+			{% if $subscriptionStatus > 0 %}
 				{t _active_subscription}
-			{else}
+			{% else %}
 				{t _inactive_subscription}
-			{/if}
+			{% endif %}
 		</label>
 		<div class="clear"></div>
 
 		{* Rebills every x months *}
 		{foreach from=$recurringProductPeriodsByItemId item="period"}
 			<label class="title"></label>
-			{if $period.periodLength == 1}
+			{% if $period.periodLength == 1 %}
 				{assign var="length" value=''}
 				{capture name="a" assign="period"}{t `$periodTypesSingle[$period.periodType]`}{/capture}
-			{else}
+			{% else %}
 				{% set length = $period.periodLength %}
 				{capture name="a" assign="period"}{t `$periodTypesPlural[$period.periodType]`}{/capture}
-			{/if}
+			{% endif %}
 			<label class="text">{maketext text=_rebills_every params="`$length`,`$period`"}</label>
 			<div class="clear"></div>
 		{/foreach}
 
-		{if $nextRebillDate}
+		{% if $nextRebillDate %}
 			<label class="title">{t _next_rebill}:</label>
 			<label class="text">[[nextRebillDate.date_medium]]</label>
 			<div class="clear"></div>
-		{/if}
+		{% endif %}
 
 		<label class="title">{t _remaining_rebills}:</label>
-		<label class="text">{if $order.rebillsLeft != -1}[[order.rebillsLeft]]{else}{t _remaining_rebills_till_canceled}{/if}
-			{if $canCancelRebills}
+		<label class="text">{% if $order.rebillsLeft != -1 %}[[order.rebillsLeft]]{% else %}{t _remaining_rebills_till_canceled}{% endif %}
+			{% if $canCancelRebills %}
 				<span class="cancelFurtherRebills">
-					{if $currentPage > 1}
+					{% if $currentPage > 1 %}
 						{assign var='rebillQuery' value="page=`$currentPage`"}
-					{else}
+					{% else %}
 						{assign var='rebillQuery' value=''}
-					{/if}
+					{% endif %}
 					<a href="{link controller=user action=cancelFurtherRebills id=$order.ID query=$rebillQuery}" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
 				</span>
-			{/if}
+			{% endif %}
 		</label>
 		<div class="clear"></div>
-	{/if}
+	{% endif %}
 
 	<p>
-		{if !$order.isCancelled && !'DISABLE_INVOICES'|config}
+		{% if !$order.isCancelled && !'DISABLE_INVOICES'|config %}
 			<a href="{link controller=user action=orderInvoice id=$order.ID}" target="_blank" class="invoice">{t _order_invoice}</a>
-		{/if}
+		{% endif %}
 		<a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a>
 	</p>
 
 	{foreach from=$order.shipments item="shipment" name="shipments"}
-		{if $shipment.items}
+		{% if $shipment.items %}
 
-			{if !$shipment.isShippable}
+			{% if !$shipment.isShippable %}
 				<h2>{t _downloads}</h2>
-			{elseif $smarty.foreach.shipments.total > 1}
+			{% elseif $smarty.foreach.shipments.total > 1 %}
 				<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				<p>
 					{t _status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
 				</p>
-			{else}
+			{% else %}
 				<h2>{t _ordered_products}</h2>
-			{/if}
+			{% endif %}
 			{include file="user/shipmentEntry.tpl" downloadLinks=true}
 
-		{/if}
+		{% endif %}
 	{/foreach}
 
 	{function name="address"}
-		{if $address}
+		{% if $address %}
 			<p>
 				[[address.fullName]]
 			</p>
@@ -111,7 +111,7 @@
 				[[address.city]]
 			</p>
 			<p>
-				{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
+				{% if $address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
 			</p>
 			<p>
 				[[address.countryName]]
@@ -119,28 +119,28 @@
 			<p>
 				{include file="order/addressFieldValues.tpl" showLabels=false}
 			</p>
-		{/if}
+		{% endif %}
 	{/function}
 
 	[[ partial("order/fieldValues.tpl") ]]
 
 	<div id="overviewAddresses">$order.shipments
 
-		{if $order.ShippingAddress && !$order.isMultiAddress}
+		{% if $order.ShippingAddress && !$order.isMultiAddress %}
 		<div class="addressContainer">
 			<h3>{t _is_shipped_to}:</h3>
-			{if $order.isLocalPickup}
+			{% if $order.isLocalPickup %}
 				{foreach $order.shipments as $shipment}
 					<div class="ShippingServiceDescription">
 						{$shipment.ShippingService.description_lang|escape}
 					</div>
 				{/foreach}
 
-			{else}
+			{% else %}
 				{address address=$order.ShippingAddress}
-			{/if}
+			{% endif %}
 		</div>
-		{/if}
+		{% endif %}
 
 		<div class="addressContainer">
 			<h3>{t _is_billed_to}:</h3>
@@ -151,7 +151,7 @@
 
 	<div class="clear"></div>
 
-	{if $order.isRecurring && $orders}
+	{% if $order.isRecurring && $orders %}
 		<h2>{t _invoices}</h2>
 		{include file="user/invoicesTable.tpl"
 			itemList=$orders
@@ -161,18 +161,18 @@
 			id=$order.ID
 			query='page=_000_'
 		}
-	{/if}
+	{% endif %}
 
 	<h2 id="m_s_g">{t _support}</h2>
 	<p class="noteAbout">{t _have_questions}</p>
 
-	{if $notes}
+	{% if $notes %}
 	   <ul class="notes">
 		   {foreach from=$notes item=note}
 			   {include file="user/orderNote.tpl" note=$note}
 		   {/foreach}
 	   </ul>
-	{/if}
+	{% endif %}
 	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm class="form-horizontal"}
 		[[ textareafld('text', '_enter_question') ]]
 

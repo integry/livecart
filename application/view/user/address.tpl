@@ -4,32 +4,32 @@
 			[[item.UserAddress.firstName]] [[item.UserAddress.lastName]]
 		</p>
 		
-		{if $item.UserAddress.companyName}
+		{% if $item.UserAddress.companyName %}
 		<p>
 		   [[item.UserAddress.companyName]]
 		</p>
-		{/if}
+		{% endif %}
 		
 		<p>
 			[[item.UserAddress.address1]]
 		</p>
 		
-		{if $item.UserAddress.address2}
+		{% if $item.UserAddress.address2 %}
 		<p>
 			[[item.UserAddress.address2]]
 		</p>
-		{/if}
+		{% endif %}
 		
 		<p>
 			[[item.UserAddress.city]]
 		</p>
 		
 		<p>
-			{if $item.State.name}
+			{% if $item.State.name %}
 				[[item.State.name]],
-			{elseif $item.UserAddress.stateName}
+			{% elseif $item.UserAddress.stateName %}
 				[[item.UserAddress.stateName]],
-			{/if}
+			{% endif %}
 			[[item.UserAddress.postalCode]]
 		</p>
 		

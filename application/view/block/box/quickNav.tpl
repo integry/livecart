@@ -1,15 +1,15 @@
 {function name="dynamicCategoryTree" node=false level=0}
-	{if $node}
+	{% if $node %}
 		{foreach from=$node item=category}
 			<option value="{categoryUrl data=$category}">{'&nbsp;&nbsp;&nbsp;'|@str_repeat:$level} [[category.name_lang]]</option>
-			{if $category.subCategories}
+			{% if $category.subCategories %}
 				{dynamicCategoryTree node=$category.subCategories level=$level+1}
-			{/if}
+			{% endif %}
 		{/foreach}
-	{/if}
+	{% endif %}
 {/function}
 
-{if $manufacturers || $categories}
+{% if $manufacturers || $categories %}
 <div class="panel quickNav">
 	<div class="panel-heading">
 		<span class="glyphicon glyphicon-link"></span>
@@ -18,7 +18,7 @@
 
 	<div class="content">
 
-		{if $manufacturers}
+		{% if $manufacturers %}
 			<p>
 			<select onchange="window.location.href = this.value;">
 				<option>{t _manufacturers}</option>
@@ -27,17 +27,17 @@
 				{/foreach}
 			</select>
 			</p>
-		{/if}
+		{% endif %}
 
-		{if $categories}
+		{% if $categories %}
 			<p>
 			<select onchange="window.location.href = this.value;">
 				<option>{t _categories}</option>
 				{dynamicCategoryTree node=$categories}
 			</select>
 			</p>
-		{/if}
+		{% endif %}
 
 	</div>
 </div>
-{/if}
+{% endif %}

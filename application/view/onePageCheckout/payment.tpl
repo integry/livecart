@@ -10,40 +10,40 @@
 					{t _select_payment_method}
 				</p>
 
-				{if 'CC_ENABLE'|config}
+				{% if 'CC_ENABLE'|config %}
 					<div class="radio">
 						<label>
-							<input type="radio" name="payMethod" value="cc" id="pay_cc" {if $selectedMethod == 'cc'}checked="checked"{/if} />
+							<input type="radio" name="payMethod" value="cc" id="pay_cc" {% if $selectedMethod == 'cc' %}checked="checked"{% endif %} />
 							{t _credit_card}
 						</label>
 					</div>
-				{/if}
+				{% endif %}
 
 				{foreach from=$offlineMethods key="key" item="method"}
 					<div class="radio">
 						<label>
-							<input type="radio" name="payMethod" value="[[method]]" id="[[method]]"  {if $selectedMethod == $method}checked="checked"{/if} />
+							<input type="radio" name="payMethod" value="[[method]]" id="[[method]]"  {% if $selectedMethod == $method %}checked="checked"{% endif %} />
 							{"OFFLINE_NAME_`$key`"|config}
 						</label>
 					</div>
 				{/foreach}
 
-				{if $otherMethods}
+				{% if $otherMethods %}
 					<div class="checkout-otherMethods">
 						{foreach from=$otherMethods item=method}
 							<div class="radio">
 								<label>
-									<input type="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="[[method]]" {if $selectedMethod == $method}checked="checked"{/if} />
+									<input type="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="[[method]]" {% if $selectedMethod == $method %}checked="checked"{% endif %} />
 									<img src="{s image/payment/[[method]].gif}" class="paymentLogo" alt="[[method]]" />
 								</label>
 							</div>
 						{/foreach}
 					</div>
-				{/if}
+				{% endif %}
 
-				{if $requireTos}
+				{% if $requireTos %}
 					[[ partial("order/block/tos.tpl") ]]
-				{/if}
+				{% endif %}
 			{/form}
 
 			<div class="form">
@@ -72,11 +72,11 @@
 			</div>
 
 			<div id="paymentMethodForms" style="display: none;">
-				{if 'CC_ENABLE'|config}
+				{% if 'CC_ENABLE'|config %}
 					<div id="payForm_cc">
 						{include file="checkout/block/ccForm.tpl" controller="onePageCheckout"}
 					</div>
-				{/if}
+				{% endif %}
 
 				{foreach from=$offlineMethods key="key" item="method"}
 					<div id="payForm_[[method]]">

@@ -1,4 +1,4 @@
-{if $products}
+{% if $products %}
 	<div class="panel panel-danger compare" id="compareMenu">
 		<div class="panel-heading">
 			<span class="glyphicon glyphicon-eye-close"></span>
@@ -20,5 +20,5 @@
 	<script type="text/javascript">
 		new Compare.Menu($('compareMenu'));
 	</script>
-{/if}
+{% endif %}
 <div id="compareMenuContainer"></div>

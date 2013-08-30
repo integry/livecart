@@ -6,9 +6,9 @@
 			<DESCRIPTION><![CDATA[[[product.longDescription_lang]]]]></DESCRIPTION>
 			<URL><![CDATA[{productUrl product=$product full=true}]]></URL>
 
-			{if $product.DefaultImage.ID}
+			{% if $product.DefaultImage.ID %}
 			<IMGURL><![CDATA[[[product.DefaultImage.urls.4]]]]></IMGURL>
-			{/if}
+			{% endif %}
 			<PRICE_VAT><![CDATA[{$product.price_CZK|default:$product.price_EUR}]]></PRICE_VAT>
 		</SHOPITEM>
 	{/foreach}

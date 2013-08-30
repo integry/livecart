@@ -6,19 +6,19 @@
 	{assign var=width value="100/$perRow"}
 	{foreach from=$feed item=shipment}
 		{section name="labels" loop=$repeat}
-			{if 0 == $index}
+			{% if 0 == $index %}
 				<tr style="page-break-inside: avoid;">
-			{/if}
+			{% endif %}
 			{assign var=index value=$index+1}
 
 			<td style="width: [[width]]%; page-break-inside: avoid;">
 				{include file="backend/customerOrder/block/shippingLabel.tpl" address=$shipment.ShippingAddress}
 			</td>
 
-			{if $perRow == $index}
+			{% if $perRow == $index %}
 				</tr>
 				{assign var=index value=0}
-			{/if}
+			{% endif %}
 		{/section}
 	{/foreach}
 </table>

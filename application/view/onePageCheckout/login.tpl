@@ -3,11 +3,11 @@
 	<h2><span class="step">1</span>{t Checkout Options}</h2>
 </div>
 
-{if $failedLogin}
+{% if $failedLogin %}
 	<div class="errorMsg failed">
 		{t _login_failed}
 	</div>
-{/if}
+{% endif %}
 
 <form method="POST" action="{link controller=onePageCheckout action=doProceedRegistration}" id="checkout-options" class="form-horizontal">
 	<h3>{t _new_customer}</h3>
@@ -46,6 +46,6 @@
 	<div class="clear"></div>
 </form>
 
-{if $preview_options}
+{% if $preview_options %}
 	<div class="stepPreview">[[preview_options]]</div>
-{/if}
+{% endif %}

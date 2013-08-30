@@ -1,8 +1,8 @@
 <div>
 	<a href="{link controller="backend.customerOrder query="rt=`$randomToken`"}#order_[[order.ID]]__" class="qeInvoiceNumber">{$order.invoiceNumber|escape}</a>
-	{if $statusEditor}
+	{% if $statusEditor %}
 		<span style="margin-left: 2em;">{t _status}: {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}</span>
-	{/if}
+	{% endif %}
 
 	<div class="qeOrderSideMenu">
 		<div class="qeOrderDate">[[order.formatted_dateCreated.date_medium]] [[order.formatted_dateCreated.time_short]]</div>
@@ -26,11 +26,11 @@
 		{foreach $order.cartItems as $cartIem}
 			<tr>
 				<td class="qeProduct">
-					{if $cartIem.Product.ID}
+					{% if $cartIem.Product.ID %}
 						<a href="{link controller="backend.category query="rt=`$randomToken`"}#product_[[cartIem.Product.ID]]__">{$cartIem.Product.name|escape}</a>
-					{else}
+					{% else %}
 						[[cartIem.name]]
-					{/if}
+					{% endif %}
 				</td>
 				<td class="qeCount">&times;{$cartIem.count|escape}</td>
 				<td class="qePrice">{$cartIem.formattedDisplayPrice|escape}</td>
@@ -40,11 +40,11 @@
 </table>
 
 <div class="qeAddresses">
-	{if $order.ShippingAddress}
+	{% if $order.ShippingAddress %}
 		<p class="shipping">{t _shipping_address}: [[order.ShippingAddress.compact]] </p>
-	{/if}
+	{% endif %}
 
-	{if $order.BillingAddress}
+	{% if $order.BillingAddress %}
 		<p class="billing">{t _billing_address}: [[order.BillingAddress.compact]]</p>
-	{/if}
+	{% endif %}
 </div>

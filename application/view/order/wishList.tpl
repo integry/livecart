@@ -15,11 +15,11 @@
 				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 			</td>
 			<td class="cartImage">
-				{if $item.Product.DefaultImage.urls.1}
+				{% if $item.Product.DefaultImage.urls.1 %}
 				<a href="{productUrl product=$item.Product}">
 					{img src=$item.Product.DefaultImage.urls.1 alt=$item.Product.name_lang|escape}
 				</a>
-				{/if}
+				{% endif %}
 			</td>
 			<td class="cartName">
 				<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>

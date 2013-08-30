@@ -12,7 +12,7 @@
 				{include file="block/count.tpl" count=$sub.count}
 			</div>
 
-			{if $sub.subCategories}
+			{% if $sub.subCategories %}
 			<ul class="subSubCats">
 				{foreach from=$sub.subCategories item="subSub"}
 					<li>
@@ -21,18 +21,18 @@
 					</li>
 				{/foreach}
 			</ul>
-			{/if}
+			{% endif %}
 
 			<div class="subCatDescr">
 				{* $sub.description_lang *}
 			</div>
 		</td>
 	</tr>
-	{if !$smarty.foreach.subcats.last}
+	{% if !$smarty.foreach.subcats.last %}
 		<tr class="separator">
 			<td colspan="2"><div></div></td>
 		</tr>
-	{/if}
+	{% endif %}
 {/foreach}
 </table>
 <div class="clear"></div>

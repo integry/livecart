@@ -1,13 +1,13 @@
 {% set extraColspanSize = 0 %}
-{if 'SHOW_SKU_CART'|config}
+{% if 'SHOW_SKU_CART'|config %}
 	{assign var="extraColspanSize" value=1+$extraColspanSize}
-{/if}
+{% endif %}
 
 {form action="order/update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
 
-{if $cart.wishListItems}
+{% if $cart.wishListItems %}
 	<h2>{t _cart_items}</h2>
-{/if}
+{% endif %}
 
 <table id="cart" class="table table-striped">
 	<thead>
@@ -20,20 +20,20 @@
 		</tr>
 	</thead>
 	
-	{if !$hideNav}
+	{% if !$hideNav %}
 	<tfoot>
 		[[ partial("order/block/navigation.tpl") ]]
 	</tfoot>
-	{/if}
+	{% endif %}
 	
 	<tbody>
 		[[ partial("order/block/items.tpl") ]]
 		[[ partial("order/block/discounts.tpl") ]]
 		[[ partial("order/block/shipping.tpl") ]]
 
-		{if !'HIDE_TAXES'|config}
+		{% if !'HIDE_TAXES'|config %}
 			[[ partial("order/block/taxes.tpl") ]]
-		{/if}
+		{% endif %}
 
 		[[ partial("order/block/total.tpl") ]]
 		[[ partial("order/block/customFields.tpl") ]]

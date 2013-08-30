@@ -1,31 +1,31 @@
-{if $fields.ADDRESS1}
+{% if $fields.ADDRESS1 %}
 	[[ textfld('`$prefix`address1', '_address') ]]
-{/if}
+{% endif %}
 
-{if $fields.ADDRESS2}
+{% if $fields.ADDRESS2 %}
 	{input name="`$prefix`address2"}
 		{textfield}
 	{/input}
-{/if}
+{% endif %}
 
-{if $fields.CITY}
+{% if $fields.CITY %}
 	[[ textfld('`$prefix`city', '_city') ]]
-{/if}
+{% endif %}
 
-{if $fields.COUNTRY}
+{% if $fields.COUNTRY %}
 	{input name="`$prefix`country"}
 		{label}{t _country}:{/label}
 		{selectfield options=$countries id="{uniqid assign=id_country}"}
 		<span class="progressIndicator" style="display: none;"></span>
 	{/input}
-{else}
+{% else %}
 	{hidden name="`$prefix`country" id="{uniqid assign=id_country}"}
-{/if}
+{% endif %}
 
-{if $fields.STATE}
+{% if $fields.STATE %}
 	{include file="user/addressFormState.tpl" prefix=$prefix}
-{/if}
+{% endif %}
 
-{if $fields.POSTALCODE}
+{% if $fields.POSTALCODE %}
 	[[ textfld('`$prefix`postalCode', '_postal_code') ]]
-{/if}
+{% endif %}

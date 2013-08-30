@@ -9,15 +9,15 @@
 	<div id="pageHeader">
 
 		<div id="systemMenu">
-				{if 'BACKEND_SHOW_HELP'|config}
-					<a id="updates-link" {if 'MODULE_STATS_NEED_UPDATING'|config}class="updateAvailable"{/if} href="{link controller="backend.module"}">{t _modules_updates}</a>
-					{if 'MODULE_STATS_NEED_UPDATING'|config}
+				{% if 'BACKEND_SHOW_HELP'|config %}
+					<a id="updates-link" {% if 'MODULE_STATS_NEED_UPDATING'|config %}class="updateAvailable"{% endif %} href="{link controller="backend.module"}">{t _modules_updates}</a>
+					{% if 'MODULE_STATS_NEED_UPDATING'|config %}
 						<span id="moduleUpdateAvailable">([[ config('MODULE_STATS_NEED_UPDATING') ]])</span>
-					{/if}
+					{% endif %}
 					|
-				{/if}
-				<a id="help" href="#" target="_blank" {if !'BACKEND_SHOW_HELP'|config}style="display:none;"{/if}>{t _base_help}</a>
-				{if 'BACKEND_SHOW_HELP'|config} | {/if}
+				{% endif %}
+				<a id="help" href="#" target="_blank" {% if !'BACKEND_SHOW_HELP'|config %}style="display:none;"{% endif %}>{t _base_help}</a>
+				{% if 'BACKEND_SHOW_HELP'|config %} | {% endif %}
 				{backendLangMenu}
 				<a href="{link}" target="_blank">{t _frontend}</a> |
 				{include file="backend/quickSearch/form.tpl" formid="QuickSearch" hint=_hint_quick_search classNames="-SearchableTemplate"}

@@ -1,16 +1,16 @@
 [[ partial("checkout/block/ccForm.tpl") ]]
 
-{if $otherMethods}
-	{if 'CC_ENABLE'|config}
+{% if $otherMethods %}
+	{% if 'CC_ENABLE'|config %}
 		<h2>{t _other_methods}</h2>
-	{else}
+	{% else %}
 		<h2>{t _select_payment_method}</h2>
-	{/if}
+	{% endif %}
 
 	<div id="otherMethods">
 		{foreach from=$otherMethods item=method}
-			{if $id}{assign var="query" value="order=`$id`"}{/if}
+			{% if $id %}{assign var="query" value="order=`$id`"}{% endif %}
 			<a href="{link controller=checkout action=redirect id=$method query=$query}"><img src="{s image/payment/[[method]].gif}" /></a>
 		{/foreach}
 	</div>
-{/if}
+{% endif %}

@@ -17,35 +17,35 @@
 {* Files with no group *}
 <ul id="productFile_list_[[productID]]_" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
 {foreach item="productFile" from=$productFilesWithGroups}
-	{if $productFile.ProductFileGroup.ID}{break}{/if}
-	{if $productFile.ID}
+	{% if $productFile.ProductFileGroup.ID %}{break}{% endif %}
+	{% if $productFile.ID %}
 		<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
 			<span class="productFile_item_title">[[productFile.title_lang]]</span>
 		</li>
-	{/if}
+	{% endif %}
 {/foreach}
 </ul>
 
 {* Files in groups *}
 <ul id="productFileGroup_list_[[productID]]" class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productFileGroup_list">
 {foreach item="productFile" from=$productFilesWithGroups}
-	{if !$productFile.ProductFileGroup.ID}{continue}{/if}
+	{% if !$productFile.ProductFileGroup.ID %}{continue}{% endif %}
 
-	{if $lastProductFileGroup != $productFile.ProductFileGroup.ID }
-		{if $lastProductFileGroup > 0}</ul></li>{/if}
+	{% if $lastProductFileGroup != $productFile.ProductFileGroup.ID  %}
+		{% if $lastProductFileGroup > 0 %}</ul></li>{% endif %}
 		<li id="productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFileGroup_item">
 			<span class="productFileGroup_title">[[productFile.ProductFileGroup.name_lang]]</span>
 			<div id="activeList_editContainer_productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="activeList_editContainer activeList_container" style="display: none">
 				[[ partial("backend/productFileGroup/form.tpl") ]]
 			</div>
 			<ul id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
-	{/if}
+	{% endif %}
 
-	{if $productFile.ID} {* For empty groups *}
+	{% if $productFile.ID %} {* For empty groups *}
 	<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
 		<span class="productFile_item_title">[[productFile.title_lang]]</span>
 	</li>
-	{/if}
+	{% endif %}
 
 	{% set lastProductFileGroup = $productFile.ProductFileGroup.ID %}
 {/foreach}
@@ -102,9 +102,9 @@
 	ActiveList.prototype.getInstance("productFile_list_[[productID]]_", Backend.ProductFile.Callbacks);
 	{assign var="lastFileGroup" value="-1"}
 	{foreach item="file" from=$productFilesWithGroups}
-		{if $file.ProductFileGroup && $lastFileGroup != $file.ProductFileGroup.ID}
+		{% if $file.ProductFileGroup && $lastFileGroup != $file.ProductFileGroup.ID %}
 			 ActiveList.prototype.getInstance('productFile_list_[[productID]]_[[file.ProductFileGroup.ID]]', Backend.ProductFile.Callbacks);
-		{/if}
+		{% endif %}
 		{% set lastFileGroup = $file.ProductFileGroup.ID %}
 	{/foreach}
 	{literal}

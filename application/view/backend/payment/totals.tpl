@@ -10,16 +10,16 @@
 
 <div class="clear amountSection"></div>
 
-{if $order.amountNotCaptured != 0}
+{% if $order.amountNotCaptured != 0 %}
 	<p>
 		<label>{t _not_captured}:</label>
 		<label>[[order.formatted_amountNotCaptured]]</label>
 	</p>
-{/if}
+{% endif %}
 
-{if $order.amountDue > 0}	
+{% if $order.amountDue > 0 %}
 	<p>
 		<label>{t _amount_due}:</label>
 		<label>[[order.formatted_amountDue]]</label>
 	</p>
-{/if}
+{% endif %}

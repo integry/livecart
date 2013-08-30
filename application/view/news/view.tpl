@@ -9,9 +9,9 @@
 	<div class="newsEntry">
 		<p>[[news.text_lang]]</p>
 
-		{if $news.moreText_lang}
+		{% if $news.moreText_lang %}
 			<p>[[news.moreText_lang]]</p>
-		{/if}
+		{% endif %}
 	</div>
 
 {% endblock %}

@@ -11,16 +11,16 @@
 	</tr>
 	<tr>
 		<td>{t _current}:</td>
-		<td class="version {if $needUpdate}outdated{else}upToDate{/if}">[[current]]</td>
+		<td class="version {% if $needUpdate %}outdated{% else %}upToDate{% endif %}">[[current]]</td>
 	</tr>
 </table>
 
 <p>
-{if $needUpdate}
+{% if $needUpdate %}
 	{t _newer_available|branding}.
-{else}
+{% else %}
 	{t _up_to_date|branding}
-{/if}
+{% endif %}
 </p>
 
 [[ partial("layout/backend/footer.tpl") ]]

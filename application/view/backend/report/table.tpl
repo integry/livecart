@@ -11,11 +11,11 @@
 			<tr>
 			{foreach from=$row item=value key=key}
 				<td class="[[key]]">
-					{if $key == $format}
+					{% if $key == $format %}
 						{include file="$template"}
-					{else}
+					{% else %}
 						[[value]]
-					{/if}
+					{% endif %}
 				</td>
 			{/foreach}
 			</tr>

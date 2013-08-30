@@ -1,9 +1,9 @@
 <li>
-	{if $order.basketCount}
+	{% if $order.basketCount %}
 		{include file="order/miniCartBlock.tpl" hidePanel=true}
-	{else}
+	{% else %}
 		<div id="miniCart" class="cartEmpty">
 			<p>{t _empty_basket}</p>
 		</div>
-	{/if}
+	{% endif %}
 </li>

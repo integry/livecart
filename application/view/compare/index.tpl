@@ -33,15 +33,15 @@
 				{/foreach}
 			</tr>
 			{foreach from=$category.groups item="group" name="groups"}
-				{if $group.group}
-					<tr class="specificationGroup heading{if $smarty.foreach.groups.first} first{/if}">
+				{% if $group.group %}
+					<tr class="specificationGroup heading{% if $smarty.foreach.groups.first %} first{% endif %}">
 						{assign var="cnt" value=$category.products|@count}
 						<th colspan="{$cnt+1}">[[group.group.name_lang]]</th>
 					</tr>
-				{/if}
+				{% endif %}
 
 				{foreach from=$group.attributes item=attr name="attributes"}
-					{if $attr.isDisplayed}
+					{% if $attr.isDisplayed %}
 					<tr>
 						<td class="param">[[attr.name_lang]]</td>
 						{foreach from=$category.products item="product"}
@@ -50,7 +50,7 @@
 							</td>
 						{/foreach}
 					</tr>
-					{/if}
+					{% endif %}
 				{/foreach}
 			{/foreach}
 		</tbody>

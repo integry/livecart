@@ -1,4 +1,4 @@
-<div class="panel inventory {if 'INVENTORY_TRACKING_DOWNLOADABLE'|config}downloadableInventory{/if}">
+<div class="panel inventory {% if 'INVENTORY_TRACKING_DOWNLOADABLE'|config %}downloadableInventory{% endif %}">
 	<div class="panel-heading">{t _inventory}</div>
 
 	{input name="isUnlimitedStock"}

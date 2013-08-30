@@ -6,17 +6,17 @@
 		{selectfield class="othertheme" id="othertheme_`$tabid`" options=$template.otherThemes}
 	</div>
 
-	{if $new || $template.isCustomFile}
+	{% if $new || $template.isCustomFile %}
 		[[ textfld('fileName', '_template_file_name') ]]
-	{/if}
+	{% endif %}
 	<input type="hidden" value="[[tabid]]" name="tabid" />
 
 	{textarea name="code" class="code" id="code_`$tabid`"}
 	{hidden name="file" id="file"}
 
-	{if $new}
+	{% if $new %}
 		{hidden name="new" value="true"}
-	{/if}
+	{% endif %}
 
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<div class="saveThemeSelector" style="float: right;">

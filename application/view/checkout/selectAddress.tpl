@@ -7,41 +7,41 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{if 'shipping' == $step}
+		{% if 'shipping' == $step %}
 			{include file="checkout/checkoutProgress.tpl" progress="progressShippingAddress"}
-		{else}
+		{% else %}
 			{include file="checkout/checkoutProgress.tpl" progress="progressAddress"}
-		{/if}
+		{% endif %}
 	</div>
 
 	{form action="checkout/doSelectAddress" method="POST" handle=$form  class="form-horizontal"}
 
 	{error for="selectedAddress"}<div><span class="text-danger">[[msg]]</span></div><div class="clear"></div>{/error}
 
-	{if !$step || ('billing' == $step)}
+	{% if !$step || ('billing' == $step) %}
 		<div id="billingAddressColumn">
 
-			{if !'REQUIRE_SAME_ADDRESS'|config}
+			{% if !'REQUIRE_SAME_ADDRESS'|config %}
 				<h2 id="billingAddress">{t _billing_address}</h2>
-			{/if}
+			{% endif %}
 
 			{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 
-			{if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step}
+			{% if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step %}
 				<p>
 					{checkbox name="sameAsBilling" class="checkbox"}
 					<label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
 				</p>
-			{/if}
+			{% endif %}
 
 		</div>
-	{/if}
+	{% endif %}
 
-	{if (!'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step))}
+	{% if (!'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step)) %}
 
-		{if 'shipping' == $step}
+		{% if 'shipping' == $step %}
 			<div class="clear"></div>
-		{/if}
+		{% endif %}
 
 		<div id="shippingSelector">
 
@@ -57,12 +57,12 @@
 		</script>
 		{/literal}
 
-	{/if}
+	{% endif %}
 
-	{if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired)) || 'REQUIRE_SAME_ADDRESS'|config}
+	{% if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired)) || 'REQUIRE_SAME_ADDRESS'|config %}
 		<div class="clear"></div>
 		[[ partial("checkout/orderFields.tpl") ]]
-	{/if}
+	{% endif %}
 
 	{literal}
 	<script type="text/javascript">

@@ -8,13 +8,13 @@
 		<h2>{t _returning}</h2>
 
 		<p>
-			{if $failed}
+			{% if $failed %}
 				<div class="errorMsg failed">
 					{t _login_failed}
 				</div>
-			{else}
+			{% else %}
 				<p class="text-muted">{t _please_sign_in}</p>
-			{/if}
+			{% endif %}
 		</p>
 
 		{capture assign="return"}{link controller="user"}{/capture}

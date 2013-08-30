@@ -1,4 +1,4 @@
-{if $itemsByType.order && $itemsByType.order|@count}
+{% if $itemsByType.order && $itemsByType.order|@count %}
 	{% set something = true %}
 	<li><span>{t _orders}</span></li>
 	{foreach $itemsByType.order as $item}
@@ -9,9 +9,9 @@
 			</a>
 		</li>
 	{/foreach}
-{/if}
+{% endif %}
 
-{if $itemsByType.product && $itemsByType.product|@count}
+{% if $itemsByType.product && $itemsByType.product|@count %}
 	{% set something = true %}
 	<li><span>{t _products}</span></li>
 	{foreach $itemsByType.product as $item}
@@ -23,9 +23,9 @@
 
 		</li>
 	{/foreach}
-{/if}
+{% endif %}
 
-{if $itemsByType.user && $itemsByType.user|@count}
+{% if $itemsByType.user && $itemsByType.user|@count %}
 	{% set something = true %}
 	<li><span>{t _users}</span></li>
 	{foreach $itemsByType.user as $item}
@@ -37,8 +37,8 @@
 			</a>
 		</li>
 	{/foreach}
-{/if}
+{% endif %}
 
-{if !$something}
+{% if !$something %}
 	<li><span>{t _history_is_empty}</span></li>
-{/if}
+{% endif %}

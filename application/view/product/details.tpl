@@ -1,17 +1,17 @@
-{if $product.longDescription_lang || $product.shortDescription_lang}
+{% if $product.longDescription_lang || $product.shortDescription_lang %}
 <div id="descriptionSection" class="productSection description">
 	<h2>{t _description}</h2>
 	<div id="productDescription">
-		{if $product.longDescription_lang}
+		{% if $product.longDescription_lang %}
 			[[product.longDescription_lang]]
-		{else}
+		{% else %}
 			[[product.shortDescription_lang]]
-		{/if}
+		{% endif %}
 	</div>
 </div>
-{/if}
+{% endif %}
 
-{if $product.attributes}
+{% if $product.attributes %}
 <div id="specificationSection" class="productSection specification">
 <h2>{t _spec}<small>{t _tab_specification}</small></h2>
 <div id="productSpecification">
@@ -20,31 +20,31 @@
 	</table>
 </div>
 </div>
-{/if}
+{% endif %}
 
-{if $related}
+{% if $related %}
 <div id="relatedSection" class="productSection related">
 <h2>{t _recommended}<small>{t _tab_recommended}</small></h2>
 <div id="relatedProducts">
 	{foreach from=$related item=group}
-	   {if $group.0.ProductRelationshipGroup.name_lang}
+	   {% if $group.0.ProductRelationshipGroup.name_lang %}
 		   <h3>[[group.0.ProductRelationshipGroup.name_lang]]</h3>
-	   {/if}
+	   {% endif %}
 	   {include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$group}
 	{/foreach}
 </div>
 </div>
-{/if}
+{% endif %}
 
-{if $additionalCategories}
+{% if $additionalCategories %}
 	[[ partial("product/block/additionalCategories.tpl") ]]
-{/if}
+{% endif %}
 
-{if $together}
+{% if $together %}
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
 <h2>{t _purchased_together}<small>{t _tab_purchased}</small></h2>
 <div id="purchasedTogether">
 	{include file="category/productListLayout.tpl" layout='PRODUCT_PAGE_LIST_LAYOUT'|config products=$together}
 </div>
 </div>
-{/if}
+{% endif %}

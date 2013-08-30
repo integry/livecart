@@ -14,9 +14,9 @@
 
 	[[ partial("user/block/phoneField.tpl") ]]
 
-	{if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO'}
+	{% if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO' %}
 		[[ partial("user/block/passwordFields.tpl") ]]
-	{/if}
+	{% endif %}
 
 	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 	{include file="block/eav/fields.tpl" eavPrefix=$prefix}
@@ -25,11 +25,11 @@
 
 <div class="registerColumn">
 
-	{if $showHeading && $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config}
+	{% if $showHeading && $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config %}
 		<h3>{t _billing_address}</h3>
-	{else}
+	{% else %}
 		<h3>{t _your_address}</h3>
-	{/if}
+	{% endif %}
 
 	[[ partial("user/block/addressFields.tpl") ]]
 

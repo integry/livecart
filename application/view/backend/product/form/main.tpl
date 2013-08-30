@@ -47,19 +47,19 @@
 		{textfield class="wide" autocomplete="controller=backend.product field=pageTitle"}
 	{/input}
 
-	{if $shippingClasses}
+	{% if $shippingClasses %}
 		{input name="shippingClassID"}
 			{label}{tip _shippingClass}:{/label}
 			{selectfield options=$shippingClasses class="shippingClassID"}
 		{/input}
-	{/if}
+	{% endif %}
 
-	{if $taxClasses}
+	{% if $taxClasses %}
 		{input name="taxClassID"}
 			{label}{tip _taxClass}:{/label}
 			{selectfield options=$taxClasses class="taxClassID"}
 		{/input}
-	{/if}
+	{% endif %}
 
 	{input name="position"}
 		{label}{tip _sort_order _hint_sort_order}:{/label}

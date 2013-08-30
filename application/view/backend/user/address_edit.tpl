@@ -1,12 +1,12 @@
 {hidden name="`$namePrefix`ID"}
 
-{if !$hideName}
+{% if !$hideName %}
 [[ textfld('`$namePrefix`firstName', '_first_name') ]]
 
 [[ textfld('`$namePrefix`lastName', '_last_name') ]]
 
 [[ textfld('`$namePrefix`companyName', '_company') ]]
-{/if}
+{% endif %}
 
 {input name="`$namePrefix`countryID"}
 	{label}{t _country}:{/label}

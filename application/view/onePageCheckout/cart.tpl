@@ -1,6 +1,6 @@
-{if 'SHOW_SKU_CART'|config}
+{% if 'SHOW_SKU_CART'|config %}
 	{assign var="extraColspanSize" value=1+$extraColspanSize}
-{/if}
+{% endif %}
 <h2>{t _shopping_cart}</h2>
 
 <a href="#" id="checkout-return-to-overview">{t _return_to_overview}</a>
@@ -16,7 +16,7 @@
 <table id="cart">
 	<thead>
 		<tr>
-			<th colspan="{if 'SHOW_SKU_CART'|config}4{else}3{/if}" class="cartListTitle"></th>
+			<th colspan="{% if 'SHOW_SKU_CART'|config %}4{% else %}3{% endif %}" class="cartListTitle"></th>
 			<th class="cartPrice">{t _price}</th>
 			<th class="cartQuant">{t _quantity}</th>
 		</tr>
@@ -27,9 +27,9 @@
 		[[ partial("order/block/discounts.tpl") ]]
 		[[ partial("order/block/shipping.tpl") ]]
 
-		{if !'HIDE_TAXES'|config}
+		{% if !'HIDE_TAXES'|config %}
 			[[ partial("order/block/taxes.tpl") ]]
-		{/if}
+		{% endif %}
 
 		{include file="order/block/total.tpl" extraColspanSize=$extraColspanSize}
 

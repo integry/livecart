@@ -1,28 +1,28 @@
 <div id="imageContainer">
-	<div id="largeImage" class="{if $images|@count == 0}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
-		{if $product.DefaultImage.urls.3}
+	<div id="largeImage" class="{% if $images|@count == 0 %}missingImage{% endif %} {% if $images|@count > 1 %}multipleImages{% endif %}">
+		{% if $product.DefaultImage.urls.3 %}
 			<a onclick="Product.Lightbox2Gallery.start(this); return false;" href="[[product.DefaultImage.urls.4]]" title="{$product.DefaultImage.title_lang|escape}" target="_blank">
 				{img src=$product.DefaultImage.urls.3 alt=$product.DefaultImage.title_lang|escape id="mainImage"}
 			</a>
-		{else}
+		{% else %}
 			{img src='MISSING_IMG_LARGE'|config alt="" id="mainImage"}
-		{/if}
+		{% endif %}
 	</div>
-	{if $images|@count > 1}
+	{% if $images|@count > 1 %}
 		<div id="moreImages">
 			{foreach from=$images item="image"}
 				<a href="[[image.urls.4]]" target="_blank" onclick="return false;">{img src=$image.urls.1 id="img_`$image.ID`" alt=$image.name_lang|escape onclick="return false;"}</a>
 			{/foreach}
 		</div>
-	{/if}
-	{if $images|@count > 0}
+	{% endif %}
+	{% if $images|@count > 0 %}
 		{* lightbox2 gallery images *}
 		<div class="hidden">
 			{foreach from=$images item="image"}
 				<a rel="lightbox[product]" href="[[image.urls.4]]" target="_blank" onclick="return false;">{img src=$image.urls.1 id="img_`$image.ID`" alt=$image.name_lang|escape onclick="return false;"}</a>
 			{/foreach}
 		</div>
-	{/if}
+	{% endif %}
 </div>
 
 {literal}
@@ -36,7 +36,7 @@
 		imageDescr[[[image.ID]]] = {json array=$image.title_lang};
 		imageProducts[[[image.ID]]] = {json array=$image.productID};
 	{/foreach}
-	new Product.ImageHandler(imageData, imageDescr, imageProducts, {if $enlargeProductThumbnailOnMouseOver}true{else}false{/if});
+	new Product.ImageHandler(imageData, imageDescr, imageProducts, {% if $enlargeProductThumbnailOnMouseOver %}true{% else %}false{% endif %});
 
 	var loadingImage = 'image/loading.gif';
 	var closeButton = 'image/silk/gif/cross.gif';

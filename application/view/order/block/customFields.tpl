@@ -1,4 +1,4 @@
-{if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config}
+{% if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config %}
 {sect}
 	{header}
 		<tr id="cartFields">
@@ -16,4 +16,4 @@
 		</tr>
 	{/footer}
 {/sect}
-{/if}
+{% endif %}

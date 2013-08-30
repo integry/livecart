@@ -1,8 +1,8 @@
-{if $class.ID}
+{% if $class.ID %}
 	{assign var="action" value="controller=backend.taxClass action=update id=`$class.ID`"}
-{else}
+{% else %}
 	{assign var="action" value="controller=backend.taxClass action=create"}
-{/if}
+{% endif %}
 
 {form handle=$classForm class="form-horizontal" action=$action id="classForm_`$class.ID`" method="post" onsubmit="Backend.TaxClass.prototype.getInstance(this).save(); return false;"}
 

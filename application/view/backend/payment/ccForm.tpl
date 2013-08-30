@@ -36,9 +36,9 @@
 
 [[ textfld('ccNum', '_cc_num') ]]
 
-{if $ccTypes}
+{% if $ccTypes %}
 	[[ selectfld('ccType', '_cc_type', ccTypes) ]]
-{/if}
+{% endif %}
 
 {input name="ccExpiryYear"}
 	{label}{t _cc_exp}:{/label}

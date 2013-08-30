@@ -1,11 +1,11 @@
-{if $fields.FIRSTNAME}
+{% if $fields.FIRSTNAME %}
 	[[ textfld('`$prefix`firstName', '_your_first_name') ]]
-{/if}
+{% endif %}
 
-{if $fields.LASTNAME}
+{% if $fields.LASTNAME %}
 	[[ textfld('`$prefix`lastName', '_your_last_name') ]]
-{/if}
+{% endif %}
 
-{if $fields.COMPANYNAME}
+{% if $fields.COMPANYNAME %}
 	[[ textfld('`$prefix`companyName', '_company_name') ]]
-{/if}
+{% endif %}

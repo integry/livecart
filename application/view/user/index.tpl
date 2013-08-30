@@ -5,17 +5,17 @@
 {include file="user/userMenu.tpl" current="homeMenu"}
 {% block content %}
 
-	{if $userConfirm}
+	{% if $userConfirm %}
 	<div class="confirmationMessage">
 		[[userConfirm]]
 	</div>
-	{/if}
+	{% endif %}
 
-	{if $message}
+	{% if $message %}
 		<div class="confirmationMessage">[[message]]</div>
-	{/if}
+	{% endif %}
 
-	{if $notes}
+	{% if $notes %}
 		<h2 id="unreadMessages">{t _unread_msg}</h2>
 		<ul class="notes">
 			{foreach from=$notes item=note}
@@ -23,9 +23,9 @@
 			   {include file="user/orderNote.tpl" note=$note}
 			{/foreach}
 		</ul>
-	{/if}
+	{% endif %}
 
-	{if $files}
+	{% if $files %}
 		<h2 id="recentDownloads">{t _download_recent}</h2>
 
 		{foreach from=$files item="item"}
@@ -35,22 +35,22 @@
 			{include file="user/fileList.tpl" item=$item}
 			<div class="clear"></div>
 		{/foreach}
-	{/if}
+	{% endif %}
 
-	{if $orders}
+	{% if $orders %}
 		<h2 id="recentOrders">{t _recent_orders}</h2>
 		{foreach from=$orders item="order"}
 			{include file="user/orderEntry.tpl" order=$order}
 		{/foreach}
-	{else}
+	{% else %}
 		<p>
 			{t _no_orders_placed}
 		</p>
-	{/if}
+	{% endif %}
 
 	<div class="clear"></div>
 
-	{if $pendingInvoiceCount > 0}
+	{% if $pendingInvoiceCount > 0 %}
 		<h2>{t _invoices}</h2>
 		{include file="user/invoicesTable.tpl"
 			itemList=$lastInvoiceArray
@@ -61,6 +61,6 @@
 			query=''
 			pendingInvoiceCount=$pendingInvoiceCount
 		}
-	{/if}
+	{% endif %}
 
 {% endblock %}

@@ -7,9 +7,9 @@
 	<title>[[ config('SOFT_NAME') ]] Admin - [[TITLE]]</title>
 	<base href="{baseUrl}" />
 
-	{if 'FAVICON'|config}
+	{% if 'FAVICON'|config %}
 		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
-	{/if}
+	{% endif %}
 
 	<!-- Css includes -->
 	{includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
@@ -25,9 +25,9 @@
 	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
 	{compiledCss glue=true nameMethod=hash}
 
-	{if !'DISABLE_WYSIWYG'|config}
+	{% if !'DISABLE_WYSIWYG'|config %}
 		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
-	{/if}
+	{% endif %}
 
 	{includeJs file="library/form/ActiveForm.js" front=true}
 	{includeJs file="library/form/Validator.js" front=true}
@@ -98,9 +98,9 @@
 			entities: '',
 			file_browser_callback : "ajaxfilemanager"
 			{/literal}
-			{if 'TINYMCE_PARAMS'|config}
+			{% if 'TINYMCE_PARAMS'|config %}
 			, [[ config('TINYMCE_PARAMS') ]]
-			{/if}
+			{% endif %}
 			{literal}
 		};
 	}

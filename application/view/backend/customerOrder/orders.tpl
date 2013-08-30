@@ -44,15 +44,15 @@
 	Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
 {/literal}
 
-{if $userID}
+{% if $userID %}
 	{assign var=dataFormatter value="Backend.User.OrderGridFormatter"};
-{else}
+{% else %}
 	{assign var=dataFormatter value="Backend.CustomerOrder.GridFormatter"};
-{/if}
+{% endif %}
 
-{if req('userOrderID')}
+{% if req('userOrderID') %}
 	Backend.User.OrderGridFormatter = Backend.CustomerOrder.GridFormatter;
-{/if}
+{% endif %}
 
 </script>
 

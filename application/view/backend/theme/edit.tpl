@@ -4,7 +4,7 @@
 		{section name="parents" start=1 loop=4}
 			<p>
 				{capture assign="label"}{maketext text=_parent_theme_x params=$smarty.section.parents.index}{/capture}
-				{if $smarty.section.parents.index == 1}{% set tipIndex = "1" %}{else}{% set tipIndex = "2" %}{/if}
+				{% if $smarty.section.parents.index == 1 %}{% set tipIndex = "1" %}{% else %}{% set tipIndex = "2" %}{% endif %}
 				<label>{toolTip label=$label hint="_tip_parent_`$tipIndex`"}:</label>
 				{selectfield name="parent_`$smarty.section.parents.index`" options=$themes blank=true}
 			</p>

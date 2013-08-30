@@ -4,11 +4,11 @@
 
 	{block LEFT_SIDE}
 
-	{if 'CATEGORY_MENU_TYPE'|config == 'CAT_MENU_FLYOUT'}
+	{% if 'CATEGORY_MENU_TYPE'|config == 'CAT_MENU_FLYOUT' %}
 		{block DYNAMIC_CATEGORIES}
-	{elseif 'CATEGORY_MENU_TYPE'|config == 'CAT_MENU_STANDARD'}
+	{% elseif 'CATEGORY_MENU_TYPE'|config == 'CAT_MENU_STANDARD' %}
 		{block CATEGORY_BOX}
-	{/if}
+	{% endif %}
 
 	{block COMPARE}
 	{block FILTER_BOX}

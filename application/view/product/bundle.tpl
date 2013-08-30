@@ -1,4 +1,4 @@
-{if $bundleData}
+{% if $bundleData %}
 <div id="bundle" class="productSection">
 	<h2>{t _bundle_includes}:</h2>
 	<div class="bundleList">
@@ -22,4 +22,4 @@
 
 	<div class="clear"></div>
 </div>
-{/if}
+{% endif %}

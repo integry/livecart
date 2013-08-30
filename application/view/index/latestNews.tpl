@@ -1,10 +1,10 @@
 <h2>{t _latest_news}</h2>
 {foreach from=$news item=newsItem name="news"}
-	{if !$smarty.foreach.news.last || !$isNewsArchive}
+	{% if !$smarty.foreach.news.last || !$isNewsArchive %}
 		{include file="news/newsEntry.tpl" entry=$newsItem}
-	{else}
+	{% else %}
 	<div class="newsArchive">
 		<a href="{link controller=news}">{t _news_archive}</a>
 	</div>
-	{/if}
+	{% endif %}
 {/foreach}

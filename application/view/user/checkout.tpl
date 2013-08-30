@@ -2,11 +2,11 @@
 
 {assign var="fields" value='USER_FIELDS'|config}
 
-{if req('action') == 'checkout'}
+{% if req('action') == 'checkout' %}
 	{% block title %}{t _order_checkout}{{% endblock %}
-{else}
+{% else %}
 	{% block title %}{t _user_registration}{{% endblock %}
-{/if}
+{% endif %}
 
 [[ partial("checkout/layout.tpl") ]]
 {% block content %}
@@ -14,11 +14,11 @@
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
 
-		{if req('action') == 'checkout'}
+		{% if req('action') == 'checkout' %}
 		<p>
 			{t _please_login}
 		</p>
-		{/if}
+		{% endif %}
 
 		{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
 		{include file="user/loginForm.tpl" return=$return}
@@ -29,13 +29,13 @@
 
 		{form handle=$form action="user/processCheckoutRegistration" method="POST" class="form-horizontal"}
 
-			{if !'REQUIRE_SAME_ADDRESS'|config}
+			{% if !'REQUIRE_SAME_ADDRESS'|config %}
 				<h3>{t _contact_info}</h3>
-			{/if}
+			{% endif %}
 
 			{include file="user/block/registerAddress.tpl" prefix="billing_" showHeading=true}
 
-			{if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config}
+			{% if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config %}
 			<h3>{t _shipping_address}</h3>
 
 				{input name="sameAsBilling"}
@@ -47,7 +47,7 @@
 					{include file="user/addressForm.tpl" prefix="shipping_" eavPrefix="shipping_" states=$shippingStates}
 				</div>
 
-			{/if}
+			{% endif %}
 
 			{block FORM-SUBMIT-REGISTER-CHECKOUT}
 

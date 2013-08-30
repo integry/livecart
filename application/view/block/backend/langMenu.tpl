@@ -1,4 +1,4 @@
-<a href="#" id="langSwitchLink" onClick="{literal}if (showLangMenu) { showLangMenu(true); }; return false;"{/literal} {if $currentLang.image}class="hasFlag" style="background-image: url([[currentLang.image]])"{/if}>{t _change_language}</a> |
+<a href="#" id="langSwitchLink" onClick="{literal}if (showLangMenu) { showLangMenu(true); }; return false;"{/literal} {% if $currentLang.image %}class="hasFlag" style="background-image: url([[currentLang.image]])"{% endif %}>{t _change_language}</a> |
 
 <div id="langMenuContainer">
 	<div id="langMenuIndicator" class="menuLoadIndicator"></div>

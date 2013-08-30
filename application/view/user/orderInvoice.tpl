@@ -4,7 +4,7 @@
 <div class="userOrderInvoice">
 
 {function name="address"}
-{if $address}
+{% if $address %}
 	<p>
 		[[address.fullName]]
 	</p>
@@ -21,7 +21,7 @@
 		[[address.city]]
 	</p>
 	<p>
-		{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
+		{% if $address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
 	</p>
 	<p>
 		[[address.countryName]]
@@ -29,7 +29,7 @@
 	<p>
 		{include file="order/addressFieldValues.tpl" showLabels=false}
 	</p>
-{/if}
+{% endif %}
 {/function}
 
 {% block content %}
@@ -52,12 +52,12 @@
 				<h2>{t _buyer}</h2>
 				{address address=$order.BillingAddress}
 				{foreach $order.User.attributes as $attr}
-					{if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values)}
+					{% if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values) %}
 						<p>
 							[[attr.EavField.name_lang]]:
 							[[ partial("product/attributeValue.tpl") ]]
 						</p>
-					{/if}
+					{% endif %}
 				{/foreach}
 			</div>
 
@@ -76,21 +76,21 @@
 
 		{foreach from=$order.shipments item="shipment" name="shipments"}
 
-			{if $shipment.items}
+			{% if $shipment.items %}
 
-				{if !$shipment.isShippable}
+				{% if !$shipment.isShippable %}
 					<h2>{t _downloads}</h2>
-				{else}
+				{% else %}
 					<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
-				{/if}
+				{% endif %}
 
 				{include file="user/shipmentEntry.tpl" sku=true showTaxes=true}
 
-			{/if}
+			{% endif %}
 
 		{/foreach}
 
-		{if 'INVOICE_SHOW_PAYMENT_INFO'|config}
+		{% if 'INVOICE_SHOW_PAYMENT_INFO'|config %}
 		<h2>{t _payment_info}</h2>
 
 		<table id="invoicePaymentInfo">
@@ -102,7 +102,7 @@
 				<td>{t _shipping_handling}:</td>
 				<td class="amount">[[order.formatted_shippingSubtotal]]</td>
 			</tr>
-			{if $order.taxes}
+			{% if $order.taxes %}
 				<tr class="beforeTaxSubtotal">
 					<td>{t _before_tax}:</td>
 					<td class="amount">[[order.formatted_subtotalBeforeTaxes]]</td>
@@ -113,14 +113,14 @@
 						<td class="amount">[[tax.formattedAmount]]</td>
 					</tr>
 				{/foreach}
-			{/if}
+			{% endif %}
 
-			{if $order.discountAmount}
+			{% if $order.discountAmount %}
 				<tr class="discountAmount">
 					<td>{t _discount}:</td>
 					<td class="amount">[[order.formatted_discountAmount]]</td>
 				</tr>
-			{/if}
+			{% endif %}
 
 			<tr class="grandTotal">
 				<td>{t _grand_total}:</td>
@@ -135,7 +135,7 @@
 				<td class="amount">[[order.formatted_amountDue]]</td>
 			</tr>
 		</table>
-		{/if}
+		{% endif %}
 
 	</div>
 

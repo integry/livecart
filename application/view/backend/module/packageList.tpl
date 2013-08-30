@@ -1,6 +1,6 @@
 <fieldset class="slide">
 	<legend>{t _add_modules}</legend>
-	{if $packages}
+	{% if $packages %}
 		<form method="POST" action="{link controller="backend.module" action=fetch}">
 			<p>
 				<label>{t _select_module}</label>
@@ -17,7 +17,7 @@
 				<input type="submit" class="submit" value="{tn _install_module}" />
 			</p>
 		</form>
-	{else}
+	{% else %}
 		<div class="errorMessage">{t _no_modules_add}</div>
-	{/if}
+	{% endif %}
 </fieldset>

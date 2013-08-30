@@ -16,9 +16,9 @@
 
 	</div>
 
-	{if $results.count > $perPage}
+	{% if $results.count > $perPage %}
 		{paginate current=$page count=$results.count perPage=$perPage url=$url}
-	{/if}
+	{% endif %}
 
 {% endblock %}
 

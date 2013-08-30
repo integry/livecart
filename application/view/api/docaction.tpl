@@ -48,23 +48,23 @@
 </style>
 {/literal}
 
-{if $xmlSamples}
+{% if $xmlSamples %}
 	<h2>{t _api_xml_samples}</h2>
 
 	{foreach from=$xmlSamples item=sample}
 		<div class="xmlSampleBlock">
-			{if $sample.comments}
+			{% if $sample.comments %}
 				<div class="xmlSampleComment">[[sample.comments]]</div>
-			{/if}
+			{% endif %}
 			<div class="xmlSample">
 				<pre>{$sample.formatted|htmlspecialchars}</pre>
 			</div>
 			<a class="sampleTest" href="{link controller=api action=xml query="xml="}{$sample.xml|urlencode}">test</a>
 		</div>
 	{/foreach}
-{/if}
+{% endif %}
 
-{if $searchFields}
+{% if $searchFields %}
 	<h2>{t _api_search_fields}</h2>
 
 	<table class="apiFields">
@@ -83,9 +83,9 @@
 			{/foreach}
 		</tbody>
 	</table>
-{/if}
+{% endif %}
 
-{if $createFields}
+{% if $createFields %}
 	<h2>{t _api_create_fields}</h2>
 
 	<table class="apiFields">
@@ -110,9 +110,9 @@
 			{/foreach}
 		</tbody>
 	</table>
-{/if}
+{% endif %}
 
-{if 'list' == $action}
+{% if 'list' == $action %}
 <h2>{t _api_limiting_results}</h2>
 <pre>
 All List actions have atributes:
@@ -125,4 +125,4 @@ All List actions have atributes:
 		&lt;customer&gt;&lt;list limit="10" offset="10"/&gt;&lt;/customer&gt;
 		&lt;order&gt;&lt;list max=5 start=10&gt;&lt;/list&gt;&lt;/order&gt;
 </pre>
-{/if}
+{% endif %}

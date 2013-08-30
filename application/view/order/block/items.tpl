@@ -1,31 +1,31 @@
 {foreach from=$cart.cartItems item="item" name="cart"}
 	<tr>
 		<td class="cartControl">
-			{if 'ENABLE_WISHLISTS'|config}
+			{% if 'ENABLE_WISHLISTS'|config %}
 				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
-			{/if}
+			{% endif %}
 			<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 		</td>
 
 		<td class="cartImage">
-			{if $item.Product.DefaultImage.urls.1}
+			{% if $item.Product.DefaultImage.urls.1 %}
 			<a href="{productUrl product=$item.Product}">
 				{img src=$item.Product.DefaultImage.urls.1 alt=$item.Product.name_lang|escape}
 			</a>
-			{/if}
+			{% endif %}
 		</td>
 
-		{if 'SHOW_SKU_CART'|config}
+		{% if 'SHOW_SKU_CART'|config %}
 			<td>{$item.Product.sku|escape}</td>
-		{/if}
+		{% endif %}
 
 		<td class="cartName">
 			<div>
-				{if $item.Product.ID}
+				{% if $item.Product.ID %}
 					<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
-				{else}
+				{% else %}
 					<span>[[item.Product.name_lang]]</span>
-				{/if}
+				{% endif %}
 				<small class="categoryName">(&rlm;[[item.Product.Category.name_lang]])</small>
 			</div>
 
@@ -34,15 +34,15 @@
 
 			[[ partial("order/block/recurringItem.tpl") ]]
 
-			{if $multi}
+			{% if $multi %}
 				{include file="order/selectItemAddress.tpl" item=$item}
-			{/if}
+			{% endif %}
 		</td>
 
-		<td class="cartPrice {if $item.itemBasePrice != $item.itemPrice}discount{/if}">
-			{if $item.count == 1}
+		<td class="cartPrice {% if $item.itemBasePrice != $item.itemPrice %}discount{% endif %}">
+			{% if $item.count == 1 %}
 				<span class="basePrice">[[item.formattedBasePrice]]</span><span class="actualPrice">[[item.formattedPrice]]</span>
-			{else}
+			{% else %}
 				[[item.formattedDisplaySubTotal]]
 				<div class="subTotalCalc">
 					<span class="itemCount">
@@ -50,7 +50,7 @@
 					</span>
 					<span class="basePrice">[[item.formattedBasePrice]]</span><span class="actualPrice">[[item.formattedPrice]]</span>
 				</div>
-			{/if}
+			{% endif %}
 		</td>
 
 		<td class="cartQuant">

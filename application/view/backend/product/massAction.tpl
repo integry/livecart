@@ -51,7 +51,7 @@
 			<option value="theme">{t _set_theme}</option>
 		</optgroup>
 
-		{if $attributes}
+		{% if $attributes %}
 			<optgroup label="{t _set_attributes}">
 				{foreach from=$attributes item=attr}
 					<option value="set_specField_[[attr.ID]]">[[attr.name_lang]]</option>
@@ -63,7 +63,7 @@
 					<option value="remove_specField_[[attr.ID]]">[[attr.name_lang]]</option>
 				{/foreach}
 			</optgroup>
-		{/if}
+		{% endif %}
 	</select>
 
 	<span id="progressIndicator_specField" class="progressIndicator" style="display: none;"></span>
@@ -96,9 +96,9 @@
 
 		{foreach from=$attributes item=attr}
 			<span class="set_specField_[[attr.ID]]"></span>
-			{if $attr.isMultiValue}
+			{% if $attr.isMultiValue %}
 				<span class="remove_specField_[[attr.ID]]"></span>
-			{/if}
+			{% endif %}
 		{/foreach}
 
 		<span class="specFieldValueContainer"></span>

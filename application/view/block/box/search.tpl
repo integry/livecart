@@ -7,11 +7,11 @@
 		</span>
     </div>
 
-	{if 'HIDE_SEARCH_CATS'|config}
+	{% if 'HIDE_SEARCH_CATS'|config %}
 		{hidden name="id" value="1"}
-	{else}
+	{% else %}
 		{* selectfield name="id" options=$categories *}
-	{/if}
+	{% endif %}
 
 	<input type="hidden" name="cathandle" value="search" />
 {/form}

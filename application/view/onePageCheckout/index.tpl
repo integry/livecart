@@ -21,11 +21,11 @@
 
 	<div class="col col-lg-8" id="checkout-left">
 
-	{if !$user.ID}
+	{% if !$user.ID %}
 	<div id="checkout-login" class="step">
 		[[login]]
 	</div>
-	{/if}
+	{% endif %}
 
 	<div class="accordion">
 

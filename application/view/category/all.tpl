@@ -8,13 +8,13 @@
 		<h2>{$letter|@capitalize}</h2>
 
 		{foreach from=$categories item=category}
-			{if !$index || (($totalCount/2) <= $index && $columns < 2)}
-				{if $columns}
+			{% if !$index || (($totalCount/2) <= $index && $columns < 2) %}
+				{% if $columns %}
 					</div>
-				{/if}
+				{% endif %}
 				<div class="manufacturerColumn">
 				{assign var=columns value=$columns+1}
-			{/if}
+			{% endif %}
 
 			<ul>
 				<li><a href="{categoryUrl data=$category}">[[category.name]]</a>

@@ -1,11 +1,11 @@
-{if !$layout}
+{% if !$layout %}
 	{assign var=layout value='LIST_LAYOUT'|config}
-{/if}
+{% endif %}
 
-{if 'GRID' == $layout}
+{% if 'GRID' == $layout %}
 	{include file="category/productGrid.tpl" products=$products}
-{elseif $layout == 'TABLE'}
+{% elseif $layout == 'TABLE' %}
 	{include file="category/productTable.tpl" products=$products}
-{else}
+{% else %}
 	{include file="category/productList.tpl" products=$products}
-{/if}
+{% endif %}

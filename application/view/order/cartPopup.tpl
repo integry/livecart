@@ -1,13 +1,13 @@
 {capture assign="body"}
 	[[ partial("order/changeMessages.tpl") ]]
 
-	{if !$cart.cartItems}
+	{% if !$cart.cartItems %}
 		<div class="emptyBasket">
 			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
 		</div>
-	{else}
+	{% else %}
 		{include file="order/cartItems.tpl" hideNav=true}
-	{/if}
+	{% endif %}
 {/capture}
 
 {capture assign="footer"}

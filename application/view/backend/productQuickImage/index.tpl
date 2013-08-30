@@ -13,9 +13,9 @@
 			<div class="errorText" style="display: none;"></div>
 		{/input}
 
-		{if $images|@json_decode}
+		{% if $images|@json_decode %}
 			[[ checkbox('setAsMainImage', '_image_set_as_main') ]]
-		{/if}
+		{% endif %}
 
 		<fieldset class="container">
 			<span class="progressIndicator" style="display: none;"></span>

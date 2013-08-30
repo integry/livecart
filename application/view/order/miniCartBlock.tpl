@@ -1,13 +1,13 @@
 <div id="miniCart">
-	{if $order.basketCount}
+	{% if $order.basketCount %}
 
-	{if !$hidePanel}
+	{% if !$hidePanel %}
 	<div class="panel panel-primary miniCart">
 		<div class="panel-heading">
 			<span class="glyphicon glyphicon-search"></span>
 			<span><a href="{link controller=order}">{t _shopping_cart}</a></span>
 		</div>
-	{/if}
+	{% endif %}
 
 		<div class="content">
 			<ul class="list-unstyled" id="miniCartContents">
@@ -24,15 +24,15 @@
 			</div>
 		</div>
 
-	{if !$hidePanel}
+	{% if !$hidePanel %}
 	</div>
-	{/if}
+	{% endif %}
 
-	{/if}
+	{% endif %}
 </div>
 
-{if !$hidePanel}
+{% if !$hidePanel %}
 <script type="text/javascript">
 	Observer.add('miniCart', Frontend.MiniCart, 'miniCart');
 </script>
-{/if}
+{% endif %}

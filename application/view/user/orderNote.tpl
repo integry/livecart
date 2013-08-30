@@ -2,11 +2,11 @@
 	
 	<div class="responseUser">
 		<span class="responderType">
-		{if $note.isAdmin}
+		{% if $note.isAdmin %}
 			{t _respond_admin}:
-		{else}
+		{% else %}
 			{t _respond_customer}:
-		{/if}
+		{% endif %}
 		</span>
 		
 		[[note.User.fullName]]

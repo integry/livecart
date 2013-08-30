@@ -52,9 +52,9 @@
 			<label id="targetCategory">
 				{foreach from=$catPath item=node name=catPath}
 					<a href="#" onclick="Backend.CsvImport.showCategorySelector([[node.ID]]); return false;">[[node.name_lang]]</a>
-					{if !$smarty.foreach.catPath.last}
+					{% if !$smarty.foreach.catPath.last %}
 						&gt;
-					{/if}
+					{% endif %}
 				{/foreach}
 			</label>
 			{hidden id="categoryID" name="category"}

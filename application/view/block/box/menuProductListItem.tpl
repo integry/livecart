@@ -1,28 +1,28 @@
 <div class="image">
 	<a href="{productUrl product=$product}">
-	{if $product.DefaultImage.urls.1}
+	{% if $product.DefaultImage.urls.1 %}
 		{img src=$product.DefaultImage.urls.1 alt=$product.name_lang|escape}
-	{else}
+	{% else %}
 		{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
-	{/if}
+	{% endif %}
 	</a>
 </div>
 
 <div class="productInfo">
-	{if $productInfoTemplate}
+	{% if $productInfoTemplate %}
 		{include file=$productInfoTemplate}
-	{/if}
+	{% endif %}
 	<a href="{productUrl product=$product}" class="productName">[[product.name_lang]]</a>
 </div>
 
 <div class="pricingInfo">
 	<span class="price">
 		{$product.formattedPrice.$currency}
-		{if $product.formattedListPrice.$currency}
+		{% if $product.formattedListPrice.$currency %}
 				<span class="listPrice">
 					{$product.formattedListPrice.$currency}
 				</span>
-		{/if}
+		{% endif %}
 	</span>
 </div>
 

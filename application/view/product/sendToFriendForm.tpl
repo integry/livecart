@@ -1,7 +1,7 @@
-{if 'ENABLE_PRODUCT_SHARING'|config
+{% if 'ENABLE_PRODUCT_SHARING'|config
 	&&
 	($user.ID || 'ENABLE_ANONYMOUS_PRODUCT_SHARING'|config)
-}
+ %}
 
 	<div id="sharingSection" class="productSection sharingSection">
 		<h2>{maketext text="_share_product_name"}</h2>
@@ -14,9 +14,9 @@
 				<div class="producSharingForm">
 					[[ textfld('friendemail', '_friend_email') ]]
 
-					{if !$user.ID}
+					{% if !$user.ID %}
 						[[ textfld('nickname', '_nickname') ]]
-					{/if}
+					{% endif %}
 
 					[[ textareafld('friendemail', '_notes') ]]
 				</div>
@@ -31,4 +31,4 @@
 		_error_cannot_send_to_friend = "{t _error_cannot_send_to_friend}";
 	</script>
 
-{/if}
+{% endif %}

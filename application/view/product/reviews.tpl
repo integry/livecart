@@ -31,9 +31,9 @@
 
 	[[ partial("product/reviewList.tpl") ]]
 
-	{if $product.reviewCount > $perPage}
+	{% if $product.reviewCount > $perPage %}
 		{paginate current=$page count=$product.reviewCount perPage=$perPage url=$url}
-	{/if}
+	{% endif %}
 
 	[[ partial("product/ratingForm.tpl") ]]
 

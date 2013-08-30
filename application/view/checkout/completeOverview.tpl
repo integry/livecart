@@ -4,7 +4,7 @@
 [[ partial("checkout/orderOverview.tpl") ]]
 
 {function name="address"}
-	{if $address}
+	{% if $address %}
 		<p>
 			[[address.fullName]]
 		</p>
@@ -21,7 +21,7 @@
 			[[address.city]]
 		</p>
 		<p>
-			{if $address.stateName}[[address.stateName]], {/if}[[address.postalCode]]
+			{% if $address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
 		</p>
 		<p>
 			[[address.countryName]]
@@ -29,43 +29,43 @@
 		<p>
 			{include file="order/addressFieldValues.tpl" showLabels=true}
 		</p>
-	{/if}
+	{% endif %}
 {/function}
 
-{if !$hideAddress}
+{% if !$hideAddress %}
 <div id="overviewAddresses">
-	{if $order.ShippingAddress && !$order.isMultiAddress}
+	{% if $order.ShippingAddress && !$order.isMultiAddress %}
 		<div class="addressContainer">
 			<h3>{t _will_ship_to}:</h3>
 
 
-            {if $order.isLocalPickup}
+            {% if $order.isLocalPickup %}
                 {foreach $order.shipments as $shipment}
                     <div class="ShippingServiceDescription">
                         {$shipment.ShippingService.description_lang|escape}
                     </div>
                 {/foreach}
-            {else}
+            {% else %}
                 {address address=$order.ShippingAddress}
-            {/if}
-			{if !$nochanges}
+            {% endif %}
+			{% if !$nochanges %}
 				<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
-			{/if}
+			{% endif %}
 		</div>
-	{/if}
+	{% endif %}
 
-	{if $order.BillingAddress && !'REQUIRE_SAME_ADDRESS'|config && ($order.ShippingAddress.compact != $order.BillingAddress.compact)}
+	{% if $order.BillingAddress && !'REQUIRE_SAME_ADDRESS'|config && ($order.ShippingAddress.compact != $order.BillingAddress.compact) %}
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
 		{address address=$order.BillingAddress}
-		{if !$nochanges}
+		{% if !$nochanges %}
 			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
-		{/if}
+		{% endif %}
 	</div>
-	{/if}
+	{% endif %}
 
 	<div class="clear"></div>
 </div>
-{/if}
+{% endif %}
 
 </div>

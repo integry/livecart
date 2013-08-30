@@ -1,6 +1,6 @@
-{if $allLanguages|@count > 1}
+{% if $allLanguages|@count > 1 %}
 <div id="language" class="btn-group">
-	{if 'LANG_SELECTION'|config == 'LANG_DROPDOWN'}
+	{% if 'LANG_SELECTION'|config == 'LANG_DROPDOWN' %}
 		<button class="btn btn-small btn-info dropdown-toggle" data-toggle="dropdown">
 			[[current.originalName]] <span class="caret"></span>
 		</button>
@@ -9,14 +9,14 @@
 				<li><a href="[[language.url]]">[[language.originalName]]</a></li>
 			{/foreach}
 		</ul>
-	{else}
+	{% else %}
 		{foreach from=$allLanguages item="language"}
-			{if 'LANG_SELECTION'|config == 'LANG_NAMES' || !$language.image}
-				<a href="[[language.url]]" class="btn btn-default btn-small {if $language.ID == $current.ID}btn-info{/if} lang-sel-[[language.ID]]">[[language.originalName]]</a>
-			{else}
+			{% if 'LANG_SELECTION'|config == 'LANG_NAMES' || !$language.image %}
+				<a href="[[language.url]]" class="btn btn-default btn-small {% if $language.ID == $current.ID %}btn-info{% endif %} lang-sel-[[language.ID]]">[[language.originalName]]</a>
+			{% else %}
 				<a href="[[language.url]]" class="lang-sel-[[language.ID]]"><img src="{static url=$language.image}" alt="[[language.originalName]]" title="[[language.originalName]]" /></a>
-			{/if}
+			{% endif %}
 		{/foreach}
-	{/if}
+	{% endif %}
 </div>
-{/if}
+{% endif %}

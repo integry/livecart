@@ -8,11 +8,11 @@
 {% block content %}
 
 	<div class="resultStats">
-		{if $files}
+		{% if $files %}
 			{maketext text=_files_found params=$files|@count}
-		{else}
+		{% else %}
 			{t _no_files_found}
-		{/if}
+		{% endif %}
 	</div>
 
 	{foreach from=$files item="item"}

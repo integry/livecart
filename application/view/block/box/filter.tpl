@@ -1,13 +1,13 @@
 {assign var=FILTER_STYLE value='FILTER_STYLE'|config}
 
-{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
+{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterCheckboxes.tpl'}
 	{literal}<script type="text/javascript">var _checkboxFilterLoadHookObserved = false;</script>{/literal}
-{else}
+{% else %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterLinks.tpl'}
-{/if}
+{% endif %}
 
-{if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS'}
+{% if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS' %}
 	<div class="panel panel-danger expandResults">
 		<div class="panel-heading">{t _expand}</div>
 
@@ -20,7 +20,7 @@
 			</ul>
 		</div>
 	</div>
-{/if}
+{% endif %}
 
 {sect}{header}
 <div class="panel panel-warning narrowResults">
@@ -32,7 +32,7 @@
 	<div class="content">
 {/header}{content}
 
-	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
+	{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
 		<form id='multipleChoiceFilterForm' action="{categoryUrl data=$category}" method="post" class="form-horizontal">
 
 		<div id="multipleChoiceFilter_top" class="hidden">
@@ -40,17 +40,17 @@
 			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
 		</div>
 
-	{/if}
+	{% endif %}
 		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$manGroup title=_by_brand allLink=$allManufacturers allTitle=_show_all_brands}
 		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$priceGroup title=_by_price}
 
 		{foreach from=$groups item="group"}
-			{if $group.displayLocation == 0}
+			{% if $group.displayLocation == 0 %}
 				{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$group title=$group.name_lang allLink=$group.more allTitle=_show_all}
-			{/if}
+			{% endif %}
 		{/foreach}
 
-	{if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE}
+	{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
 
 		<div id="multipleChoiceFilter_bottom" class="hidden">
 			<input type="hidden" name="q" value="[[request.q]]" />
@@ -58,7 +58,7 @@
 			<a href="javascript:void(0);" onclick="Filter.reset();" class="cancel">{t _clear}</a>
 		</div>
 		</form>
-	{/if}
+	{% endif %}
 
 {/content}{footer}
 	</div>

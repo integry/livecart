@@ -14,11 +14,11 @@
 		</div>
 	</div>
 
-	{if $error}
+	{% if $error %}
 		<div class="errorMessage">
 			<div>[[error]]</div>
 		</div>
-	{/if}
+	{% endif %}
 
 	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
 

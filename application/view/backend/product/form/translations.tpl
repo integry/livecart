@@ -13,10 +13,10 @@
 		{textfield name="pageTitle_`$lang.ID`" class="wide"}
 	{/input}
 
-	{if $multiLingualSpecFieldss}
+	{% if $multiLingualSpecFieldss %}
 	<fieldset>
 		<legend>{t _specification_attributes}</legend>
 		{include file="backend/eav/language.tpl" item=$product cat=$cat language=$lang.ID}
 	</fieldset>
-	{/if}
+	{% endif %}
 {/language}

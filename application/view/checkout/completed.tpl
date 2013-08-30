@@ -4,15 +4,15 @@
 {include file="layout/frontend/layout.tpl" hideLeft=true}
 {% block content %}
 
-	{if $order.isPaid}
+	{% if $order.isPaid %}
 		{t _completed_paid}
-	{else}
+	{% else %}
 		{t _completed_offline}
 
-		{if $transactions.0.serializedData.handlerID}
+		{% if $transactions.0.serializedData.handlerID %}
 			{include file="checkout/offlineMethodInfo.tpl" method=$transactions.0.serializedData.handlerID|@substr:-1}
-		{/if}
-	{/if}
+		{% endif %}
+	{% endif %}
 
 	{include file="checkout/completeOverview.tpl" nochanges=true}
 	[[ partial("checkout/orderDownloads.tpl") ]]

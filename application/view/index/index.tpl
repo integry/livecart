@@ -11,18 +11,18 @@
 {#
 	{block HOME-PAGE-TOP}
 
-	{if 'HOME_PAGE_SUBCATS'|config}
+	{% if 'HOME_PAGE_SUBCATS'|config %}
 		[[ partial("category/subcategoriesColumns.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{if $subCatFeatured}
+	{% if $subCatFeatured %}
 		<h2>{t _featured_products}</h2>
 		{include file="category/productListLayout.tpl" layout='FEATURED_LAYOUT'|config|default:$layout products=$subCatFeatured}
-	{/if}
+	{% endif %}
 
-	{if $news}
+	{% if $news %}
 		[[ partial("index/latestNews.tpl") ]]
-	{/if}
+	{% endif %}
 
 	[[ partial("category/categoryProductList.tpl") ]]
 #}

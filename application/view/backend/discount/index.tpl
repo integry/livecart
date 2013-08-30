@@ -155,25 +155,25 @@
 
 			<div class="ruleFields">
 				{foreach from=$ruleFields key=ruleClass item=fields}
-					{if $fields}
+					{% if $fields %}
 					<div class="classContainer [[ruleClass]]">
 						{foreach from=$fields item=field}
 							<p>
 								<label>{translate text=$field.label}</label>
 								<span>
-									{if $field.type == 'number'}
+									{% if $field.type == 'number' %}
 										{textfield class="text number ruleField `$field.name`" name=$field.name}
-									{elseif $field.type == 'text'}
+									{% elseif $field.type == 'select' %}
 										{textfield class="text wide ruleField `$field.name`" name=$field.name}
-									{elseif $field.type == 'select'}
+									{% elseif $field.type == 'select' %}
 										{selectfield class="ruleField `$field.name`" name=$field.name options=$field.options}
-									{/if}
+									{% endif %}
 									<span class="progressIndicator" style="display: none;"></span>
 								</span>
 							</p>
 						{/foreach}
 					</div>
-					{/if}
+					{% endif %}
 				{/foreach}
 			</div>
 
@@ -250,25 +250,25 @@
 
 			<div class="actionFields">
 				{foreach from=$actionFields key=actionClass item=fields}
-					{if $fields}
+					{% if $fields %}
 						<div class="classContainer [[actionClass]]">
 							{foreach from=$fields item=field}
 								<p>
 									<label>{translate text=$field.label}</label>
 									<span>
-										{if $field.type == 'number'}
+										{% if $field.type == 'number' %}
 											{textfield class="text number actionField `$field.name`" name=$field.name}
-										{elseif $field.type == 'text'}
+										{% elseif $field.type == 'text' %}
 											{textfield class="text wide actionField `$field.name`" name=$field.name}
-										{elseif $field.type == 'select'}
+										{% elseif $field.type == 'select' %}
 											{selectfield class="actionField `$field.name`" name=$field.name options=$field.options}
-										{/if}
+										{% endif %}
 										<span class="progressIndicator" style="display: none;"></span>
 									</span>
 								</p>
 							{/foreach}
 						</div>
-					{/if}
+					{% endif %}
 				{/foreach}
 			</div>
 

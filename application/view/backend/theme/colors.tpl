@@ -1,6 +1,6 @@
-{if !$config}
+{% if !$config %}
 	<div class="warning">{t _colors_not_editable}</div>
-{/if}
+{% endif %}
 
 <div
 	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
@@ -16,13 +16,13 @@
 			{foreach from=$section.properties item=property}
 				<fieldset class="container entry" rel="[[property.selector]]/[[property.type]]">
 
-					{if 'checkbox' != $property.type}
+					{% if 'checkbox' != $property.type %}
 						<label>[[property.name]]</label>
-					{else}
+					{% else %}
 						<label></label>
-					{/if}
+					{% endif %}
 
-					{if 'upload' == $property.type}
+					{% if 'upload' == $property.type %}
 						{filefield name=$property.var class="file"}
 						- {t _or} -
 						{textfield class="text"}
@@ -30,17 +30,17 @@
 							<div class="repeat">{t _repeat}: {selectfield class="repeat" options=$bgRepeat}</div>
 							<div class="position">{t _position}: {selectfield class="position" options=$bgPosition}</div>
 						</div>
-					{elseif 'color' == $property.type}
+					{% elseif 'color' == $property.type %}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
 							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
 						</script>
-					{elseif 'size' == $property.type}
+					{% elseif 'size' == $property.type %}
 						<div class="sizeEntry">
 							{textfield id=$property.id class="text number"}
 							{selectfield options=$measurements}
 						</div>
-					{elseif 'border' == $property.type}
+					{% elseif 'border' == $property.type %}
 						{textfield class="text number"}
 						px
 						{selectfield options=$borderStyles}
@@ -48,21 +48,21 @@
 						<script type="text/javascript">
 							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
 						</script>
-					{elseif 'text-decoration' == $property.type}
+					{% elseif 'text-decoration' == $property.type %}
 						{selectfield options=$textStyles}
-					{elseif 'font' == $property.type}
+					{% elseif 'font' == $property.type %}
 						<div class="fontEntry">
 							{textfield name=$property.var id=$property.id class="text"}
 						</div>
-					{elseif 'checkbox' == $property.type}
+					{% elseif 'checkbox' == $property.type %}
 						{checkbox id="{uniqid}" name="option" class="option checkbox" value=$property.append}
-						{if 'checkbox' == $property.type}
+						{% if 'checkbox' == $property.type %}
 							<label class="checkbox" for="{uniqid last=true}">[[property.name]]</label>
-						{/if}
-					{/if}
-					{if $property.append}
+						{% endif %}
+					{% endif %}
+					{% if $property.append %}
 						{hidden class="append" name="append" value=$property.append}
-					{/if}
+					{% endif %}
 				</fieldset>
 			{/foreach}
 		</fieldset>

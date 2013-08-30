@@ -10,45 +10,45 @@
 
 	[[ partial("category/head.tpl") ]]
 
-	{if $allFilters.filters}
+	{% if $allFilters.filters %}
 		[[ partial("category/allFilters.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{if $foundCategories}
+	{% if $foundCategories %}
 		[[ partial("category/foundCategories.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{if $modelSearch}
+	{% if $modelSearch %}
 		[[ partial("search/block/allResults.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{if $categoryNarrow}
+	{% if $categoryNarrow %}
 		[[ partial("category/narrowByCategory.tpl") ]]
-	{elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config}
+	{% elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config %}
 		[[ partial("category/subcategoriesColumns.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{if $searchQuery && !$products}
+	{% if $searchQuery && !$products %}
 		<p class="notFound">
 			{t _not_found}
 		</p>
-	{/if}
+	{% endif %}
 
-	{if $appliedFilters && !$products}
+	{% if $appliedFilters && !$products %}
 		<p class="notFound">
 			<span class='notFoundMain'>{t _no_products}</span>
 		</p>
-	{/if}
+	{% endif %}
 
-	{if !$searchQuery && 1 == $currentPage}
+	{% if !$searchQuery && 1 == $currentPage %}
 		{block PRODUCT_LISTS}
-	{/if}
+	{% endif %}
 
-	{if $subCatFeatured}
+	{% if $subCatFeatured %}
 		<h2>{t _featured_products}</h2>
 
 		{include file="category/productListLayout.tpl" layout='FEATURED_LAYOUT'|config|default:$layout products=$subCatFeatured}
-	{/if}
+	{% endif %}
 
 	{block FILTER_TOP}
 

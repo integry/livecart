@@ -6,14 +6,14 @@
 
 <dl class="requirements">
 	{foreach from=$requirements key=req item=result}
-		{if 1 != $result}
-			<div class="{if 1 == $result}pass{else}fail{/if}">
+		{% if 1 != $result %}
+			<div class="{% if 1 == $result %}pass{% else %}fail{% endif %}">
 				<dt>{translate text=$req}</dt>
 				<dd>
-				{if 1 == $result}
+				{% if 1 == $result %}
 					<img src="image/silk/gif/tick.gif" />
-				{else}
-					{if 'checkWritePermissions' == $req}
+				{% else %}
+					{% if 'checkWritePermissions' == $req %}
 						The following directories are not writable:
 						<ul id="notWritable">
 						{foreach from=$result item=dir}
@@ -23,18 +23,18 @@
 						<p>
 							{t _writePermissionsFix}							
 						</p>				
-					{else}
+					{% else %}
 						<img src="image/silk/gif/delete.gif" />
-						{if 0 == $result}
+						{% if 0 == $result %}
 							<div class="reqError">
 								{translate text="`$req`_error"}
 							</div>
-						{/if}
-					{/if}
-				{/if}
+						{% endif %}
+					{% endif %}
+				{% endif %}
 				</dd>
 			</div>
-		{/if}
+		{% endif %}
 	{/foreach}
 </dl>
 

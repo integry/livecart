@@ -5,26 +5,26 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{if $cart.cartItems}
+		{% if $cart.cartItems %}
 			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
-		{/if}
+		{% endif %}
 	</div>
 
-	{if !$cart.cartItems && !$cart.wishListItems}
+	{% if !$cart.cartItems && !$cart.wishListItems %}
 		<div style="clear: left;">
 			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
 		</div>
-	{else}
+	{% else %}
 
-	{if $cart.cartItems}
+	{% if $cart.cartItems %}
 		{include file="order/cartItems.tpl" multi=true}
-	{/if}
+	{% endif %}
 
-	{if $cart.wishListItems && 'ENABLE_WISHLISTS'|config}
+	{% if $cart.wishListItems && 'ENABLE_WISHLISTS'|config %}
 		[[ partial("order/wishList.tpl") ]]
-	{/if}
+	{% endif %}
 
-	{/if}
+	{% endif %}
 
 	<div class="clear"></div>
 

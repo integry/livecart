@@ -1,9 +1,9 @@
 {assign var=actionPrefix value=$prefix|@ucfirst}
-{if !$addresses}
+{% if !$addresses %}
 	<div id="[[prefix]]AddressForm">
 		{include file="user/addressForm.tpl" prefix="`$prefix`_" states=$states}
 	</div>
-{else}
+{% else %}
 	<table class="addressSelector">
 		{foreach from=$addresses item="item"}
 			<tr>
@@ -30,4 +30,4 @@
 			</td>
 		</tr>
 	</table>
-{/if}
+{% endif %}

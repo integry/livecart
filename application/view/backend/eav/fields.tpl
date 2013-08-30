@@ -9,29 +9,29 @@
 
 			{sect}
 				{header}
-					{if $groupID}
+					{% if $groupID %}
 						<fieldset class="eavGroup">
 							<legend>{$fieldList.0.$groupClass.name_lang}</legend>
-					{/if}
+					{% endif %}
 				{/header}
 				{content}
 					{foreach from=$fieldList item=field}
-						{if !$filter || ($filter && ($field[$filter] || ($field.handle == $filter)))}
-							{capture assign=class}eavField field_[[field.fieldName]] eavHandle_[[field.handle]] {if $field.isRequired}required{/if} {if !$field.isDisplayed}notDisplayed{/if}{/capture}
+						{% if !$filter || ($filter && ($field[$filter] || ($field.handle == $filter))) %}
+							{capture assign=class}eavField field_[[field.fieldName]] eavHandle_[[field.handle]] {% if $field.isRequired %}required{% endif %} {% if !$field.isDisplayed %}notDisplayed{% endif %}{/capture}
 							{input name=$field.fieldName class=$class}
 								{label}[[field.name_lang]]:{/label}
 								{include file="backend/eav/specFieldFactory.tpl" field=$field autocompleteController="backend.eavFieldValue"}
-								{if $field.description}
+								{% if $field.description %}
 									<div class="fieldDescription">[[field.description_lang]]</div>
-								{/if}
+								{% endif %}
 							{/input}
-						{/if}
+						{% endif %}
 					{/foreach}
 				{/content}
 				{footer}
-					{if $groupID}
+					{% if $groupID %}
 						</fieldset>
-					{/if}
+					{% endif %}
 				{/footer}
 			{/sect}
 		{/foreach}

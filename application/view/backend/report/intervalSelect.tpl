@@ -1,4 +1,4 @@
-{if $chartType < 2}
+{% if $chartType < 2 %}
 	<div class="intervalSelector">
 		<span>{t _interval}:</span>
 		<select class="intervalSelect">
@@ -9,4 +9,4 @@
 			<option value="week">{t _weekly}</option>
 		</select>
 	</div>
-{/if}
+{% endif %}

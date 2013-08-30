@@ -5,18 +5,18 @@
 
 	<div class="accordion-body">
 		<div class="accordion-inner">
-			{if $user.ID > 0}
+			{% if $user.ID > 0 %}
 				{form action="onePageCheckout/doSelectBillingAddress" method="POST" handle=$form class="form-vertical"}
 					{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
 					[[ partial("checkout/orderFields.tpl") ]]
 					[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 				{/form}
-			{else}
+			{% else %}
 				{include file="onePageCheckout/register.tpl" states=$billing_states}
-			{/if}
+			{% endif %}
 		</div>
-		{if $preview_billing}
+		{% if $preview_billing %}
 			<div class="stepPreview">[[preview_billing.compact]]</div>
-		{/if}
+		{% endif %}
 	</div>
 </div>

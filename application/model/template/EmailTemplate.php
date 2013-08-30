@@ -48,7 +48,7 @@ class EmailTemplate extends Template
 			$code = array_pop(explode("\n", $this->code, 2));
 		}
 
-		preg_match('/\{if \!\$html\}\s+(.*)\s+{\/if}\{\*html\*\}\s+{if \$html\}\s+(.*)\s+{\/if}\{\*html\*\}/msU', $code, $matches);
+		preg_match('/\{% if !$html %}\s+(.*)\s+{\/if}\{\*html\*\}\s+{% if !$html %}\s+(.*)\s+{\/if}\{\*html\*\}/msU', $code, $matches);
 
 		if ($matches)
 		{
@@ -92,7 +92,7 @@ class EmailTemplate extends Template
 	{
 		if ($this->html)
 		{
-			$body = '{if !$html}' . "\n" . $this->body . "\n" . '{/if}{*html*}' . "\n" . '{if $html}' . "\n" . $this->html . "\n" . '{/if}{*html*}';
+			$body = '{% if !$html %}' . "\n" . $this->body . "\n" . '{% endif %}{*html*}' . "\n" . '{% if $html %}' . "\n" . $this->html . "\n" . '{% endif %}{*html*}';
 		}
 		else
 		{
@@ -121,7 +121,7 @@ class EmailTemplate extends Template
 			return true;
 		}
 
-		if ($this->getSubject() == '{if !$html}')
+		if ($this->getSubject() == '{% if !$html %}')
 		{
 			return true;
 		}

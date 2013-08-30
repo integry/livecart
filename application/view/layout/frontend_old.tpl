@@ -9,29 +9,29 @@
 
 
 	<title>
-		{if !$PAGE_TITLE}
+		{% if !$PAGE_TITLE %}
 			{capture assign="PAGE_TITLE"}
 				{block BREADCRUMB_TITLE}
 			{/capture}
-		{/if}
+		{% endif %}
 
-		{if 'TITLE_FORMAT'|config == 'NAME_FIRST'}
+		{% if 'TITLE_FORMAT'|config == 'NAME_FIRST' %}
 			[[ config('STORE_NAME') ]] [[ config('TITLE_SEPARATOR') ]] {$PAGE_TITLE|@strip_tags}
-		{else}
+		{% else %}
 			{$PAGE_TITLE|@strip_tags} [[ config('TITLE_SEPARATOR') ]] [[ config('STORE_NAME') ]]
-		{/if}
+		{% endif %}
 	</title>
 
 
 	{liveCustomization}
 
-	{if 'FAVICON'|config}
+	{% if 'FAVICON'|config %}
 		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
-	{/if}
+	{% endif %}
 
-	{if !$CANONICAL}
+	{% if !$CANONICAL %}
 		{canonical}{self}{/canonical}
-	{/if}
+	{% endif %}
 
 	<link rel="canonical" href="[[CANONICAL]]" />
 
@@ -39,9 +39,9 @@
 	{includeCss file="frontend/Frontend.css"}
 	{includeCss file="backend/stat.css"}
 
-	{if {isRTL}}
+	{% if {isRTL %}}
 		{includeCss file="frontend/FrontendRTL.css"}
-	{/if}
+	{% endif %}
 
 	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -50,9 +50,9 @@
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if lt IE 8]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
-		{if $ieCss}
+		{% if $ieCss %}
 			<link href="[[ieCss]]" rel="Stylesheet" type="text/css"/>
-		{/if}
+		{% endif %}
 	<![endif]-->
 
 	<!-- JavaScript includes -->
@@ -65,7 +65,7 @@
 	</script>
 </head>
 
-<body class="[[request.controller]]Con [[request.controller]]-[[request.action]]{if {isRTL}} rtl{/if}{if $bodyClass} [[bodyClass]]{/if}">
+<body class="[[request.controller]]Con [[request.controller]]-[[request.action]]{% if {isRTL %}} rtl{% endif %}{% if $bodyClass %} [[bodyClass]]{% endif %}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
 		<div id="containerWrapper1">
@@ -85,11 +85,11 @@
 	{block TRACKING}
 	{liveCustomization action="lang"}
 
-	{if !'DISABLE_AJAX'|config}
+	{% if !'DISABLE_AJAX'|config %}
 		<script type="text/javascript">
 			new Frontend.AjaxInit(document.body);
 					</script>
-	{/if}
+	{% endif %}
 
 
 	</body>

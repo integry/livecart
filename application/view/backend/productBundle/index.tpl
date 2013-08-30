@@ -28,11 +28,11 @@
 {* No group *}
 <ul id="productBundle_[[ownerID]]" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$items}
-	{if $relationship.RelatedProduct.ID}
+	{% if $relationship.RelatedProduct.ID %}
 		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct template="backend/productBundle/bundleCount.tpl"}
 		</li>
-	{/if}
+	{% endif %}
 {/foreach}
 </ul>
 

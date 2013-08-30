@@ -18,36 +18,36 @@
 	</div>
 </div>
 
-{if 'PRODUCT_TABS'|config}
+{% if 'PRODUCT_TABS'|config %}
 	<ul class="nav nav-tabs" id="productTabs"></ul>
-{/if}
+{% endif %}
 
 <div id="productContent" class="productContent">
-	{if $product.type == 2}
+	{% if $product.type == 2 %}
 		[[ partial("product/bundle.tpl") ]]
-	{/if}
+	{% endif %}
 
 	[[ partial("product/files.tpl") ]]
 
 	[[ partial("product/details.tpl") ]]
 
-	{if 'PRODUCT_INQUIRY_FORM'|config}
+	{% if 'PRODUCT_INQUIRY_FORM'|config %}
 		[[ partial("product/contactForm.tpl") ]]
-	{/if}
+	{% endif %}
 
 	[[ partial("product/ratingForm.tpl") ]]
 	[[ partial("product/sendToFriendForm.tpl") ]]
 
-	{if $reviews}
+	{% if $reviews %}
 		<div id="reviewSection" class="productSection reviewSection">
 			<h2>{t _reviews}<small>{t _tab_reviews}</small></h2>
 			[[ partial("product/reviewList.tpl") ]]
 
-			{if $product.reviewCount  > $reviews|@count}
+			{% if $product.reviewCount  > $reviews|@count %}
 				<a href="{link product/reviews id=$product.ID}" class="readAllReviews">{maketext text="_read_all_reviews" params=$product.reviewCount}</a>
-			{/if}
+			{% endif %}
 		</div>
-	{/if}
+	{% endif %}
 </div>
 
 {% endblock %}

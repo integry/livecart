@@ -2,11 +2,11 @@
 	
 	<div class="responseUser">
 		<span class="responderType">
-		{if $note.isAdmin}
+		{% if $note.isAdmin %}
 			{t _admin}:
-		{else}
+		{% else %}
 			{t _customer}:
-		{/if}
+		{% endif %}
 		</span>
 		
 		<a href="{backendUserUrl user=$note.User}">[[note.User.fullName]]</a>

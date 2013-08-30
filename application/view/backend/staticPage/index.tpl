@@ -42,11 +42,11 @@
 
 					{input name="title"}
 						{label}{t _title}:{/label}
-						{if $page.ID}
+						{% if $page.ID %}
 							{textfield class="wider" id="title_`$page.ID`"}
-						{else}
+						{% else %}
 							{textfield class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
-						{/if}
+						{% endif %}
 					{/input}
 
 					<p>{t _add_page_to_menu}</p>

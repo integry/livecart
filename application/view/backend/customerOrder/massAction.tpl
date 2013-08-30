@@ -8,10 +8,10 @@
 
 	{t _with_selected}:
 	<select name="act" class="select">
-		{if $orderGroupID == 8}
+		{% if $orderGroupID == 8 %}
 			<option value="setFinalized">{t _mark_completed}</option>
-		{/if}
-		{if $orderGroupID < 8}
+		{% endif %}
+		{% if $orderGroupID < 8 %}
 			<option value="printLabels" rel="blank">{t _print_shipping_labels}</option>
 			<optgroup label="{t _order_status}" class="massStatus">
 				<option value="setNew">{t _set_new}</option>
@@ -21,7 +21,7 @@
 				<option value="setReturned">{t _set_returned}</option>
 			</optgroup>
 			<option value="setCancel" class="massCancel">{t _cancel}</option>
-		{/if}
+		{% endif %}
 		<option value="delete" class="delete">{t _delete}</option>
 	</select>
 

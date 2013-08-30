@@ -1,22 +1,22 @@
-{if $product.listAttributes}
+{% if $product.listAttributes %}
 	<p class="specSummary spec">
 		{foreach from=$product.listAttributes item="attr" name="attr"}
-			{if $attr.values}
+			{% if $attr.values %}
 				{foreach from=$attr.values item="value" name="values"}
 					[[value.value_lang]]
-					{if !$smarty.foreach.values.last}
+					{% if !$smarty.foreach.values.last %}
 					/
-					{/if}
+					{% endif %}
 				{/foreach}
-			{elseif $attr.value}
+			{% elseif $attr.value %}
 				[[attr.SpecField.valuePrefix_lang]][[attr.value]][[attr.SpecField.valueSuffix_lang]]
-			{elseif $attr.value_lang}
+			{% elseif $attr.value_lang %}
 				[[attr.value_lang]]
-			{/if}
+			{% endif %}
 
-			{if !$smarty.foreach.attr.last}
+			{% if !$smarty.foreach.attr.last %}
 			/
-			{/if}
+			{% endif %}
 		{/foreach}
 	</p>
-{/if}
+{% endif %}

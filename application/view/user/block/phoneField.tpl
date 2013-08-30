@@ -1,3 +1,3 @@
-{if $fields.PHONE}
+{% if $fields.PHONE %}
 	[[ textfld('`$prefix`phone', '_your_phone') ]]
-{/if}
+{% endif %}

@@ -1,5 +1,5 @@
-{if $variations.products}
+{% if $variations.products %}
 	<div id="variations" class="productVariations">
 		[[ partial("product/variations.tpl") ]]
 	</div>
-{/if}
+{% endif %}

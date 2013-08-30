@@ -4,7 +4,7 @@
 		<td class="param"></td>
 		{section start=0 loop='RATING_SCALE'|config name=rate}
 			{assign var=index value=$smarty.section.rate.index+1}
-			<td class="{if $smarty.section.rate.last}value{/if}">[[index]]</td>
+			<td class="{% if $smarty.section.rate.last %}value{% endif %}">[[index]]</td>
 		{/section}
 		<td class="ratingPreview"></td>
 	</tr>
@@ -15,11 +15,11 @@
 		</td>
 		{section start=0 loop='RATING_SCALE'|config name=rate}
 			{assign var=index value=$smarty.section.rate.index+1}
-			<td class="{if $smarty.section.rate.last}value{/if}">
+			<td class="{% if $smarty.section.rate.last %}value{% endif %}">
 				{radio name="rating_`$type.ID`" value=$index onchange="Product.Rating.prototype.updatePreview(event);"}
-				{if $smarty.section.rate.last}
+				{% if $smarty.section.rate.last %}
 					<div class="text-danger hidden">{error for="rating_`$type.ID`"}{/error}</div>
-				{/if}
+				{% endif %}
 			</td>
 		{/section}
 			<td class="ratingPreview"><img src="" style="display: none;" alt="Rating" /></td>
@@ -30,14 +30,14 @@
 <input type="hidden" name="rating" />
 <div class="text-danger hidden">{error for="rating"}{/error}</div>
 
-{if !'ENABLE_REVIEWS'|config || !$ratingForm|@isRequired:'nickname'}
+{% if !'ENABLE_REVIEWS'|config || !$ratingForm|@isRequired:'nickname' %}
 	<p>
 		<input class="submit" type="submit" value="{tn _submit_rating}" /> <span class="progressIndicator" style="display: none;"></span>
 	</p>
 	<div class="clear"></div>
-{/if}
+{% endif %}
 
-{if 'ENABLE_REVIEWS'|config}
+{% if 'ENABLE_REVIEWS'|config %}
 	<div class="reviewForm">
 		[[ textfld('nickname', '_nickname') ]]
 
@@ -47,6 +47,6 @@
 	</div>
 
 	{include file="block/submit.tpl" caption="_submit_review"}
-{/if}
+{% endif %}
 
 {/form}

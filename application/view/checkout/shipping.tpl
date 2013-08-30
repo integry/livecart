@@ -8,33 +8,33 @@
 		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}
 	</div>
 
-	{if $shipments|@count > 1 && !$order.isMultiAddress}
+	{% if $shipments|@count > 1 && !$order.isMultiAddress %}
 		<div class="infoMessage">
 			{t _info_multi_shipments}
 		</div>
-	{/if}
+	{% endif %}
 
 	<div id="shippingSelect">
 
 		{form action="checkout/doSelectShippingMethod" method="POST" handle=$form class="form-horizontal"}
 			{foreach from=$shipments key="key" item="shipment"}
 
-				{if $order.isMultiAddress}
+				{% if $order.isMultiAddress %}
 					<h2>[[shipment.ShippingAddress.compact]]</h2>
-				{/if}
+				{% endif %}
 
 				[[ partial("checkout/shipmentProductList.tpl") ]]
 
-				{if $shipment.isShippable}
+				{% if $shipment.isShippable %}
 					[[ partial("checkout/shipmentSelectShipping.tpl") ]]
 
-				{/if}
+				{% endif %}
 
 			{/foreach}
 
-		{if 'SHIPPING_METHOD_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config}
+		{% if 'SHIPPING_METHOD_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config %}
 			[[ partial("checkout/orderFields.tpl") ]]
-		{/if}
+		{% endif %}
 
 		{include file="block/submit.tpl" caption="_continue"}
 

@@ -1,28 +1,28 @@
-{if !$hideShippingEstimationForm && 'ENABLE_SHIPPING_ESTIMATE'|config}
+{% if !$hideShippingEstimationForm && 'ENABLE_SHIPPING_ESTIMATE'|config %}
 <tr id="shippingEstimation">
 	<td colspan="{math equation="$extraColspanSize + 5"}" class="form-horizontal">
 		<h2>{t _estimate_shipping}</h2>
 
 		{assign var=fields value='SHIP_ESTIMATE_FIELDS'|config}
 
-		<div {if !$fields.COUNTRY}style="display: none;"{/if}>
+		<div {% if !$fields.COUNTRY %}style="display: none;"{% endif %}>
 			{input name="estimate_country"}
 				{label}{t _country}{/label}
 				{selectfield options=$countries id="{uniqid assign=id_country}"}
 			{/input}
 		</div>
 
-		{if $fields.STATE}
+		{% if $fields.STATE %}
 			{include file="user/addressFormState.tpl" states=$states notRequired=true prefix="estimate_"}
-		{/if}
+		{% endif %}
 
-		{if $fields.POSTALCODE}
+		{% if $fields.POSTALCODE %}
 			[[ textfld('estimate_postalCode', '_postal_code') ]]
-		{/if}
+		{% endif %}
 
-		{if $fields.CITY}
+		{% if $fields.CITY %}
 			[[ textfld('estimate_city', '_city') ]]
-		{/if}
+		{% endif %}
 
 		<div class="row">
 			<div class="controls">
@@ -31,4 +31,4 @@
 		</div>
 	</td>
 </tr>
-{/if}
+{% endif %}

@@ -1,6 +1,6 @@
 <div class="tree ui-widget-content">
 	<ul
-		{if $sortable}
+		{% if $sortable %}
 		ui-nested-sortable="{
 		listType: 'ul',
 		doNotClear: true,
@@ -9,7 +9,7 @@
 		toleranceElement: '> div'
 		}"
 		ui-nested-sortable-stop="updatePosition($event, $ui)"
-		{/if}
+		{% endif %}
 		>
 		<li ya-tree="child in data.children at ul" class="minimized-{{child.open != true}}">
 			<div ng-init="mouseover=0" ng-mouseover="mouseover=1" ng-mouseout="mouseover=0" ng-class="{ldelim}'ui-state-hover': mouseover, 'ui-state-active': tree.selectedID == child.id{rdelim}">

@@ -3,9 +3,9 @@ Hello!
 Your friend [[friendName]] wants you to take a look at this product
 [[product.name]] ({productUrl product=$product full=true})
 
-{if $notes}
+{% if $notes %}
 He also added:
 [[notes]]
-{/if}
+{% endif %}
 
 [[ partial("email/en/signature.tpl") ]]

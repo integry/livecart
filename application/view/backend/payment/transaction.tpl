@@ -1,73 +1,73 @@
 <li class="transactionType_[[transaction.type]]" id="transaction_[[transaction.ID]]">
 
 	<div class="transactionMainDetails">
-		<div class="transactionAmount{if $transaction.isVoided} isVoided{/if}">
+		<div class="transactionAmount{% if $transaction.isVoided %} isVoided{% endif %}">
 			[[transaction.formattedAmount]]
-			{if $transaction.Currency.ID != $transaction.RealCurrency.ID}
+			{% if $transaction.Currency.ID != $transaction.RealCurrency.ID %}
 				<span class="transactionRealAmount">
 				([[transaction.formattedRealAmount]])
 				</span>
-			{/if}
+			{% endif %}
 		</div>
 
 		<div class="transactionStatus">
 
-			{if 0 == $transaction.type}
+			{% if 0 == $transaction.type %}
 				{t _type_sale}
 
-			{elseif 1 == $transaction.type}
+			{% elseif 1 == $transaction.type %}
 				{t _type_authorization}
 
-			{elseif 2 == $transaction.type}
+			{% elseif 2 == $transaction.type %}
 				{t _type_capture}
 
-			{elseif 3 == $transaction.type}
+			{% elseif 3 == $transaction.type %}
 				{t _type_void}
 
-			{/if}
+			{% endif %}
 		</div>
 
 		<div class="transactionUser">
 
-			{if $transaction.User}
+			{% if $transaction.User %}
 				{t _processed_by}: <a href="{backendUserUrl user=$transaction.User}">[[transaction.User.fullName]]</a>
-			{/if}
+			{% endif %}
 
 		</div>
 
-		{if $transaction.comment}
+		{% if $transaction.comment %}
 			<div class="transactionComment">
 				[[transaction.comment]]
 			</div>
-		{/if}
+		{% endif %}
 
-		{if $transaction.attributes}
+		{% if $transaction.attributes %}
 			<div class="overview">
 				{include file="backend/eav/view.tpl" item=$transaction}
 			</div>
-		{/if}
+		{% endif %}
 
 	</div>
 
 	<div class="transactionDetails">
 
 		<ul class="transactionMenu" {denied role='order.update'}style="display: none;"{/denied}>
-			{if $transaction.isCapturable}
+			{% if $transaction.isCapturable %}
 				<li class="captureMenu">
 					<a href="" onclick="Backend.Payment.showCaptureForm([[transaction.ID]], event);">{t _capture}</a>
 				</li>
-			{/if}
-			{if $transaction.isVoidable}
+			{% endif %}
+			{% if $transaction.isVoidable %}
 				<li class="voidMenu">
 					<a href="#void" onclick="Backend.Payment.showVoidForm([[transaction.ID]], event);">{t _void}</a>
 				</li>
-			{/if}
-			{if $transaction.hasFullNumber}
+			{% endif %}
+			{% if $transaction.hasFullNumber %}
 				<li class="delCcNumMenu">
 					<span class="progressIndicator" style="display: none;"></span>
 					<a href="{link controller="backend.payment" action=deleteCcNumber id=$transaction.ID}" onclick="Backend.Payment.deleteCcNum([[transaction.ID]], event);">{t _delete_cc_num}</a>
 				</li>
-			{/if}
+			{% endif %}
 		</ul>
 
 		<div class="clear"></div>
@@ -94,7 +94,7 @@
 			</form>
 		</div>
 
-		{if $transaction.isCapturable}
+		{% if $transaction.isCapturable %}
 		<div class="transactionForm captureForm" style="display: none;">
 				{form action="controller=backend.payment action=capture id=`$transaction.ID`" method="POST" onsubmit="Backend.Payment.captureTransaction(`$transaction.ID`, this, event);" handle=$capture}
 
@@ -113,15 +113,15 @@
 					<textarea name="comment"></textarea>
 				</p>
 
-				{if $transaction.isMultiCapture}
+				{% if $transaction.isMultiCapture %}
 					<p>
 						{checkbox name="complete" class="checkbox"}
 						<label for="complete">{t _finalize}</label>
 						<div class="clear"></div>
 					</p>
-				{else}
+				{% else %}
 					<input type="checkbox" name="complete" id="complete" value="ON" checked="checked" style="display: none;" />
-				{/if}
+				{% endif %}
 				</fieldset>
 
 		<fieldset class="controls">
@@ -132,55 +132,55 @@
 
 			{/form}
 		</div>
-		{/if}
+		{% endif %}
 
 		<fieldset class="transactionMethod">
 
-			{if $transaction.methodName}
+			{% if $transaction.methodName %}
 				{assign var=transactionMethodName value=$transaction.methodName}
-			{elseif $transaction.serializedData.handler}
+			{% elseif $transaction.serializedData.handler %}
 				{assign var=transactionMethodName value=$transaction.serializedData.handler}
-			{else}
+			{% else %}
 				{capture assign=transactionMethodName}{t _manual}{/capture}
-			{/if}
+			{% endif %}
 
-			{if $transactionMethodName}
+			{% if $transactionMethodName %}
 				<legend>
-					{if $transaction.availableOfflinePaymentMethods}
+					{% if $transaction.availableOfflinePaymentMethods %}
 						{include file="backend/payment/editOfflineMethod.tpl"
 							ID=$transaction.ID
 							methods=$transaction.availableOfflinePaymentMethods
 							name=$transactionMethodName
 							handlerID=$transaction.handlerID
 						}
-					{else}
+					{% else %}
 						[[transaction.methodName]]
-					{/if}
+					{% endif %}
 				</legend>
-			{/if}
+			{% endif %}
 
-			{if $transaction.ccLastDigits}
+			{% if $transaction.ccLastDigits %}
 				<div class="ccDetails">
 					<div>[[transaction.ccName]]</div>
-					<div>[[transaction.ccType]] <span class="ccNum">{if $transaction.hasFullNumber} / {else}...{/if}[[transaction.ccLastDigits]]</span></div>
-					{if $transaction.ccCVV}
+					<div>[[transaction.ccType]] <span class="ccNum">{% if $transaction.hasFullNumber %} / {% else %}...{% endif %}[[transaction.ccLastDigits]]</span></div>
+					{% if $transaction.ccCVV %}
 						<div>[[transaction.ccCVV]]<div>
-					{/if}
+					{% endif %}
 					<div>[[transaction.ccExpiryMonth]] / [[transaction.ccExpiryYear]]</div>
 				</div>
-			{/if}
+			{% endif %}
 
-			{if $transaction.gatewayTransactionID}
+			{% if $transaction.gatewayTransactionID %}
 				<div class="gatewayTransactionID">
 					{t _transaction_id}: [[transaction.gatewayTransactionID]]
 				</div>
-			{/if}
+			{% endif %}
 
 			<div class="transactionTime">
 				[[transaction.formatted_time.date_full]] [[transaction.formatted_time.time_full]]
 			</div>
 
-			{if $transaction.serializedData}
+			{% if $transaction.serializedData %}
 			<div class="extraData">
 				{foreach from=$transaction.serializedData key=key item=value}
 					<div>
@@ -188,7 +188,7 @@
 					</div>
 				{/foreach}
 			</div>
-			{/if}
+			{% endif %}
 
 		</fieldset>
 
@@ -196,8 +196,8 @@
 
 	<div class="clear"></div>
 
-	{if $transaction.transactions}
+	{% if $transaction.transactions %}
 		{include file="backend/payment/transactions.tpl" transactions=$transaction.transactions}
-	{/if}
+	{% endif %}
 
 </li>

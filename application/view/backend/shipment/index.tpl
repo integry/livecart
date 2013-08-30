@@ -44,7 +44,7 @@
 			</td>
 		</tr>
 
-		{if $order.discounts}
+		{% if $order.discounts %}
 			<tr>
 				<td class="orderShipment_report_description">{t _discounts}</td>
 				<td class="orderShipment_report_discounts orderShipment_report_value">
@@ -52,7 +52,7 @@
 					<span class="price">{$order.discountAmount|string_format:"%.2f"}</span> <span class="priceSuffix">[[order.Currency.priceSuffix]]</span>
 				</td>
 			</tr>
-		{/if}
+		{% endif %}
 
 		<tr>
 			<td class="orderShipment_report_description">{t _taxes}</td>
@@ -73,18 +73,18 @@
 	</table>
 </fieldset>
 
-{if $order.discounts || $order.coupons}
+{% if $order.discounts || $order.coupons %}
 	<fieldset class="discounts">
 		<legend>{t _discounts}</legend>
 
-		{if $order.coupons}
+		{% if $order.coupons %}
 			<div class="appliedCoupons">
 				{t _coupons}:
 				{foreach from=$order.coupons item=coupon name=coupons}
-					<strong>[[coupon.couponCode]]</strong>{if !$smarty.foreach.coupons.last}, {/if}
+					<strong>[[coupon.couponCode]]</strong>{% if !$smarty.foreach.coupons.last %}, {% endif %}
 				{/foreach}
 			</div>
-		{/if}
+		{% endif %}
 
 		<table class="discounts">
 			{foreach from=$order.discounts item=discount name=discounts}
@@ -95,7 +95,7 @@
 			{/foreach}
 		</table>
 	</fieldset>
-{/if}
+{% endif %}
 
 <div id="order[[orderID]]_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2>
@@ -103,11 +103,11 @@
 		<ul id="orderShipmentsItems_list_[[orderID]]_downloadable" class="activeList_add_delete orderShipmentsItem activeList singleShipment">
 			<li id="orderShipments_list_[[orderID]]_[[downloadableShipment.ID]]" class="orderShipment" >
 				{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
-				{if $downloadableShipment.items|@count > 0}
+				{% if $downloadableShipment.items|@count > 0 %}
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_downloadableShipments");
 					</script>
-				{/if}
+				{% endif %}
 			</li>
 		</ul>
 	</div>
@@ -118,20 +118,20 @@
 	<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
 	{% set shippmentCount = 0 %}
 	{foreach item="shipment" from=$shipments}
-		{if $shipment.status == 3 && $shipment.isShippable}
+		{% if $shipment.status == 3 && $shipment.isShippable %}
 			{assign var="shippmentCount" value=$shippmentCount+1}
-		{/if}
+		{% endif %}
 	{/foreach}
-	<ul id="orderShipments_list_[[orderID]]" class="orderShipments {if $shippmentCount == 1}singleShipment{/if}">
+	<ul id="orderShipments_list_[[orderID]]" class="orderShipments {% if $shippmentCount == 1 %}singleShipment{% endif %}">
 		{foreach item="shipment" from=$shipments}
-			{if $shipment.status != 3 && $shipment.isShippable}
+			{% if $shipment.status != 3 && $shipment.isShippable %}
 				<li id="orderShipments_list_[[orderID]]_[[shipment.ID]]" class="orderShipment downloadableOrder">
 					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_shippableShipments");
 					</script>
 				</li>
-			{/if}
+			{% endif %}
 		{/foreach}
 	</ul>
 </div>
@@ -141,18 +141,18 @@
 <div id="order[[orderID]]_shippedShipments" class="shippedShipments shipmentCategoty" style="display: none">
 	<h2 class="shippedShipmentsTitle">{t _shipped}</h2>
 	{foreach item="shipment" from=$shipments}
-		{if $shipment.status == 3 && $shipment.isShippable}
+		{% if $shipment.status == 3 && $shipment.isShippable %}
 			{assign var="shippmentCount" value=$shippmentCount+1}
-		{/if}
+		{% endif %}
 	{/foreach}
-	<ul id="orderShipments_list_[[orderID]]_shipped" class="orderShippedShipments {if $shippmentCount == 1}singleShipment{/if}">
+	<ul id="orderShipments_list_[[orderID]]_shipped" class="orderShippedShipments {% if $shippmentCount == 1 %}singleShipment{% endif %}">
 		{foreach item="shipment" from=$shipments}
-			{if $shipment.status == 3 && $shipment.isShippable}
+			{% if $shipment.status == 3 && $shipment.isShippable %}
 				<li id="orderShipments_list_[[orderID]]_shipped_[[shipment.ID]]" class="orderShipment">
 					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">Element.show("order[[orderID]]_shippedShipments");</script>
 				</li>
-			{/if}
+			{% endif %}
 		{/foreach}
 	</ul>
 </div>
@@ -207,11 +207,11 @@
 	var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]{literal}', Backend.Shipment.Callbacks);
 
 	{/literal}{foreach item="shipment" from=$shipments}{literal}
-		{/literal}{if $shipment.isShippable}{literal}
-			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]{if $shipment.isShipped}_shipped{/if}_[[shipment.ID]]{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});
-		{/literal}{else}{literal}
+		{/literal}{% if $shipment.isShippable %}{literal}
+			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]{% if $shipment.isShipped %}_shipped{% endif %}_[[shipment.ID]]{literal}', {isShipped: {/literal}{% if $shipment.isShipped %}true{% else %}false{% endif %}{literal}});
+		{/literal}{% else %}{literal}
 			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]_[[shipment.ID]]{literal}');
-		{/literal}{/if}{literal}
+		{/literal}{% endif %}{literal}
 	{/literal}{/foreach}{literal}
 
 	groupList.createSortable(true);

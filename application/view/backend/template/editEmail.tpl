@@ -4,51 +4,51 @@
 
 {form handle=$form action="backend.template/saveEmail" method="POST" class="templateForm" id="templateForm_`$tabid`"}
 
-	{if !$template.isFragment}
+	{% if !$template.isFragment %}
 	<p>
 		<label>{t _subject}:</label>
 		{textfield name="subject" id="subject_`$tabid`" class="text wide"}
 	</p>
-	{/if}
+	{% endif %}
 
 	<p>
-		{if !$template.isFragment}
+		{% if !$template.isFragment %}
 			<label>{t _body}:</label>
-		{/if}
+		{% endif %}
 		{textarea name="body" id="body_`$tabid`" class="body"}
 	</p>
 
-	{if $template.hasPlainText}
+	{% if $template.hasPlainText %}
 	<p>
 		<label>{t _html_version}:</label>
 		{textarea name="html" id="html_`$tabid`" class="body"}
 	</p>
-	{/if}
+	{% endif %}
 
-	{if $fileName|@substr:0:11 != 'email/block'}
+	{% if $fileName|@substr:0:11 != 'email/block' %}
 		{language}
-			{if !$template.isFragment}
+			{% if !$template.isFragment %}
 				<p>
 					<label>{t _subject}:</label>
 					{textfield name="subject_`$lang.ID`" class="text wide"}
 				</p>
-			{/if}
+			{% endif %}
 
 			<p>
-				{if !$template.isFragment}
+				{% if !$template.isFragment %}
 					<label>{t _body}:</label>
-				{/if}
+				{% endif %}
 				{textarea name="body_`$lang.ID`" id="body_`$tabid`_`$lang.ID`" class="body"}
 			</p>
 
-			{if $template.hasPlainText}
+			{% if $template.hasPlainText %}
 			<p>
 				<label>{t _html_version}:</label>
 				{textarea name="html_`$lang.ID`" id="html_`$tabid`_`$lang.ID`" class="body"}
 			</p>
-			{/if}
+			{% endif %}
 		{/language}
-	{/if}
+	{% endif %}
 
 	{hidden name="file" id="file_`$tabid`"}
 

@@ -39,10 +39,10 @@
 
 </fieldset>
 
-{if $lastOrders}
+{% if $lastOrders %}
 <fieldset class="dashboardOrders stats">
 	<legend>{t _last_orders}</legend>
-	{if $lastOrders}
+	{% if $lastOrders %}
 		<table class="qeOrders">
 			<thead>
 				<tr>
@@ -63,9 +63,9 @@
 				{/foreach}
 			</tbody>
 		</table>
-	{/if}
+	{% endif %}
 </fieldset>
-{/if}
+{% endif %}
 
 <fieldset class="stats">
 	<legend>{t _inventory}</legend>

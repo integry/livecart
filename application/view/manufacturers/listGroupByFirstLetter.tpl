@@ -1,17 +1,17 @@
-{if $letters|count > 0}
+{% if $letters|count > 0 %}
 	<ul class="manufacturerLetterFilter">
 		<li class="label">{t _filter}:</li>
 		{foreach from=$letters item=letter}
 			<li>
-				{if $letter == $currentLetter}
+				{% if $letter == $currentLetter %}
 					<strong class="selectedLetter">[[letter]]</strong>
-				{else}
+				{% else %}
 					<a href="{link controller=manufacturers query="letter=[[letter]]"}">[[letter]]</a>
-				{/if}
+				{% endif %}
 			</li>
 		{/foreach}
 	</ul>
-{/if}
+{% endif %}
 
 
 {assign var=numberOfColumns value='MANUFACTURER_PAGE_NUMBER_OF_COLUMNS'|config}
@@ -24,21 +24,21 @@
 {assign var=columns value=0}
 {foreach from=$manufacturers item=manufacturer key=index}
 
-		{if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns )}
-			{if $columns}
+		{% if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns ) %}
+			{% if $columns %}
 				{assign var=opened value=false}
 				</div>
-			{/if}
+			{% endif %}
 			<div class="manufacturerColumn">
 			{assign var=opened value=true}
 			{assign var=columns value=$columns+1}
-		{/if}
+		{% endif %}
 	<ul>
 		<li><a href="[[manufacturer.url]]">[[manufacturer.name]]</a>
 		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
 	</ul>
 {/foreach}
 
-{if opened}
+{% if opened %}
 </div>
-{/if}
+{% endif %}

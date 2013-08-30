@@ -12,12 +12,12 @@
 <body>
 <script type="text/javascript">
 	new this.parent.Backend.ThemeColor('[[theme]]');
-	{if req('saved')}
+	{% if req('saved') %}
 		this.parent.Backend.SaveConfirmationMessage.prototype.showMessage('{tn _colors_saved}');
 		this.parent.Backend.Theme.prototype.styleTabNotChanged('[[theme]]');
 		this.parent.TabControl.prototype.getInstance("tabContainer").reloadTabContent(this.parent.$("tabCss"));
 		this.parent.Backend.Theme.prototype.cssTabNotChanged('[[theme]]');
-	{/if}
+	{% endif %}
 </script>
 </body>
 

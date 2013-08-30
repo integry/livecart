@@ -8,15 +8,15 @@
 					{t _theme}
 					<select id="themeMenu" name="theme">
 						{foreach $themes as $thm}
-							<option {if $currentTheme == $thm}selected="selected" {/if}value="{$thm|escape}">{$thm|escape}</option>
+							<option {% if $currentTheme == $thm %}selected="selected" {% endif %}value="{$thm|escape}">{$thm|escape}</option>
 						{/foreach}
 					</select>
 				</form>
 			</li>
 
-			<li id="modeTemplate" {if 'template' == $mode}class="active"{/if}><a href="{link controller="backend.customize" action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
-			<li id="modeCss" {if 'css' == $mode}class="active"{/if}><a  href="{link controller="backend.customize" action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
-			{if 'css' == $mode}
+			<li id="modeTemplate" {% if 'template' == $mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
+			<li id="modeCss" {% if 'css' == $mode %}class="active"{% endif %}><a  href="{link controller="backend.customize" action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
+			{% if 'css' == $mode %}
 				<input type="button" class="button" id="cssNewRule" value="{t _css_add}" />
 				<input type="button" class="button" id="cssSave" value="{t _css_save}" />
 				<span class="progressIndicator" id="cssSaveIndicator" style="display: none;"></span>
@@ -41,8 +41,8 @@
 						</p>
 					</form>
 				</div>
-			{/if}
-			<li id="modeTranslation" {if 'translate' == $mode}class="active"{/if}><a href="{link controller="backend.customize" action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
+			{% endif %}
+			<li id="modeTranslation" {% if 'translate' == $mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
 
 			<li id="modeExit"><a href="{link controller="backend.customize" action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
 
@@ -52,7 +52,7 @@
 	</div>
 </div>
 
-{if 'css' == $mode}
+{% if 'css' == $mode %}
 	<script type="text/javascript">
 		Router.setUrlTemplate('{link controller="controller" action="action"}');
 		var cust = new CssCustomize({json array=$theme});
@@ -64,7 +64,7 @@
 
 		cust.showMessage(cust.firebugMsg, true);
 	</script>
-{/if}
+{% endif %}
 
 <script type="text/javascript">
 	new Customize.ThemesMenu({literal}${/literal}("themeMenu"));

@@ -18,7 +18,7 @@ test
 
 {% block content %}
 
-	{if $subPages}
+	{% if $subPages %}
 		<div class="staticSubpages">
 			<h2>{t _subpages}</h2>
 			<ul>
@@ -27,7 +27,7 @@ test
 				{/foreach}
 			</ul>
 		</div>
-	{/if}
+	{% endif %}
 
 	<div class="staticPageText">
 		[[page.text_lang]]
@@ -37,17 +37,17 @@ test
 		<div class="eavAttr eav-[[attr.EavField.handle]]">
 		<h3 class="attributeTitle">[[attr.EavField.name_lang]]</h3>
 		<p class="attributeValue">
-			{if $attr.values}
-				<ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
+			{% if $attr.values %}
+				<ul class="attributeList{% if $attr.values|@count == 1 %} singleValue{% endif %}">
 					{foreach from=$attr.values item="value"}
 						<li class="fieldDescription"> [[value.value_lang]]</li>
 					{/foreach}
 				</ul>
-				{elseif $attr.value_lang}
+				{% elseif $attr.value_lang %}
 					[[attr.value_lang]]
-				{elseif $attr.value}
+				{% elseif $attr.value %}
 					[[attr.EavField.valuePrefix_lang]][[attr.value]][[attr.EavField.valueSuffix_lang]]
-				{/if}
+				{% endif %}
 		</p>
 		</div>
 	{/foreach}

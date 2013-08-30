@@ -1,15 +1,15 @@
 <div style="padding: 1em; border: 1px grey dotted;">
-	{if $address.companyName}
+	{% if $address.companyName %}
 		<div class="labelCompany" style="font-weight: bold;">
 			[[address.companyName]]
 		</div>
-	{/if}
+	{% endif %}
 
-	{if $address.fullName}
+	{% if $address.fullName %}
 		<div class="labelName" style="font-weight: bold;">
 			[[address.fullName]]
 		</div>
-	{/if}
+	{% endif %}
 
 	<div class="labelAddress1">
 		[[address.address1]]
@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="labelState">
-		{$address.stateName|default:$address.State.name}{if $address.postalCode}, [[address.postalCode]]{/if}
+		{$address.stateName|default:$address.State.name}{% if $address.postalCode %}, [[address.postalCode]]{% endif %}
 	</div>
 
 	<div class="labelCountry">

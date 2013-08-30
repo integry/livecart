@@ -1,9 +1,9 @@
-{if 'CC_ENABLE'|config}
+{% if 'CC_ENABLE'|config %}
 	<h2>{t _pay_securely}</h2>
 
 	[[ partial("checkout/testHandler.tpl") ]]
 
-	{if $id}{assign var=ccId value=" id=`$id`"}{/if}
+	{% if $id %}{assign var=ccId value=" id=`$id`"}{% endif %}
 	{assign var=controller value=$controller|default:'checkout'}
 	{form action="controller=`$controller` action=payCreditCard`$ccId`" handle=$ccForm method="POST" class="form-horizontal"}
 
@@ -25,12 +25,12 @@
 			{textfield autoComplete="off"}
 		{/input}
 
-		{if $ccTypes}
+		{% if $ccTypes %}
 			{input name="ccType"}
 				{label}{t _cc_type}:{/label}
 				{selectfield id="ccType" options=$ccTypes}
 			{/input}
-		{/if}
+		{% endif %}
 
 		{input name="ccExpiryYear"}
 			{label}{t _card_exp}:{/label}
@@ -49,9 +49,9 @@
 			</div>
 		{/input}
 
-		{if $ccVars}
+		{% if $ccVars %}
 			{include file="block/eav/fields.tpl" fieldList=$ccVars.specFieldList}
-		{/if}
+		{% endif %}
 
 		{include file="block/submit.tpl" caption="_complete_now"}
 
@@ -63,7 +63,7 @@
 	</div>
 
 	<div class="clear"></div>
-{else}
+{% else %}
 	{form action="checkout/payCreditCard" handle=$ccForm method="POST" id="paymentError" class="form-horizontal"}
 		{error for="creditCardError"}
 			<div class="clear"></div>
@@ -73,4 +73,4 @@
 			<div class="clear"></div>
 		{/error}
 	{/form}
-{/if}
+{% endif %}

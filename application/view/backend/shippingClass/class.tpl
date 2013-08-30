@@ -1,8 +1,8 @@
-{if $class.ID}
+{% if $class.ID %}
 	{assign var="action" value="controller=backend.shippingClass action=update id=`$class.ID`"}
-{else}
+{% else %}
 	{assign var="action" value="controller=backend.shippingClass action=create"}
-{/if}
+{% endif %}
 
 {form handle=$classForm action=$action id="classForm_`$class.ID`" method="post" onsubmit="Backend.ShippingClass.prototype.getInstance(this).save(); return false;"}
 

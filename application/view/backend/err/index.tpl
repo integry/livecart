@@ -1,9 +1,9 @@
-{if !$ajax}
+{% if !$ajax %}
 	[[ partial("layout/backend/header.tpl") ]]
-{/if}
+{% endif %}
 
 [[description]] [Code [[id]]]
 
-{if !$ajax}
+{% if !$ajax %}
 	[[ partial("layout/backend/footer.tpl") ]]
-{/if}
+{% endif %}

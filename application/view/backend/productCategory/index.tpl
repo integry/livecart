@@ -1,10 +1,10 @@
 {function name="catPath" category=null}
-	{if $category}
-		{if $category.ParentNode}
+	{% if $category %}
+		{% if $category.ParentNode %}
 			{catPath category=$category.ParentNode} &gt;
-		{/if}
+		{% endif %}
 		[[category.name_lang]]
-	{/if}
+	{% endif %}
 {/function}
 
 <fieldset>

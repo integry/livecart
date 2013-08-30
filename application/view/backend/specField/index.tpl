@@ -1,6 +1,6 @@
-{if !$controller}
+{% if !$controller %}
 	{assign var=controller value="backend.specField"}
-{/if}
+{% endif %}
 
 {literal}
 <script type="text/javascript">
@@ -37,11 +37,11 @@
 
 	{/literal}
 	{foreach from=$configuration item="configItem" key="configKey"}
-		{if $configKey == 'types'}
+		{% if $configKey == 'types' %}
 			Backend.SpecField.prototype.[[configKey]] = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
-		{else}
+		{% else %}
 			Backend.SpecField.prototype.[[configKey]] = {json array=$configItem};
-		{/if}
+		{% endif %}
 	{/foreach}
 
 // ]!]>
@@ -82,13 +82,13 @@
 <ul id="specField_items_list_[[categoryID]]_" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
-	{if $field.SpecFieldGroup.ID}{break}{/if}
+	{% if $field.SpecFieldGroup.ID %}{break}{% endif %}
 
-	{if $field.ID}
+	{% if $field.ID %}
 	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
 		<span class="specField_title">[[field.name_lang]]</span>
 	</li>
-	{/if}
+	{% endif %}
 {/foreach}
 </ul>
 
@@ -96,20 +96,20 @@
 {assign var="lastSpecFieldGroup" value="-1"}
 <ul id="specField_groups_list_[[categoryID]]" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeListGroup">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
-	{if !$field.SpecFieldGroup.ID}{continue}{/if}
+	{% if !$field.SpecFieldGroup.ID %}{continue}{% endif %}
 
-	{if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
-		{if $lastSpecFieldGroup > 0}</ul></li>{/if}
+	{% if $lastSpecFieldGroup != $field.SpecFieldGroup.ID  %}
+		{% if $lastSpecFieldGroup > 0 %}</ul></li>{% endif %}
 		<li id="specField_groups_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]">
 			<span class="specField_group_title">[[field.SpecFieldGroup.name_lang]]</span>
 			<ul id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit  activeList_accept_specFieldList">
-	{/if}
+	{% endif %}
 
-	{if $field.ID} {* For empty groups *}
+	{% if $field.ID %} {* For empty groups *}
 	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
 		<span class="specField_title">[[field.name_lang]]</span>
 	</li>
-	{/if}
+	{% endif %}
 
 	{% set lastSpecFieldGroup = $field.SpecFieldGroup.ID %}
 {/foreach}
@@ -136,9 +136,9 @@
 
 	 {assign var="lastSpecFieldGroup" value="-1"}
 	 {foreach item="field" from=$specFieldsWithGroups}
-		 {if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID}
+		 {% if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID %}
 			  ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_[[field.SpecFieldGroup.ID]]', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
-		 {/if}
+		 {% endif %}
 		 {% set lastSpecFieldGroupID = $field.SpecFieldGroup.ID %}
 	 {/foreach}
 

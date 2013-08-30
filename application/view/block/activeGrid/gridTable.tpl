@@ -5,17 +5,17 @@
 
 	<div class="row-fluid">
 		<div class="col col-lg-8">
-			{if $addMenu}
+			{% if $addMenu %}
 				<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
 					{include file=$addMenu}
 				</div>
-			{/if}
+			{% endif %}
 
-			{if $count}
+			{% if $count %}
 				<span class="gridCount">
 					{include file="custom:`$count`"}
 				</span>
-			{/if}
+			{% endif %}
 
 			<a class="ui-icon ui-icon-refresh" href="#" onclick="window.activeGrids['[[prefix]]_[[id]]'].reloadGrid(); return false;">&nbsp;</a>
 		</div>
@@ -36,7 +36,7 @@
 					<div class="activeGridColumnsList">
 						{foreach from=$availableColumns item=item key=column}
 						<p class="activeGridcolumn_{$column|replace:'.':'_'}">
-							<input type="checkbox" name="col[[[column]]]" class="checkbox" id="column_[[id]]_[[column]]_{uniqid}"{if $displayedColumns.$column}checked="checked"{/if} />
+							<input type="checkbox" name="col[[[column]]]" class="checkbox" id="column_[[id]]_[[column]]_{uniqid}"{% if $displayedColumns.$column %}checked="checked"{% endif %} />
 							<label for="column_[[id]]_[[column]]_{uniqid last=true}" class="checkbox" id="column_[[id]]_{uniqid last=true}_[[column]]_label">
 								[[item.name]]
 							</label>
@@ -47,7 +47,7 @@
 			  </form>
 			</div>
 
-			{if $advancedSearch}
+			{% if $advancedSearch %}
 				<span id="[[prefix]]_[[id]]_AdvancedSearch" class="activeGridAdvancedSearch">
 					<a href="javascript:void(0);" class="advancedSearchLink fg-button ui-state-default fg-button-icon-left ui-corner-all" href="#">
 						<span class="ui-icon ui-icon-search"></span>
@@ -58,7 +58,7 @@
 						</ul>
 					</div>
 				</span>
-			{/if}
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -93,12 +93,12 @@
 		<th class="cell_cb ui-state-default ui-th-column ui-th-ltr"><input type="checkbox" class="checkbox" /></th>
 
 		{foreach from=$displayedColumns item=type key=column name="columns"}
-			{if !$smarty.foreach.columns.first}
+			{% if !$smarty.foreach.columns.first %}
 				<th class="first cellt_[[type]] cell_{$column|replace:'.':'_'} ui-state-default ui-th-column ui-th-ltr">
 					<div style="position: relative;">
 					<span class="fieldName">[[column]]</span>
 
-					{if 'bool' == $type}
+					{% if 'bool' == $type %}
 
 						<select id="filter_[[column]]_[[id]]">
 							<option value="">{$availableColumns.$column.name|escape}</option>
@@ -106,7 +106,7 @@
 							<option value="0">{tn _no}</option>
 						</select>
 
-					{elseif 'select' == $type}
+					{% elseif 'select' == $type %}
 
 						<select id="filter_[[column]]_[[id]]">
 							<option value="">{$availableColumns.$column.name|escape}</option>
@@ -115,7 +115,7 @@
 							{/foreach}
 						</select>
 
-					{elseif 'multi-select' == $type}
+					{% elseif 'multi-select' == $type %}
 
 						<select id="filter_[[column]]_[[id]]" class="multiSelect" multiple="multiple">
 							<option value="">{$availableColumns.$column.name|escape}</option>
@@ -125,7 +125,7 @@
 							{/foreach}
 						</select>
 
-					{elseif 'numeric' == $type}
+					{% elseif 'numeric' == $type %}
 
 						<div class="filterMenuContainer">
 
@@ -179,7 +179,7 @@
 							<span class="rangeTo">-</span>
 							<input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_[[column]]_[[id]]').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
 						</div>
-					{elseif 'date' == $type}
+					{% elseif 'date' == $type %}
 						<select id="filter_[[column]]_[[id]]">
 							<option value="">{$availableColumns.$column.name|escape}</option>
 							<option value="today | now">{tn _today}</option>
@@ -200,24 +200,24 @@
 								{calendar nobutton="true" noform="true" class="max text `$type`" id="filter_`$column`_`$id`_to" onchange="document.getElementById('filter_`$column`_`$id`').filter.updateDateRangeFilter(this);"}
 							</div>
 						</div>
-					{else}
+					{% else %}
 						<input type="text" class="text [[type]]" id="filter_[[column]]_[[id]]" value="{$availableColumns.$column.name|escape}"  />
-					{/if}
+					{% endif %}
 					{img src="image/silk/bullet_arrow_up.png" class="sortPreview" }
 					</div>
 				</th>
-			{/if}
+			{% endif %}
 		{/foreach}
 	</tr>
 </thead>
 <tbody>
 	{section name="createRows" start=0 loop=$rowCount}
-		<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if} ui-widget-content ui-row-ltr">
+		<tr class="{% if $smarty.section.createRows.index is even %}even{% else %}odd{% endif %} ui-widget-content ui-row-ltr">
 			<td class="cell_cb"></td>
 		{foreach from=$displayedColumns key=column item=type name="columns"}
-		 	{if !$smarty.foreach.columns.first}
+		 	{% if !$smarty.foreach.columns.first %}
 				<td class="cellt_[[type]] cell_{$column|replace:'.':'_'}"></td>
-			{/if}
+			{% endif %}
 		{/foreach}
 		</tr>
 	{/section}
@@ -228,9 +228,9 @@
 
 <div class="ui-state-default ui-corner-bottom" >
 	<ul class="menu" style="float: left;">
-		{if $massAction}
+		{% if $massAction %}
 			{include file="custom:`$massAction`"}
-		{/if}
+		{% endif %}
 	</ul>
 
 	<div class="menu" style="float: right;">
@@ -251,17 +251,17 @@
 	window.activeGrids['[[prefix]]_[[id]]'] = new ActiveGrid($('[[prefix]]_[[id]]'), '[[url]]', [[totalCount]], $("[[prefix]]LoadIndicator_[[id]]"), [[rowCount]], {json array=$filters});
 	window.activeGrids['[[prefix]]_[[id]]'].setController('[[controller]]');
 	window.activeGrids['[[prefix]]_[[id]]'].setColumnWidths({json array=$columnWidths});
-	{if $dataFormatter}
+	{% if $dataFormatter %}
 		window.activeGrids['[[prefix]]_[[id]]'].setDataFormatter([[dataFormatter]]);
-	{/if}
+	{% endif %}
 	window.activeGrids['[[prefix]]_[[id]]'].setInitialData({json array=$data});
 
 	{foreach from=$displayedColumns item=index key=column name="columns"}
-		{if !$smarty.foreach.columns.first}
+		{% if !$smarty.foreach.columns.first %}
 			new ActiveGridFilter($('filter_[[column]]_[[id]]'), window.activeGrids['[[prefix]]_[[id]]']);
-		{/if}
+		{% endif %}
 	{/foreach}
-	{if $advancedSearch}
+	{% if $advancedSearch %}
 
 		window.activeGrids['[[prefix]]_[[id]]'].initAdvancedSearch(
 			"[[prefix]]_[[id]]",
@@ -284,7 +284,7 @@
 			}
 			{/literal}
 		);
-	{/if}
+	{% endif %}
 
 	// register translations
 	$T("_yes","{t _yes}");

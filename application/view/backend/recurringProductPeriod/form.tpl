@@ -1,8 +1,8 @@
-{if $recurringProductPeriod.ID}
+{% if $recurringProductPeriod.ID %}
 	{assign var="action" value="controller=backend.recurringProductPeriod" action=update id=`$recurringProductPeriod.ID`"}
-{else}
+{% else %}
 	{assign var="action" value="controller=backend.recurringProductPeriod" action=create"}
-{/if}
+{% endif %}
 
 {form
 	onsubmit="Backend.RecurringProductPeriod.prototype.getInstance(this).save(); return false;"

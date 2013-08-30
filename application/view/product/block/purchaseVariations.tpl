@@ -1,29 +1,29 @@
-{if $samePrice}
+{% if $samePrice %}
 	<p>
 		<label>{t _price}</label>
 		<span class="price">{$product.formattedPrice.$currency}</span>
 	</p>
 
-	{if $quantityPricing}
+	{% if $quantityPricing %}
 		[[ partial("product/block/quantityPrice.tpl") ]]
-	{/if}
-{/if}
+	{% endif %}
+{% endif %}
 
 {% set parentProduct = $product %}
 {form action="order/addToCart" handle=$cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
 	{foreach $variations.products as $product}
 		<h3>{$product.variationNames|@implode:' / '}</h3>
 
-		{if !$samePrice}
+		{% if !$samePrice %}
 			<p>
 				<label>{t _price}</label>
 				<span class="price">{$product.finalFormattedPrice.$currency}</span>
 			</p>
 
-			{if $quantityPricing}
+			{% if $quantityPricing %}
 				[[ partial("product/block/quantityPrice.tpl") ]]
-			{/if}
-		{/if}
+			{% endif %}
+		{% endif %}
 
 		<p>
 			<label>{t _quantity}</label>

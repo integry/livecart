@@ -1,10 +1,10 @@
-{if 'DISPLAY_PRICES'|config}
+{% if 'DISPLAY_PRICES'|config %}
 <span class="price">
 	{$product.formattedPrice.$currency}
-	{if $product.formattedListPrice.$currency}
+	{% if $product.formattedListPrice.$currency %}
 		<span class="listPrice">
 			{$product.formattedListPrice.$currency}
 		</span>
-	{/if}
+	{% endif %}
 </span>
-{/if}
+{% endif %}

@@ -32,32 +32,32 @@
 {* No group *}
 <ul id="noGroup_[[type]]_[[productID]]" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 {foreach item="relationship" from=$relationshipsWithGroups}
-	{if $relationship.ProductRelationshipGroup.ID}{break}{/if}
-	{if $relationship.RelatedProduct.ID}
+	{% if $relationship.ProductRelationshipGroup.ID %}{break}{% endif %}
+	{% if $relationship.RelatedProduct.ID %}
 		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
 		</li>
-	{/if}
+	{% endif %}
 {/foreach}
 </ul>
 
 <ul class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit groupList">
 {foreach item="relationship" from=$relationshipsWithGroups}
-	{if !$relationship.ProductRelationshipGroup.ID}{continue}{/if}
+	{% if !$relationship.ProductRelationshipGroup.ID %}{continue}{% endif %}
 
-	{if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
-		{if $lastProductRelationshipGroup > 0}</ul></li>{/if}
+	{% if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID  %}
+		{% if $lastProductRelationshipGroup > 0 %}</ul></li>{% endif %}
 		<li id="[[relationship.ProductRelationshipGroup.ID]]" class="groupContainer">
 			<span class="groupTitle">[[relationship.ProductRelationshipGroup.name]]</span>
 			[[ partial("backend/productRelationshipGroup/form.tpl") ]]
 			<ul id="[[relationship.ProductRelationshipGroup.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
-	{/if}
+	{% endif %}
 
-	{if $relationship.RelatedProduct.ID} {* For empty groups *}
+	{% if $relationship.RelatedProduct.ID %} {* For empty groups *}
 		<li id="[[relationship.RelatedProduct.ID]]">
 			{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
 		</li>
-	{/if}
+	{% endif %}
 
 	{% set lastProductRelationshipGroup = $relationship.ProductRelationshipGroup.ID %}
 {/foreach}

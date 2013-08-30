@@ -10,9 +10,9 @@
 </div>
 
 <div id="loginContainer">
-{if req('failed')}
+{% if req('failed') %}
 	<div class="loginFailed">{t _login_failed}</div>
-{/if}
+{% endif %}
 <form action="{link controller="backend.session" action=doLogin}" method="post" />
 	<p>
 	   <label for="email">{t _email}:</label>

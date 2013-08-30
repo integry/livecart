@@ -1,8 +1,8 @@
-{if $order.isMultiAddress}
+{% if $order.isMultiAddress %}
 	<div class="shipmentAddress">
 		<span class="shipmentAddressLabel">{t _shipment_shipped_to}:</span> [[shipment.ShippingAddress.compact]]
 	</div>
-{/if}
+{% endif %}
 
 <table class="table shipment">
 
@@ -20,40 +20,40 @@
 
 		[[ partial("order/orderTableDetails.tpl") ]]
 
-		{if !'HIDE_TAXES'|config || $showTaxes}
+		{% if !'HIDE_TAXES'|config || $showTaxes %}
 			{foreach from=$shipment.taxes item="tax"}
 				<tr>
 					<td colspan="4" class="tax">[[tax.TaxRate.Tax.name_lang]]:</td>
 					<td>{$tax.formattedAmount[$order.Currency.ID]}</td>
 				</tr>
 			{/foreach}
-		{/if}
+		{% endif %}
 
-		{if $smarty.foreach.shipments.iteration == 1}
+		{% if $smarty.foreach.shipments.iteration == 1 %}
 			{foreach from=$order.discounts item=discount}
-				{if $discount.amount != 0}
+				{% if $discount.amount != 0 %}
 					<tr>
-						<td colspan="4" class="subTotalCaption"><span class="discountLabel">{if $discount.amount > 0}{t _discount}{else}{t _surcharge}{/if}:</span> <span class="discountDesc">[[discount.description]]</span></td>
+						<td colspan="4" class="subTotalCaption"><span class="discountLabel">{% if $discount.amount > 0 %}{t _discount}{% else %}{t _surcharge}{% endif %}:</span> <span class="discountDesc">[[discount.description]]</span></td>
 						<td class="amount discountAmount">[[discount.formatted_amount]]</td>
 					</tr>
-				{/if}
+				{% endif %}
 			{/foreach}
-		{/if}
+		{% endif %}
 
 		<tr>
 			<td colspan="4" class="subTotalCaption">
-				{if $smarty.foreach.shipments.total > 1}
+				{% if $smarty.foreach.shipments.total > 1 %}
 					{t _shipment_total}:
-				{else}
+				{% else %}
 					{t _order_total}:
-				{/if}
+				{% endif %}
 			</td>
 			<td class="subTotal">
-				{if $smarty.foreach.shipments.total == 1}
+				{% if $smarty.foreach.shipments.total == 1 %}
 					{$order.formattedTotal[$order.Currency.ID]}
-				{else}
+				{% else %}
 					[[shipment.formatted_totalAmount]]
-				{/if}
+				{% endif %}
 			</td>
 		</tr>
 

@@ -91,19 +91,19 @@
 				<label>[[file]]</label>
 			{/input}
 
-			{if 'ProductImport' == $type}
+			{% if 'ProductImport' == $type %}
 			<p>
 				<label>{t _import_category}</label>
 				<label>
 					{foreach from=$catPath item=node name="catPath"}
 						<a href="{link controller="backend.csvImport" action=index}?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
-						{if !$smarty.foreach.catPath.last}
+						{% if !$smarty.foreach.catPath.last %}
 							&gt;
-						{/if}
+						{% endif %}
 					{/foreach}
 				</label>
 			</p>
-			{/if}
+			{% endif %}
 
 		</form>
 	</fieldset>

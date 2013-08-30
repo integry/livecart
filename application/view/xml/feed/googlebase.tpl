@@ -12,37 +12,37 @@
 			<item>
 				<title><![CDATA[[[product.name_lang_utf8]]]]></title>
 
-				{if $product.shortDescription_lang_utf8}
+				{% if $product.shortDescription_lang_utf8 %}
 					<description><![CDATA[[[product.shortDescription_lang_utf8]]]]></description>
-				{elseif $product.longDescription_lang_utf8}
+				{% elseif $product.longDescription_lang_utf8 %}
 					<description><![CDATA[[[product.longDescription_lang_utf8]]]]></description>
-				{/if}
+				{% endif %}
 
 				<link><![CDATA[{productUrl product=$product full=true}]]></link>
 
 				<g:id><![CDATA[{$product.sku|@htmlentities}]]></g:id>
-				{if $product.Manufacturer.name}
+				{% if $product.Manufacturer.name %}
 					<g:brand><![CDATA[{$product.Manufacturer.name|@htmlentities}]]></g:brand>
-				{/if}
+				{% endif %}
 
-				{if $product.DefaultImage.ID}
+				{% if $product.DefaultImage.ID %}
 					<g:image_link><![CDATA[[[product.DefaultImage.urls.4]]]]></g:image_link>
-				{/if}
+				{% endif %}
 
-				{if $product.$listPriceCurrency}
+				{% if $product.$listPriceCurrency %}
 					<g:price><![CDATA[{$product.$listPriceCurrency} USD]]></g:price>
 					<g:sale_price><![CDATA[{$product.$priceCurrency} USD]]></g:sale_price>
-				{else}
+				{% else %}
 					<g:price><![CDATA[{$product.$priceCurrency|default:0} USD]]></g:price>
-				{/if}
+				{% endif %}
 
-				{if $product.shippingWeight}
+				{% if $product.shippingWeight %}
 					<g:shipping_weight><![CDATA[[[product.shippingWeight]] kg]]></g:weight>
-				{/if}
+				{% endif %}
 
 				<g:condition>new</g:condition>
 				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
-				<g:availability><![CDATA[{if $product.isAvailable}in stock{else}out of stock{/if}]]></g:availability>
+				<g:availability><![CDATA[{% if $product.isAvailable %}in stock{% else %}out of stock{% endif %}]]></g:availability>
 
 			</item>
 		{/foreach}

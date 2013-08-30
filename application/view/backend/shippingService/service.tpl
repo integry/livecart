@@ -26,7 +26,7 @@
 
 	{input name="rangeTypeStatic" class="rangeTypeStatic"}
 		<label>{tip _range_type}</label>
-		<label style="width: auto;">{if $service.rangeType == 0}{tip _weight_based_calculations}{else}{tip _subtotal_based_calculations}{/if}</label>
+		<label style="width: auto;">{% if $service.rangeType == 0 %}{tip _weight_based_calculations}{% else %}{tip _subtotal_based_calculations}{% endif %}</label>
 	{/input}
 
 	<div class="expectedDeliveryInterval">

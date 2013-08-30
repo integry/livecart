@@ -1,9 +1,9 @@
 {capture assign="body"}
 	[[ partial("order/changeMessages.tpl") ]]
 
-	{if $error}
+	{% if $error %}
 		<div class="errorMessage">[[error]]</div>
-	{/if}
+	{% endif %}
 
 	<p class="addedToCart">[[msg]]</p>
 {/capture}

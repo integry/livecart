@@ -6,25 +6,25 @@
 {% block content %}
 
 	<div class="resultStats">
-		{if $orders}
-			{if $count > $perPage}
+		{% if $orders %}
+			{% if $count > $perPage %}
 				{maketext text=_displaying_orders params="`$from`,`$to`,`$count`"}
-			{else}
+			{% else %}
 				{maketext text=_orders_found params=$count}
-			{/if}
-		{else}
+			{% endif %}
+		{% else %}
 			{t _no_orders_found}
-		{/if}
+		{% endif %}
 	</div>
 
 	{foreach from=$orders item="order"}
 		{include file="user/orderEntry.tpl" order=$order}
 	{/foreach}
 
-	{if $count > $perPage}
+	{% if $count > $perPage %}
 		{capture assign="url"}{link controller=user action=orders id=0}{/capture}
 		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
-	{/if}
+	{% endif %}
 
 {% endblock %}
 

@@ -1,4 +1,4 @@
-{if $product.isAvailable && 'ENABLE_CART'|config}
+{% if $product.isAvailable && 'ENABLE_CART'|config %}
 
 	<div class="well">
 		
@@ -20,5 +20,5 @@
 		</div>
 	
 	</div>
-{/if}
+{% endif %}
 

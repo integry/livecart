@@ -1,17 +1,17 @@
 [[ config('STORE_NAME') ]] Order Status Update
 Dear [[user.fullName]],
 
-{if $order.shipments|@count == 1}
+{% if $order.shipments|@count == 1 %}
 Status has been updated for your order <b class="orderID">#[[order.invoiceNumber]]</b>.
-{else}
+{% else %}
 Status has been updated for one or more shipments from your order <b class="orderID">#[[order.invoiceNumber]]</b>.
-{/if}
+{% endif %}
 
 If you have any questions regarding this order, you can send us an email message or contact from the following page:
 {link controller=user action=viewOrder id=$order.ID url=true}
 
 {foreach from=$order.shipments item=shipment}
-New status: {if $shipment.status == 2}awaiting shipment{elseif $shipment.status == 3}shipped{elseif $shipment.status == 4}returned{else}processing{/if}
+New status: {% if $shipment.status == 2 %}awaiting shipment{% elseif $shipment.status == 3 %}shipped{% elseif $shipment.status == 4 %}returned{% else %}processing{% endif %}
 
 [[ partial("email/blockItemHeader.tpl") ]]
 [[ partial("email/blockShipment.tpl") ]]

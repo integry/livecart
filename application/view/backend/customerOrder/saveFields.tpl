@@ -13,9 +13,9 @@
 
 	<div class="overview">
 		{include file="backend/eav/view.tpl" item=$order}
-		{if !$order.attributes}
+		{% if !$order.attributes %}
 			<p>{t _no_info_entered_yet}</p>
-		{/if}
+		{% endif %}
 	</div>
 
 	{form handle=$fieldsForm action="backend.customerOrder/saveFields" method="POST"}

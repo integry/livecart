@@ -26,11 +26,11 @@
 
 	{/literal}
 	{foreach from=$configuration item="configItem" key="configKey"}
-		{if $configKey == 'types'}
+		{% if $configKey == 'types' %}
 			Backend.ProductOption.prototype.[[configKey]] = Backend.ProductOption.prototype.createTypesOptions({json array=$configItem});
-		{else}
+		{% else %}
 			Backend.ProductOption.prototype.[[configKey]] = {json array=$configItem};
-		{/if}
+		{% endif %}
 	{/foreach}
 
 // ]!]>
@@ -62,12 +62,12 @@
 <ul id="productOption_items_list_[[parentID]]_" class="productOptionList activeList_add_sort activeList_add_delete activeList_add_edit activeList_accept_productOptionList">
 {assign var="lastProductOptionGroup" value="-1"}
 {foreach name="productOptionForeach" item="field" from=$options}
-	{if $field.ID}
+	{% if $field.ID %}
 		<li id="productOption_items_list_[[parentID]]_[[field.ProductOptionGroup.ID]]_[[field.ID]]">
 			<span class="productOption_title">[[field.name_lang]]</span>
 			<span class="productOption_choiceCount"></span>
 		</li>
-	{/if}
+	{% endif %}
 {/foreach}
 </ul>
 

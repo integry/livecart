@@ -10,7 +10,7 @@
 </dialog>
 
 {*
-<div class="productForm {if 1 == $product.type}intangible{/if}">
+<div class="productForm {% if 1 == $product.type %}intangible{% endif %}">
 	<fieldset class="container">
 		<ul class="menu">
 			<li class="done"><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct([[product.Category.ID]]); return false;">{t _cancel_add_product}</a></li>
@@ -22,11 +22,11 @@
 		<input type="hidden" name="categoryID" value="[[product.Category.ID]]" />
 
 		{include file="backend/product/form/main.tpl" product=$product cat=$cat productTypes=$productTypes}
-		{if $specFieldList}
+		{% if $specFieldList %}
 			<div class="specFieldContainer">
 			{include file="backend/product/form/specFieldList.tpl" product=$product cat=$cat specFieldList=$specFieldList}
 			</div>
-		{/if}
+		{% endif %}
 
 		{include file="backend/product/form/inventory.tpl" product=$product cat=$cat baseCurrency=$baseCurrency form=$productForm}
 		{include file="backend/product/form/pricing.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}

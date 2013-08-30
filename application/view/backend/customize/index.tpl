@@ -5,14 +5,14 @@
 
 <ul id="customizeMenu">
 
-	<li{if $isCustomizationModeEnabled} class="active"{/if}>
+	<li{% if $isCustomizationModeEnabled %} class="active"{% endif %}>
 
-		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {if $isCustomizationModeEnabled}on{/if}">
-		{if $isCustomizationModeEnabled}
+		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {% if $isCustomizationModeEnabled %}on{% endif %}">
+		{% if $isCustomizationModeEnabled %}
 			{tn _turn_off}
-		{else}
+		{% else %}
 			{tn _turn_on}
-		{/if}
+		{% endif %}
 		</a>
 
 		<div class="modeDescr">

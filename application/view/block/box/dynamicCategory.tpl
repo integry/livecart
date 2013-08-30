@@ -18,21 +18,21 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 {/literal}
 
 {function name="dynamicCategoryTree" node=false filters=false}
-	{if $node}
+	{% if $node %}
 		<ul class="unstyled" id="dynamicNav">
 		{foreach from=$node item=category}
-				<li class="{if $category.parentNodeID == 1}topCategory{/if} {if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt} dynCurrent{/if}{if $category.subCategories} hasSubs{else} noSubs{/if}">
+				<li class="{% if $category.parentNodeID == 1 %}topCategory{% endif %} {% if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt %} dynCurrent{% endif %}{% if $category.subCategories %} hasSubs{% else %} noSubs{% endif %}">
 					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
-					{if 'DISPLAY_NUM_CAT'|config}
+					{% if 'DISPLAY_NUM_CAT'|config %}
 						{include file="block/count.tpl" count=$category.count}
-					{/if}
-					{if $category.subCategories}
+					{% endif %}
+					{% if $category.subCategories %}
 		   				{dynamicCategoryTree node=$category.subCategories}
-					{/if}
+					{% endif %}
 				</li>
 		{/foreach}
 		</ul>
-	{/if}
+	{% endif %}
 {/function}
 
 <div class="panel categories dynamicMenu">
