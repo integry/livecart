@@ -8,7 +8,7 @@ Status er oppdatert for en eller flere forsendelser av din bestillingsordre <b c
 {% endif %}
 
 Hvis du har spørsmål ang. denne bestillingen, kan du sende oss en mail eller kontakte oss på følgene link:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$shipments item=shipment}
 Ny status: {% if $shipment.status == 2 %}Forventet levering{% elseif $shipment.status == 3 %}sendt{% elseif $shipment.status == 4 %}returnert{% else %}under behandling {% endif %}

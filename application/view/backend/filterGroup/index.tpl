@@ -2,14 +2,14 @@
 <script type="text/javascript">
 //<[!CDATA[
 	Backend.Filter.prototype.links = {};
-	Backend.Filter.prototype.links.deleteGroup = '{link controller="backend.filterGroup" action=delete}/';
-	Backend.Filter.prototype.links.editGroup = '{link controller="backend.filterGroup" action=item}/';
-	Backend.Filter.prototype.links.sortGroup = '{link controller="backend.filterGroup" action=sort}/';
-	Backend.Filter.prototype.links.updateGroup = '{link controller="backend.filterGroup" action=update}/';
-	Backend.Filter.prototype.links.createGroup = '{link controller="backend.filterGroup" action=create}/';
-	Backend.Filter.prototype.links.deleteFilter = '{link controller="backend.filter" action=delete}/';
-	Backend.Filter.prototype.links.sortFilter = '{link controller="backend.filter" action=sort}/';
-	Backend.Filter.prototype.links.generateFilters = '{link controller="backend.filter" action=generate}/';
+	Backend.Filter.prototype.links.deleteGroup = '[[ url("backend.filterGroup/delete") ]]/';
+	Backend.Filter.prototype.links.editGroup = '[[ url("backend.filterGroup/item") ]]/';
+	Backend.Filter.prototype.links.sortGroup = '[[ url("backend.filterGroup/sort") ]]/';
+	Backend.Filter.prototype.links.updateGroup = '[[ url("backend.filterGroup/update") ]]/';
+	Backend.Filter.prototype.links.createGroup = '[[ url("backend.filterGroup/create") ]]/';
+	Backend.Filter.prototype.links.deleteFilter = '[[ url("backend.filter/delete") ]]/';
+	Backend.Filter.prototype.links.sortFilter = '[[ url("backend.filter/sort") ]]/';
+	Backend.Filter.prototype.links.generateFilters = '[[ url("backend.filter/generate") ]]/';
 
 	Backend.Filter.prototype.msg = {};
 	Backend.Filter.prototype.msg.translateTo = '{t _translate_to}';

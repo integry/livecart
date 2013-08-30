@@ -4,7 +4,7 @@
 طلبك <b class="orderID">#[[order.invoiceNumber]]</b>, وضعت في [[ config('STORE_NAME') ]], تم إلغائه.
 
 إذا كان لديك أي أسئلة بخصوص هذا الطلب، ويمكنك أن ترسل لنا رسالة عبر البريد الإلكتروني أو الاتصال من الصفحة التالية :
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 تم الغاء هذه العناصر
 [[ partial("email/blockOrderItems.tpl") ]]

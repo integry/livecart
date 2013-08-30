@@ -7,7 +7,7 @@
 	{% endif %}
 
 	<li class="ext_[[file.extension]]">
-		<a href="{link controller=user action=download id=$item.ID query="fileID=`$file.ID`"}">[[file.title_lang]]</a>
+		<a href="[[ url("user/download/" ~ item.ID, "fileID=`$file.ID`") ]]">[[file.title_lang]]</a>
 	</li>
 	{% set prev = $file %}
 {/foreach}

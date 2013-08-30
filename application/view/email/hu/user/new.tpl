@@ -9,6 +9,6 @@ Jelszó: <b>[[user.newPassword]]</b>
 Felhasználói felületedről láthatod: rendelésed aktuális státuszát, régebbi rendeléseid. Ugyanakkor innen töltheted le a megvásárolt digitális állományokat, és módosíthatod elérhetőséged is.
 
 Ezt a címet használhatod, hogy bejelentkezz felhasználói felületedre:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

@@ -12,7 +12,7 @@
 
 	<div class="clear"></div>
 
-	<form action="{link controller=checkout action=payExpressComplete}" method="post" id="expressComplete" class="form-horizontal">
+	<form action="[[ url("checkout/payExpressComplete") ]]" method="post" id="expressComplete" class="form-horizontal">
 
 		[[ partial('block/submit.tpl', ['caption': "_complete_now"]) ]]
 

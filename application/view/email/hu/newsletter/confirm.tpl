@@ -2,10 +2,10 @@
 Hello,
 
 Hogy megerősítsd e-mail címedet, és elkezd kapni hírlevelünkett kattints a következő linkre:
-{link controller=newsletter action=confirm query="email=`$email`&code=`$subscriber.confirmationCode`" url=true}
+[[ fullurl("newsletter/confirm", email=`$email`&code=`$subscriber.confirmationCode`) ]]
 
 [[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Ha nem akarod tovább kapni hírlevelünket, kattints az alábbi linkre:
-{link controller=newsletter action=unsubscribe query="email=`$email`" url=true}
+[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]

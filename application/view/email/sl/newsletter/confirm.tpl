@@ -2,10 +2,10 @@
 Pozdravljeni,
 
 Za aktivacijo e-mail naslova, prosimo kliknite na naslednjo povezavo:
-{link controller=newsletter action=confirm query="email=`$email`&code=`$subscriber.confirmationCode`" url=true}
+[[ fullurl("newsletter/confirm", email=`$email`&code=`$subscriber.confirmationCode`) ]]
 
 [[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Če ne želite več prejemati obvestil, prosimo kliknite spodnjo povezavo, da se odjavite z naše mailing liste:
-{link controller=newsletter action=unsubscribe query="email=`$email`" url=true}
+[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]

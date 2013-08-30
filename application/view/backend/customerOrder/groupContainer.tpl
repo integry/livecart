@@ -5,7 +5,7 @@
 	<div class="tabContainer" id="orderGroupsTabContainer">
 		<ul class="tabList tabs">
 			<li id="tabOrders" class="tab inactive">
-				<a href="{link controller="backend.customerOrder" action=orders}?id=_id_">{t _orders}</a>
+				<a href="[[ url("backend.customerOrder/orders") ]]?id=_id_">{t _orders}</a>
 				<span class="tabHelp">orders</span>
 			</li>
 		</ul>

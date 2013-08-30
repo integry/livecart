@@ -11,8 +11,8 @@
 	{foreach from=$cart.wishListItems item="item" name="wishList"}
 		<tr>
 			<td class="cartControl">
-				<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t _move_to_cart}</a>
-				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
+				<a href="[[ url("order/moveToCart/" ~ item.ID, "return=`$return`") ]]">{t _move_to_cart}</a>
+				<a href="[[ url("order/delete/" ~ item.ID, "return=`$return`") ]]">{t _remove}</a>
 			</td>
 			<td class="cartImage">
 				{% if $item.Product.DefaultImage.urls.1 %}
@@ -31,5 +31,5 @@
 	{/foreach}
 	</tbody>
 </table>
-<a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
+<a href="[[ url(return) ]]" class="continueShopping">{t _continue_shopping}</a>
 </div>

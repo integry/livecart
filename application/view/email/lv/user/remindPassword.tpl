@@ -7,6 +7,6 @@ E-pasts: <b>[[user.email]]</b>
 Parole: <b>[[user.newPassword]]</b>
 
 Piekļūt savam lietotāja kontam varat no šejienes:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/lv/signature.tpl") ]]

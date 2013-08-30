@@ -4,13 +4,13 @@
 {% block title %}{t _checkout}{{% endblock %}
 
 <noscript>
-	<meta http-equiv="refresh" content="0;{link controller=onePageCheckout action=fallback}" />
+	<meta http-equiv="refresh" content="0;[[ url("onePageCheckout/fallback") ]]" />
 </noscript>
 
 <script type="text/javascript">
 	if (Prototype.Browser.IE6)
 	{ldelim}
-		window.location.href = '{link controller=onePageCheckout action=fallback}';
+		window.location.href = '[[ url("onePageCheckout/fallback") ]]';
 	{rdelim}
 </script>
 

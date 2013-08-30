@@ -5,7 +5,7 @@ Děkujeme za objednávku v našem obchodě [[ config('STORE_NAME') ]].
 Pokud nás ohledně této objednávky chcete kontaktovat, uvádějte její číslo: [[order.invoiceNumber]].
 
 Stav objednávky můžete sledovat zde:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 Kontaktovat nás můžete použitím odkazu nahoře.
 

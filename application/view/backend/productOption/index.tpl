@@ -6,13 +6,13 @@
 	 * so we define them in
 	 */
 	Backend.ProductOption.prototype.links = {};
-	Backend.ProductOption.prototype.links.create		  = '{link controller="backend.productOption" action=create}';
-	Backend.ProductOption.prototype.links.update		  = '{link controller="backend.productOption" action=update}';
-	Backend.ProductOption.prototype.links.deleteField	 = '{link controller="backend.productOption" action=delete}/';
-	Backend.ProductOption.prototype.links.editField	   = '{link controller="backend.productOption" action=item}/';
-	Backend.ProductOption.prototype.links.sortField	   = '{link controller="backend.productOption" action=sort}/';
-	Backend.ProductOption.prototype.links.deleteValue	 = '{link controller="backend.productOption" action=deleteChoice}/';
-	Backend.ProductOption.prototype.links.sortValues	  = '{link controller="backend.productOption" action=sortChoice}/';
+	Backend.ProductOption.prototype.links.create		  = '[[ url("backend.productOption/create") ]]';
+	Backend.ProductOption.prototype.links.update		  = '[[ url("backend.productOption/update") ]]';
+	Backend.ProductOption.prototype.links.deleteField	 = '[[ url("backend.productOption/delete") ]]/';
+	Backend.ProductOption.prototype.links.editField	   = '[[ url("backend.productOption/item") ]]/';
+	Backend.ProductOption.prototype.links.sortField	   = '[[ url("backend.productOption/sort") ]]/';
+	Backend.ProductOption.prototype.links.deleteValue	 = '[[ url("backend.productOption/deleteChoice") ]]/';
+	Backend.ProductOption.prototype.links.sortValues	  = '[[ url("backend.productOption/sortChoice") ]]/';
 
 	Backend.ProductOption.prototype.msg = {};
 	Backend.ProductOption.prototype.msg.removeFieldQuestion  = '[[ addslashes({t _ProductOption_remove_question}) ]]';

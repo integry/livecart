@@ -9,7 +9,7 @@
 	</div>
 {% endif %}
 
-<form method="POST" action="{link controller=onePageCheckout action=doProceedRegistration}" id="checkout-options" class="form-horizontal">
+<form method="POST" action="[[ url("onePageCheckout/doProceedRegistration") ]]" id="checkout-options" class="form-horizontal">
 	<h3>{t _new_customer}</h3>
 	<p>
 		Shopping here for the first time? The next step would be to enter your address and contact information.
@@ -18,7 +18,7 @@
 	[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 </form>
 
-<form method="POST" action="{link controller=onePageCheckout action=doLogin}" id="checkoutLogin" class="form-horizontal">
+<form method="POST" action="[[ url("onePageCheckout/doLogin") ]]" id="checkoutLogin" class="form-horizontal">
 	<h3>Returning Customer</h3>
 	<p id="login-msg">
 		{t _opc_login_msg}
@@ -34,7 +34,7 @@
 		<label>{t _password}:</label>
 		<div class="controls">
 			<input type="password" class="text" id="password" name="password" />
-			<a href="{link controller=user action="remindPassword" query="return=onePageCheckout"}" class="forgottenPassword">
+			<a href="[[ url("user/remindPassword", "return=onePageCheckout") ]]" class="forgottenPassword">
 				{t _remind_password}
 			</a>
 		</div>

@@ -9,11 +9,11 @@
 
 		<ul class="menu">
 			<li class="order_printInvoice">
-				<a href="{link controller="backend.customerOrder" action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
+				<a href="[[ url("backend.customerOrder/printInvoice/" ~ order.ID) ]]" target="_blank">{t _print_invoice}</a>
 			</li>
 
 			<li class="order_printLabel">
-				<a href="{link controller="backend.customerOrder" action=printLabels id=$order.ID"}" target="_blank">{t _print_shipping_labels}</a>
+				<a href="[[ url("backend.customerOrder/printLabels/" ~ order.ID) ]]" target="_blank">{t _print_shipping_labels}</a>
 			</li>
 		</ul>
 

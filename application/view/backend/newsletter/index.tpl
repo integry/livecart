@@ -29,8 +29,8 @@
 	</div>
 
 	<ul class="tabList tabs">
-		<li id="tabMessages" class="tab active"><a href="{link controller="backend.newsletter" action=list}">{t _messages}</a></li>
-		<li id="tabSubscribers" class="tab inactive"><a href="{link controller="backend.newsletterSubscriber"}">{t _subscribers}</a></li>
+		<li id="tabMessages" class="tab active"><a href="[[ url("backend.newsletter/list") ]]">{t _messages}</a></li>
+		<li id="tabSubscribers" class="tab inactive"><a href="[[ url("backend.newsletterSubscriber") ]]">{t _subscribers}</a></li>
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabMessagesContent" class="maxHeight tabPageContainer">
@@ -79,12 +79,12 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabMessageInfo" class="tab active">
-				<a href="{link controller="backend.newsletter" action=edit id=_id_}">{t _edit_message}</a>
+				<a href="[[ url("backend.newsletter/edit/_id_") ]]">{t _edit_message}</a>
 				<span class="tabHelp">products.edit</span>
 			</li>
 
 			<li id="tabSubmissionStats" class="tab inactive">
-				<a href="{link controller="backend.productPrice" action=index id=_id_}">{t _submission_info}</a>
+				<a href="[[ url("backend.productPrice/index/_id_") ]]">{t _submission_info}</a>
 				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 		</ul>
@@ -106,14 +106,14 @@
 
 	Backend.Newsletter.links =
 	{
-		add: '{link controller="backend.newsletter" action=add}',
-		recipientCount: '{link controller="backend.newsletter" action=recipientCount}',
-		plaintext: '{link controller="backend.newsletter" action=plaintext}',
+		add: '[[ url("backend.newsletter/add") ]]',
+		recipientCount: '[[ url("backend.newsletter/recipientCount") ]]',
+		plaintext: '[[ url("backend.newsletter/plaintext") ]]',
 	}
 
 
 
-	Backend.Newsletter.GridFormatter.url = '{link controller="backend.newsletter" action=edit}?id=';
+	Backend.Newsletter.GridFormatter.url = '[[ url("backend.newsletter/edit") ]]?id=';
 	window.activeGrids['newsletters_0'].setDataFormatter(Backend.Newsletter.GridFormatter);
 
 	var massHandler = new ActiveGrid.MassActionHandler(

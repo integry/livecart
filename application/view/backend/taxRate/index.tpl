@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if empty(taxes) %}
-	<div class="noRecords"><div>{t _no_taxes} <a href="{link controller="backend.tax"}" class="menu">{t _add_tax}</a></div></div>
+	<div class="noRecords"><div>{t _no_taxes} <a href="[[ url("backend.tax") ]]" class="menu">{t _add_tax}</a></div></div>
 {% else %}
 	{form action="controller=backend.taxRate action=save id=`$deliveryZone.ID`" method="post" onsubmit="new LiveCart.AjaxRequest(this); return false;" handle=$form}
 	<table class="taxes">

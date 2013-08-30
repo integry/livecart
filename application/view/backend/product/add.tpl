@@ -55,7 +55,7 @@
 			</p>
 
 			{filefield name="upload_productImage" class="upload_productImageEmpty" style="display:none;"}
-			<input type="hidden" id="fileUploadOptions_[[cat]]_[[product.ID]]" class="fileUploadOptions" value="{link controller="backend.product" action=uploadProductImage query="field=productImage"}" />
+			<input type="hidden" id="fileUploadOptions_[[cat]]_[[product.ID]]" class="fileUploadOptions" value="[[ url("backend.product/uploadProductImage", "field=productImage") ]]" />
 
 			<script type="text/javascript">
 				var upload = $('product_image_[[cat]]_[[product.ID]]');

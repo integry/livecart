@@ -27,7 +27,7 @@
 		<input type="submit" class="submit" value="{t _save_css}" />
 		{% if isset($noTabHandling) == false %}
 			{t _or}
-			<a id="cancel_[[tabid]]" class="cancel" href="{link controller="backend.cssEditor"}">{t _cancel}</a>
+			<a id="cancel_[[tabid]]" class="cancel" href="[[ url("backend.cssEditor") ]]">{t _cancel}</a>
 		{% endif %}
 	</fieldset>
 {/form}

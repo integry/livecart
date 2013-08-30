@@ -17,35 +17,35 @@
 	{% if !$order.isFinalized %}
 	<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
 		<span style="display: none;" id="order_[[order.ID]]_isFinalizedIndicator" class="progressIndicator"></span>
-		<a id="order_[[order.ID]]_isFinalized" href="{link controller="backend.customerOrder" action="finalize" id=$order.ID}">
+		<a id="order_[[order.ID]]_isFinalized" href="[[ url("backend.customerOrder/finalize/" ~ order.ID) ]]">
 			{t _finalize}
 		</a>
 	</li>
 	{% endif %}
 	<li class="order_printInvoice">
-		<a href="{link controller="backend.customerOrder" action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
+		<a href="[[ url("backend.customerOrder/printInvoice/" ~ order.ID) ]]" target="_blank">{t _print_invoice}</a>
 	</li>
 
 	<li class="order_printLabel">
-		<a href="{link controller="backend.customerOrder" action=printLabels id=$order.ID}" target="_blank">{t _print_shipping_labels}</a>
+		<a href="[[ url("backend.customerOrder/printLabels/" ~ order.ID) ]]" target="_blank">{t _print_shipping_labels}</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied}
 		class="{% if $order.isCancelled %}order_accept{% else %}order_cancel{% endif %}">
 		<span style="display: none;" id="order_[[order.ID]]_isCanceledIndicator" class="progressIndicator"></span>
-		<a id="order_[[order.ID]]_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
+		<a id="order_[[order.ID]]_isCanceled" href="[[ url("backend.customerOrder/setIsCanceled/" ~ order.ID) ]]">
 			{% if $order.isCancelled %}{t _accept_order}{% else %}{t _cancel_order}{% endif %}
 		</a>
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied} class="addCoupon">
 		<span style="display: none;" id="order_[[order.ID]]_addCouponIndicator" class="progressIndicator"></span>
-		<a id="order_[[order.ID]]_addCoupon" href="{link controller="backend.customerOrder" action="addCoupon" id=$order.ID}?coupon=_coupon_">{t _add_coupon}</a>
+		<a id="order_[[order.ID]]_addCoupon" href="[[ url("backend.customerOrder/addCoupon/" ~ order.ID) ]]?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
 
 	{% if $order.isFinalized %}
 		<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
-			<a id="order_[[order.ID]]_recalculateDiscounts" href="{link controller="backend.customerOrder" action="recalculateDiscounts" id=$order.ID}">
+			<a id="order_[[order.ID]]_recalculateDiscounts" href="[[ url("backend.customerOrder/recalculateDiscounts/" ~ order.ID) ]]">
 				{t _recalculate_discounts}
 			</a>
 		</li>
@@ -97,7 +97,7 @@
 			[[order.Currency.pricePrefix]]<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>[[order.Currency.priceSuffix]]
 		</label>
 		<span class="notPaid">
-			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '{link controller="backend.payment" action=changeOrderPaidStatus id=$order.ID query='status=_stat_'}');">
+			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '[[ url("backend.payment/changeOrderPaidStatus/" ~ order.ID, "'status=_stat_'") ]]');">
 			<label for="{uniqid last=true}" class="checkbox">{t _mark_as_paid}</label>
 		</span>
 	</div>
@@ -126,7 +126,7 @@
 	{% if 'ENABLE_MULTIADDRESS'|@config %}
 	<div class="clearfix">
 		<label class="param" for="order_[[order.ID]])_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
-		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '{link controller="backend.customerOrder" action=setMultiAddress id=$order.ID query='status=_stat_'}', [[order.ID]]);"><option value=0>{t _no}</option><option value=1{% if $order.isMultiAddress %} selected="selected"{% endif %}>{t _yes}</option></select>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '[[ url("backend.customerOrder/setMultiAddress/" ~ order.ID, "'status=_stat_'") ]]', [[order.ID]]);"><option value=0>{t _no}</option><option value=1{% if $order.isMultiAddress %} selected="selected"{% endif %}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</div>
 	{% endif %}
@@ -156,8 +156,8 @@
 			<span class="stopRebillsLinkContainer" style="{% if $order.rebillsLeft == 0 %}display:none;{% endif %}">
 				<span class="progressIndicator" style="display:none;"></span>
 				<a href="#" id="stopRebills[[order.ID]]">{t _cancel_subscription}</a>
-				<input type="hidden" id="cancelSubscriptionURL[[order.ID]]" value="{link controller="backend.CustomerOrder" action=cancelSubscription id=$order.ID}" />
-				<input type="hidden" id="stopRebillsURL[[order.ID]]" value="{link controller="backend.CustomerOrder" action=stopRebills id=$order.ID}" />
+				<input type="hidden" id="cancelSubscriptionURL[[order.ID]]" value="[[ url("backend.CustomerOrder/cancelSubscription/" ~ order.ID) ]]" />
+				<input type="hidden" id="stopRebillsURL[[order.ID]]" value="[[ url("backend.CustomerOrder/stopRebills/" ~ order.ID) ]]" />
 			</span>
 		</div>
 	{% endif %}
@@ -335,22 +335,22 @@
 
 <script type="text/javascript">
 	Backend.OrderedItem.Links = {};
-	Backend.OrderedItem.Links.remove = '{link controller="backend.orderedItem" action=delete}';
-	Backend.OrderedItem.Links.changeShipment = '{link controller="backend.orderedItem" action=changeShipment}';
-	Backend.OrderedItem.Links.addProduct = '{link controller="backend.orderedItem" action=selectProduct}/[[orderID]]';
-	Backend.OrderedItem.Links.createNewItem = '{link controller="backend.orderedItem" action=create}';
-	// Backend.OrderedItem.Links.createFromSearchQuery = '{link controller="backend.orderedItem" action=createFromSearchQuery}';
-	Backend.OrderedItem.Links.changeItemCount = '{link controller="backend.orderedItem" action=changeCount}';
+	Backend.OrderedItem.Links.remove = '[[ url("backend.orderedItem/delete") ]]';
+	Backend.OrderedItem.Links.changeShipment = '[[ url("backend.orderedItem/changeShipment") ]]';
+	Backend.OrderedItem.Links.addProduct = '[[ url("backend.orderedItem/selectProduct") ]]/[[orderID]]';
+	Backend.OrderedItem.Links.createNewItem = '[[ url("backend.orderedItem/create") ]]';
+	// Backend.OrderedItem.Links.createFromSearchQuery = '[[ url("backend.orderedItem/createFromSearchQuery") ]]';
+	Backend.OrderedItem.Links.changeItemCount = '[[ url("backend.orderedItem/changeCount") ]]';
 
 	Backend.Shipment.Links = {};
-	Backend.Shipment.Links.update = '{link controller="backend.shipment" action=update}';
-	Backend.Shipment.Links.create = '{link controller="backend.shipment" action=create}';
-	Backend.Shipment.Links.remove = '{link controller="backend.shipment" action=delete}';
-	Backend.Shipment.Links.edit = '{link controller="backend.shipment" action=edit}';
-	Backend.Shipment.Links.getAvailableServices = '{link controller="backend.shipment" action=getAvailableServices}';
-	Backend.Shipment.Links.changeService = '{link controller="backend.shipment" action=changeService}';
-	Backend.Shipment.Links.changeStatus = '{link controller="backend.shipment" action=changeStatus}';
-	Backend.Shipment.Links.removeEmptyShipments = '{link controller="backend.customerOrder" action=removeEmptyShipments}';
+	Backend.Shipment.Links.update = '[[ url("backend.shipment/update") ]]';
+	Backend.Shipment.Links.create = '[[ url("backend.shipment/create") ]]';
+	Backend.Shipment.Links.remove = '[[ url("backend.shipment/delete") ]]';
+	Backend.Shipment.Links.edit = '[[ url("backend.shipment/edit") ]]';
+	Backend.Shipment.Links.getAvailableServices = '[[ url("backend.shipment/getAvailableServices") ]]';
+	Backend.Shipment.Links.changeService = '[[ url("backend.shipment/changeService") ]]';
+	Backend.Shipment.Links.changeStatus = '[[ url("backend.shipment/changeStatus") ]]';
+	Backend.Shipment.Links.removeEmptyShipments = '[[ url("backend.customerOrder/removeEmptyShipments") ]]';
 
 
 	Backend.Shipment.Statuses = {json array=$statuses};

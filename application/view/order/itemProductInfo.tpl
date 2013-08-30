@@ -1,6 +1,6 @@
 {% if $item.Product.ID %}
 	{% if $item.Product.isDownloadable && $downloadLinks %}
-		<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
+		<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name_lang]]</a>
 	{% else %}
 		<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
 	{% endif %}
@@ -24,7 +24,7 @@
 		{foreach $item.subItems as $subItem}
 			{% if $subItem.Product.isDownloadable %}
 				<li>
-					<a href="{link controller=user action=item id=$subItem.ID}">[[subItem.Product.name_lang]]</a>
+					<a href="[[ url("user/item/" ~ subItem.ID) ]]">[[subItem.Product.name_lang]]</a>
 					[[ partial('user/itemOptions.tpl', ['options': subItem.options]) ]]
 				</li>
 			{% endif %}

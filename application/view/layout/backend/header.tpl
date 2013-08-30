@@ -10,7 +10,7 @@
 
 		<div id="systemMenu">
 				{% if 'BACKEND_SHOW_HELP'|config %}
-					<a id="updates-link" {% if 'MODULE_STATS_NEED_UPDATING'|config %}class="updateAvailable"{% endif %} href="{link controller="backend.module"}">{t _modules_updates}</a>
+					<a id="updates-link" {% if 'MODULE_STATS_NEED_UPDATING'|config %}class="updateAvailable"{% endif %} href="[[ url("backend.module") ]]">{t _modules_updates}</a>
 					{% if 'MODULE_STATS_NEED_UPDATING'|config %}
 						<span id="moduleUpdateAvailable">([[ config('MODULE_STATS_NEED_UPDATING') ]])</span>
 					{% endif %}
@@ -19,12 +19,12 @@
 				<a id="help" href="#" target="_blank" {% if !'BACKEND_SHOW_HELP'|config %}style="display:none;"{% endif %}>{t _base_help}</a>
 				{% if 'BACKEND_SHOW_HELP'|config %} | {% endif %}
 				{backendLangMenu}
-				<a href="{link}" target="_blank">{t _frontend}</a> |
+				<a href="[[ url("/") ]]" target="_blank">{t _frontend}</a> |
 				[[ partial('backend/quickSearch/form.tpl', ['formid': "QuickSearch", 'hint': _hint_quick_search, 'classNames': "-SearchableTemplate"]) ]]
 		</div>
 
 		<div id="topLogoImageContainer">
-			<a href="{link controller="backend.index" action=index}">
+			<a href="[[ url("backend.index/index") ]]">
 				{img src='BACKEND_LOGO_SMALL'|config|@or:"image/promo/transparentlogo_small.png" id="topLogoImage"}
 			</a>
 		</div>

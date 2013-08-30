@@ -3,7 +3,7 @@
 		{foreach from=$options[$item.ID] item=option}
 			[[ partial('product/optionItem.tpl', ['selectedChoice': item.options[$option.ID]]) ]]
 			{% if 3 == $option.type %}
-				<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.ID`"}">{$item.options[$option.ID].fileName}</a>
+				<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.ID`") ]]">{$item.options[$option.ID].fileName}</a>
 			{% endif %}
 		{/foreach}
 
@@ -16,7 +16,7 @@
 					{% elseif 1 == $option.type %}
 						{$item.options[$option.ID].Choice.name_lang}
 					{% elseif 3 == $option.type %}
-						<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.ID`"}">{$item.options[$option.ID].fileName}</a>
+						<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.ID`") ]]">{$item.options[$option.ID].fileName}</a>
 						{% if $item.options[$option.ID].small_url %}
 							<div class="optionImage">
 								<a href="{static url=$item.options[$option.ID].large_url}" rel="lightbox"><img src="{static url=$item.options[$option.ID].small_url}" /></a>
@@ -36,7 +36,7 @@
 
 		{% if $moreOptions[$item.ID] %}
 		<div class="productOptionsMenu">
-			<a href="{link controller=order action=options id=$item.ID}" ajax="{link controller=order action=optionForm id=$item.ID}">{t _edit_options}</a>
+			<a href="[[ url("order/options/" ~ item.ID) ]]" ajax="[[ url("order/optionForm/" ~ item.ID) ]]">{t _edit_options}</a>
 		</div>
 		{% endif %}
 	</div>

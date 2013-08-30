@@ -3,7 +3,7 @@
 	<div class="content">
 		[[ partial("user/loginForm.tpl") ]]
 		<div class="quickLoginRegister">
-			<a href="{link controller=user action=register}">{t _not_registered}</a>
+			<a href="[[ url("user/register") ]]">{t _not_registered}</a>
 		</div>
 	</div>
 </div>

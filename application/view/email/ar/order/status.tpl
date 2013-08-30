@@ -8,7 +8,7 @@ Dear [[user.fullName]],
 {% endif %}
 
 إذا كان لديك أي أسئلة بخصوص هذا النظام ، ويمكنك أن ترسل لنا رسالة عبر البريد الإلكتروني أو الاتصال من الصفحة التالية :
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$order.shipments item=shipment}
 حالة جديدة : {% if $shipment.status == 2 %}في انتظار شحنة{% elseif $shipment.status == 3 %}شحنت{% elseif $shipment.status == 4 %}عاد{% else %}processing{% endif %}

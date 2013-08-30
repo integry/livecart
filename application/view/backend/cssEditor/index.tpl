@@ -37,9 +37,9 @@
 
 <script type="text/javascript">
 	var settings = new Backend.CssEditor([[categories]]);
-	settings.urls['edit'] = '{link controller="backend.cssEditor" action=edit query="file=_id_&tabid=_tabid_"}';
-	settings.urls['empty'] = '{link controller="backend.cssEditor" action=emptyPage}';
-	settings.urls['templateData'] = '{link controller="backend.cssEditor" action=templateData}?file=_id_&tabid=_tabid_&version=_version_';
+	settings.urls['edit'] = '[[ url("backend.cssEditor/edit", "file=_id_&tabid=_tabid_") ]]';
+	settings.urls['empty'] = '[[ url("backend.cssEditor/emptyPage") ]]';
+	settings.urls['templateData'] = '[[ url("backend.cssEditor/templateData") ]]?file=_id_&tabid=_tabid_&version=_version_';
 	settings.tabControl =  TabControl.prototype.getInstance(
 		'templateTabContainer',
 		Backend.CssEditor.prototype.getTabUrl,

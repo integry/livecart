@@ -2,7 +2,7 @@
 <div class="col col-lg-12" id="header">
 
 	<div class="col col-lg-6" id="logoContainer">
-		<a href="{link}">{img src='LOGO'|config alt="LiveCart Logo"}</a>
+		<a href="[[ url("/") ]]">{img src='LOGO'|config alt="LiveCart Logo"}</a>
 	</div>
 
 	<div class="col col-lg-6" id="topMenuContainer">

@@ -1,5 +1,5 @@
 <div class="specField_group_form">
-	<form action="{link controller="backend.specFieldGroup" action=save}/" method="post" class="{denied role="category.update"}formReadonly{/denied} specField_group_form_node">
+	<form action="[[ url("backend.specFieldGroup/save") ]]/" method="post" class="{denied role="category.update"}formReadonly{/denied} specField_group_form_node">
 		<input type="hidden" name="categoryID" class="specField_group_categoryID" />
 		<fieldset class="specField_group_translations specField_step_main">
 			<div class="specField_group_default_language">

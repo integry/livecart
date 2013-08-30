@@ -7,7 +7,7 @@ Se volessi contattarci in merito a questo ordine, ti preghiamo di fare riferimen
 a questo numero identificativo: Ordine numero [[order.invoiceNumber]].
 
 Potrai tracciare lo stato del tuo ordine direttamente da questa pagina:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 Nel caso avessi domande in merito a questo ordine, potrai inviarci una comunicazione
 direttamente dalla pagina su indicata.

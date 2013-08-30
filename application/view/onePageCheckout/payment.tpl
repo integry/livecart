@@ -33,7 +33,7 @@
 						{foreach from=$otherMethods item=method}
 							<div class="radio">
 								<label>
-									<input type="radio" name="payMethod" value="{link controller=onePageCheckout action=redirect query="id=`$method`"}" id="[[method]]" {% if $selectedMethod == $method %}checked="checked"{% endif %} />
+									<input type="radio" name="payMethod" value="[[ url("onePageCheckout/redirect", "id=`$method`") ]]" id="[[method]]" {% if $selectedMethod == $method %}checked="checked"{% endif %} />
 									<img src="{s image/payment/[[method]].gif}" class="paymentLogo" alt="[[method]]" />
 								</label>
 							</div>

@@ -53,9 +53,9 @@
 </ul>
 
 <div style="display: none">
-	<span id="deleteUrl">{link controller="backend.themeFile" action=delete}?file=__FILE__&theme=__THEME__</span>
+	<span id="deleteUrl">[[ url("backend.themeFile/delete") ]]?file=__FILE__&theme=__THEME__</span>
 	<span id="confirmDelete">{t _del_conf}</span>
-	{* <span id="saveUrl">{link controller="backend.siteNews" action=save}</span> *}
+	{* <span id="saveUrl">[[ url("backend.siteNews/save") ]]</span> *}
 </div>
 
 <ul style="display: none;">

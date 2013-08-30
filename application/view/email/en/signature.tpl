@@ -1,8 +1,8 @@
 {% if empty(html) %}
 ------------------------
 [[ config('STORE_NAME') ]]
-{link url=true}
+[[ fullurl("/") ]]
 {% endif %}{*html*}
 {% if !empty(html) %}
-<hr /><a href="{link url=true}">[[ config('STORE_NAME') ]]</a>
+<hr /><a href="[[ fullurl("/") ]]">[[ config('STORE_NAME') ]]</a>
 {% endif %}{*html*}

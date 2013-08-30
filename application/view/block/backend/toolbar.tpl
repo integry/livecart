@@ -3,8 +3,8 @@
 	<ul id="mainpanel">
 		{block BACKEND-TOOLBAR-BEFORE-ALL}
 
-		<li><a href="{link controller=index}" class="storeFrontend" target="_blank">{t _store_frontend}{*<small>{t _store_frontend}</small>*}</a></li>
-		<li><a href="{link controller="backend.index"}" class="storeBackend">{t _admin_dashboard}{*<small>{t _admin_dashboard}</small>*}</a></li>
+		<li><a href="[[ url("index") ]]" class="storeFrontend" target="_blank">{t _store_frontend}{*<small>{t _store_frontend}</small>*}</a></li>
+		<li><a href="[[ url("backend.index") ]]" class="storeBackend">{t _admin_dashboard}{*<small>{t _admin_dashboard}</small>*}</a></li>
 
 		{block BACKEND-TOOLBAR-BEFORE-BUTTONS}
 
@@ -51,10 +51,10 @@
 // global variable footerToolbar
 	footerToolbar = new BackendToolbar("footpanel",
 		{
-			addIcon: "{link controller="backend.backendToolbar" action=addIcon}?id=_id_&position=_position_",
-			removeIcon: "{link controller="backend.backendToolbar" action=removeIcon}?id=_id_&position=_position_",
-			sortIcons: "{link controller="backend.backendToolbar" action=sortIcons}?order=_order_",
-			lastViewed: "{link controller="backend.backendToolbar" action=lastViewed query='where=__where__'}"
+			addIcon: "[[ url("backend.backendToolbar/addIcon") ]]?id=_id_&position=_position_",
+			removeIcon: "[[ url("backend.backendToolbar/removeIcon") ]]?id=_id_&position=_position_",
+			sortIcons: "[[ url("backend.backendToolbar/sortIcons") ]]?order=_order_",
+			lastViewed: "[[ url("backend.backendToolbar/lastViewed", "'where=__where__'") ]]"
 		}
 	);
 

@@ -24,12 +24,12 @@
 
 		<ul id="categoryBrowserActions" class="verticalMenu">
 			<li class="addTreeNode" id="createTemplate">
-				<a href="{link controller="backend.template" action=add query="tabid=_tabid_"}">
+				<a href="[[ url("backend.template/add", "tabid=_tabid_") ]]">
 					{t _create_template}
 				</a>
 			</li>
 			<li class="removeTreeNode" id="deleteTemplate" style="display: none;">
-				<a href="{link controller="backend.template" action=delete query="file=_id_"}">
+				<a href="[[ url("backend.template/delete", "file=_id_") ]]">
 					{t _delete_template}
 				</a>
 			</li>
@@ -59,9 +59,9 @@
 <script type="text/javascript">
 	// creates global variable backendTemplateInstance
 	backendTemplateInstance = new Backend.Template([[categories]]);
-	backendTemplateInstance.urls['edit'] = '{link controller="backend.template" action=edit}?file=_id_&tabid=_tabid_';
-	backendTemplateInstance.urls['empty'] = '{link controller="backend.template" action=emptyPage}';
-	backendTemplateInstance.urls['templateData'] = '{link controller="backend.template" action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_';
+	backendTemplateInstance.urls['edit'] = '[[ url("backend.template/edit") ]]?file=_id_&tabid=_tabid_';
+	backendTemplateInstance.urls['empty'] = '[[ url("backend.template/emptyPage") ]]';
+	backendTemplateInstance.urls['templateData'] = '[[ url("backend.template/templateData") ]]?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_';
 	backendTemplateInstance.translations['_tab_title_new'] = "{t _tab_title_new}";
 	backendTemplateInstance.setTabControlInstance(
 		TabControl.prototype.getInstance(

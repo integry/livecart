@@ -108,11 +108,11 @@
 </ul>
 
 <div style="display: none">
-	<span id="deleteUrl">{link controller="backend.siteNews" action=delete}?id=</span>
+	<span id="deleteUrl">[[ url("backend.siteNews/delete") ]]?id=</span>
 	<span id="confirmDelete">{t _del_conf}</span>
-	<span id="sortUrl">{link controller="backend.siteNews" action=saveOrder}</span>
-	<span id="statusUrl">{link controller="backend.siteNews" action=setEnabled}</span>
-	<span id="saveUrl">{link controller="backend.siteNews" action=save}</span>
+	<span id="sortUrl">[[ url("backend.siteNews/saveOrder") ]]</span>
+	<span id="statusUrl">[[ url("backend.siteNews/setEnabled") ]]</span>
+	<span id="saveUrl">[[ url("backend.siteNews/save") ]]</span>
 </div>
 
 

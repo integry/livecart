@@ -2,7 +2,7 @@
 
 {% if empty(nochanges) %}
 	<div class="orderOverviewControls">
-		<a href="{link controller=order}">{t _any_changes}</a>
+		<a href="[[ url("order") ]]">{t _any_changes}</a>
 	</div>
 {% endif %}
 

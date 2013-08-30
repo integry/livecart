@@ -9,7 +9,7 @@
 
 	<div id="headerContent">
 
-		<a href="{link}">{img style="float: left" src='LOGO'|config alt="LiveCart Logo"}</a>
+		<a href="[[ url("/") ]]">{img style="float: left" src='LOGO'|config alt="LiveCart Logo"}</a>
 
 		{block CART}
 

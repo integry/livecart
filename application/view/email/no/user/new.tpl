@@ -9,6 +9,6 @@ Passord: <b>[[user.newPassword]]</b>
 Fra din kundeside kan du til enhver tid se status på dine bestillinger, se tidligere bestillinger, laste ned filer (kjøpte digitale produkter) og endre din kontaktinformasjon.
 
 Du kan logge deg inn på din kundeside her:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/no/signature.tpl") ]]

@@ -94,8 +94,8 @@
 	<div id="managerContainer" class="treeManagerContainer maxHeight h--60">
 		<div ng-repeat="category in categories" ng-show="category.id == activeID">
 			<tabset>
-				<tab-route heading="{t _products}" template="{link controller="backend.product" action="index"}" route="{{route('backend.product', 'list', {id: category.id})}}"></tab-route>
-				<tab-route heading="{t _category_details}" template="{link controller="backend.category" action="form"}" route="{{route('backend.category', 'category', {id: category.id})}}"></tab-route>
+				<tab-route heading="{t _products}" template="[[ url("backend.product/index") ]]" route="{{route('backend.product', 'list', {id: category.id})}}"></tab-route>
+				<tab-route heading="{t _category_details}" template="[[ url("backend.category/form") ]]" route="{{route('backend.category', 'category', {id: category.id})}}"></tab-route>
 			</tabset>
 		</div>
 	</div>
@@ -105,15 +105,15 @@
 		<div id="tabContainer" class="tabContainer">
 			{tabControl id="tabList"}
 				{tab id="tabProducts" role="product" help="products"}<a href="{link controller="backend.product" action=index id=_id_ }">{t _products}</a>{/tab}
-				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="{link controller="backend.category" action=form id=_id_}">{t _category_details}</a>{/tab}
-				{tab id="tabFields" role="category" help="categories.attributes"}<a href="{link controller="backend.specField" action=index id=_id_}">{t _attributes}</a>{/tab}
-				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="{link controller="backend.filterGroup" action=index id=_id_}">{t _filters}</a>{/tab}
-				{tab id="tabImages" role="category" help="categories.images"}<a href="{link controller="backend.categoryImage" action=index id=_id_}">{t _images}</a>{/tab}
-				{tab id="tabOptions" role="option" help="categories"}<a href="{link controller="backend.productOption" action=index id=_id_ query="category=true"}">{t _options}</a>{/tab}
-				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.ratingType" action=index id=_id_}">{t _rating_categories}</a>{/tab}
-				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.review" action=index id=_id_ query="category=true"}">{t _reviews}</a>{/tab}
-				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="{link controller="backend.productList" action=index id=_id_}">{t _product_lists}</a>{/tab}
-				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="{link controller="backend.categoryRelationship" action=index id=_id_}">{t _related_categories}</a>{/tab}
+				{tab id="tabMainDetails" role="category" help="categories.details"}<a href="[[ url("backend.category/form/_id_") ]]">{t _category_details}</a>{/tab}
+				{tab id="tabFields" role="category" help="categories.attributes"}<a href="[[ url("backend.specField/index/_id_") ]]">{t _attributes}</a>{/tab}
+				{tab id="tabFilters" role="filter" help="categories.filters"}<a href="[[ url("backend.filterGroup/index/_id_") ]]">{t _filters}</a>{/tab}
+				{tab id="tabImages" role="category" help="categories.images"}<a href="[[ url("backend.categoryImage/index/_id_") ]]">{t _images}</a>{/tab}
+				{tab id="tabOptions" role="option" help="categories"}<a href="[[ url("backend.productOption/index/_id_", "category=true") ]]">{t _options}</a>{/tab}
+				{tab id="tabRatingCategories" role="ratingcategory" help="categories" hidden=true}<a href="[[ url("backend.ratingType/index/_id_") ]]">{t _rating_categories}</a>{/tab}
+				{tab id="tabReviews" role="ratingcategory" help="categories" hidden=true}<a href="[[ url("backend.review/index/_id_", "category=true") ]]">{t _reviews}</a>{/tab}
+				{tab id="tabProductLists" role="ratingcategory" help="categories" hidden=true}<a href="[[ url("backend.productList/index/_id_") ]]">{t _product_lists}</a>{/tab}
+				{tab id="tabRelatedCategory" role="category" help="categories" hidden=true}<a href="[[ url("backend.categoryRelationship/index/_id_") ]]">{t _related_categories}</a>{/tab}
 			{/tabControl}
 		</div>
 		<div id="sectionContainer" class="ui-tabs-panel ui-widget-content ui-corner-bottom sectionContainer maxHeight  h--50">

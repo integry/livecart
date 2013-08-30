@@ -8,6 +8,6 @@ Jūsu pasūtījumam pievienots jauns paziņojums.
 --------------------------------------------------
 
 Jūs varat atbildēt no šīs lapas:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/lv/signature.tpl") ]]

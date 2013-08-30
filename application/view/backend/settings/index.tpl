@@ -29,8 +29,8 @@
 	</div>
 
 	<div id="handler_ENABLE_SITEMAPS">
-		<a href="{link controller=sitemap action=ping}" id="siteMapPing" class="menu">{t _sitemap_ping}</a> |
-		<a href="{link controller=sitemap}" class="menu" target="_blank">{t _view_sitemap}</a>
+		<a href="[[ url("sitemap/ping") ]]" id="siteMapPing" class="menu">{t _sitemap_ping}</a> |
+		<a href="[[ url("sitemap") ]]" class="menu" target="_blank">{t _view_sitemap}</a>
 		<span class="progressIndicator" id="siteMapFeedback" style="display: none;"></span>
 		<div id="siteMapSubmissionResult"></div>
 	</div>
@@ -40,12 +40,12 @@
 	</div>
 
 	<div id="handler_SOFT_NAME">
-		<a href="{link controller="backend.settings" action=disablePrivateLabel}" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
+		<a href="[[ url("backend.settings/disablePrivateLabel") ]]" id="disablePrivateLabel" class="menu">{t _disable_private_label_change}</a>
 		<span class="progressIndicator" style="display: none;"></span>
 	</div>
 
 	<div id="handler_UPDATE_COPY_METHOD">
-		<a href="{link controller="backend.update" action=testCopy}" id="testUpdateCopy" class="menu">{t _test_update_copy}</a>
+		<a href="[[ url("backend.update/testCopy") ]]" id="testUpdateCopy" class="menu">{t _test_update_copy}</a>
 		<span class="progressIndicator" style="display: none;"></span>
 		<div id="testUpdateCopyResult"></div>
 	</div>

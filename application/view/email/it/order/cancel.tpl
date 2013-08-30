@@ -5,7 +5,7 @@ L'ordine numero <b class="orderID">#[[order.invoiceNumber]]</b>, inserito presso
 
 Nel caso desiderassi effettuare domande in merito a questo ordine, puoi inviarci una email
 oppure contattarci direttamente da questa pagina:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 Articoli contenuti nell'ordine cancellato:
 [[ partial("email/blockOrderItems.tpl") ]]

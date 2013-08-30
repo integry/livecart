@@ -7,6 +7,6 @@ E-mail: <b>[[user.email]]</b>
 Mot de passe: <b>[[user.newPassword]]</b>
 
 Vous pouvez utiliser cette adresse pour vous connecter a votre compte:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/fr/signature.tpl") ]]

@@ -1,4 +1,4 @@
-<h1><a href="{link controller=api action=doc}">{t _livecart_api}</a> &gt; <a href="{link controller=api action=docview query="class=`$className`"}">[[info.path]]</a>.[[name]]</h1>
+<h1><a href="[[ url("api/doc") ]]">{t _livecart_api}</a> &gt; <a href="[[ url("api/docview", "class=`$className`") ]]">[[info.path]]</a>.[[name]]</h1>
 
 
 <style>
@@ -59,7 +59,7 @@
 			<div class="xmlSample">
 				<pre>{$sample.formatted|htmlspecialchars}</pre>
 			</div>
-			<a class="sampleTest" href="{link controller=api action=xml query="xml="}{$sample.xml|urlencode}">test</a>
+			<a class="sampleTest" href="[[ url("api/xml", "xml=") ]]{$sample.xml|urlencode}">test</a>
 		</div>
 	{/foreach}
 {% endif %}

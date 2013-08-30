@@ -9,6 +9,6 @@
 	<script type="text/javascript">
 
 		new User.StateSwitcher($('[[id_country]]'), $('[[id_state_select]]'), $('[[id_state_text]]'),
-				'{link controller=user action=states}');
+				'[[ url("user/states") ]]');
 	</script>
 {% endif %}

@@ -20,7 +20,7 @@
 		</p>
 		{% endif %}
 
-		{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
+		{capture assign="return"}[[ url("checkout/selectAddress") ]]{/capture}
 		[[ partial('user/loginForm.tpl', ['return': return]) ]]
 	</div>
 

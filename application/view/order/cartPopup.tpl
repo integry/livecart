@@ -3,7 +3,7 @@
 
 	{% if !$cart.cartItems %}
 		<div class="emptyBasket">
-			{t _empty_basket}. <a href="{link route=$return}">{t _continue_shopping}</a>.
+			{t _empty_basket}. <a href="[[ url(return) ]]">{t _continue_shopping}</a>.
 		</div>
 	{% else %}
 		[[ partial('order/cartItems.tpl', ['hideNav': true]) ]]

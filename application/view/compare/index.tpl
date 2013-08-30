@@ -4,7 +4,7 @@
 [[ partial("layout/frontend/header.tpl") ]]
 {% block content %}
 
-<a href="{link route=$return}" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
+<a href="[[ url(return) ]]" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
 
 {foreach from=$products item=category}
 	<h2>[[category.category.name_lang]]</h2>

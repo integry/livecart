@@ -96,16 +96,16 @@
 			<div class="tabContainer">
 				<ul class="tabList tabs">
 					<li id="tabSettings" class="tab active">
-						<a href="{link controller="backend.theme" action=edit query='id=_id_'}"}">{t _settings}</a>
+						<a href="[[ url("backend.theme/edit", "'id=_id_'") ]]"}">{t _settings}</a>
 					</li>
 					<li id="tabColors" class="tab">
-						<a href="{link controller="backend.theme" action=colors query='id=_id_'}">{t _colors}</a>
+						<a href="[[ url("backend.theme/colors", "'id=_id_'") ]]">{t _colors}</a>
 					</li>
 					<li id="tabCss" class="tab">
-						<a href="{link controller="backend.cssEditor" action=edit query='file=_id_'}">{t _css}</a>
+						<a href="[[ url("backend.cssEditor/edit", "'file=_id_'") ]]">{t _css}</a>
 					</li>
 					<li id="tabFiles" class="tab">
-						<a href="{link controller="backend.themeFile" action=index query='id=_id_'}">{t _files}</a>
+						<a href="[[ url("backend.themeFile/index", "'id=_id_'") ]]">{t _files}</a>
 					</li>
 					{block THEME_TABS}
 				</ul>
@@ -118,15 +118,15 @@
 
 <script type="text/javascript">
 	var pageHandler = new Backend.Theme([[themes]]);
-	pageHandler.urls['edit'] = '{link controller="backend.theme" action=edit}?id=_id_';
-	pageHandler.urls['add'] = '{link controller="backend.theme" action=add}';
-	pageHandler.urls['delete'] = '{link controller="backend.theme" action=delete}?id=_id_';
-	pageHandler.urls['moveup'] = '{link controller="backend.theme" action=reorder}?order=up&id=_id_';
-	pageHandler.urls['movedown'] = '{link controller="backend.theme" action=reorder}?order=down&id=_id_';
-	pageHandler.urls['empty'] = '{link controller="backend.theme" action=emptyPage}';
-	pageHandler.urls['create'] = '{link controller="backend.theme" action=create}';
-	pageHandler.urls['update'] = '{link controller="backend.theme" action=update}';
-	pageHandler.urls['export'] = '{link controller="backend.theme" action=export}?id=_id_';
+	pageHandler.urls['edit'] = '[[ url("backend.theme/edit") ]]?id=_id_';
+	pageHandler.urls['add'] = '[[ url("backend.theme/add") ]]';
+	pageHandler.urls['delete'] = '[[ url("backend.theme/delete") ]]?id=_id_';
+	pageHandler.urls['moveup'] = '[[ url("backend.theme/reorder") ]]?order=up&id=_id_';
+	pageHandler.urls['movedown'] = '[[ url("backend.theme/reorder") ]]?order=down&id=_id_';
+	pageHandler.urls['empty'] = '[[ url("backend.theme/emptyPage") ]]';
+	pageHandler.urls['create'] = '[[ url("backend.theme/create") ]]';
+	pageHandler.urls['update'] = '[[ url("backend.theme/update") ]]';
+	pageHandler.urls['export'] = '[[ url("backend.theme/export") ]]?id=_id_';
 </script>
 
 

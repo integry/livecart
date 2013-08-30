@@ -7,6 +7,6 @@ E-mail: <b>[[user.email]]</b>
 Password: <b>[[user.newPassword]]</b>
 
 Du kan logga in direkt via den här länken:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/sv/signature.tpl") ]]

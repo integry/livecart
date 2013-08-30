@@ -4,7 +4,7 @@
 		<span id="modeTitle">{t _cust_mode}</span>
 		<ul>
 			<li class="modeTheme">
-				<form action="{link controller="backend.Customize" action=changeTheme}" class="form-horizontal">
+				<form action="[[ url("backend.Customize/changeTheme") ]]" class="form-horizontal">
 					{t _theme}
 					<select id="themeMenu" name="theme">
 						{foreach $themes as $thm}
@@ -54,7 +54,7 @@
 
 {% if 'css' == $mode %}
 	<script type="text/javascript">
-		Router.setUrlTemplate('{link controller="controller" action="action"}');
+		Router.setUrlTemplate('[[ url("controller/action") ]]');
 		var cust = new CssCustomize({json array=$theme});
 		cust.errSelectorMsg = '[[ escape({t _css_err_selector}) ]]';
 		cust.errTextMsg = '[[ escape({t _css_err_text}) ]]';

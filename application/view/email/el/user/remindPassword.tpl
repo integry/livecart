@@ -7,6 +7,6 @@ E-mail: <strong><b>[[user.email]]</b></strong>
 Password: <strong><b>[[user.newPassword]]</b></strong>
 
 Μπορείτε να χρησιμοποιήσετε αυτή τη διεύθυνση για να υπογράψετε στο λογαριασμό σας:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

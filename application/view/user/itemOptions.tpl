@@ -8,7 +8,7 @@
 			{% elseif 1 == $option.Choice.Option.type %}
 				[[option.Choice.name_lang]]
 			{% elseif 3 == $option.Choice.Option.type %}
-				<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.Choice.Option.ID`"}">[[option.fileName]]</a>
+				<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.Choice.Option.ID`") ]]">[[option.fileName]]</a>
 				{% if $option.small_url %}
 					<div class="optionImage">
 						<a href="{static url=$option.large_url}" rel="lightbox"><img src="{static url=$option.small_url}" /></a>

@@ -5,4 +5,4 @@
 
 -----------------------------------------------
 Om du inte längre vill ta emot våra nyhetsbrev kan du avbeställa prenumerationen genom länken nedan:
-{link controller=newsletter action=unsubscribe query="email=`$email`" url=true}
+[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]

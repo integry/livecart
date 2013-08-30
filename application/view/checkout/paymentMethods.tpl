@@ -10,7 +10,7 @@
 	<div id="otherMethods">
 		{foreach from=$otherMethods item=method}
 			{% if !empty(id) %}{assign var="query" value="order=`$id`"}{% endif %}
-			<a href="{link controller=checkout action=redirect id=$method query=$query}"><img src="{s image/payment/[[method]].gif}" /></a>
+			<a href="[[ url("checkout/redirect/" ~ method, "$query") ]]"><img src="{s image/payment/[[method]].gif}" /></a>
 		{/foreach}
 	</div>
 {% endif %}

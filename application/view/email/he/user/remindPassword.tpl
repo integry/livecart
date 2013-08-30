@@ -7,6 +7,6 @@
 סיסמתך: <b>[[user.newPassword]]</b>
 
 על מנת להתחבר לחשבון שלך , השתמש בכתובת שלהלן:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

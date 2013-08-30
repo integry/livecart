@@ -9,6 +9,6 @@ Password: <b>[[user.newPassword]]</b>
 Anda dapat melihat status order Anda, melihat order terdahulu, mendownload file (untuk pembelian berupa file), dan mengubah informasi alamat Anda, dengan cara login ke rekening Anda.
 
 Anda dapat login ke rekening Anda di:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/id/signature.tpl") ]]

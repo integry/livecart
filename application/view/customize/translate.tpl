@@ -9,7 +9,7 @@
 
 	<script type="text/javascript">
 		var cust = new Customize();
-		cust.setActionUrl('{link controller="backend.language" action=translationDialog}');
+		cust.setActionUrl('[[ url("backend.language/translationDialog") ]]');
 		cust.initLang();
 		jQuery('#transDialogBox').draggable();
 		Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel.bind(cust), false);

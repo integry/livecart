@@ -4,7 +4,7 @@ Kære [[user.fullName]],
 Tak for din ordre, som du netop har afgivet på [[ config('STORE_NAME') ]]. Ved henvendelse vedrørende denne ordre, oplyst da venligst følgende ordre ID <b class="orderID">#[[order.invoiceNumber]]</b>.
 
 Du vil kunne følge din ordrestatus på denne side:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 Hvis du har spørgsmål vedrørende denne ordre, kan dette ligeledes gøres på ovenstående side.
 

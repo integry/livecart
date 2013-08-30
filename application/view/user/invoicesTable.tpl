@@ -47,7 +47,7 @@
 		<tr>
 			<td colspan="4">
 			{% if $pendingInvoiceCount && $pendingInvoiceCount  > 0 %}
-				<a style="float:right;" href="{link controller=user action=pendingInvoices}">{maketext text=_x_pending_invoices params=$pendingInvoiceCount}</a>
+				<a style="float:right;" href="[[ url("user/pendingInvoices") ]]">{maketext text=_x_pending_invoices params=$pendingInvoiceCount}</a>
 			{% endif %}
 			</td>
 		</tr>

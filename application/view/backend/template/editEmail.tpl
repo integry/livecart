@@ -56,7 +56,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{t _save_template}" />
 		{t _or}
-		<a id="cancel_[[tabid]]" class="cancel" href="{link controller="backend.template"}">{t _cancel}</a>
+		<a id="cancel_[[tabid]]" class="cancel" href="[[ url("backend.template") ]]">{t _cancel}</a>
 	</fieldset>
 {/form}
 

@@ -17,7 +17,7 @@
 			{% endif %}
 		</p>
 
-		{capture assign="return"}{link controller="user"}{/capture}
+		{capture assign="return"}[[ url("user") ]]{/capture}
 		[[ partial('user/loginForm.tpl', ['return': return]) ]]
 	</div>
 

@@ -10,6 +10,6 @@ Dal tuo pannello personalizzato potrai controllare lo stato dei tuoi ordini, con
 ordini, scaricare files e modificare le informazioni relative agli indirizzi di fatturazione e consegna della merce.
 
 Puoi utilizzare questo indirizzo per accedere al tuo account:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/it/signature.tpl") ]]

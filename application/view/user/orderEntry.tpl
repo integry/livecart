@@ -1,10 +1,10 @@
 <h3>
-	<a href="{link controller=user action=viewOrder id=$order.ID}">[[order.formatted_dateCompleted.date_long]]</a>
+	<a href="[[ url("user/viewOrder/" ~ order.ID) ]]">[[order.formatted_dateCompleted.date_long]]</a>
 </h3>
 
 {% if $order.unreadMessageCount %}
 	<p class="messages">
-		<a href="{link controller=user action=viewOrder id=$order.ID}#msg" class="messages">
+		<a href="[[ url("user/viewOrder/" ~ order.ID) ]]#msg" class="messages">
 			{maketext text="_unread_messages" params=$order.unreadMessageCount}
 		</a>
 	</p>
@@ -20,11 +20,11 @@
    <div class="orderMenu">
 
 		<ul>
-			<li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
+			<li><a href="[[ url("user/viewOrder/" ~ order.ID) ]]" class="viewOrder">{t _view_details}</a></li>
 			{% if !$order.isCancelled && !'DISABLE_INVOICES'|config %}
-				<li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
+				<li><a href="[[ url("user/orderInvoice/" ~ order.ID) ]]" class="invoice">{t _order_invoice}</a></li>
 			{% endif %}
-			<li><a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a></li>
+			<li><a href="[[ url("user/reorder/" ~ order.ID) ]]" class="reorder">{t _reorder}</a></li>
 		</ul>
 
 	   <div class="orderID">
@@ -49,7 +49,7 @@
 		{foreach from=$order.cartItems item="item"}
 			<li>[[item.count]] x
 				{% if $item.Product.isDownloadable %}
-					<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
+					<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name_lang]]</a>
 				{% else %}
 					[[item.Product.name_lang]]
 				{% endif %}
@@ -61,7 +61,7 @@
 					{content}
 						{foreach $item.subItems as $subItem}
 							{% if $subItem.Product.isDownloadable %}
-								<li><a href="{link controller=user action=item id=$subItem.ID}">[[subItem.Product.name_lang]]</a></li>
+								<li><a href="[[ url("user/item/" ~ subItem.ID) ]]">[[subItem.Product.name_lang]]</a></li>
 							{% endif %}
 						{/foreach}
 					{/content}

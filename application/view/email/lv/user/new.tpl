@@ -9,6 +9,6 @@ Parole: <b>[[user.newPassword]]</b>
 No Jūsu lietotāja konta, varat sekot līdzi pasūtījuma statusam, apskatīt iepriekšējos pasūtījumus, lejupielādēt failus un nomainīt savu kontaktinformāciju.
 
 Pieslēgties savam lietotāja kontam varat no šejienes:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/lv/signature.tpl") ]]

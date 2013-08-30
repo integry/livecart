@@ -8,6 +8,6 @@
 --------------------------------------------------
 
 يمكنك الرد على هذه الرسالة من الصفحة التالية :
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/en/signature.tpl") ]]

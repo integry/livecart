@@ -4,8 +4,7 @@
 		<select 
 			id="recurringBillingPlanFor[[item.ID]]"
 			name="recurringBillingPlanFor[[item.ID]]"
-			onchange="new Product.ChangeRecurringPlanAction('{link controller="order"
-			action=changeRecurringProductPeriod id=$item.ID}', this)"
+			onchange="new Product.ChangeRecurringPlanAction('[[ url("order/changeRecurringProductPeriod/" ~ item.ID) ]]', this)"
 		}
 			{foreach $recurringItemsByItem[$item.ID] as $period}
 				<option

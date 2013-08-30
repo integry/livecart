@@ -8,6 +8,6 @@ Dostal jste novou zprávu ohledně Vaší objednávky.
 --------------------------------------------------
 
 Odpovědět můžete pomocí tohoto odkazu:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/en/signature.tpl") ]]

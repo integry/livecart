@@ -8,7 +8,7 @@
 
 <ul>
 	{foreach from=$classes key=class item=params}
-		<li><a href="{link controller=api action=docview query="class=`$class`"}">[[params.path]]</a></li>
+		<li><a href="[[ url("api/docview", "class=`$class`") ]]">[[params.path]]</a></li>
 	{/foreach}
 </ul>
 
@@ -16,7 +16,7 @@
 {% if !empty(authMethods) %}
 	<ul>
 		{foreach from=$authMethods item=class}
-			<li><a href="{link controller=api action=docauth query="class=`$class`"}">[[ t(class) ]]</a></li>
+			<li><a href="[[ url("api/docauth", "class=`$class`") ]]">[[ t(class) ]]</a></li>
 		{/foreach}
 	</ul>
 {% else %}

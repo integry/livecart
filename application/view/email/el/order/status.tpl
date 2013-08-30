@@ -8,7 +8,7 @@
 {% endif %}
 
 Εάν έχετε οποιαδήποτε ερώτηση σχετικά με την παραγγελλία σας,μπορείτε να μας στείλετε ένα μήνυμα ή να επικοινωνήσετε μαζί μας μέσω της επομένης σελίδας:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$order.shipments item=shipment}
 Νέος Κατάλογος: {% if $shipment.status == 2 %}awaiting shipment{% elseif $shipment.status == 3 %}shipped{% elseif $shipment.status == 4 %}returned{% else %}processing{% endif %}

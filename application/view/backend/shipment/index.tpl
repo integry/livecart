@@ -163,21 +163,21 @@
 
 <script type="text/javascript">
 	Backend.OrderedItem.Links = {};
-	Backend.OrderedItem.Links.remove = '{link controller="backend.orderedItem" action=delete}';
-	Backend.OrderedItem.Links.changeShipment = '{link controller="backend.orderedItem" action=changeShipment}';
-	Backend.OrderedItem.Links.addProduct = '{link controller="backend.orderedItem" action=selectProduct}/[[orderID]]';
-	Backend.OrderedItem.Links.createNewItem = '{link controller="backend.orderedItem" action=create}';
-	Backend.OrderedItem.Links.changeItemCount = '{link controller="backend.orderedItem" action=changeCount}';
+	Backend.OrderedItem.Links.remove = '[[ url("backend.orderedItem/delete") ]]';
+	Backend.OrderedItem.Links.changeShipment = '[[ url("backend.orderedItem/changeShipment") ]]';
+	Backend.OrderedItem.Links.addProduct = '[[ url("backend.orderedItem/selectProduct") ]]/[[orderID]]';
+	Backend.OrderedItem.Links.createNewItem = '[[ url("backend.orderedItem/create") ]]';
+	Backend.OrderedItem.Links.changeItemCount = '[[ url("backend.orderedItem/changeCount") ]]';
 
 	Backend.Shipment.Links = {};
-	Backend.Shipment.Links.update = '{link controller="backend.shipment" action=update}';
-	Backend.Shipment.Links.create = '{link controller="backend.shipment" action=create}';
-	Backend.Shipment.Links.remove = '{link controller="backend.shipment" action=delete}';
-	Backend.Shipment.Links.edit = '{link controller="backend.shipment" action=edit}';
-	Backend.Shipment.Links.getAvailableServices = '{link controller="backend.shipment" action=getAvailableServices}';
-	Backend.Shipment.Links.changeService = '{link controller="backend.shipment" action=changeService}';
-	Backend.Shipment.Links.changeStatus = '{link controller="backend.shipment" action=changeStatus}';
-	Backend.Shipment.Links.removeEmptyShipments = '{link controller="backend.customerOrder" action=removeEmptyShipments}';
+	Backend.Shipment.Links.update = '[[ url("backend.shipment/update") ]]';
+	Backend.Shipment.Links.create = '[[ url("backend.shipment/create") ]]';
+	Backend.Shipment.Links.remove = '[[ url("backend.shipment/delete") ]]';
+	Backend.Shipment.Links.edit = '[[ url("backend.shipment/edit") ]]';
+	Backend.Shipment.Links.getAvailableServices = '[[ url("backend.shipment/getAvailableServices") ]]';
+	Backend.Shipment.Links.changeService = '[[ url("backend.shipment/changeService") ]]';
+	Backend.Shipment.Links.changeStatus = '[[ url("backend.shipment/changeStatus") ]]';
+	Backend.Shipment.Links.removeEmptyShipments = '[[ url("backend.customerOrder/removeEmptyShipments") ]]';
 
 
 	Backend.Shipment.Statuses = {json array=$statuses};

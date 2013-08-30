@@ -75,7 +75,7 @@
 				</div>
 				<script type="text/javascript">
 					var upload = $('[[uniq]]');
-					new LiveCart.FileUpload(upload, '{link controller=order action=uploadOptionFile id=$option.ID query="uniq=`$uniq`&field=`$fieldName`&productID=`$product.ID`"}', Order.previewOptionImage);
+					new LiveCart.FileUpload(upload, '[[ url("order/uploadOptionFile/" ~ option.ID, "uniq=`$uniq`&field=`$fieldName`&productID=`$product.ID`") ]]', Order.previewOptionImage);
 				</script>
 			{% endif %}
 

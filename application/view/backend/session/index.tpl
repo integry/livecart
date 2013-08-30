@@ -13,7 +13,7 @@
 {% if req('failed') %}
 	<div class="loginFailed">{t _login_failed}</div>
 {% endif %}
-<form action="{link controller="backend.session" action=doLogin}" method="post" />
+<form action="[[ url("backend.session/doLogin") ]]" method="post" />
 	<p>
 	   <label for="email">{t _email}:</label>
 	   <input type="text" class="text" id="email" name="email" value="{$email|escape}" />
@@ -22,7 +22,7 @@
 		<label for="password">{t _password}:</label>
 		<fieldset class="container">
 			<input type="password" class="text" id="password" name="password" value="{$password|escape}" />
-			<a href="{link controller="user" action="remindPassword" query="return=`$return`"}" class="forgottenPassword">
+			<a href="[[ url("user/remindPassword", "return=`$return`") ]]" class="forgottenPassword">
 				{t _remind_password}
 			</a>
 		</fieldset>

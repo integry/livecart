@@ -100,10 +100,10 @@
 	var handler = new Backend.ObjectImage($("catImageList_[[ownerId]]"), 'cat');
 	handler.initList([[images]]);
 
-	handler.setDeleteUrl('{link controller="backend.categoryImage" action=delete}');
-	handler.setSortUrl('{link controller="backend.categoryImage" action=saveOrder}');
-	handler.setEditUrl('{link controller="backend.categoryImage" action=edit}');
-	handler.setSaveUrl('{link controller="backend.categoryImage" action=save}');
+	handler.setDeleteUrl('[[ url("backend.categoryImage/delete") ]]');
+	handler.setSortUrl('[[ url("backend.categoryImage/saveOrder") ]]');
+	handler.setEditUrl('[[ url("backend.categoryImage/edit") ]]');
+	handler.setSaveUrl('[[ url("backend.categoryImage/save") ]]');
 
 	handler.setDeleteMessage('[[ addslashes({t _delete_confirm}) ]]');
 	handler.setEditCaption('[[ addslashes({t _edit_image}) ]]');

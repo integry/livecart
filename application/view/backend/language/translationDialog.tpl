@@ -1,6 +1,6 @@
 <div id="translationDialog">
 	<div class="container">
-		<form action="{link controller="backend.language" action=saveTranslationDialog}" method="post" onSubmit="cust.saveTranslationDialog(this); return false;">
+		<form action="[[ url("backend.language/saveTranslationDialog") ]]" method="post" onSubmit="cust.saveTranslationDialog(this); return false;">
 			<input type="hidden" name="id" value="[[id]]" />
 			<input type="hidden" name="file" value="[[file]]" />
 			<input type="hidden" name="translation" id="translation" />

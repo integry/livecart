@@ -65,20 +65,20 @@
 	Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{t _you_cannot_delete_this_group}';
 	Backend.User.Group.prototype.Messages.savedMessage = '{t _form_has_been_successfully_saved}';
 
-	Backend.CustomerOrder.Links.selectCustomer = '{link controller="backend.customerOrder" action=selectCustomer}';
+	Backend.CustomerOrder.Links.selectCustomer = '[[ url("backend.customerOrder/selectCustomer") ]]';
 	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '[[ escape({t _order_number}) ]]';
 	Backend.CustomerOrder.Messages.selecCustomerTitle = '{t _select_customer_title}';
-	Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
+	Backend.CustomerOrder.Links.createOrder = '[[ url("backend.customerOrder/create") ]]';
 
-	Backend.User.Group.prototype.Links.save = '{link controller="backend.userGroup" action=save}';
-	Backend.User.Group.prototype.Links.remove = '{link controller="backend.userGroup" action=delete}';
-	Backend.User.Group.prototype.Links.createNewUserGroup = '{link controller="backend.userGroup" action=create}';
-	Backend.User.Group.prototype.Links.removeNewGroup = '{link controller="backend.userGroup" action=remove}';
-	Backend.User.Group.prototype.Links.create = '{link controller="backend.userGroup" action=create}';
+	Backend.User.Group.prototype.Links.save = '[[ url("backend.userGroup/save") ]]';
+	Backend.User.Group.prototype.Links.remove = '[[ url("backend.userGroup/delete") ]]';
+	Backend.User.Group.prototype.Links.createNewUserGroup = '[[ url("backend.userGroup/create") ]]';
+	Backend.User.Group.prototype.Links.removeNewGroup = '[[ url("backend.userGroup/remove") ]]';
+	Backend.User.Group.prototype.Links.create = '[[ url("backend.userGroup/create") ]]';
 
-	Backend.User.Editor.prototype.Links.create = '{link controller="backend.user" action=create}';
-	Backend.User.Editor.prototype.Links.update = '{link controller="backend.user" action=update}';
-	Backend.User.Editor.prototype.Links.generatePassword = '{link controller="backend.user" action=generatePassword}';
+	Backend.User.Editor.prototype.Links.create = '[[ url("backend.user/create") ]]';
+	Backend.User.Editor.prototype.Links.update = '[[ url("backend.user/update") ]]';
+	Backend.User.Editor.prototype.Links.generatePassword = '[[ url("backend.user/generatePassword") ]]';
 
 	Backend.UserGroup.prototype.usersMiscPermision = {allowed role="user"}true{/allowed}{denied role="user"}false{/denied};
 

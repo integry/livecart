@@ -8,6 +8,6 @@ Tisztelt [[user.fullName]],
 --------------------------------------------------
 
 Válaszolhatsz erre az üzenetre a következő linkre kattintva:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/en/signature.tpl") ]]

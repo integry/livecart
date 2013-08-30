@@ -9,6 +9,6 @@ Heslo: <b>[[user.newPassword]]</b>
 Zde můžete sledovat stav a historii Vašich objednávek, stahovat objednané soubory, měnit kontaktní údaje, atd.
 
 Pro přihlášení k Vašemu účtu můžete použít tento odkaz:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

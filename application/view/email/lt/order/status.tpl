@@ -8,7 +8,7 @@ Būsena pakito vienam ar daugiau Jūsų užsakymo <b class="orderID">#[[order.in
 {% endif %}
 
 Jei turite klausimų, susijusių su šiuo užsakymu, galite siųsti laišką ar susisiekti su mumis iš šio puslapio:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$shipments item=shipment}
 Nauja būsena: {% if $shipment.status == 2 %}laukia siuntimo{% elseif $shipment.status == 3 %}išsiųstas{% elseif $shipment.status == 4 %}grąžintas{% else %}processing{% endif %}

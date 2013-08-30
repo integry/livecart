@@ -1,7 +1,7 @@
 <div>
 	<fieldset class="addForm">
 		<legend>[[ capitalize({t _add_currency}) ]]</legend>
-		<form onSubmit="curr.add(this); return false;" action="{link controller="backend.currency" action=add}">
+		<form onSubmit="curr.add(this); return false;" action="[[ url("backend.currency/add") ]]">
 			<select name="id" class="select" id="addLang-sel">
 			   {html_options options=$currencies}
 			</select>

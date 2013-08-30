@@ -7,6 +7,6 @@ E-mail: <b>[[user.email]]</b>
 Geslo: <b>[[user.newPassword]]</b>
 
 V spletno trgovino se lahko prijavite tukaj:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

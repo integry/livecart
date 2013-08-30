@@ -45,7 +45,7 @@
 			{label}{t _cvv_descr}:{/label}
 			<div class="controls">
 				{textfield maxlength="4" id="ccCVV" noFormat=true}
-				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+				<a class="cvv" href="[[ url("checkout/cvv") ]]" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
 			</div>
 		{/input}
 

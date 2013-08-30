@@ -8,7 +8,7 @@ Status vašega naročila za eno ali več pošiljk je bil obnovljen <b class="ord
 {% endif %}
 
 Če imate kakršna koli vprašanja glede tega naročila nam lahko pošljete email ali nas kontaktirate s naslednje strani:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$order.shipments item=shipment}
 Novi status: {% if $shipment.status == 2 %}awaiting shipment{% elseif $shipment.status == 3 %}shipped{% elseif $shipment.status == 4 %}returned{% else %}processing{% endif %}

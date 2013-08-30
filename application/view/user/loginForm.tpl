@@ -1,4 +1,4 @@
-<form action="{link controller=user action=doLogin}" method="post" id="loginForm" class="form-horizontal" />
+<form action="[[ url("user/doLogin") ]]" method="post" id="loginForm" class="form-horizontal" />
 	{input name="email"}
 		{label}{t _your_email}:{/label}
 		<div class="controls">
@@ -10,7 +10,7 @@
 		{label}{t _your_pass}:{/label}
 		<div class="controls">
 			<input type="password" class="text" id="password" name="password" />
-			<a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
+			<a href="[[ url("user/remindPassword", "return=$return") ]]" class="forgottenPassword">
 				{t _remind_password}
 			</a>
 		</div>

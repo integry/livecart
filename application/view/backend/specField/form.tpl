@@ -4,7 +4,7 @@
 	<li class="ui-state-default ui-corner-top"><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
 </ul>
 
-<form action="{link controller="backend.specField" action=save}" method="post" class="specField {denied role="category.update"}formReadonly{/denied}" enctype="multipart/form-data">
+<form action="[[ url("backend.specField/save") ]]" method="post" class="specField {denied role="category.update"}formReadonly{/denied}" enctype="multipart/form-data">
 	<!-- STEP 1 -->
 	<fieldset class="specField_step_lev1 specField_step_main">
 	<legend>{t _SpecField_step_one}</legend>

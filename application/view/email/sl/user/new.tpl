@@ -9,6 +9,6 @@ Geslo: <b>[[user.newPassword]]</b>
 Z vaše nadzorne strani, lahko preverjate status vašega naročila, pogledate vaša prejšnja naročila in spremenite vaše kontaktne informacije.
 
 Za prijavo lahko sledite spodnji povezavi:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

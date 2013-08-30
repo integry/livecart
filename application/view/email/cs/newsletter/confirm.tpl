@@ -2,10 +2,10 @@
 Dobrý den,
 
 Pro potvrzení přihlášení k odběru novinek našeho obchodu klikněte na tento odkaz:
-{link controller=newsletter action=confirm query="email=`$email`&code=`$subscriber.confirmationCode`" url=true}
+[[ fullurl("newsletter/confirm", email=`$email`&code=`$subscriber.confirmationCode`) ]]
 
 [[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Pokud již nechcete naše novinky odebírat, klikněte na tento odkaz:
-{link controller=newsletter action=unsubscribe query="email=`$email`" url=true}
+[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]

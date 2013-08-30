@@ -1,1 +1,1 @@
-<a href="{link controller=product action=index id=$id}">[[value]]</a>
+<a href="[[ url("product/index/" ~ id) ]]">[[value]]</a>

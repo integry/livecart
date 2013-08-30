@@ -3,7 +3,7 @@
 	<li><a href="#step_values" class="productOption_change_state" >{t _ProductOption_values}</a></li>
 </ul>
 
-<form action="{link controller="backend.productOption" action=save}" method="post" class="productOption">
+<form action="[[ url("backend.productOption/save") ]]" method="post" class="productOption">
 	<!-- STEP 1 -->
 	<fieldset class="productOption_step_lev1 productOption_step_main">
 	<legend>{t _ProductOption_step_one}</legend>

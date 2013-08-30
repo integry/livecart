@@ -34,10 +34,10 @@
 <ul id="typeList_[[id]]" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed} typeList">
 </ul>
 <div style="display: none">
-	<span class="deleteUrl">{link controller="backend.ratingType" action=delete}?id=</span>
+	<span class="deleteUrl">[[ url("backend.ratingType/delete") ]]?id=</span>
 	<span class="confirmDelete">{t _del_conf}</span>
-	<span class="sortUrl">{link controller="backend.ratingType" action=saveOrder id=$id}</span>
-	<span class="saveUrl">{link controller="backend.ratingType" action=save}</span>
+	<span class="sortUrl">[[ url("backend.ratingType/saveOrder/" ~ id) ]]</span>
+	<span class="saveUrl">[[ url("backend.ratingType/save") ]]</span>
 </div>
 
 <ul style="display: none;">

@@ -78,9 +78,9 @@
 	{hidden name="options"}
 
 	<span style="display: none;">
-		<span id="fieldsUrl">{link controller="backend.csvImport" action=fields}</span>
-		<span id="importUrl">{link controller="backend.csvImport" action=import}</span>
-		<span id="cancelUrl">{link controller="backend.csvImport" action=isCancelled}</span>
+		<span id="fieldsUrl">[[ url("backend.csvImport/fields") ]]</span>
+		<span id="importUrl">[[ url("backend.csvImport/import") ]]</span>
+		<span id="cancelUrl">[[ url("backend.csvImport/isCancelled") ]]</span>
 	</span>
 
 	<fieldset id="info">
@@ -96,7 +96,7 @@
 				<label>{t _import_category}</label>
 				<label>
 					{foreach from=$catPath item=node name="catPath"}
-						<a href="{link controller="backend.csvImport" action=index}?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
+						<a href="[[ url("backend.csvImport/index") ]]?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
 						{% if !$smarty.foreach.catPath.last %}
 							&gt;
 						{% endif %}
@@ -162,7 +162,7 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{t _continue}" />
 		{t _or}
-		<a class="cancel" href="{link controller="backend.csvImport"}">{t _cancel}</a>
+		<a class="cancel" href="[[ url("backend.csvImport") ]]">{t _cancel}</a>
 	</fieldset>
 
 	<div class="clear"></div>

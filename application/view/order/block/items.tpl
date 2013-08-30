@@ -2,9 +2,9 @@
 	<tr>
 		<td class="cartControl">
 			{% if 'ENABLE_WISHLISTS'|config %}
-				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
+				<a href="[[ url("order/moveToWishList/" ~ item.ID, "return=`$return`") ]]">{t _move_to_wishlist}</a>
 			{% endif %}
-			<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
+			<a href="[[ url("order/delete/" ~ item.ID, "return=`$return`") ]]">{t _remove}</a>
 		</td>
 
 		<td class="cartImage">

@@ -61,7 +61,7 @@
 					{% else %}
 						{assign var='rebillQuery' value=''}
 					{% endif %}
-					<a href="{link controller=user action=cancelFurtherRebills id=$order.ID query=$rebillQuery}" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
+					<a href="[[ url("user/cancelFurtherRebills/" ~ order.ID, "$rebillQuery") ]]" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
 				</span>
 			{% endif %}
 		</label>
@@ -70,9 +70,9 @@
 
 	<p>
 		{% if !$order.isCancelled && !'DISABLE_INVOICES'|config %}
-			<a href="{link controller=user action=orderInvoice id=$order.ID}" target="_blank" class="invoice">{t _order_invoice}</a>
+			<a href="[[ url("user/orderInvoice/" ~ order.ID) ]]" target="_blank" class="invoice">{t _order_invoice}</a>
 		{% endif %}
-		<a href="{link controller=user action=reorder id=$order.ID}" class="reorder">{t _reorder}</a>
+		<a href="[[ url("user/reorder/" ~ order.ID) ]]" class="reorder">{t _reorder}</a>
 	</p>
 
 	{foreach from=$order.shipments item="shipment" name="shipments"}

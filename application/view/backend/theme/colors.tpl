@@ -74,9 +74,9 @@
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" value="{t _save}" class="submit" />
 		{t _or}
-		<a class="cancel" href="{link controller="backend.theme"}">{t _cancel}</a>
+		<a class="cancel" href="[[ url("backend.theme") ]]">{t _cancel}</a>
 	</fieldset>
 {/form}
 
-<iframe src="{link controller="backend.theme" action=cssIframe query="theme=`$theme`"}" id="iframe_[[theme]]" name="iframe_[[theme]]" style="display: none;"></iframe>
+<iframe src="[[ url("backend.theme/cssIframe", "theme=`$theme`") ]]" id="iframe_[[theme]]" name="iframe_[[theme]]" style="display: none;"></iframe>
 

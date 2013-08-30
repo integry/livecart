@@ -44,8 +44,8 @@
 
 	// creates global variable backendTemplateInstance
 	backendTemplateInstance = new Backend.Template([[categories]]);
-	backendTemplateInstance .urls['edit'] = '{link controller="backend.template" action=editEmail}?file=_id_&tabid=_tabid_';
-	backendTemplateInstance .urls['empty'] = '{link controller="backend.template" action=emptyPage}';
+	backendTemplateInstance .urls['edit'] = '[[ url("backend.template/editEmail") ]]?file=_id_&tabid=_tabid_';
+	backendTemplateInstance .urls['empty'] = '[[ url("backend.template/emptyPage") ]]';
 	backendTemplateInstance .translations['_tab_title_new'] = "{t _tab_title_new}";
 	backendTemplateInstance .setTabControlInstance(
 		TabControl.prototype.getInstance(

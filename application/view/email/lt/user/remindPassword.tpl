@@ -7,6 +7,6 @@ El-paštas: <b>[[user.email]]</b>
 Slaptažodis: <b>[[user.newPassword]]</b>
 
 Prisijungti galite šiu adresu:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/lt/signature.tpl") ]]

@@ -1,7 +1,7 @@
 <fieldset class="slide">
 	<legend>{t _add_modules}</legend>
 	{% if !empty(packages) %}
-		<form method="POST" action="{link controller="backend.module" action=fetch}">
+		<form method="POST" action="[[ url("backend.module/fetch") ]]">
 			<p>
 				<label>{t _select_module}</label>
 				<select name="module">

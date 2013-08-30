@@ -65,8 +65,8 @@
 	inst.grid.ricoGrid.metaData.options.largeBufferSize = 100;
 
 	inst.links = {};
-	inst.links.categoryRecursiveAutoloading = '{link controller="backend.selectFile" action=xmlRecursivePath}';
-	inst.links.categoryAutoloading = '{link controller="backend.selectFile" action=xmlBranch}';
+	inst.links.categoryRecursiveAutoloading = '[[ url("backend.selectFile/xmlRecursivePath") ]]';
+	inst.links.categoryAutoloading = '[[ url("backend.selectFile/xmlBranch") ]]';
 
 	inst.init();
 	inst.addCategories({json array=$root});

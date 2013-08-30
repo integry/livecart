@@ -22,7 +22,7 @@
 	{/foreach}
 
 	{% if $count > $perPage %}
-		{capture assign="url"}{link controller=user action=orders id=0}{/capture}
+		{capture assign="url"}[[ url("user/orders/0") ]]{/capture}
 		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
 	{% endif %}
 

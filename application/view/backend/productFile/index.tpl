@@ -58,22 +58,22 @@
 
 	with(Backend.ProductFile)
 	{
-		Links.update	 = '{link controller="backend.productFile" action=update}';
-		Links.create	 = '{link controller="backend.productFile" action=create}';
-		Links.deleteFile   = '{link controller="backend.productFile" action=delete}';
-		Links.sort	 = '{link controller="backend.productFile" action=sort}';
-		Links.edit	 = '{link controller="backend.productFile" action=edit}';
-		Links.download	 = '{link controller="backend.productFile" action=download}';
+		Links.update	 = '[[ url("backend.productFile/update") ]]';
+		Links.create	 = '[[ url("backend.productFile/create") ]]';
+		Links.deleteFile   = '[[ url("backend.productFile/delete") ]]';
+		Links.sort	 = '[[ url("backend.productFile/sort") ]]';
+		Links.edit	 = '[[ url("backend.productFile/edit") ]]';
+		Links.download	 = '[[ url("backend.productFile/download") ]]';
 
 		Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete}) ]]';
 
 		with(Group)
 		{
-			Links.update	 = '{link controller="backend.productFileGroup" action=update}';
-			Links.create	 = '{link controller="backend.productFileGroup" action=create}';
-			Links.remove   = '{link controller="backend.productFileGroup" action=delete}';
-			Links.sort	 = '{link controller="backend.productFileGroup" action=sort}?target=productFileGroup_list_[[productID]]';
-			Links.edit	 = '{link controller="backend.productFileGroup" action=edit}';
+			Links.update	 = '[[ url("backend.productFileGroup/update") ]]';
+			Links.create	 = '[[ url("backend.productFileGroup/create") ]]';
+			Links.remove   = '[[ url("backend.productFileGroup/delete") ]]';
+			Links.sort	 = '[[ url("backend.productFileGroup/sort") ]]?target=productFileGroup_list_[[productID]]';
+			Links.edit	 = '[[ url("backend.productFileGroup/edit") ]]';
 
 			Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_group}) ]]'
 		}

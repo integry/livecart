@@ -19,7 +19,7 @@
 		<h2 id="unreadMessages">{t _unread_msg}</h2>
 		<ul class="notes">
 			{foreach from=$notes item=note}
-			   <a href="{link controller=user action=viewOrder id=$note.orderID}#msg">{t _order} #[[note.orderID]]</a>
+			   <a href="[[ url("user/viewOrder/" ~ note.orderID) ]]#msg">{t _order} #[[note.orderID]]</a>
 			   [[ partial('user/orderNote.tpl', ['note': note]) ]]
 			{/foreach}
 		</ul>
@@ -30,7 +30,7 @@
 
 		{foreach from=$files item="item"}
 			<h3>
-				<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
+				<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name_lang]]</a>
 			</h3>
 			[[ partial('user/fileList.tpl', ['item': item]) ]]
 			<div class="clear"></div>

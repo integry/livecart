@@ -12,23 +12,23 @@
 	<div class="treeContainer">
 		<ul class="verticalMenu" id="reportTypeSelector">
 			<li id="menuSales">
-				<a href="{link controller="backend.report" action=sales}">{t _sales}</a>
+				<a href="[[ url("backend.report/sales") ]]">{t _sales}</a>
 			</li>
 			<li id="menuBest">
-				<a href="{link controller="backend.report" action=bestsellers}">{t _bestsellers}</a>
+				<a href="[[ url("backend.report/bestsellers") ]]">{t _bestsellers}</a>
 			</li>
 			<li id="menuCarts">
-				<a href="{link controller="backend.report" action=conversion}">{t _conversion}</a>
+				<a href="[[ url("backend.report/conversion") ]]">{t _conversion}</a>
 			</li>
 			<li id="menuCustomers">
-				<a href="{link controller="backend.report" action=customers}">{t _customers}</a>
+				<a href="[[ url("backend.report/customers") ]]">{t _customers}</a>
 			</li>
 			<li id="menuSearch">
-				<a href="{link controller="backend.report" action=search}">{t _search}</a>
+				<a href="[[ url("backend.report/search") ]]">{t _search}</a>
 			</li>
 			{*
 			<li id="menuPages">
-				<a href="{link controller="backend.report" action=pages}">{t _pages}</a>
+				<a href="[[ url("backend.report/pages") ]]">{t _pages}</a>
 			</li>
 			*}
 		</ul>

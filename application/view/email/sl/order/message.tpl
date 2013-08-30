@@ -8,6 +8,6 @@ Dodano je bilo novo sporočilo glede vašega naročila.
 --------------------------------------------------
 
 Na to sporočilo lahko odgovorite s naslednje strani:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/en/signature.tpl") ]]

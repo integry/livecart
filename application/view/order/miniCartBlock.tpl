@@ -5,7 +5,7 @@
 	<div class="panel panel-primary miniCart">
 		<div class="panel-heading">
 			<span class="glyphicon glyphicon-search"></span>
-			<span><a href="{link controller=order}">{t _shopping_cart}</a></span>
+			<span><a href="[[ url("order") ]]">{t _shopping_cart}</a></span>
 		</div>
 	{% endif %}
 
@@ -18,7 +18,7 @@
 
 			<div class="miniCartTotal">
 				<div>{t _total}: <span class="miniCartTotalAmount">{$order.formattedTotal[$order.Currency.ID]}</span></div>
-				<a href="{link controller=checkout}" class="btn btn-danger checkout">
+				<a href="[[ url("checkout") ]]" class="btn btn-danger checkout">
 					{t _checkout}
 				</a>
 			</div>

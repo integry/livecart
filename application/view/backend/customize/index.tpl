@@ -7,7 +7,7 @@
 
 	<li{% if !empty(isCustomizationModeEnabled) %} class="active"{% endif %}>
 
-		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {% if !empty(isCustomizationModeEnabled) %}on{% endif %}">
+		<a href="[[ url("backend.customize/mode") ]]" class="customizeControl {% if !empty(isCustomizationModeEnabled) %}on{% endif %}">
 		{% if !empty(isCustomizationModeEnabled) %}
 			{tn _turn_off}
 		{% else %}
@@ -19,7 +19,7 @@
 			{t _live_custom_descr}
 		</div>
 
-		<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+		<a href="[[ url("/") ]]" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
 		<div class="clear"></div>
 
 	</li>

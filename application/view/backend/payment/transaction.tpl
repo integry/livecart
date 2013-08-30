@@ -65,7 +65,7 @@
 			{% if $transaction.hasFullNumber %}
 				<li class="delCcNumMenu">
 					<span class="progressIndicator" style="display: none;"></span>
-					<a href="{link controller="backend.payment" action=deleteCcNumber id=$transaction.ID}" onclick="Backend.Payment.deleteCcNum([[transaction.ID]], event);">{t _delete_cc_num}</a>
+					<a href="[[ url("backend.payment/deleteCcNumber/" ~ transaction.ID) ]]" onclick="Backend.Payment.deleteCcNum([[transaction.ID]], event);">{t _delete_cc_num}</a>
 				</li>
 			{% endif %}
 		</ul>
@@ -73,7 +73,7 @@
 		<div class="clear"></div>
 
 		<div class="transactionForm voidForm" style="display: none;">
-			<form action="{link controller="backend.payment" action=void id=$transaction.ID}" method="post" onsubmit="Backend.Payment.voidTransaction([[transaction.ID]], this, event);">
+			<form action="[[ url("backend.payment/void/" ~ transaction.ID) ]]" method="post" onsubmit="Backend.Payment.voidTransaction([[transaction.ID]], this, event);">
 
 				<span class="confirmation" style="display: none">{t _void_conf}</span>
 

@@ -54,10 +54,10 @@
 
 
 <script type="text/javascript">
-	Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{link controller="backend.customerOrder" action=switchCancelled}';
+	Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '[[ url("backend.customerOrder/switchCancelled") ]]';
 
-	Backend.CustomerOrder.Links.selectCustomer = '{link controller="backend.customerOrder" action=selectCustomer}';
-	Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
+	Backend.CustomerOrder.Links.selectCustomer = '[[ url("backend.customerOrder/selectCustomer") ]]';
+	Backend.CustomerOrder.Links.createOrder = '[[ url("backend.customerOrder/create") ]]';
 	Backend.CustomerOrder.Messages.selecCustomerTitle = '{t _select_customer_title}';
 	Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '[[ escape({t _are_you_sure_you_want_to_update_order_status}) ]]';
 

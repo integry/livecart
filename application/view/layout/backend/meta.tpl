@@ -151,7 +151,7 @@
 
 	window.onload = onLoad;
 
-	Router.setUrlTemplate('{link controller=controller action=action}');
+	Router.setUrlTemplate('[[ url("controller/action") ]]');
 	</script>
 
 	{block TRANSLATIONS}

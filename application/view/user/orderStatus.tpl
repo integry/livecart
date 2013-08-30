@@ -3,7 +3,7 @@
 {% elseif !$order.isPaid %}
 	<span class="awaitingPayment">{t _awaiting_payment}
 	<strong>{$order.formattedTotal[$order.Currency.ID]}</strong></span>.
-	<a href="{link controller=user action=pay id=$order.ID}">{t _make_payment}</a>.
+	<a href="[[ url("user/pay/" ~ order.ID) ]]">{t _make_payment}</a>.
 {% else %}
 	{% if $order.isReturned %}
 		<span class="returned">{t _returned}</span>

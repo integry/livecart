@@ -11,7 +11,7 @@
 
 			{% if $results.count > 'SEARCH_MODEL_PREVIEW'|@config %}
 				<div class="allResults">
-					<a href="{link controller=search action=index query="type=`$results.meta.class`&q=`req('q')`"}">{maketext text=_all_results params=$results.count}</a>
+					<a href="[[ url("search/index", "type=`$results.meta.class`&q=`req('q')`") ]]">{maketext text=_all_results params=$results.count}</a>
 				</div>
 			{% endif %}
 		</div>

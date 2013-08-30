@@ -7,6 +7,6 @@ E-mail: <b>[[user.email]]</b>
 Passord: <b>[[user.newPassword]]</b>
 
 Du kan bruke denne linken til å logge eg inn på din kundeside:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/no/signature.tpl") ]]

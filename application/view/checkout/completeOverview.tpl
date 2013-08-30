@@ -49,7 +49,7 @@
                 {address address=$order.ShippingAddress}
             {% endif %}
 			{% if empty(nochanges) %}
-				<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
+				<a href="[[ url("checkout/selectAddress") ]]">{t _change}</a>
 			{% endif %}
 		</div>
 	{% endif %}
@@ -59,7 +59,7 @@
 		<h3>{t _will_bill_to}:</h3>
 		{address address=$order.BillingAddress}
 		{% if empty(nochanges) %}
-			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
+			<a href="[[ url("checkout/selectAddress") ]]">{t _change}</a>
 		{% endif %}
 	</div>
 	{% endif %}

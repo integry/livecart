@@ -3,7 +3,7 @@
 	<div class="btn-toolbar pull-right">
 
 	<div class="btn-group" id="topAccount">
-		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown disabled" href="{link controller=user action=index}">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown disabled" href="[[ url("user/index") ]]">
 			<span class="glyphicon glyphicon-user"></span>
 			{t _your_account}
 			<span class="caret"></span>
@@ -12,7 +12,7 @@
 		<ul class="dropdown-menu">
 			{% if $user.ID > 0 %}
 				<li class="logout">
-					<a href="{link controller=user action=logout}">{t _sign_out}</a>
+					<a href="[[ url("user/logout") ]]">{t _sign_out}</a>
 				</li>
 			{% endif %}
 		</ul>

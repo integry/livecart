@@ -23,11 +23,11 @@
 		Backend.RecurringProductPeriod.prototype.ActiveListCallbacks);
 
 	Backend.RecurringProductPeriod.prototype.properties = {
-		// link_update: "{link controller="backend.recurringProductPeriod" action=update}",
-		// link_create: "{link controller="backend.recurringProductPeriod" action=create}",
-		link_edit: "{link controller="backend.recurringProductPeriod" action=edit id=_id_}",
-		link_remove: "{link controller="backend.recurringProductPeriod" action=delete id=_id_}",
-		// link_sort: "{link controller="backend.recurringProductPeriod" action=sort}",
+		// link_update: "[[ url("backend.recurringProductPeriod/update") ]]",
+		// link_create: "[[ url("backend.recurringProductPeriod/create") ]]",
+		link_edit: "[[ url("backend.recurringProductPeriod/edit/_id_") ]]",
+		link_remove: "[[ url("backend.recurringProductPeriod/delete/_id_") ]]",
+		// link_sort: "[[ url("backend.recurringProductPeriod/sort") ]]",
 		message_confirm_remove: "{t _confirm_removing_rpp}"
 	};
 

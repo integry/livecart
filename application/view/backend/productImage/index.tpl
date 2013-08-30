@@ -96,10 +96,10 @@
 	var handler = new Backend.ObjectImage($("prodImageList_[[ownerId]]"), 'prod');
 	handler.initList([[images]]);
 
-	handler.setDeleteUrl('{link controller="backend.productImage" action=delete}');
-	handler.setSortUrl('{link controller="backend.productImage" action=saveOrder}');
-	handler.setEditUrl('{link controller="backend.productImage" action=edit}');
-	handler.setSaveUrl('{link controller="backend.productImage" action=save}');
+	handler.setDeleteUrl('[[ url("backend.productImage/delete") ]]');
+	handler.setSortUrl('[[ url("backend.productImage/saveOrder") ]]');
+	handler.setEditUrl('[[ url("backend.productImage/edit") ]]');
+	handler.setSaveUrl('[[ url("backend.productImage/save") ]]');
 
 	handler.setDeleteMessage('[[ addslashes({t _delete_confirm}) ]]');
 	handler.setEditCaption('[[ addslashes({t _edit_image}) ]]');

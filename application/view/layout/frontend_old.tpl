@@ -61,7 +61,7 @@
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 
 	<script type="text/javascript">
-		Router.setUrlTemplate('{link controller=controller action=action}');
+		Router.setUrlTemplate('[[ url("controller/action") ]]');
 	</script>
 </head>
 

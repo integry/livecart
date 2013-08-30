@@ -8,7 +8,7 @@ Status har uppdaterats för en eller flera leveranser av din <b class="orderID">
 {% endif %}
 
 Om du har frågor rörande din order kan du kontakta oss via följande länk:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 {foreach from=$order.shipments item=shipment}
 Ny status: {% if $shipment.status == 2 %}avvaktar leverans {% elseif $shipment.status == 3 %}levererad {% elseif $shipment.status == 4 %}returnerad {% else %}under behandling{% endif %}

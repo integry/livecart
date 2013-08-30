@@ -15,7 +15,7 @@
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabReviewEdit" class="tab active">
-				<a href="{link controller="backend.review" action=edit id=_id_}"}">...</a>
+				<a href="[[ url("backend.review/edit/_id_") ]]"}">...</a>
 				<span class="tabHelp">products</span>
 			</li>
 		</ul>

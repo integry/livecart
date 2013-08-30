@@ -8,6 +8,6 @@ Jums išsiųsta nauja žinutė susijusi su Jūsų užsakymu.
 --------------------------------------------------
 
 Jūs galite atsakyti į žinutę iš šio puslapio:
-{link controller=user action=viewOrder id=$order.ID url=true}
+[[ fullurl("user/viewOrder" ~ order.ID) ]]
 
 [[ partial("email/lt/signature.tpl") ]]

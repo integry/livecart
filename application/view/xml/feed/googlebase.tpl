@@ -5,7 +5,7 @@
 
 	<channel>
 		<title>[[ config('STORE_NAME') ]]</title>
-		<link>{link url=true}</link>
+		<link>[[ fullurl("/") ]]</link>
 		<description></description>
 
 		{foreach from=$feed item=product}

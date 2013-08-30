@@ -41,7 +41,7 @@
 	<div id="tabContainer" class="tabContainer">
 	<ul id="tabList" class="tabList tabs">
 		<li id="tabProducts" class="tab active">
-			<a href="{link controller="backend.product" action=index id=_id_}">{t _products}</a>
+			<a href="[[ url("backend.product/index/_id_") ]]">{t _products}</a>
 			<span> </span>
 			<span class="tabHelp">products</span>
 		</li>
@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
 	Backend.Category.links = {};
-	Backend.Category.links.countTabsItems = '{link controller="backend.category" action=countTabsItems id=_id_}';
+	Backend.Category.links.countTabsItems = '[[ url("backend.category/countTabsItems/_id_") ]]';
 
 	Backend.Category.init({json array=$categoryList});
 

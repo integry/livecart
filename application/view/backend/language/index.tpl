@@ -17,11 +17,11 @@
 		_activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 	}
 
-	lng.setFormUrl('{link controller="backend.language" action=addForm}');
-	lng.setStatusUrl("{link controller="backend.language" action=setEnabled}/");
-	lng.setEditUrl("{link controller="backend.language" action=edit}");
-	lng.setSortUrl("{link controller="backend.language" action=saveorder}");
-	lng.setDeleteUrl("{link controller="backend.language" action=delete}");
+	lng.setFormUrl('[[ url("backend.language/addForm") ]]');
+	lng.setStatusUrl("[[ url("backend.language/setEnabled") ]]/");
+	lng.setEditUrl("[[ url("backend.language/edit") ]]");
+	lng.setSortUrl("[[ url("backend.language/saveorder") ]]");
+	lng.setDeleteUrl("[[ url("backend.language/delete") ]]");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
 
 </script>
@@ -58,7 +58,7 @@
 			</span>
 
 			<div class="langListMenu">
-				<a href="{link controller="backend.language" action=setDefault}/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
+				<a href="[[ url("backend.language/setDefault") ]]/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
 					{t _set_as_default}
 				</a>
 				<span class="langDefault">{t _default_language}</span>

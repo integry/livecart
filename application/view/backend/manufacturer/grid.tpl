@@ -1,6 +1,6 @@
 
 <script type="text/javascript">
-	Backend.Manufacturer.GridFormatter.url = '{link controller="backend.manufacturer"}';
+	Backend.Manufacturer.GridFormatter.url = '[[ url("backend.manufacturer") ]]';
 </script>
 
 

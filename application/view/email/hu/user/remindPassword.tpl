@@ -7,6 +7,6 @@ E-mail: <b>[[user.email]]</b>
 Jelszó: <b>[[user.newPassword]]</b>
 
 Ezt a címet használhatod, hogy bejelentkezz felhasználói felületedre:
-{link controller=user action=login url=true}
+[[ fullurl("user/login") ]]
 
 [[ partial("email/en/signature.tpl") ]]

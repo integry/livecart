@@ -11,7 +11,7 @@
 					</li>
 				{% else %}
 					<div class="newsArchive">
-						<a href="{link controller=news}">{t _news_archive}</a>
+						<a href="[[ url("news") ]]">{t _news_archive}</a>
 					</div>
 				{% endif %}
 			{/foreach}

@@ -5,5 +5,5 @@
 </div>
 
 <script type="text/javascript">
-	var langMenuUrl = '{link controller="backend.language" action=langSwitchMenu query="returnRoute=$returnRoute"}';
+	var langMenuUrl = '[[ url("backend.language/langSwitchMenu", "returnRoute=$returnRoute") ]]';
 </script>
