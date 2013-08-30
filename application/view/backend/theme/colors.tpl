@@ -72,7 +72,7 @@
 		<input type="hidden" name="id" value="[[theme]]" />
 		<input type="hidden" name="css" value="" />
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" value="{tn _save}" class="submit" />
+		<input type="submit" value="{t _save}" class="submit" />
 		{t _or}
 		<a class="cancel" href="{link controller="backend.theme"}">{t _cancel}</a>
 	</fieldset>

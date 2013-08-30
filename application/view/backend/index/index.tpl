@@ -1,4 +1,4 @@
-{pageTitle help=""}{t _livecart_backend|branding}{/pageTitle}
+{pageTitle help=""}[[ branding({t _livecart_backend}) ]]{/pageTitle}
 
 {includeCss file="backend/Index.css"}
 {includeCss file="backend/User.css"}

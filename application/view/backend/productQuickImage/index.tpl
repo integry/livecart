@@ -19,7 +19,7 @@
 
 		<fieldset class="container">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}">
+			<input type="submit" name="upload" class="submit" value="{t _upload}">
 			{t _or}
 			<a href="javascript:void(0);"
 			onclick="return Backend.Product.hideQuickEditAddImageForm($('product_[[ownerId]]_quick_form').down('ul').down('li',1), [[ownerId]]);" class="cancel" >{t _cancel}</a>

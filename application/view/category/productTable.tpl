@@ -6,7 +6,7 @@
 			{% set currentOrder = $sortOrder %}
 			{% if $sortOrder == "asc" %}{% set sortOrder = "desc" %}{% else %}{% set sortOrder = "asc" %}{% endif %}
 		{% endif %}
-		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{% if !empty(currentOrder) %}direction_[[currentOrder]]{% endif %}">{translate text=$title}</a>
+		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{% if !empty(currentOrder) %}direction_[[currentOrder]]{% endif %}">[[ t(title) ]]</a>
 	{% endif %}
 {/function}
 {assign var="columns" value='TABLE_VIEW_COLUMNS'|config}

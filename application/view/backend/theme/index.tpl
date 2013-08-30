@@ -38,7 +38,7 @@
 
 					<div>
 						<span class="progressIndicator" style="display: none;"></span>
-						<input type="submit" value="{tn _add}" class="submit" />
+						<input type="submit" value="{t _add}" class="submit" />
 						{t _or}
 						<a class="cancel" href="#" onclick="pageHandler.hideAddForm(); return false;">{t _cancel}</a>
 					</div>
@@ -62,7 +62,7 @@
 
 					<fieldset class="controls">
 						<span class="progressIndicator" style="display: none;"></span>
-						<input type="submit" name="upload" class="submit" value="{tn _import}">
+						<input type="submit" name="upload" class="submit" value="{t _import}">
 						{t _or}
 						<a class="cancel" href="#" onclick="pageHandler.hideImportForm(); return false;">{t _cancel}</a>
 					</fieldset>
@@ -78,7 +78,7 @@
 
 					<div>
 						<span class="progressIndicator" id="copyFormProgressIndicator" style="display: none;"></span>
-						<input type="submit" value="{tn _copy}" class="submit" />
+						<input type="submit" value="{t _copy}" class="submit" />
 						{t _or}
 						<a class="cancel" href="#" onclick="pageHandler.hideCopyForm(); return false;">{t _cancel}</a>
 					</div>

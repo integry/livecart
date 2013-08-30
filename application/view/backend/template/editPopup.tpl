@@ -32,7 +32,7 @@
 		<div style="float: left;{denied role="template.save"} display: none;{/denied}">
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="hidden" name="theme" value="[[theme]]" />
-			<input type="submit" class="submit" value="{tn _save_template}" />
+			<input type="submit" class="submit" value="{t _save_template}" />
 			{t _or}
 			<a class="cancel" href="#" onclick="window.close();">{t _cancel}</a>
 		</div>

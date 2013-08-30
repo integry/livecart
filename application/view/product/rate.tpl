@@ -32,7 +32,7 @@
 
 {% if !'ENABLE_REVIEWS'|config || !$ratingForm|@isRequired:'nickname' %}
 	<p>
-		<input class="submit" type="submit" value="{tn _submit_rating}" /> <span class="progressIndicator" style="display: none;"></span>
+		<input class="submit" type="submit" value="{t _submit_rating}" /> <span class="progressIndicator" style="display: none;"></span>
 	</p>
 	<div class="clear"></div>
 {% endif %}

@@ -6,7 +6,7 @@
 </fieldset>
 
 <fieldset style="display: none;" class="addForm rpp_new_form" id="rpp_new_form_[[product.ID]]">
-	<legend>{t _add_new_recurring_product_period|capitalize}</legend>
+	<legend>[[ capitalize({t _add_new_recurring_product_period}) ]]</legend>
 	[[ partial('backend/recurringProductPeriod/form.tpl', ['recurringProductPeriod': newRecurringProductPeriod, 'form': newForm]) ]]
 </fieldset>
 

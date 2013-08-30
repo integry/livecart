@@ -3,5 +3,5 @@
 </p>
 
 <p class="inlineWarning">
-	{t _css_warn|branding}
+	[[ branding({t _css_warn}) ]]
 </p>

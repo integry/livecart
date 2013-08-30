@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	<a href="{link controller="backend.language"}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} [[edit_language]])
+	<a href="{link controller="backend.language"}">{t _languages}</a> &gt; [[ t("_language_definitons") ]] ({img src="image/localeflag/`$id`.png"} [[edit_language]])
 {/pageTitle}
 
 {includeJs file="library/json.js"}
@@ -70,14 +70,14 @@
 
 		{form id="addPhraseForm" style="display: none;" handle=$addForm}
 			<fieldset>
-				<legend>{t _add_new|@ucwords}</legend>
+				<legend>[[ @ucwords({t _add_new}) ]]</legend>
 
 				[[ textfld('key', '_phrase_key') ]]
 
 				[[ textfld('value', '_phrase_value') ]]
 
 				<fieldset class="controls">
-					<input type="submit" class="submit" value="{tn _add}" />
+					<input type="submit" class="submit" value="{t _add}" />
 					{t _or}
 					<a class="cancel" href="#cancel">{t _cancel}</a>
 				</fieldset>

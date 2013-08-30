@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
 	var massHandler = new ActiveGrid.MassActionHandler($('manufacturerMass'), window.activeGrids['manufacturer_0']);
-	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_manufacturer|addslashes}' ;
-	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+	massHandler.deleteConfirmMessage = '[[ addslashes({t _are_you_sure_you_want_to_delete_manufacturer}) ]]' ;
+	massHandler.nothingSelectedMessage = '[[ addslashes({t _nothing_selected}) ]]' ;
 </script>
 

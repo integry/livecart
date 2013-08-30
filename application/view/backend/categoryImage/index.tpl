@@ -57,7 +57,7 @@
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}">
+			<input type="submit" name="upload" class="submit" value="{t _upload}">
 			{t _or}
 			<a href="#" class="cancel">{t _cancel}</a>
 		</fieldset>
@@ -105,15 +105,15 @@
 	handler.setEditUrl('{link controller="backend.categoryImage" action=edit}');
 	handler.setSaveUrl('{link controller="backend.categoryImage" action=save}');
 
-	handler.setDeleteMessage('{t _delete_confirm|addslashes}');
-	handler.setEditCaption('{t _edit_image|addslashes}');
-	handler.setSaveCaption('{t _save|addslashes}');
+	handler.setDeleteMessage('[[ addslashes({t _delete_confirm}) ]]');
+	handler.setEditCaption('[[ addslashes({t _edit_image}) ]]');
+	handler.setSaveCaption('[[ addslashes({t _save}) ]]');
 
 
 	handler.activeListMessages =
 	{
-		_activeList_edit:	'{t _activeList_edit|addslashes}',
-		_activeList_delete:  '{t _activeList_delete|addslashes}'
+		_activeList_edit:	'[[ addslashes({t _activeList_edit}) ]]',
+		_activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 	}
 </script>
 

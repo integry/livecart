@@ -87,7 +87,7 @@
 
 				<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn _void_button}" />
+					<input type="submit" class="submit" value="{t _void_button}" />
 					{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm([[transaction.ID]], event);">{t _cancel}</a>
 				</fieldset>
 
@@ -126,7 +126,7 @@
 
 		<fieldset class="controls">
 				<span class="progressIndicator" style="display: none;"></span>
-				<input type="submit" class="submit" value="{tn _process_capture}" />
+				<input type="submit" class="submit" value="{t _process_capture}" />
 			{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm([[transaction.ID]], event);">{t _cancel}</a>
 		</fieldset>
 

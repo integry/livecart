@@ -99,8 +99,8 @@
 																}
 														}
 													   );
-	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_this_order|addslashes}' ;
-	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+	massHandler.deleteConfirmMessage = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_order}) ]]' ;
+	massHandler.nothingSelectedMessage = '[[ addslashes({t _nothing_selected}) ]]' ;
 	ordersActiveGrid['[[orderGroupID]]'] = window.activeGrids['orders_[[orderGroupID]]'];
 </script>
 

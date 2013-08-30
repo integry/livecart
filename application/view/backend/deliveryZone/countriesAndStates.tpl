@@ -37,7 +37,7 @@
 			<div class="clear"></div>
 			<div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
 				{foreach key="groupName" item="group" from=$countryGroups}
-					<div><a href="#[[groupName]]">{translate text=$groupName}</a>&nbsp;&nbsp;</div>
+					<div><a href="#[[groupName]]">[[ t(groupName) ]]</a>&nbsp;&nbsp;</div>
 				{/foreach}
 			</div>
 		</fieldset>

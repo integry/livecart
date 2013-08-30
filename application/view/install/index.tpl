@@ -8,7 +8,7 @@
 	{foreach from=$requirements key=req item=result}
 		{% if 1 != $result %}
 			<div class="{% if 1 == $result %}pass{% else %}fail{% endif %}">
-				<dt>{translate text=$req}</dt>
+				<dt>[[ t(req) ]]</dt>
 				<dd>
 				{% if 1 == $result %}
 					<img src="image/silk/gif/tick.gif" />

@@ -10,7 +10,7 @@
 	{footer}
 				<p>
 					<label></label>
-					<input type="submit" class="submit" value="{tn _update}" name="saveFields" />
+					<input type="submit" class="submit" value="{t _update}" name="saveFields" />
 				</p>
 			</td>
 		</tr>

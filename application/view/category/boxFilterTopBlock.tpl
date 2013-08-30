@@ -19,7 +19,7 @@
 
 {/content}{footer}
 {% if !'TOP_FILTER_RELOAD'|config %}
-	<input type="submit" class="submit" value="{tn _search}" />
+	<input type="submit" class="submit" value="{t _search}" />
 {% endif %}
 </form>
 </div>

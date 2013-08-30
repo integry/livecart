@@ -15,9 +15,9 @@
 	Backend.ProductOption.prototype.links.sortValues	  = '{link controller="backend.productOption" action=sortChoice}/';
 
 	Backend.ProductOption.prototype.msg = {};
-	Backend.ProductOption.prototype.msg.removeFieldQuestion  = '{t _ProductOption_remove_question|addslashes}';
-	Backend.ProductOption.prototype.msg.editActiveListItem   = '{t _activeList_edit|addslashes}',
-	Backend.ProductOption.prototype.msg.deleteActiveListItem = '{t _activeList_delete|addslashes}'
+	Backend.ProductOption.prototype.msg.removeFieldQuestion  = '[[ addslashes({t _ProductOption_remove_question}) ]]';
+	Backend.ProductOption.prototype.msg.editActiveListItem   = '[[ addslashes({t _activeList_edit}) ]]',
+	Backend.ProductOption.prototype.msg.deleteActiveListItem = '[[ addslashes({t _activeList_delete}) ]]'
 	Backend.ProductOption.prototype.activeListMessages =
 	{
 		'_activeList_edit':	Backend.ProductOption.prototype.msg.editActiveListItem,
@@ -46,7 +46,7 @@
 
 <div>
 	<fieldset class="addForm" id="productOption_item_new_[[parentID]]_form" style="display: none;">
-		<legend>{t _add_new_field|capitalize}</legend>
+		<legend>[[ capitalize({t _add_new_field}) ]]</legend>
 
 		<script type="text/javascript">
 		   var newProductOptionForm = new Backend.ProductOption('{json array=$productOptionsList}');

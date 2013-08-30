@@ -13,7 +13,7 @@
 
 	Backend.Filter.prototype.msg = {};
 	Backend.Filter.prototype.msg.translateTo = '{t _translate_to}';
-	Backend.Filter.prototype.msg.removeQuestion = '{t _FilterGroup_remove_question|addslashes}';
+	Backend.Filter.prototype.msg.removeQuestion = '[[ addslashes({t _FilterGroup_remove_question}) ]]';
 
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{% if $configKey == 'types' %}
@@ -37,7 +37,7 @@
 		</fieldset>
 
 		<fieldset class="addForm" id="filter_item_new_[[categoryID]]_form" style="display: none;" class="filter_item_new">
-			<legend>{t _add_new_filter|capitalize}</legend>
+			<legend>[[ capitalize({t _add_new_filter}) ]]</legend>
 			<script type="text/javascript">
 				var newFilterForm = new Backend.Filter({json array=$blankFilter}, true);
 				newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
@@ -59,8 +59,8 @@
 	<script type="text/javascript">
 		 Backend.Filter.prototype.activeListMessages =
 		 {
-			 _activeList_edit:	'{t _activeList_edit|addslashes}',
-			 _activeList_delete:  '{t _activeList_delete|addslashes}'
+			 _activeList_edit:	'[[ addslashes({t _activeList_edit}) ]]',
+			 _activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 		 }
 
 		 Event.observe($("filter_item_new_[[categoryID]]_show"), "click", function(e)

@@ -2,14 +2,14 @@
 [[ partial("email/blockOrderItems.tpl") ]]
 
 {% if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config %}
-{t _subtotal|@str_pad_left:49}: [[order.formatted_itemSubtotalWithoutTax]]
+[[ @str_pad_left:49({t _subtotal}) ]]: [[order.formatted_itemSubtotalWithoutTax]]
 {% endif %}
 {% if $order.formatted_shippingSubtotal %}
-{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{t _shipping|@str_pad_left:49}: [[order.formatted_shippingSubtotal]]
+{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}[[ @str_pad_left:49({t _shipping}) ]]: [[order.formatted_shippingSubtotal]]
 {% endif %}
 {% if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config %}
 {% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{''|@str_pad_left:27}---------------------------------
-{t _subtotal_before_tax|@str_pad_left:49}: [[order.formatted_subtotalBeforeTaxes]]
+[[ @str_pad_left:49({t _subtotal_before_tax}) ]]: [[order.formatted_subtotalBeforeTaxes]]
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
 {% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{$tax.name_lang|@str_pad_left:49}: [[tax.formattedAmount]]
 {/foreach}
@@ -19,10 +19,10 @@
 {% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{$discount.description|@str_pad_left:49}: [[discount.formatted_amount]]{% endif %}
 {/foreach}
 {% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{''|@str_pad_left:27}---------------------------------
-{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{t _grand_total|@str_pad_left:49}: {$order.formattedTotal[$order.Currency.ID]}
-{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{t _amount_paid|@str_pad_left:49}: [[order.formatted_amountPaid]]
+{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}[[ @str_pad_left:49({t _grand_total}) ]]: {$order.formattedTotal[$order.Currency.ID]}
+{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}[[ @str_pad_left:49({t _amount_paid}) ]]: [[order.formatted_amountPaid]]
 {% if $order.amountDue %}
-{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{t _amount_due|@str_pad_left:49}: [[order.formatted_amountDue]]
+{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}[[ @str_pad_left:49({t _amount_due}) ]]: [[order.formatted_amountDue]]
 {% endif %}
 {% endif %}{*html*}
 {% if !empty(html) %}

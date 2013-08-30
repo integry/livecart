@@ -48,7 +48,7 @@
 
 <fieldset class="controls">
 	<span class="progressIndicator" style="display: none;"></span>
-	<input type="submit" value="{tn _save}" class="submit">
+	<input type="submit" value="{t _save}" class="submit">
 	{t _or}
 	<a href="#cancel" onclick="this.parentNode.parentNode.parentNode.innerHTML = ''; return false;" class="cancel">{t _cancel}</a>
 </fieldset>

@@ -49,7 +49,7 @@
 					[[ partial('backend/user/address_edit.tpl', ['hideName': true]) ]]
 
 					<div>
-						<input type="submit" class="submit" value="{tn _lookup_zone}" />
+						<input type="submit" class="submit" value="{t _lookup_zone}" />
 						<span class="progressIndicator" style="display: none;"></span>
 						{t _or}
 						<a href="#cancel" class="cancel" onclick="$('testAddressForm').hide(); return false;">{t _cancel}</a>

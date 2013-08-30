@@ -7,7 +7,7 @@
 <div class="clear"></div>
 
 {capture assign="cartUpdate"}
-	<td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
+	<td id="cartUpdate"><input type="submit" class="submit" value="{t _update}" /></td>
 {/capture}
 {assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
 {php}$GLOBALS['cartUpdate'] = $smarty->getTemplateVars('cartUpdate'); $smarty->assignByRef('GLOBALS', $GLOBALS);{/php}

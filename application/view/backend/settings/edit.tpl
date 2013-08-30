@@ -93,6 +93,6 @@
 
 <fieldset class="controls">
 	<span class="progressIndicator" style="display: none;"></span>
-	<input type="submit" value="{tn _save}" class="submit" />
+	<input type="submit" value="{t _save}" class="submit" />
 </fieldset>
 {/form}

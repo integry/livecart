@@ -8,7 +8,7 @@
 	{form handle=$form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
 
 		<fieldset>
-			<legend>{t _create_message|capitalize}</legend>
+			<legend>[[ capitalize({t _create_message}) ]]</legend>
 			[[ partial("backend/newsletter/form.tpl") ]]
 		</fieldset>
 

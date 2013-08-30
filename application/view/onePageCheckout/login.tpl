@@ -41,7 +41,7 @@
 	</div>
 	<div class="one-page-checkout-login-field">
 		<label class="empty">&nbsp;</label>
-		<input type="submit" class="submit" value="{tn _login}" />
+		<input type="submit" class="submit" value="{t _login}" />
 	</div>
 	<div class="clear"></div>
 </form>

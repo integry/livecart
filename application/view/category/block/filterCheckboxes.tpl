@@ -1,6 +1,6 @@
 {% if $sectionFilters.filters %}
 	<div class="filterGroup filterTypeCheckbox" id="filterGroup_[[sectionFilters.ID]]">
-		<div class="nav-header">{translate text=$title}</div>
+		<div class="nav-header">[[ t(title) ]]</div>
 		{foreach from=$sectionFilters.filters item="filter" name="filters"}
 			<div class="checkbox">
 				<label>

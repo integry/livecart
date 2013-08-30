@@ -4,7 +4,7 @@
 
 {form action="backend.discount/save" method="POST" id="discountAddForm" handle=$form}
 	<fieldset>
-		<legend>{t _create_rule|capitalize}</legend>
+		<legend>[[ capitalize({t _create_rule}) ]]</legend>
 
 		[[ partial('backend/discount/conditionForm.tpl', ['id': "discountAddForm"]) ]]
 
@@ -12,7 +12,7 @@
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _save_and_continue}" />
+		<input type="submit" class="submit" value="{t _save_and_continue}" />
 		{t _or}
 		<a class="cancel" href="#" onclick="$('cancel_discount_add').onclick(event);">{t _cancel}</a>
 	</fieldset>

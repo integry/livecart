@@ -25,10 +25,10 @@
 	Backend.SpecField.prototype.links.updateGroup	 = '{link controller="`$controller`Group" action=update}';
 
 	Backend.SpecField.prototype.msg = {};
-	Backend.SpecField.prototype.msg.removeGroupQuestion  = '{t _SpecFieldGroup_remove_question|addslashes}';
-	Backend.SpecField.prototype.msg.removeFieldQuestion  = '{t _SpecField_remove_question|addslashes}';
-	Backend.SpecField.prototype.msg.editActiveListItem   = '{t _activeList_edit|addslashes}',
-	Backend.SpecField.prototype.msg.deleteActiveListItem = '{t _activeList_delete|addslashes}'
+	Backend.SpecField.prototype.msg.removeGroupQuestion  = '[[ addslashes({t _SpecFieldGroup_remove_question}) ]]';
+	Backend.SpecField.prototype.msg.removeFieldQuestion  = '[[ addslashes({t _SpecField_remove_question}) ]]';
+	Backend.SpecField.prototype.msg.editActiveListItem   = '[[ addslashes({t _activeList_edit}) ]]',
+	Backend.SpecField.prototype.msg.deleteActiveListItem = '[[ addslashes({t _activeList_delete}) ]]'
 	Backend.SpecField.prototype.activeListMessages =
 	{
 		'_activeList_edit':	Backend.SpecField.prototype.msg.editActiveListItem,
@@ -60,7 +60,7 @@
 
 <div>
 	<fieldset class="addForm" id="specField_item_new_[[categoryID]]_form" style="display: none;">
-		<legend>{t _add_new_field|capitalize}</legend>
+		<legend>[[ capitalize({t _add_new_field}) ]]</legend>
 
 		<script type="text/javascript">
 		   var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
@@ -71,7 +71,7 @@
 	</fieldset>
 
 	<fieldset class="addForm" id="specField_group_new_[[categoryID]]_form" class="specField_new_group" style="display: none;">
-		<legend>{t _add_new_group|capitalize}</legend>
+		<legend>[[ capitalize({t _add_new_group}) ]]</legend>
 		<script type="text/javascript">
 		   new Backend.SpecFieldGroup($('specField_group_new_[[categoryID]]_form'), {ldelim} Category: {ldelim} ID: '[[categoryID]]' {rdelim} {rdelim});
 		</script>

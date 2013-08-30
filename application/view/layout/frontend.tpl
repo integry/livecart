@@ -25,7 +25,7 @@
 				{% block content %}{% endblock %}
 			{% block contentend %}[[ partial("block/content-stop.tpl") ]]{% endblock %}
 
-			{% block footer %}{% endblock %}
+			{% block footer %}[[ partial("layout/frontend/footer.tpl") ]]{% endblock %}
 		</div>
 	</body>
 </html>

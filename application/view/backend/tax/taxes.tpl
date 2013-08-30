@@ -6,7 +6,7 @@
 </fieldset>
 
 <fieldset id="tax_new_form" style="display: none;" class="addForm">
-	<legend>{t _add_new_tax|capitalize}</legend>
+	<legend>[[ capitalize({t _add_new_tax}) ]]</legend>
 	[[ partial('backend/tax/tax.tpl', ['tax': newTax, 'taxForm': newTaxForm]) ]]
 </fieldset>
 

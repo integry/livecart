@@ -94,7 +94,7 @@
 
 				<fieldset class="controls">
 					<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-					<input ng-disabled="form.$invalid" type="submit" value="{tn _save}" class="submit" />
+					<input ng-disabled="form.$invalid" type="submit" value="{t _save}" class="submit" />
 					{t _or}
 					<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
 				</fieldset>

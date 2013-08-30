@@ -135,7 +135,7 @@
 	<div class="clear"></div>
 
 	<fieldset id="columns" style="display: none;">
-		<legend>{t _map_data|branding}</legend>
+		<legend>[[ branding({t _map_data}) ]]</legend>
 
 		<div id="importProfiles">
 			[[ partial("backend/csvImport/profiles.tpl") ]]
@@ -160,7 +160,7 @@
 		</div>
 
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _continue}" />
+		<input type="submit" class="submit" value="{t _continue}" />
 		{t _or}
 		<a class="cancel" href="{link controller="backend.csvImport"}">{t _cancel}</a>
 	</fieldset>

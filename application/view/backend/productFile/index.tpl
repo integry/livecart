@@ -65,7 +65,7 @@
 		Links.edit	 = '{link controller="backend.productFile" action=edit}';
 		Links.download	 = '{link controller="backend.productFile" action=download}';
 
-		Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete|addslashes}';
+		Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete}) ]]';
 
 		with(Group)
 		{
@@ -75,7 +75,7 @@
 			Links.sort	 = '{link controller="backend.productFileGroup" action=sort}?target=productFileGroup_list_[[productID]]';
 			Links.edit	 = '{link controller="backend.productFileGroup" action=edit}';
 
-			Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_group|addslashes}'
+			Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_group}) ]]'
 		}
 	}
 	// create empty form

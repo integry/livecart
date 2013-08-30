@@ -28,7 +28,7 @@
 
 <fieldset id="addNews" class="slideForm addForm" style="display: none;">
 
-	<legend>{t _add_news|capitalize}</legend>
+	<legend>[[ capitalize({t _add_news}) ]]</legend>
 
 	{form action="backend.siteNews/add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
 		<input type="hidden" name="id" />

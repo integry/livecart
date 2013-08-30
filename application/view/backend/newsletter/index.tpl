@@ -129,8 +129,8 @@
 						}
 
 						);
-	massHandler.deleteConfirmMessage = '{t _newsletter_delete_confirm|addslashes}' ;
-	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+	massHandler.deleteConfirmMessage = '[[ addslashes({t _newsletter_delete_confirm}) ]]' ;
+	massHandler.nothingSelectedMessage = '[[ addslashes({t _nothing_selected}) ]]' ;
 
 </script>
 

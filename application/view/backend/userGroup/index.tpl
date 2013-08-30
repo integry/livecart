@@ -66,7 +66,7 @@
 	Backend.User.Group.prototype.Messages.savedMessage = '{t _form_has_been_successfully_saved}';
 
 	Backend.CustomerOrder.Links.selectCustomer = '{link controller="backend.customerOrder" action=selectCustomer}';
-	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{t _order_number|escape}';
+	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '[[ escape({t _order_number}) ]]';
 	Backend.CustomerOrder.Messages.selecCustomerTitle = '{t _select_customer_title}';
 	Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
 

@@ -3,5 +3,5 @@
 	editor.updateIDs({json array=$ids});
 	editor.updateImages({json array=$images});
 	parent.TabControl.prototype.getInstance('productManagerContainer').setCounter('tabProductVariations', [[variationCount]]);
-	parent.Backend.SaveConfirmationMessage.prototype.showMessage('{t _variations_save_conf|escape}');
+	parent.Backend.SaveConfirmationMessage.prototype.showMessage('[[ escape({t _variations_save_conf}) ]]');
 </script>

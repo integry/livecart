@@ -13,8 +13,8 @@
 	var lng = new Backend.LanguageIndex();
 
 	lng.activeListMessages = {
-		_activeList_edit:	'{t _activeList_edit|addslashes}',
-		_activeList_delete:  '{t _activeList_delete|addslashes}'
+		_activeList_edit:	'[[ addslashes({t _activeList_edit}) ]]',
+		_activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 	}
 
 	lng.setFormUrl('{link controller="backend.language" action=addForm}');

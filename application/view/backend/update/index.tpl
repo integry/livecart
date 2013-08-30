@@ -1,4 +1,4 @@
-{pageTitle help="update"}{t _update_livecart|branding}{/pageTitle}
+{pageTitle help="update"}[[ branding({t _update_livecart}) ]]{/pageTitle}
 
 {includeCss file="backend/Update.css"}
 
@@ -17,9 +17,9 @@
 
 <p>
 {% if !empty(needUpdate) %}
-	{t _newer_available|branding}.
+	[[ branding({t _newer_available}) ]].
 {% else %}
-	{t _up_to_date|branding}
+	[[ branding({t _up_to_date}) ]]
 {% endif %}
 </p>
 

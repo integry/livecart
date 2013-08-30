@@ -14,12 +14,26 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 			$this->_compiler->setOptions($this->getOptions());
 			$this->_compiler->setDI($this->getDI());
 
+			$this->_compiler->addFunction('empty', 'empty');
+
 			$this->_compiler->addFunction('config', function($resolvedArgs, $exprArgs) {
 				return '$this->getDI()->get(\'config\')->get(' . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('global', function($resolvedArgs, $exprArgs) {
 				return '$this->setOrReturnGlobal(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('t', function($resolvedArgs, $exprArgs) {
+				return '$GLOBALS[\'di\']->get(\'application\')->translate(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('tip', function($resolvedArgs, $exprArgs) {
+				return '$GLOBALS[\'di\']->get(\'application\')->translate(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('req', function($resolvedArgs, $exprArgs) {
+				return '$this->getDI()->get(\'request\')->get(' . $resolvedArgs . ')';
 			});
 		}
 
@@ -33,9 +47,9 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 		return parent::render($path ? $path : $templatePath, $params, $mustClean);
 	}
 
-	public function partial($partialPath)
+	public function partial($partialPath, $params = array())
 	{
-		return parent::render($this->getTemplatePath($partialPath), $this->globals);
+		return parent::render($this->getTemplatePath($partialPath), array_merge($this->globals, $params));
 	}
 
 	public function setOrReturnGlobal($key, $value = null)
@@ -207,6 +221,9 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 
 		$source = str_replace('[[', '{{', $source);
 		$source = str_replace(']]', '}}', $source);
+
+		$source = preg_replace('/{t ([^\|]+?)}/', '[[t("$1")]]', $source);
+		$source = preg_replace('/{tn ([^\|]+?)}/', '[[t("$1", true)]]', $source);
 
 		//$source = '<' . '?php extract($this->getGlobals()); ?' . '>' . $source;
 

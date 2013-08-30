@@ -183,23 +183,23 @@
 	Backend.Shipment.Statuses = {json array=$statuses};
 
 	Backend.Shipment.Messages = {};
-	Backend.Shipment.Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_group|addslashes}';
-	Backend.Shipment.Messages.shippingServiceIsNotSelected = '{t _shipping_service_is_not_selected|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToReturned = '{t _are_you_sure_you_want_to_change_shipment_status_to_returned|addslashes}';
-	Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}';
-	Backend.Shipment.Messages.youWontBeAbleToUndelete = '{t _you_wont_be_able_to_undelete_this_shipment|addslashes}';
-	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}';
-	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}'
+	Backend.Shipment.Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_group}) ]]';
+	Backend.Shipment.Messages.shippingServiceIsNotSelected = '[[ addslashes({t _shipping_service_is_not_selected}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '[[ addslashes({t _are_you_sure_you_want_to_change_shipment_status_to_awaiting}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '[[ addslashes({t _are_you_sure_you_want_to_change_shipment_status_to_pending}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '[[ addslashes({t _are_you_sure_you_want_to_change_shipment_status_to_new}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '[[ addslashes({t _are_you_sure_you_want_to_change_shipment_status_to_shipped}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToReturned = '[[ addslashes({t _are_you_sure_you_want_to_change_shipment_status_to_returned}) ]]';
+	Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '[[ addslashes({t _you_wont_be_able_to_revert_status_from_shipped}) ]]';
+	Backend.Shipment.Messages.youWontBeAbleToUndelete = '[[ addslashes({t _you_wont_be_able_to_undelete_this_shipment}) ]]';
+	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_shipment}) ]]';
+	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '[[ addslashes({t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page}) ]]'
 	Backend.Shipment.Messages.shipment = '{t _shipment}';
 
 	Backend.OrderedItem.Messages = {};
-	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_item|addslashes}';
-	Backend.OrderedItem.Messages.selectProductTitle = '{t _select_product|addslashes}';
-	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{t _are_you_realy_want_to_update_items_count|addslashes}';
+	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_item}) ]]';
+	Backend.OrderedItem.Messages.selectProductTitle = '[[ addslashes({t _select_product}) ]]';
+	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '[[ addslashes({t _are_you_realy_want_to_update_items_count}) ]]';
 
 	Backend.Shipment.prototype.initializePage("[[orderID]]", "[[downloadableShipment.ID]]")
 

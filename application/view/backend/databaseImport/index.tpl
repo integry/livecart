@@ -10,9 +10,9 @@
 
 [[ partial("layout/backend/header.tpl") ]]
 
-<p>{t _import_description|branding}</p>
+<p>[[ branding({t _import_description}) ]]</p>
 
-<p class="importWarning">{t _import_warning|branding}</p>
+<p class="importWarning">[[ branding({t _import_warning}) ]]</p>
 
 <div id="import">
 {form action="backend.databaseImport/import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
@@ -37,7 +37,7 @@
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _import}" />
+		<input type="submit" class="submit" value="{t _import}" />
 		{t _or}
 		<a class="cancel" href="{link controller="backend.databaseImport"}">{t _cancel}</a>
 	</fieldset>
@@ -63,7 +63,7 @@
 		<ul id="progressBarContainer">
 			{foreach from=$recordTypes item=type}
 				<li id="progress_[[type]]" style="display: none;">
-					<h2>{translate text=$type}</h2>
+					<h2>[[ t(type) ]]</h2>
 					<div class="progressBarIndicator"></div>
 					<div class="progressBar" style="display: none;">
 						<span class="progressCount"></span>

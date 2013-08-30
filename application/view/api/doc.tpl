@@ -16,7 +16,7 @@
 {% if !empty(authMethods) %}
 	<ul>
 		{foreach from=$authMethods item=class}
-			<li><a href="{link controller=api action=docauth query="class=`$class`"}">{translate text=$class}</a></li>
+			<li><a href="{link controller=api action=docauth query="class=`$class`"}">[[ t(class) ]]</a></li>
 		{/foreach}
 	</ul>
 {% else %}

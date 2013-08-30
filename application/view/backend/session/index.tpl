@@ -1,9 +1,9 @@
 {includeCss file="backend/Session.css"}
-{% block title %}{t _backend_login|branding}{{% endblock %}
+{% block title %}[[ branding({t _backend_login}) ]]{{% endblock %}
 
 [[ partial("layout/backend/meta.tpl") ]]
 
-<h1 id="loginHeader">{t _backend_login|branding}</h1>
+<h1 id="loginHeader">[[ branding({t _backend_login}) ]]</h1>
 
 <div id="logoContainer">
 	{img src='BACKEND_LOGIN_LOGO'|config|@or:"image/promo/transparentlogo.png"}
@@ -30,7 +30,7 @@
 
    	<p>
 		<label></label>
-		<input type="submit" class="submit" value="{tn _login}" />
+		<input type="submit" class="submit" value="{t _login}" />
 	</p>
 
 	<input type="hidden" name="return" value="[[return]]" />

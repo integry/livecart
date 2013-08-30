@@ -4,6 +4,6 @@
 
 [[ partial("layout/backend/header.tpl") ]]
 
-{t _update_successful|branding}
+[[ branding({t _update_successful}) ]]
 
 [[ partial("layout/backend/footer.tpl") ]]

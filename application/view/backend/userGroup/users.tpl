@@ -18,7 +18,7 @@
 			</li>
 		</ul>
 		<fieldset  class="addForm newUserForm">
-			<legend>{t _add_new_user|capitalize}</legend>
+			<legend>[[ capitalize({t _add_new_user}) ]]</legend>
 			[[ partial('backend/user/info.tpl', ['someUser': newUser]) ]]
 		</fieldset>
 	</div>
@@ -64,8 +64,8 @@
 
 <script type="text/javascript">
 	var massHandler = new Backend.UserGroup.massActionHandler($('userMass_[[userGroupID]]'), window.activeGrids['users_[[userGroupID]]']);
-	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_this_user|addslashes}' ;
-	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+	massHandler.deleteConfirmMessage = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_user}) ]]' ;
+	massHandler.nothingSelectedMessage = '[[ addslashes({t _nothing_selected}) ]]' ;
 
 	usersActiveGrid[[[userGroupID]]] = window.activeGrids['users_[[userGroupID]]'];
 </script>

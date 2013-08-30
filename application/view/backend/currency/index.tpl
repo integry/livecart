@@ -52,7 +52,7 @@
 						</span>
 
 						<div class="currListMenu">
-							<a href="{link controller="backend.currency" action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied} onclick="return confirm('{t _base_currency_warning|escape}')">{t _set_as_default}</a>
+							<a href="{link controller="backend.currency" action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied} onclick="return confirm('[[ escape({t _base_currency_warning}) ]]')">{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
 						<div class="currEdit activeList_editContainer activeList_container"></div>
@@ -77,8 +77,8 @@
 
 	var messages =
 	{
-		_activeList_edit:	'{t _activeList_edit|addslashes}',
-		_activeList_delete:  '{t _activeList_delete|addslashes}'
+		_activeList_edit:	'[[ addslashes({t _activeList_edit}) ]]',
+		_activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 	}
 
 	function initCurrencyList()

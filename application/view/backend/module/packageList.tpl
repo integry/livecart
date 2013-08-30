@@ -14,7 +14,7 @@
 					{/foreach}
 				</select>
 				<input type="hidden" name="repos" value="[[repos]]" />
-				<input type="submit" class="submit" value="{tn _install_module}" />
+				<input type="submit" class="submit" value="{t _install_module}" />
 			</p>
 		</form>
 	{% else %}

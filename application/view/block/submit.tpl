@@ -1,5 +1,5 @@
 <div class="form-actions">
-	<button type="submit" class="btn btn-primary">{translate text=$caption}</button>
+	<button type="submit" class="btn btn-primary">[[ t(caption) ]]</button>
 	<span class="progressIndicator" style="display: none;"></span>
 
 	{% if !empty(cancelRoute) %}

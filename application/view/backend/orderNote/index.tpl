@@ -11,7 +11,7 @@
 	<div class="addResponseform style="display: none;">
 		<fieldset class="addform">
 
-			<legend>{t _add_response|capitalize}</legend>
+			<legend>[[ capitalize({t _add_response}) ]]</legend>
 
 			{form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
 
@@ -21,7 +21,7 @@
 
 				<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn _add_response}" />
+					<input type="submit" class="submit" value="{t _add_response}" />
 					{t _or} <a class="cancel responseCancel" href="#">{t _cancel}</a>
 				</fieldset>
 

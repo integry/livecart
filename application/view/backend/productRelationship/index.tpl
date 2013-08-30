@@ -3,7 +3,7 @@
 	with(Backend.RelatedProduct.Group)
 	{
 		Links.sort = '{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_[[productID]]';
-		Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_group|addslashes}'
+		Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_group}) ]]'
 	}
 
 	Backend.RelatedProduct.links = {};
@@ -11,8 +11,8 @@
 	with(Backend.RelatedProduct)
 	{
 		links.selectProduct = '{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__';
-		messages.selectProductTitle = '{t _select_product|addslashes}';
-		messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_relation|addslashes}';
+		messages.selectProductTitle = '[[ addslashes({t _select_product}) ]]';
+		messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_relation}) ]]';
 	}
 
 </script>

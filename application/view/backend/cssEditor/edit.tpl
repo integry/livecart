@@ -24,7 +24,7 @@
 
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="submit" value="{tn _save_css}" />
+		<input type="submit" class="submit" value="{t _save_css}" />
 		{% if isset($noTabHandling) == false %}
 			{t _or}
 			<a id="cancel_[[tabid]]" class="cancel" href="{link controller="backend.cssEditor"}">{t _cancel}</a>

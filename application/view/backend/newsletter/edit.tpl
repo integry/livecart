@@ -4,7 +4,7 @@
 	{hidden name="id" value=$newsletter.ID}
 
 	<fieldset>
-		<legend>{t _edit_message|capitalize}</legend>
+		<legend>[[ capitalize({t _edit_message}) ]]</legend>
 		[[ partial("backend/newsletter/form.tpl") ]]
 	</fieldset>
 
@@ -31,7 +31,7 @@
 
 <div class="sendContainer">
 	<fieldset>
-		<legend>{t _send_message|@capitalize}</legend>
+		<legend>[[ @capitalize({t _send_message}) ]]</legend>
 		<p>
 			<label class="sendLabel">{t _send_to}:</label>
 			<div style="float: left;">

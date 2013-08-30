@@ -22,7 +22,7 @@
 			</div>
 		{% endif %}
 
-		<input type="submit" class="submit" value="{tn _proceed_update}" />
+		<input type="submit" class="submit" value="{t _proceed_update}" />
 		{t _or}
 		<a href="#cancel" class="cancel">{t _cancel}</a>
 	{/form}

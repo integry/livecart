@@ -5,7 +5,7 @@
 
 {includeCss file="backend/Settings.css"}
 
-{pageTitle help="settings.configuration"}{t _livecart_settings|branding}{/pageTitle}
+{pageTitle help="settings.configuration"}[[ branding({t _livecart_settings}) ]]{/pageTitle}
 [[ partial("layout/backend/header.tpl") ]]
 
 <div id="settingsContainer" ng-controller="SettingsController" ng-init="setTree({$categories|escape});">

@@ -169,7 +169,7 @@
 					<a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
 					<span class="specField_mergeValuesControls controls" style="display: none">
 						<span class="progressIndicator" style="display: none;"></span>
-						<input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />
+						<input type="button" class="submit specField_mergeValuessubmit" value="{t _specField_merge_values}" />
 						{t _or}
 						<a href="#" class="cancel specField_mergeValuesCancel">{t _cancel}</a>
 					</span>
@@ -198,7 +198,7 @@
 
 	<fieldset class="specField_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>
-		<input type="submit" class="specField_save button submit" value="{translate text=_save}" />
+		<input type="submit" class="specField_save button submit" value="[[ t("_save") ]]" />
 		{t _or}
 		<a href="#cancel" class="specField_cancel cancel">{t _cancel}</a>
 	</fieldset>

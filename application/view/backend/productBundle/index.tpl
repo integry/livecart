@@ -5,8 +5,8 @@
 	with(Backend.ProductBundle)
 	{
 		links.selectProduct = '{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__';
-		messages.selectProductTitle = '{t _select_product|addslashes}';
-		messages.areYouSureYouWantToDelete = '{t _confirm_bundle_delete|addslashes}';
+		messages.selectProductTitle = '[[ addslashes({t _select_product}) ]]';
+		messages.areYouSureYouWantToDelete = '[[ addslashes({t _confirm_bundle_delete}) ]]';
 	}
 
 </script>

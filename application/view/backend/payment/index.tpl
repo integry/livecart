@@ -11,7 +11,7 @@
 	<div class="slideForm addOffline" style="display: none;">
 		<fieldset class="addForm addOfflinePayment">
 
-			<legend>{t _add_offline_payment|capitalize}</legend>
+			<legend>[[ capitalize({t _add_offline_payment}) ]]</legend>
 
 			{form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
 
@@ -24,7 +24,7 @@
 
 				<fieldset class="controls" style="margin-right: 40px;">
 					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn _add_payment}" />
+					<input type="submit" class="submit" value="{t _add_payment}" />
 					{t _or} <a class="cancel offlinePaymentCancel" href="#">{t _cancel}</a>
 				</fieldset>
 

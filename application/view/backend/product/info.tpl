@@ -8,7 +8,7 @@
 	<form>
 		{foreach from=$purchaseStats key=key item=count}
 			<p>
-				<label>{translate text=$key}</label>
+				<label>[[ t(key) ]]</label>
 				<label>[[count]]</label>
 			</p>
 		{foreachelse}

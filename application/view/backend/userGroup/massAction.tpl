@@ -17,7 +17,7 @@
 
 	</span>
 
-	<input type="submit" value="{tn _process}" class="submit" />
+	<input type="submit" value="{t _process}" class="submit" />
 	<span class="progressIndicator" style="display: none;"></span>
 
 	{/form}

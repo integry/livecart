@@ -117,7 +117,7 @@
 		{selectfield noFormat=true id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
 	</span>
 
-	<input type="submit" value="{tn _process}" class="submit" />
+	<input type="submit" value="{t _process}" class="submit" />
 	<span class="massIndicator progressIndicator" style="display: none;"></span>
 
 	{/form}

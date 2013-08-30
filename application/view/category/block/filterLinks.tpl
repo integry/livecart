@@ -1,7 +1,7 @@
 {assign var=maxFilters value='MAX_FILTER_CRITERIA_COUNT'|config}
 {% if $sectionFilters.filters|@hasFilters %}
 	<div class="filterGroup">
-		<h4>{translate text=$title}</h4>
+		<h4>[[ t(title) ]]</h4>
 		<ul>
 			{foreach from=$sectionFilters.filters item="filter" name="filters"}
 				{% if $filter.count && (!$allLink || ($allLink && $smarty.foreach.filters.index < $maxFilters)) %}
@@ -17,7 +17,7 @@
 			{/foreach}
 
 			{% if !empty(allLink) %}
-				<li class="showAll"><a href="[[allLink]]">{translate text=$allTitle}</a></li>
+				<li class="showAll"><a href="[[allLink]]">[[ t(allTitle) ]]</a></li>
 			{% endif %}
 		</ul>
 	</div>

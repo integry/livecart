@@ -14,13 +14,13 @@
 	{% endif %}
 
 	{% if !'TOP_MENU_COMPACT'|config %}
-		<span class="topMenuFilterCaption {% if $topMenuFilterIndex == 1 %}first{% endif %}">{translate text=$title}</span>
+		<span class="topMenuFilterCaption {% if $topMenuFilterIndex == 1 %}first{% endif %}">[[ t(title) ]]</span>
 	{% endif %}
 
 	<select {% if !empty(disabled) %}disabled="disabled" class="disabled"{% endif %}>
 		<option value="{categoryUrl action=$action data=$category filters=$appliedFilters removeFilters=$sectionFilters.filters}">
 			{% if 'TOP_MENU_COMPACT'|config %}
-				{translate text=$title}
+				[[ t(title) ]]
 			{% else %}
 				&nbsp;&nbsp;&nbsp;&nbsp;
 			{% endif %}
