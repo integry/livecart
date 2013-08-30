@@ -11,12 +11,12 @@
 	</tr>
 	<tr>
 		<td>{t _current}:</td>
-		<td class="version {% if $needUpdate %}outdated{% else %}upToDate{% endif %}">[[current]]</td>
+		<td class="version {% if !empty(needUpdate) %}outdated{% else %}upToDate{% endif %}">[[current]]</td>
 	</tr>
 </table>
 
 <p>
-{% if $needUpdate %}
+{% if !empty(needUpdate) %}
 	{t _newer_available|branding}.
 {% else %}
 	{t _up_to_date|branding}

@@ -1,4 +1,4 @@
-<fieldset class="orderShipment_controls {% if $order.isMultiAddress %}multiAddress{% endif %} error" {% if $notShippable %}style="display: none;"{% endif %}>
+<fieldset class="orderShipment_controls {% if $order.isMultiAddress %}multiAddress{% endif %} error" {% if !empty(notShippable) %}style="display: none;"{% endif %}>
    <fieldset class="orderShipment_status error">
 	   <label>{t _status}: </label>
 	   <select name="status" id="orderShipment_status_[[shipment.ID]]" {denied role='order.update'}disabled="disabled"{/denied}">

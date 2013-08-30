@@ -4,7 +4,7 @@
 [[ partial("checkout/orderOverview.tpl") ]]
 
 {function name="address"}
-	{% if $address %}
+	{% if !empty(address) %}
 		<p>
 			[[address.fullName]]
 		</p>
@@ -32,7 +32,7 @@
 	{% endif %}
 {/function}
 
-{% if !$hideAddress %}
+{% if empty(hideAddress) %}
 <div id="overviewAddresses">
 	{% if $order.ShippingAddress && !$order.isMultiAddress %}
 		<div class="addressContainer">
@@ -48,7 +48,7 @@
             {% else %}
                 {address address=$order.ShippingAddress}
             {% endif %}
-			{% if !$nochanges %}
+			{% if empty(nochanges) %}
 				<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
 			{% endif %}
 		</div>
@@ -58,7 +58,7 @@
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
 		{address address=$order.BillingAddress}
-		{% if !$nochanges %}
+		{% if empty(nochanges) %}
 			<a href="{link controller=checkout action=selectAddress}">{t _change}</a>
 		{% endif %}
 	</div>

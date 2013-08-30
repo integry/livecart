@@ -5,7 +5,7 @@
 
 	{foreach from=$result key=engine item=status}
 	<ul class="siteMapSubmission">
-		<li class="{% if !$status %}submitFail{% endif %}">[[engine]]</li>
+		<li class="{% if empty(status) %}submitFail{% endif %}">[[engine]]</li>
 	</ul>
 	{/foreach}
 </div>

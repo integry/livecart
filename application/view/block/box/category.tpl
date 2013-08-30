@@ -1,5 +1,5 @@
 {function name="categoryTree" node=false filters=false}
-	{% if $node %}
+	{% if !empty(node) %}
 		{$level=$level+1}
 		<ul class="nav nav-pills nav-stacked">
 		{foreach from=$node item=category}

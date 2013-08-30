@@ -16,7 +16,7 @@
 				{% endif %}
 			{/foreach}
 
-			{% if $allLink %}
+			{% if !empty(allLink) %}
 				<li class="showAll"><a href="[[allLink]]">{translate text=$allTitle}</a></li>
 			{% endif %}
 		</ul>

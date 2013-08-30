@@ -5,7 +5,7 @@
 [[ partial('user/userMenu.tpl', ['current': "homeMenu"]) ]]
 {% block content %}
 
-	{% if $files %}
+	{% if !empty(files) %}
 		{foreach from=$files item="item"}
 			<h3>
 				<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>

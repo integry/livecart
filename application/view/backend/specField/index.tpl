@@ -1,4 +1,4 @@
-{% if !$controller %}
+{% if empty(controller) %}
 	{assign var=controller value="backend.specField"}
 {% endif %}
 

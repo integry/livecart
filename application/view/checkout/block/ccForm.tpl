@@ -3,7 +3,7 @@
 
 	[[ partial("checkout/testHandler.tpl") ]]
 
-	{% if $id %}{assign var=ccId value=" id=`$id`"}{% endif %}
+	{% if !empty(id) %}{assign var=ccId value=" id=`$id`"}{% endif %}
 	{assign var=controller value=$controller|default:'checkout'}
 	{form action="controller=`$controller` action=payCreditCard`$ccId`" handle=$ccForm method="POST" class="form-horizontal"}
 
@@ -25,7 +25,7 @@
 			{textfield autoComplete="off"}
 		{/input}
 
-		{% if $ccTypes %}
+		{% if !empty(ccTypes) %}
 			{input name="ccType"}
 				{label}{t _cc_type}:{/label}
 				{selectfield id="ccType" options=$ccTypes}
@@ -49,7 +49,7 @@
 			</div>
 		{/input}
 
-		{% if $ccVars %}
+		{% if !empty(ccVars) %}
 			[[ partial('block/eav/fields.tpl', ['fieldList': ccVars.specFieldList]) ]]
 		{% endif %}
 

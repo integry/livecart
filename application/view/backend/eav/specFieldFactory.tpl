@@ -4,16 +4,16 @@
 	{assign var="fieldName" value="`$field.fieldName`_`$language`"}
 {% endif %}
 
-{% if $angular %}
+{% if !empty(angular) %}
 	{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.value"}
-	{% if $language %}
+	{% if !empty(language) %}
 		{assign var="ngmodel" value="`$ngmodel`_`$language`"}
 	{% endif %}
 {% endif %}
 
 {% if $field.type == 1 || $field.type == 5 %}
 	{% if $field.isMultiValue %}
-		{% if $angular %}
+		{% if !empty(angular) %}
 			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`"}
 		{% endif %}
 
@@ -32,7 +32,7 @@
 
 			<div class="row">
 				<div class="col-lg-5">
-					{% if !$disableNewOptionValues %}
+					{% if empty(disableNewOptionValues) %}
 						<div ng-repeat="value in newValues">
 							{textfield placeholder="{t _other}" class="newOptionValue" ng_model="value.value" ng_change="handleNewValues()" noFormat=true}
 						</div>
@@ -47,15 +47,15 @@
 		</eav-multiselect>
 		{/control}
 	{% else %}
-		{% if $angular %}
+		{% if !empty(angular) %}
 			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.ID"}
 			{assign var="ngmodelnew" value="`$angular`.attributes.`$field.ID`.newValue"}
 		{% endif %}
 
 		{control}
-		<eav-select {% if !$disableNewOptionValues %}new="{t _enter_other}"{% endif %}>
+		<eav-select {% if empty(disableNewOptionValues) %}new="{t _enter_other}"{% endif %}>
 			<span class="prefix">[[field.valuePrefix_lang]]</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix_lang]]</span>
-			{% if !$disableNewOptionValues %}
+			{% if empty(disableNewOptionValues) %}
 				<div class="newOptionValue" style="display: none">
 					{textfield ng_model=$ngmodelnew name="`$prefix`other[`$field.ID`]" class="text" noFormat=true}
 				</div>
@@ -70,7 +70,7 @@
 	{/control}
 
 {% elseif $field.type == 3 %}
-	{% if !$disableAutocomplete %}
+	{% if empty(disableAutocomplete) %}
 		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
 		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
 	{% endif %}

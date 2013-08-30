@@ -14,7 +14,7 @@
 		</div>
 	</div>
 
-	{% if $error %}
+	{% if !empty(error) %}
 		<div class="errorMessage">
 			<div>[[error]]</div>
 		</div>

@@ -1,4 +1,4 @@
-{% if $options %}
+{% if !empty(options) %}
 	<ul class="itemOptions">
 	{foreach from=$options item=option}
 		<li>

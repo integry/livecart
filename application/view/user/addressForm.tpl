@@ -16,6 +16,6 @@
 	</fieldset>
 </div>
 
-{% if $return %}
+{% if !empty(return) %}
 	<input type="hidden" name="return" value="[[return]]" />
 {% endif %}

@@ -14,15 +14,15 @@
 		[[ partial("category/allFilters.tpl") ]]
 	{% endif %}
 
-	{% if $foundCategories %}
+	{% if !empty(foundCategories) %}
 		[[ partial("category/foundCategories.tpl") ]]
 	{% endif %}
 
-	{% if $modelSearch %}
+	{% if !empty(modelSearch) %}
 		[[ partial("search/block/allResults.tpl") ]]
 	{% endif %}
 
-	{% if $categoryNarrow %}
+	{% if !empty(categoryNarrow) %}
 		[[ partial("category/narrowByCategory.tpl") ]]
 	{% elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config %}
 		[[ partial("category/subcategoriesColumns.tpl") ]]
@@ -44,7 +44,7 @@
 		{block PRODUCT_LISTS}
 	{% endif %}
 
-	{% if $subCatFeatured %}
+	{% if !empty(subCatFeatured) %}
 		<h2>{t _featured_products}</h2>
 
 		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': subCatFeatured]) ]]

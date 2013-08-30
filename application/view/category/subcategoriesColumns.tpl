@@ -1,5 +1,5 @@
 {assign var="columns" value='CATEGORY_COLUMNS'|config}
-{% if $subCategories %}
+{% if !empty(subCategories) %}
 {math count=$subCategories|@count equation="max(1, ceil(count / $columns))" assign="rows"}
 {math count=$subCategories|@count equation="min(12, ceil(12 / $columns))" assign="width"}
 {% endif %}
@@ -19,7 +19,7 @@
 
 		{assign var=cat value=$subCategories[$index]}
 
-		{% if $cat %}
+		{% if !empty(cat) %}
 		<div class="col col-lg-[[width]] subCategoryItem">
 			<div class="thumbnail">
 				[[ partial('category/block/categoryItem.tpl', ['sub': cat]) ]]

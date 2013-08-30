@@ -36,7 +36,7 @@
 
 [[ textfld('ccNum', '_cc_num') ]]
 
-{% if $ccTypes %}
+{% if !empty(ccTypes) %}
 	[[ selectfld('ccType', '_cc_type', ccTypes) ]]
 {% endif %}
 

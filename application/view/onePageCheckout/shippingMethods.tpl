@@ -28,7 +28,7 @@
 
 					[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 				{/form}
-				{% if !$shipments %}
+				{% if empty(shipments) %}
 					<div class="text-danger">{t _err_no_rates_for_address}</div>
 				{% endif %}
 			</div>
@@ -38,7 +38,7 @@
 			</div>
 		</div>
 
-		{% if $preview_shipping_methods %}
+		{% if !empty(preview_shipping_methods) %}
 			<div class="stepPreview">
 			{foreach from=$preview_shipping_methods item=method}
 				<div class="shippingPreview">

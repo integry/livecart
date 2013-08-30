@@ -5,13 +5,13 @@
 
 	<div class="row-fluid">
 		<div class="col col-lg-8">
-			{% if $addMenu %}
+			{% if !empty(addMenu) %}
 				<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
 					[[ partial(addMenu) ]]
 				</div>
 			{% endif %}
 
-			{% if $count %}
+			{% if !empty(count) %}
 				<span class="gridCount">
 					[[ partial(count) ]]
 				</span>
@@ -47,7 +47,7 @@
 			  </form>
 			</div>
 
-			{% if $advancedSearch %}
+			{% if !empty(advancedSearch) %}
 				<span id="[[prefix]]_[[id]]_AdvancedSearch" class="activeGridAdvancedSearch">
 					<a href="javascript:void(0);" class="advancedSearchLink fg-button ui-state-default fg-button-icon-left ui-corner-all" href="#">
 						<span class="ui-icon ui-icon-search"></span>
@@ -228,7 +228,7 @@
 
 <div class="ui-state-default ui-corner-bottom" >
 	<ul class="menu" style="float: left;">
-		{% if $massAction %}
+		{% if !empty(massAction) %}
 			[[ partial(massAction) ]]
 		{% endif %}
 	</ul>
@@ -251,7 +251,7 @@
 	window.activeGrids['[[prefix]]_[[id]]'] = new ActiveGrid($('[[prefix]]_[[id]]'), '[[url]]', [[totalCount]], $("[[prefix]]LoadIndicator_[[id]]"), [[rowCount]], {json array=$filters});
 	window.activeGrids['[[prefix]]_[[id]]'].setController('[[controller]]');
 	window.activeGrids['[[prefix]]_[[id]]'].setColumnWidths({json array=$columnWidths});
-	{% if $dataFormatter %}
+	{% if !empty(dataFormatter) %}
 		window.activeGrids['[[prefix]]_[[id]]'].setDataFormatter([[dataFormatter]]);
 	{% endif %}
 	window.activeGrids['[[prefix]]_[[id]]'].setInitialData({json array=$data});
@@ -261,7 +261,7 @@
 			new ActiveGridFilter($('filter_[[column]]_[[id]]'), window.activeGrids['[[prefix]]_[[id]]']);
 		{% endif %}
 	{/foreach}
-	{% if $advancedSearch %}
+	{% if !empty(advancedSearch) %}
 
 		window.activeGrids['[[prefix]]_[[id]]'].initAdvancedSearch(
 			"[[prefix]]_[[id]]",

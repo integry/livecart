@@ -51,7 +51,7 @@
 			<option value="theme">{t _set_theme}</option>
 		</optgroup>
 
-		{% if $attributes %}
+		{% if !empty(attributes) %}
 			<optgroup label="{t _set_attributes}">
 				{foreach from=$attributes item=attr}
 					<option value="set_specField_[[attr.ID]]">[[attr.name_lang]]</option>

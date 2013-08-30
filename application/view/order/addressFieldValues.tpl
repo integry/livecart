@@ -9,7 +9,7 @@
 {% endif %}{/function}
 {foreach $address.attributes as $attr}
 {% if $attr.EavField && ($attr.values || $attr.value || $attr.value_lang) %}
-{% if $showLabels %}<label class="attrName">[[attr.EavField.name_lang]]:</label>  <label class="attrValue">{attributeValue attr=$attr field="EavField"}</label>
+{% if !empty(showLabels) %}<label class="attrName">[[attr.EavField.name_lang]]:</label>  <label class="attrValue">{attributeValue attr=$attr field="EavField"}</label>
 {% else %}<p class="attrValue">{attributeValue attr=$attr field="EavField"}</p>{% endif %}
 {% endif %}
 {/foreach}

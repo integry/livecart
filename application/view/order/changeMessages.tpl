@@ -1,4 +1,4 @@
-{% if $changes %}
+{% if !empty(changes) %}
 	{foreach from=$changes key=type item=items}
 		<div style="clear: left;"></div>
 		<div class="infoMessage message">

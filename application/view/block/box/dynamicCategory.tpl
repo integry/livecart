@@ -18,7 +18,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 {/literal}
 
 {function name="dynamicCategoryTree" node=false filters=false}
-	{% if $node %}
+	{% if !empty(node) %}
 		<ul class="unstyled" id="dynamicNav">
 		{foreach from=$node item=category}
 				<li class="{% if $category.parentNodeID == 1 %}topCategory{% endif %} {% if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt %} dynCurrent{% endif %}{% if $category.subCategories %} hasSubs{% else %} noSubs{% endif %}">

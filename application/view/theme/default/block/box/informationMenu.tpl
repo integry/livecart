@@ -1,4 +1,4 @@
-{% if $pages %}
+{% if !empty(pages) %}
 <div class="informationMenu">
 	{foreach from=$pages item=page name="pages"}
 		<span class="infoLink" id="static_[[page.ID]]"><a href="{pageUrl data=$page}">[[page.title_lang]]</a></span>

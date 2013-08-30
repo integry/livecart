@@ -46,7 +46,7 @@
 			<div class="clear"></div>
 		{/foreach}
 
-		{% if $nextRebillDate %}
+		{% if !empty(nextRebillDate) %}
 			<label class="title">{t _next_rebill}:</label>
 			<label class="text">[[nextRebillDate.date_medium]]</label>
 			<div class="clear"></div>
@@ -54,7 +54,7 @@
 
 		<label class="title">{t _remaining_rebills}:</label>
 		<label class="text">{% if $order.rebillsLeft != -1 %}[[order.rebillsLeft]]{% else %}{t _remaining_rebills_till_canceled}{% endif %}
-			{% if $canCancelRebills %}
+			{% if !empty(canCancelRebills) %}
 				<span class="cancelFurtherRebills">
 					{% if $currentPage > 1 %}
 						{assign var='rebillQuery' value="page=`$currentPage`"}
@@ -94,7 +94,7 @@
 	{/foreach}
 
 	{function name="address"}
-		{% if $address %}
+		{% if !empty(address) %}
 			<p>
 				[[address.fullName]]
 			</p>
@@ -159,7 +159,7 @@
 	<h2 id="m_s_g">{t _support}</h2>
 	<p class="noteAbout">{t _have_questions}</p>
 
-	{% if $notes %}
+	{% if !empty(notes) %}
 	   <ul class="notes">
 		   {foreach from=$notes item=note}
 			   [[ partial('user/orderNote.tpl', ['note': note]) ]]

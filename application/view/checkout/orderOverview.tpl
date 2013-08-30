@@ -1,6 +1,6 @@
 {assign var="colspan" value=2-$hideSku}
 
-{% if !$nochanges %}
+{% if empty(nochanges) %}
 	<div class="orderOverviewControls">
 		<a href="{link controller=order}">{t _any_changes}</a>
 	</div>
@@ -9,7 +9,7 @@
 <table class="table table-striped table-condensed shipment{% if $order.isMultiAddress %} multiAddress{% endif %}" id="payItems">
 	<thead>
 		<tr>
-			{% if !$hideSku %}<th class="sku">{t _sku}</th>{% endif %}
+			{% if empty(hideSku) %}<th class="sku">{t _sku}</th>{% endif %}
 			<th class="productName">{t _product}</th>
 			<th>{t _subtotal}</th>
 		</tr>

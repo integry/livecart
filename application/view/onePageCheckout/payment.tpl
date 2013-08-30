@@ -28,7 +28,7 @@
 					</div>
 				{/foreach}
 
-				{% if $otherMethods %}
+				{% if !empty(otherMethods) %}
 					<div class="checkout-otherMethods">
 						{foreach from=$otherMethods item=method}
 							<div class="radio">
@@ -41,7 +41,7 @@
 					</div>
 				{% endif %}
 
-				{% if $requireTos %}
+				{% if !empty(requireTos) %}
 					[[ partial("order/block/tos.tpl") ]]
 				{% endif %}
 			{/form}

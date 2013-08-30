@@ -5,10 +5,10 @@
 
 <ul id="customizeMenu">
 
-	<li{% if $isCustomizationModeEnabled %} class="active"{% endif %}>
+	<li{% if !empty(isCustomizationModeEnabled) %} class="active"{% endif %}>
 
-		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {% if $isCustomizationModeEnabled %}on{% endif %}">
-		{% if $isCustomizationModeEnabled %}
+		<a href="{link controller="backend.customize" action=mode}" class="customizeControl {% if !empty(isCustomizationModeEnabled) %}on{% endif %}">
+		{% if !empty(isCustomizationModeEnabled) %}
 			{tn _turn_off}
 		{% else %}
 			{tn _turn_on}

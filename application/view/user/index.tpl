@@ -5,17 +5,17 @@
 [[ partial('user/userMenu.tpl', ['current': "homeMenu"]) ]]
 {% block content %}
 
-	{% if $userConfirm %}
+	{% if !empty(userConfirm) %}
 	<div class="confirmationMessage">
 		[[userConfirm]]
 	</div>
 	{% endif %}
 
-	{% if $message %}
+	{% if !empty(message) %}
 		<div class="confirmationMessage">[[message]]</div>
 	{% endif %}
 
-	{% if $notes %}
+	{% if !empty(notes) %}
 		<h2 id="unreadMessages">{t _unread_msg}</h2>
 		<ul class="notes">
 			{foreach from=$notes item=note}
@@ -25,7 +25,7 @@
 		</ul>
 	{% endif %}
 
-	{% if $files %}
+	{% if !empty(files) %}
 		<h2 id="recentDownloads">{t _download_recent}</h2>
 
 		{foreach from=$files item="item"}
@@ -37,7 +37,7 @@
 		{/foreach}
 	{% endif %}
 
-	{% if $orders %}
+	{% if !empty(orders) %}
 		<h2 id="recentOrders">{t _recent_orders}</h2>
 		{foreach from=$orders item="order"}
 			[[ partial('user/orderEntry.tpl', ['order': order]) ]]

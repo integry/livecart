@@ -12,7 +12,7 @@
 
 	<fieldset class="settings" ng-show="activeID == '[[sectionId]]'">
 
-		{% if $groupName %}
+		{% if !empty(groupName) %}
 			<legend>{t $groupName}</legend>
 		{% endif %}
 
@@ -68,7 +68,7 @@
 
 {/foreach}
 
-{% if $subsections %}
+{% if !empty(subsections) %}
 	</fieldset>
 {% endif %}
 

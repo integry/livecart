@@ -6,7 +6,7 @@
 {% block content %}
 
 	<div class="resultStats">
-		{% if $orders %}
+		{% if !empty(orders) %}
 			{% if $count > $perPage %}
 				{maketext text=_displaying_orders params="`$from`,`$to`,`$count`"}
 			{% else %}

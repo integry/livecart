@@ -8,7 +8,7 @@
 {% block content %}
 
 	<div class="resultStats">
-		{% if $files %}
+		{% if !empty(files) %}
 			{maketext text=_files_found params=$files|@count}
 		{% else %}
 			{t _no_files_found}

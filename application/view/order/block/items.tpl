@@ -34,7 +34,7 @@
 
 			[[ partial("order/block/recurringItem.tpl") ]]
 
-			{% if $multi %}
+			{% if !empty(multi) %}
 				[[ partial('order/selectItemAddress.tpl', ['item': item]) ]]
 			{% endif %}
 		</td>

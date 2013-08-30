@@ -10,7 +10,7 @@
 		{% endif %}
 
 		{% if 'ENABLE_MULTIADDRESS'|config %}
-			{% if !$multi %}
+			{% if empty(multi) %}
 				<a href="{link controller=order action=setMultiAddress}" class="multiAddressCheckout">{t _ship_to_multiple}</a>
 			{% else %}
 				<a href="{link controller=order action=setSingleAddress}" class="multiAddressCheckout">{t _ship_to_single}</a>

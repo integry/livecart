@@ -1,6 +1,6 @@
 <div class="tree ui-widget-content">
 	<ul
-		{% if $sortable %}
+		{% if !empty(sortable) %}
 		ui-nested-sortable="{
 		listType: 'ul',
 		doNotClear: true,

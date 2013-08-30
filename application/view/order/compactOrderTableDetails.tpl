@@ -1,6 +1,6 @@
 {foreach from=$shipment.items item="item" name="shipment"}
 	<tr>
-		{% if !$hideSku %}
+		{% if empty(hideSku) %}
 		<td class="sku">
 			[[item.Product.sku]]
 		</td>

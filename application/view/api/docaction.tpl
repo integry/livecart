@@ -48,7 +48,7 @@
 </style>
 {/literal}
 
-{% if $xmlSamples %}
+{% if !empty(xmlSamples) %}
 	<h2>{t _api_xml_samples}</h2>
 
 	{foreach from=$xmlSamples item=sample}
@@ -64,7 +64,7 @@
 	{/foreach}
 {% endif %}
 
-{% if $searchFields %}
+{% if !empty(searchFields) %}
 	<h2>{t _api_search_fields}</h2>
 
 	<table class="apiFields">
@@ -85,7 +85,7 @@
 	</table>
 {% endif %}
 
-{% if $createFields %}
+{% if !empty(createFields) %}
 	<h2>{t _api_create_fields}</h2>
 
 	<table class="apiFields">

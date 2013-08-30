@@ -1,15 +1,15 @@
 {assign var="colspan" value=$colspan|@or:4}
 
 {foreach from=$shipment.items item="item" name="shipment"}
-	<tr class="{% if $productsInSeparateLine %} topLine{% endif %}">
+	<tr class="{% if !empty(productsInSeparateLine) %} topLine{% endif %}">
 
-		{% if !$hideSku %}
+		{% if empty(hideSku) %}
 		<td class="sku">
 			[[item.Product.sku]]
 		</td>
 		{% endif %}
 
-		{% if !$productsInSeparateLine %}
+		{% if empty(productsInSeparateLine) %}
 			<td class="productName">
 				[[ partial("order/itemProductInfo.tpl") ]]
 			</td>
@@ -31,7 +31,7 @@
 		<td class="itemCount">[[item.count]]</td>
 		<td class="amount">[[item.formattedDisplaySubTotal]]</td>
 	</tr>
-	{% if $productsInSeparateLine %}
+	{% if !empty(productsInSeparateLine) %}
 		<tr>
 			<td class="productName productNameRow" colspan="{$colspan+1}">
 				[[ partial("order/itemProductInfo.tpl") ]]

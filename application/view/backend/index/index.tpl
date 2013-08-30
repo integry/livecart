@@ -39,10 +39,10 @@
 
 </fieldset>
 
-{% if $lastOrders %}
+{% if !empty(lastOrders) %}
 <fieldset class="dashboardOrders stats">
 	<legend>{t _last_orders}</legend>
-	{% if $lastOrders %}
+	{% if !empty(lastOrders) %}
 		<table class="qeOrders">
 			<thead>
 				<tr>

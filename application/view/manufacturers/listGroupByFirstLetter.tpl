@@ -25,7 +25,7 @@
 {foreach from=$manufacturers item=manufacturer key=index}
 
 		{% if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns ) %}
-			{% if $columns %}
+			{% if !empty(columns) %}
 				{assign var=opened value=false}
 				</div>
 			{% endif %}

@@ -1,4 +1,4 @@
-{% if $pages %}
+{% if !empty(pages) %}
 <div class="panel panel-info informationMenu">
 	<div class="panel-heading">
 		<span class="glyphicon glyphicon-info-sign"></span>

@@ -1,4 +1,4 @@
-{% if !$add %}
+{% if empty(add) %}
 	{assign var="action" value="Backend.Manufacturer.Editor.prototype.getInstance(`$manufacturer.ID`, false).submitForm();"}
 	{assign var="urlAction" value="action=update id=`$manufacturer.ID`"}
 {% else %}

@@ -155,7 +155,7 @@
 
 			<div class="ruleFields">
 				{foreach from=$ruleFields key=ruleClass item=fields}
-					{% if $fields %}
+					{% if !empty(fields) %}
 					<div class="classContainer [[ruleClass]]">
 						{foreach from=$fields item=field}
 							<p>
@@ -250,7 +250,7 @@
 
 			<div class="actionFields">
 				{foreach from=$actionFields key=actionClass item=fields}
-					{% if $fields %}
+					{% if !empty(fields) %}
 						<div class="classContainer [[actionClass]]">
 							{foreach from=$fields item=field}
 								<p>

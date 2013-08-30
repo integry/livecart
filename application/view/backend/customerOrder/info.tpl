@@ -165,7 +165,7 @@
 
 <br class="clear" />
 
-{% if $specFieldList %}
+{% if !empty(specFieldList) %}
 <div class="customFields">
 	[[ partial("backend/customerOrder/saveFields.tpl") ]]
 </div>
@@ -398,11 +398,11 @@
 	{literal}
 	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}[[order.ID]], true, {json array=$hideShipped}, [[order.isCancelled]], [[order.isFinalized]], {json array=$order.invoiceNumber}{literal});
 
-	{/literal}{% if $formShippingAddress %}{literal}
+	{/literal}{% if !empty(formShippingAddress) %}{literal}
 		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_[[order.ID]]_shippingAddress_form{literal}'), 'shippingAddress');
 	{/literal}{% endif %}{literal}
 
-	{/literal}{% if $formBillingAddress %}{literal}
+	{/literal}{% if !empty(formBillingAddress) %}{literal}
 		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_[[order.ID]]_billingAddress_form{literal}'), 'billingAddress');
 	{/literal}{% endif %}
 

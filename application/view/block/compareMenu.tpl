@@ -1,4 +1,4 @@
-{% if $products %}
+{% if !empty(products) %}
 	<div class="panel panel-danger compare" id="compareMenu">
 		<div class="panel-heading">
 			<span class="glyphicon glyphicon-eye-close"></span>

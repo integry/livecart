@@ -18,7 +18,7 @@
 	{textarea name="code" id="code_[[tabid]]" class="code"}
 	{hidden name="file" id="file_[[tabid]]"}
 
-	{% if $new %}
+	{% if !empty(new) %}
 		{hidden name="new" value="true"}
 	{% endif %}
 
@@ -44,7 +44,7 @@
 	</script>
 {/literal}
 
-{% if $noTabHandling %}
+{% if !empty(noTabHandling) %}
 	<script type="text/javascript">
 		new Backend.CssEditorHandler($('templateForm_[[tabid]]'), null, '[[tabid]]');
 	</script>

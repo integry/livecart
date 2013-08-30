@@ -1,5 +1,5 @@
 {function name="catPath" category=null}
-	{% if $category %}
+	{% if !empty(category) %}
 		{% if $category.ParentNode %}
 			{catPath category=$category.ParentNode} &gt;
 		{% endif %}

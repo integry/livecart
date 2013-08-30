@@ -9,7 +9,7 @@
 
 			{sect}
 				{header}
-					{% if $groupID %}
+					{% if !empty(groupID) %}
 						<fieldset class="eavGroup">
 							<legend>{$fieldList.0.$groupClass.name_lang}</legend>
 					{% endif %}
@@ -29,7 +29,7 @@
 					{/foreach}
 				{/content}
 				{footer}
-					{% if $groupID %}
+					{% if !empty(groupID) %}
 						</fieldset>
 					{% endif %}
 				{/footer}

@@ -1,5 +1,5 @@
 {assign var=actionPrefix value=$prefix|@ucfirst}
-{% if !$addresses %}
+{% if empty(addresses) %}
 	<div id="[[prefix]]AddressForm">
 		[[ partial('user/addressForm.tpl', ['prefix': "`$prefix`_", 'states': states]) ]]
 	</div>

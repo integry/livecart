@@ -21,7 +21,7 @@
 			{/form}
 		</div>
 
-		{% if $preview_shipping %}
+		{% if !empty(preview_shipping) %}
 			<div class="stepPreview">[[preview_shipping.compact]]</div>
 		{% endif %}
 	</div>

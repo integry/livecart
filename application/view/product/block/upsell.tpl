@@ -1,12 +1,12 @@
 {% set SHOW_UPSELL_GROUPS = false %}
-{% if $upsell %}
+{% if !empty(upsell) %}
 <tr>
 	<td colspan="2" id="upsellProducts">
 		<fieldset id="upsellProducts">
 			<legend>{t _you_may_also_like}</legend>
 			{foreach from=$upsell item=group}
 
-				{% if $SHOW_UPSELL_GROUPS %}
+				{% if !empty(SHOW_UPSELL_GROUPS) %}
 					<fieldset>
 						{% if $group.0.ProductRelationshipGroup.name_lang %}
 							<legend>[[group.0.ProductRelationshipGroup.name_lang]]</legend>
@@ -28,7 +28,7 @@
 					{/foreach}
 				</ul>
 
-				{% if $SHOW_UPSELL_GROUPS %}
+				{% if !empty(SHOW_UPSELL_GROUPS) %}
 					</fieldset>
 				{% endif %}
 

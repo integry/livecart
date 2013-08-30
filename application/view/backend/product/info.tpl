@@ -18,7 +18,7 @@
 
 </fieldset>
 
-{% if $together %}
+{% if !empty(together) %}
 <fieldset class="purchasedTogether">
 	<legend>{t _together_with}</legend>
 

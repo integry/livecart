@@ -14,7 +14,7 @@
 	{textarea name="code" class="code" id="code_`$tabid`"}
 	{hidden name="file" id="file"}
 
-	{% if $new %}
+	{% if !empty(new) %}
 		{hidden name="new" value="true"}
 	{% endif %}
 

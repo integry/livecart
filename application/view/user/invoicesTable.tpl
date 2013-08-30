@@ -1,6 +1,6 @@
 {% if $count && $perPage %}
 	<div class="resultStats">
-		{% if $itemList %}
+		{% if !empty(itemList) %}
 			{% if $count > $perPage %}
 				{maketext text=$textDisplaying params="`$from`,`$to`,`$count`"}
 			{% else %}
@@ -12,7 +12,7 @@
 	</div>
 {% endif %}
 
-{% if $itemList %}
+{% if !empty(itemList) %}
 	<table class="invoiceTable table table-striped">
 		<thead>
 			<tr>

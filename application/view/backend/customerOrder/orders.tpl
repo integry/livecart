@@ -44,7 +44,7 @@
 	Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
 {/literal}
 
-{% if $userID %}
+{% if !empty(userID) %}
 	{assign var=dataFormatter value="Backend.User.OrderGridFormatter"};
 {% else %}
 	{assign var=dataFormatter value="Backend.CustomerOrder.GridFormatter"};

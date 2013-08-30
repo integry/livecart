@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	{% if $success %}
+	{% if !empty(success) %}
 		<p>{t _reg_confirm_success}</p>
 		<p>{t _reg_next_steps}:</p>
 		<ul>

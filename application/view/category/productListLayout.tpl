@@ -1,4 +1,4 @@
-{% if !$layout %}
+{% if empty(layout) %}
 	{assign var=layout value='LIST_LAYOUT'|config}
 {% endif %}
 

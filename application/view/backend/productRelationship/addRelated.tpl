@@ -5,7 +5,7 @@
 				{img src=$product.DefaultImage.urls[1] alt=$product.DefaultImage.title title=$product.DefaultImage[1].title }
 			{% endif %}
 		</div>
-		{% if $template %}
+		{% if !empty(template) %}
 			[[ partial(template) ]]
 		{% endif %}
 		<span class="productRelationship_title">[[product.name_lang]]</span>

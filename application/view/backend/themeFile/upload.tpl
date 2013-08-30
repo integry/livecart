@@ -11,6 +11,6 @@ tf = new parent.Backend.ThemeFile(
 );
 tf.cancelOpened(container, "[[theme]]");
 
-{% if $highlightFileName %}
+{% if !empty(highlightFileName) %}
 	parent.ActiveList.prototype.highlight(parent.$('filesList_[[theme]]_[[highlightFileName]]'), 'yellow');
 {% endif %}

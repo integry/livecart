@@ -1,4 +1,4 @@
-{% if $quantityPricing %}
+{% if !empty(quantityPricing) %}
 	<div class="row" id="quantityPrices">
 		<div class="col col-lg-12">
 			[[ partial("product/block/quantityPrice.tpl") ]]

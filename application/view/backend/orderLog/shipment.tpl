@@ -1,4 +1,4 @@
-{% if $shipment %}
+{% if !empty(shipment) %}
 	{% if $shipment.ID !== $otherShipment.ID %}
 		<dl class="{% if $shipment.ID !== $otherShipment.ID %}logValueChanged{% endif %}">
 			<dt>{t _shipment_id}:</dt>

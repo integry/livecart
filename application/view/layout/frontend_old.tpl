@@ -9,7 +9,7 @@
 
 
 	<title>
-		{% if !$PAGE_TITLE %}
+		{% if empty(PAGE_TITLE) %}
 			{capture assign="PAGE_TITLE"}
 				{block BREADCRUMB_TITLE}
 			{/capture}
@@ -29,7 +29,7 @@
 		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
 	{% endif %}
 
-	{% if !$CANONICAL %}
+	{% if empty(CANONICAL) %}
 		{canonical}{self}{/canonical}
 	{% endif %}
 
@@ -50,7 +50,7 @@
 	{compiledCss glue=true nameMethod=hash}
 	<!--[if lt IE 8]>
 		<link href="stylesheet/frontend/FrontendIE.css" rel="Stylesheet" type="text/css"/>
-		{% if $ieCss %}
+		{% if !empty(ieCss) %}
 			<link href="[[ieCss]]" rel="Stylesheet" type="text/css"/>
 		{% endif %}
 	<![endif]-->
@@ -65,7 +65,7 @@
 	</script>
 </head>
 
-<body class="[[request.controller]]Con [[request.controller]]-[[request.action]]{% if {isRTL %}} rtl{% endif %}{% if $bodyClass %} [[bodyClass]]{% endif %}">
+<body class="[[request.controller]]Con [[request.controller]]-[[request.action]]{% if {isRTL %}} rtl{% endif %}{% if !empty(bodyClass) %} [[bodyClass]]{% endif %}">
 	{liveCustomization action="menu"}
 	<div id="container" class="lang_{localeCode}">
 		<div id="containerWrapper1">

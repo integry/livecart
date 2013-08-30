@@ -18,7 +18,7 @@ test
 
 {% block content %}
 
-	{% if $subPages %}
+	{% if !empty(subPages) %}
 		<div class="staticSubpages">
 			<h2>{t _subpages}</h2>
 			<ul>

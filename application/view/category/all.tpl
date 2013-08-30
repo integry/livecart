@@ -9,7 +9,7 @@
 
 		{foreach from=$categories item=category}
 			{% if !$index || (($totalCount/2) <= $index && $columns < 2) %}
-				{% if $columns %}
+				{% if !empty(columns) %}
 					</div>
 				{% endif %}
 				<div class="manufacturerColumn">

@@ -11,7 +11,7 @@
 {% endif %}
 
 [[ partial("layout/frontend/header.tpl") ]]
-{% if !$hideLeft %}
+{% if empty(hideLeft) %}
 	[[ partial("layout/frontend/leftSide.tpl") ]]
 {% endif %}
 {* include file="layout/frontend/rightSide.tpl" *}

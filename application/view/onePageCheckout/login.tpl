@@ -3,7 +3,7 @@
 	<h2><span class="step">1</span>{t Checkout Options}</h2>
 </div>
 
-{% if $failedLogin %}
+{% if !empty(failedLogin) %}
 	<div class="errorMsg failed">
 		{t _login_failed}
 	</div>
@@ -46,6 +46,6 @@
 	<div class="clear"></div>
 </form>
 
-{% if $preview_options %}
+{% if !empty(preview_options) %}
 	<div class="stepPreview">[[preview_options]]</div>
 {% endif %}

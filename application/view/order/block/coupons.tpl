@@ -1,4 +1,4 @@
-{% if $isCouponCodes %}
+{% if !empty(isCouponCodes) %}
 	<tr id="couponCodes">
 		<td colspan="{math equation="$extraColspanSize + 5"}">
 			{t _have_coupon}: <input type="text" class="text coupon" name="coupon" /> <input type="submit" class="submit coupon" value="{tn _add_coupon}" />

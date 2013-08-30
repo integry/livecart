@@ -9,7 +9,7 @@
 </div>
 
 <div class="productInfo">
-	{% if $productInfoTemplate %}
+	{% if !empty(productInfoTemplate) %}
 		[[ partial(productInfoTemplate) ]]
 	{% endif %}
 	<a href="{productUrl product=$product}" class="productName">[[product.name_lang]]</a>

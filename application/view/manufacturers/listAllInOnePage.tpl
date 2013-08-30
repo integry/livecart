@@ -9,7 +9,7 @@
 {foreach from=$manufacturers item=manufacturer key=index}
 	{% if $lastLetter != $manufacturer.name.0|@capitalize %}
 		{% if !$index || (($manufacturers|@count/$numberOfColumns * $columns ) <= $index && $columns < $numberOfColumns ) %}
-			{% if $columns %}
+			{% if !empty(columns) %}
 				{assign var=opened value=false}
 				</div>
 			{% endif %}
@@ -25,6 +25,6 @@
 	</ul>
 	{assign var=lastLetter value=$manufacturer.name.0|@capitalize}
 {/foreach}
-{% if $opened %}
+{% if !empty(opened) %}
 	</div>
 {% endif %}

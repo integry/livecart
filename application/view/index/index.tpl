@@ -15,12 +15,12 @@
 		[[ partial("category/subcategoriesColumns.tpl") ]]
 	{% endif %}
 
-	{% if $subCatFeatured %}
+	{% if !empty(subCatFeatured) %}
 		<h2>{t _featured_products}</h2>
 		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': subCatFeatured]) ]]
 	{% endif %}
 
-	{% if $news %}
+	{% if !empty(news) %}
 		[[ partial("index/latestNews.tpl") ]]
 	{% endif %}
 

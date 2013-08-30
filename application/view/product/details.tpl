@@ -22,7 +22,7 @@
 </div>
 {% endif %}
 
-{% if $related %}
+{% if !empty(related) %}
 <div id="relatedSection" class="productSection related">
 <h2>{t _recommended}<small>{t _tab_recommended}</small></h2>
 <div id="relatedProducts">
@@ -36,11 +36,11 @@
 </div>
 {% endif %}
 
-{% if $additionalCategories %}
+{% if !empty(additionalCategories) %}
 	[[ partial("product/block/additionalCategories.tpl") ]]
 {% endif %}
 
-{% if $together %}
+{% if !empty(together) %}
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
 <h2>{t _purchased_together}<small>{t _tab_purchased}</small></h2>
 <div id="purchasedTogether">

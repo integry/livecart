@@ -22,7 +22,7 @@
 		<input type="hidden" name="categoryID" value="[[product.Category.ID]]" />
 
 		[[ partial('backend/product/form/main.tpl', ['product': product, 'cat': cat, 'productTypes': productTypes]) ]]
-		{% if $specFieldList %}
+		{% if !empty(specFieldList) %}
 			<div class="specFieldContainer">
 			[[ partial('backend/product/form/specFieldList.tpl', ['product': product, 'cat': cat, 'specFieldList': specFieldList]) ]]
 			</div>

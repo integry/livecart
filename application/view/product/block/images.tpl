@@ -36,7 +36,7 @@
 		imageDescr[[[image.ID]]] = {json array=$image.title_lang};
 		imageProducts[[[image.ID]]] = {json array=$image.productID};
 	{/foreach}
-	new Product.ImageHandler(imageData, imageDescr, imageProducts, {% if $enlargeProductThumbnailOnMouseOver %}true{% else %}false{% endif %});
+	new Product.ImageHandler(imageData, imageDescr, imageProducts, {% if !empty(enlargeProductThumbnailOnMouseOver) %}true{% else %}false{% endif %});
 
 	var loadingImage = 'image/loading.gif';
 	var closeButton = 'image/silk/gif/cross.gif';

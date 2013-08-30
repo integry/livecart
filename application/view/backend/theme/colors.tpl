@@ -1,4 +1,4 @@
-{% if !$config %}
+{% if empty(config) %}
 	<div class="warning">{t _colors_not_editable}</div>
 {% endif %}
 

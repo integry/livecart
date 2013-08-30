@@ -1,5 +1,5 @@
 {* Function to generate address output (address template) *}
-{% if $address %}
+{% if !empty(address) %}
 [[address.fullName]]
 {% if $address.companyName %}
 [[address.companyName]]

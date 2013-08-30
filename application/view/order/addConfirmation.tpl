@@ -1,7 +1,7 @@
 {capture assign="body"}
 	[[ partial("order/changeMessages.tpl") ]]
 
-	{% if $error %}
+	{% if !empty(error) %}
 		<div class="errorMessage">[[error]]</div>
 	{% endif %}
 

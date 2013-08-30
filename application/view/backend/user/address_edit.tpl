@@ -1,6 +1,6 @@
 {hidden name="`$namePrefix`ID"}
 
-{% if !$hideName %}
+{% if empty(hideName) %}
 [[ textfld('`$namePrefix`firstName', '_first_name') ]]
 
 [[ textfld('`$namePrefix`lastName', '_last_name') ]]

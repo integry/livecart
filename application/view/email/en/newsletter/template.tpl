@@ -1,5 +1,5 @@
 [[subject]]
-{% if $html %}[[htmlMessage]]
+{% if !empty(html) %}[[htmlMessage]]
 {% else %}[[text]]{% endif %}
 
 [[ partial("email/en/signature.tpl") ]]

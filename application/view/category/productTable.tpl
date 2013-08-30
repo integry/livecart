@@ -1,12 +1,12 @@
 {function name="headLink" title="" sortVar=""}
-	{% if $title %}
+	{% if !empty(title) %}
 		{assign var="sortOrder" value='_'|@explode:$sortField|@array_pop|default:'asc'}
 		{% if ($sortOrder != 'asc') && ($sortOrder != 'desc') %}{assign var="sortOrder" value='asc'}{% endif %}
 		{% if $sortField == "`$sortVar`_`$sortOrder`" %}
 			{% set currentOrder = $sortOrder %}
 			{% if $sortOrder == "asc" %}{% set sortOrder = "desc" %}{% else %}{% set sortOrder = "asc" %}{% endif %}
 		{% endif %}
-		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{% if $currentOrder %}direction_[[currentOrder]]{% endif %}">{translate text=$title}</a>
+		<a href="{link self=true sort="`$sortVar`_`$sortOrder`"}" class="{% if !empty(currentOrder) %}direction_[[currentOrder]]{% endif %}">{translate text=$title}</a>
 	{% endif %}
 {/function}
 {assign var="columns" value='TABLE_VIEW_COLUMNS'|config}

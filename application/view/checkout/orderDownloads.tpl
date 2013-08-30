@@ -1,4 +1,4 @@
-{% if $files %}
+{% if !empty(files) %}
 	<div id="orderDownloads">
 		<h2>{t _download}</h2>
 		{foreach from=$files item="item"}

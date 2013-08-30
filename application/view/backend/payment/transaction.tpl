@@ -144,7 +144,7 @@
 				{capture assign=transactionMethodName}{t _manual}{/capture}
 			{% endif %}
 
-			{% if $transactionMethodName %}
+			{% if !empty(transactionMethodName) %}
 				<legend>
 					{% if $transaction.availableOfflinePaymentMethods %}
 						[[ partial('backend/payment/editOfflineMethod.tpl', ['ID': transaction.ID, 'methods': transaction.availableOfflinePaymentMethods, 'name': transactionMethodName, 'handlerID': transaction.handlerID]) ]]

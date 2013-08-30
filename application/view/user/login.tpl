@@ -8,7 +8,7 @@
 		<h2>{t _returning}</h2>
 
 		<p>
-			{% if $failed %}
+			{% if !empty(failed) %}
 				<div class="errorMsg failed">
 					{t _login_failed}
 				</div>

@@ -1,4 +1,4 @@
-{% if $orderedItem %}
+{% if !empty(orderedItem) %}
 
 	<dl class="{% if $orderedItem.Product.ID !== $otherOrderedItem.Product.ID %}logValueChanged{% endif %}">
 		<dt>{t _product_name}:</dt>

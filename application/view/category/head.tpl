@@ -15,7 +15,7 @@
 		{% endif %}
 	{% endif %}
 {% else %}
-	<h1>[[category.name_lang]]{% if $searchQuery %} &gt;&gt; "<span class="keywords">[[searchQuery]]</span>"{% endif %}</h1>
+	<h1>[[category.name_lang]]{% if !empty(searchQuery) %} &gt;&gt; "<span class="keywords">[[searchQuery]]</span>"{% endif %}</h1>
 {% endif %}
 
 {% if 'DISPLAY_CATEGORY_DESC'|config && $category.description_lang %}

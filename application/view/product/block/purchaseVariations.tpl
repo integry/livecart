@@ -1,10 +1,10 @@
-{% if $samePrice %}
+{% if !empty(samePrice) %}
 	<p>
 		<label>{t _price}</label>
 		<span class="price">{$product.formattedPrice.$currency}</span>
 	</p>
 
-	{% if $quantityPricing %}
+	{% if !empty(quantityPricing) %}
 		[[ partial("product/block/quantityPrice.tpl") ]]
 	{% endif %}
 {% endif %}
@@ -14,13 +14,13 @@
 	{foreach $variations.products as $product}
 		<h3>{$product.variationNames|@implode:' / '}</h3>
 
-		{% if !$samePrice %}
+		{% if empty(samePrice) %}
 			<p>
 				<label>{t _price}</label>
 				<span class="price">{$product.finalFormattedPrice.$currency}</span>
 			</p>
 
-			{% if $quantityPricing %}
+			{% if !empty(quantityPricing) %}
 				[[ partial("product/block/quantityPrice.tpl") ]]
 			{% endif %}
 		{% endif %}

@@ -1,4 +1,4 @@
-{% if $products %}
+{% if !empty(products) %}
 	<div class="row resultStats">
 		<div class="col col-lg-6 pagingInfo text-muted">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
@@ -20,7 +20,7 @@
 
 	<hr />
 
-	{% if $products %}
+	{% if !empty(products) %}
 		<form action="{link controller=category action=listAction returnPath=true}" method="post" class="form-horizontal">
 			[[ partial('category/productListLayout.tpl', ['products': products]) ]]
 		</form>

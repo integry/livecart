@@ -20,7 +20,7 @@
 		</tr>
 	</thead>
 	
-	{% if !$hideNav %}
+	{% if empty(hideNav) %}
 	<tfoot>
 		[[ partial("order/block/navigation.tpl") ]]
 	</tfoot>

@@ -39,6 +39,6 @@
 	{/foreach}
 {% endif %}
 
-{% if !$something %}
+{% if empty(something) %}
 	<li><span>{t _history_is_empty}</span></li>
 {% endif %}

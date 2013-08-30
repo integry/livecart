@@ -1,5 +1,5 @@
 {function name="dynamicCategoryTree" node=false level=0}
-	{% if $node %}
+	{% if !empty(node) %}
 		{foreach from=$node item=category}
 			<option value="{categoryUrl data=$category}">{'&nbsp;&nbsp;&nbsp;'|@str_repeat:$level} [[category.name_lang]]</option>
 			{% if $category.subCategories %}
@@ -18,7 +18,7 @@
 
 	<div class="content">
 
-		{% if $manufacturers %}
+		{% if !empty(manufacturers) %}
 			<p>
 			<select onchange="window.location.href = this.value;">
 				<option>{t _manufacturers}</option>
@@ -29,7 +29,7 @@
 			</p>
 		{% endif %}
 
-		{% if $categories %}
+		{% if !empty(categories) %}
 			<p>
 			<select onchange="window.location.href = this.value;">
 				<option>{t _categories}</option>

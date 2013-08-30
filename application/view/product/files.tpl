@@ -1,4 +1,4 @@
-{% if $files %}
+{% if !empty(files) %}
 	<div id="filesSection" class="productSection files">
 		<h2>{t _preview_files}</h2>
 

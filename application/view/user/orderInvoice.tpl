@@ -4,7 +4,7 @@
 <div class="userOrderInvoice">
 
 {function name="address"}
-{% if $address %}
+{% if !empty(address) %}
 	<p>
 		[[address.fullName]]
 	</p>
