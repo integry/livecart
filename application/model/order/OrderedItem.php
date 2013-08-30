@@ -58,7 +58,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 
 	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->customerOrder = $order;
 		$instance->product = $product;
 		$instance->count = $count;
@@ -529,7 +529,7 @@ class OrderedItem extends MultilingualObject implements BusinessRuleProductInter
 		$product = $this->product->get();
 		if (!$product)
 		{
-			$product = ActiveRecordModel::getNewInstance('Product');
+			$product = new Product;
 			$product->setID(0);
 			$product->markAsLoaded();
 		}

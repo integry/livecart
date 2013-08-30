@@ -40,7 +40,7 @@ class DeliveryZoneCityMask extends ActiveRecordModel
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $mask)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 
 	  	$instance->deliveryZone = $zone;
 	  	$instance->mask = $mask;

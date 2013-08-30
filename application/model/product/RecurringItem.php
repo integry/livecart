@@ -52,7 +52,7 @@ class RecurringItem extends ActiveRecordModel
 	public static function getNewInstance(RecurringProductPeriod $recurringProductPeriod,
 		OrderedItem $item, $setupPrice = null, $periodPrice = null, $rebillCount = null)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->orderedItem = $item;
 		$instance->setRecurringProductPeriod($recurringProductPeriod); // call after orderedItem is added!
 		$instance->periodLength = $recurringProductPeriod->periodLength);

@@ -19,7 +19,7 @@ class CategoryImage extends ObjectImage
 
 	public static function getNewInstance(Category $category)
 	{
-	  	$catImage = new __CLASS__();
+	  	$catImage = new self();
 	  	$catImage->category = $category;
 	  	return $catImage;
 	}

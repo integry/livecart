@@ -35,7 +35,7 @@ abstract class ModelApi
 		$this->supportedApiActionNames = array_diff($this->supportedApiActionNames, $apiActionNames);
 	}
 
-	public static function canParse(Request $request, $parserClassNames=array())
+	public static function canParse(\Phalcon\Http\Request $request, $parserClassNames=array())
 	{
 		foreach($parserClassNames as $parserClassName)
 		{

@@ -29,7 +29,7 @@ abstract class ApiReader implements Iterator
 	private $fieldNames = array();
 	private $actionAtributes;
 	
-	public static function canParse(Request $request, $parserClassName)
+	public static function canParse(\Phalcon\Http\Request $request, $parserClassName)
 	{
 		return self::canParseXml($request, call_user_func(array($parserClassName, 'getXMLPath')), $parserClassName);
 	}
@@ -346,7 +346,7 @@ abstract class ApiReader implements Iterator
 		return array();
 	}
 
-	protected static function canParseXml(Request $request, $lookForXpath, $parserClassName)
+	protected static function canParseXml(\Phalcon\Http\Request $request, $lookForXpath, $parserClassName)
 	{
 		
 		$requestData = $request->getRawRequest();
@@ -366,7 +366,7 @@ abstract class ApiReader implements Iterator
 		}
 	}
 
-	public function getAuthCredentials(Request $request)
+	public function getAuthCredentials(\Phalcon\Http\Request $request)
 	{
 		$xml = $request->get(ApiReader::API_PARSER_DATA);
 		if($xml != null)

@@ -27,7 +27,7 @@ class OrderCoupon extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order, $code)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->order = $order;
 		$instance->couponCode = $code;
 		return $instance;

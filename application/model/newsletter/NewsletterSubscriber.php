@@ -24,7 +24,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 
 	public static function getNewInstanceByUser(User $user)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->user->set($user);
 		$instance->email->set($user->email->get());
 		return $instance;
@@ -32,7 +32,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 
 	public static function getNewInstanceByEmail($email)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->email->set($email);
 		return $instance;
 	}

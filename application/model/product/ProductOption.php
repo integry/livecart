@@ -56,7 +56,7 @@ class ProductOption extends MultilingualObject
 	 */
 	public static function getNewInstance(ActiveRecordModel $parent)
 	{
-		$option = new __CLASS__();
+		$option = new self();
 
 		if ($parent instanceof Product)
 		{

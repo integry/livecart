@@ -43,7 +43,7 @@ class NewsPostImport extends DataImport
 
 		if (empty($instance))
 		{
-			$instance = ActiveRecordModel::getNewInstance('NewsPost');
+			$instance = new NewsPost;
 		}
 
 		//$this->setLastImportedRecordName($instance->getID());

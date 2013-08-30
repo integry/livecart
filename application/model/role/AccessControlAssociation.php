@@ -43,7 +43,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getNewInstance(UserGroup $userGroup, Role $role)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 	  	$instance->userGroup = $userGroup;
 		$instance->role = $role;
 

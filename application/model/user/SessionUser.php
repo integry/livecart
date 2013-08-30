@@ -1,5 +1,6 @@
 <?php
 
+namespace user;
 
 /**
  * User session handler (set user as logged in / logout)
@@ -7,26 +8,31 @@
  * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
-class SessionUser
+class SessionUser extends \Phalcon\DI\Injectable
 {
 	private static $currentUser;
-	
+
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
+	{
+		$this->setDI($di);
+	}
+
 	/**
 	 * Get current user (from session)
 
 	 * @return User
 	 */
-	public static function getUser()
+	public function getUser()
 	{
 		if (!empty(self::$currentUser))
 		{
 			return self::$currentUser;
 		}
-	
-		$session = new Session();
+
+		$session = $this->session;
 
 		$id = $session->get('User');
-		$app = ActiveRecordModel::getApplication();
+		$app = $this->application;
 
 		if (!$id)
 		{
@@ -37,7 +43,7 @@ class SessionUser
 			$user = User::getInstanceById($id);
 
 			// set user's prefered locale code
-			$reqLang = $app->getRequest()->get('requestLanguage');
+			$reqLang = $this->request->get('requestLanguage');
 			$localeCode = $reqLang ? $reqLang : $app->getLocaleCode();
 
 			try
@@ -77,7 +83,7 @@ class SessionUser
 	public static function setUser(User $user)
 	{
 		self::$currentUser = $user;
-		
+
 		$app = ActiveRecordModel::getApplication();
 
 		$app->processRuntimePlugins('session/before-login');
@@ -117,7 +123,7 @@ class SessionUser
 
 		if (!$instance)
 		{
-			$instance = ActiveRecordModel::getNewInstance('User');
+			$instance = new User;
 			$instance->setID(User::ANONYMOUS_USER_ID);
 		}
 

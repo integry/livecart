@@ -61,7 +61,7 @@ class ProductRelationship extends ActiveRecordModel
 			throw new ProductRelationshipException('Expected two different products when creating a relationship');
 		}
 
-		$relationship = new __CLASS__();
+		$relationship = new self();
 
 		$relationship->product = $product;
 		$relationship->relatedProduct = $related;

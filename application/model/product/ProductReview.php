@@ -31,7 +31,7 @@ class ProductReview extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, User $user)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->product = $product;
 
 		if ($user && $user->isAnonymous())

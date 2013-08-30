@@ -42,7 +42,7 @@ class FilterGroup extends MultilingualObject
 	 */
 	public static function getNewInstance(SpecField $specField)
 	{
-		$inst = new __CLASS__();
+		$inst = new self();
 		$inst->specField = $specField;
 		return $inst;
 	}

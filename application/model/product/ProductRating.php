@@ -27,7 +27,7 @@ class ProductRating extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, ProductRatingType $type = null, User $user = null)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->product = $product;
 
 		if ($type && is_null($type->getID()))

@@ -12,7 +12,7 @@ class CategoryApi extends ModelApi
 {
 	private $root = null;
 
-	public static function canParse(Request $request)
+	public static function canParse(\Phalcon\Http\Request $request)
 	{
 		return parent::canParse($request, array('XmlCategoryApiReader'));
 	}

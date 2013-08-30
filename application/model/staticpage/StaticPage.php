@@ -52,7 +52,7 @@ class StaticPage extends \ActiveRecordModel // MultilingualObject implements Eav
 
 	public static function getNewInstance()
 	{
-		return new __CLASS__();
+		return new self();
 	}
 
 	public static function getInstanceByHandle($handle)

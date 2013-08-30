@@ -294,7 +294,7 @@ abstract class EavSpecificationManagerCommon
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
 	}
 
-	public function loadRequestData(Request $request, $prefix = '')
+	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
 	{
 		$fields = $this->getSpecificationFieldSet();
 		$application = ActiveRecordModel::getApplication();

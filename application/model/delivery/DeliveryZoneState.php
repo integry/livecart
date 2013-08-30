@@ -24,7 +24,7 @@ class DeliveryZoneState extends ActiveRecordModel
 	 */
 	public static function getNewInstance(DeliveryZone $zone, State $state)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 
 	  	$instance->deliveryZone = $zone;
 	  	$instance->state = $state;

@@ -23,7 +23,7 @@ class ProductRatingType extends MultilingualObject
 
 	public static function getNewInstance(Category $category)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->category = $category;
 		return $instance;
 	}

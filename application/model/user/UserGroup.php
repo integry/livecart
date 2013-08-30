@@ -51,7 +51,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 	 */
 	public static function getNewInstance($name, $description = '')
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 
 	  	$instance->name = $name;
 	  	$instance->description = $description;

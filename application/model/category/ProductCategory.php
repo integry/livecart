@@ -30,7 +30,7 @@ class ProductCategory extends ActiveRecordModel
 	 */
 	public static function getNewInstance(Product $product, Category $category)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->product = $product;
 		$instance->category = $category;
 

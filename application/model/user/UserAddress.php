@@ -35,7 +35,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 	public static function getNewInstance()
 	{
-		return new __CLASS__();
+		return new self();
 	}
 
 	public static function getNewInstanceByTransaction(TransactionDetails $details)
@@ -110,7 +110,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 		return implode($separator, array_filter($address, 'trim'));
 	}
 
-	public function loadRequestData(Request $request, $prefix = '')
+	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
 	{
 		parent::loadRequestData($request, $prefix);
 

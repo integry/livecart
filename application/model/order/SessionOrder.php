@@ -46,7 +46,7 @@ class SessionOrder
 
 		if (!isset($instance))
 		{
-			$userId = SessionUser::getUser()->getID();
+			$userId = $this->sessionUser->getUser()->getID();
 
 			// get the last unfinalized order by this user
 			if ($userId > 0)
@@ -69,9 +69,9 @@ class SessionOrder
 			$instance->user->set(NULL);
 		}
 
-		if (!$instance->user->get() && SessionUser::getUser()->getID() > 0)
+		if (!$instance->user->get() && $this->sessionUser->getUser()->getID() > 0)
 		{
-			$instance->setUser(SessionUser::getUser());
+			$instance->setUser($this->sessionUser->getUser());
 			$instance->save();
 		}
 

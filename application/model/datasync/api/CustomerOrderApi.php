@@ -14,7 +14,7 @@ class CustomerOrderApi extends ModelApi
 	private $listFilterMapping = null;
 	protected $application;
 
-	public static function canParse(Request $request)
+	public static function canParse(\Phalcon\Http\Request $request)
 	{
 		return parent::canParse($request, array('XmlCustomerOrderApiReader'));
 	}

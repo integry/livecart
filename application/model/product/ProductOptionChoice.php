@@ -38,7 +38,7 @@ class ProductOptionChoice extends MultilingualObject
 	 */
 	public static function getNewInstance(ProductOption $option)
 	{
-		$choice = new __CLASS__();
+		$choice = new self();
 		$choice->option = $option;
 
 		return $choice;

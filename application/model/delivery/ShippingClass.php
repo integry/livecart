@@ -40,7 +40,7 @@ class ShippingClass extends MultilingualObject
 	 */
 	public static function getNewInstance($defaultLanguageName)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 	  	$instance->setValueByLang('name', null, $defaultLanguageName);
 
 	  	return $instance;

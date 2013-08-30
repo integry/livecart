@@ -21,7 +21,7 @@ class ProductImage extends ObjectImage
 
 	public static function getNewInstance(Product $product)
 	{
-	  	$image = new __CLASS__();
+	  	$image = new self();
 	  	$image->product->set($product);
 	  	return $image;
 	}

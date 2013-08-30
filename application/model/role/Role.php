@@ -9,7 +9,7 @@ namespace role;
  * @package application/model/roles
  * @author Integry Systems <http://integry.com>
  */
-class Role extends ActiveRecordModel
+class Role extends \ActiveRecordModel
 {
 	public $ID;
 	public $name;
@@ -54,7 +54,7 @@ class Role extends ActiveRecordModel
 	 */
 	public static function getNewInstance($name)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 	  	$instance->name = $name;
 
 	  	return $instance;
@@ -84,7 +84,7 @@ class Role extends ActiveRecordModel
 		}
 
 		if(!is_array($roleNames) || empty($roleNames)) return;
-
+var_dump($roleNames);
 		$filter = new ARSelectFilter();
 		$deleteFilter = new ARDeleteFilter();
 

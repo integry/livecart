@@ -64,7 +64,7 @@ class Shipment extends ActiveRecordModel
 
 	public static function getNewInstance(CustomerOrder $order)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->order = $order;
 		return $instance;
 	}

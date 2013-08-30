@@ -89,7 +89,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public static function getNewInstance(User $user)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->user = $user;
 		$instance->currency = self::getApplication()->getDefaultCurrency());
 
@@ -2349,7 +2349,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		return $shippableCount;
 	}
 
-	public function loadRequestData(Request $request)
+	public function loadRequestData(\Phalcon\Http\Request $request)
 	{
 		$this->getSpecification()->loadRequestData($request);
 	}

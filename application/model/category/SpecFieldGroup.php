@@ -27,7 +27,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 	 */
 	public static function getNewInstance(Category $category)
 	{
-		$inst = new __CLASS__();
+		$inst = new self();
 		$inst->category = $category;
 
 		return $inst;

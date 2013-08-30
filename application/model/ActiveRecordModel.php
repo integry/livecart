@@ -21,7 +21,17 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return array_pop($parts);
 	}
 
-	public function loadRequestModel(Request $request, $key = '')
+	public function getID()
+	{
+		return $this->ID;
+	}
+
+	public function setID($id)
+	{
+		$this->ID = $id;
+	}
+
+	public function loadRequestModel(\Phalcon\Http\Request $request, $key = '')
 	{
 		$json = $request->getJSON();
 		if ($key)
@@ -82,13 +92,13 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		$this->loadRequestData($modelReq);
 	}
 
-	public static function getRequestInstance(Request $request, $field = 'ID')
+	public static function getRequestInstance(\Phalcon\Http\Request $request, $field = 'ID')
 	{
 		$data = $request->getJSON();
 		return ActiveRecordModel::getInstanceByID(get_called_class(), $data[$field], true);
 	}
 
-	public static function updateFromRequest(Request $request)
+	public static function updateFromRequest(\Phalcon\Http\Request $request)
 	{
 		$instance = self::getRequestInstance($request);
 		$instance->loadRequestModel($request);
@@ -101,7 +111,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-	public function loadRequestData(Request $request, $prefix = '')
+	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
 	{
 		$enabledFields = is_array($prefix) ? array_flip($prefix) : null;
 		$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
@@ -297,50 +307,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return $res;
 	}
 
-	protected function storeToPool()
-	{
-		$cache = self::getApplication()->getCache();
-		if ($cache instanceof MemCachedCache)
-		{
-			$cache->set($this->getRecordIdentifier($this), $this);
-		}
-
-		parent::storeToPool();
-	}
-
-	public static function retrieveFromPool($className, $recordID = null)
-	{
-		if (is_object($recordID))
-		{
-			if (!($recordID instanceof ActiveRecord))
-			{
-				return;
-			}
-
-			if ($recordID instanceof ARSerializableDateTime)
-			{
-				debug_zval_dump($recordID);
-			}
-
-			$recordID = $recordID->getID();
-		}
-
-		if (($memPool = parent::retrieveFromPool($className, $recordID)) || is_null($recordID))
-		{
-			return $memPool;
-		}
-
-		$cache = self::getApplication()->getCache();
-		if ($cache instanceof MemCachedCache)
-		{
-			if ($instance = $cache->get($className . '-' . self::getRecordHash($recordID)))
-			{
-				$instance->storeToPool();
-				return $instance;
-			}
-		}
-	}
-
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		$schemaName = $schema->getName();
@@ -491,10 +457,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		{
 			$className = get_class($object);
 		}
-
-		if (!class_exists('ModelPlugin'))
-		{
-					}
 
 		// get plugins
 		$path = 'model/' . strtolower($className) . '/' . $action;

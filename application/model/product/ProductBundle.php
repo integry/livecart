@@ -56,7 +56,7 @@ class ProductBundle extends ActiveRecordModel
 			return null;
 		}
 
-		$relationship = new __CLASS__();
+		$relationship = new self();
 
 		$relationship->product = $product;
 		$relationship->relatedProduct = $related;

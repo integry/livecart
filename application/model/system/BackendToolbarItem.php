@@ -55,7 +55,7 @@ class BackendToolbarItem extends ActiveRecordModel
 	{
 		$item = new BackendToolbarItem();
 
-		$item->owner = SessionUser::getUser());
+		$item->owner = $this->sessionUser->getUser());
 		foreach(array('productID', 'userID', 'orderID') as $fieldName)
 		{
 			if (array_key_exists($fieldName, $data))
@@ -82,7 +82,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), SessionUser::getUser()->getID()));
+		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), $this->sessionUser->getUser()->getID()));
 		$filter->setOrder(f(__CLASS__.'.position'), $order);
 
 		$m = array(

@@ -111,7 +111,7 @@ class Language extends \ActiveRecordModel
 
 	public function toArray($args = null)
 	{
-	  	$array = parent::toArray();
+	  	$array = parent::toArray($args);
 
 	  	$info = self::getApplication()->getLocale()->info();
 		$array['name'] = $info->getLanguageName($array['ID']);

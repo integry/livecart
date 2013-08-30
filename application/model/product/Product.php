@@ -124,7 +124,7 @@ class Product extends MultilingualObject
 	 */
 	public static function getNewInstance(Category $category, $name = '')
 	{
-		$product = new __CLASS__();
+		$product = new self();
 		$product->category = $category;
 		$product->setValueByLang('name', null, $name);
 
@@ -187,7 +187,7 @@ class Product extends MultilingualObject
 
 	public function createChildProduct()
 	{
-		$child = new __CLASS__();
+		$child = new self();
 		$child->parent = $this;
 		return $child;
 	}
@@ -370,7 +370,7 @@ class Product extends MultilingualObject
 		return $this->stockCount->get();
 	}
 
-	private function loadPricingFromRequest(Request $request, $listPrice = false, $removeMissing = false)
+	private function loadPricingFromRequest(\Phalcon\Http\Request $request, $listPrice = false, $removeMissing = false)
 	{
 		$prices = $request->get('defined' . ($listPrice ? 'listPrice' : ''));
 		foreach (self::getApplication()->getCurrencyArray() as $currency)
@@ -386,7 +386,7 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function loadRequestData(Request $request, $removeMissingPrices = true)
+	public function loadRequestData(\Phalcon\Http\Request $request, $removeMissingPrices = true)
 	{
 		// basic data
 		parent::loadRequestData($request);
@@ -626,7 +626,7 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public static function getRequestInstance(Request $request, $field = 'ID')
+	public static function getRequestInstance(\Phalcon\Http\Request $request, $field = 'ID')
 	{
 		$product = parent::getRequestInstance($request, $field);
 		if (!$product->getID())

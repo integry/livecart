@@ -23,7 +23,7 @@ class CategoryRelationship extends ActiveRecordModel
 
 	public static function getNewInstance(Category $category, Category $relatedCategory)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->category = $category;
 		$instance->relatedCategory = $relatedCategory;		return $instance;
 	}

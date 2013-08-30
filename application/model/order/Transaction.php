@@ -79,7 +79,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->order = $order;
 		$instance->gatewayTransactionID = $result->gatewayTransactionID->get());
 
@@ -145,7 +145,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public static function getNewOfflineTransactionInstance(CustomerOrder $order, $amount)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->order = $order;
 		$instance->realCurrency = $order->currency->get());
 		$instance->type = self::TYPE_SALE);

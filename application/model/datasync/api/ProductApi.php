@@ -10,7 +10,7 @@
  */
 class ProductApi extends ModelApi
 {
-	public static function canParse(Request $request)
+	public static function canParse(\Phalcon\Http\Request $request)
 	{
 		return parent::canParse($request, array('XmlProductApiReader'));
 	}

@@ -83,7 +83,7 @@ class BusinessRuleContext
 			return array();
 		}
 
-		$sessionUser = SessionUser::getUser();
+		$sessionUser = $this->sessionUser->getUser();
 		if ($this->isSessionCacheUsable())
 		{
 			$session = new Session();
@@ -194,7 +194,7 @@ class BusinessRuleContext
 			return false;
 		}
 
-		return $this->user->getID() == SessionUser::getUser()->getID();
+		return $this->user->getID() == $this->sessionUser->getUser()->getID();
 	}
 }
 

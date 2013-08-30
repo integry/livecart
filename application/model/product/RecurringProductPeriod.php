@@ -131,7 +131,7 @@ class RecurringProductPeriod extends MultilingualObject
 
 	public static function getNewInstance(Product $product)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		//$instance->setValueByLang('name', null, $defaultLanguageName);
 		$instance->productID = $product;
 		return $instance;

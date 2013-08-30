@@ -61,7 +61,7 @@ class ShippingService extends MultilingualObject implements EavAble
 	 */
 	public static function getNewInstance(DeliveryZone $deliveryZone = null, $defaultLanguageName, $calculationCriteria)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		if($deliveryZone)
 		{
 			$instance->deliveryZone = $deliveryZone;

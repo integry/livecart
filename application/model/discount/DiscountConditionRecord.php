@@ -23,7 +23,7 @@ class DiscountConditionRecord extends ActiveRecordModel
 
 	public static function getNewInstance(DiscountCondition $condition, ActiveRecordModel $record)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->condition = $condition;
 
 		$class = get_class($record);

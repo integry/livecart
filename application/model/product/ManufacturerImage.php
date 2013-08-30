@@ -21,7 +21,7 @@ class ManufacturerImage extends ObjectImage
 
 	public static function getNewInstance(Manufacturer $manufacturer)
 	{
-	  	$image = new __CLASS__();
+	  	$image = new self();
 	  	$image->manufacturer = $manufacturer;
 	  	return $image;
 	}

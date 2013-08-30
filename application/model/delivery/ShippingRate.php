@@ -64,7 +64,7 @@ class ShippingRate extends MultilingualObject
 	 */
 	public static function getNewInstance(ShippingService $shippingService, $rangeStart, $rangeEnd)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 	  	$instance->shippingService = $shippingService;
 
 	  	$instance->setRangeStart($rangeStart);

@@ -52,7 +52,7 @@ class OrderLog extends ActiveRecordModel
 
 	public static function getNewInstance($type, $action, $oldValue, $newValue, $oldTotal, $newTotal, User $user, CustomerOrder $order)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 
 		$instance->user = $user;
 

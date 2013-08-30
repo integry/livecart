@@ -48,7 +48,7 @@ class CategoryPresentation extends ActiveRecordModel
 
 	public static function getNewInstance(ActiveRecordModel $parent)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		if ($parent instanceof Category)
 		{
 			$instance->category->set($parent);

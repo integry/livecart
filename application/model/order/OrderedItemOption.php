@@ -32,7 +32,7 @@ class OrderedItemOption extends ActiveRecordModel
 
 	public static function getNewInstance(OrderedItem $item, ProductOptionChoice $choice)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->orderedItem = $item;
 		$instance->choice = $choice;
 

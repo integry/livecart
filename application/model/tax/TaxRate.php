@@ -47,7 +47,7 @@ class TaxRate extends MultilingualObject
 	 */
 	public static function getNewInstance(DeliveryZone $deliveryZone = null, Tax $tax, $rate)
 	{
-	  	$instance = new __CLASS__();
+	  	$instance = new self();
 
 		if($deliveryZone)
 		{

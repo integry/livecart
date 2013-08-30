@@ -29,7 +29,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 
 	public static function getNewInstance($name)
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->name = $name;
 		return $instance;
 	}

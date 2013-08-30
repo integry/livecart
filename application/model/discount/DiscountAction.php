@@ -39,7 +39,7 @@ class DiscountAction extends ActiveRecordModel
 
 	public static function getNewInstance(DiscountCondition $condition, $className = 'RuleActionPercentageDiscount')
 	{
-		$instance = new __CLASS__();
+		$instance = new self();
 		$instance->condition = $condition;
 		$instance->actionClass = $className;
 
