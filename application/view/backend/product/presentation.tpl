@@ -3,20 +3,11 @@
 	<fieldset>
 		<legend>{t _presentation}</legend>
 
-		{input name="isVariationImages"}
-			{label}{tip _theme}:{/label}
-			{selectfield options=$themes}
-		{/input}
+		[[ selectfld('isVariationImages', tip( '_theme'), themes) ]]
 
-		{input name="isVariationImages"}
-			{checkbox}
-			{label}{tip _show_variation_images}{/label}
-		{/input}
+		[[ checkbox('isVariationImages', tip('_show_variation_images')) ]]
 
-		{input name="isAllVariations"}
-			{checkbox}
-			{label}{tip _allow_all_variations}{/label}
-		{/input}
+		[[ checkbox('isAllVariations', tip('_allow_all_variations')) ]]
 	</fieldset>
 {/form}
 </div>

@@ -12,17 +12,8 @@
 	<input type="hidden" id="newsletter_[[newsletter.ID]]_format" name="newsletter_[[newsletter.ID]]_format" value="4" />
 {/if}
 
-{input name="subject"}
-	{label}{t _subject}:{/label}
-	{textfield class="wide"}
-{/input}
+[[ textfld('subject', '_subject', class: 'wide') ]]
 
-{input name="html"}
-	{label}{t _message_text_html}:{/label}
-	{textarea class="tinyMCE"}
-{/input}
+[[ textarea('html', '_message_text_html', class: 'tinyMCE') ]]
 
-{input name="text"}
-	{label}{t _text}:{/label}
-	{textarea}
-{/input}
+[[ textareafld('text', '_text') ]]

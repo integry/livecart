@@ -1,20 +1,11 @@
 {hidden name="`$namePrefix`ID"}
 
 {if !$hideName}
-{input name="`$namePrefix`firstName"}
-	{label}{t _first_name}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`firstName', '_first_name') ]]
 
-{input name="`$namePrefix`lastName"}
-	{label}{t _last_name}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`lastName', '_last_name') ]]
 
-{input name="`$namePrefix`companyName"}
-	{label}{t _company}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`companyName', '_company') ]]
 {/if}
 
 {input name="`$namePrefix`countryID"}
@@ -28,30 +19,15 @@
 	{textfield id="`$idPrefix`_stateName"}
 {/input}
 
-{input name="`$namePrefix`city"}
-	{label}{t _city}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`city', '_city') ]]
 
-{input name="`$namePrefix`address1"}
-	{label}{t _address} 1:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`address1', '_address') ]]
 
-{input name="`$namePrefix`address2"}
-	{label}{t _address} 2:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`address2', '_address') ]]
 
-{input name="`$namePrefix`postalCode"}
-	{label}{t _postal_code}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`postalCode', '_postal_code') ]]
 
-{input name="`$namePrefix`phone"}
-	{label}{t _phone}:{/label}
-	{textfield}
-{/input}
+[[ textfld('`$namePrefix`phone', '_phone') ]]
 
 {include file="block/eav/fields.tpl" item=$address fieldList=$specFieldListByOwner.UserAddress[$address.ID]}
 

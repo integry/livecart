@@ -12,10 +12,7 @@
 			<div class="controls">[[user.email]]</div>
 		{/input}
 
-		{input name="email"}
-			{label}{t _new_email}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('email', '_new_email') ]]
 
 		{include file="block/submit.tpl" caption="_complete_email_change" cancel="user"}
 

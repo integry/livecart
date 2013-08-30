@@ -7,16 +7,10 @@
 {form handle=$taxForm action=$action id="taxForm_`$tax.ID`" method="post" onsubmit="Backend.Tax.prototype.getInstance(this).save(); return false;" role="taxes.update(edit),taxes.create(index)"}
 	{hidden name="ID"}
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_name') ]]
 
 	{language}
-		{input name="name_`$lang.ID`"}
-			{label}{t _name}:{/label}
-			{textfield class="observed"}
-		{/input}
+		[[ textfld('name_`$lang.ID`', '_name', class: 'observed') ]]
 	{/language}
 
 	<fieldset class="taxZonesContainer">

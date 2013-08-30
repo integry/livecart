@@ -174,10 +174,7 @@
 	   </ul>
 	{/if}
 	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm class="form-horizontal"}
-		{input name="text"}
-			{label}{t _enter_question}:{/label}
-			{textarea}
-		{/input}
+		[[ textareafld('text', '_enter_question') ]]
 
 		{include file="block/submit.tpl" caption="_submit_response"}
 	{/form}

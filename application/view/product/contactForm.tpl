@@ -3,28 +3,16 @@
 
 <div>
 {form action="controller=product action=sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;" class="form-horizontal"}
-	{input name="name"}
-		{label}{t _inquiry_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_inquiry_name') ]]
 
 	{* anti-spam *}
 	<div style="display: none;">
-		{input name="surname"}
-			{label}{t surname}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('surname', 'surname') ]]
 	</div>
 
-	{input name="email"}
-		{label}{t _inquiry_email}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('email', '_inquiry_email') ]]
 
-	{input name="msg"}
-		{label}{t _inquiry_msg}:{/label}
-		{textarea}
-	{/input}
+	[[ textareafld('msg', '_inquiry_msg') ]]
 
 	{include file="block/submit.tpl" caption="_form_submit"}
 

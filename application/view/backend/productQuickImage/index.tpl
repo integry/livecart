@@ -14,10 +14,7 @@
 		{/input}
 
 		{if $images|@json_decode}
-			{input name="setAsMainImage"}
-				{checkbox}
-				{label}{t _image_set_as_main}:{/label}
-			{/input}
+			[[ checkbox('setAsMainImage', '_image_set_as_main') ]]
 		{/if}
 
 		<fieldset class="container">

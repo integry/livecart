@@ -15,16 +15,10 @@
 		<input type="hidden" name="categoryId" value="[[id]]" />
 		<input type="hidden" name="id" />
 
-		{input name="name"}
-			{label}{t _name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('name', '_name') ]]
 
 		{language}
-			{input name="name_`$lang.ID`"}
-				{label}{t _name}:{/label}
-				{textfield}
-			{/input}
+			[[ textfld('name_`$lang.ID`', '_name') ]]
 		{/language}
 
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>

@@ -1,10 +1,7 @@
 <fieldset id="[[type]]_edit" class="orderAddress_edit error" style="display: none">
 	<input name="orderID" type="hidden" value="[[order.ID]]" />
 
-	{input name="existingUserAddress"}
-		{label}{t _use_existing_address}:{/label}
-		{selectfield options=$existingUserAddressOptions}
-	{/input}
+	[[ selectfld('existingUserAddress', '_use_existing_address', existingUserAddressOptions) ]]
 
 	{include file="backend/user/address_edit.tpl" idPrefix=$type states=$states}
 

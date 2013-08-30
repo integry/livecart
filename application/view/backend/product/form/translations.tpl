@@ -4,15 +4,9 @@
 		{textfield class="wide" autocomplete="controller=backend.product field=name"}
 	{/input}
 
-	{input name="shortDescription_`$lang.ID`"}
-		{label}{t _short_description}:{/label}
-		{textarea class="shortDescr tinyMCE"}
-	{/input}
+	[[ textarea('shortDescription_`$lang.ID`', '_short_description', class: 'shortDescr tinyMCE') ]]
 
-	{input name="longDescription_`$lang.ID`"}
-		{label}{t _long_description}:{/label}
-		{textarea class="longDescr tinyMCE"}
-	{/input}
+	[[ textarea('longDescription_`$lang.ID`', '_long_description', class: 'longDescr tinyMCE') ]]
 
 	{input name="pageTitle_`$lang.ID`"}
 		{label}{t _pageTitle}:{/label}

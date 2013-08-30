@@ -5,20 +5,11 @@
 </p>
 
 {form action="controller=install action=setConfig" method="POST" handle=$form class="form-horizontal"}
-	{input name="name"}
-		{label}{t _store_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_store_name') ]]
 
-	{input name="language"}
-		{label}{t _base_language}:{/label}
-		{selectfield options=$languages}
-	{/input}
+	[[ selectfld('language', '_base_language', languages) ]]
 
-	{input name="curr"}
-		{label}{t _base_currency}:{/label}
-		{selectfield options=$currencies}
-	{/input}
+	[[ selectfld('curr', '_base_currency', currencies) ]]
 
 	<input type="submit" class="submit" value="Complete installation" />
 {/form}

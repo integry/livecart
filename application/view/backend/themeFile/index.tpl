@@ -28,10 +28,7 @@
 			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
 		{/input}
 
-		{input name="filename"}
-			{label}{t _change_file_name}:{/label}
-			{textfield class="changeFileName"}
-		{/input}
+		[[ textfld('filename', '_change_file_name', class: 'changeFileName') ]]
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>

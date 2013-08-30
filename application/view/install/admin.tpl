@@ -4,30 +4,15 @@
 
 	{form action="controller=install action=setAdmin" method="POST" handle=$form class="form-horizontal"}
 
-		{input name="firstName"}
-			{label}{t _first_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('firstName', '_first_name') ]]
 
-		{input name="lastName"}
-			{label}{t _last_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('lastName', '_last_name') ]]
 
-		{input name="email"}
-			{label}{t _email}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('email', '_email') ]]
 
-		{input name="password"}
-			{label}{t _password}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('password', '_password') ]]
 
-		{input name="confirmPassword"}
-			{label}{t _confirm_password}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('confirmPassword', '_confirm_password') ]]
 
 		<div class="clear"></div>
 		<input type="submit" value="Continue installation" />

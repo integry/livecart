@@ -1,49 +1,25 @@
 <div ng-controller="CategoryFormController" ng-show="category.ID">
 {form model="category" ng_submit="save()" handle=$catalogForm role="category.update"}
-	{input name="isEnabled"}
-		{checkbox}
-		{label}{tip _active}{/label}
-	{/input}
+	[[ checkbox('isEnabled', tip('_active')) ]]
 
-	{input name="name"}
-		{label}{t _category_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_category_name') ]]
 
-	{input name="description"}
-		{label}{tip _descr}:{/label}
-		{textarea class="tinyMCE"}
-	{/input}
+	[[ textarea('description', tip('_descr'), class: 'tinyMCE') ]]
 
-	{input name="keywords"}
-		{label}{tip _keywords}:{/label}
-		{textarea class="categoryKeywords"}
-	{/input}
+	[[ textarea('keywords', tip('_keywords'), class: 'categoryKeywords') ]]
 
-	{input name="pageTitle"}
-		{label}{tip _pageTitle _hint_pageTitle}:{/label}
-		{textfield class="wide"}
-	{/input}
+	[[ textfld('pageTitle', tip('_pageTitle _hint_pageTitle'), class: 'wide') ]]
 
 	{include file="backend/eav/fields.tpl" angular="category" item=$category}
 
 	<fieldset>
 		<legend>{t _presentation}</legend>
 
-		{input name="presentation.isSubcategories"}
-			{checkbox}
-			{label}{tip _theme_subcategories}{/label}
-		{/input}
+		[[ checkbox('presentation.isSubcategories', tip('_theme_subcategories')) ]]
 
-		{input name="presentation.isVariationImages"}
-			{checkbox}
-			{label}{tip _show_variation_images}{/label}
-		{/input}
+		[[ checkbox('presentation.isVariationImages', tip('_show_variation_images')) ]]
 
-		{input name="presentation.isAllVariations"}
-			{checkbox}
-			{label}{tip _allow_all_variations}{/label}
-		{/input}
+		[[ checkbox('presentation.isAllVariations', tip('_allow_all_variations')) ]]
 
 		{input name="presentation.listStyle"}
 			{label}{tip _list_style}:{/label}
@@ -64,25 +40,13 @@
 	{block FORM-CATEGORY-BOTTOM}
 
 	{language}
-		{input name="name_`$lang.ID`"}
-			{label}{t _category_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('name_`$lang.ID`', '_category_name') ]]
 
-		{input name="description_`$lang.ID`"}
-			{label}{t _descr}:{/label}
-			{textarea class="tinyMCE"}
-		{/input}
+		[[ textarea('description_`$lang.ID`', '_descr', class: 'tinyMCE') ]]
 
-		{input name="keywords_`$lang.ID`"}
-			{label}{t _keywords}:{/label}
-			{textarea class="categoryKeywords"}
-		{/input}
+		[[ textarea('keywords_`$lang.ID`', '_keywords', class: 'categoryKeywords') ]]
 
-		{input name="pageTitle_`$lang.ID`"}
-			{label}{t _pageTitle}:{/label}
-			{textfield class="wide"}
-		{/input}
+		[[ textfld('pageTitle_`$lang.ID`', '_pageTitle', class: 'wide') ]]
 
 		{include file="backend/eav/fields.tpl" angular="instance" item=$category language=$lang.ID}
 	{/language}

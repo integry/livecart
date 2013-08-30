@@ -32,21 +32,12 @@
 	{textfield class="text number"} [[order.Currency.ID]]
 {/input}
 
-{input name="name"}
-	{label}{t _cc_name}:{/label}
-	{textfield}
-{/input}
+[[ textfld('name', '_cc_name') ]]
 
-{input name="ccNum"}
-	{label}{t _cc_num}:{/label}
-	{textfield}
-{/input}
+[[ textfld('ccNum', '_cc_num') ]]
 
 {if $ccTypes}
-	{input name="ccType"}
-		{label}{t _cc_type}:{/label}
-		{selectfield options=$ccTypes}
-	{/input}
+	[[ selectfld('ccType', '_cc_type', ccTypes) ]]
 {/if}
 
 {input name="ccExpiryYear"}
@@ -61,10 +52,7 @@
 	{textfield maxlength="4" class="text number"}
 {/input}
 
-{input name="comment"}
-	{label}{t _comment}:{/label}
-	{textarea}
-{/input}
+[[ textareafld('comment', '_comment') ]]
 
 <fieldset class="controls">
 	<span class="progressIndicator" style="display: none;"></span>

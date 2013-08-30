@@ -2,10 +2,7 @@
 	<input type="hidden" name="deliveryZoneID" value="[[service.DeliveryZone.ID]]" />
 	<input type="hidden" name="serviceID" value="[[service.ID]]" />
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield class="observed shippingService_name"}
-	{/input}
+	[[ textfld('name', '_name', class: 'observed shippingService_name') ]]
 
 	{input name="isFinal"}
 		{checkbox class="checkbox observed shippingService_isFinal"}
@@ -41,10 +38,7 @@
 		{/input}
 	</div>
 
-	{input name="description"}
-		{label}{tip _description}{/label}
-		{textarea class="observed shippingService_description"}
-	{/input}
+	[[ textarea('description', tip('_description'), class: 'observed shippingService_description') ]]
 
 	<fieldset class="shippingService_rates ">
 		<legend>{t _shipping_service_rates}</legend>
@@ -91,15 +85,9 @@
 	{include file="backend/eav/fields.tpl" item=$service}
 
 	{language}
-		{input name="name_`$lang.ID`"}
-			{label}{t _name}:{/label}
-			{textfield class="observed"}
-		{/input}
+		[[ textfld('name_`$lang.ID`', '_name', class: 'observed') ]]
 
-		{input name="description_`$lang.ID`"}
-			{label}{t _description}:{/label}
-			{textfield class="observed"}
-		{/input}
+		[[ textfld('description_`$lang.ID`', '_description', class: 'observed') ]]
 	{/language}
 
 	<fieldset class="shippingService_controls controls">

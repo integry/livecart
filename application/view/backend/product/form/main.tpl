@@ -1,20 +1,14 @@
 <fieldset>
 	<legend>{t _main_details}</legend>
 
-	{input name="isEnabled"}
-		{label}{tip _availability}:{/label}
-		{selectfield options=$productStatuses}
-	{/input}
+	[[ selectfld('isEnabled', tip( '_availability'), productStatuses) ]]
 
 	{input name="name"}
 		{label}{t _product_name}:{/label}
 		{textfield class="wide" autocomplete="controller=backend.product field=name"}
 	{/input}
 
-	{input name="autosku"}
-		{checkbox}
-		{label}{t _generate_sku}{/label}
-	{/input}
+	[[ checkbox('autosku', '_generate_sku') ]]
 
 	{input name="sku"}
 		{label}{tip _sku_code _hint_sku}:{/label}
@@ -31,10 +25,7 @@
 		{textarea tinymce=true class="longDescr tinyMCE"}
 	{/input}
 
-	{input name="type"}
-		{label}{tip _product_type}:{/label}
-		{selectfield options=$productTypes}
-	{/input}
+	[[ selectfld('type', tip( '_product_type'), productTypes) ]]
 
 	{input name="URL"}
 		{label}{tip _website_address}:{/label}
@@ -75,9 +66,6 @@
 		{textfield class="number" number=true}
 	{/input}
 
-	{input name="isFeatured"}
-		{checkbox}
-		{label}{tip _mark_as_featured_product _hint_featured}{/label}
-	{/input}
+	[[ checkbox('isFeatured', tip('_mark_as_featured_product _hint_featured')) ]]
 
 </fieldset>

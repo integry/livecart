@@ -72,15 +72,9 @@
 			<fieldset>
 				<legend>{t _add_new|@ucwords}</legend>
 
-				{input name="key"}
-					{label}{t _phrase_key}:{/label}
-					{textfield}
-				{/input}
+				[[ textfld('key', '_phrase_key') ]]
 
-				{input name="value"}
-					{label}{t _phrase_value}:{/label}
-					{textfield}
-				{/input}
+				[[ textfld('value', '_phrase_value') ]]
 
 				<fieldset class="controls">
 					<input type="submit" class="submit" value="{tn _add}" />

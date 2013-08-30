@@ -6,21 +6,21 @@
 
 	{if !$template.isFragment}
 	<p>
-		<label class="wide">{t _subject}:</label>
+		<label>{t _subject}:</label>
 		{textfield name="subject" id="subject_`$tabid`" class="text wide"}
 	</p>
 	{/if}
 
 	<p>
 		{if !$template.isFragment}
-			<label class="wide">{t _body}:</label>
+			<label>{t _body}:</label>
 		{/if}
 		{textarea name="body" id="body_`$tabid`" class="body"}
 	</p>
 
 	{if $template.hasPlainText}
 	<p>
-		<label class="wide">{t _html_version}:</label>
+		<label>{t _html_version}:</label>
 		{textarea name="html" id="html_`$tabid`" class="body"}
 	</p>
 	{/if}
@@ -29,21 +29,21 @@
 		{language}
 			{if !$template.isFragment}
 				<p>
-					<label class="wide">{t _subject}:</label>
+					<label>{t _subject}:</label>
 					{textfield name="subject_`$lang.ID`" class="text wide"}
 				</p>
 			{/if}
 
 			<p>
 				{if !$template.isFragment}
-					<label class="wide">{t _body}:</label>
+					<label>{t _body}:</label>
 				{/if}
 				{textarea name="body_`$lang.ID`" id="body_`$tabid`_`$lang.ID`" class="body"}
 			</p>
 
 			{if $template.hasPlainText}
 			<p>
-				<label class="wide">{t _html_version}:</label>
+				<label>{t _html_version}:</label>
 				{textarea name="html_`$lang.ID`" id="html_`$tabid`_`$lang.ID`" class="body"}
 			</p>
 			{/if}

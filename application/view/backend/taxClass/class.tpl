@@ -8,16 +8,10 @@
 
 	{hidden name="ID"}
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_name') ]]
 
 	{language}
-		{input name="name_`$lang.ID`"}
-			{label}{t _name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('name_`$lang.ID`', '_name') ]]
 	{/language}
 
 	<fieldset class="class_controls controls">

@@ -12,22 +12,13 @@
 			{form action="controller=product action=sendToFriend id=`$product.ID`" handle=$sharingForm method="POST"
 				onsubmit="new Product.Share(this); return false;" class="form-horizontal"}
 				<div class="producSharingForm">
-					{input name="friendemail"}
-						{label}{t _friend_email}:{/label}
-						{textfield}
-					{/input}
+					[[ textfld('friendemail', '_friend_email') ]]
 
 					{if !$user.ID}
-						{input name="nickname"}
-							{label}{t _nickname}:{/label}
-							{textfield}
-						{/input}
+						[[ textfld('nickname', '_nickname') ]]
 					{/if}
 
-					{input name="friendemail"}
-						{label}{t _notes}:{/label}
-						{textarea}
-					{/input}
+					[[ textareafld('friendemail', '_notes') ]]
 				</div>
 
 				{block SEND-TO-FRIEND-SUBMIT}

@@ -2,15 +2,9 @@
 {form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_name') ]]
 
-	{input name="description"}
-		{label}{t _description}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('description', '_description') ]]
 
 	{include file="backend/eav/fields.tpl" item=$userGroup}
 

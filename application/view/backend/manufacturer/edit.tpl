@@ -8,10 +8,7 @@
 
 {form handle=$form action="controller=backend.manufacturer `$urlAction`" id="userInfo_`$manufacturer.ID`_form" onsubmit="`$action`; return false;" method="post" role="product.update"}
 
-	{input name="name"}
-		{label}{t Manufacturer.name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', 'Manufacturer.name') ]]
 
 	{include file="backend/eav/fields.tpl" item=$manufacturer}
 

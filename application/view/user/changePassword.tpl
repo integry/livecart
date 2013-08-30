@@ -7,20 +7,11 @@
 
 	{form action="controller=user action=doChangePassword" method="POST" handle=$form class="form-horizontal"}
 
-		{input name="currentpassword"}
-			{label}{t _current_pass}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('currentpassword', '_current_pass') ]]
 
-		{input name="password"}
-			{label}{t _enter_new_pass}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('password', '_enter_new_pass') ]]
 
-		{input name="confpassword"}
-			{label}{t _reenter_new_pass}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('confpassword', '_reenter_new_pass') ]]
 
 		{include file="block/submit.tpl" caption="_complete_pass_change" cancel=user}
 

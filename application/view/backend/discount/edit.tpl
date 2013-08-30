@@ -3,10 +3,7 @@
 	<fieldset>
 		<legend>{t _main_info}</legend>
 
-		{input name="isEnabled"}
-			{checkbox}
-			{label}{tip _is_enabled _tip_is_enabled_condition}:{/label}
-		{/input}
+		[[ checkbox('isEnabled', tip('_is_enabled _tip_is_enabled_condition')) ]]
 
 		{include file="backend/discount/conditionForm.tpl" id="userInfo_`$condition.ID`_form"}
 

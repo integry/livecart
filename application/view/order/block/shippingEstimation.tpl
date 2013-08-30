@@ -17,17 +17,11 @@
 		{/if}
 
 		{if $fields.POSTALCODE}
-			{input name="estimate_postalCode"}
-				{label}{t _postal_code}{/label}
-				{textfield}
-			{/input}
+			[[ textfld('estimate_postalCode', '_postal_code') ]]
 		{/if}
 
 		{if $fields.CITY}
-			{input name="estimate_city"}
-				{label}{t _city}{/label}
-				{textfield}
-			{/input}
+			[[ textfld('estimate_city', '_city') ]]
 		{/if}
 
 		<div class="row">

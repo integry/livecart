@@ -4,30 +4,15 @@
 
 	<legend>{t _pr_form}</legend>
 
-	{input name="pricePrefix"}
-		{label}{t _pr_prefix}{/label}
-		{textfield class="currencyPricePrefix"}
-	{/input}
+	[[ textfld('pricePrefix', '_pr_prefix', class: 'currencyPricePrefix') ]]
 
-	{input name="priceSuffix"}
-		{label}{t _pr_suffix}{/label}
-		{textfield class="currencyPriceSuffix"}
-	{/input}
+	[[ textfld('priceSuffix', '_pr_suffix', class: 'currencyPriceSuffix') ]]
 
-	{input name="decimalSeparator"}
-		{label}{t _pr_decimal_sep}{/label}
-		{textfield class="currencyPriceSuffix"}
-	{/input}
+	[[ textfld('decimalSeparator', '_pr_decimal_sep', class: 'currencyPriceSuffix') ]]
 
-	{input name="thousandSeparator"}
-		{label}{t _pr_thousand_sep}{/label}
-		{textfield class="currencyPriceSuffix"}
-	{/input}
+	[[ textfld('thousandSeparator', '_pr_thousand_sep', class: 'currencyPriceSuffix') ]]
 
-	{input name="decimalCount"}
-		{label}{t _pr_decimal_count}{/label}
-		{textfield class="currencyPriceSuffix"}
-	{/input}
+	[[ textfld('decimalCount', '_pr_decimal_count', class: 'currencyPriceSuffix') ]]
 
 </fieldset>
 

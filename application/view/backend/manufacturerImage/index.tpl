@@ -45,16 +45,10 @@
 			<div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
 		{/input}
 
-		{input name="title"}
-			{label}{t _image_title}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('title', '_image_title') ]]
 
 		{language}
-			{input name="title_`$lang.ID`"}
-				{label}{t _image_title}:{/label}
-				{textfield}
-			{/input}
+			[[ textfld('title_`$lang.ID`', '_image_title') ]]
 		{/language}
 
 		<fieldset class="controls">

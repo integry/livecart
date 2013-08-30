@@ -20,10 +20,7 @@
 					{textfield class="text number"} [[order.Currency.ID]]
 				{/input}
 
-				{input name="comment"}
-					{label}{t _comment}:{/label}
-					{textarea}
-				{/input}
+				[[ textareafld('comment', '_comment') ]]
 
 				<fieldset class="controls" style="margin-right: 40px;">
 					<span class="progressIndicator" style="display: none;"></span>

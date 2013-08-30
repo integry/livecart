@@ -8,20 +8,11 @@
 	{/foreach}
 
 	<p class="required">
-		{input name="nickname"}
-			{label}{t _nickname}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('nickname', '_nickname') ]]
 
-		{input name="title"}
-			{label}{t _title}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('title', '_title') ]]
 
-		{input name="text"}
-			{label}{t _text}:{/label}
-			{textarea}
-		{/input}
+		[[ textareafld('text', '_text') ]]
 	</p>
 
 	{include file="backend/eav/fields.tpl" item=$review}

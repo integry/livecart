@@ -1,8 +1,5 @@
 {if $fields.ADDRESS1}
-	{input name="`$prefix`address1"}
-		{label}{t _address}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('`$prefix`address1', '_address') ]]
 {/if}
 
 {if $fields.ADDRESS2}
@@ -12,10 +9,7 @@
 {/if}
 
 {if $fields.CITY}
-	{input name="`$prefix`city"}
-		{label}{t _city}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('`$prefix`city', '_city') ]]
 {/if}
 
 {if $fields.COUNTRY}
@@ -33,8 +27,5 @@
 {/if}
 
 {if $fields.POSTALCODE}
-	{input name="`$prefix`postalCode"}
-		{label}{t _postal_code}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('`$prefix`postalCode', '_postal_code') ]]
 {/if}

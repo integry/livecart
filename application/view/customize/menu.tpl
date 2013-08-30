@@ -23,13 +23,13 @@
 				<div id="newRuleMenu" style="display: none;" class="form-horizontal">
 					<form>
 						<p>
-							<label class="wide">{t _css_rule_sel}:</label>
+							<label>{t _css_rule_sel}:</label>
 							<input type="text" class="text wide" id="cssNewRuleName" />
 							<span class="cssExample">{t _css_example}: <strong>.product-index h1</strong></span>
 							<span class="text-danger hidden"></span>
 						</p>
 						<p>
-							<label class="wide">{t _css_rule_text}:</label>
+							<label>{t _css_rule_text}:</label>
 							<textarea id="cssNewRuleText"></textarea>
 							<span class="cssExample">{t _css_example}: <strong>color: green</strong></span>
 							<span class="text-danger hidden"></span>

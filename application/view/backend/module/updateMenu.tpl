@@ -9,17 +9,11 @@
 		*}
 
 		{if $lines}
-			{input name="channel"}
-				{label}{t _channel}:{/label}
-				{selectfield options=$lines}
-			{/input}
+			[[ selectfld('channel', '_channel', lines) ]]
 		{/if}
 
 		{if $versions}
-			{input name="version"}
-				{label}{t _version}:{/label}
-				{selectfield options=$versions}
-			{/input}
+			[[ selectfld('version', '_version', versions) ]]
 		{/if}
 
 		{if !$versions}

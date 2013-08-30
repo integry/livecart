@@ -38,39 +38,33 @@
 			{calendar id="time"}
 		{/input}
 
-		{input name="title"}
-			{label}{t _title}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('title', '_title') ]]
+
+		[[ textarea('text', '_text', class: 'tinyMCE') ]]
 
 		{input name="text"}
 			{label}{t _text}:{/label}
 			{textarea class="tinyMCE"}
 		{/input}
 
-		{input name="text"}
-			{label class="wide"}{t _text}:{/label}
-			{textarea class="tinyMCE"}
-		{/input}
-
 		{input name="moreText"}
-			{label class="wide"}{t _more_text}:{/label}
+			{label}{t _more_text}:{/label}
 			{textarea class="tinyMCE"}
 		{/input}
 
 		{language}
 			{input name="title_`$lang.ID`"}
-				{label class="wide"}{t _title}:{/label}
+				{label}{t _title}:{/label}
 				{textfield}
 			{/input}
 
 			{input name="text_`$lang.ID`"}
-				{label class="wide"}{t _text}:{/label}
+				{label}{t _text}:{/label}
 				{textarea class="tinyMCE"}
 			{/input}
 
 			{input name="moreText_`$lang.ID`"}
-				{label class="wide"}{t _more_text}:{/label}
+				{label}{t _more_text}:{/label}
 				{textarea class="tinyMCE"}
 			{/input}
 		{/language}

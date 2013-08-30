@@ -1,25 +1,13 @@
 <fieldset class="shipping" ng-show="product.type != 1">
 	<legend>{t _shipping}</legend>
 
-	{input name="isSeparateShipment"}
-		{checkbox}
-		{label}{tip _requires_separate_shipment}{/label}
-	{/input}
+	[[ checkbox('isSeparateShipment', tip('_requires_separate_shipment')) ]]
 
-	{input name="isFreeShipping"}
-		{checkbox}
-		{label}{tip _qualifies_for_free_shipping}{/label}
-	{/input}
+	[[ checkbox('isFreeShipping', tip('_qualifies_for_free_shipping')) ]]
 
-	{input name="isBackOrderable"}
-		{checkbox}
-		{label}{tip _allow_back_ordering}{/label}
-	{/input}
+	[[ checkbox('isBackOrderable', tip('_allow_back_ordering')) ]]
 
-	{input name="isFractionalUnit"}
-		{checkbox}
-		{label}{tip _allow_fractional_quantities}{/label}
-	{/input}
+	[[ checkbox('isFractionalUnit', tip('_allow_fractional_quantities')) ]]
 
 	{input name="shippingWeight"}
 		{label}{tip _shipping_weight}:{/label}

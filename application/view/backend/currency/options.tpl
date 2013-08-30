@@ -4,17 +4,11 @@
 
 {form id="options" handle=$form action="controller=backend.currency action=saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
 
-	{input name="updateCb"}
-		{checkbox}
-		{label}{t _update_auto}{/label}
-	{/input}
+	[[ checkbox('updateCb', '_update_auto') ]]
 
 	<fieldset id="feedOptions" class="disabled">
 
-		{input name="frequency"}
-			{label}{t _update_freq}:{/label}
-			{selectfield options=$frequency}
-		{/input}
+		[[ selectfld('frequency', '_update_freq', frequency) ]]
 
 		<p>{t _to_update}: </p>
 		{foreach from=$currencies item=item}

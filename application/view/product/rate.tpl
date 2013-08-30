@@ -39,20 +39,11 @@
 
 {if 'ENABLE_REVIEWS'|config}
 	<div class="reviewForm">
-		{input name="nickname"}
-			{label}{t _nickname}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('nickname', '_nickname') ]]
 
-		{input name="title"}
-			{label}{t _summary}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('title', '_summary') ]]
 
-		{input name="text"}
-			{label}{t _review_text}:{/label}
-			{textarea}
-		{/input}
+		[[ textareafld('text', '_review_text') ]]
 	</div>
 
 	{include file="block/submit.tpl" caption="_submit_review"}

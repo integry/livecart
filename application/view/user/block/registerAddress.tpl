@@ -8,15 +8,9 @@
 
 	[[ partial("user/block/nameFields.tpl") ]]
 
-	{input name="email"}
-		{label}{t _your_email}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('email', '_your_email') ]]
 
-	{input name="newsletter"}
-		{checkbox}
-		{label}{t _newsletter_signup}{/label}
-	{/input}
+	[[ checkbox('newsletter', '_newsletter_signup') ]]
 
 	[[ partial("user/block/phoneField.tpl") ]]
 

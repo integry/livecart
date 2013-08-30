@@ -88,13 +88,13 @@
 
 			{input name=""}
 				{label}{tip _import_file}:{/label}
-				<label class="wide">[[file]]</label>
+				<label>[[file]]</label>
 			{/input}
 
 			{if 'ProductImport' == $type}
 			<p>
 				<label>{t _import_category}</label>
-				<label class="wide">
+				<label>
 					{foreach from=$catPath item=node name="catPath"}
 						<a href="{link controller="backend.csvImport" action=index}?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
 						{if !$smarty.foreach.catPath.last}

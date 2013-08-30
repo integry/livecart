@@ -8,20 +8,11 @@
 
 	{form class="form-horizontal" action="controller=user action=savePersonal" method="POST" handle=$form class="form-horizontal"}
 
-		{input name="firstName"}
-			{label}{t _your_first_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('firstName', '_your_first_name') ]]
 
-		{input name="lastName"}
-			{label}{t _your_last_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('lastName', '_your_last_name') ]]
 
-		{input name="companyName"}
-			{label}{t _company_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('companyName', '_company_name') ]]
 
 		{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
 

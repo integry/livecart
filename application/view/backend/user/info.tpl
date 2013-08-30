@@ -1,33 +1,15 @@
 {form handle=$form action="controller=backend.user action=update" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
-	{input name="isEnabled"}
-		{checkbox}
-		{label}{t _is_enabled}:{/label}
-	{/input}
+	[[ checkbox('isEnabled', '_is_enabled') ]]
 
-	{input name="UserGroup"}
-		{label}{t _user_group}:{/label}
-		{selectfield options=$availableUserGroups}
-	{/input}
+	[[ selectfld('UserGroup', '_user_group', availableUserGroups) ]]
 
-	{input name="firstName"}
-		{label}{t _first_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('firstName', '_first_name') ]]
 
-	{input name="lastName"}
-		{label}{t _last_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('lastName', '_last_name') ]]
 
-	{input name="companyName"}
-		{label}{t _company_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('companyName', '_company_name') ]]
 
-	{input name="email"}
-		{label}{t _email}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('email', '_email') ]]
 
 	{include file="backend/eav/fields.tpl" item=$someUser}
 

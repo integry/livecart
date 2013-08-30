@@ -34,10 +34,7 @@
 			<fieldset id="addform style="display: none;">
 				{form action="controller=backend.theme action=add" method="POST" handle=$addForm onsubmit="pageHandler.addTheme(); return false;"}
 
-					{input name="name"}
-						{label}{t _theme_name}:{/label}
-						{textfield class="text themeName"}
-					{/input}
+					[[ textfld('name', '_theme_name', class: 'text themeName') ]]
 
 					<div>
 						<span class="progressIndicator" style="display: none;"></span>
@@ -77,10 +74,7 @@
 			<fieldset id="copyform style="display: none;">
 				{form action="controller=backend.theme action=copyTheme" method="POST" handle=$copyForm onsubmit="pageHandler.copyTheme(); return false;"}
 					<input type="hidden" name="id" value="" id="copyFromID" />
-					{input name="name"}
-						{label}{t _theme_name}:{/label}
-						{textfield class="text themeName"}
-					{/input}
+					[[ textfld('name', '_theme_name', class: 'text themeName') ]]
 
 					<div>
 						<span class="progressIndicator" id="copyFormProgressIndicator" style="display: none;"></span>

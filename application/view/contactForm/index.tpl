@@ -5,28 +5,16 @@
 {% block content %}
 
 {form action="controller=contactForm action=send" method="POST" id="contactForm" handle=$form style="float: left;"}
-	{input name="name"}
-		{label}{t _your_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_your_name') ]]
 
 	{* anti-spam *}
 	<div style="display: none;">
-		{input name="surname"}
-			{label}{t surname}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('surname', 'surname') ]]
 	</div>
 
-	{input name="email"}
-		{label}{t _your_email}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('email', '_your_email') ]]
 
-	{input name="msg"}
-		{label}{t _your_message}:{/label}
-		{textarea}
-	{/input}
+	[[ textareafld('msg', '_your_message') ]]
 
 	{block FORM-SUBMIT-CONTACT}
 

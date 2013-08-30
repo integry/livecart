@@ -20,40 +20,19 @@
 	<fieldset>
 		<legend>{t _begin_import}</legend>
 
-		{input name="cart"}
-			{label}{t _shopping_cart}:{/label}
-			{selectfield options=$carts}
-		{/input}
+		[[ selectfld('cart', '_shopping_cart', carts) ]]
 
-		{input name="dbType"}
-			{label}{t _database_type}:{/label}
-			{selectfield options=$dbTypes}
-		{/input}
+		[[ selectfld('dbType', '_database_type', dbTypes) ]]
 
-		{input name="dbServer"}
-			{label}{t _database_server}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('dbServer', '_database_server') ]]
 
-		{input name="dbName"}
-			{label}{t _database_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('dbName', '_database_name') ]]
 
-		{input name="dbUser"}
-			{label}{t _database_user}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('dbUser', '_database_user') ]]
 
-		{input name="dbPass"}
-			{label}{t _database_pass}:{/label}
-			{textfield type="password"}
-		{/input}
+		[[ pswfld('dbPass', '_database_pass') ]]
 
-		{input name="filePath"}
-			{label}{t _file_path}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('filePath', '_file_path') ]]
 	</fieldset>
 
 	<fieldset class="controls">

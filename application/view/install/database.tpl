@@ -17,15 +17,9 @@
 		<div style="margin-top: -5px;"><small>Usually <em>localhost</em></small></div>
 	{/input}
 
-	{input name="name"}
-		{label}{t _db_name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_db_name') ]]
 
-	{input name="username"}
-		{label}{t _db_username}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('username', '_db_username') ]]
 
 	{input name="password"}
 		{label}{t _db_pass}:{/label}

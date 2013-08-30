@@ -51,15 +51,9 @@
 
 					<p>{t _add_page_to_menu}</p>
 
-					{input name="menuInformation"}
-						{checkbox}
-						{label}{t _information_menu}{/label}
-					{/input}
+					[[ checkbox('menuInformation', '_information_menu') ]]
 
-					{input name="menuRootCategories"}
-						{checkbox}
-						{label}{t _main_header_menu}{/label}
-					{/input}
+					[[ checkbox('menuRootCategories', '_main_header_menu') ]]
 
 					{input name="handle"}
 						{label}{t _handle}:{/label}
@@ -67,32 +61,29 @@
 					{/input}
 
 					{input name="text"}
-						{label class="wide"}{t _text}:{/label}
+						{label}{t _text}:{/label}
 						<div class="textarea" id="textContainer">
 							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
 						</div>
 					{/input}
 
 					{input name="metaDescription"}
-						{label class="wide"}{t _meta_description}:{/label}
+						{label}{t _meta_description}:{/label}
 						{textarea style="width: 100%; height: 4em;"}
 					{/input}
 
 					{include file="backend/eav/fields.tpl" item=$page angular="instance"}
 
 					{language}
-						{input name="title_`$lang.ID`"}
-							{label}{t _title}:{/label}
-							{textfield class="wider"}
-						{/input}
+						[[ textfld('title_`$lang.ID`', '_title', class: 'wider') ]]
 
 						{input name="text_`$lang.ID`"}
-							{label class="wide"}{t _text}:{/label}
+							{label}{t _text}:{/label}
 							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
 						{/input}
 
 						{input name="metaDescription_`[[lang.ID]]`"}
-							{label class="wide"}{t _meta_description}:{/label}
+							{label}{t _meta_description}:{/label}
 							{textarea style="width: 100%; height: 4em;"}
 						{/input}
 

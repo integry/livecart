@@ -7,10 +7,7 @@
 		{selectfield options=$allTypes class="observed"}
 	{/input}
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield class="observed countriesAndStates_name"}
-	{/input}
+	[[ textfld('name', '_name', class: 'observed countriesAndStates_name') ]]
 
 	{input name="isEnabled"}
 		{checkbox class="checkbox observed"}

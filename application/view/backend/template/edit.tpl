@@ -7,10 +7,7 @@
 	</div>
 
 	{if $new || $template.isCustomFile}
-		{input name="fileName"}
-			{label}{t _template_file_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('fileName', '_template_file_name') ]]
 	{/if}
 	<input type="hidden" value="[[tabid]]" name="tabid" />
 

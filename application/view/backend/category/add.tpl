@@ -2,10 +2,7 @@
 	{form model="category" ng_submit="submit(form)" handle=$form}
 		<dialog-header>{t _add_category}</dialog-header>
 		<dialog-body>
-			{input name="name"}
-				{label}{t _category_name}{/label}
-				{textfield}
-			{/input}
+			[[ textfld('name', '_category_name') ]]
 		</dialog-body>
 		<dialog-footer>
 			<dialog-cancel>{t _cancel}</dialog-cancel>

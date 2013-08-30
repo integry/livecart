@@ -8,10 +8,7 @@
 {form handle=$form action="controller=backend.cssEditor action=save" method="POST" class="templateform" id="templateForm_`$tabid`"}
 
 	{if $new || $template.isCustomFile}
-		{input name="fileName"}
-			{label}{t _template_file_name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('fileName', '_template_file_name') ]]
 	{/if}
 
 	<div class="minimenu" id="minimenu_[[tabid]]">

@@ -11,20 +11,14 @@
 	{hidden name="ID"}
 	{hidden name="productID"}
 
-	{input name="name"}
-		{label}{t _name}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('name', '_name') ]]
 
 	{input name="periodLength"}
 		{label}{t _period_length}:{/label}
 		{textfield name="periodLength" class="number"} {selectfield name="periodType" options=$periodTypes}
 	{/input}
 
-	{input name="rebillCount"}
-		{label}{t _rebill_count}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('rebillCount', '_rebill_count') ]]
 
 	{foreach $currencies as $currency}
 		{input name="ProductPrice_setup_price_`$currency`"}
@@ -40,16 +34,10 @@
 		{/input}
 	{/foreach}
 
-	{input name="description"}
-		{label}{t _description}:{/label}
-		{textarea}
-	{/input}
+	[[ textareafld('description', '_description') ]]
 
 	{language}
-		{input name="name_`$lang.ID`"}
-			{label}{t _name}:{/label}
-			{textfield}
-		{/input}
+		[[ textfld('name_`$lang.ID`', '_name') ]]
 
 		{input name="description_`$lang.ID`"}
 			{label}{t _description}:{/label}

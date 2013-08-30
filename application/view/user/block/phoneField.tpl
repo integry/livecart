@@ -1,6 +1,3 @@
 {if $fields.PHONE}
-	{input name="`$prefix`phone"}
-		{label}{t _your_phone}:{/label}
-		{textfield}
-	{/input}
+	[[ textfld('`$prefix`phone', '_your_phone') ]]
 {/if}
