@@ -17,7 +17,7 @@
 
 {include file="backend/csvImport/wizardProgress.tpl" class="stepSelect"}
 
-{form action="controller=backend.csvImport action=setFile" method="POST" handle=$form}
+{form action="backend.csvImport/setFile" method="POST" handle=$form}
 
 	<fieldset>
 		<legend>{t _data_type}</legend>

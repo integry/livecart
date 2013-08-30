@@ -157,7 +157,7 @@
 	{block TRANSLATIONS}
 
 </head>
-<body class="{$request.controller|replace:'.':'-'}Con {$request.controller|replace:'.':'-'}-[[request.action]] ui-widget">
+<body class="{req('controller')|replace:'.':'-'}Con {req('controller')|replace:'.':'-'}-[[request.action]] ui-widget">
 <div id="confirmations" class="messagesList" app-messages></div>
 <script type="text/javascript">
 {literal}

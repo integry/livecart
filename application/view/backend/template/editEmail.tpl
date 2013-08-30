@@ -2,7 +2,7 @@
 	[[displayFileName]]
 </h1>
 
-{form handle=$form action="controller=backend.template action=saveEmail" method="POST" class="templateForm" id="templateForm_`$tabid`"}
+{form handle=$form action="backend.template/saveEmail" method="POST" class="templateForm" id="templateForm_`$tabid`"}
 
 	{if !$template.isFragment}
 	<p>

@@ -11,7 +11,7 @@
 
 	<legend>{t _add_rating_type|capitalize}</legend>
 
-	{form action="controller=backend.ratingType action=add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeform}
+	{form action="backend.ratingType/add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeform}
 		<input type="hidden" name="categoryId" value="[[id]]" />
 		<input type="hidden" name="id" />
 

@@ -1,5 +1,5 @@
 <!--
-{form action="controller=order action=update" method="POST" handle=$form id="cartItems"}
+{form action="order/update" method="POST" handle=$form id="cartItems"}
 -->
 
 {foreach from=$options[$item.ID] item=option}

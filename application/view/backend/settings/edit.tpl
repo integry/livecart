@@ -1,4 +1,4 @@
-{form action="controller=backend.settings action=save" class="form-vertical" method="post" handle=$form onsubmit="return settings.save(this);" role="settings.update" id="settings" type="multipart/form-data" target="upload"}
+{form action="backend.settings/save" class="form-vertical" method="post" handle=$form onsubmit="return settings.save(this);" role="settings.update" id="settings" type="multipart/form-data" target="upload"}
 
 {foreach from=$layouts key=sectionId item=layout name="groups"}
 {foreach from=$layout key=groupName item=fields name="groups"}

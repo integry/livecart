@@ -3,7 +3,7 @@
 	{assign var="extraColspanSize" value=1+$extraColspanSize}
 {/if}
 
-{form action="controller=order action=update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
+{form action="order/update" method="POST" enctype="multipart/form-data" handle=$form id="cartItems"}
 
 {if $cart.wishListItems}
 	<h2>{t _cart_items}</h2>

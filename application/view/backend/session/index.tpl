@@ -10,7 +10,7 @@
 </div>
 
 <div id="loginContainer">
-{if $request.failed}
+{if req('failed')}
 	<div class="loginFailed">{t _login_failed}</div>
 {/if}
 <form action="{link controller="backend.session" action=doLogin}" method="post" />

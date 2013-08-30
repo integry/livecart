@@ -5,7 +5,7 @@
 {include file="user/userMenu.tpl" current="passwordMenu"}
 {% block content %}
 
-	{form action="controller=user action=doChangePassword" method="POST" handle=$form class="form-horizontal"}
+	{form action="user/doChangePassword" method="POST" handle=$form class="form-horizontal"}
 
 		[[ pswfld('currentpassword', '_current_pass') ]]
 

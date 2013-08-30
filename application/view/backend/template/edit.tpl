@@ -1,5 +1,5 @@
 <h1>[[fileName]]</h1>
-{form handle=$form action="controller=backend.template action=save" method="POST" class="templateForm" id="templateForm_`$tabid`"}
+{form handle=$form action="backend.template/save" method="POST" class="templateForm" id="templateForm_`$tabid`"}
 	<div class="minimenu" id="minimenu_[[tabid]]">
 		<span class="progressIndicator" style="display:none;"></span>
 		{selectfield class="version" id="version_`$tabid`" options=$template.backups}

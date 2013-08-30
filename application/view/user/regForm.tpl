@@ -1,33 +1,4 @@
-{%- macro startinput(field, type) %}
-	<div class="row">
-{%- endmacro %}
-
-{%- macro endinput() %}
-	</div>
-{%- endmacro %}
-
-{%- macro textfld(field, title, class = '') %}
-    [[ startinput(field, 'textfld') ]]
-        <label>[[ t(title) ]]</label>
-        [[ text_field(field, 'class': class) ]]
-    [[ endinput() ]]
-{%- endmacro %}
-
-{%- macro pwdfld(field, title) %}
-    [[ startinput(field, 'pwdfld') ]]
-        <label>[[ t(title) ]]</label>
-        [[ password_field(field) ]]
-    [[ endinput() ]]
-{%- endmacro %}
-
-{%- macro selectfld(field, title, options) %}
-    [[ startinput(field, 'selectfld') ]]
-        <label>[[ t(title) ]]</label>
-        [[ select(field, options) ]]
-    [[ endinput() ]]
-{%- endmacro %}
-
-{form action="controller=user action=doRegister" method="POST" handle=$regForm class="form-horizontal"}
+<form action="user/doRegister" method="POST" handle=$regForm>
 
 	[[ textfld('firstName', '_your_first_name') ]]
 
@@ -43,8 +14,8 @@
 
 	{block FORM-SUBMIT-REGISTER}
 
-	{include file="block/submit.tpl" caption="_complete_reg" cancelHref=$request.return}
+	{include file="block/submit.tpl" caption="_complete_reg" cancelHref=req('return')}
 
-	<input type="hidden" name="return" value="{$request.return|escape}" />
+	<input type="hidden" name="return" value="{req('return')|escape}" />
 
-{/form}
+</form>

@@ -5,7 +5,7 @@
 
 	<div class="accordion-body">
 		<div class="accordion-inner">
-			{form action="controller=onePageCheckout action=doSelectShippingAddress" method="POST" handle=$form class="form-vertical"}
+			{form action="onePageCheckout/doSelectShippingAddress" method="POST" handle=$form class="form-vertical"}
 				{if !$order.isMultiAddress}
 					<div class="checkbox">
 						<label>

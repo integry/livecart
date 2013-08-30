@@ -22,7 +22,7 @@
 	<div id="pageTitle">[[PAGE_TITLE]]</div>
 </div>
 
-{form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm" class="templateForm"}
+{form handle=$form action="backend.template/save" method="POST" id="templateForm" class="templateForm"}
 
 	{textarea name="code" class="code" id="code_undefined"}
 

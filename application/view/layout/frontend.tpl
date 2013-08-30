@@ -1,6 +1,8 @@
+[[ partial("macro/form.tpl") ]]
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<base href="/livecart2/public/"></base>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
@@ -8,20 +10,22 @@
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>
+		<link href="upload/css/mrfeedback.css" rel="stylesheet"></link>
 
 		{% block head %}{% endblock %}
 		<title>{% block title %}{% endblock %}</title>
-		<base href="/livecart2/public/"></base>
 	</head>
 	<body>
-		{% block header %}[[ partial("layout/frontend/header.tpl") ]]{% endblock %}
-		{% block left %}[[ partial("layout/frontend/leftSide.tpl") ]]{% endblock %}
-		{% block right %}[[ partial("layout/frontend/rightSide.tpl") ]]{% endblock %}
+		<div id="container" class="container">
+			{% block header %}[[ partial("layout/frontend/header.tpl") ]]{% endblock %}
+			{% block left %}[[ partial("layout/frontend/leftSide.tpl") ]]{% endblock %}
+			{% block right %}[[ partial("layout/frontend/rightSide.tpl") ]]{% endblock %}
 
-		{% block contentstart %}[[ partial("block/content-start.tpl") ]]{% endblock %}
-			{% block content %}{% endblock %}
-		{% block contentend %}[[ partial("block/content-stop.tpl") ]]{% endblock %}
+			{% block contentstart %}[[ partial("block/content-start.tpl") ]]{% endblock %}
+				{% block content %}{% endblock %}
+			{% block contentend %}[[ partial("block/content-stop.tpl") ]]{% endblock %}
 
-		{% block footer %}{% endblock %}
+			{% block footer %}{% endblock %}
+		</div>
 	</body>
 </html>

@@ -1,6 +1,6 @@
 <span id="newslettersMass_0" class="activeGridMass">
 
-	{form action="controller=backend.newsletter action=processMass" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="backend.newsletter/processMass" method="POST" handle=$massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />

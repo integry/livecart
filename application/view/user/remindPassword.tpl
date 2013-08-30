@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	{form action="controller=user action=doRemindPassword" method="post"  class="form-horizontal" handle=$form}
+	{form action="user/doRemindPassword" method="post"  class="form-horizontal" handle=$form}
 		[[ textfld('email', '_your_email') ]]
 
 		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return cancel=user}

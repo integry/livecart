@@ -64,7 +64,7 @@
 
 	<div class="clear"></div>
 {else}
-	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" id="paymentError" class="form-horizontal"}
+	{form action="checkout/payCreditCard" handle=$ccForm method="POST" id="paymentError" class="form-horizontal"}
 		{error for="creditCardError"}
 			<div class="clear"></div>
 			<div class="errorMsg ccPayment">

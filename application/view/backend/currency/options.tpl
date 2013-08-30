@@ -2,7 +2,7 @@
 	<div>{t _opts_save_conf}</div>
 </div>
 
-{form id="options" handle=$form action="controller=backend.currency action=saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
+{form id="options" handle=$form action="backend.currency/saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
 
 	[[ checkbox('updateCb', '_update_auto') ]]
 

@@ -2,7 +2,7 @@
 
 <div>
 
-	{form action="controller=install action=setDatabase" method="POST" handle=$form class="form-horizontal"}
+	{form action="install/setDatabase" method="POST" handle=$form class="form-horizontal"}
 
 	{error for="connect"}
 		<div class="fail" style="float: left;">

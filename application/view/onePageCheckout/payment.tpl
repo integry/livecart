@@ -5,7 +5,7 @@
 
 	<div class="accordion-body">
 		<div class="accordion-inner">
-			{form action="controller=onePageCheckout action=setPaymentMethod" method="POST" handle=$form id="checkout-select-payment-method" class="form-horizontal"}
+			{form action="onePageCheckout/setPaymentMethod" method="POST" handle=$form id="checkout-select-payment-method" class="form-horizontal"}
 				<p class="selectMethodMsg">
 					{t _select_payment_method}
 				</p>

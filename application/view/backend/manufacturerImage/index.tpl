@@ -31,7 +31,7 @@
 {/literal}
 
 <div id="manImgAdd_[[ownerId]]" class="manImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.manufacturerImage action=upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
+{form handle=$form action="backend.manufacturerImage/upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 
 	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />

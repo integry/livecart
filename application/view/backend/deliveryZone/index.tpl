@@ -36,7 +36,7 @@
 		<div id="testAddressForm" style="display: none;">
 			<fieldset>
 				<legend>{t _test_which_zone}</legend>
-				{form action="controller=backend.deliveryZone action=testAddress" method="post" handle=$testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
+				{form action="backend.deliveryZone/testAddress" method="post" handle=$testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
 
 					{input name="ccCVV"}
 						{label}{t _zone_type}:{/label}

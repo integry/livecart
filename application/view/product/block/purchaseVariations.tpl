@@ -10,7 +10,7 @@
 {/if}
 
 {% set parentProduct = $product %}
-{form action="controller=order action=addToCart" handle=$cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
+{form action="order/addToCart" handle=$cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
 	{foreach $variations.products as $product}
 		<h3>{$product.variationNames|@implode:' / '}</h3>
 

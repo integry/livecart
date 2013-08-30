@@ -2,7 +2,7 @@
 
 {assign var="fields" value='USER_FIELDS'|config}
 
-{if $request.action == 'checkout'}
+{if req('action') == 'checkout'}
 	{% block title %}{t _order_checkout}{{% endblock %}
 {else}
 	{% block title %}{t _user_registration}{{% endblock %}
@@ -14,7 +14,7 @@
 	<div class="returningCustomer">
 		<h2>{t _returning}</h2>
 
-		{if $request.action == 'checkout'}
+		{if req('action') == 'checkout'}
 		<p>
 			{t _please_login}
 		</p>
@@ -27,7 +27,7 @@
 	<div class="newCustomer">
 		<h2>{t _new_cust}</h2>
 
-		{form handle=$form action="controller=user action=processCheckoutRegistration" method="POST" class="form-horizontal"}
+		{form handle=$form action="user/processCheckoutRegistration" method="POST" class="form-horizontal"}
 
 			{if !'REQUIRE_SAME_ADDRESS'|config}
 				<h3>{t _contact_info}</h3>

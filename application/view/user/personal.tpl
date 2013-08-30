@@ -6,7 +6,7 @@
 {include file="user/userMenu.tpl" current="personalMenu"}
 {% block content %}
 
-	{form class="form-horizontal" action="controller=user action=savePersonal" method="POST" handle=$form class="form-horizontal"}
+	{form class="form-horizontal" action="user/savePersonal" method="POST" handle=$form class="form-horizontal"}
 
 		[[ textfld('firstName', '_your_first_name') ]]
 

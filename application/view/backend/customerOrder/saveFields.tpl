@@ -18,7 +18,7 @@
 		{/if}
 	</div>
 
-	{form handle=$fieldsForm action="controller=backend.customerOrder action=saveFields" method="POST"}
+	{form handle=$fieldsForm action="backend.customerOrder/saveFields" method="POST"}
 		{include file="backend/eav/fields.tpl" item=$order}
 		<input type="hidden" name="id" value="[[order.ID]]" />
 		<fieldset class="controls">

@@ -5,7 +5,7 @@
 		</ul>
 	</fieldset>
 
-	{form handle=$form action="controller=backend.newsletter action=save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
+	{form handle=$form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
 
 		<fieldset>
 			<legend>{t _create_message|capitalize}</legend>

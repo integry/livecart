@@ -1,4 +1,4 @@
-{form action="controller=backend.theme action=saveSettings" handle=$form onsubmit="new LiveCart.AjaxRequest(this); return false;"}
+{form action="backend.theme/saveSettings" handle=$form onsubmit="new LiveCart.AjaxRequest(this); return false;"}
 	<fieldset>
 		<legend>{t _parent_themes}</legend>
 		{section name="parents" start=1 loop=4}

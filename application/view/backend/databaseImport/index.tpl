@@ -15,7 +15,7 @@
 <p class="importWarning">{t _import_warning|branding}</p>
 
 <div id="import">
-{form action="controller=backend.databaseImport action=import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
+{form action="backend.databaseImport/import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
 
 	<fieldset>
 		<legend>{t _begin_import}</legend>

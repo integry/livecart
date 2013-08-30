@@ -8,7 +8,7 @@
 
 		<p class="subscribeInfo">{t _subscribe_info}</p>
 
-		{form handle=$form action="controller=newsletter action=subscribe" method="POST" class="form-horizontal"}
+		{form handle=$form action="newsletter/subscribe" method="POST" class="form-horizontal"}
 			{input name="email"}
 				<div class="input-group">
 					{textfield placeholder="_email_placeholder" noFormat=true}

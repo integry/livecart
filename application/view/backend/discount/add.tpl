@@ -2,7 +2,7 @@
 	<li class="done"><a href="#cancelEditing" id="cancel_discount_add" class="cancel">{t _cancel_adding_rule}</a></li>
 </ul>
 
-{form action="controller=backend.discount action=save" method="POST" id="discountAddForm" handle=$form}
+{form action="backend.discount/save" method="POST" id="discountAddForm" handle=$form}
 	<fieldset>
 		<legend>{t _create_rule|capitalize}</legend>
 

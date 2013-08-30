@@ -11,7 +11,7 @@
 </fieldset>
 
 <div id="themeFileForm_[[theme]]" class="slideForm addForm" style="display: none;">
-	{form handle=$form action="controller=backend.themeFile action=upload"
+	{form handle=$form action="backend.themeFile/upload"
 		onsubmit=""
 		target="fileUpload_`$theme`" method="POST" enctype="multipart/form-data"
 		autocomplete="off"

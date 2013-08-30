@@ -3,7 +3,7 @@
 <div id="license">{$license|nl2br}</div>
 
 <div>
-	{form action="controller=install action=acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
+	{form action="install/acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
 {literal}
 	<fieldset class="error">
 		<p id="agreeContainer" onclick="if (Event.element(event) != $('accept')) { $('accept').click(); }">

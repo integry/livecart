@@ -16,7 +16,7 @@
 
 	<div id="shippingSelect">
 
-		{form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form class="form-horizontal"}
+		{form action="checkout/doSelectShippingMethod" method="POST" handle=$form class="form-horizontal"}
 			{foreach from=$shipments key="key" item="shipment"}
 
 				{if $order.isMultiAddress}

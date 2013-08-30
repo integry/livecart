@@ -50,7 +50,7 @@
 	{assign var=dataFormatter value="Backend.CustomerOrder.GridFormatter"};
 {/if}
 
-{if $request.userOrderID}
+{if req('userOrderID')}
 	Backend.User.OrderGridFormatter = Backend.CustomerOrder.GridFormatter;
 {/if}
 

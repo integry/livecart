@@ -12,7 +12,7 @@
 {assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
 {php}$GLOBALS['cartUpdate'] = $smarty->getTemplateVars('cartUpdate'); $smarty->assignByRef('GLOBALS', $GLOBALS);{/php}
 
-{form action="controller=onePageCheckout action=updateCart" method="POST" enctype="multipart/form-data" handle=$form id="cartItems" class="form-horizontal"}
+{form action="onePageCheckout/updateCart" method="POST" enctype="multipart/form-data" handle=$form id="cartItems" class="form-horizontal"}
 <table id="cart">
 	<thead>
 		<tr>

@@ -66,7 +66,7 @@
 
 {include file="backend/csvImport/wizardProgress.tpl" class="stepDelimiters"}
 
-{form action="controller=backend.csvImport action=preview" method="POST" id="delimitersform handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
+{form action="backend.csvImport/preview" method="POST" id="delimitersform handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
 
 	<div id="import">
 

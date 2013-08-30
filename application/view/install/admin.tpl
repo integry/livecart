@@ -2,7 +2,7 @@
 
 <div>
 
-	{form action="controller=install action=setAdmin" method="POST" handle=$form class="form-horizontal"}
+	{form action="install/setAdmin" method="POST" handle=$form class="form-horizontal"}
 
 		[[ textfld('firstName', '_first_name') ]]
 

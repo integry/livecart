@@ -5,7 +5,7 @@
 {include file="user/userMenu.tpl" current="addressMenu"}
 {% block content %}
 
-	{form action="controller=user action=doAddBillingAddress" handle=$form class="form-horizontal"}
+	{form action="user/doAddBillingAddress" handle=$form class="form-horizontal"}
 		[[ partial("user/addressForm.tpl") ]]
 
 		{include file="block/submit.tpl" caption="_continue" cancelRoute=$return class="form-horizontal"}

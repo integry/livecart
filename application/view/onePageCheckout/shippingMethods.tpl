@@ -6,7 +6,7 @@
 	<div class="accordion-body">
 		<div class="accordion-inner">
 			<div class="form">
-				{form action="controller=onePageCheckout action=doSelectShippingMethod" method="POST" handle=$form}
+				{form action="onePageCheckout/doSelectShippingMethod" method="POST" handle=$form}
 					{foreach from=$shipments key="key" item="shipment"}
 
 						{if $shipment.isShippable}

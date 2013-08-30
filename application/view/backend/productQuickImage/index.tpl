@@ -1,5 +1,5 @@
 <div id="prodImgAdd_[[ownerId]]" class="prodImageEditForm">
-{form handle=$form action="controller=backend.productQuickImage action=upload" method="post" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
+{form handle=$form action="backend.productQuickImage/upload" method="post" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
 	<fieldset class="addForm">

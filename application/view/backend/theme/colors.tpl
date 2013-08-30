@@ -8,7 +8,7 @@
 >{t _notice_changes_in_css_tab}</div>
 
 
-{form action="controller=backend.theme action=saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
+{form action="backend.theme/saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
 	{foreach from=$config item=section}
 		<fieldset>
 			<legend>[[section.name]]</legend>

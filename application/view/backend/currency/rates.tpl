@@ -1,5 +1,5 @@
 <div id="currencyRateList">
-{form id="rateform" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="curr.saveRates(this); return false;" role="currency.update"}
+{form id="rateform" handle=$rateForm action="backend.currency/saveRates" method="post" onsubmit="curr.saveRates(this); return false;" role="currency.update"}
 
 	<fieldset id="rates">
 		{foreach from=$currencies key=key item=item}

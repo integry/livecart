@@ -1,4 +1,4 @@
-{form handle=$form action="controller=backend.user action=update" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
+{form handle=$form action="backend.user/update" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
 	[[ checkbox('isEnabled', '_is_enabled') ]]
 
 	[[ selectfld('UserGroup', '_user_group', availableUserGroups) ]]

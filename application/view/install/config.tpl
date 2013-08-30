@@ -4,7 +4,7 @@
 	This step allows you to configure the most important aspects of your store. <Br />More configuration options will be available after the installation is completed.
 </p>
 
-{form action="controller=install action=setConfig" method="POST" handle=$form class="form-horizontal"}
+{form action="install/setConfig" method="POST" handle=$form class="form-horizontal"}
 	[[ textfld('name', '_store_name') ]]
 
 	[[ selectfld('language', '_base_language', languages) ]]

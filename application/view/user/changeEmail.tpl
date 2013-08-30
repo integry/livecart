@@ -5,7 +5,7 @@
 {include file="user/userMenu.tpl" current="emailMenu"}
 {% block content %}
 
-	{form action="controller=user action=doChangeEmail" method="POST" handle=$form class="form-horizontal"}
+	{form action="user/doChangeEmail" method="POST" handle=$form class="form-horizontal"}
 
 		{input}
 			{label}{t _current_email}:{/label}

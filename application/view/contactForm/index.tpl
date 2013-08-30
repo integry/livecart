@@ -4,7 +4,7 @@
 
 {% block content %}
 
-{form action="controller=contactForm action=send" method="POST" id="contactForm" handle=$form style="float: left;"}
+{form action="contactForm/send" method="POST" id="contactForm" handle=$form style="float: left;"}
 	[[ textfld('name', '_your_name') ]]
 
 	{* anti-spam *}

@@ -5,7 +5,7 @@
 	class="warning cssAndStyleTab" id="notice_changes_colors_and_styles_tab_[[tabid]]" style="display:none;"
 >{t _notice_changes_colors_and_styles_tab}</div>
 
-{form handle=$form action="controller=backend.cssEditor action=save" method="POST" class="templateform" id="templateForm_`$tabid`"}
+{form handle=$form action="backend.cssEditor/save" method="POST" class="templateform" id="templateForm_`$tabid`"}
 
 	{if $new || $template.isCustomFile}
 		[[ textfld('fileName', '_template_file_name') ]]

@@ -1,6 +1,6 @@
 <ul class="menu">
 	<li>
-		{form handle=$form class="orderStatus" action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$form class="orderStatus" action="backend.customerOrder/update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
 			{hidden name="ID"}
 			{hidden name="isCancelled"}
 				<label for="order_[[order.ID]]_status" style="width: auto; float: none;">{t _status}: </label>
@@ -57,7 +57,7 @@
 
 <div class="addressContainer">
 	{if $formShippingAddress || !$formBillingAddress}
-		{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formShippingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_shippingAddress">
 				<legend>{t _shipping_address}</legend>
 				{include file="backend/customerOrder/address.tpl" type="order_`$order.ID`_shippingAddress" address=$order.ShippingAddress states=$shippingStates order=$order}
@@ -65,7 +65,7 @@
 		{/form}
 	{/if}
 	{if $formBillingAddress || !$formShippingAddress}
-		{form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=$formBillingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_billingAddress">
 				<legend>{t _billing_address}</legend>
 				{include file="backend/customerOrder/address.tpl" type="order_`$order.ID`_billingAddress" address=$order.BillingAddress states=$billingStates order=$order}
@@ -110,7 +110,7 @@
 				<span id="dateCreatedVisible">[[order.dateCompleted]]</span>
 			</label>
 
-			{form id="calendarform" handle=$dateForm class="hidden" action="controller=backend.customerOrder action=updateDate" method="POST"}
+			{form id="calendarform" handle=$dateForm class="hidden" action="backend.customerOrder/updateDate" method="POST"}
 				{calendar name="dateCompleted" id="dateCompleted"}
 
 				<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>

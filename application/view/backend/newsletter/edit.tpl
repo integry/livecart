@@ -1,4 +1,4 @@
-{form handle=$form action="controller=backend.newsletter action=save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
+{form handle=$form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
 <div class="newsletterform">
 
 	{hidden name="id" value=$newsletter.ID}

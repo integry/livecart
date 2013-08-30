@@ -1,6 +1,6 @@
 <span class="activeGridMass" {denied role="product.mass"}style="visibility: hidden;"{/denied} id="manufacturerMass" >
 
-	{form action="controller=backend.manufacturer action=processMass" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="backend.manufacturer/processMass" method="POST" handle=$massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />
