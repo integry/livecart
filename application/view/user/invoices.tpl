@@ -5,7 +5,7 @@
 [[ partial('user/userMenu.tpl', ['current': "invoicesMenu"]) ]]
 {% block content %}
 
-	[[ partial('user/invoicesTable.tpl', ['itemList': $orders, 'paginateAction': "invoices", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': 0, 'query': '']) ]]
+	[[ partial('user/invoicesTable.tpl', ['itemList': orders, 'paginateAction': "invoices", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': 0, 'query': '']) ]]
 
 {% endblock %}
 

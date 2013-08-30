@@ -15,7 +15,7 @@
 		[[ textareafld('text', '_text') ]]
 	</p>
 
-	[[ partial('backend/eav/fields.tpl', ['item': $review]) ]]
+	[[ partial('backend/eav/fields.tpl', ['item': review]) ]]
 
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>

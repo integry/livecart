@@ -52,7 +52,7 @@
 				<p>
 				<fieldset class="container">
 					<p class="recipientCount">
-						[[ partial('backend/newsletter/recipientCount.tpl', ['count': $recipientCount]) ]]
+						[[ partial('backend/newsletter/recipientCount.tpl', ['count': recipientCount]) ]]
 					</p>
 				</fieldset>
 

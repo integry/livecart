@@ -18,7 +18,7 @@
 	<div class="clear"></div>
 
 	<label class="title">{t _order_status}:</label>
-	<label class="text">[[ partial('user/orderStatus.tpl', ['order': $order]) ]]</label>
+	<label class="text">[[ partial('user/orderStatus.tpl', ['order': order]) ]]</label>
 	<div class="clear"></div>
 
 	{% if $order.isRecurring %}
@@ -83,7 +83,7 @@
 			{% elseif $smarty.foreach.shipments.total > 1 %}
 				<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				<p>
-					{t _status}: [[ partial('user/shipmentStatus.tpl', ['shipment': $shipment]) ]]
+					{t _status}: [[ partial('user/shipmentStatus.tpl', ['shipment': shipment]) ]]
 				</p>
 			{% else %}
 				<h2>{t _ordered_products}</h2>
@@ -153,7 +153,7 @@
 
 	{% if $order.isRecurring && $orders %}
 		<h2>{t _invoices}</h2>
-		[[ partial('user/invoicesTable.tpl', ['itemList': $orders, 'paginateAction': "viewOrder", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': $order.ID, 'query': 'page=_000_']) ]]
+		[[ partial('user/invoicesTable.tpl', ['itemList': orders, 'paginateAction': "viewOrder", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': order.ID, 'query': 'page=_000_']) ]]
 	{% endif %}
 
 	<h2 id="m_s_g">{t _support}</h2>
@@ -162,7 +162,7 @@
 	{% if $notes %}
 	   <ul class="notes">
 		   {foreach from=$notes item=note}
-			   [[ partial('user/orderNote.tpl', ['note': $note]) ]]
+			   [[ partial('user/orderNote.tpl', ['note': note]) ]]
 		   {/foreach}
 	   </ul>
 	{% endif %}

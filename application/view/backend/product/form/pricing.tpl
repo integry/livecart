@@ -17,7 +17,7 @@
 			</div>
 		{/input}
 
-		[[ partial('backend/product/form/quantityPricing.tpl', ['currency': $baseCurrency]) ]]
+		[[ partial('backend/product/form/quantityPricing.tpl', ['currency': baseCurrency]) ]]
 	</div>
 	</div>
 
@@ -39,7 +39,7 @@
 				</div>
 			{/input}
 
-			[[ partial('backend/product/form/quantityPricing.tpl', ['currency': $currency]) ]]
+			[[ partial('backend/product/form/quantityPricing.tpl', ['currency': currency]) ]]
 		</div>
 		</div>
 

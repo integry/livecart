@@ -21,16 +21,16 @@
 
 		<input type="hidden" name="categoryID" value="[[product.Category.ID]]" />
 
-		[[ partial('backend/product/form/main.tpl', ['product': $product, 'cat': $cat, 'productTypes': $productTypes]) ]]
+		[[ partial('backend/product/form/main.tpl', ['product': product, 'cat': cat, 'productTypes': productTypes]) ]]
 		{% if $specFieldList %}
 			<div class="specFieldContainer">
-			[[ partial('backend/product/form/specFieldList.tpl', ['product': $product, 'cat': $cat, 'specFieldList': $specFieldList]) ]]
+			[[ partial('backend/product/form/specFieldList.tpl', ['product': product, 'cat': cat, 'specFieldList': specFieldList]) ]]
 			</div>
 		{% endif %}
 
-		[[ partial('backend/product/form/inventory.tpl', ['product': $product, 'cat': $cat, 'baseCurrency': $baseCurrency, 'form': $productForm]) ]]
-		[[ partial('backend/product/form/pricing.tpl', ['product': $product, 'cat': $cat, 'baseCurrency': $baseCurrency]) ]]
-		[[ partial('backend/product/form/shipping.tpl', ['product': $product, 'cat': $cat, 'baseCurrency': $baseCurrency]) ]]
+		[[ partial('backend/product/form/inventory.tpl', ['product': product, 'cat': cat, 'baseCurrency': baseCurrency, 'form': productForm]) ]]
+		[[ partial('backend/product/form/pricing.tpl', ['product': product, 'cat': cat, 'baseCurrency': baseCurrency]) ]]
+		[[ partial('backend/product/form/shipping.tpl', ['product': product, 'cat': cat, 'baseCurrency': baseCurrency]) ]]
 
 		<fieldset class="productImages">
 			<legend>{t _image}</legend>
@@ -63,7 +63,7 @@
 			</script>
 		</fieldset>
 
-		[[ partial('backend/product/form/translations.tpl', ['product': $product, 'cat': $cat, 'multiLingualSpecFields': $languageList]) ]]
+		[[ partial('backend/product/form/translations.tpl', ['product': product, 'cat': cat, 'multiLingualSpecFields': languageList]) ]]
 
 
 		<fieldset class="controls">

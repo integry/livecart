@@ -192,7 +192,7 @@
 	<fieldset id="preview">
 		<legend>{maketext text=_preview_count params="`$previewCount`,`$total`"}</legend>
 			<div id="previewContainer">
-				[[ partial('backend/csvImport/preview.tpl', ['preview': $preview]) ]]
+				[[ partial('backend/csvImport/preview.tpl', ['preview': preview]) ]]
 			</div>
 	</fieldset>
 

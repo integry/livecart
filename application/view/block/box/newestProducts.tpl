@@ -4,7 +4,7 @@
 	</div>
 
 	<div class="content">
-		[[ partial('block/box/menuProductList.tpl', ['products': $products]) ]]
+		[[ partial('block/box/menuProductList.tpl', ['products': products]) ]]
 	</div>
 
 	<div class="clear"></div>

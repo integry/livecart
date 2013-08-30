@@ -7,7 +7,7 @@
 
 <fieldset id="tax_new_form" style="display: none;" class="addForm">
 	<legend>{t _add_new_tax|capitalize}</legend>
-	[[ partial('backend/tax/tax.tpl', ['tax': $newTax, 'taxForm': $newTaxForm]) ]]
+	[[ partial('backend/tax/tax.tpl', ['tax': newTax, 'taxForm': newTaxForm]) ]]
 </fieldset>
 
 <ul class="activeList {allowed role="taxes.remove"}activeList_add_delete activeList_add_sort{/allowed} activeList_add_edit tax_taxesList" id="tax_taxesList" >

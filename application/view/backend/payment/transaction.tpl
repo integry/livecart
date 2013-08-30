@@ -43,7 +43,7 @@
 
 		{% if $transaction.attributes %}
 			<div class="overview">
-				[[ partial('backend/eav/view.tpl', ['item': $transaction]) ]]
+				[[ partial('backend/eav/view.tpl', ['item': transaction]) ]]
 			</div>
 		{% endif %}
 
@@ -147,7 +147,7 @@
 			{% if $transactionMethodName %}
 				<legend>
 					{% if $transaction.availableOfflinePaymentMethods %}
-						[[ partial('backend/payment/editOfflineMethod.tpl', ['ID': $transaction.ID, 'methods': $transaction.availableOfflinePaymentMethods, 'name': $transactionMethodName, 'handlerID': $transaction.handlerID]) ]]
+						[[ partial('backend/payment/editOfflineMethod.tpl', ['ID': transaction.ID, 'methods': transaction.availableOfflinePaymentMethods, 'name': transactionMethodName, 'handlerID': transaction.handlerID]) ]]
 					{% else %}
 						[[transaction.methodName]]
 					{% endif %}
@@ -192,7 +192,7 @@
 	<div class="clear"></div>
 
 	{% if $transaction.transactions %}
-		[[ partial('backend/payment/transactions.tpl', ['transactions': $transaction.transactions]) ]]
+		[[ partial('backend/payment/transactions.tpl', ['transactions': transaction.transactions]) ]]
 	{% endif %}
 
 </li>

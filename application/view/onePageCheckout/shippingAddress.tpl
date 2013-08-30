@@ -15,7 +15,7 @@
 					</div>
 				{% endif %}
 
-				[[ partial('checkout/block/selectAddress.tpl', ['addresses': $shippingAddresses, 'prefix': "shipping", 'states': $shippingStates]) ]]
+				[[ partial('checkout/block/selectAddress.tpl', ['addresses': shippingAddresses, 'prefix': "shipping", 'states': shippingStates]) ]]
 
 				[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 			{/form}

@@ -29,7 +29,7 @@
 
 [[ textfld('`$namePrefix`phone', '_phone') ]]
 
-[[ partial('block/eav/fields.tpl', ['item': $address, 'fieldList': $specFieldListByOwner.UserAddress[$address.ID]]) ]]
+[[ partial('block/eav/fields.tpl', ['item': address, 'fieldList': specFieldListByOwner.UserAddress[$address.ID]]) ]]
 
 <script type="text/javascript">
 $('[[idPrefix]]_stateID').stateSwitcher = new Backend.User.StateSwitcher(

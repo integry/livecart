@@ -18,8 +18,8 @@
 		[[ partial("user/block/passwordFields.tpl") ]]
 	{% endif %}
 
-	[[ partial('block/eav/fields.tpl', ['item': $user, 'filter': "isDisplayed"]) ]]
-	[[ partial('block/eav/fields.tpl', ['eavPrefix': $prefix]) ]]
+	[[ partial('block/eav/fields.tpl', ['item': user, 'filter': "isDisplayed"]) ]]
+	[[ partial('block/eav/fields.tpl', ['eavPrefix': prefix]) ]]
 
 </div>
 

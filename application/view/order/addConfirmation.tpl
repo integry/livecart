@@ -12,4 +12,4 @@
 	[[ partial('order/block/navigationButtons.tpl', ['hideTos': true]) ]]
 {/capture}
 
-[[ partial('block/modal.tpl', ['title': "_item_added_title", 'body': $body, 'footer': $footer]) ]]
+[[ partial('block/modal.tpl', ['title': "_item_added_title", 'body': body, 'footer': footer]) ]]

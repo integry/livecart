@@ -10,7 +10,7 @@
 
 	[[ textfld('pageTitle', tip('_pageTitle _hint_pageTitle'), class: 'wide') ]]
 
-	[[ partial('backend/eav/fields.tpl', ['angular': "category", 'item': $category]) ]]
+	[[ partial('backend/eav/fields.tpl', ['angular': "category", 'item': category]) ]]
 
 	<fieldset>
 		<legend>{t _presentation}</legend>
@@ -48,7 +48,7 @@
 
 		[[ textfld('pageTitle_`$lang.ID`', '_pageTitle', class: 'wide') ]]
 
-		[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': $category, 'language': $lang.ID]) ]]
+		[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': category, 'language': lang.ID]) ]]
 	{/language}
 
 	<fieldset class="controls">

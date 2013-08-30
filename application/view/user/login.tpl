@@ -18,7 +18,7 @@
 		</p>
 
 		{capture assign="return"}{link controller="user"}{/capture}
-		[[ partial('user/loginForm.tpl', ['return': $return]) ]]
+		[[ partial('user/loginForm.tpl', ['return': return]) ]]
 	</div>
 
 	<div class="newCustomer">

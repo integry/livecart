@@ -10,7 +10,7 @@
 			<h3>
 				<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
 			</h3>
-			[[ partial('user/fileList.tpl', ['item': $item]) ]]
+			[[ partial('user/fileList.tpl', ['item': item]) ]]
 		{/foreach}
 	{% endif %}
 

@@ -6,11 +6,11 @@
 		{% if $sub.featuredProduct.ID %}
 			<div class="categoryFeaturedProduct">
 				<div class="price">
-					[[ partial('product/block/productPrice.tpl', ['product': $sub.featuredProduct]) ]]
+					[[ partial('product/block/productPrice.tpl', ['product': sub.featuredProduct]) ]]
 				</div>
 				<a href="{productUrl product=$sub.featuredProduct}">{$sub.featuredProduct.name_lang|truncate:25}</a>
 				{% if $sub.featuredProduct.DefaultImage.ID %}
-					[[ partial('product/block/smallImage.tpl', ['product': $sub.featuredProduct]) ]]
+					[[ partial('product/block/smallImage.tpl', ['product': sub.featuredProduct]) ]]
 				{% endif %}
 			</div>
 		{% elseif $sub.DefaultImage.urls.1 && 'CAT_MENU_IMAGE'|config %}
@@ -25,7 +25,7 @@
 	<div class="subCatContainer">
 		<div class="subCatName">
 			<a href="{categoryUrl data=$sub filters=$filters}">[[sub.name_lang]]</a>
-			[[ partial('block/count.tpl', ['count': $sub.searchCount|default:$sub.count]) ]]
+			[[ partial('block/count.tpl', ['count': sub.searchCount|default:$sub.count]) ]]
 		</div>
 
 		{% if $sub.subCategories %}
@@ -39,7 +39,7 @@
 				{% endif %}
 				<li>
 					<a href="{categoryUrl data=$subSub}">[[subSub.name_lang]]</a>
-					[[ partial('block/count.tpl', ['count': $subSub.count]) ]]
+					[[ partial('block/count.tpl', ['count': subSub.count]) ]]
 				</li>
 			{/foreach}
 		</ul>

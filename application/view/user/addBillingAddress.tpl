@@ -8,7 +8,7 @@
 	{form action="user/doAddBillingAddress" handle=$form class="form-horizontal"}
 		[[ partial("user/addressForm.tpl") ]]
 
-		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': $return, 'class': "form-horizontal"]) ]]
+		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return, 'class': "form-horizontal"]) ]]
 	{/form}
 
 {% endblock %}

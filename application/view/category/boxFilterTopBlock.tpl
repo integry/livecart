@@ -4,16 +4,16 @@
 {/header}{content}
 
 	{% if 'TOP_FILTER_PRICE'|config %}
-		[[ partial('category/block/filterSelect.tpl', ['sectionFilters': $priceGroup, 'title': _by_price]) ]]
+		[[ partial('category/block/filterSelect.tpl', ['sectionFilters': priceGroup, 'title': _by_price]) ]]
 	{% endif %}
 
 	{% if 'TOP_FILTER_MANUFACTURER'|config %}
-		[[ partial('category/block/filterSelect.tpl', ['sectionFilters': $manGroup, 'title': _by_brand]) ]]
+		[[ partial('category/block/filterSelect.tpl', ['sectionFilters': manGroup, 'title': _by_brand]) ]]
 	{% endif %}
 
 	{foreach from=$groups item="group"}
 		{% if $group.displayLocation == 1 %}
-			[[ partial('category/block/filterSelect.tpl', ['sectionFilters': $group, 'title': $group.name_lang, 'allLink': $group.more, 'allTitle': _show_all]) ]]
+			[[ partial('category/block/filterSelect.tpl', ['sectionFilters': group, 'title': group.name_lang, 'allLink': group.more, 'allTitle': _show_all]) ]]
 		{% endif %}
 	{/foreach}
 

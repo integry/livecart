@@ -23,7 +23,7 @@
 {% endif %}
 
 {% if $fields.STATE %}
-	[[ partial('user/addressFormState.tpl', ['prefix': $prefix]) ]]
+	[[ partial('user/addressFormState.tpl', ['prefix': prefix]) ]]
 {% endif %}
 
 {% if $fields.POSTALCODE %}

@@ -54,7 +54,7 @@
 			</fieldset>
 
 			<fieldset class="shippingService_new_rate" id="shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form" style="display: none">
-				[[ partial('backend/shippingService/rate.tpl', ['rate': $newRate]) ]]
+				[[ partial('backend/shippingService/rate.tpl', ['rate': newRate]) ]]
 			</fieldset>
 
 			<script type="text/jscript">
@@ -82,7 +82,7 @@
 		</fieldset>
 	</fieldset>
 
-	[[ partial('backend/eav/fields.tpl', ['item': $service]) ]]
+	[[ partial('backend/eav/fields.tpl', ['item': service]) ]]
 
 	{language}
 		[[ textfld('name_`$lang.ID`', '_name', class: 'observed') ]]

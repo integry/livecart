@@ -14,4 +14,4 @@
 	[[ partial('order/block/navigationButtons.tpl', ['hideTos': true]) ]]
 {/capture}
 
-[[ partial('block/modal.tpl', ['title': "_your_basket", 'body': $body, 'footer': $footer]) ]]
+[[ partial('block/modal.tpl', ['title': "_your_basket", 'body': body, 'footer': footer]) ]]

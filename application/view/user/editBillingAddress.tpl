@@ -8,7 +8,7 @@
 	{form action="controller=user action=saveBillingAddress id=`$addressType.ID`" class="form-horizontal" handle=$form}
 		[[ partial("user/addressForm.tpl") ]]
 
-		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': $return]) ]]
+		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return]) ]]
 	{/form}
 
 {% endblock %}

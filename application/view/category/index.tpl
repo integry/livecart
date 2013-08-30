@@ -47,7 +47,7 @@
 	{% if $subCatFeatured %}
 		<h2>{t _featured_products}</h2>
 
-		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': $subCatFeatured]) ]]
+		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': subCatFeatured]) ]]
 	{% endif %}
 
 	{block FILTER_TOP}

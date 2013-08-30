@@ -9,7 +9,7 @@
 						<div>
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">[[filter.name_lang]]</a>
 							{% if 'DISPLAY_NUM_FILTER'|config %}
-								 [[ partial('block/count.tpl', ['count': $filter.count]) ]]
+								 [[ partial('block/count.tpl', ['count': filter.count]) ]]
 							{% endif %}
 						</div>
 					</li>

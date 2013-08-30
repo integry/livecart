@@ -11,7 +11,7 @@
 					/>
 					[[filter.name_lang]]
 					{% if 'DISPLAY_NUM_FILTER'|config %}
-						[[ partial('block/count.tpl', ['count': $filter.count]) ]]
+						[[ partial('block/count.tpl', ['count': filter.count]) ]]
 					{% endif %}
 				</label>
 			</div>

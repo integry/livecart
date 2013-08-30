@@ -6,7 +6,7 @@
 	{% endif %}
 {/function}
 
-<div class="resultStats">{t _found_cats} [[ partial('block/count.tpl', ['count': $foundCategories|@count]) ]]</div>
+<div class="resultStats">{t _found_cats} [[ partial('block/count.tpl', ['count': foundCategories|@count]) ]]</div>
 <ul class="foundCategories">
 	{foreach from=$foundCategories item=category}
 		<li>{categoryNode node=$category}</li>

@@ -72,7 +72,7 @@
 						{textarea style="width: 100%; height: 4em;"}
 					{/input}
 
-					[[ partial('backend/eav/fields.tpl', ['item': $page, 'angular': "instance"]) ]]
+					[[ partial('backend/eav/fields.tpl', ['item': page, 'angular': "instance"]) ]]
 
 					{language}
 						[[ textfld('title_`$lang.ID`', '_title', class: 'wider') ]]
@@ -87,7 +87,7 @@
 							{textarea style="width: 100%; height: 4em;"}
 						{/input}
 
-						[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': $page, 'language': $lang.ID]) ]]
+						[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': page, 'language': lang.ID]) ]]
 					{/language}
 
 				</div>

@@ -40,7 +40,7 @@
 
 	{% if $item.Product.ID %} {* For empty groups *}
 		<li id="[[item.ID]]">
-			[[ partial('backend/productListItem/add.tpl', ['product': $item.Product]) ]]
+			[[ partial('backend/productListItem/add.tpl', ['product': item.Product]) ]]
 		</li>
 	{% endif %}
 

@@ -4,7 +4,7 @@
 {% endif %}
 
 	<div class="shipmentStatus_[[shipment.status]]">
-		[[ partial('backend/shipment/shipmentControls.tpl', ['status': $shipment.status, 'notShippable': $notShippable]) ]]
+		[[ partial('backend/shipment/shipmentControls.tpl', ['status': shipment.status, 'notShippable': notShippable]) ]]
 
 		<table class="orderShipmentsItem_info shipmentTableHeading" style="font-size: smaller; display: table;">
 			<tbody>

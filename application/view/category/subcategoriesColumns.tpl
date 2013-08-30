@@ -22,7 +22,7 @@
 		{% if $cat %}
 		<div class="col col-lg-[[width]] subCategoryItem">
 			<div class="thumbnail">
-				[[ partial('category/block/categoryItem.tpl', ['sub': $cat]) ]]
+				[[ partial('category/block/categoryItem.tpl', ['sub': cat]) ]]
 			</div>
 		</div>
 		{% endif %}

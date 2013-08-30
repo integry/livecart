@@ -14,7 +14,7 @@
 
 		[[ textfld('companyName', '_company_name') ]]
 
-		[[ partial('block/eav/fields.tpl', ['item': $user, 'filter': "isDisplayed"]) ]]
+		[[ partial('block/eav/fields.tpl', ['item': user, 'filter': "isDisplayed"]) ]]
 
 		[[ partial('block/submit.tpl', ['caption': "_save", 'cancel': "user"]) ]]
 	{/form}

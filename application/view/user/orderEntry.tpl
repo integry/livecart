@@ -12,7 +12,7 @@
 
 <div class="orderStatus">
 	{t _status}:
-	[[ partial('user/orderStatus.tpl', ['order': $order]) ]]
+	[[ partial('user/orderStatus.tpl', ['order': order]) ]]
 </div>
 
 <div class="orderDetails">

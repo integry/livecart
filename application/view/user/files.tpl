@@ -19,7 +19,7 @@
 		<h3>
 			<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
 		</h3>
-		[[ partial('user/fileList.tpl', ['item': $item]) ]]
+		[[ partial('user/fileList.tpl', ['item': item]) ]]
 	{/foreach}
 
 {% endblock %}

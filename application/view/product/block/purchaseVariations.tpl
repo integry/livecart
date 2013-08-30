@@ -27,7 +27,7 @@
 
 		<p>
 			<label>{t _quantity}</label>
-			[[ partial('product/block/quantity.tpl', ['field': "product_`$product.ID`_count", 'quantity': $quantities[$product.ID]]) ]]
+			[[ partial('product/block/quantity.tpl', ['field': "product_`$product.ID`_count", 'quantity': quantities[$product.ID]]) ]]
 		</p>
 
 		{assign var="optionPrefix" value="product_`$product.ID`_"}

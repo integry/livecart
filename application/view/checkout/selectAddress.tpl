@@ -25,7 +25,7 @@
 				<h2 id="billingAddress">{t _billing_address}</h2>
 			{% endif %}
 
-			[[ partial('checkout/block/selectAddress.tpl', ['addresses': $billingAddresses, 'prefix': "billing", 'states': $billing_states]) ]]
+			[[ partial('checkout/block/selectAddress.tpl', ['addresses': billingAddresses, 'prefix': "billing", 'states': billing_states]) ]]
 
 			{% if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step %}
 				<p>
@@ -47,7 +47,7 @@
 
 			<h2 id="shippingAddress">{t _shipping_address}</h2>
 
-			[[ partial('checkout/block/selectAddress.tpl', ['addresses': $shippingAddresses, 'prefix': "shipping", 'states': $shipping_states]) ]]
+			[[ partial('checkout/block/selectAddress.tpl', ['addresses': shippingAddresses, 'prefix': "shipping", 'states': shipping_states]) ]]
 
 		</div>
 

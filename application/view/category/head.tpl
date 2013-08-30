@@ -5,7 +5,7 @@
 		{% if $products.0.Manufacturer.attributes %}
 			<div id="productSpecification" class="manufacturerAttributes">
 				<table class="productTable table table-striped">
-					[[ partial('product/specificationTableBody.tpl', ['attributes': $products.0.Manufacturer.attributes, 'field': EavField, 'group': EavFieldGroup]) ]]
+					[[ partial('product/specificationTableBody.tpl', ['attributes': products.0.Manufacturer.attributes, 'field': EavField, 'group': EavFieldGroup]) ]]
 				</table>
 			</div>
 		{% endif %}

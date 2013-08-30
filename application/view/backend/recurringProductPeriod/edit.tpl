@@ -1,4 +1,4 @@
-[[ partial('backend/recurringProductPeriod/form.tpl', ['recurringProductPeriod': $recurringProductPeriod, 'form': $form]) ]]
+[[ partial('backend/recurringProductPeriod/form.tpl', ['recurringProductPeriod': recurringProductPeriod, 'form': form]) ]]
 <script type=text/javascript>
 	var newForm = Backend.RecurringProductPeriod.prototype.getInstance($("recurringProductPeriodForm_[[recurringProductPeriod.ID]]"));
 </script>

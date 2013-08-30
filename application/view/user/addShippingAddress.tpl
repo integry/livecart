@@ -7,7 +7,7 @@
 
 	{form action="user/doAddShippingAddress" handle=$form class="form-horizontal"}
 		[[ partial("user/addressForm.tpl") ]]
-		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': $return]) ]]
+		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return]) ]]
 	{/form}
 
 {% endblock %}

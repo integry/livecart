@@ -10,10 +10,10 @@
 
 	[[ textfld('name', 'Manufacturer.name') ]]
 
-	[[ partial('backend/eav/fields.tpl', ['item': $manufacturer]) ]]
+	[[ partial('backend/eav/fields.tpl', ['item': manufacturer]) ]]
 
 	{language}
-		[[ partial('backend/eav/language.tpl', ['item': $manufacturer, 'language': $lang.ID]) ]]
+		[[ partial('backend/eav/language.tpl', ['item': manufacturer, 'language': lang.ID]) ]]
 	{/language}
 
 	<fieldset class="controls">

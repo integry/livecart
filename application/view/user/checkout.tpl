@@ -21,7 +21,7 @@
 		{% endif %}
 
 		{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
-		[[ partial('user/loginForm.tpl', ['return': $return]) ]]
+		[[ partial('user/loginForm.tpl', ['return': return]) ]]
 	</div>
 
 	<div class="newCustomer">
@@ -44,7 +44,7 @@
 				{/input}
 
 				<div id="shippingForm">
-					[[ partial('user/addressForm.tpl', ['prefix': "shipping_", 'eavPrefix': "shipping_", 'states': $shippingStates]) ]]
+					[[ partial('user/addressForm.tpl', ['prefix': "shipping_", 'eavPrefix': "shipping_", 'states': shippingStates]) ]]
 				</div>
 
 			{% endif %}

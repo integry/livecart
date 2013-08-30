@@ -34,7 +34,7 @@
 {% endif %}
 {% if $order.formatted_shippingSubtotal %}
 	{% if $order.shipments|@count == 1 %}
-		[[ partial('email/blockShippingCost.tpl', ['shipment': $order.shipments.0]) ]]
+		[[ partial('email/blockShippingCost.tpl', ['shipment': order.shipments.0]) ]]
 	{% else %}
 		<tr><td colspan="{% if $SHOW_SKU %}4{% else %}3{% endif %}">{t _shipping}</td><td align="right">[[order.formatted_shippingSubtotal]]</td></tr>
 	{% endif %}

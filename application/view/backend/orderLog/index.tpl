@@ -74,13 +74,13 @@
 							{% if $log.oldValue %}
 							<td>
 								{% if $log.type == $TYPE_ORDER %}
-									[[ partial('backend/orderLog/order.tpl', ['order': $log.oldValue, 'otherOrder': $log.newValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/order.tpl', ['order': log.oldValue, 'otherOrder': log.newValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_SHIPMENT %}
-									[[ partial('backend/orderLog/shipment.tpl', ['shipment': $log.oldValue, 'otherShipment': $log.newValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/shipment.tpl', ['shipment': log.oldValue, 'otherShipment': log.newValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_ORDERITEM %}
-									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': $log.oldValue, 'otherOrderedItem': $log.newValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': log.oldValue, 'otherOrderedItem': log.newValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS %}
-									[[ partial('backend/orderLog/address.tpl', ['address': $log.oldValue, 'otherAddress': $log.newValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/address.tpl', ['address': log.oldValue, 'otherAddress': log.newValue, 'log': log]) ]]
 								{% endif %}
 							</td>
 							{% endif %}
@@ -88,13 +88,13 @@
 							{% if $log.newValue %}
 							<td>
 								{% if $log.type == $TYPE_ORDER %}
-									[[ partial('backend/orderLog/order.tpl', ['order': $log.newValue, 'otherOrder': $log.oldValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/order.tpl', ['order': log.newValue, 'otherOrder': log.oldValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_SHIPMENT %}
-									[[ partial('backend/orderLog/shipment.tpl', ['shipment': $log.newValue, 'otherShipment': $log.oldValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/shipment.tpl', ['shipment': log.newValue, 'otherShipment': log.oldValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_ORDERITEM %}
-									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': $log.newValue, 'otherOrderedItem': $log.oldValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': log.newValue, 'otherOrderedItem': log.oldValue, 'log': log]) ]]
 								{% elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS %}
-									[[ partial('backend/orderLog/address.tpl', ['address': $log.newValue, 'otherAddress': $log.oldValue, 'log': $log]) ]]
+									[[ partial('backend/orderLog/address.tpl', ['address': log.newValue, 'otherAddress': log.oldValue, 'log': log]) ]]
 								{% endif %}
 							</td>
 							{% endif %}

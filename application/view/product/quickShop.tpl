@@ -6,4 +6,4 @@
 	{block PRODUCT-NAVIGATION}
 {/capture}
 
-[[ partial('block/modal.tpl', ['title': $product.name_lang, 'body': $body, 'footer': $footer]) ]]
+[[ partial('block/modal.tpl', ['title': product.name_lang, 'body': body, 'footer': footer]) ]]

@@ -10,7 +10,7 @@
 		{t _completed_offline}
 
 		{% if $transactions.0.serializedData.handlerID %}
-			[[ partial('checkout/offlineMethodInfo.tpl', ['method': $transactions.0.serializedData.handlerID|@substr:-1]) ]]
+			[[ partial('checkout/offlineMethodInfo.tpl', ['method': transactions.0.serializedData.handlerID|@substr:-1]) ]]
 		{% endif %}
 	{% endif %}
 

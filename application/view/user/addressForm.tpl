@@ -12,7 +12,7 @@
 	<fieldset>
 		<legend>{t _your_address}</legend>
 		[[ partial("user/block/addressFields.tpl") ]]
-		[[ partial('block/eav/fields.tpl', ['item': $address, 'eavPrefix': $prefix]) ]]
+		[[ partial('block/eav/fields.tpl', ['item': address, 'eavPrefix': prefix]) ]]
 	</fieldset>
 </div>
 

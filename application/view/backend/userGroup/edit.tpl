@@ -6,7 +6,7 @@
 
 	[[ textfld('description', '_description') ]]
 
-	[[ partial('backend/eav/fields.tpl', ['item': $userGroup]) ]]
+	[[ partial('backend/eav/fields.tpl', ['item': userGroup]) ]]
 
 	<fieldset class="userGroup_controls controls">
 		<span class="progressIndicator" style="display: none;"></span>

@@ -44,7 +44,7 @@
 <div class="clear"></div>
 
 <fieldset class="container transactionContainer">
-	[[ partial('backend/payment/transactions.tpl', ['transactions': $transactions]) ]]
+	[[ partial('backend/payment/transactions.tpl', ['transactions': transactions]) ]]
 </fieldset>
 
 {literal}

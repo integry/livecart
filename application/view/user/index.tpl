@@ -20,7 +20,7 @@
 		<ul class="notes">
 			{foreach from=$notes item=note}
 			   <a href="{link controller=user action=viewOrder id=$note.orderID}#msg">{t _order} #[[note.orderID]]</a>
-			   [[ partial('user/orderNote.tpl', ['note': $note]) ]]
+			   [[ partial('user/orderNote.tpl', ['note': note]) ]]
 			{/foreach}
 		</ul>
 	{% endif %}
@@ -32,7 +32,7 @@
 			<h3>
 				<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
 			</h3>
-			[[ partial('user/fileList.tpl', ['item': $item]) ]]
+			[[ partial('user/fileList.tpl', ['item': item]) ]]
 			<div class="clear"></div>
 		{/foreach}
 	{% endif %}
@@ -40,7 +40,7 @@
 	{% if $orders %}
 		<h2 id="recentOrders">{t _recent_orders}</h2>
 		{foreach from=$orders item="order"}
-			[[ partial('user/orderEntry.tpl', ['order': $order]) ]]
+			[[ partial('user/orderEntry.tpl', ['order': order]) ]]
 		{/foreach}
 	{% else %}
 		<p>
@@ -52,7 +52,7 @@
 
 	{% if $pendingInvoiceCount > 0 %}
 		<h2>{t _invoices}</h2>
-		[[ partial('user/invoicesTable.tpl', ['itemList': $lastInvoiceArray, 'paginateAction': "pendingInvoice", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': 0, 'query': '', 'pendingInvoiceCount': $pendingInvoiceCount]) ]]
+		[[ partial('user/invoicesTable.tpl', ['itemList': lastInvoiceArray, 'paginateAction': "pendingInvoice", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': 0, 'query': '', 'pendingInvoiceCount': pendingInvoiceCount]) ]]
 	{% endif %}
 
 {% endblock %}

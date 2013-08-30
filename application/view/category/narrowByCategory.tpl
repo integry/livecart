@@ -5,6 +5,6 @@
 		{t _narrow_by_cat}
 	</div>
 
-	[[ partial('category/subcategoriesColumns.tpl', ['subCategories': $categoryNarrow, 'filters': $appliedFilters]) ]]
+	[[ partial('category/subcategoriesColumns.tpl', ['subCategories': categoryNarrow, 'filters': appliedFilters]) ]]
 
 </div>

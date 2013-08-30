@@ -60,7 +60,7 @@
 		{form handle=$formShippingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_shippingAddress">
 				<legend>{t _shipping_address}</legend>
-				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_shippingAddress", 'address': $order.ShippingAddress, 'states': $shippingStates, 'order': $order]) ]]
+				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_shippingAddress", 'address': order.ShippingAddress, 'states': shippingStates, 'order': order]) ]]
 			</fieldset>
 		{/form}
 	{% endif %}
@@ -68,7 +68,7 @@
 		{form handle=$formBillingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_billingAddress">
 				<legend>{t _billing_address}</legend>
-				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_billingAddress", 'address': $order.BillingAddress, 'states': $billingStates, 'order': $order]) ]]
+				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_billingAddress", 'address': order.BillingAddress, 'states': billingStates, 'order': order]) ]]
 			</fieldset>
 		{/form}
 	{% endif %}
@@ -277,7 +277,7 @@
 	<div id="orderShipments_list_[[orderID]]_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>
 		<ul id="orderShipmentsItems_list_[[orderID]]_downloadable" class="activeList_add_delete orderShipmentsItem activeList">
 			<li id="orderShipments_list_[[orderID]]_[[downloadableShipment.ID]]" class="orderShipment" >
-				[[ partial('backend/shipment/shipment.tpl', ['shipment': $downloadableShipment, 'notShippable': true, 'downloadable': 1]) ]]
+				[[ partial('backend/shipment/shipment.tpl', ['shipment': downloadableShipment, 'notShippable': true, 'downloadable': 1]) ]]
 
 				{% if $downloadableShipment.items|@count > 0 %}
 					<script type="text/javascript">

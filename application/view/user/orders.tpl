@@ -18,7 +18,7 @@
 	</div>
 
 	{foreach from=$orders item="order"}
-		[[ partial('user/orderEntry.tpl', ['order': $order]) ]]
+		[[ partial('user/orderEntry.tpl', ['order': order]) ]]
 	{/foreach}
 
 	{% if $count > $perPage %}

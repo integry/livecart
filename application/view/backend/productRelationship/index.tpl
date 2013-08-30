@@ -26,7 +26,7 @@
 </fieldset>
 
 <div class="newForm">
-	[[ partial('backend/productRelationshipGroup/form.tpl', ['type': $type]) ]]
+	[[ partial('backend/productRelationshipGroup/form.tpl', ['type': type]) ]]
 </div>
 
 {* No group *}
@@ -35,7 +35,7 @@
 	{% if $relationship.ProductRelationshipGroup.ID %}{break}{% endif %}
 	{% if $relationship.RelatedProduct.ID %}
 		<li id="[[relationship.RelatedProduct.ID]]">
-			[[ partial('backend/productRelationship/addRelated.tpl', ['product': $relationship.RelatedProduct]) ]]
+			[[ partial('backend/productRelationship/addRelated.tpl', ['product': relationship.RelatedProduct]) ]]
 		</li>
 	{% endif %}
 {/foreach}
@@ -55,7 +55,7 @@
 
 	{% if $relationship.RelatedProduct.ID %} {* For empty groups *}
 		<li id="[[relationship.RelatedProduct.ID]]">
-			[[ partial('backend/productRelationship/addRelated.tpl', ['product': $relationship.RelatedProduct]) ]]
+			[[ partial('backend/productRelationship/addRelated.tpl', ['product': relationship.RelatedProduct]) ]]
 		</li>
 	{% endif %}
 

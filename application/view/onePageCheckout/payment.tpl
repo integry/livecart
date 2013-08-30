@@ -86,8 +86,8 @@
 									<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
 								{/header}
 								{content}
-									[[ partial('checkout/offlineMethodInfo.tpl', ['method': $key]) ]]
-									[[ partial('block/eav/fields.tpl', ['fieldList': $offlineVars[$method].specFieldList]) ]]
+									[[ partial('checkout/offlineMethodInfo.tpl', ['method': key]) ]]
+									[[ partial('block/eav/fields.tpl', ['fieldList': offlineVars[$method].specFieldList]) ]]
 								{/content}
 							{/sect}
 						{/form}

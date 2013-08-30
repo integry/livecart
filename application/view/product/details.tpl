@@ -16,7 +16,7 @@
 <h2>{t _spec}<small>{t _tab_specification}</small></h2>
 <div id="productSpecification">
 	<table class="productDetailsTable table table-striped">
-		[[ partial('product/specificationTableBody.tpl', ['attributes': $product.attributes, 'field': SpecField, 'group': SpecFieldGroup]) ]]
+		[[ partial('product/specificationTableBody.tpl', ['attributes': product.attributes, 'field': SpecField, 'group': SpecFieldGroup]) ]]
 	</table>
 </div>
 </div>
@@ -30,7 +30,7 @@
 	   {% if $group.0.ProductRelationshipGroup.name_lang %}
 		   <h3>[[group.0.ProductRelationshipGroup.name_lang]]</h3>
 	   {% endif %}
-	   [[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': $group]) ]]
+	   [[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': group]) ]]
 	{/foreach}
 </div>
 </div>
@@ -44,7 +44,7 @@
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
 <h2>{t _purchased_together}<small>{t _tab_purchased}</small></h2>
 <div id="purchasedTogether">
-	[[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': $together]) ]]
+	[[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': together]) ]]
 </div>
 </div>
 {% endif %}

@@ -84,7 +84,7 @@
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_cityMasksList" id="countriesAndStates_[[zoneID]]_cityMasks">
 				{foreach from=$cityMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]">
-						[[ partial('backend/deliveryZone/mask.tpl', ['mask': $mask]) ]]
+						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]");
@@ -116,7 +116,7 @@
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_zipMasksList" id="countriesAndStates_[[zoneID]]_zipMasks">
 				{foreach from=$zipMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]">
-						[[ partial('backend/deliveryZone/mask.tpl', ['mask': $mask]) ]]
+						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]");
@@ -148,7 +148,7 @@
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_addressMasksList" id="countriesAndStates_[[zoneID]]_addressMasks">
 				{foreach from=$addressMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]">
-						[[ partial('backend/deliveryZone/mask.tpl', ['mask': $mask]) ]]
+						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]");

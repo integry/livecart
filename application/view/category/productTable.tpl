@@ -64,7 +64,7 @@
 				{% endif %}
 
 				{foreach from=$listAttributes item=attribute}
-					<td class="attribute attr_[[attribute.ID]]">[[ partial('product/attributeValue.tpl', ['attr': $product.attributes[$attribute.ID]]) ]]</td>
+					<td class="attribute attr_[[attribute.ID]]">[[ partial('product/attributeValue.tpl', ['attr': product.attributes[$attribute.ID]]) ]]</td>
 				{/foreach}
 
 				{% if $columns.PRICE && 'DISPLAY_PRICES'|config %}

@@ -14,7 +14,7 @@
 	</span>
 {% endif %}
 
-[[ partial('user/itemOptions.tpl', ['options': $item.options]) ]]
+[[ partial('user/itemOptions.tpl', ['options': item.options]) ]]
 
 {sect}
 	{header}
@@ -25,7 +25,7 @@
 			{% if $subItem.Product.isDownloadable %}
 				<li>
 					<a href="{link controller=user action=item id=$subItem.ID}">[[subItem.Product.name_lang]]</a>
-					[[ partial('user/itemOptions.tpl', ['options': $subItem.options]) ]]
+					[[ partial('user/itemOptions.tpl', ['options': subItem.options]) ]]
 				</li>
 			{% endif %}
 		{/foreach}

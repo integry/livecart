@@ -7,7 +7,7 @@
 
 <fieldset style="display: none;" class="addForm rpp_new_form" id="rpp_new_form_[[product.ID]]">
 	<legend>{t _add_new_recurring_product_period|capitalize}</legend>
-	[[ partial('backend/recurringProductPeriod/form.tpl', ['recurringProductPeriod': $newRecurringProductPeriod, 'form': $newForm]) ]]
+	[[ partial('backend/recurringProductPeriod/form.tpl', ['recurringProductPeriod': newRecurringProductPeriod, 'form': newForm]) ]]
 </fieldset>
 
 <ul class="activeList activeList_add_delete activeList_add_edit" id="recurringProductPeriods_[[product.ID]]">

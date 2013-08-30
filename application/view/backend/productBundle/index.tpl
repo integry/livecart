@@ -30,7 +30,7 @@
 {foreach item="relationship" from=$items}
 	{% if $relationship.RelatedProduct.ID %}
 		<li id="[[relationship.RelatedProduct.ID]]">
-			[[ partial('backend/productRelationship/addRelated.tpl', ['product': $relationship.RelatedProduct, 'template': "backend/productBundle/bundleCount.tpl"]) ]]
+			[[ partial('backend/productRelationship/addRelated.tpl', ['product': relationship.RelatedProduct, 'template': "backend/productBundle/bundleCount.tpl"]) ]]
 		</li>
 	{% endif %}
 {/foreach}

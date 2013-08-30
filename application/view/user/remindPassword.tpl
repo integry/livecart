@@ -7,7 +7,7 @@
 	{form action="user/doRemindPassword" method="post"  class="form-horizontal" handle=$form}
 		[[ textfld('email', '_your_email') ]]
 
-		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': $return, 'cancel': user]) ]]
+		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return, 'cancel': user]) ]]
 
 		<input type="hidden" name="return" value="[[return]]" />
 

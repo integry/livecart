@@ -11,7 +11,7 @@
 	[[ partial("user/block/passwordFields.tpl", ['required': true]) ]]
 	[[ partial('user/block/passwordFields.tpl', ['required': true]) ]]
 
-	[[ partial('block/eav/fields.tpl', ['item': $user, 'filter': "isDisplayed"]) ]]
+	[[ partial('block/eav/fields.tpl', ['item': user, 'filter': "isDisplayed"]) ]]
 
 	{block FORM-SUBMIT-REGISTER}
 

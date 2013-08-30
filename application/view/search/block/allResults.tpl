@@ -1,7 +1,7 @@
 {foreach $modelSearch as $results}
 	{% if $results.count %}
 		<div class="modelSearchResults">
-			<div class="resultStats">{maketext text="_found_x" params=$results.meta.name} [[ partial('block/count.tpl', ['count': $results.count]) ]]</div>
+			<div class="resultStats">{maketext text="_found_x" params=$results.meta.name} [[ partial('block/count.tpl', ['count': results.count]) ]]</div>
 
 			<ol>
 				{foreach $results.records as $record}
