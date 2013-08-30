@@ -40,16 +40,15 @@ class StaticPageController extends StoreManagementController
 			$root['children'][] =& $pointers[$page['id']];
 		}
 
-		$response = new ActionResponse();
-		$response->set('pages', json_encode($pages));
+
+		$this->set('pages', json_encode($pages));
 
 		$form = $this->getForm();
 		$page = StaticPage::getNewInstance();
 		$page->getSpecification()->setFormResponse($response, $form);
-		$response->set('form', $form);
-		$response->set('page', $page->toArray());
+		$this->set('form', $form);
+		$this->set('page', $page->toArray());
 
-		return $response;
 	}
 
 	public function editAction()
@@ -149,7 +148,7 @@ class StaticPageController extends StoreManagementController
 
 	public function emptyPageAction()
 	{
-		return new ActionResponse();
+
 	}
 
 	public function saveAction()

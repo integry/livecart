@@ -18,17 +18,16 @@ class RecurringProductPeriodController extends StoreManagementController
 		$productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA);
 		$rppa = RecurringProductPeriod::getRecordSetByProduct($product)->toArray();
-		$response = new ActionResponse();
-		$response->set('recurringProductPeriods', $rppa);
-		$response->set('product', $product->toArray());
+
+		$this->set('recurringProductPeriods', $rppa);
+		$this->set('product', $product->toArray());
 
 		$newRpp = RecurringProductPeriod::getNewInstance($product);
-		$response->set('newRecurringProductPeriod', $newRpp->toArray());
-		$response->set('newForm', $this->createForm($newRpp->toArray()));
-		$response->set('currencies', $this->application->getCurrencyArray(true));
-		$response->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
+		$this->set('newRecurringProductPeriod', $newRpp->toArray());
+		$this->set('newForm', $this->createForm($newRpp->toArray()));
+		$this->set('currencies', $this->application->getCurrencyArray(true));
+		$this->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
 
-		return $response;
 	}
 
 	public function editAction()
@@ -38,13 +37,12 @@ class RecurringProductPeriodController extends StoreManagementController
 		$rpp = $rpp->toArray();
 
 		$form = $this->createForm($rpp);
-		$response = new ActionResponse();
-		$response->set('recurringProductPeriod', $rpp);
-		$response->set('form', $form);
-		$response->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
-		$response->set('currencies', $this->application->getCurrencyArray(true));
 
-		return $response;
+		$this->set('recurringProductPeriod', $rpp);
+		$this->set('form', $form);
+		$this->set('periodTypes', array_map(array($this,'translate'), RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL)));
+		$this->set('currencies', $this->application->getCurrencyArray(true));
+
 	}
 
 

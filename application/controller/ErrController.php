@@ -15,14 +15,13 @@ class ErrController extends FrontendController
 
 	public function indexAction()
 	{
-		$response = new ActionResponse();
-		$response->set('id', $this->request->get('id'));
-		$response->set('ajax', $this->request->get('ajax'));
-		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
+
+		$this->set('id', $this->request->get('id'));
+		$this->set('ajax', $this->request->get('ajax'));
+		$this->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
 
 		$response->setStatusCode($this->request->get('id'));
 
-		return $response;
 	}
 
 	public function redirectAction()
@@ -43,21 +42,20 @@ class ErrController extends FrontendController
 				return new ActionRedirectResponse('user', 'login', $params);
 
 			default:
-				$response = new ActionResponse('id', $id);
+				$this->set('id', $id);
 				$response->setStatusCode($this->request->get('id'));
-				return $response;
 		}
 	}
 
 	public function backendBrowserAction()
 	{
-		return new ActionResponse();
+
 	}
 
 	public function databaseAction()
 	{
 		$this->setLayout('empty');
-		return new ActionResponse('error', $_REQUEST['exception']->getMessage());
+		$this->set('error', $_REQUEST['exception']->getMessage());
 	}
 }
 

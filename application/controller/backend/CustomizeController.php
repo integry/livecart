@@ -13,10 +13,9 @@ class CustomizeController extends StoreManagementController
 {
 	public function indexAction()
 	{
-		$response = new ActionResponse();
-		$response->set('isCustomizationModeEnabled', $this->application->isCustomizationMode());
-		$response->set('isTranslationModeEnabled', $this->application->isTranslationMode());
-		return $response;
+
+		$this->set('isCustomizationModeEnabled', $this->application->isCustomizationMode());
+		$this->set('isTranslationModeEnabled', $this->application->isTranslationMode());
 	}
 
 	public function translationModeAction()

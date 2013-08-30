@@ -13,11 +13,11 @@ class DiscountController extends ActiveGridController
 	{
 		$response = $this->getGridResponse();
 
-		$response->set('form', $this->buildForm());
+		$this->set('form', $this->buildForm());
 
-		$response->set('conditionForm', $this->buildConditionForm());
+		$this->set('conditionForm', $this->buildConditionForm());
 
-		$response->set('comparisonTypes', array(
+		$this->set('comparisonTypes', array(
 						DiscountCondition::COMPARE_GTEQ => $this->translate('_compare_gteq'),
 						DiscountCondition::COMPARE_LTEQ => $this->translate('_compare_lteq'),
 						DiscountCondition::COMPARE_EQ => $this->translate('_compare_eq'),
@@ -26,23 +26,23 @@ class DiscountController extends ActiveGridController
 						DiscountCondition::COMPARE_NDIV => $this->translate('_compare_ndiv'),
 						));
 
-		$response->set('comparisonFields', array(
+		$this->set('comparisonFields', array(
 						'count' => $this->translate('_with_count'),
 						'subTotal' => $this->translate('_with_subTotal'),
 						));
 
 		$conditions = $this->getClasses('application/model/businessrule/condition');
 		unset($conditions['RuleConditionRoot']);
-		$response->set('conditionTypes', $conditions);
-		$response->set('actionTypes', $this->getClasses('application/model/businessrule/action'));
+		$this->set('conditionTypes', $conditions);
+		$this->set('actionTypes', $this->getClasses('application/model/businessrule/action'));
 
-		$response->set('applyToChoices', array(
+		$this->set('applyToChoices', array(
 						DiscountAction::TYPE_ORDER_DISCOUNT => $this->translate('_apply_order'),
 						DiscountAction::TYPE_ITEM_DISCOUNT => $this->translate('_apply_matched_items'),
 						DiscountAction::TYPE_CUSTOM_DISCOUNT => $this->translate('_apply_custom_items'),
 					  ));
 
-		$response->set('currencyCode', $this->application->getDefaultCurrencyCode());
+		$this->set('currencyCode', $this->application->getDefaultCurrencyCode());
 
 		$actionFields = $itemActions = array();
 		foreach ($response->get('actionTypes') as $class => $name)
@@ -52,8 +52,8 @@ class DiscountController extends ActiveGridController
 			$itemActions[$class] = $reflection->implementsInterface('RuleItemAction');
 		}
 
-		$response->set('actionFields', array_filter($actionFields));
-		$response->set('itemActions', $itemActions);
+		$this->set('actionFields', array_filter($actionFields));
+		$this->set('itemActions', $itemActions);
 
 		$ruleFields = array();
 		foreach ($conditions as $class => $name)
@@ -61,9 +61,8 @@ class DiscountController extends ActiveGridController
 			$ruleFields[$class] = call_user_func(array($class, 'getFields'));
 		}
 
-		$response->set('ruleFields', array_filter($ruleFields));
+		$this->set('ruleFields', array_filter($ruleFields));
 
-		return $response;
 	}
 
 	private function getCurrencies()
@@ -107,9 +106,8 @@ class DiscountController extends ActiveGridController
 
 	public function addAction()
 	{
-		$response = new ActionResponse('form', $this->buildForm());
+		$this->set('form', $this->buildForm());
 		$this->setEditResponse($response);
-		return $response;
 	}
 
 	public function editAction()
@@ -117,7 +115,7 @@ class DiscountController extends ActiveGridController
 		$condition = ActiveRecordModel::getInstanceById('DiscountCondition', $this->request->get('id'), DiscountCondition::LOAD_DATA, DiscountCondition::LOAD_REFERENCES);
 		$condition->loadAll();
 
-		$response = new ActionResponse('condition', $condition->toArray());
+		$this->set('condition', $condition->toArray());
 
 		$records = array();
 		$zones = ActiveRecordModel::getRecordSetArray('DeliveryZone', new ARSelectFilter());
@@ -127,9 +125,9 @@ class DiscountController extends ActiveGridController
 		$records['DeliveryZone'] = $zones;
 		$records['UserGroup'] = ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter());
 
-		$response->set('records', $records);
+		$this->set('records', $records);
 
-		$response->set('serializedValues', array(
+		$this->set('serializedValues', array(
 						'RuleConditionPaymentMethodIs' => $this->getPaymentMethods(),
 						'RuleConditionCurrencyIs' => $this->getCurrencies(),
 						'RuleConditionShippingMethodIs' => $this->getShippingMethods(),
@@ -137,7 +135,7 @@ class DiscountController extends ActiveGridController
 
 		$form = $this->buildForm();
 		$form->setData($condition->toArray());
-		$response->set('form', $form);
+		$this->set('form', $form);
 
 		// actions
 		$f = new ARSelectFilter();
@@ -152,16 +150,15 @@ class DiscountController extends ActiveGridController
 			}
 		}
 
-		$response->set('actions', $actions->toArray());
+		$this->set('actions', $actions->toArray());
 
 		$this->setEditResponse($response);
 
-		return $response;
 	}
 
 	private function setEditResponse(ActionResponse $response)
 	{
-		$response->set('couponLimitTypes', array(
+		$this->set('couponLimitTypes', array(
 						'' => $this->translate('_coupon_limit_none'),
 						DiscountCondition::COUPON_LIMIT_ALL => $this->translate('_coupon_limit_all'),
 						DiscountCondition::COUPON_LIMIT_USER => $this->translate('_coupon_limit_user'),
@@ -465,9 +462,8 @@ class DiscountController extends ActiveGridController
 
 	private function getGridResponse()
 	{
-		$response = new ActionResponse();
+
 		$this->setGridResponse($response);
-		return $response;
 	}
 
 	protected function getClassName()

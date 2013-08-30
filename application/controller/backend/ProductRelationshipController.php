@@ -15,14 +15,13 @@ class ProductRelationshipController extends StoreManagementController
 		$productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 
-		$response = new ActionResponse();
-		$response->set('categoryID', $product->category->get()->getID());
-		$response->set('productID', $productID);
-		$response->set('relationships', $product->getRelationships($this->request->get('type'))->toArray());
-		$response->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray($this->request->get('type')));
-		$response->set('type', $this->request->get('type'));
 
-		return $response;
+		$this->set('categoryID', $product->category->get()->getID());
+		$this->set('productID', $productID);
+		$this->set('relationships', $product->getRelationships($this->request->get('type'))->toArray());
+		$this->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray($this->request->get('type')));
+		$this->set('type', $this->request->get('type'));
+
 	}
 
 	/**
@@ -32,13 +31,12 @@ class ProductRelationshipController extends StoreManagementController
 	 */
 	public function selectProductAction()
 	{
-		$response = new ActionResponse();
+
 
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		$response->set("categoryList", $categoryList->toArray());
+		$this->set("categoryList", $categoryList->toArray());
 
-		return $response;
 	}
 
 	/**
@@ -61,10 +59,9 @@ class ProductRelationshipController extends StoreManagementController
 				$product->addRelatedProduct($relatedProduct, $this->request->get('type'));
 				$product->save();
 
-				$response = new ActionResponse();
-				$response->set('product', $relatedProduct->toArray());
-				$response->set('added', true);
-				return $response;
+
+				$this->set('product', $relatedProduct->toArray());
+				$this->set('added', true);
 			}
 			catch(ProductRelationshipException $e)
 			{

@@ -42,26 +42,25 @@ MANUFACTURER_PAGE_PER_PAGE
 			$manufacturer['url'] = $this->getManufacturerFilterUrl($manufacturer);
 		}
 		$this->addBreadCrumb($this->translate('_manufacturers'), '');
-		$response = new ActionResponse();
+
 		$response->setReference('manufacturers', $manufacturers);
-		$response->set('counts', $counts); // product count
-		$response->set('count', $count); // manufacturers count
-		$response->set('rootCat', Category::getRootNode()->toArray());
-		$response->set('currentPage', $page);
-		$response->set('perPage', $config->get('MANUFACTURER_PAGE_PER_PAGE'));
+		$this->set('counts', $counts); // product count
+		$this->set('count', $count); // manufacturers count
+		$this->set('rootCat', Category::getRootNode()->toArray());
+		$this->set('currentPage', $page);
+		$this->set('perPage', $config->get('MANUFACTURER_PAGE_PER_PAGE'));
 
 		$paginateUrlParams = array('controller' => 'manufacturers', 'action' => 'index', 'query'=>array('page' => '_000_'));
 		if ($listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER')
 		{
 			$paginateUrlParams['query']['letter'] = $currentLetter;
 		}
-		$response->set('url', $this->router->createURL($paginateUrlParams, true));
+		$this->set('url', $this->router->createURL($paginateUrlParams, true));
 		if ($listStyle == 'MANPAGE_STYLE_GROUP_BY_FIRST_LETTER')
 		{
-			$response->set('currentLetter',$currentLetter);
-			$response->set('letters',$letters);
+			$this->set('currentLetter',$currentLetter);
+			$this->set('letters',$letters);
 		}
-		return $response;
 	}
 
 	public function viewAction()

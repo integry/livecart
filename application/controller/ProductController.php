@@ -102,13 +102,13 @@ class ProductController extends CatalogController
 		$last = prev($this->breadCrumb);
 		$catRoute = $this->router->getRouteFromUrl($last['url']);
 
-		$response = new ActionResponse();
-		$response->set('product', $productArray);
-		$response->set('category', $productArray['Category']);
-		$response->set('quantity', $this->getQuantities($product));
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
-		$response->set('catRoute', $catRoute);
-		$response->set('context', $this->getContext());
+
+		$this->set('product', $productArray);
+		$this->set('category', $productArray['Category']);
+		$this->set('quantity', $this->getQuantities($product));
+		$this->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$this->set('catRoute', $catRoute);
+		$this->set('context', $this->getContext());
 
 		// ratings
 		if ($this->config->get('ENABLE_RATINGS'))
@@ -116,23 +116,23 @@ class ProductController extends CatalogController
 			if ($product->ratingCount->get() > 0)
 			{
 				// rating summaries
-								$response->set('rating', ProductRatingSummary::getProductRatingsArray($product));
+								$this->set('rating', ProductRatingSummary::getProductRatingsArray($product));
 			}
 
 						$ratingTypes = ProductRatingType::getProductRatingTypeArray($product);
-			$response->set('ratingTypes', $ratingTypes);
-			$response->set('ratingForm', $this->buildRatingForm($ratingTypes, $product));
-			$response->set('isRated', $this->isRated($product));
-			$response->set('isLoginRequiredToRate', $this->isLoginRequiredToRate());
-			$response->set('isPurchaseRequiredToRate', $this->isPurchaseRequiredToRate($product));
+			$this->set('ratingTypes', $ratingTypes);
+			$this->set('ratingForm', $this->buildRatingForm($ratingTypes, $product));
+			$this->set('isRated', $this->isRated($product));
+			$this->set('isLoginRequiredToRate', $this->isLoginRequiredToRate());
+			$this->set('isPurchaseRequiredToRate', $this->isPurchaseRequiredToRate($product));
 
-			$response->set('sharingForm', $this->buildSharingForm($product));
+			$this->set('sharingForm', $this->buildSharingForm($product));
 		}
 
-		$response->set('sharingForm', $this->buildSharingForm($product));
+		$this->set('sharingForm', $this->buildSharingForm($product));
 
 		// add to cart form
-		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), $this->getVariations()));
+		$this->set('cartForm', $this->buildAddToCartForm($this->getOptions(), $this->getVariations()));
 
 		// related products
 		$related = $this->getRelatedProducts($product);
@@ -158,15 +158,15 @@ class ProductController extends CatalogController
 
 		ProductSpecification::loadSpecificationForRecordSetArray($spec);
 
-		$response->set('related', $related);
-		$response->set('together', $together);
+		$this->set('related', $related);
+		$this->set('together', $together);
 
 		if (isset($manFilter))
 		{
-			$response->set('manufacturerFilter', $manFilter);
+			$this->set('manufacturerFilter', $manFilter);
 		}
 
-		$response->set('variations', $this->getVariations());
+		$this->set('variations', $this->getVariations());
 
 		// reviews
 		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount->get() && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
@@ -175,7 +175,7 @@ class ProductController extends CatalogController
 			$f->setLimit($numReviews);
 			$reviews = $product->getRelatedRecordSetArray('ProductReview', $f);
 			$this->pullRatingDetailsForReviewArray($reviews);
-			$response->set('reviews', $reviews);
+			$this->set('reviews', $reviews);
 		}
 
 		// bundled products
@@ -189,21 +189,21 @@ class ProductController extends CatalogController
 			}
 
 			ProductPrice::loadPricesForRecordSetArray($bundledProducts);
-			$response->set('bundleData', $bundleData);
+			$this->set('bundleData', $bundleData);
 
 			$currency = Currency::getInstanceByID($this->getRequestCurrency());
 			$total = ProductBundle::getTotalBundlePrice($product, $currency);
-			$response->set('bundleTotal', $currency->getFormattedPrice($total));
+			$this->set('bundleTotal', $currency->getFormattedPrice($total));
 
 			$saving = $total - $product->getPrice($currency);
-			$response->set('bundleSavingTotal', $currency->getFormattedPrice($saving));
-			$response->set('bundleSavingPercent', $total ? round(($saving / $total) * 100) : 0);
+			$this->set('bundleSavingTotal', $currency->getFormattedPrice($saving));
+			$this->set('bundleSavingPercent', $total ? round(($saving / $total) * 100) : 0);
 		}
 
 		// contact form
 		if ($this->config->get('PRODUCT_INQUIRY_FORM'))
 		{
-			$response->set('contactForm', $this->buildContactForm());
+			$this->set('contactForm', $this->buildContactForm());
 		}
 
 		// display theme
@@ -214,7 +214,7 @@ class ProductController extends CatalogController
 				$this->application->setTheme($theme->getTheme());
 			}
 
-			$response->set('presentation', $theme->toFlatArray());
+			$this->set('presentation', $theme->toFlatArray());
 		}
 
 		// product images
@@ -232,11 +232,11 @@ class ProductController extends CatalogController
 				}
 			}
 		}
-		$response->set('images', $images);
+		$this->set('images', $images);
 
 		// discounted pricing
-		$response->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
-		$response->set('files', $this->getPublicFiles());
+		$this->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
+		$this->set('files', $this->getPublicFiles());
 
 		// additional categories
 		$f = new ARSelectFilter();
@@ -275,12 +275,11 @@ class ProductController extends CatalogController
 				$cat = array_reverse($cat);
 			}
 
-			$response->set('additionalCategories', $categories);
+			$this->set('additionalCategories', $categories);
 		}
-		$response->set('enlargeProductThumbnailOnMouseOver',
+		$this->set('enlargeProductThumbnailOnMouseOver',
 			$this->config->get('_ENLARGE_PRODUCT_THUMBNAILS_ON') == 'P_THUMB_ENLARGE_MOUSEOVER');
 
-		return $response;
 	}
 
 	public function quickShopAction()
@@ -288,7 +287,6 @@ class ProductController extends CatalogController
 		$response = $this->index();
 		if (!($response instanceof ActionResponse))
 		{
-			return $response;
 		}
 
 		$bResponse = new BlockResponse();
@@ -312,12 +310,11 @@ class ProductController extends CatalogController
 		$response = new BlockResponse();
 		if ($this->product->type->get() == Product::TYPE_RECURRING)
 		{
-									$response->set('isRecurring', true);
-			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
-			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
-			$response->set('recurringProductPeriods', RecurringProductPeriod::getRecordSetByProduct($this->product)->toArray());
+									$this->set('isRecurring', true);
+			$this->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$this->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+			$this->set('recurringProductPeriods', RecurringProductPeriod::getRecordSetByProduct($this->product)->toArray());
 		}
-		return $response;
 	}
 
 	public function addToCartBlockAction()
@@ -328,9 +325,8 @@ class ProductController extends CatalogController
 	public function optionsBlockAction()
 	{
 		$response = new BlockResponse();
-		$response->set('allOptions', $this->getOptions(true));
-		$response->set('options', $this->getOptions());
-		return $response;
+		$this->set('allOptions', $this->getOptions(true));
+		$this->set('options', $this->getOptions());
 	}
 
 	public function variationsBlockAction()
@@ -354,8 +350,7 @@ class ProductController extends CatalogController
 			ProductSpecification::loadSpecificationForRecordSetArray($spec);
 		}
 		$response = new BlockResponse();
-		$response->set('upsell', $upsell);
-		return $response;
+		$this->set('upsell', $upsell);
 	}
 
 	public function overviewBlockAction()
@@ -436,10 +431,9 @@ class ProductController extends CatalogController
 		}
 
 		$response = new BlockResponse('variations', $variations);
-		$response->set('cartForm', $this->buildAddToCartForm($this->getOptions(), array(), $prefixes));
-		$response->set('quantities', $quantities);
-		$response->set('samePrice', $samePrice);
-		return $response;
+		$this->set('cartForm', $this->buildAddToCartForm($this->getOptions(), array(), $prefixes));
+		$this->set('quantities', $quantities);
+		$this->set('samePrice', $samePrice);
 	}
 
 	private function getOptions($all = false)
@@ -491,7 +485,7 @@ class ProductController extends CatalogController
 			$email->setTo($request->get('friendemail'));
 			$email->setTemplate('notify.sendProductToFriend');
 			$email->set('product', $productArray);
-			$user = SessionUser::getUser();
+			$user = $this->sessionUser->getUser();
 			$email->set('user', $user->toArray());
 
 			if ($user->isAnonymous())
@@ -517,7 +511,6 @@ class ProductController extends CatalogController
 			$response = new JSONResponse(array('message'=>$this->translate('_error_cannot_send_to_friend')), 'failure');
 		}
 
-		return $response;
 	}
 
 	public function rateAction()
@@ -571,7 +564,6 @@ class ProductController extends CatalogController
 			}
 
 			$response->setCookie('rating_' . $product->getID(), true, strtotime('+' . $this->config->get('RATING_SAME_IP_TIME') . ' hours'), $this->router->getBaseDirFromUrl());
-			return $response;
 		}
 		else
 		{
@@ -605,16 +597,15 @@ class ProductController extends CatalogController
 		$reviews = $this->product->getRelatedRecordSetArray('ProductReview', $f);
 		$this->pullRatingDetailsForReviewArray($reviews);
 
-		$response->set('reviews', $reviews);
-		$response->set('offsetStart', $offsetStart + 1);
-		$response->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount->get()));
-		$response->set('page', $page);
-		$response->set('perPage', $perPage);
-		$response->set('url', $this->router->createUrl(array('controller' => 'product', 'action' => 'reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
+		$this->set('reviews', $reviews);
+		$this->set('offsetStart', $offsetStart + 1);
+		$this->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount->get()));
+		$this->set('page', $page);
+		$this->set('perPage', $perPage);
+		$this->set('url', $this->router->createUrl(array('controller' => 'product', 'action' => 'reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
 
 		$this->addBreadCrumb($this->translate('_reviews'), '');
 
-		return $response;
 	}
 
 	public function sendContactFormAction()
@@ -644,7 +635,6 @@ class ProductController extends CatalogController
 				$response = $redirect;
 			}
 
-			return $response;
 		}
 		else
 		{
@@ -839,7 +829,7 @@ class ProductController extends CatalogController
 		$validator->addCheck('friendemail', new IsNotEmptyCheck($this->translate('_err_enter_email')));
 		$validator->addCheck('friendemail', new IsValidEmailCheck($this->translate('_err_invalid_email')));
 
-		if (SessionUser::getUser()->isAnonymous())
+		if ($this->sessionUser->getUser()->isAnonymous())
 		{
 			if (!$this->config->get('ENABLE_ANONYMOUS_PRODUCT_SHARING'))
 			{
@@ -984,7 +974,7 @@ class ProductController extends CatalogController
 		return new Form($this->buildContactValidator());
 	}
 
-	public function buildContactValidatorAction(Request $request = null)
+	public function buildContactValidatorAction(\Phalcon\Http\Request $request = null)
 	{
 		$this->loadLanguageFile('ContactForm');
 

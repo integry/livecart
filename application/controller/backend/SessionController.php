@@ -13,10 +13,9 @@ class SessionController extends StoreManagementController
 	public function indexAction()
 	{
 		$this->loadLanguageFile('User');
-		$response = new ActionResponse('email', $this->request->get('email'));
+		$this->set('email', $this->request->get('email'));
 		$response->setHeader('NeedLogin', 1);
-		$response->set('return', $this->request->get('return'));
-		return $response;
+		$this->set('return', $this->request->get('return'));
 	}
 
 	/**
@@ -31,7 +30,7 @@ class SessionController extends StoreManagementController
 		}
 
 		// login
-		SessionUser::setUser($user);
+		$this->sessionUser->setUser($user);
 
 		if ($this->request->get('return'))
 		{
@@ -45,7 +44,7 @@ class SessionController extends StoreManagementController
 
 	public function logoutAction()
 	{
-		SessionUser::destroy();
+		$this->sessionUser->destroy();
 		return new ActionRedirectResponse('backend.session', 'index');
 	}
 }

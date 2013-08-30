@@ -43,7 +43,7 @@ class CustomFieldController extends StoreManagementController
 			$nodes[] = array('ID' => 'offline methods', 'name' => $this->translate('_offline_methods'), 'sub' => $offlineMethods);
 		}
 
-		return new ActionResponse('nodes', $nodes);
+		$this->set('nodes', $nodes);
 	}
 }
 

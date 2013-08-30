@@ -170,7 +170,7 @@ class CheckoutController extends FrontendController
 				$user->save();
 			}
 
-			SessionUser::setUser($user);
+			$this->sessionUser->setUser($user);
 			$order->setUser($user);
 		}
 
@@ -271,14 +271,14 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		$response = new ActionResponse();
+
 
 		foreach (array('billing' => $this->user->getBillingAddressArray(),
 						'shipping' => $this->user->getShippingAddressArray()) as $type => $addresses)
 		{
 			if (count($addresses) > 1)
 			{
-				$response->set($type . 'Addresses', $addresses);
+				$this->set($type . 'Addresses', $addresses);
 			}
 			else if (count($addresses) == 1)
 			{
@@ -307,12 +307,12 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		$response->set('form', $form);
-		$response->set('order', $this->order->toArray());
-		$response->set('countries', $this->getCountryList($form));
-		$response->set('billing_states', $this->getStateList($form->get('billing_country')));
-		$response->set('shipping_states', $this->getStateList($form->get('shipping_country')));
-		$response->set('step', $step);
+		$this->set('form', $form);
+		$this->set('order', $this->order->toArray());
+		$this->set('countries', $this->getCountryList($form));
+		$this->set('billing_states', $this->getStateList($form->get('billing_country')));
+		$this->set('shipping_states', $this->getStateList($form->get('shipping_country')));
+		$this->set('step', $step);
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
@@ -337,7 +337,6 @@ class CheckoutController extends FrontendController
 			$address->getSpecification()->setFormResponse($response, $form, $type . '_');
 		}
 
-		return $response;
 	}
 
 	/**
@@ -585,12 +584,12 @@ class CheckoutController extends FrontendController
 			$rateArray[$key] = $rate->toArray();
 		}
 
-		$response = new ActionResponse();
+
 		$shipmentArray = $shipments->toArray();
 
 		if (isset($download))
 		{
-			$response->set('download', $download->toArray());
+			$this->set('download', $download->toArray());
 			unset($shipmentArray[$downloadIndex]);
 		}
 
@@ -627,21 +626,20 @@ class CheckoutController extends FrontendController
 		{
 			$this->loadLanguageFile('Product'); // contains translations for recurring product pricing.
 						$recurringPlans = RecurringProductPeriod::getRecordSetArrayByIDs($recurringIDs);
-			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
-			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+			$this->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$this->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
 		}
 
-		$response->set('shipments', $shipmentArray);
-		$response->set('rates', $rateArray);
-		$response->set('recurringPlans', $recurringPlans);
-		$response->set('currency', $this->getRequestCurrency());
-		$response->set('form', $form);
-		$response->set('order', $this->order->toArray());
+		$this->set('shipments', $shipmentArray);
+		$this->set('rates', $rateArray);
+		$this->set('recurringPlans', $recurringPlans);
+		$this->set('currency', $this->getRequestCurrency());
+		$this->set('form', $form);
+		$this->set('order', $this->order->toArray());
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_ADDRESS);
 
-		return $response;
 	}
 
 	/*
@@ -772,15 +770,15 @@ class CheckoutController extends FrontendController
 
 		$currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
 
-		$response = new ActionResponse();
-		$response->set('order', $this->order->toArray());
-		$response->set('currency', $this->getRequestCurrency());
-		$response->set('error', strip_tags($this->request->get('error')));
+
+		$this->set('order', $this->order->toArray());
+		$this->set('currency', $this->getRequestCurrency());
+		$this->set('error', strip_tags($this->request->get('error')));
 
 		// offline payment methods
 		$offlineMethods = OfflineTransactionHandler::getEnabledMethods();
-		$response->set('offlineMethods', $offlineMethods);
-		$response->set('offlineForms', $this->getOfflinePaymentForms($response));
+		$this->set('offlineMethods', $offlineMethods);
+		$this->set('offlineForms', $this->getOfflinePaymentForms($response));
 
 		$this->setPaymentMethodResponse($response, $this->order);
 		$this->order->getSpecification()->setFormResponse($response, $response->get('ccForm'));
@@ -806,7 +804,6 @@ class CheckoutController extends FrontendController
 
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_SHIPPING);
 
-		return $response;
 	}
 
 	public function setPaymentMethodResponseAction(ActionResponse $response, CustomerOrder $order)
@@ -819,10 +816,10 @@ class CheckoutController extends FrontendController
 			$ccForm->set('ccName', $order->billingAddress->getFullName());
 		}
 
-		$response->set('ccForm', $ccForm);
+		$this->set('ccForm', $ccForm);
 		if ($ccHandler)
 		{
-			$response->set('ccHandler', $ccHandler->toArray());
+			$this->set('ccHandler', $ccHandler->toArray());
 
 			$months = range(1, 12);
 			$months = array_combine($months, $months);
@@ -830,9 +827,9 @@ class CheckoutController extends FrontendController
 			$years = range(date('Y'), date('Y') + 20);
 			$years = array_combine($years, $years);
 
-			$response->set('months', $months);
-			$response->set('years', $years);
-			$response->set('ccTypes', $this->application->getCardTypes($ccHandler));
+			$this->set('months', $months);
+			$this->set('years', $years);
+			$this->set('ccTypes', $this->application->getCardTypes($ccHandler));
 
 			$eavManager = new EavSpecificationManager(EavObject::getInstanceByIdentifier('creditcard'));
 			$eavManager->setFormResponse($response, $ccForm);
@@ -841,12 +838,12 @@ class CheckoutController extends FrontendController
 				$ccVars[$vars] = $response->get($vars);
 			}
 
-			$response->set('ccVars', $ccVars);
+			$this->set('ccVars', $ccVars);
 		}
 
 		// other payment methods
 		$external = $this->application->getPaymentHandlerList(true);
-		$response->set('otherMethods', $external);
+		$this->set('otherMethods', $external);
 	}
 
 	private function getOfflinePaymentForms(ActionResponse $response)
@@ -864,7 +861,7 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		$response->set('offlineVars', $offlineVars);
+		$this->set('offlineVars', $offlineVars);
 
 		return $forms;
 	}
@@ -965,7 +962,6 @@ class CheckoutController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		return $response;
 	}
 
 	private function getPaymentPageRedirect()
@@ -1011,7 +1007,6 @@ class CheckoutController extends FrontendController
 
 		ActiveRecordModel::commit();
 
-		return $response;
 	}
 
 	/**
@@ -1026,10 +1021,9 @@ class CheckoutController extends FrontendController
 		}
 
 		$response = new ActionResponse;
-		$response->set('order', $this->order->toArray());
-		$response->set('currency', $this->getRequestCurrency());
-		$response->set('method', $res->toArray());
-		return $response;
+		$this->set('order', $this->order->toArray());
+		$this->set('currency', $this->getRequestCurrency());
+		$this->set('method', $res->toArray());
 	}
 
 	/**
@@ -1121,10 +1115,9 @@ class CheckoutController extends FrontendController
 
 		if ($handler->isPostRedirect())
 		{
-			$response = new ActionResponse();
-			$response->set('url', $handler->getUrl());
-			$response->set('params', $handler->getPostParams());
-			return $response;
+
+			$this->set('url', $handler->getUrl());
+			$this->set('params', $handler->getPostParams());
 		}
 
 		return new RedirectResponse($handler->getUrl());
@@ -1185,9 +1178,8 @@ class CheckoutController extends FrontendController
 				$returnUrl = $this->router->createFullUrl($returnUrl);
 			}
 
-			$response = new ActionResponse('order', $order->toArray());
-			$response->set('returnUrl', $returnUrl);
-			return $response;
+			$this->set('order', $order->toArray());
+			$this->set('returnUrl', $returnUrl);
 		}
 	}
 
@@ -1223,28 +1215,27 @@ class CheckoutController extends FrontendController
 
 		$order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
 		$order->loadAll();
-		$response = new ActionResponse();
-		$response->set('order', $order->toArray());
-		$response->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
+
+		$this->set('order', $order->toArray());
+		$this->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
 
 		if (!$order->isPaid)
 		{
 			$transactions = $order->getTransactions()->toArray();
-			$response->set('transactions', $transactions);
+			$this->set('transactions', $transactions);
 		}
 		else
 		{
-			$response->set('files', ProductFile::getOrderFiles(select(eq('CustomerOrder.ID', $order->getID()))));
+			$this->set('files', ProductFile::getOrderFiles(select(eq('CustomerOrder.ID', $order->getID()))));
 		}
 
-		return $response;
 	}
 
 	public function cvvAction()
 	{
 		$this->addBreadCrumb($this->translate('_cvv'), '');
 
-		return new ActionResponse();
+
 	}
 
 	private function createAddress($addressClass, $prefix)

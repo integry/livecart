@@ -12,7 +12,7 @@ class OrderLogController extends StoreManagementController
 {
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 		$customerOrder = CustomerOrder::getInstanceById($this->request->get('id'), true, array('User', 'Currency'));
 
 		$logs = array();
@@ -38,9 +38,8 @@ class OrderLogController extends StoreManagementController
 			}
 		}
 
-		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
-		$response->set('logs', $logs);
-		return $response;
+		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
+		$this->set('logs', $logs);
 	}
 }
 

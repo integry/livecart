@@ -50,10 +50,9 @@ class XmlController extends FrontendController
 		$feed->setFlush();
 
 		$response = new XMLResponse();
-		$response->set('feed', $feed);
-		$response->set('tpl', 'xml/feed/' . $module . '.tpl');
+		$this->set('feed', $feed);
+		$this->set('tpl', 'xml/feed/' . $module . '.tpl');
 
-		return $response;
 	}
 }
 

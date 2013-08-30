@@ -12,7 +12,6 @@ class CurrencyController extends StoreManagementController
 {
 	/**
 	 * List all system currencies
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
@@ -21,10 +20,9 @@ class CurrencyController extends StoreManagementController
 
 		$curr = ActiveRecord::getRecordSet("Currency", $filter, true)->toArray();
 
-		$response = new ActionResponse();
-		$response->set("currencies", json_encode($curr));
 
-		return $response;
+		$this->set("currencies", json_encode($curr));
+
 	}
 
 	/**
@@ -51,9 +49,8 @@ class CurrencyController extends StoreManagementController
 
 		unset($currencies[$this->application->getDefaultCurrencyCode()]);
 
-		$response = new ActionResponse();
-		$response->set('currencies', $currencies);
-		return $response;
+
+		$this->set('currencies', $currencies);
 	}
 
 	/**
@@ -157,7 +154,6 @@ class CurrencyController extends StoreManagementController
 	/**
 	 * Sets if currency is enabled
 	 * @role status
-	 * @return ActionResponse
 	 */
 	public function setEnabledAction()
 	{
@@ -195,11 +191,10 @@ class CurrencyController extends StoreManagementController
 		$form = new Form($this->buildFormattingValidator());
 		$form->setData($currency->toArray());
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('id', $this->request->get('id'));
-		$response->set('currency', $currency->toArray());
-		return $response;
+
+		$this->set('form', $form);
+		$this->set('id', $this->request->get('id'));
+		$this->set('currency', $currency->toArray());
 	}
 
 	/**
@@ -217,7 +212,6 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Currency rates form
-	 * @return ActionResponse
 	 */
 	public function ratesAction()
 	{
@@ -229,18 +223,16 @@ class CurrencyController extends StoreManagementController
 			$form->set('rate_' . $currency['ID'], $currency['rate']);
 		}
 
-		$response = new ActionResponse();
-		$response->set('currencies', $currencies);
-		$response->set('saved', $this->request->get('saved'));
-		$response->set('rateForm', $form);
-		$response->set('defaultCurrency', $this->application->getDefaultCurrency()->getID());
-		return $response;
+
+		$this->set('currencies', $currencies);
+		$this->set('saved', $this->request->get('saved'));
+		$this->set('rateForm', $form);
+		$this->set('defaultCurrency', $this->application->getDefaultCurrency()->getID());
 	}
 
 	/**
 	 * Change currency options
 	 * @role update
-	 * @return ActionResponse
 	 */
 	public function optionsAction()
 	{
@@ -284,12 +276,11 @@ class CurrencyController extends StoreManagementController
 			$frequency[$mins] = $this->translate('_freq_' . $mins);
 		}
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('currencies', $currencies);
-		$response->set('frequency', $frequency);
-		$response->set('feeds', $feeds);
-		return $response;
+
+		$this->set('form', $form);
+		$this->set('currencies', $currencies);
+		$this->set('frequency', $frequency);
+		$this->set('feeds', $feeds);
 	}
 
 	/**

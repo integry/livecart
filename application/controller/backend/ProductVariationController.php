@@ -12,11 +12,10 @@ ClassLoader::importNow("application/model/product/ProductVariationTypeSet");
 class ProductVariationController extends StoreManagementController
 {
 	/**
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 
 		$parent = Product::getInstanceByID($this->request->get('id'), true);
 
@@ -24,8 +23,8 @@ class ProductVariationController extends StoreManagementController
 		$variations = $variationTypes->getVariations();
 		$parentArray = $parent->toArray();
 
-		$response->set('parent', $parentArray);
-		$response->set('params', array(
+		$this->set('parent', $parentArray);
+		$this->set('params', array(
 									'parent' => $parentArray,
 									'variationTypes' => $variationTypes->toArray(),
 									'variations' => $variations->toArray(),
@@ -33,7 +32,6 @@ class ProductVariationController extends StoreManagementController
 									'currency' => $this->application->getDefaultCurrencyCode()
 									));
 
-		return $response;
 	}
 
 	public function saveAction()
@@ -263,11 +261,10 @@ class ProductVariationController extends StoreManagementController
 			$ids[$id] = $instance->getID();
 		}
 
-		$response = new ActionResponse('ids', $ids);
-		$response->set('parent', $parent->getID());
-		$response->set('images', $images);
-		$response->set('variationCount', $parent->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true))));
-		return $response;
+		$this->set('ids', $ids);
+		$this->set('parent', $parent->getID());
+		$this->set('images', $images);
+		$this->set('variationCount', $parent->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true))));
 	}
 
 	/**

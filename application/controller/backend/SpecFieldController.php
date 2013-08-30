@@ -28,7 +28,6 @@ class SpecFieldController extends EavFieldControllerCommon
 	/**
 	 * Displays form for creating a new or editing existing one product group specification field
 	 *
-	 * @return ActionResponse
 	 */
 	public function itemAction()
 	{

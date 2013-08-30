@@ -19,17 +19,16 @@ class UserController extends StoreManagementController
 			$availableUserGroups[$group->getID()] = $group->name->get();
 		}
 
-		$response = new ActionResponse();
-		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
+
+		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		$form = self::createUserForm($this, $user, $response);
-		$response->set('form', $form);
-		$response->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
-		$response->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
+		$this->set('form', $form);
+		$this->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
+		$this->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
 		$user->loadAddresses();
-		$response->set('someUser', $user->toArray());
-		$response->set('availableUserGroups', $availableUserGroups);
+		$this->set('someUser', $user->toArray());
+		$this->set('availableUserGroups', $availableUserGroups);
 		BackendToolbarItem::registerLastViewedUser($user);
-		return $response;
 	}
 
 	/**
@@ -79,7 +78,7 @@ class UserController extends StoreManagementController
 
 		if (!$user)
 		{
-			$user = ActiveRecordModel::getNewInstance('User');
+			$user = new User;
 		}
 
 		return $validator;
@@ -152,7 +151,7 @@ class UserController extends StoreManagementController
 
 		if (!$user)
 		{
-			$user = ActiveRecordModel::getNewInstance('User');
+			$user = new User;
 		}
 		$user->getSpecification()->setFormResponse($response, $form);
 
@@ -213,7 +212,7 @@ class UserController extends StoreManagementController
 			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
 
-		return new ActionResponse('userGroups', $userGroups);
+		$this->set('userGroups', $userGroups);
 	}
 
 	private function save(User $user = null)

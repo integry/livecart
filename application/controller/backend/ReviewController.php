@@ -12,9 +12,8 @@ class ReviewController extends ActiveGridController
 	public function indexAction()
 	{
 		$response = $this->getGridResponse();
-		$response->set('id', ($this->isCategory() ? 'c' : '') . $this->getID());
-		$response->set('container', $this->request->get('category') ? 'tabReviews' : 'tabProductReviews');
-		return $response;
+		$this->set('id', ($this->isCategory() ? 'c' : '') . $this->getID());
+		$this->set('container', $this->request->get('category') ? 'tabReviews' : 'tabProductReviews');
 	}
 
 	public function editAction()
@@ -22,7 +21,7 @@ class ReviewController extends ActiveGridController
 		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
 		//$manufacturer->getSpecification();
 
-		$response = new ActionResponse('review', $review->toArray());
+		$this->set('review', $review->toArray());
 		$form = $this->buildForm($review);
 		$form->setData($review->toArray());
 
@@ -35,13 +34,12 @@ class ReviewController extends ActiveGridController
 		$form->set('rating_', $review->rating);
 
 		//$manufacturer->getSpecification()->setFormResponse($response, $form);
-		$response->set('form', $form);
-		$response->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product)->toArray());
+		$this->set('form', $form);
+		$this->set('ratingTypes', ProductRatingType::getProductRatingTypes($review->product)->toArray());
 
 		$options = range(1, $this->config->get('RATING_SCALE'));
-		$response->set('ratingOptions', array_combine($options, $options));
+		$this->set('ratingOptions', array_combine($options, $options));
 
-		return $response;
 	}
 
 	public function updateAction()
@@ -80,9 +78,8 @@ class ReviewController extends ActiveGridController
 	{
 		$this->loadLanguageFile('backend/Category');
 
-		$response = new ActionResponse();
+
 		$this->setGridResponse($response);
-		return $response;
 	}
 
 	protected function getClassName()

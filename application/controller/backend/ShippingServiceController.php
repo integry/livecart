@@ -35,14 +35,13 @@ class ShippingServiceController extends StoreManagementController
 		$form = $this->createShippingServiceForm();
 		$form->setData(array('rangeType' => 0));
 
-		$response = new ActionResponse();
-		$response->set('shippingServices', $shippingServicesArray);
-		$response->set('newService', array('DeliveryZone' => $deliveryZoneArray));
-		$response->set('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
-		$response->set('deliveryZone', $deliveryZoneArray);
-		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
-		$response->set('form', $form);
-		return $response;
+
+		$this->set('shippingServices', $shippingServicesArray);
+		$this->set('newService', array('DeliveryZone' => $deliveryZoneArray));
+		$this->set('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
+		$this->set('deliveryZone', $deliveryZoneArray);
+		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
+		$this->set('form', $form);
 	}
 
 	private function getSelectOptionsFromSet(ARSet $set)
@@ -75,17 +74,16 @@ class ShippingServiceController extends StoreManagementController
 		$spec = $shippingService->getSpecification();
 		$form = $this->createShippingServiceForm();
 		$form->setData($shippingService->toArray());
-		$response = new ActionResponse();
+
 		$spec->setFormResponse($response, $form);
-		$response->set('form', $form);
+		$this->set('form', $form);
 
-		$response->set('service', $shippingService->toArray());
-		$response->set('shippingRates', $shippingService->getRates()->toArray());
-		$response->set('newRate', array('ShippingService' => $shippingService->toArray()));
-		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
-		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$this->set('service', $shippingService->toArray());
+		$this->set('shippingRates', $shippingService->getRates()->toArray());
+		$this->set('newRate', array('ShippingService' => $shippingService->toArray()));
+		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
+		$this->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 
-		return $response;
 	}
 
 	/**

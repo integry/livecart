@@ -5,7 +5,7 @@ class ContactFormController extends FrontendController
 	public function indexAction()
 	{
 		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
-		return new ActionResponse('form', $this->buildForm());
+		$this->set('form', $this->buildForm());
 	}
 
 	public function sendAction()
@@ -30,7 +30,7 @@ class ContactFormController extends FrontendController
 		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
 		$this->addBreadCrumb($this->translate('_form_sent'), '');
 
-		return new ActionResponse();
+
 	}
 
 	public function buildFormAction()
@@ -38,7 +38,7 @@ class ContactFormController extends FrontendController
 		return new Form($this->buildValidator());
 	}
 
-	public function buildValidatorAction(Request $request = null)
+	public function buildValidatorAction(\Phalcon\Http\Request $request = null)
 	{
 		$request = $request ? $request : $this->request;
 

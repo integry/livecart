@@ -11,11 +11,10 @@ class TaxController extends StoreManagementController
 {
 	/**
 	 * List all system currencies
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 
 		$taxesForms = array();
 		$taxes = array();
@@ -25,12 +24,12 @@ class TaxController extends StoreManagementController
 			$taxesForms[] = $this->createTaxForm($tax);
 		}
 
-		$response->set("taxesForms", $taxesForms);
-		$response->set("taxes", $taxes);
+		$this->set("taxesForms", $taxesForms);
+		$this->set("taxes", $taxes);
 
 		$newTax = Tax::getNewInstance('');
-		$response->set("newTaxForm", $this->createTaxForm($newTax));
-		$response->set("newTax", $newTax->toArray());
+		$this->set("newTaxForm", $this->createTaxForm($newTax));
+		$this->set("newTax", $newTax->toArray());
 
 		return $this->appendTaxRates($response);
 	}
@@ -40,9 +39,9 @@ class TaxController extends StoreManagementController
 		$tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
 		$form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
-		$response = new ActionResponse();
-		$response->set('tax', $tax->toArray());
-		$response->set('taxForm', $form);
+
+		$this->set('tax', $tax->toArray());
+		$this->set('taxForm', $form);
 		return $this->appendTaxRates($response, $tax->getID());
 	}
 
@@ -190,9 +189,8 @@ class TaxController extends StoreManagementController
 		}
 		$classes = TaxClass::getAllClasses()->toArray();
 
-		$response->set('zones', $zones);
-		$response->set('classes', $classes);
-		return $response;
+		$this->set('zones', $zones);
+		$this->set('classes', $classes);
 	}
 
 	private function saveTaxRates(Tax $tax)

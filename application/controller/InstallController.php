@@ -48,10 +48,9 @@ class InstallController extends FrontendController
 		{
 			if (1 != $req)
 			{
-				$response = new ActionResponse();
-				$response->set('isReqError', true);
-				$response->set('requirements', $requirements);
-				return $response;
+
+				$this->set('isReqError', true);
+				$this->set('requirements', $requirements);
 			}
 		}
 
@@ -65,9 +64,8 @@ class InstallController extends FrontendController
 			return $lastStep;
 		}
 
-		$response = new ActionResponse('license', file_get_contents($this->config->getPath('.') . 'license.txt'));
-		$response->set('form', $this->buildLicenseForm());
-		return $response;
+		$this->set('license', file_get_contents($this->config->getPath('.') . 'license.txt'));
+		$this->set('form', $this->buildLicenseForm());
 	}
 
 	public function acceptLicenseAction()
@@ -87,9 +85,8 @@ class InstallController extends FrontendController
 			return $lastStep;
 		}
 
-		$response = new ActionResponse('form', $this->buildDatabaseForm());
+		$this->set('form', $this->buildDatabaseForm());
 
-		return $response;
 	}
 
 	public function setDatabaseAction()
@@ -160,7 +157,7 @@ class InstallController extends FrontendController
 
 			ActiveRecord::commit();
 
-			return new ActionResponse();
+
 			//return new ActionRedirectResponse('install', 'admin');
 		}
 		catch (SQLException $e)
@@ -169,7 +166,7 @@ class InstallController extends FrontendController
 			$validator->triggerError('connect', $e->getNativeError());
 			$validator->saveState();
 
-			return new ActionResponse('step', 'database');
+			$this->set('step', 'database');
 			//return new ActionRedirectResponse('install', 'database');
 		}
 	}
@@ -181,7 +178,7 @@ class InstallController extends FrontendController
 			return $lastStep;
 		}
 
-		return new ActionResponse('form', $this->buildAdminForm());
+		$this->set('form', $this->buildAdminForm());
 	}
 
 	public function setAdminAction()
@@ -209,7 +206,7 @@ class InstallController extends FrontendController
 		ActiveRecordModel::commit();
 
 		// log in
-		SessionUser::setUser($user);
+		$this->sessionUser->setUser($user);
 
 		// set store email
 		$this->config->set('MAIN_EMAIL', $this->request->get('email'));
@@ -242,10 +239,9 @@ class InstallController extends FrontendController
 			$currencies[$key] = $key . ' - ' . $currency;
 		}
 
-		$response = new ActionResponse('form', $form);
-		$response->set('languages', $languages);
-		$response->set('currencies', $currencies);
-		return $response;
+		$this->set('form', $form);
+		$this->set('languages', $languages);
+		$this->set('currencies', $currencies);
 	}
 
 	public function setConfigAction()
@@ -321,7 +317,7 @@ class InstallController extends FrontendController
 		$page->save();
 
 		// create an example site news post
-				$news = ActiveRecordModel::getNewInstance('NewsPost');
+				$news = new NewsPost;
 		$news->setValueByLang('title', $language->getID(), 'Our store is open');
 		$news->setValueByLang('text', $language->getID(), 'Powered by LiveCart software, we have gone live! Of course, we will have to go to <a href="../backend">the backend area</a> and add some categories and products first...');
 		$news->setValueByLang('moreText', $language->getID(), 'Do not forget to delete this post when you actually go live :)');
@@ -344,9 +340,8 @@ class InstallController extends FrontendController
 			return new ActionRedirectResponse('install', 'index');
 		}
 
-		$response = new ActionResponse();
 
-		return $response;
+
 	}
 
 	private function getDsnFile()

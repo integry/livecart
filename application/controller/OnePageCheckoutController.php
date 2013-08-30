@@ -58,7 +58,7 @@ class OnePageCheckoutController extends CheckoutController
 			{
 				$checkoutUser = unserialize($this->session->get('checkoutUser'));
 				$checkoutUser->setID(null);
-				SessionUser::setUser($checkoutUser);
+				$this->sessionUser->setUser($checkoutUser);
 
 				if ($this->user !== $checkoutUser && ($checkoutUser instanceof User))
 				{
@@ -130,9 +130,8 @@ class OnePageCheckoutController extends CheckoutController
 			$response->addAction($block, 'onePageCheckout', $block);
 		}
 
-		$response->set('orderValues', $this->getOrderValues($this->order));
+		$this->set('orderValues', $this->getOrderValues($this->order));
 
-		return $response;
 	}
 
 	public function loginAction()
@@ -142,15 +141,14 @@ class OnePageCheckoutController extends CheckoutController
 			return;
 		}
 
-		$response = new ActionResponse();
+
 		if ($this->request->get('failedLogin'))
 		{
-			$response->set('failedLogin', true);
+			$this->set('failedLogin', true);
 		}
 
-		$response->set('preview_options', $this->translate('_new_customer'));
+		$this->set('preview_options', $this->translate('_new_customer'));
 
-		return $response;
 	}
 
 	public function shippingAddressAction()
@@ -185,7 +183,7 @@ class OnePageCheckoutController extends CheckoutController
 					$form->setData($spec->getFormData('shipping_'));
 				}
 
-				$response->set('shippingStates', $this->getStateList($form->get('shipping_country')));
+				$this->set('shippingStates', $this->getStateList($form->get('shipping_country')));
 			}
 
 			$form->setData($this->user->toFlatArray());
@@ -208,7 +206,7 @@ class OnePageCheckoutController extends CheckoutController
 				return null;
 			}
 
-			$response->set('step', 'shipping');
+			$this->set('step', 'shipping');
 		}
 
 		if ($this->isSameAddress())
@@ -220,7 +218,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($this->order->shippingAddress)
 		{
-			$response->set('preview_shipping', $this->order->shippingAddress->toArray());
+			$this->set('preview_shipping', $this->order->shippingAddress->toArray());
 		}
 
 		return $this->postProcessResponse($response);
@@ -236,10 +234,9 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($this->order->billingAddress)
 		{
-			$response->set('preview_billing', $this->order->billingAddress->toArray());
+			$this->set('preview_billing', $this->order->billingAddress->toArray());
 		}
 
-		return $response;
 	}
 
 	public function shippingMethodsAction()
@@ -304,7 +301,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($previewRates)
 		{
-			$response->set('preview_shipping_methods', $previewRates);
+			$this->set('preview_shipping_methods', $previewRates);
 		}
 
 		return $this->postProcessResponse($response);
@@ -353,10 +350,9 @@ class OnePageCheckoutController extends CheckoutController
 
 		$paymentMethodForm->set('payMethod', $this->session->get('paymentMethod'));
 
-		$response->set('form', $paymentMethodForm);
-		$response->set('selectedMethod', $this->session->get('paymentMethod'));
-		$response->set('requireTos', $this->isTosRequired);
-		return $response;
+		$this->set('form', $paymentMethodForm);
+		$this->set('selectedMethod', $this->session->get('paymentMethod'));
+		$this->set('requireTos', $this->isTosRequired);
 	}
 
 	protected function getPaymentMethodValidator()
@@ -605,7 +601,6 @@ class OnePageCheckoutController extends CheckoutController
 			return new ActionRedirectResponse('onePageCheckout', 'index');
 		}
 
-		return $response;
 	}
 
 	public function fallbackAction()
@@ -850,7 +845,7 @@ class OnePageCheckoutController extends CheckoutController
 			$response->addAction('payment', 'onePageCheckout', 'payment');
 		}
 
-		$response->set('order', $this->getOrderValues($this->order));
+		$this->set('order', $this->getOrderValues($this->order));
 
 		foreach (func_get_args() as $arg)
 		{
@@ -880,12 +875,12 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		if ($response instanceof ActionRedirectResponse)
 		{
-			$response = new ActionResponse();
+
 		}
 
-		$response->set('steps', $this->getCheckoutSteps($this->order));
-		$response->set('editableSteps', $this->getStepStatus($this->order));
-		$response->set('completedSteps', $this->getStepStatus($this->order, true));
+		$this->set('steps', $this->getCheckoutSteps($this->order));
+		$this->set('editableSteps', $this->getStepStatus($this->order));
+		$this->set('completedSteps', $this->getStepStatus($this->order, true));
 
 		if ($this->anonTransactionInitiated)
 		{
@@ -893,7 +888,6 @@ class OnePageCheckoutController extends CheckoutController
 			$this->anonTransactionInitiated = false;
 		}
 
-		return $response;
 	}
 
 	protected function initAnonUser()
@@ -909,7 +903,7 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		$user->setID(null);
 		$this->session->set('checkoutUser', serialize($user));
-		SessionUser::setUser($user);
+		$this->sessionUser->setUser($user);
 	}
 
 	protected function registerAnonUser()
@@ -957,7 +951,7 @@ class OnePageCheckoutController extends CheckoutController
 			$this->order->user->set($this->user);
 			$this->order->user->setAsModified();
 
-			SessionUser::setUser($this->user);
+			$this->sessionUser->setUser($this->user);
 			$this->session->set('checkoutUser', null);
 
 			if ($this->session->get('newsletter'))

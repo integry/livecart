@@ -50,7 +50,7 @@ class SitemapController extends FrontendController
 
 		$this->router->removeAutoAppendVariable('requestLanguage');
 
-		return new ActionResponse('maps', $maps);
+		$this->set('maps', $maps);
 	}
 
 	public function sitemapAction()
@@ -79,7 +79,7 @@ class SitemapController extends FrontendController
 			$entries[] = $this->getEntryData($class, $row);
 		}
 
-		return new ActionResponse('entries', $entries);
+		$this->set('entries', $entries);
 	}
 
 	public function fullAction()
@@ -114,7 +114,7 @@ class SitemapController extends FrontendController
 			}
 		}
 
-		return new ActionResponse('entries', $entries);
+		$this->set('entries', $entries);
 	}
 
 	public function pingAction()
@@ -137,7 +137,7 @@ class SitemapController extends FrontendController
 			$result[$site] = strpos($this->fetchUrl($pingUrl, true), '200 OK') > 0;
 		}
 
-		return new ActionResponse('result', $result);
+		$this->set('result', $result);
 	}
 
 	private function getSupportedTypes()

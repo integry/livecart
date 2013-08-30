@@ -31,7 +31,7 @@ abstract class BackendController extends BaseController
 
 		if (!$this->user->hasBackendAccess() && !($this instanceof SessionController))
 		{
-			SessionUser::destroy();
+			$this->sessionUser->destroy();
 
 			$url = $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index', 'query' => array('return' => $_SERVER['REQUEST_URI'])));
 			if (!$this->isAjax())
@@ -97,12 +97,11 @@ abstract class BackendController extends BaseController
 	public function toolbarBlockAction()
 	{
 		$response = new BlockResponse();
-		$response->set('dropButtons',
+		$this->set('dropButtons',
 			BackendToolbarItem::sanitizeItemArray(
 				BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU)
 			)
 		);
-		return $response;
 	}
 }
 

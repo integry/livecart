@@ -18,12 +18,11 @@ class ManufacturerController extends ActiveGridController
 	{
 		$manufacturer = Manufacturer::getNewInstance('test');
 
-		$response = new ActionResponse();
+
 		$form = $this->buildForm($manufacturer);
 		$manufacturer->getSpecification()->setFormResponse($response, $form);
-		$response->set('form', $form);
+		$this->set('form', $form);
 
-		return $response;
 	}
 
 	public function editAction()
@@ -31,14 +30,13 @@ class ManufacturerController extends ActiveGridController
 		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
 		$manufacturer->getSpecification();
 
-		$response = new ActionResponse('manufacturer', $manufacturer->toArray());
+		$this->set('manufacturer', $manufacturer->toArray());
 		$form = $this->buildForm($manufacturer);
 		$form->setData($manufacturer->toArray());
 
 		$manufacturer->getSpecification()->setFormResponse($response, $form);
-		$response->set('form', $form);
+		$this->set('form', $form);
 
-		return $response;
 	}
 
 	public function createAction()
@@ -82,9 +80,8 @@ class ManufacturerController extends ActiveGridController
 	{
 		$this->loadLanguageFile('backend/Product');
 
-		$response = new ActionResponse();
+
 		$this->setGridResponse($response);
-		return $response;
 	}
 
 	protected function getClassName()

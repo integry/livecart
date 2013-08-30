@@ -27,10 +27,9 @@ class ProductListItemController extends StoreManagementController
 		{
 			$list->addProduct($product);
 
-			$response = new ActionResponse();
-			$response->set('product', $product->toArray());
-			$response->set('added', true);
-			return $response;
+
+			$this->set('product', $product->toArray());
+			$this->set('added', true);
 		}
 		else
 		{

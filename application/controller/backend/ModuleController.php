@@ -105,10 +105,9 @@ class ModuleController extends StoreManagementController
 			}
 		}
 
-		$response = new ActionResponse();
-		$response->set('sortedModules', $sorted);
-		$response->set('repos', $repos);
-		return $response;
+
+		$this->set('sortedModules', $sorted);
+		$this->set('repos', $repos);
 	}
 
 	private function sortModulesByName($a, $b)
@@ -190,9 +189,8 @@ class ModuleController extends StoreManagementController
 		$form->set('channel', $moduleLine);
 
 		$response = new ActionResponse('lines', array_combine($lines, $lines));
-		$response->set('versions', $this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $moduleLine))));
-		$response->set('form', $form);
-		return $response;
+		$this->set('versions', $this->getVersionList($this->getRepoResponse('package/versions', array('channel' => $moduleLine))));
+		$this->set('form', $form);
 	}
 
 	public function listVersionsAction()
@@ -204,7 +202,7 @@ class ModuleController extends StoreManagementController
 	{
 		$module = $this->toArray($this->getModule());
 		$module['repo'] = array('repo' => $this->request->get('repo'), 'handshake' => $this->request->get('handshake'));
-		return new ActionResponse('module', $module);
+		$this->set('module', $module);
 	}
 
 	public function updateAction()
@@ -221,7 +219,6 @@ class ModuleController extends StoreManagementController
 
 		if (!$updatePath)
 		{
-			return $response;
 		}
 
 		require_once($this->config->getPath('library/pclzip') . '/pclzip.lib.php');
@@ -316,10 +313,9 @@ class ModuleController extends StoreManagementController
 			}
 		}
 
-		$response = new ActionResponse();
-		$response->set('repos', base64_encode($this->request->get('repos')));
-		$response->set('packages', $resp);
-		return $response;
+
+		$this->set('repos', base64_encode($this->request->get('repos')));
+		$this->set('packages', $resp);
 	}
 
 	public function fetchAction()
@@ -411,7 +407,6 @@ class ModuleController extends StoreManagementController
 		$response = new CompositeJSONResponse();
 		$response->setResponse('status', new JSONResponse(array('status' => $this->makeText($statusMsg, array($this->translate($module->getName()))))));
 		$response->addAction('node', 'backend.module', 'node');
-		return $response;
 	}
 
 	private function getModule()

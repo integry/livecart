@@ -11,12 +11,11 @@ class ErrController extends BackendController
 {
 	public function indexAction()
 	{
-		$response = new ActionResponse();
-		$response->set('id', $this->request->get('id'));
-		$response->set('ajax', $this->request->get('ajax'));
-		$response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
 
-		return $response;
+		$this->set('id', $this->request->get('id'));
+		$this->set('ajax', $this->request->get('ajax'));
+		$this->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
+
 	}
 
 	public function redirectAction()
@@ -39,7 +38,6 @@ class ErrController extends BackendController
 				}
 				else
 				{
-					return $response;
 				}
 			case 403:
 			case 404:

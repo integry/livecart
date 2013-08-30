@@ -20,11 +20,10 @@ class FilterGroupController extends StoreManagementController
 	/**
 	 * Filters group index page
 	 *
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 
 		$categoryID = (int)$this->request->get('id');
 		$category = Category::getInstanceByID($categoryID);
@@ -39,13 +38,12 @@ class FilterGroupController extends StoreManagementController
 			'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
 		);
 
-		$response->set('filters', $this->createFiltersInGroupsCountArray($category->getFilterGroupSet()));
-		$response->set('blankFilter', $blankFilter);
-		$response->set('categoryID', $categoryID);
-		$response->set('configuration', $this->getConfig());
-		$response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
+		$this->set('filters', $this->createFiltersInGroupsCountArray($category->getFilterGroupSet()));
+		$this->set('blankFilter', $blankFilter);
+		$this->set('categoryID', $categoryID);
+		$this->set('configuration', $this->getConfig());
+		$this->set('defaultLangCode', $this->application->getDefaultLanguageCode());
 
-		return $response;
 	}
 
 	/**
@@ -122,7 +120,7 @@ class FilterGroupController extends StoreManagementController
 		$groupID = $this->request->get('id');
 		$categoryID = $this->request->get('categoryID');
 
-		$response = new ActionResponse();
+
 		$filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
 
 		$filterGroupArray = $filterGroup->toArray();

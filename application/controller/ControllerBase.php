@@ -12,32 +12,11 @@
 abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiTranslator
 {
 	/**
-	 * System user
-	 *
-	 * @var User
-	 */
-	protected $user = null;
-
-	/**
-	 * Session instance
-	 *
-	 * @var Session
-	 */
-	protected $session = null;
-
-	/**
 	 * Locale
 	 *
 	 * @var Locale
 	 */
 	protected $locale = null;
-
-	/**
-	 * Configuration handler instance
-	 *
-	 * @var Config
-	 */
-	protected $config = null;
 
 	/**
 	 * Configuration files (language, registry)
@@ -68,9 +47,6 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		}
 
 		unset($this->locale);
-		unset($this->config);
-		unset($this->user);
-		unset($this->session);
 
 		$this->checkAccess();
 
@@ -94,6 +70,11 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			exit;
 		}
 		*/
+	}
+
+	public function set($key, $value)
+	{
+		$this->view->$key = $value;
 	}
 
 	public function getBlockResponse(&$block)
@@ -190,22 +171,6 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	public function makeText($key, $params)
 	{
 		return $this->locale->translator()->makeText($key, $params);
-	}
-
-	public function getUser()
-	{
-		if (empty($this->user))
-		{
-						$sessionUser = new SessionUser();
-			$this->user = $sessionUser->getUser();
-		}
-
-		return $this->user;
-	}
-
-	public function setUser(User $user)
-	{
-		$this->user = $user;
 	}
 
 	public function loadLanguageFile($langFile)
@@ -332,20 +297,6 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			case 'locale':
 				$this->locale = $this->application->getLocale();
 				return $this->locale;
-			break;
-
-			case 'config':
-				$this->config = $this->application->getConfig();
-				return $this->config;
-			break;
-
-			case 'user':
-				return $this->getUser();
-			break;
-
-			case 'session':
-				$this->session = new Session();
-				return $this->session;
 			break;
 
 			default:

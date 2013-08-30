@@ -14,15 +14,14 @@ class CategoryController extends StoreManagementController
 	public function indexAction()
 	{
 		Category::loadTree();
-		$response = new ActionResponse();
+
 
 		$categories = array('children' => array($this->getRecursiveJson(Category::getRootNode()->toArray())));
 
-		$response->set('categoryList', json_encode($categories));
-		$response->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
-		$response->set('maxUploadSize', ini_get('upload_max_filesize'));
-		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
-		return $response;
+		$this->set('categoryList', json_encode($categories));
+		$this->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
+		$this->set('maxUploadSize', ini_get('upload_max_filesize'));
+		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
 	}
 
 	/**
@@ -30,7 +29,6 @@ class CategoryController extends StoreManagementController
 	 *
 	 * @role !category
 	 *
-	 * @return ActionResponse
 	 */
 	public function formAction()
 	{
@@ -39,20 +37,19 @@ class CategoryController extends StoreManagementController
 
 		$category = Category::getRootNode();
 		$form = $this->buildForm($category);
-		$response = new ActionResponse("catalogForm", $form);
+		$this->set("catalogForm", $form);
 
-		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+		$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		$listStyles = array();
 		foreach (array('LIST', 'GRID', 'TABLE') as $style)
 		{
 			$listStyles[$style] = $this->translate($style);
 		}
-		$response->set('listStyles', array_merge(array(''), $listStyles));
+		$this->set('listStyles', array_merge(array(''), $listStyles));
 
 		$category->getSpecification()->setFormResponse($response, $form);
 
-		return $response;
 	}
 
 	public function categoryAction()
@@ -80,8 +77,7 @@ class CategoryController extends StoreManagementController
 	public function addAction()
 	{
 		$response = new BlockResponse();
-		$response->set('form', $this->buildAddForm());
-		return $response;
+		$this->set('form', $this->buildAddForm());
 	}
 
 	/**
@@ -342,7 +338,7 @@ class CategoryController extends StoreManagementController
 
 	public function popupAction()
 	{
-		return new ActionResponse('categoryList', $this->getRootCategoryJson());
+		$this->set('categoryList', $this->getRootCategoryJson());
 	}
 
 	public function productSelectPopupAction()

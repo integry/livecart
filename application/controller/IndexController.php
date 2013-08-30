@@ -35,7 +35,6 @@ class IndexController extends ControllerBase
 		$response = 'news', $news);
 		$response = 'isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
 
-		return $response;
 	}
 
 }

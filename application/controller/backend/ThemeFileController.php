@@ -14,12 +14,11 @@ class ThemeFileController extends StoreManagementController
 		$request = $this->getRequest();
 		$theme = $request->get('id');
 		$tfh = ThemeFile::getNewInstance($theme);
-		$response = new ActionResponse();
-		$response->set('form',$this->buildForm());
-		$response->set('filesList',$tfh->getFiles());
-		$response->set('theme',$theme);
-		$response->set('maxSize', ini_get('upload_max_filesize'));
-		return $response;
+
+		$this->set('form',$this->buildForm());
+		$this->set('filesList',$tfh->getFiles());
+		$this->set('theme',$theme);
+		$this->set('maxSize', ini_get('upload_max_filesize'));
 	}
 
 	public function uploadAction()
@@ -29,14 +28,13 @@ class ThemeFileController extends StoreManagementController
 		$tfh = ThemeFile::getNewInstance($request->get('theme'));
 		$res = $tfh->processFileUpload('file', $request->get('filename'), $request->get('orginalFileName'));
 		$this->setLayout('iframeJs');
-		$response = new ActionResponse();
-		$response->set('theme', $theme);
-		$response->set('result', json_encode($tfh->getFiles()));
+
+		$this->set('theme', $theme);
+		$this->set('result', json_encode($tfh->getFiles()));
 		if(is_array($res))
 		{
-			$response->set('highlightFileName', $res['filename']);
+			$this->set('highlightFileName', $res['filename']);
 		}
-		return $response;
 	}
 
 	public function deleteAction()

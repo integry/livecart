@@ -27,18 +27,17 @@ class SelectFileController extends ActiveGridController
 					  'childrenCount' => 22,
 					 );
 
-		$response = new ActionResponse();
-		$response->set('directoryList', $this->getSubDirectories(getcwd()));
-		$response->set('root', array(0 => $root));
-		$response->set('current', $dir);
+
+		$this->set('directoryList', $this->getSubDirectories(getcwd()));
+		$this->set('root', array(0 => $root));
+		$this->set('current', $dir);
 
 		$this->setGridResponse($response);
-		$response->set('offset', 0);
-		$response->set('data', '');
+		$this->set('offset', 0);
+		$this->set('data', '');
 
 		//print_r($response->getData());
 
-		return $response;
 	}
 
 	public function xmlRecursivePathAction()

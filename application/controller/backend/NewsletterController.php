@@ -35,7 +35,7 @@ class NewsletterController extends ActiveGridController
 
 	public function addAction()
 	{
-		return new ActionResponse('form', $this->getForm());
+		$this->set('form', $this->getForm());
 	}
 
 	private function sortGroups($a, $b)
@@ -51,14 +51,14 @@ class NewsletterController extends ActiveGridController
 		$form->setData($newsletter->toArray());
 		$form->set('users', 1);
 		$form->set('subscribers', 1);
-		$response = new ActionResponse('form', $form);
+		$this->set('form', $form);
 		$groupsArray = array_merge(
 			ActiveRecord::getRecordSetArray('UserGroup', select()),
 			array(array('ID' => null,'name' => $this->translate('Customers')))
 		);
 
         usort($groupsArray, array($this, 'sortGroups'));
-		$response->set('groupsArray', $groupsArray);
+		$this->set('groupsArray', $groupsArray);
 		
 		$newsletterArray = $newsletter->toArray();
 		$text = strlen($newsletterArray['text']);
@@ -75,15 +75,14 @@ class NewsletterController extends ActiveGridController
 		{
 			$newsletterArray['format'] = self::FORMAT_HTML;
 		}
-		$response->set('newsletter', $newsletterArray);
-		$response->set('sentCount', $newsletter->getSentCount());
-		$response->set('recipientCount', $this->getRecipientCount($form->getData()));
-		return $response;
+		$this->set('newsletter', $newsletterArray);
+		$this->set('sentCount', $newsletter->getSentCount());
+		$this->set('recipientCount', $this->getRecipientCount($form->getData()));
 	}
 
 	public function recipientCountAction()
 	{
-		return new ActionResponse('count', $this->getRecipientCount($this->request->toArray()));
+		$this->set('count', $this->getRecipientCount($this->request->toArray()));
 	}
 
 	public function saveAction()
@@ -100,7 +99,7 @@ class NewsletterController extends ActiveGridController
 		}
 		else
 		{
-			$newsletter = ActiveRecordModel::getNewInstance('NewsletterMessage');
+			$newsletter = new NewsletterMessage;
 		}
 		
 		$format = $this->request->get('newsletter_'.$id.'_format');

@@ -26,13 +26,12 @@ class PaymentController extends StoreManagementController
 		$captureForm = $this->buildCaptureForm();
 		$captureForm->set('amount', $orderArray['amountNotCaptured']);
 
-		$response = new ActionResponse();
-		$response->set('transactions', $transactions);
-		$response->set('order', $orderArray);
-		$response->set('offlinePaymentForm', $this->buildOfflinePaymentForm());
-		$response->set('capture', $captureForm);
 
-		return $response;
+		$this->set('transactions', $transactions);
+		$this->set('order', $orderArray);
+		$this->set('offlinePaymentForm', $this->buildOfflinePaymentForm());
+		$this->set('capture', $captureForm);
+
 	}
 
 	/**
@@ -125,9 +124,8 @@ class PaymentController extends StoreManagementController
 	public function totalsAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->get('id'));
-		$response = new ActionResponse();
-		$response->set('order', $transaction->order->get()->toArray(array('payments' => true)));
-		return $response;
+
+		$this->set('order', $transaction->order->get()->toArray(array('payments' => true)));
 	}
 
 	/**
@@ -144,25 +142,24 @@ class PaymentController extends StoreManagementController
 		$captureForm = $this->buildCaptureForm();
 		$captureForm->set('amount', $orderArray['amountNotCaptured']);
 
-		$response = new ActionResponse();
-		$response->set('transaction', $transactions[$transaction->getID()]);
-		$response->set('capture', $captureForm);
-		return $response;
+
+		$this->set('transaction', $transactions[$transaction->getID()]);
+		$this->set('capture', $captureForm);
 	}
 
 	public function ccFormAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'));
 
-		$response = new ActionResponse();
 
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+
+		$this->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 
 		$ccHandler = $this->application->getCreditCardHandler();
 		if ($ccHandler)
 		{
-			$response->set('ccHandler', $ccHandler->toArray());
-			$response->set('ccForm', $this->buildCreditCardForm());
+			$this->set('ccHandler', $ccHandler->toArray());
+			$this->set('ccForm', $this->buildCreditCardForm());
 
 			$months = range(1, 12);
 			$months = array_combine($months, $months);
@@ -170,8 +167,8 @@ class PaymentController extends StoreManagementController
 			$years = range(date('Y'), date('Y') + 20);
 			$years = array_combine($years, $years);
 
-			$response->set('months', $months);
-			$response->set('years', $years);
+			$this->set('months', $months);
+			$this->set('years', $years);
 		}
 
 		$orderArray = $order->toArray(array('payments' => true));
@@ -179,10 +176,9 @@ class PaymentController extends StoreManagementController
 		$form->set('amount', $orderArray['amountDue']);
 		$form->set('name', $order->user->get()->getName());
 
-		$response->set('ccTypes', $this->application->getCardTypes($ccHandler));
-		$response->set('order', $orderArray);
-		$response->set('ccForm', $form);
-		return $response;
+		$this->set('ccTypes', $this->application->getCardTypes($ccHandler));
+		$this->set('order', $orderArray);
+		$this->set('ccForm', $form);
 	}
 
 	/**
@@ -294,7 +290,6 @@ class PaymentController extends StoreManagementController
 		$response = new CompositeJSONResponse();
 		$response->addAction('transaction', 'backend.payment', 'transaction');
 		$response->addAction('totals', 'backend.payment', 'totals');
-		return $response;
 	}
 
 	/**

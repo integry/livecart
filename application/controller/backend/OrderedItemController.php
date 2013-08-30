@@ -225,25 +225,24 @@ class OrderedItemController extends StoreManagementController
 	public function selectProductAction()
 	{
 
-		$response = new ActionResponse();
+
 
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 
-		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
+		$this->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
 
-		$response->set("order", $order->toFlatArray());
-		$response->set("shipments", $this->getOrderShipments($order));
+		$this->set("order", $order->toFlatArray());
+		$this->set("shipments", $this->getOrderShipments($order));
 
-		return $response;
 	}
 
 	public function shipmentsAction()
 	{
 		$order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
-		return new ActionResponse("shipments", $this->getOrderShipments($order));
+		$this->set("shipments", $this->getOrderShipments($order));
 	}
 
 	private function getOrderShipments(CustomerOrder $order)
@@ -527,8 +526,7 @@ class OrderedItemController extends StoreManagementController
 		$c = new OrderController($this->application);
 
 		$response = $c->optionForm($item->customerOrder, '');
-		$response->set('currency', $item->customerOrder->currency->getID());
-		return $response;
+		$this->set('currency', $item->customerOrder->currency->getID());
 	}
 
 	public function variationFormAction()
@@ -542,9 +540,8 @@ class OrderedItemController extends StoreManagementController
 		$c = new OrderController($this->application);
 
 		$response = $c->variationForm($item->customerOrder, '');
-		$response->set('currency', $item->customerOrder->currency->getID());
-		$response->set('variations', $item->getProduct()->getVariationData($this->application));
-		return $response;
+		$this->set('currency', $item->customerOrder->currency->getID());
+		$this->set('variations', $item->getProduct()->getVariationData($this->application));
 	}
 
 	public function saveOptionsAction()
@@ -608,14 +605,13 @@ class OrderedItemController extends StoreManagementController
 			$items[] = $item->toArray();
 			$set->add($item->getProduct()->getParent());
 		}
-		$response = new ActionResponse('items', $items);
+		$this->set('items', $items);
 
 		// load product options and variations
 		//  pp(array_keys(ProductOption::loadOptionsForProductSet($set)));
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($set));
-		$response->set('variations', $set->getVariationData($this->application));
+		$this->set('allOptions', ProductOption::loadOptionsForProductSet($set));
+		$this->set('variations', $set->getVariationData($this->application));
 
-		return $response;
 	}
 
 	public function itemAction()
@@ -648,13 +644,12 @@ class OrderedItemController extends StoreManagementController
 
 		$this->application->getLocale()->translationManager()->loadFile('backend/Shipment');
 
-		$response = new ActionResponse('item', $item->toArray());
+		$this->set('item', $item->toArray());
 
 		// load product options and variations
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($item->getProduct()->getParent()->initSet()));
-		$response->set('variations', $item->getProduct()->getParent()->initSet()->getVariationData($this->application));
+		$this->set('allOptions', ProductOption::loadOptionsForProductSet($item->getProduct()->getParent()->initSet()));
+		$this->set('variations', $item->getProduct()->getParent()->initSet()->getVariationData($this->application));
 
-		return $response;
 	}
 }
 

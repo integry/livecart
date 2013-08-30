@@ -242,7 +242,7 @@ class CategoryController extends CatalogController
 			$this->getFeaturedMainCategoryProducts($categoryNarrow);
 		}
 
-		$response = new ActionResponse();
+
 		$response = 'id', $this->getCategoryId());
 
 		$response = 'context', $this->getContext());
@@ -297,7 +297,6 @@ class CategoryController extends CatalogController
 			$response = 'modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
 
-		return $response;
 	}
 
 	/**
@@ -320,10 +319,9 @@ class CategoryController extends CatalogController
 			$sorted[$letter][] = $category;
 		}
 
-		$response = new ActionResponse('sorted', $sorted);
+		$this->set('sorted', $sorted);
 		$response = 'totalCount', count($allCategories));
 		$response = 'categories', $allCategories);
-		return $response;
 	}
 
 	/**
@@ -346,7 +344,6 @@ class CategoryController extends CatalogController
 		$category['name_lang'] = $this->translate('_all_products');
 		$response = 'category', $category);
 
-		return $response;
 	}
 
 	private function getCategoryPageUrl($params = array())
@@ -552,7 +549,6 @@ class CategoryController extends CatalogController
 
 		$response = new BlockResponse();
 		$response = 'context', $context);
-		return $response;
 	}
 
 	protected function relatedCategoriesBlock()
@@ -601,7 +597,6 @@ class CategoryController extends CatalogController
 
 		$response = new BlockResponse();
 		$response = 'lists', $lists);
-		return $response;
 	}
 
 	protected function boxFilterBlock($includeAppliedFilters = true)
@@ -730,7 +725,6 @@ class CategoryController extends CatalogController
 		}
 	 	$response = 'category', $this->getCategory()->toArray());
 	 	$response = 'groups', $filterGroups);
-		return $response;
 	}
 
 	private function getAppliedFilterArray()
@@ -859,7 +853,6 @@ class CategoryController extends CatalogController
 			$response = 'category', $this->getCategory()->toArray());
 			$response = 'groups', $groups);
 
-			return $response;
 		}
 		else
 		{

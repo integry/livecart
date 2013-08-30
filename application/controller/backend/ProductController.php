@@ -12,9 +12,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 {
     public function indexAction()
 	{
-		$response = new ActionResponse();
 
-		return $response;
+
 	}
 
     public function categoryAction()
@@ -27,11 +26,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response['options'] = $this->getGridOptions();
 
 		/*
-		$response->set('currency', $this->application->getDefaultCurrency()->getID());
-		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
-		$response->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
-		$response->set('taxClasses', $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
-		$response->set('attributes', $category->getSpecificationFieldArray());
+		$this->set('currency', $this->application->getDefaultCurrency()->getID());
+		$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+		$this->set('shippingClasses', $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$this->set('taxClasses', $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
+		$this->set('attributes', $category->getSpecificationFieldArray());
 		*/
 
 		return new JSONResponse($response);
@@ -41,7 +40,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		$response = $this->productForm(true);
 
-		return $response;
 	}
 
 	public function getAction()
@@ -427,7 +425,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			Category::recalculateProductsCount();
 		}
 
-		return $response;
 	}
 
 	protected function getMassActionProcessor()
@@ -674,7 +671,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		$response->get('productForm')->set('isEnabled', $this->config->get('DEFAULT_PRODUCT_ENABLED'));
 
-		return $response;
 	}
 
 	/**
@@ -682,12 +678,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 *
 	 * @role create
 	 *
-	 * @return ActionResponse
 	 */
 	public function addAction()
 	{
 		$response = $this->productForm(false);
-		return $response;
 	}
 
 	/**
@@ -702,12 +696,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		if ($response instanceOf ActionResponse)
 		{
 			$response->get('productForm')->clearData();
-			$response->set('id', $product->getID());
-			return $response;
+			$this->set('id', $product->getID());
 		}
 		else
 		{
-			return $response;
 		}
 	}
 
@@ -743,9 +735,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$otherCurrencies[] = $row['ID'];
 		}
 
-		$response->set("product", $product->toFlatArray());
-		$response->set("otherCurrencies", $otherCurrencies);
-		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
+		$this->set("product", $product->toFlatArray());
+		$this->set("otherCurrencies", $otherCurrencies);
+		$this->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$productForm = $response->get('productForm');
 
 		// all product prices in a separate array
@@ -756,9 +748,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$productForm->set('price_' . $price['currencyID'], $price['price']);
 			$productForm->set('listPrice_' . $price['currencyID'], $price['listPrice']);
 		}
-		$response->set('prices', $prices);
+		$this->set('prices', $prices);
 
-		return $response;
 	}
 
 	public function specFieldsAction()
@@ -780,7 +771,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$response = new BlockResponse('form', $form);
 		$product->getSpecification()->setFormResponse($response, $form);
 		$product->getSpecification()->setValidation($form->getValidator());
-		return $response;
 	}
 
 	public function countTabsItemsAction()
@@ -866,11 +856,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			}
 		}
 
-		$response = new ActionResponse();
-		$response->set('together', $product->getProductsPurchasedTogether(10));
-		$response->set('product', $product->toArray());
-		$response->set('purchaseStats', $purchaseStats);
-		return $response;
+
+		$this->set('together', $product->getProductsPurchasedTogether(10));
+		$this->set('product', $product->toArray());
+		$this->set('purchaseStats', $purchaseStats);
 	}
 
 	private function save(Product $product)
@@ -962,7 +951,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 			$response->setHeader('Content-type', 'text/javascript');
 
-			return $response;
 		}
 		else
 		{
@@ -977,7 +965,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 
 		$response = new BlockResponse();
-		$response->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+		$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		$form = $this->buildForm($isExisting);
 
@@ -996,13 +984,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		//$product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
 
-		$response->set("productForm", $form);
-		$response->set("productTypes", $types);
-		$response->set("productStatuses", $status);
-		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
-		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
-		$response->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
-		$response->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
+		$this->set("productForm", $form);
+		$this->set("productTypes", $types);
+		$this->set("productStatuses", $status);
+		$this->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
+		$this->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+		$this->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$this->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
 		// get user groups
 		$f = new ARSelectFilter();
@@ -1013,9 +1001,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$groups[$group['ID']] = $group['name'];
 		}
 		$groups[''] = '';
-		$response->set('userGroups', $groups);
+		$this->set('userGroups', $groups);
 
-		return $response;
 	}
 
 	private function getSelectOptionsFromSet(ARSet $set)
@@ -1083,9 +1070,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			}
 		}
 
-		$response = new ActionResponse('field', $array);
-		$response->set('form', new Form($this->getValidator('massActionField')));
-		return $response;
+		$this->set('field', $array);
+		$this->set('form', new Form($this->getValidator('massActionField')));
 	}
 
 	protected function setGridResponse()

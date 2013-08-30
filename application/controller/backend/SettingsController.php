@@ -23,8 +23,8 @@ class SettingsController extends StoreManagementController
 			unset($tree['49-private-label']);
 		}
 
-		$response = new ActionResponse('categories', json_encode($tree));
-		$response->set('settings', json_encode($this->config->toArray()));
+		$this->set('categories', json_encode($tree));
+		$this->set('settings', json_encode($this->config->toArray()));
 
 		$defLang = $this->application->getDefaultLanguageCode();
 		$languages = $this->application->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
@@ -62,12 +62,11 @@ class SettingsController extends StoreManagementController
 			$types[$key] = $value['type'];
 		}
 
-		$response->set('form', $form);
-		$response->set('values', $values);
-		$response->set('types', $types);
-		$response->set('layouts', $layouts);
-		$response->set('multiLingualValues', $multiLingualValues);
-		return $response;
+		$this->set('form', $form);
+		$this->set('values', $values);
+		$this->set('types', $types);
+		$this->set('layouts', $layouts);
+		$this->set('multiLingualValues', $multiLingualValues);
 	}
 
 	/**

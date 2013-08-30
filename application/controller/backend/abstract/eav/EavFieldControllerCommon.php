@@ -25,7 +25,6 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 	/**
 	 * Specification field index page
 	 *
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
@@ -45,13 +44,12 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 			'isDisplayed' => true,
 		);
 
-		$response = new ActionResponse();
-		$response->set('categoryID', $categoryID);
-		$response->set('configuration', $this->getSpecFieldConfig());
-		$response->set('specFieldsList', $defaultSpecFieldValues);
-		$response->set('specFieldsWithGroups', $this->getParent($categoryID)->getSpecFieldsWithGroupsArray());
 
-		return $response;
+		$this->set('categoryID', $categoryID);
+		$this->set('configuration', $this->getSpecFieldConfig());
+		$this->set('specFieldsList', $defaultSpecFieldValues);
+		$this->set('specFieldsWithGroups', $this->getParent($categoryID)->getSpecFieldsWithGroupsArray());
+
 	}
 
 	/**

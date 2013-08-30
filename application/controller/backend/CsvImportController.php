@@ -39,11 +39,10 @@ class CsvImportController extends StoreManagementController
 		$form->set('category', $root->getID());
 		$form->set('atServer', $this->request->get('file'));
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('catPath', $root->getPathNodeArray(true));
-		$response->set('types', $types);
-		return $response;
+
+		$this->set('form', $form);
+		$this->set('catPath', $root->getPathNodeArray(true));
+		$this->set('types', $types);
 	}
 
 	public function setFileAction()
@@ -124,9 +123,9 @@ class CsvImportController extends StoreManagementController
 		$form->set('type', $this->request->get('type'));
 		$form->set('category', $this->request->get('category'));
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('file', $file);
+
+		$this->set('form', $form);
+		$this->set('file', $file);
 
 		$delimiters = array_flip($this->delimiters);
 		foreach ($delimiters as &$title)
@@ -134,18 +133,18 @@ class CsvImportController extends StoreManagementController
 			$title = $this->translate($title);
 		}
 
-		$response->set('delimiters', $delimiters);
+		$this->set('delimiters', $delimiters);
 
 		$csv = new CsvFile($file, $delimiter);
 		$preview = $this->getPreview($csv);
-		$response->set('type', $this->request->get('type'));
-		$response->set('preview', $preview);
-		$response->set('previewCount', count($preview));
-		$response->set('total', $csv->getRecordCount());
-		$response->set('currencies', $this->application->getCurrencyArray());
-		$response->set('languages', $this->application->getLanguageSetArray(true));
-		$response->set('groups', ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter()));
-		$response->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
+		$this->set('type', $this->request->get('type'));
+		$this->set('preview', $preview);
+		$this->set('previewCount', count($preview));
+		$this->set('total', $csv->getRecordCount());
+		$this->set('currencies', $this->application->getCurrencyArray());
+		$this->set('languages', $this->application->getLanguageSetArray(true));
+		$this->set('groups', ActiveRecordModel::getRecordSetArray('UserGroup', new ARSelectFilter()));
+		$this->set('catPath', Category::getInstanceByID($this->request->get('category'), Category::LOAD_DATA)->getPathNodeArray(true));
 
 		$profiles = array('' => '');
 		foreach ((array)glob($this->getProfileDirectory($this->getImportInstance()) . '*.ini') as $path)
@@ -153,9 +152,8 @@ class CsvImportController extends StoreManagementController
 			$profile = basename($path, '.ini');
 			$profiles[$profile] = $profile;
 		}
-		$response->set('profiles', $profiles);
+		$this->set('profiles', $profiles);
 
-		return $response;
 	}
 
 	public function previewAction()
@@ -169,12 +167,11 @@ class CsvImportController extends StoreManagementController
 
 		$csv = new CsvFile($this->request->get('file'), $this->request->get('delimiter'));
 
-		$response = new ActionResponse('columns', $csv->getRecord());
-		$response->set('fields', $import->getFields());
-		$response->set('form', $this->getFieldsForm());
-		$response->set('type', $this->request->get('type'));
-		$response->set('options', $this->request->get('options'));
-		return $response;
+		$this->set('columns', $csv->getRecord());
+		$this->set('fields', $import->getFields());
+		$this->set('form', $this->getFieldsForm());
+		$this->set('type', $this->request->get('type'));
+		$this->set('options', $this->request->get('options'));
 	}
 
 	public function loadProfileAction()

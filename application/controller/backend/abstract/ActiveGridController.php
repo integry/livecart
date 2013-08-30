@@ -351,16 +351,15 @@ abstract class ActiveGridController extends StoreManagementController
 		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
 		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
 
-		$response->set('displayedColumns', $displayedColumns);
-		$response->set('availableColumns', $availableColumns);
-		$response->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
+		$this->set('displayedColumns', $displayedColumns);
+		$this->set('availableColumns', $availableColumns);
+		$this->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
 
-		$response->set('massForm', $this->getMassForm());
-		$response->set('totalCount', '0');
-		$response->set('filters', $this->request->get('filters'));
-		$response->set('data', $this->lists(false, $displayedColumns)->getData());
+		$this->set('massForm', $this->getMassForm());
+		$this->set('totalCount', '0');
+		$this->set('filters', $this->request->get('filters'));
+		$this->set('data', $this->lists(false, $displayedColumns)->getData());
 
-		return $response;
 	}
 
 	protected function setGridResponse(ActionResponse $response = null)
@@ -368,7 +367,7 @@ abstract class ActiveGridController extends StoreManagementController
 		if (empty($response))
 		{
 			$jsonResponse = true;
-			$response = new ActionResponse();
+
 		}
 
 		$displayedColumns = $this->getRequestColumns();
@@ -379,23 +378,22 @@ abstract class ActiveGridController extends StoreManagementController
 		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
 		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
 
-		$response->set('displayedColumns', $displayedColumns);
-		$response->set('availableColumns', $availableColumns);
-		$response->set('advancedSearchColumns', $this->getAdvancedSearchFields());
-		$response->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
+		$this->set('displayedColumns', $displayedColumns);
+		$this->set('availableColumns', $availableColumns);
+		$this->set('advancedSearchColumns', $this->getAdvancedSearchFields());
+		$this->set('columnWidths', $this->user->getPreference('columnWidth_' . get_class($this)));
 
-		$response->set('massForm', $this->getMassForm());
-		$response->set('offset', $this->request->get('offset'));
-		$response->set('totalCount', '0');
-		$response->set('filters', $this->request->get('filters'));
-		$response->set('data', $this->lists(false, $displayedColumns)->getData());
+		$this->set('massForm', $this->getMassForm());
+		$this->set('offset', $this->request->get('offset'));
+		$this->set('totalCount', '0');
+		$this->set('filters', $this->request->get('filters'));
+		$this->set('data', $this->lists(false, $displayedColumns)->getData());
 
 		if (isset($jsonResponse))
 		{
 			return $response->getData();
 		}
 
-		return $response;
 	}
 
 	protected function formatValue($value, $type)

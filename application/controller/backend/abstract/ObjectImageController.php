@@ -23,12 +23,11 @@ abstract class ObjectImageController extends StoreManagementController
 
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
 
-		$response = new ActionResponse();
-		$response->set('form', $this->buildForm($owner->getID()));
-		$response->set('maxSize', ini_get('upload_max_filesize'));
-		$response->set('ownerId', $owner->getID());
-		$response->set('images', json_encode($imageArray));
-		return $response;
+
+		$this->set('form', $this->buildForm($owner->getID()));
+		$this->set('maxSize', ini_get('upload_max_filesize'));
+		$this->set('ownerId', $owner->getID());
+		$this->set('images', json_encode($imageArray));
 	}
 
 	public function uploadAction()
@@ -76,10 +75,9 @@ abstract class ObjectImageController extends StoreManagementController
 		unset($result['Product']['DefaultImage']['Product']);
 
 		$this->setLayout('iframeJs');
-		$response = new ActionResponse();
-		$response->set('ownerId', $ownerId);
-		$response->set('result', json_encode($result));
-		return $response;
+
+		$this->set('ownerId', $ownerId);
+		$this->set('result', json_encode($result));
 	}
 
 	public function saveAction()
@@ -122,7 +120,7 @@ abstract class ObjectImageController extends StoreManagementController
 			$error = $this->translate('_err_not_found ' . get_class($exc));
 		}
 
-		$response = new ActionResponse();
+
 
 		if (isset($error))
 		{
@@ -136,10 +134,9 @@ abstract class ObjectImageController extends StoreManagementController
 		}
 
 		$this->setLayout('iframeJs');
-		$response->set('ownerId', $this->request->get('ownerId'));
-		$response->set('imageId', $this->request->get('imageId'));
-	  	$response->set('result', @json_encode($result));
-		return $response;
+		$this->set('ownerId', $this->request->get('ownerId'));
+		$this->set('imageId', $this->request->get('imageId'));
+	  	$this->set('result', @json_encode($result));
 	}
 
 	/**

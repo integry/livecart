@@ -28,13 +28,12 @@ class DeliveryZoneController extends StoreManagementController
 			$zones[2]['items'][] = array('ID' => $zone['ID'], 'name' => $zone['name'], 'type'=>$zone['type']);
 		}
 
-		$response = new ActionResponse();
-		$response->set('zones', json_encode($zones));
-		$response->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
-		$response->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
-		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
+
+		$this->set('zones', json_encode($zones));
+		$this->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
+		$this->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
+		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		$this->loadLanguageFile('backend/ShippingService');
-		return $response;
 	}
 
 	public function countriesAndStatesAction()
@@ -73,22 +72,21 @@ class DeliveryZoneController extends StoreManagementController
 
 		$states = $this->getStates($deliveryZone, $stateCountry);
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('zoneID', $id);
-		$response->set('states', $states['all']);
-		$response->set('allCountries', $allCountries);
-		$response->set('countries', $countries);
-		$response->set('countryGroups', $this->locale->info()->getCountryGroups());
-		$response->set('selectedCountries', $selectedCountries);
-		$response->set('selectedStates', $states['selected']);
-		$response->set('zipMasks', $deliveryZone->getZipMasks()->toArray());
-		$response->set('cityMasks', $deliveryZone->getCityMasks()->toArray());
-		$response->set('addressMasks', $deliveryZone->getAddressMasks()->toArray());
-		$response->set('defaultLanguageCode', $this->application->getDefaultLanguageCode());
-		$response->set('alternativeLanguagesCodes', $alternativeLanguagesCodes);
+
+		$this->set('form', $form);
+		$this->set('zoneID', $id);
+		$this->set('states', $states['all']);
+		$this->set('allCountries', $allCountries);
+		$this->set('countries', $countries);
+		$this->set('countryGroups', $this->locale->info()->getCountryGroups());
+		$this->set('selectedCountries', $selectedCountries);
+		$this->set('selectedStates', $states['selected']);
+		$this->set('zipMasks', $deliveryZone->getZipMasks()->toArray());
+		$this->set('cityMasks', $deliveryZone->getCityMasks()->toArray());
+		$this->set('addressMasks', $deliveryZone->getAddressMasks()->toArray());
+		$this->set('defaultLanguageCode', $this->application->getDefaultLanguageCode());
+		$this->set('alternativeLanguagesCodes', $alternativeLanguagesCodes);
 		$this->assignAllTypes($response);
-		return $response;
 	}
 
 	public function loadStatesAction()
@@ -346,7 +344,7 @@ class DeliveryZoneController extends StoreManagementController
 
 	private function assignAllTypes(Response $response)
 	{
-		$response->set('allTypes', array(
+		$this->set('allTypes', array(
 			DeliveryZone::BOTH_RATES => $this->translate('_tax_and_shipping_rates'),
 			DeliveryZone::SHIPPING_RATES  => $this->translate('_shipping_rates'),
 			DeliveryZone::TAX_RATES => $this->translate('_tax_rates')

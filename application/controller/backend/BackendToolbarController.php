@@ -12,9 +12,9 @@ class BackendToolbarController extends StoreManagementController
 	{
 		$request = $this->getRequest();
 		$where = $request->get('where');
-		$response = new ActionResponse();
-		$response->set('randomToken', substr(md5(time().mt_rand(1,9999999999)),0,8));
-		$response->set('where', $where);
+
+		$this->set('randomToken', substr(md5(time().mt_rand(1,9999999999)),0,8));
+		$this->set('where', $where);
 		$lastViewed = BackendToolbarItem::sanitizeItemArray(
 			BackendToolbarItem::getUserToolbarItems(array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),null, 'DESC')
 		);
@@ -23,8 +23,7 @@ class BackendToolbarController extends StoreManagementController
 		{
 			$itemsByType[$item['type']][] = $item;
 		}
-		$response->set('itemsByType', $itemsByType);
-		return $response;
+		$this->set('itemsByType', $itemsByType);
 	}
 
 	public function addIconAction()

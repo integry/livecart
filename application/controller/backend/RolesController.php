@@ -106,18 +106,17 @@ class RolesController extends StoreManagementController
 
 		$form = $this->createRolesForm($userGroup, $activeRoles);
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
 
-		$response->set('roles', $roles);
-		$response->set('userGroup', $userGroup->toArray());
+		$this->set('form', $form);
+
+		$this->set('roles', $roles);
+		$this->set('userGroup', $userGroup->toArray());
 		
 		
-		$response->set('activeRolesIDs', $activeRolesIDs);
+		$this->set('activeRolesIDs', $activeRolesIDs);
 		$disabledRolesIDs = $this->getRolesWithDisabledCheckboxes($roles, $userGroupID);
-		$response->set('disabledRolesIDs', $disabledRolesIDs); // show, but with disabled checkboxes
+		$this->set('disabledRolesIDs', $disabledRolesIDs); // show, but with disabled checkboxes
 
-		return $response;
 	}
 
 	/**

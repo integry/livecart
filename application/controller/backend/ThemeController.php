@@ -18,14 +18,13 @@ class ThemeController extends StoreManagementController
 	{
 		$themes = array_merge(array('barebone' => 'barebone'), array_diff($this->application->getRenderer()->getThemeList(), array('barebone')));
 		unset($themes['default'], $themes['default-3column'], $themes['light'], $themes['light-3column']);
-		$response = new ActionResponse();
-		$response->set('themes', json_encode($themes));
-		$response->set('addForm', $this->buildForm());
-		$response->set('maxSize', ini_get('upload_max_filesize'));
-		$response->set('importForm', $this->buildImportForm());
-		$response->set('copyForm', $this->buildCopyForm());
 
-		return $response;
+		$this->set('themes', json_encode($themes));
+		$this->set('addForm', $this->buildForm());
+		$this->set('maxSize', ini_get('upload_max_filesize'));
+		$this->set('importForm', $this->buildImportForm());
+		$this->set('copyForm', $this->buildCopyForm());
+
 	}
 
 	public function editAction()
@@ -41,11 +40,10 @@ class ThemeController extends StoreManagementController
 			$form->set('parent_' . ($key + 1), $parent);
 		}
 
-		$response = new ActionResponse();
-		$response->set('theme', $arr);
-		$response->set('form', $form);
-		$response->set('themes', $this->application->getRenderer()->getThemeList());
-		return $response;
+
+		$this->set('theme', $arr);
+		$this->set('form', $form);
+		$this->set('themes', $this->application->getRenderer()->getThemeList());
 	}
 
 	public function saveSettingsAction()
@@ -108,16 +106,15 @@ class ThemeController extends StoreManagementController
 	{
 		$inst = new Theme($this->request->get('id'), $this->application);
 
-		$response = new ActionResponse();
-		$response->set('config', $this->getParsedStyleConfig($inst));
-		$response->set('form', $this->buildColorsForm($inst));
-		$response->set('measurements', $this->getSelectOptions(array('', 'auto', 'px', '%', 'em')));
-		$response->set('borderStyles', $this->getSelectOptions(array('', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset')));
-		$response->set('textStyles', $this->getSelectOptions(array('', 'none', 'underline')));
-		$response->set('bgRepeat', $this->getSelectOptions(array('repeat', 'no-repeat', 'repeat-x', 'repeat-y')));
-		$response->set('bgPosition', $this->getSelectOptions(array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom')));
-		$response->set('theme', $this->request->get('id'));
-		return $response;
+
+		$this->set('config', $this->getParsedStyleConfig($inst));
+		$this->set('form', $this->buildColorsForm($inst));
+		$this->set('measurements', $this->getSelectOptions(array('', 'auto', 'px', '%', 'em')));
+		$this->set('borderStyles', $this->getSelectOptions(array('', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset')));
+		$this->set('textStyles', $this->getSelectOptions(array('', 'none', 'underline')));
+		$this->set('bgRepeat', $this->getSelectOptions(array('repeat', 'no-repeat', 'repeat-x', 'repeat-y')));
+		$this->set('bgPosition', $this->getSelectOptions(array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom')));
+		$this->set('theme', $this->request->get('id'));
 	}
 
 	private function getSelectOptions($options)
@@ -178,10 +175,9 @@ class ThemeController extends StoreManagementController
 			$css->save();
 		}
 
-		$response = new ActionResponse();
-		$response->set('theme', $theme);
-		$response->set('file', $css->getFileName());
-		return $response;
+
+		$this->set('theme', $theme);
+		$this->set('file', $css->getFileName());
 	}
 
 	private function getParsedStyleConfig(Theme $theme)
@@ -289,13 +285,12 @@ class ThemeController extends StoreManagementController
 	public function importAction()
 	{
 		$this->setLayout('iframeJs');
-		$response = new ActionResponse();
+
 		$res = $this->doImport();
 		foreach($res as $key=>$value)
 		{
-			$response->set($key, $value);
+			$this->set($key, $value);
 		}
-		return $response;
 	}
 
 	private function doImport()
@@ -461,7 +456,6 @@ class ThemeController extends StoreManagementController
 		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zipFilePath, $id.'.zip'));
 		$response->deleteFileOnComplete();
 
-		return $response;
 	}
 
 	/**

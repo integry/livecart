@@ -24,11 +24,10 @@ class OrderNoteController extends StoreManagementController
 			}
 		}
 
-		$response = new ActionResponse();
-		$response->set('form', $this->buildOrderNoteForm());
-		$response->set('order', $order->toArray());
-		$response->set('notes', $notes->toArray());
-		return $response;
+
+		$this->set('form', $this->buildOrderNoteForm());
+		$this->set('order', $order->toArray());
+		$this->set('notes', $notes->toArray());
 	}
 
 	public function viewAction()

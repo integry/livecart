@@ -61,20 +61,19 @@ class IndexController extends StoreManagementController
 		$rootCat = Category::getRootNode();
 		$rootCat->load();
 
-		$response = new ActionResponse();
-		$response->set('orderCount', $orderCount);
-		$response->set('inventoryCount', $inventoryCount);
-		$response->set('rootCat', $rootCat->toArray());
-		$response->set('thisMonth', date('m'));
-		$response->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
 
-		$response->set('ordersLast24', $this->getOrderCount('-24 hours', 'now'));
-		$response->set('ordersThisWeek', $this->getOrderCount('w:Monday', 'now'));
-		$response->set('ordersThisMonth', $this->getOrderCount(date('m') . '/1', 'now'));
-		$response->set('ordersLastMonth', $this->getOrderCount($response->get('lastMonth') . '-1', date('m') . '/1'));
+		$this->set('orderCount', $orderCount);
+		$this->set('inventoryCount', $inventoryCount);
+		$this->set('rootCat', $rootCat->toArray());
+		$this->set('thisMonth', date('m'));
+		$this->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
 
-		$response->set('lastOrders', $this->getLastOrders());
-		return $response;
+		$this->set('ordersLast24', $this->getOrderCount('-24 hours', 'now'));
+		$this->set('ordersThisWeek', $this->getOrderCount('w:Monday', 'now'));
+		$this->set('ordersThisMonth', $this->getOrderCount(date('m') . '/1', 'now'));
+		$this->set('ordersLastMonth', $this->getOrderCount($response->get('lastMonth') . '-1', date('m') . '/1'));
+
+		$this->set('lastOrders', $this->getLastOrders());
 	}
 
 	public function totalOrdersAction()

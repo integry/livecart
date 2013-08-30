@@ -38,15 +38,13 @@ class EavFieldController extends EavFieldControllerCommon
 				$field['SpecFieldGroup']['Category']['ID'] = $response->get('categoryID');
 			}
 		}
-		$response->set('specFieldsWithGroups', $fields);
+		$this->set('specFieldsWithGroups', $fields);
 
-		return $response;
 	}
 
 	/**
 	 * Displays form for creating a new or editing existing one product group specification field
 	 *
-	 * @return ActionResponse
 	 */
 	public function itemAction()
 	{

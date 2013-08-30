@@ -185,9 +185,8 @@ abstract class FrontendController extends ControllerBase
 				$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 		$response = new BlockResponse();
-		$response->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
+		$this->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
-		return $response;
 	}
 
 	protected function boxNewsletterSubscribeBlock()
@@ -210,10 +209,9 @@ abstract class FrontendController extends ControllerBase
 			$orderData = SessionOrder::getOrderData();
 		}
 
-		$response->set('order', $orderData);
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
+		$this->set('order', $orderData);
+		$this->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 
-		return $response;
 	}
 
 	protected function boxSwitchCurrencyBlock()
@@ -238,11 +236,10 @@ abstract class FrontendController extends ControllerBase
 		}
 
 		$response = new BlockResponse();
-		$response->set('allCurrencies', $currencyArray);
-		$response->set('currencies', array_diff_key($currencyArray, array($current => '')));
-		$response->set('current', $current);
-		$response->set('currentCurrency', $currentCurrency);
-		return $response;
+		$this->set('allCurrencies', $currencyArray);
+		$this->set('currencies', array_diff_key($currencyArray, array($current => '')));
+		$this->set('current', $current);
+		$this->set('currentCurrency', $currentCurrency);
 	}
 
 	protected function boxSwitchCurrencyMenuBlock()
@@ -269,7 +266,7 @@ abstract class FrontendController extends ControllerBase
 			if ($lang['ID'] == $current)
 			{
 				$defKey = $key;
-				$response->set('current', $lang);
+				$this->set('current', $lang);
 			}
 			else
 			{
@@ -284,12 +281,11 @@ abstract class FrontendController extends ControllerBase
 			}
 		}
 
-		$response->set('allLanguages', $languages);
+		$this->set('allLanguages', $languages);
 
 		unset($languages[$defKey]);
-		$response->set('languages', $languages);
+		$this->set('languages', $languages);
 
-		return $response;
 	}
 
 	protected function boxBreadCrumbBlock()
@@ -310,8 +306,7 @@ abstract class FrontendController extends ControllerBase
 		}
 
 		$response = new BlockResponse();
-		$response->set('breadCrumb', $this->breadCrumb);
-		return $response;
+		$this->set('breadCrumb', $this->breadCrumb);
 	}
 
 	protected function boxBreadCrumbTitleBlock()
@@ -376,9 +371,8 @@ abstract class FrontendController extends ControllerBase
 		}
 
 		$response = new BlockResponse();
-		$response->set('categories', $options);
-		$response->set('form', $form);
-		return $response;
+		$this->set('categories', $options);
+		$this->set('form', $form);
 	}
 
 	private function getTopCategories()
@@ -483,10 +477,9 @@ abstract class FrontendController extends ControllerBase
 		}
 
 		$response = new BlockResponse();
-		$response->set('categories', $topCategories);
-		$response->set('currentId', $this->getCategory()->getID());
-		$response->set('lang', 'en');
-		return $response;
+		$this->set('categories', $topCategories);
+		$this->set('currentId', $this->getCategory()->getID());
+		$this->set('lang', 'en');
 	}
 
 	protected function dynamicCategoryMenuBlock()
@@ -512,13 +505,12 @@ abstract class FrontendController extends ControllerBase
 		$path = $this->getCategory()->getPathNodeArray();
 		if ($path)
 		{
-			$response->set('topCategoryId', $path[0]['ID']);
+			$this->set('topCategoryId', $path[0]['ID']);
 		}
 
-		$response->set('currentId', $this->getCategory()->getID());
-		$response->set('currentCategory', $this->getCategory()->toArray());
+		$this->set('currentId', $this->getCategory()->getID());
+		$this->set('currentCategory', $this->getCategory()->toArray());
 
-		return $response;
 	}
 
 	protected function boxRootCategoryBlock()
@@ -576,12 +568,11 @@ abstract class FrontendController extends ControllerBase
 		}
 
 		$response = new BlockResponse();
-		$response->set('categories', $topCategories);
-		$response->set('subCategories', $subCategories);
-		$response->set('pages', $pages);
-		$response->set('subPages', $subPages);
-		$response->set('currentId', $this->getTopCategoryId());
-		return $response;
+		$this->set('categories', $topCategories);
+		$this->set('subCategories', $subCategories);
+		$this->set('pages', $pages);
+		$this->set('subPages', $subPages);
+		$this->set('currentId', $this->getTopCategoryId());
 	}
 
 	protected function saleItemsBlock($useRoot = false)
@@ -727,10 +718,9 @@ abstract class FrontendController extends ControllerBase
 		$this->application->logStat('Fetched news from DB');
 
 		$response = new BlockResponse('news', $news);
-		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+		$this->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
 
 		$this->application->logStat('Finished latestNewsBlock');
-		return $response;
 	}
 
 	public function blockQuickNavBlockAction()
@@ -740,14 +730,13 @@ abstract class FrontendController extends ControllerBase
 		// manufacturer list
 				$controller = new ManufacturersController($this->application);
 		$man = $controller->index();
-		$response->set('manufacturers', $man->get('manufacturers'));
-		$response->set('rootCat', $man->get('rootCat'));
+		$this->set('manufacturers', $man->get('manufacturers'));
+		$this->set('rootCat', $man->get('rootCat'));
 
 		// category tree
 		$cat = $this->dynamicCategoryMenuBlock();
-		$response->set('categories', $cat->get('categories'));
+		$this->set('categories', $cat->get('categories'));
 
-		return $response;
 	}
 
 	/**
@@ -781,19 +770,18 @@ abstract class FrontendController extends ControllerBase
 
 	protected function ajaxResponse(CompositeJSONResponse $response)
 	{
-		$response->set('orderSummary', SessionOrder::getOrderData());
+		$this->set('orderSummary', SessionOrder::getOrderData());
 
 		if ($msg = $this->getMessage())
 		{
-			$response->set('successMessage', $msg);
+			$this->set('successMessage', $msg);
 		}
 
 		if ($error = $this->getErrorMessage())
 		{
-			$response->set('errorMessage', $error);
+			$this->set('errorMessage', $error);
 		}
 
-		return $response;
 	}
 
 	protected function getCategory()

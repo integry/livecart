@@ -25,10 +25,9 @@ class CategoryRelationshipController extends StoreManagementController
 			$cat->relatedCategory->get()->getPathNodeSet();
 		}
 
-		$response = new ActionResponse('category', $category->toArray());
-		$response->set('categories', ARSet::buildFromArray($categories)->toArray());
+		$this->set('category', $category->toArray());
+		$this->set('categories', ARSet::buildFromArray($categories)->toArray());
 
-		return $response;
 	}
 
 	public function addCategoryAction()

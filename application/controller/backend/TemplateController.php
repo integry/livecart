@@ -34,22 +34,21 @@ class TemplateController extends StoreManagementController
 			unset($files['layout']['subs']['empty.tpl']);
 		}
 
-		return new ActionResponse('categories', json_encode($files));
+		$this->set('categories', json_encode($files));
 	}
 
 	public function editAction()
 	{
 		$template = new Template($this->getFileName());
-		$response = new ActionResponse();
-		$response->set('tabid', $this->getRequest()->get('tabid'));
-		$response->set('fileName', $template->getFileName());
-		$response->set('form', $this->getTemplateForm($template));
-		$response->set('code', base64_encode($template->getCode()));
-		$response->set('template', $template->toArray());
-		$response->set('themes', $this->application->getRenderer()->getThemeList());
-		$response->set('theme', $this->request->get('theme'));
 
-		return $response;
+		$this->set('tabid', $this->getRequest()->get('tabid'));
+		$this->set('fileName', $template->getFileName());
+		$this->set('form', $this->getTemplateForm($template));
+		$this->set('code', base64_encode($template->getCode()));
+		$this->set('template', $template->toArray());
+		$this->set('themes', $this->application->getRenderer()->getThemeList());
+		$this->set('theme', $this->request->get('theme'));
+
 	}
 
 	public function templateDataAction()
@@ -66,8 +65,7 @@ class TemplateController extends StoreManagementController
 	{
 		$response = $this->edit();
 		$response->get('form')->getValidator()->addCheck('fileName', new IsNotEmptyCheck($this->translate('_file_name_empty')));
-		$response->set('tabid', $this->getRequest()->get('tabid'));
-		return $response;
+		$this->set('tabid', $this->getRequest()->get('tabid'));
 	}
 
 	public function editEmailAction()
@@ -84,11 +82,11 @@ class TemplateController extends StoreManagementController
 		$template->getOtherLanguages();
 
 		$fileName = $template->getFileName();
-		$response = new ActionResponse();
-		$response->set('tabid', $this->getRequest()->get('tabid'));
-	  	$response->set('fileName', $fileName);
-	  	$response->set('form', $this->getEmailTemplateForm($template));
-	  	$response->set('template', $template->toArray());
+
+		$this->set('tabid', $this->getRequest()->get('tabid'));
+	  	$this->set('fileName', $fileName);
+	  	$this->set('form', $this->getEmailTemplateForm($template));
+	  	$this->set('template', $template->toArray());
 
 	  	if (substr($fileName, 0, 11) == 'email/block')
 	  	{
@@ -98,9 +96,8 @@ class TemplateController extends StoreManagementController
 		{
 			$fileName = preg_replace('/email\/[a-z]{2}\//', '', $fileName);
 		}
-		$response->set('displayFileName', $fileName);
+		$this->set('displayFileName', $fileName);
 
-		return $response;
 	}
 
 	public function editPopupAction()
@@ -143,9 +140,8 @@ class TemplateController extends StoreManagementController
 			$files['module'] = array('id' => 'module', 'subs' => $modules);
 		}
 
-		$response = new ActionResponse();
-		$response->set('categories', json_encode($files));
-		return $response;
+
+		$this->set('categories', json_encode($files));
 	}
 
 	/**
@@ -252,7 +248,7 @@ class TemplateController extends StoreManagementController
 
 	public function emptyPageAction()
 	{
-		return new ActionResponse();
+
 	}
 
 	private function getFileName()

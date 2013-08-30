@@ -176,7 +176,6 @@ class ShipmentController extends StoreManagementController
 		$response = $this->save($shipment);
 		$history->saveLog();
 
-		return $response;
 	}
 
 	public function editAddressAction()
@@ -194,13 +193,13 @@ class ShipmentController extends StoreManagementController
 		$shipment->shippingAddress->get()->load();
 		$address = $shipment->shippingAddress->get()->toArray();
 
-		$response = new ActionResponse();
-		$controller = new CustomerOrderController($this->application);
-		$response->set('form', $controller->createUserAddressForm($address, $response));
 
-		$response->set('countries', $this->application->getEnabledCountries());
-		$response->set('states', State::getStatesByCountry($address['countryID']));
-		$response->set('shipmentID', $shipment->getID());
+		$controller = new CustomerOrderController($this->application);
+		$this->set('form', $controller->createUserAddressForm($address, $response));
+
+		$this->set('countries', $this->application->getEnabledCountries());
+		$this->set('states', State::getStatesByCountry($address['countryID']));
+		$this->set('shipmentID', $shipment->getID());
 
 		$addressOptions = array('' => '');
 		$addresses = array();
@@ -209,10 +208,9 @@ class ShipmentController extends StoreManagementController
 			$addressOptions[$address['ID']] = $address['UserAddress']['compact'];
 			$addresses[$address['ID']] = $address;
 		}
-		$response->set('existingUserAddressOptions', $addressOptions);
-		$response->set('existingUserAddresses', $addresses);
+		$this->set('existingUserAddressOptions', $addressOptions);
+		$this->set('existingUserAddresses', $addresses);
 
-		return $response;
 	}
 
 	public function saveAddressAction()

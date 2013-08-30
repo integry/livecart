@@ -41,9 +41,8 @@ class RssController extends FrontendController
 		$feed = new ProductFeed($filter);
 		$feed->setFlush();
 		$feed->setLimit($this->config->get('NUMBER_OF_PRODUCTS_TO_INCLUDE'));
-		$response->set('feed', $feed);
-		$response->set('category', $category->toArray());
-		return $response;
+		$this->set('feed', $feed);
+		$this->set('category', $category->toArray());
 	}
 
 	public function newsAction()
@@ -54,9 +53,8 @@ class RssController extends FrontendController
 		$f = select(eq(f('NewsPost.isEnabled'), true));
 		$f->setLimit($this->config->get('NUMBER_OF_NEWS_POSTS_TO_INCLUDE'));
 		$f->setOrder(f('NewsPost.position'), ARSelectFilter::ORDER_DESC);
-		$response->set('feed', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
+		$this->set('feed', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$this->application->getLocale()->translationManager()->loadFile('News');
-		return $response;
 	}
 
 	private function shouldBeEnabledFeed($feedName)

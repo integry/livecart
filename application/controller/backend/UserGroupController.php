@@ -10,7 +10,6 @@ class UserGroupController extends ActiveGridController
 {
 	/**
 	 * Action shows filters and datagrid.
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
@@ -23,7 +22,7 @@ class UserGroupController extends ActiveGridController
 		}
 		$userGroups[] = array('ID' => -3, 'name' => $this->translate('_online_users'), 'rootID' => 0);
 
-		return new ActionResponse('userGroups', $userGroups);
+		$this->set('userGroups', $userGroups);
 	}
 
 	public function editAction()
@@ -31,13 +30,12 @@ class UserGroupController extends ActiveGridController
 		$group = UserGroup::getInstanceByID((int)$this->request->get('id'), true);
 		$form = $this->createUserGroupForm($group);
 
-		$response = new ActionResponse();
-		$response->set('userGroup', $group->toArray());
-		$response->set('userGroupForm', $form);
+
+		$this->set('userGroup', $group->toArray());
+		$this->set('userGroupForm', $form);
 
 		$group->getSpecification()->setFormResponse($response, $form);
 
-		return $response;
 	}
 
 	public function changeColumnsAction()
@@ -51,7 +49,7 @@ class UserGroupController extends ActiveGridController
 	{
 		$id = (int)$this->request->get("id");
 
-		$response = new ActionResponse();
+
 
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
 		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
@@ -63,16 +61,15 @@ class UserGroupController extends ActiveGridController
 
 		$form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
 
-		$response->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
-		$response->set('availableUserGroups', $availableUserGroups);
-		$response->set('form', $form);
-		$response->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
+		$this->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
+		$this->set('availableUserGroups', $availableUserGroups);
+		$this->set('form', $form);
+		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 
-		$response->set("userGroupID", $id);
+		$this->set("userGroupID", $id);
 
 		$this->setGridResponse($response);
 
-		return $response;
 	}
 
 	/**

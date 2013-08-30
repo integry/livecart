@@ -13,8 +13,7 @@ class SiteNewsController extends StoreManagementController
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
-		$response->set('form', $this->buildForm());
-		return $response;
+		$this->set('form', $this->buildForm());
 	}
 
 	/**
@@ -24,7 +23,7 @@ class SiteNewsController extends StoreManagementController
 	{
 		$form = $this->buildForm();
 		$form->loadData(NewsPost::getInstanceById($this->request->get('id'), NewsPost::LOAD_DATA)->toArray());
-		return new ActionResponse('form', $form);
+		$this->set('form', $form);
 	}
 
 	/**
@@ -38,7 +37,7 @@ class SiteNewsController extends StoreManagementController
 			return new JSONResponse(array('err' => $validator->getErrorList()));
 		}
 
-		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ActiveRecordModel::getNewInstance('NewsPost');
+		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : new NewsPost;
 		$post->loadRequestData($this->request);
 		$post->save();
 

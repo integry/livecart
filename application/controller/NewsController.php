@@ -25,7 +25,7 @@ class NewsController extends FrontendController
 		$this->addIndexBreadCrumb();
 		$this->addBreadCrumb($newsPost['title_lang'], '');
 
-		return new ActionResponse('news', $newsPost);
+		$this->set('news', $newsPost);
 	}	
 	
 	public function indexAction()

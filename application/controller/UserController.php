@@ -72,24 +72,23 @@ class UserController extends ControllerBase
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->setLimit(self::COUNT_RECENT_FILES);
 
-		$response = new ActionResponse();
 
-		$response->set('orders', $orderArray);
-		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
+
+		$this->set('orders', $orderArray);
+		$this->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 
 		// get unread messages
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
 		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
-		$response->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
+		$this->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
 		// feedback/confirmation message that was stored in session by some other action
-		$response->set('userConfirm', $this->session->pullValue('userConfirm'));
-		$response->set('pendingInvoiceCount', $pendingInvoiceCount);
-		$response->set('lastInvoiceArray', $lastInvoiceArray);
+		$this->set('userConfirm', $this->session->pullValue('userConfirm'));
+		$this->set('pendingInvoiceCount', $pendingInvoiceCount);
+		$this->set('lastInvoiceArray', $lastInvoiceArray);
 
-		return $response;
 	}
 
 	/**
@@ -155,16 +154,15 @@ class UserController extends ControllerBase
 				$orderArray[$k]['overdue'] = $today > strtotime(date('Y-m-d',strtotime($order['dateDue'])));
 			}
 		}
-		$response = new ActionResponse();
-		$response->set('from', ($perPage * ($page - 1)) + 1);
-		$response->set('to', min($perPage * $page, $orders->getTotalRecordCount()));
-		$response->set('count', $orders->getTotalRecordCount());
-		$response->set('currentPage', $page);
-		$response->set('perPage', $perPage);
-		$response->set('user', $this->user->toArray());
-		$response->set('orders', $orderArray);
 
-		return $response;
+		$this->set('from', ($perPage * ($page - 1)) + 1);
+		$this->set('to', min($perPage * $page, $orders->getTotalRecordCount()));
+		$this->set('count', $orders->getTotalRecordCount());
+		$this->set('currentPage', $page);
+		$this->set('perPage', $perPage);
+		$this->set('user', $this->user->toArray());
+		$this->set('orders', $orderArray);
+
 	}
 
 	private function getOrdersPerPage()
@@ -243,10 +241,9 @@ class UserController extends ControllerBase
 		$this->addAccountBreadcrumb();
 		$this->addFilesBreadcrumb();
 
-		$response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
-		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
-		return $response;
+
+		$this->set('user', $this->user->toArray());
+		$this->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 	}
 
 	/**
@@ -273,17 +270,16 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'index');
 		}
 
-		$response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
-		$response->set('files', $fileArray);
-		$response->set('item', $item);
+
+		$this->set('user', $this->user->toArray());
+		$this->set('files', $fileArray);
+		$this->set('item', $item);
 
 		if ($subItems)
 		{
-			$response->set('subItems', $subItems->toArray());
+			$this->set('subItems', $subItems->toArray());
 		}
 
-		return $response;
 	}
 
 	private function loadDownloadableItems(ARSelectFilter $f)
@@ -299,10 +295,9 @@ class UserController extends ControllerBase
 		$this->addAccountBreadcrumb();
 
 		$this->addBreadCrumb($this->translate('_change_pass'), '');
-		$response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
-		$response->set('form', $this->buildPasswordChangeForm());
-		return $response;
+
+		$this->set('user', $this->user->toArray());
+		$this->set('form', $this->buildPasswordChangeForm());
 	}
 
 	/**
@@ -331,10 +326,9 @@ class UserController extends ControllerBase
 		$this->addAccountBreadcrumb();
 
 		$this->addBreadCrumb($this->translate('_change_email'), '');
-		$response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
-		$response->set('form', $this->buildEmailChangeForm());
-		return $response;
+
+		$this->set('user', $this->user->toArray());
+		$this->set('form', $this->buildEmailChangeForm());
 	}
 
 	/**
@@ -364,10 +358,9 @@ class UserController extends ControllerBase
 		$this->addBreadcrumb($this->translate('_personal_info'), '');
 
 		$form = $this->buildPersonalDataForm($this->user);
-		$response = new ActionResponse('form', $form);
+		$this->set('form', $form);
 		$this->user->getSpecification()->setFormResponse($response, $form);
 
-		return $response;
 	}
 
 	/**
@@ -397,11 +390,10 @@ class UserController extends ControllerBase
 		$this->addAccountBreadcrumb();
 		$this->addAddressBreadcrumb();
 
-		$response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
-		$response->set('billingAddresses', $this->user->getBillingAddressArray());
-		$response->set('shippingAddresses', $this->user->getShippingAddressArray());
-		return $response;
+
+		$this->set('user', $this->user->toArray());
+		$this->set('billingAddresses', $this->user->getBillingAddressArray());
+		$this->set('shippingAddresses', $this->user->getShippingAddressArray());
 	}
 
 	/**
@@ -453,26 +445,25 @@ class UserController extends ControllerBase
 						$recurringProductPeriods[$orderedItem->getID()] =  RecurringItem::getInstanceByOrderedItem($orderedItem) -> toArray();
 					}
 				}
-												$response->set('nextRebillDate', $order->getNextRebillDate());
-				$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
-				$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
-				$response->set('recurringProductPeriodsByItemId', $recurringProductPeriods);
+												$this->set('nextRebillDate', $order->getNextRebillDate());
+				$this->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+				$this->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+				$this->set('recurringProductPeriodsByItemId', $recurringProductPeriods);
 				$this->loadLanguageFile('Product');
 			}
 
 			if (!$response)
 			{
-				$response = new ActionResponse();
+
 			}
 
-			$response->set('subscriptionStatus', $order->getSubscriptionStatus());
-			$response->set('canCancelRebills', $order->canUserCancelRebills());
-			$response->set('order', $orderArray);
-			$response->set('notes', $notes->toArray());
-			$response->set('user', $this->user->toArray());
-			$response->set('noteForm', $this->buildNoteForm());
+			$this->set('subscriptionStatus', $order->getSubscriptionStatus());
+			$this->set('canCancelRebills', $order->canUserCancelRebills());
+			$this->set('order', $orderArray);
+			$this->set('notes', $notes->toArray());
+			$this->set('user', $this->user->toArray());
+			$this->set('noteForm', $this->buildNoteForm());
 
-			return $response;
 		}
 		else
 		{
@@ -549,10 +540,9 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'index');
 		}
 
-		$response = new ActionResponse();
-		$response->set('order', $order->toArray(array('payments' => true)));
-		$response->set('user', $this->user->toArray());
-		return $response;
+
+		$this->set('order', $order->toArray(array('payments' => true)));
+		$this->set('user', $this->user->toArray());
 	}
 
 	public function registerAction()
@@ -563,11 +553,10 @@ class UserController extends ControllerBase
 		}
 
 		$form = $this->buildRegForm();
-		$response = new ActionResponse('regForm', $form);
+		$this->set('regForm', $form);
+		$this->set('regForm', $form);
 
-		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
-
-		return $response;
+		//$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 	}
 
 	public function registerAddressAction()
@@ -575,7 +564,6 @@ class UserController extends ControllerBase
 		$this->request->set('return', 'user/index');
 		$response = $this->checkout();
 		$response->get('form')->set('regType', 'register');
-		return $response;
 	}
 
 	public function doRegisterAction()
@@ -610,7 +598,7 @@ class UserController extends ControllerBase
 
 	public function unconfirmedAction()
 	{
-		return new ActionResponse();
+
 	}
 
 	public function confirmAction()
@@ -626,7 +614,7 @@ class UserController extends ControllerBase
 				$user->isEnabled->set(true);
 				$user->save();
 
-				SessionUser::setUser($user);
+				$this->sessionUser->setUser($user);
 
 				$success = true;
 
@@ -634,7 +622,7 @@ class UserController extends ControllerBase
 			}
 		}
 
-		return new ActionResponse('success', $success);
+		$this->set('success', $success);
 	}
 
 	/**
@@ -650,15 +638,14 @@ class UserController extends ControllerBase
 		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
 		$form = $this->buildRegForm();
-		$response = new ActionResponse();
-		$response->set('regForm', $form);
-		$response->set('email', $this->request->get('email'));
-		$response->set('failed', $this->request->get('failed'));
-		$response->set('return', $this->request->get('return'));
 
-		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+		$this->set('regForm', $form);
+		$this->set('email', $this->request->get('email'));
+		$this->set('failed', $this->request->get('failed'));
+		$this->set('return', $this->request->get('return'));
 
-		return $response;
+		$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+
 	}
 
 	/**
@@ -673,7 +660,7 @@ class UserController extends ControllerBase
 		}
 
 		// login
-		SessionUser::setUser($user);
+		$this->sessionUser->setUser($user);
 
 		$this->user = $user;
 		$this->mergeOrder();
@@ -732,10 +719,9 @@ class UserController extends ControllerBase
 	{
 		$this->addBreadCrumb($this->translate('_remind_password'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
 
-		$response = new ActionResponse();
-		$response->set('form', $this->buildPasswordReminderForm());
-		$response->set('return', $this->request->get('return'));
-		return $response;
+
+		$this->set('form', $this->buildPasswordReminderForm());
+		$this->set('return', $this->request->get('return'));
 	}
 
 	public function doRemindPasswordAction()
@@ -759,14 +745,13 @@ class UserController extends ControllerBase
 
 	public function remindCompleteAction()
 	{
-		$response = new ActionResponse();
-		$response->set('email', $this->request->get('email'));
-		return $response;
+
+		$this->set('email', $this->request->get('email'));
 	}
 
 	public function logoutAction()
 	{
-		SessionUser::destroy();
+		$this->sessionUser->destroy();
 		return new ActionRedirectResponse('index', 'index');
 	}
 
@@ -783,18 +768,17 @@ class UserController extends ControllerBase
 		$form->set('shipping_country', $this->config->get('DEF_COUNTRY'));
 		$form->set('return', $this->request->get('return'));
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('countries', $this->getCountryList($form));
-		$response->set('states', $this->getStateList($form->get('billing_country')));
-		$response->set('shippingStates', $this->getStateList($form->get('shipping_country')));
-		$response->set('order', $this->order->toArray());
 
-		SessionUser::getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
+		$this->set('form', $form);
+		$this->set('countries', $this->getCountryList($form));
+		$this->set('states', $this->getStateList($form->get('billing_country')));
+		$this->set('shippingStates', $this->getStateList($form->get('shipping_country')));
+		$this->set('order', $this->order->toArray());
+
+		$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, 'billing_');
 		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, 'shipping_');
 
-		return $response;
 	}
 
 	public function processCheckoutRegistrationAction()
@@ -932,7 +916,6 @@ class UserController extends ControllerBase
 		{
 			$response = $this->editAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
 			$this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
-			return $response;
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -949,7 +932,6 @@ class UserController extends ControllerBase
 		{
 			$response = $this->editAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
 			$this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
-			return $response;
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -974,17 +956,16 @@ class UserController extends ControllerBase
 			$form->set('state_select', $address->state->get()->getID());
 		}
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('return', $this->request->get('return'));
-		$response->set('countries', $this->getCountryList($form));
-		$response->set('states', $this->getStateList($form->get('country')));
-		$response->set('address', $address->toArray());
-		$response->set('addressType', $addressType->toArray());
+
+		$this->set('form', $form);
+		$this->set('return', $this->request->get('return'));
+		$this->set('countries', $this->getCountryList($form));
+		$this->set('states', $this->getStateList($form->get('country')));
+		$this->set('address', $address->toArray());
+		$this->set('addressType', $addressType->toArray());
 
 		$address->getSpecification()->setFormResponse($response, $form);
 
-		return $response;
 	}
 
 	/**
@@ -1065,15 +1046,14 @@ class UserController extends ControllerBase
 			$form->set('country', $this->config->get('DEF_COUNTRY'));
 		}
 
-		$response = new ActionResponse();
-		$response->set('form', $form);
-		$response->set('return', $this->request->get('return'));
-		$response->set('countries', $this->getCountryList($form));
-		$response->set('states', $this->getStateList($form->get('country')));
+
+		$this->set('form', $form);
+		$this->set('return', $this->request->get('return'));
+		$this->set('countries', $this->getCountryList($form));
+		$this->set('states', $this->getStateList($form->get('country')));
 
 		UserAddress::getNewInstance()->getSpecification()->setFormResponse($response, $form, '');
 
-		return $response;
 	}
 
 	/**
@@ -1083,7 +1063,6 @@ class UserController extends ControllerBase
 	{
 		$response = $this->addBillingAddress(true);
 		$this->addBreadCrumb($this->translate('_add_shipping_address'), '');
-		return $response;
 	}
 
 	/**
@@ -1171,14 +1150,13 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'index');
 		}
 
-		$response = new ActionResponse();
-		$response->set('order', $order->toArray(array('payments' => true)));
-		$response->set('id', $order->getID());
+
+		$this->set('order', $order->toArray(array('payments' => true)));
+		$this->set('id', $order->getID());
 
 		$checkout = new CheckoutController($this->application);
 		$checkout->setPaymentMethodResponse($response, $order);
 
-		return $response;
 	}
 
 	/**
@@ -1206,7 +1184,7 @@ class UserController extends ControllerBase
 
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
-			SessionUser::setUser($user);
+			$this->sessionUser->setUser($user);
 			$this->sendWelcomeEmail($user);
 		}
 		else
@@ -1262,7 +1240,6 @@ class UserController extends ControllerBase
 				$response = new ActionRedirectResponse('user', 'addresses');
 			}
 
-			return $response;
 		}
 		else
 		{
@@ -1336,7 +1313,7 @@ class UserController extends ControllerBase
 		$this->validateEmail($validator);
 		$this->validatePassword($validator);
 
-		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
+		$this->sessionUser->getAnonymousUser()->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}
@@ -1376,7 +1353,7 @@ class UserController extends ControllerBase
 			$this->validateAddress($validator, 'shipping_', true);
 		}
 
-		SessionUser::getAnonymousUser()->getSpecification()->setValidation($validator);
+		$this->sessionUser->getAnonymousUser()->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}
@@ -1543,10 +1520,9 @@ class UserController extends ControllerBase
 		}
 		$response = new BlockResponse();
 		$hasPendingInvoices = $this->user->hasPendingInvoices();
-		$response->set('hasPendingInvoices', $hasPendingInvoices);
-		$response->set('hasInvoices', $hasPendingInvoices ? true : $this->user->hasInvoices()); // if user has pending invoice, he invoices (at least one pending invoice)
+		$this->set('hasPendingInvoices', $hasPendingInvoices);
+		$this->set('hasInvoices', $hasPendingInvoices ? true : $this->user->hasInvoices()); // if user has pending invoice, he invoices (at least one pending invoice)
 
-		return $response;
 	}
 
 	public function cancelFurtherRebillsAction()

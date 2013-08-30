@@ -38,11 +38,10 @@ class ProductBundleItemController extends StoreManagementController
 
 			$instance->save();
 
-			$response = new ActionResponse();
-			$response->set('product', $product->toArray());
-			$response->set('added', true);
-			$response->set('total', $this->getTotal($owner));
-			return $response;
+
+			$this->set('product', $product->toArray());
+			$this->set('added', true);
+			$this->set('total', $this->getTotal($owner));
 		}
 		else
 		{

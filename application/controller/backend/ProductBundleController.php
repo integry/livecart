@@ -15,15 +15,14 @@ class ProductBundleController extends ProductListControllerCommon
 		$productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA);
 
-		$response = new ActionResponse();
-		$response->set('ownerID', $productID);
-		$response->set('categoryID', $product->category->get()->getID());
-		$response->set('items', ProductBundle::getBundledProductArray($product));
+
+		$this->set('ownerID', $productID);
+		$this->set('categoryID', $product->category->get()->getID());
+		$this->set('items', ProductBundle::getBundledProductArray($product));
 
 		$currency = $this->application->getDefaultCurrency();
-		$response->set('total', $currency->getFormattedPrice(ProductBundle::getTotalBundlePrice($product, $currency)));
+		$this->set('total', $currency->getFormattedPrice(ProductBundle::getTotalBundlePrice($product, $currency)));
 
-		return $response;
 	}
 
 	protected function getOwnerClassName()

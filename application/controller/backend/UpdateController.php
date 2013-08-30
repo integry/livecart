@@ -14,7 +14,7 @@ class UpdateController extends StoreManagementController
 		$f = fsockopen('update.livecart.com', '80', $err);
 		if ($err)
 		{
-			return new ActionResponse('err', true);
+			$this->set('err', true);
 		}
 
 		$out = "GET /version HTTP/1.1\r\n";
@@ -33,10 +33,9 @@ class UpdateController extends StoreManagementController
 		$current = $this->getCurrentVersion();
 
 		// get current version
-		$response = new ActionResponse('current', $current);
-		$response->set('newest', $version);
-		$response->set('needUpdate', version_compare($current, $version, '<'));
-		return $response;
+		$this->set('current', $current);
+		$this->set('newest', $version);
+		$this->set('needUpdate', version_compare($current, $version, '<'));
 	}
 
 	/**
@@ -87,10 +86,9 @@ class UpdateController extends StoreManagementController
 			ob_end_clean();
 		}
 
-		$response = new ActionResponse();
-		$response->set('progress', $progress);
-		$response->set('errors', $errors);
-		return $response;
+
+		$this->set('progress', $progress);
+		$this->set('errors', $errors);
 	}
 
 	public function testCopyAction()
@@ -115,7 +113,6 @@ class UpdateController extends StoreManagementController
 		$handler->deleteFile('module/' . $tmp);
 		unlink($tmp);
 
-		return $response;
 	}
 
 	private function getCurrentVersion()

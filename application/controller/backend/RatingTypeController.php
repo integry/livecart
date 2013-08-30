@@ -12,10 +12,9 @@ class RatingTypeController extends StoreManagementController
 	{
 		$category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
 		$types = ProductRatingType::getCategoryRatingTypes($category)->toArray();
-		$response = new ActionResponse('typeList', $types);
-		$response->set('form', $this->buildForm());
-		$response->set('id', $this->request->get('id'));
-		return $response;
+		$this->set('typeList', $types);
+		$this->set('form', $this->buildForm());
+		$this->set('id', $this->request->get('id'));
 	}
 
 	/**
@@ -26,7 +25,7 @@ class RatingTypeController extends StoreManagementController
 		$form = $this->buildForm();
 		$type = ActiveRecordModel::getInstanceByID('ProductRatingType', $this->request->get('id'), ProductRatingType::LOAD_DATA);
 		$form->loadData($type->toArray());
-		return new ActionResponse('form', $form);
+		$this->set('form', $form);
 	}
 
 	/**

@@ -41,9 +41,8 @@ class StaticpageController extends ControllerBase
 		$pageArray = $page->toArray();
 		$this->addBreadCrumb($pageArray['title_lang'], '');
 
-		$response = new ActionResponse('page', $pageArray);
+		$this->set('page', $pageArray);
 		$response = 'subPages', $page->getSubPageArray());
-		return $response;
 		*/
 	}
 }

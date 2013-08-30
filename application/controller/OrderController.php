@@ -40,7 +40,6 @@ class OrderController extends FrontendController
 		$response = $this->getCartPageResponse();
 
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
-		return $response;
 	}
 
 	/**
@@ -86,10 +85,9 @@ class OrderController extends FrontendController
 		}
 
 		$response = new BlockResponse();
-		$response->set('msg', $this->request->get('message'));
-		$response->set('error', $this->request->get('err'));
-		$response->set('cart', $this->order->toArray());
-		return $response;
+		$this->set('msg', $this->request->get('message'));
+		$this->set('error', $this->request->get('err'));
+		$this->set('cart', $this->order->toArray());
 	}
 
 	/**
@@ -115,7 +113,7 @@ class OrderController extends FrontendController
 			$addresses[$address['UserAddress']['ID']] = $address['UserAddress']['compact'];
 		}
 
-		$response->set('addresses', $addresses);
+		$this->set('addresses', $addresses);
 
 		if (!$addresses)
 		{
@@ -123,7 +121,6 @@ class OrderController extends FrontendController
 		}
 
 		$this->addBreadCrumb($this->translate('_select_shipping_addresses'), '');
-		return $response;
 	}
 
 	private function getCartPageResponse()
@@ -133,10 +130,10 @@ class OrderController extends FrontendController
 		$this->order->setUser($this->user);
 		$this->order->loadItemData();
 
-		$response = new ActionResponse();
+
 		if ($result = $this->order->updateToStock())
 		{
-			$response->set('changes', $result);
+			$this->set('changes', $result);
 		}
 
 		$options = $this->getItemOptions();
@@ -155,7 +152,7 @@ class OrderController extends FrontendController
 			if ($this->estimateShippingCost())
 			{
 				$this->order->getTotal(true);
-				$response->set('isShippingEstimated', true);
+				$this->set('isShippingEstimated', true);
 			}
 
 			$address = $this->order->shippingAddress->get();
@@ -169,8 +166,8 @@ class OrderController extends FrontendController
 				$form->set('estimate_state_select', $address->state->get()->getID());
 			}
 
-			$response->set('countries', $this->getCountryList($form));
-			$response->set('states', $this->getStateList($form->get('estimate_country')));
+			$this->set('countries', $this->getCountryList($form));
+			$this->set('states', $this->getStateList($form->get('estimate_country')));
 
 			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
 			$hideForm = (!empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous()) ||
@@ -179,7 +176,7 @@ class OrderController extends FrontendController
 						!$this->order->isShippingRequired() ||
 						$this->order->isMultiAddress->get();
 
-			$response->set('hideShippingEstimationForm', $hideForm);
+			$this->set('hideShippingEstimationForm', $hideForm);
 		}
 
 		$orderArray = $this->order->toArray();
@@ -205,27 +202,26 @@ class OrderController extends FrontendController
 		}
 		if ($hasRecurringItem)
 		{
-			$response->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
-			$response->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
-			$response->set('recurringItemsByItem', $recurringItemsByItem);
+			$this->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
+			$this->set('periodTypesSingle', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_SINGLE));
+			$this->set('recurringItemsByItem', $recurringItemsByItem);
 		}
-		$response->set('cart', $orderArray);
-		$response->set('itemsById', $itemsById);
-		$response->set('form', $form);
-		$response->set('return', $this->request->get('return'));
-		$response->set('currency', $currency->getID());
-		$response->set('options', $options['visible']);
-		$response->set('moreOptions', $options['more']);
-		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
-		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
-		$response->set('isCouponCodes', DiscountCondition::isCouponCodes());
-		$response->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
+		$this->set('cart', $orderArray);
+		$this->set('itemsById', $itemsById);
+		$this->set('form', $form);
+		$this->set('return', $this->request->get('return'));
+		$this->set('currency', $currency->getID());
+		$this->set('options', $options['visible']);
+		$this->set('moreOptions', $options['more']);
+		$this->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
+		$this->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
+		$this->set('isCouponCodes', DiscountCondition::isCouponCodes());
+		$this->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
 		SessionOrder::getOrder()->getShoppingCartItems();
 
-		return $response;
 	}
 
 	private function estimateShippingCost()
@@ -306,8 +302,7 @@ class OrderController extends FrontendController
 	public function optionsAction()
 	{
 		$response = $this->index();
-		$response->set('editOption', $this->request->get('id'));
-		return $response;
+		$this->set('editOption', $this->request->get('id'));
 	}
 
 	public function optionFormAction(CustomerOrder $order = null, $filter = 'isDisplayed')
@@ -322,11 +317,10 @@ class OrderController extends FrontendController
 
 		$this->setLayout('empty');
 
-		$response = new ActionResponse();
-		$response->set('form', $this->buildOptionsForm($item, $options));
-		$response->set('options', $optionsArray);
-		$response->set('item', $item->toArray());
-		return $response;
+
+		$this->set('form', $this->buildOptionsForm($item, $options));
+		$this->set('options', $optionsArray);
+		$this->set('item', $item->toArray());
 	}
 
 	public function variationFormAction(CustomerOrder $order = null)
@@ -338,11 +332,10 @@ class OrderController extends FrontendController
 
 		$this->setLayout('empty');
 
-		$response = new ActionResponse();
-		$response->set('form', $this->buildVariationsForm($item, $variations));
-		$response->set('variations', $variations);
-		$response->set('item', $item->toArray());
-		return $response;
+
+		$this->set('form', $this->buildVariationsForm($item, $variations));
+		$this->set('variations', $variations);
+		$this->set('item', $item->toArray());
 	}
 
 	private function getOptionsArray($set, $item, $filter = 'isDisplayed')

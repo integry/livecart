@@ -94,10 +94,9 @@ class ApiController extends BaseController
 	{
 		$this->loadLanguageFile('backend/Settings/API');
 
-		$response = new ActionResponse();
-		$response->set('classes', $this->getDocInfo());
-		$response->set('authMethods', ModelApi::getAuthMethods($this->application));
-		return $response;
+
+		$this->set('classes', $this->getDocInfo());
+		$this->set('authMethods', ModelApi::getAuthMethods($this->application));
 	}
 
 	/**
@@ -117,9 +116,8 @@ class ApiController extends BaseController
 			throw new ApplicationException('API class ' . $className . ' not found');
 		}
 
-		$response = new ActionResponse('info', $info);
-		$response->set('className', $className);
-		return $response;
+		$this->set('info', $info);
+		$this->set('className', $className);
 	}
 
 	public function docactionAction()
@@ -142,7 +140,7 @@ class ApiController extends BaseController
 
 				$samples[] = array('xml' => $xml, 'formatted' => $this->formatXmlString($xml), 'comments' => $comments);
 			}
-			$response->set('xmlSamples', $samples);
+			$this->set('xmlSamples', $samples);
 		}
 
 		// get search field names
@@ -168,7 +166,7 @@ class ApiController extends BaseController
 				}
 			}
 
-			$response->set('searchFields', $searchFields);
+			$this->set('searchFields', $searchFields);
 		}
 
 		if (in_array($action, array('create', 'update')) && ($importer = $inst->getImportHandler()))
@@ -193,11 +191,10 @@ class ApiController extends BaseController
 				$createFields[$this->translate($groupName)] = $apiFields;
 			}
 
-			$response->set('createFields', $createFields);
+			$this->set('createFields', $createFields);
 		}
 
-		$response->set('action', $action);
-		return $response;
+		$this->set('action', $action);
 	}
 
 	public function docAuthAction()
@@ -213,10 +210,8 @@ class ApiController extends BaseController
 		$expr = "/\/\*\*|\s\*\s|@.*\n|\*\//";
         $comment = htmlspecialchars(trim(preg_replace($expr, '', $comment)));
 
-        $response = new ActionResponse('class', $class);
-        $response->set('comment', $comment);
-
-        return $response;
+        $this->set('class', $class);
+        $this->set('comment', $comment);
 	}
 
 	private function formatXmlString($xml)

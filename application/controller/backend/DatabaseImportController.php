@@ -12,12 +12,11 @@ class DatabaseImportController extends StoreManagementController
 {
 	public function indexAction()
 	{
-		$response = new ActionResponse();
-		$response->set('form', $this->getForm());
-		$response->set('carts', $this->getDrivers());
-		$response->set('dbTypes', array('mysql' => 'MySQL'));
-		$response->set('recordTypes', LiveCartImporter::getRecordTypes());
-		return $response;
+
+		$this->set('form', $this->getForm());
+		$this->set('carts', $this->getDrivers());
+		$this->set('dbTypes', array('mysql' => 'MySQL'));
+		$this->set('recordTypes', LiveCartImporter::getRecordTypes());
 	}
 
 	public function importAction()
@@ -106,7 +105,6 @@ class DatabaseImportController extends StoreManagementController
 
 		$importer->reset();
 
-		return $response;
 	}
 
 	private function getResponse($data)

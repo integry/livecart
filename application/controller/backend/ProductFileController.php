@@ -14,15 +14,14 @@ class ProductFileController extends StoreManagementController
 	{
 		$product = Product::getInstanceByID((int)$this->request->get('id'));
 
-		$response = new ActionResponse();
+
 
 		$languages = array();
 		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
-		$response->set('languages', $languages);
-		$response->set('productID', $product->getID());
-		$response->set('productFilesWithGroups', $product->getFilesMergedWithGroupsArray());
+		$this->set('languages', $languages);
+		$this->set('productID', $product->getID());
+		$this->set('productFilesWithGroups', $product->getFilesMergedWithGroupsArray());
 
-		return $response;
 	}
 
 	/**
@@ -71,7 +70,7 @@ class ProductFileController extends StoreManagementController
 
 	private function save(ProductFile $productFile)
 	{
-		$response = new ActionResponse();
+
 		$response->setHeader("Cache-Control", "no-cache, must-revalidate");
 		$response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 
@@ -100,16 +99,15 @@ class ProductFileController extends StoreManagementController
 	   		$productFile->isPublic->set($this->request->get('isPublic') != false);
 
 	   		$productFile->save();
-			$response->set('status', 'success');
-			$response->set('productFile', $productFile->toArray());
+			$this->set('status', 'success');
+			$this->set('productFile', $productFile->toArray());
 		}
 		else
 		{
-			$response->set('status', 'failure');
-			$response->set('errors', $validator->getErrorList());
+			$this->set('status', 'failure');
+			$this->set('errors', $validator->getErrorList());
 		}
 
-		return $response;
 	}
 
 	public function editAction()

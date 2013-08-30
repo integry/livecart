@@ -11,11 +11,10 @@ class ShippingClassController extends StoreManagementController
 {
 	/**
 	 * List all system currencies
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 
 		$classesForms = array();
 		$classes = array();
@@ -25,14 +24,13 @@ class ShippingClassController extends StoreManagementController
 			$classesForms[] = $this->createClassForm($class);
 		}
 
-		$response->set("classesForms", $classesForms);
-		$response->set("classes", $classes);
+		$this->set("classesForms", $classesForms);
+		$this->set("classes", $classes);
 
 		$newClass = ShippingClass::getNewInstance('');
-		$response->set("newClassForm", $this->createClassForm($newClass));
-		$response->set("newClass", $newClass->toArray());
+		$this->set("newClassForm", $this->createClassForm($newClass));
+		$this->set("newClass", $newClass->toArray());
 
-		return $response;
 	}
 
 	public function editAction()
@@ -42,11 +40,10 @@ class ShippingClassController extends StoreManagementController
 		$form = $this->createClassForm($class);
 		$form->setData($class->toArray());
 
-		$response = new ActionResponse();
-		$response->set('class', $class->toArray());
-		$response->set('classForm', $form);
 
-		return $response;
+		$this->set('class', $class->toArray());
+		$this->set('classForm', $form);
+
 	}
 
 	/**

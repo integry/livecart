@@ -19,7 +19,7 @@ class NewsletterController extends FrontendController
 			$s->save();
 		}
 
-		return new ActionResponse();
+
 	}
 
 	public function subscribeAction()
@@ -52,12 +52,12 @@ class NewsletterController extends FrontendController
 		$mail->set('email', $email);
 		$mail->send();
 
-		return new ActionResponse('subscriber', $instance->toArray());
+		$this->set('subscriber', $instance->toArray());
 	}
 
 	public function alreadySubscribedAction()
 	{
-		return new ActionResponse();
+
 	}
 
 	public function confirmAction()
@@ -69,7 +69,7 @@ class NewsletterController extends FrontendController
 			$instance->save();
 		}
 
-		return new ActionResponse('subscriber', $instance->toArray());
+		$this->set('subscriber', $instance->toArray());
 	}
 
 	public function getSubscribeValidatorAction()

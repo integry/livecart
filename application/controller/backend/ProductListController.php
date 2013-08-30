@@ -35,10 +35,9 @@ class ProductListController extends ProductListControllerCommon
 
 		$items = ActiveRecordGroup::mergeGroupsWithFields('ProductList', $lists, $items);
 
-		$response = new ActionResponse();
-		$response->set('ownerID', $categoryID);
-		$response->set('items', $items);
-		return $response;
+
+		$this->set('ownerID', $categoryID);
+		$this->set('items', $items);
 	}
 
 	protected function getOwnerClassName()

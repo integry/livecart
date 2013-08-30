@@ -21,14 +21,13 @@ class ProductCategoryController extends StoreManagementController
 			$category->getPathNodeSet();
 		}
 
-		$response = new ActionResponse('product', $product->toArray());
+		$this->set('product', $product->toArray());
 
 		if ($additional)
 		{
-			$response->set('categories', ARSet::buildFromArray($additional)->toArray());
+			$this->set('categories', ARSet::buildFromArray($additional)->toArray());
 		}
 
-		return $response;
 	}
 
 	public function saveMainCategoryAction()

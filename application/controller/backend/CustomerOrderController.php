@@ -38,7 +38,6 @@ class CustomerOrderController extends ActiveGridController
 
 	/**
 	 * Action shows filters and datagrid.
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
@@ -66,7 +65,7 @@ class CustomerOrderController extends ActiveGridController
 			array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => self::TYPE_ROOT),
 		));
 
-		return new ActionResponse('orderGroups', $orderGroups);
+		$this->set('orderGroups', $orderGroups);
 	}
 
 	protected function getClassName()
@@ -96,14 +95,13 @@ class CustomerOrderController extends ActiveGridController
 	public function assignStatusesAction(ActionResponse $response)
 	{
 
-		$response->set('statuses', array(
+		$this->set('statuses', array(
 										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
 										CustomerOrder::STATUS_PROCESSING  => $this->translate('_status_processing'),
 										CustomerOrder::STATUS_AWAITING  => $this->translate('_status_awaiting'),
 										CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
 										CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
 						));
-		return $response;
 	}
 
 	public function infoAction()
@@ -114,10 +112,10 @@ class CustomerOrderController extends ActiveGridController
 		$order->loadAll();
 		$this->removeEmptyShipments($order);
 
-		$response = new ActionResponse();
+
 
 		$this->assignStatuses($response);
-		$response->set('countries', $this->application->getEnabledCountries());
+		$this->set('countries', $this->application->getEnabledCountries());
 
 		$orderArray = $order->toArray();
 		if($order->isFinalized->get())
@@ -138,7 +136,7 @@ class CustomerOrderController extends ActiveGridController
 				$billingStates = State::getStatesByCountry($order->billingAddress->get()->countryID->get());
 				$billingStates[''] = '';
 				asort($billingStates);
-				$response->set('billingStates',  $billingStates);
+				$this->set('billingStates',  $billingStates);
 			}
 
 			if($order->shippingAddress->get())
@@ -146,7 +144,7 @@ class CustomerOrderController extends ActiveGridController
 				$shippingStates = State::getStatesByCountry($order->shippingAddress->get()->countryID->get());
 				$shippingStates[''] = '';
 				asort($shippingStates);
-				$response->set('shippingStates',  $shippingStates);
+				$this->set('shippingStates',  $shippingStates);
 			}
 		}
 		elseif ($order->user->get())
@@ -169,12 +167,12 @@ class CustomerOrderController extends ActiveGridController
 
 			$billingStates[''] = '';
 
-			$response->set('shippingStates',  $shippingStates);
-			$response->set('billingStates',  $billingStates);
+			$this->set('shippingStates',  $shippingStates);
+			$this->set('billingStates',  $billingStates);
 		}
 
-		$response->set('order', $orderArray);
-		$response->set('form', $this->createOrderForm($orderArray));
+		$this->set('order', $orderArray);
+		$this->set('form', $this->createOrderForm($orderArray));
 
 		$user = $order->user->get();
 
@@ -198,13 +196,13 @@ class CustomerOrderController extends ActiveGridController
 				$addresses[$address['ID']] = $address;
 			}
 
-			$response->set('existingUserAddressOptions', $addressOptions);
-			$response->set('existingUserAddresses', $addresses);
+			$this->set('existingUserAddressOptions', $addressOptions);
+			$this->set('existingUserAddresses', $addresses);
 		}
 
 		foreach (array('ShippingAddress', 'BillingAddress') as $type)
 		{
-			$response->set('form' . $type, $this->createUserAddressForm(isset($orderArray[$type]) ? $orderArray[$type] : array(), $response));
+			$this->set('form' . $type, $this->createUserAddressForm(isset($orderArray[$type]) ? $orderArray[$type] : array(), $response));
 		}
 
 		$shipableShipmentsCount = 0;
@@ -229,14 +227,14 @@ class CustomerOrderController extends ActiveGridController
 			}
 		}
 		BackendToolbarItem::registerLastViewedOrder($order);
-//		$response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
-		$response->set('hideShipped', false);
-		$response->set('type', $this->getOrderType($order));
+//		$this->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
+		$this->set('hideShipped', false);
+		$this->set('type', $this->getOrderType($order));
 
 		// custom fields
 		$form = $this->createFieldsForm($order);
 		$order->getSpecification()->setFormResponse($response, $form);
-		$response->set('fieldsForm', $form);
+		$this->set('fieldsForm', $form);
 
 		$this->appendCalendarForm($response);
 		return $this->shipmentInfo($response);
@@ -339,35 +337,34 @@ class CustomerOrderController extends ActiveGridController
 
 		$totalAmount = $subtotalAmount + $shippingAmount + $taxAmount;
 
-		// $response = new ActionResponse();
-		$response->set('orderID', $this->request->get('id'));
-		$response->set('order', $order->toArray());
-		$response->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
-		$response->set('shipments', $shipmentsArray);
-		$response->set('subtotalAmount', $subtotalAmount);
-		$response->set('shippingAmount', $shippingAmount);
-		$response->set('variations', $variations);
+		//
+		$this->set('orderID', $this->request->get('id'));
+		$this->set('order', $order->toArray());
+		$this->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
+		$this->set('shipments', $shipmentsArray);
+		$this->set('subtotalAmount', $subtotalAmount);
+		$this->set('shippingAmount', $shippingAmount);
+		$this->set('variations', $variations);
 
 		if ($downloadable = $order->getDownloadShipment(false))
 		{
 
-			$response->set('downloadableShipment', $downloadable->toArray());
+			$this->set('downloadableShipment', $downloadable->toArray());
 		}
 
-		$response->set('taxAmount', $taxAmount);
-		$response->set('totalAmount', $totalAmount);
-		$response->set('shipableShipmentsCount', $shipableShipmentsCount);
-		$response->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
+		$this->set('taxAmount', $taxAmount);
+		$this->set('totalAmount', $totalAmount);
+		$this->set('shipableShipmentsCount', $shipableShipmentsCount);
+		$this->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
 
 		unset($statuses[3]);
-		$response->set('statusesWithoutShipped', $statuses);
-		$response->set('newShipmentForm', $form);
-		$response->set('downloadCount', $this->getDownloadCounts($itemIDs));
+		$this->set('statusesWithoutShipped', $statuses);
+		$this->set('newShipmentForm', $form);
+		$this->set('downloadCount', $this->getDownloadCounts($itemIDs));
 
 		// load product options
-		$response->set('allOptions', ProductOption::loadOptionsForProductSet($products));
+		$this->set('allOptions', ProductOption::loadOptionsForProductSet($products));
 
-		return $response;
 	}
 
 
@@ -406,10 +403,10 @@ class CustomerOrderController extends ActiveGridController
 				$dateForm->set($key, $order[$key]);
 			}
 		}
-		$response->set('dateForm', $dateForm);
+		$this->set('dateForm', $dateForm);
 	}
 
-	private function getDateCompletedValidator(Request $request)
+	private function getDateCompletedValidator(\Phalcon\Http\Request $request)
 	{
 		$validator = $this->getValidator('dateCreatedValidator', $request);
 		$validator->addCheck('dateCompleted', new IsNotEmptyCheck($this->translate('_err_date_cannot_be_empty')));
@@ -455,7 +452,7 @@ class CustomerOrderController extends ActiveGridController
 			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
 
-		return new ActionResponse('userGroups', $userGroups);
+		$this->set('userGroups', $userGroups);
 	}
 
 	public function ordersAction()
@@ -465,9 +462,9 @@ class CustomerOrderController extends ActiveGridController
 			$this->request->set('id', 1);
 		}
 
-		$response = new ActionResponse();
-		$response->set("massForm", $this->getMassForm());
-		$response->set("orderGroupID", $this->request->get('id'));
+
+		$this->set("massForm", $this->getMassForm());
+		$this->set("orderGroupID", $this->request->get('id'));
 
 		if ($this->request->get('userOrderID'))
 		{
@@ -477,13 +474,12 @@ class CustomerOrderController extends ActiveGridController
 
 		if ($this->request->get('userID'))
 		{
-			$response->set('userID', $this->request->get('userID'));
+			$this->set('userID', $this->request->get('userID'));
 		}
 
 		$this->setGridResponse($response);
-		$response->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
+		$this->set("filters", ((int)$this->request->get('userID') ? array('filter_User.ID' => $this->request->get('userID')) : false));
 
-		return $response;
 	}
 
 	/**
@@ -1160,11 +1156,10 @@ class CustomerOrderController extends ActiveGridController
 			$order->loadRequestData($this->request);
 			$order->save(true);
 
-			$response = new ActionResponse('order', $order->toArray());
+			$this->set('order', $order->toArray());
 			$form = $this->createFieldsForm($order);
 			$order->getSpecification()->setFormResponse($response, $form);
-			$response->set('fieldsForm', $form);
-			return $response;
+			$this->set('fieldsForm', $form);
 		}
 	}
 
@@ -1190,7 +1185,6 @@ class CustomerOrderController extends ActiveGridController
 
 		$this->sendStatusNotifyEmail($order);
 
-		return $response;
 	}
 
 	/**
@@ -1235,7 +1229,6 @@ class CustomerOrderController extends ActiveGridController
 		$response = $this->save($order);
 
 		ActiveRecord::commit();
-		return $response;
 	}
 
 	/**
@@ -1320,7 +1313,7 @@ class CustomerOrderController extends ActiveGridController
 		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('User');
 
-		return new ActionResponse('order', $order->toArray(array('payments' => true)));
+		$this->set('order', $order->toArray(array('payments' => true)));
 	}
 
 	private function save(CustomerOrder $order)
@@ -1579,10 +1572,9 @@ class CustomerOrderController extends ActiveGridController
 	public function invoicesAction()
 	{
 		$this->invoiceRequestPreFilter();
-		$response = new ActionResponse();
-		$response->set('parentID', $this->getRequest()->get('parentID'));
+
+		$this->set('parentID', $this->getRequest()->get('parentID'));
 		$this->setGridResponse($response);
-		return $response;
 	}
 
 	public function listInvoicesAction()

@@ -22,11 +22,10 @@ class ProductOptionController extends StoreManagementController
 	/**
 	 * Specification field index page
 	 *
-	 * @return ActionResponse
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
+
 
 		$parentId = $this->request->get('id');
 		$parent = $this->request->get('category') ? Category::getInstanceByID($parentId) : Product::getInstanceByID($parentId);
@@ -43,24 +42,22 @@ class ProductOptionController extends StoreManagementController
 			'isDisplayed' => true
 		);
 
-		$response->set('parentID', $parentId);
-		$response->set('configuration', $this->getProductOptionConfig());
-		$response->set('productOptionsList', $defaultProductOptionValues);
-		$response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
-		$response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
-		$response->set('options', $parent->getOptions()->toArray());
+		$this->set('parentID', $parentId);
+		$this->set('configuration', $this->getProductOptionConfig());
+		$this->set('productOptionsList', $defaultProductOptionValues);
+		$this->set('defaultLangCode', $this->application->getDefaultLanguageCode());
+		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
+		$this->set('options', $parent->getOptions()->toArray());
 
-		return $response;
 	}
 
 	/**
 	 * Displays form for creating a new or editing existing one product group specification field
 	 *
-	 * @return ActionResponse
 	 */
 	public function itemAction()
 	{
-		$response = new ActionResponse();
+
 		$option = ProductOption::getInstanceByID($this->request->get('id'), true);
 
 		if ($option->defaultChoice)

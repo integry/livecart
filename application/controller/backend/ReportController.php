@@ -17,10 +17,9 @@ class ReportController extends StoreManagementController
 	 */
 	public function indexAction()
 	{
-		$response = new ActionResponse();
-		$response->set('thisMonth', date('m'));
-		$response->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
-		return $response;
+
+		$this->set('thisMonth', date('m'));
+		$this->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
 	}
 
 	public function salesAction()
@@ -79,8 +78,7 @@ class ReportController extends StoreManagementController
 		}
 
 		$response = $this->getChartResponse($report);
-		$response->set('type', $type);
-		return $response;
+		$this->set('type', $type);
 	}
 
 	public function bestsellersAction()
@@ -102,8 +100,7 @@ class ReportController extends StoreManagementController
 		}
 
 		$response = $this->getChartResponse($report);
-		$response->set('type', $type);
-		return $response;
+		$this->set('type', $type);
 	}
 
 	public function customersAction()
@@ -129,8 +126,7 @@ class ReportController extends StoreManagementController
 		}
 
 		$response = $this->getChartResponse($report);
-		$response->set('type', $type);
-		return $response;
+		$this->set('type', $type);
 	}
 
 	public function conversionAction()
@@ -158,8 +154,7 @@ class ReportController extends StoreManagementController
 		}
 
 		$response = $this->getChartResponse($report);
-		$response->set('type', $type);
-		return $response;
+		$this->set('type', $type);
 	}
 
 	public function searchAction()
@@ -177,23 +172,21 @@ class ReportController extends StoreManagementController
 		}
 
 		$response = $this->getChartResponse($report);
-		$response->set('type', $type);
-		return $response;
+		$this->set('type', $type);
 	}
 
 	private function getChartResponse(Report $report)
 	{
-		$response = new ActionResponse();
+
 		if (Report::TABLE != $report->getChartType())
 		{
-			$response->set('chart', $report->getChartDataString());
+			$this->set('chart', $report->getChartDataString());
 		}
 		else
 		{
-			$response->set('reportData', $report->getValues());
+			$this->set('reportData', $report->getValues());
 		}
-		$response->set('chartType', $report->getChartType());
-		return $response;
+		$this->set('chartType', $report->getChartType());
 	}
 
 	private function initReport(Report $report)

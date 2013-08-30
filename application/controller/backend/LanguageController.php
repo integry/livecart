@@ -14,7 +14,6 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * @role language
-	 * @return ActionResponse
 	 */
 	public function exportAction()
 	{
@@ -84,13 +83,11 @@ class LanguageController extends StoreManagementController
 		$response = new ObjectFileResponse(ObjectFile::getNewInstance('ObjectFile', $zip, 'LiveCart-' . $locale->getLocaleCode() . '.zip'));
 		$response->deleteFileOnComplete();
 
-		return $response;
 	}
 
 	/**
 	 * Gets definitions from project files and updates them in database.
 	 * @role language.update
-	 * @return ActionResponse
 	 */
 	public function updateAction()
 	{
@@ -102,7 +99,6 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays definitions edit page.
-	 * @return ActionResponse
 	 * @role language
 	 */
 	public function editAction()
@@ -183,14 +179,13 @@ class LanguageController extends StoreManagementController
 			}
 		}
 
-		$response = new ActionResponse();
-		$response->set("id", $editLocaleName);
-		$response->set("addForm", $this->buildAddPhraseForm());
-		$response->set("translations", @json_encode($translated));
-		$response->set("english", @json_encode($enDefs));
-		$response->set("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
 
-		return $response;
+		$this->set("id", $editLocaleName);
+		$this->set("addForm", $this->buildAddPhraseForm());
+		$this->set("translations", @json_encode($translated));
+		$this->set("english", @json_encode($enDefs));
+		$this->set("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
+
 	}
 
 	private function sortTranslations($a, $b)
@@ -257,7 +252,6 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays main admin page.
-	 * @return ActionResponse
 	 * @role language
 	 */
 	public function indexAction()
@@ -265,10 +259,9 @@ class LanguageController extends StoreManagementController
 		// get all added languages
 		$list = $this->getLanguages()->toArray();
 
-		$response = new ActionResponse();
-		$response->set("language", $this->request->get("language"));
-		$response->set("languageArray", json_encode($list));
-		return $response;
+
+		$this->set("language", $this->request->get("language"));
+		$this->set("languageArray", json_encode($list));
 	}
 
 	/**
@@ -289,9 +282,8 @@ class LanguageController extends StoreManagementController
 		// sort Locale language list
 		asort($languagesSelect);
 
-		$response = new ActionResponse();
-		$response->set("languages_select", $languagesSelect);
-		return $response;
+
+		$this->set("languages_select", $languagesSelect);
 	}
 
 	/**
@@ -396,11 +388,10 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays system menu for switching active language
-	 * @return ActionResponse
 	 */
 	public function langSwitchMenuAction()
 	{
-		$response = new ActionResponse();
+
 
 		// get all system languages
 		$list = $this->getLanguages(false)->toArray();
@@ -410,10 +401,9 @@ class LanguageController extends StoreManagementController
 			$list[$key]['name'] = $this->locale->info()->getOriginalLanguageName($value['ID']);
 		}
 
-		$response->set('returnRoute', $this->request->get('returnRoute'));
-		$response->set('languages', $list);
-		$response->set('currentLanguage', $this->locale->getLocaleCode());
-		return $response;
+		$this->set('returnRoute', $this->request->get('returnRoute'));
+		$this->set('languages', $list);
+		$this->set('currentLanguage', $this->locale->getLocaleCode());
 	}
 
 	/**
@@ -445,7 +435,6 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Displays translation dialog menu for Live Translations
 	 *
-	 * @return ActionResponse
 	 */
 	public function translationDialogAction()
 	{
@@ -455,20 +444,18 @@ class LanguageController extends StoreManagementController
 
 	  	$defaultTranslation = Locale::getInstance($this->application->getDefaultLanguageCode())->translationManager()->get($file, $id);
 
-	  	$response = new ActionResponse();
-	  	$response->set('id', $id);
-	  	$response->set('file', $file);
-	  	$response->set('translation', $translation);
-	  	$response->set('defaultTranslation', $defaultTranslation);
-	  	$response->set('language', Language::getInstanceByID($this->locale->getLocaleCode())->toArray());
-	  	return $response;
-	}
+
+	  	$this->set('id', $id);
+	  	$this->set('file', $file);
+	  	$this->set('translation', $translation);
+	  	$this->set('defaultTranslation', $defaultTranslation);
+	  	$this->set('language', Language::getInstanceByID($this->locale->getLocaleCode())->toArray());
+	  	}
 
 	/**
 	 * Saves a single translation entry from Live Translations dialog menu
 	 *
 	 * @role language.update
-	 * @return ActionResponse
 	 */
 	public function saveTranslationDialogAction()
 	{

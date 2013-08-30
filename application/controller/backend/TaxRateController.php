@@ -38,12 +38,11 @@ class TaxRateController extends StoreManagementController
 			$form->set($this->getFieldName($tax->tax->get(), $tax->taxClass->get()), $tax->rate->get());
 		}
 
-		$response = new ActionResponse();
-		$response->set('deliveryZone', $deliveryZoneArray);
-		$response->set('form', $form);
-		$response->set('taxes', $taxes);
-		$response->set('classes', $classes);
-		return $response;
+
+		$this->set('deliveryZone', $deliveryZoneArray);
+		$this->set('form', $form);
+		$this->set('taxes', $taxes);
+		$this->set('classes', $classes);
 	}
 
 	/**
