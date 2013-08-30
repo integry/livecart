@@ -15,7 +15,7 @@
 	<!-- Css includes -->
 	<link href="stylesheet/install/Install.css" rel="Stylesheet" type="text/css"/>
 
-	{literal}
+
 	<!--[if IE]>
 		<link href="stylesheet/frontend/InstallIE.css" rel="Stylesheet" type="text/css"/>
 		<style>
@@ -29,7 +29,7 @@
 			}
 		</style>
 	<![endif]-->
-	{/literal}
+
 
 	{includeJs file="library/prototype/prototype.js"}
 	{includeJs file="library/livecart.js"}

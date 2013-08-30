@@ -55,14 +55,14 @@
 	</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	// creates global variable backendTemplateInstance
-	backendTemplateInstance = new Backend.Template({/literal}[[categories]]{literal});
-	backendTemplateInstance.urls['edit'] = '{/literal}{link controller="backend.template" action=edit}?file=_id_&tabid=_tabid_{literal}';
-	backendTemplateInstance.urls['empty'] = '{/literal}{link controller="backend.template" action=emptyPage}{literal}';
-	backendTemplateInstance.urls['templateData'] = '{/literal}{link controller="backend.template" action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_{literal}';
-	backendTemplateInstance.translations['_tab_title_new'] = "{/literal}{t _tab_title_new}{literal}";
+	backendTemplateInstance = new Backend.Template([[categories]]);
+	backendTemplateInstance.urls['edit'] = '{link controller="backend.template" action=edit}?file=_id_&tabid=_tabid_';
+	backendTemplateInstance.urls['empty'] = '{link controller="backend.template" action=emptyPage}';
+	backendTemplateInstance.urls['templateData'] = '{link controller="backend.template" action=templateData}?file=_id_&tabid=_tabid_&theme=_theme_&version=_version_';
+	backendTemplateInstance.translations['_tab_title_new'] = "{t _tab_title_new}";
 	backendTemplateInstance.setTabControlInstance(
 		TabControl.prototype.getInstance(
 			'templateTabContainer',
@@ -74,6 +74,6 @@
 		)
 	);
 </script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

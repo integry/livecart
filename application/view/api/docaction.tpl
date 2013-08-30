@@ -1,6 +1,6 @@
 <h1><a href="{link controller=api action=doc}">{t _livecart_api}</a> &gt; <a href="{link controller=api action=docview query="class=`$className`"}">[[info.path]]</a>.[[name]]</h1>
 
-{literal}
+
 <style>
 	.xmlSample
 	{
@@ -46,7 +46,7 @@
 	}
 
 </style>
-{/literal}
+
 
 {% if !empty(xmlSamples) %}
 	<h2>{t _api_xml_samples}</h2>

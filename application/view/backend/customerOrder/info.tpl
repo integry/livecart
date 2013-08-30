@@ -332,79 +332,79 @@
 <div class="hidden" style="display:none;" id="order[[orderID]]_tmpContainer"></div>
 
 
-{literal}
+
 <script type="text/javascript">
 	Backend.OrderedItem.Links = {};
-	Backend.OrderedItem.Links.remove = '{/literal}{link controller="backend.orderedItem" action=delete}{literal}';
-	Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller="backend.orderedItem" action=changeShipment}{literal}';
-	Backend.OrderedItem.Links.addProduct = '{/literal}{link controller="backend.orderedItem" action=selectProduct}/[[orderID]]{literal}';
-	Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller="backend.orderedItem" action=create}{literal}';
-	// Backend.OrderedItem.Links.createFromSearchQuery = '{/literal}{link controller="backend.orderedItem" action=createFromSearchQuery}{literal}';
-	Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller="backend.orderedItem" action=changeCount}{literal}';
+	Backend.OrderedItem.Links.remove = '{link controller="backend.orderedItem" action=delete}';
+	Backend.OrderedItem.Links.changeShipment = '{link controller="backend.orderedItem" action=changeShipment}';
+	Backend.OrderedItem.Links.addProduct = '{link controller="backend.orderedItem" action=selectProduct}/[[orderID]]';
+	Backend.OrderedItem.Links.createNewItem = '{link controller="backend.orderedItem" action=create}';
+	// Backend.OrderedItem.Links.createFromSearchQuery = '{link controller="backend.orderedItem" action=createFromSearchQuery}';
+	Backend.OrderedItem.Links.changeItemCount = '{link controller="backend.orderedItem" action=changeCount}';
 
 	Backend.Shipment.Links = {};
-	Backend.Shipment.Links.update = '{/literal}{link controller="backend.shipment" action=update}{literal}';
-	Backend.Shipment.Links.create = '{/literal}{link controller="backend.shipment" action=create}{literal}';
-	Backend.Shipment.Links.remove = '{/literal}{link controller="backend.shipment" action=delete}{literal}';
-	Backend.Shipment.Links.edit = '{/literal}{link controller="backend.shipment" action=edit}{literal}';
-	Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller="backend.shipment" action=getAvailableServices}{literal}';
-	Backend.Shipment.Links.changeService = '{/literal}{link controller="backend.shipment" action=changeService}{literal}';
-	Backend.Shipment.Links.changeStatus = '{/literal}{link controller="backend.shipment" action=changeStatus}{literal}';
-	Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller="backend.customerOrder" action=removeEmptyShipments}{literal}';
+	Backend.Shipment.Links.update = '{link controller="backend.shipment" action=update}';
+	Backend.Shipment.Links.create = '{link controller="backend.shipment" action=create}';
+	Backend.Shipment.Links.remove = '{link controller="backend.shipment" action=delete}';
+	Backend.Shipment.Links.edit = '{link controller="backend.shipment" action=edit}';
+	Backend.Shipment.Links.getAvailableServices = '{link controller="backend.shipment" action=getAvailableServices}';
+	Backend.Shipment.Links.changeService = '{link controller="backend.shipment" action=changeService}';
+	Backend.Shipment.Links.changeStatus = '{link controller="backend.shipment" action=changeStatus}';
+	Backend.Shipment.Links.removeEmptyShipments = '{link controller="backend.customerOrder" action=removeEmptyShipments}';
 
 
-	Backend.Shipment.Statuses = {/literal}{json array=$statuses}{literal};
+	Backend.Shipment.Statuses = {json array=$statuses};
 
 	Backend.Shipment.Messages = {};
-	Backend.Shipment.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}';
-	Backend.Shipment.Messages.shippingServiceIsNotSelected = '{/literal}{t _shipping_service_is_not_selected|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToReturned = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_returned|addslashes}{literal}';
-	Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}';
-	Backend.Shipment.Messages.youWontBeAbleToUndelete = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}';
-	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}';
-	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}'
-	Backend.Shipment.Messages.shipment = '{/literal}{t _shipment}{literal}';
-	Backend.Shipment.Messages.addCouponCode = '{/literal}{t _add_coupon_code}{literal}';
+	Backend.Shipment.Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_group|addslashes}';
+	Backend.Shipment.Messages.shippingServiceIsNotSelected = '{t _shipping_service_is_not_selected|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToReturned = '{t _are_you_sure_you_want_to_change_shipment_status_to_returned|addslashes}';
+	Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}';
+	Backend.Shipment.Messages.youWontBeAbleToUndelete = '{t _you_wont_be_able_to_undelete_this_shipment|addslashes}';
+	Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}';
+	Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}'
+	Backend.Shipment.Messages.shipment = '{t _shipment}';
+	Backend.Shipment.Messages.addCouponCode = '{t _add_coupon_code}';
 
 	Backend.OrderedItem.Messages = {};
-	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';
-	Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
-	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
+	Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_item|addslashes}';
+	Backend.OrderedItem.Messages.selectProductTitle = '{t _select_product|addslashes}';
+	Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{t _are_you_realy_want_to_update_items_count|addslashes}';
 
-	Backend.Shipment.prototype.initializePage("{/literal}[[orderID]]{literal}", "{/literal}[[downloadableShipment.ID]]{literal}")
-	ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_[[orderID]]_[[downloadableShipment.ID]]{literal}", Backend.OrderedItem.activeListCallbacks);
-	var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]{literal}', Backend.Shipment.Callbacks);
+	Backend.Shipment.prototype.initializePage("[[orderID]]", "[[downloadableShipment.ID]]")
+	ActiveList.prototype.getInstance("orderShipmentsItems_list_[[orderID]]_[[downloadableShipment.ID]]", Backend.OrderedItem.activeListCallbacks);
+	var groupList = ActiveList.prototype.getInstance('orderShipments_list_[[orderID]]', Backend.Shipment.Callbacks);
 
-	{/literal}{foreach item="shipment" from=$shipments}{literal}
-		{/literal}{% if $shipment.isShippable %}{literal}
-			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]{% if $shipment.isShipped %}_shipped{% endif %}_[[shipment.ID]]{literal}', {isShipped: {/literal}{% if $shipment.isShipped %}true{% else %}false{% endif %}{literal}});
-		{/literal}{% else %}{literal}
-			var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_[[orderID]]_[[shipment.ID]]{literal}');
-		{/literal}{% endif %}{literal}
-	{/literal}{/foreach}{literal}
+	{foreach item="shipment" from=$shipments}
+		{% if $shipment.isShippable %}
+			var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_[[orderID]]{% if $shipment.isShipped %}_shipped{% endif %}_[[shipment.ID]]', {isShipped: {% if $shipment.isShipped %}true{% else %}false{% endif %}});
+		{% else %}
+			var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_[[orderID]]_[[shipment.ID]]');
+		{% endif %}
+	{/foreach}
 
 	groupList.createSortable(true);
 	</script>
-{/literal}
+
 
 <script type="text/javascript">
 	Backend.CustomerOrder.prototype.treeBrowser.selectItem({$type|default:0}, false);
 
 	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
-	{literal}
-	var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}[[order.ID]], true, {json array=$hideShipped}, [[order.isCancelled]], [[order.isFinalized]], {json array=$order.invoiceNumber}{literal});
 
-	{/literal}{% if !empty(formShippingAddress) %}{literal}
-		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_[[order.ID]]_shippingAddress_form{literal}'), 'shippingAddress');
-	{/literal}{% endif %}{literal}
+	var status = Backend.CustomerOrder.Editor.prototype.getInstance([[order.ID]], true, {json array=$hideShipped}, [[order.isCancelled]], [[order.isFinalized]], {json array=$order.invoiceNumber});
 
-	{/literal}{% if !empty(formBillingAddress) %}{literal}
-		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_[[order.ID]]_billingAddress_form{literal}'), 'billingAddress');
-	{/literal}{% endif %}
+	{% if !empty(formShippingAddress) %}
+		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('orderInfo_[[order.ID]]_shippingAddress_form'), 'shippingAddress');
+	{% endif %}
+
+	{% if !empty(formBillingAddress) %}
+		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('orderInfo_[[order.ID]]_billingAddress_form'), 'billingAddress');
+	{% endif %}
 
 	{% if $order.dateCompleted %}
 		var dateComplededEditor = new Backend.CustomerOrder.DateCompletedEditor();

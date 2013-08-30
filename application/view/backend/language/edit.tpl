@@ -16,12 +16,12 @@
 
 [[ partial("layout/backend/header.tpl") ]]
 
-{literal}
+
 <script type="text/javascript">
-	var translations = {/literal}[[translations]]{literal}
-	var english = {/literal}[[english]]{literal}
+	var translations = [[translations]]
+	var english = [[english]]
 </script>
-{/literal}
+
 
 <div style="display: none;">
 	<div id="fileTemplate">
@@ -157,9 +157,9 @@
 
 <div class="clear"></div>
 
-{literal}
+
 <script type="text/javascript">
-{/literal}
+
 	var edit = new Backend.LangEdit(translations, english);
 </script>
 

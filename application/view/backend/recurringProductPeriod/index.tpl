@@ -22,19 +22,19 @@
 	ActiveList.prototype.getInstance("recurringProductPeriods_[[product.ID]]",
 		Backend.RecurringProductPeriod.prototype.ActiveListCallbacks);
 
-	Backend.RecurringProductPeriod.prototype.properties = {literal}{{/literal}
+	Backend.RecurringProductPeriod.prototype.properties = {
 		// link_update: "{link controller="backend.recurringProductPeriod" action=update}",
 		// link_create: "{link controller="backend.recurringProductPeriod" action=create}",
 		link_edit: "{link controller="backend.recurringProductPeriod" action=edit id=_id_}",
 		link_remove: "{link controller="backend.recurringProductPeriod" action=delete id=_id_}",
 		// link_sort: "{link controller="backend.recurringProductPeriod" action=sort}",
 		message_confirm_remove: "{t _confirm_removing_rpp}"
-	{literal}}{/literal};
+	};
 
 	Event.observe($("rpp_new_show_[[product.ID]]"), "click", function(e)
-	{literal}{{/literal}
+	{
 		e.preventDefault();
 		var newForm = Backend.RecurringProductPeriod.prototype.getInstance( $("rpp_new_form_[[product.ID]]").down('form') );
 		newForm.showNewForm();
-	{literal}}{/literal});
+	});
 </script>

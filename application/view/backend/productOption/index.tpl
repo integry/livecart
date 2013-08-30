@@ -1,4 +1,4 @@
-{literal}
+
 <script type="text/javascript">
 //<[!CDATA[
 	/**<b></b>
@@ -6,25 +6,25 @@
 	 * so we define them in
 	 */
 	Backend.ProductOption.prototype.links = {};
-	Backend.ProductOption.prototype.links.create		  = {/literal}'{link controller="backend.productOption" action=create}'{literal};
-	Backend.ProductOption.prototype.links.update		  = {/literal}'{link controller="backend.productOption" action=update}'{literal};
-	Backend.ProductOption.prototype.links.deleteField	 = {/literal}'{link controller="backend.productOption" action=delete}/'{literal};
-	Backend.ProductOption.prototype.links.editField	   = {/literal}'{link controller="backend.productOption" action=item}/'{literal};
-	Backend.ProductOption.prototype.links.sortField	   = {/literal}'{link controller="backend.productOption" action=sort}/'{literal};
-	Backend.ProductOption.prototype.links.deleteValue	 = {/literal}'{link controller="backend.productOption" action=deleteChoice}/'{literal};
-	Backend.ProductOption.prototype.links.sortValues	  = {/literal}'{link controller="backend.productOption" action=sortChoice}/'{literal};
+	Backend.ProductOption.prototype.links.create		  = '{link controller="backend.productOption" action=create}';
+	Backend.ProductOption.prototype.links.update		  = '{link controller="backend.productOption" action=update}';
+	Backend.ProductOption.prototype.links.deleteField	 = '{link controller="backend.productOption" action=delete}/';
+	Backend.ProductOption.prototype.links.editField	   = '{link controller="backend.productOption" action=item}/';
+	Backend.ProductOption.prototype.links.sortField	   = '{link controller="backend.productOption" action=sort}/';
+	Backend.ProductOption.prototype.links.deleteValue	 = '{link controller="backend.productOption" action=deleteChoice}/';
+	Backend.ProductOption.prototype.links.sortValues	  = '{link controller="backend.productOption" action=sortChoice}/';
 
 	Backend.ProductOption.prototype.msg = {};
-	Backend.ProductOption.prototype.msg.removeFieldQuestion  = {/literal}'{t _ProductOption_remove_question|addslashes}'{literal};
-	Backend.ProductOption.prototype.msg.editActiveListItem   = {/literal}'{t _activeList_edit|addslashes}'{literal},
-	Backend.ProductOption.prototype.msg.deleteActiveListItem = {/literal}'{t _activeList_delete|addslashes}'{literal}
+	Backend.ProductOption.prototype.msg.removeFieldQuestion  = '{t _ProductOption_remove_question|addslashes}';
+	Backend.ProductOption.prototype.msg.editActiveListItem   = '{t _activeList_edit|addslashes}',
+	Backend.ProductOption.prototype.msg.deleteActiveListItem = '{t _activeList_delete|addslashes}'
 	Backend.ProductOption.prototype.activeListMessages =
 	{
 		'_activeList_edit':	Backend.ProductOption.prototype.msg.editActiveListItem,
 		'_activeList_delete':  Backend.ProductOption.prototype.msg.deleteActiveListItem
 	}
 
-	{/literal}
+
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{% if $configKey == 'types' %}
 			Backend.ProductOption.prototype.[[configKey]] = Backend.ProductOption.prototype.createTypesOptions({json array=$configItem});
@@ -47,14 +47,14 @@
 <div>
 	<fieldset class="addForm" id="productOption_item_new_[[parentID]]_form" style="display: none;">
 		<legend>{t _add_new_field|capitalize}</legend>
-		{literal}
+
 		<script type="text/javascript">
-		   var newProductOptionForm = new Backend.ProductOption('{/literal}{json array=$productOptionsList}{literal}');
+		   var newProductOptionForm = new Backend.ProductOption('{json array=$productOptionsList}');
 		   newProductOptionForm.addField(null, "new" + Backend.ProductOption.prototype.countNewFilters, true);
 		   newProductOptionForm.bindDefaultFields();
 		   Backend.ProductOption.prototype.countNewFilters++;
 		</script>
-		{/literal}
+
 	</fieldset>
 </div>
 

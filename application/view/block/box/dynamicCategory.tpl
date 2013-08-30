@@ -1,4 +1,4 @@
-{literal}
+
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 
 sfHover = function() {
@@ -15,7 +15,7 @@ sfHover = function() {
 if (window.attachEvent) window.attachEvent("onload", sfHover);
 
 //--><!]]></script>
-{/literal}
+
 
 {function name="dynamicCategoryTree" node=false filters=false}
 	{% if !empty(node) %}

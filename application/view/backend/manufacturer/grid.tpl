@@ -1,8 +1,8 @@
-{literal}
+
 <script type="text/javascript">
-	Backend.Manufacturer.GridFormatter.url = '{/literal}{link controller="backend.manufacturer"}{literal}';
+	Backend.Manufacturer.GridFormatter.url = '{link controller="backend.manufacturer"}';
 </script>
-{/literal}
+
 
 {activeGrid
 	prefix="manufacturer"
@@ -18,10 +18,10 @@
 	massAction="backend/manufacturer/massAction.tpl"
 }
 
-{literal}
+
 <script type="text/javascript">
 	var massHandler = new ActiveGrid.MassActionHandler($('manufacturerMass'), window.activeGrids['manufacturer_0']);
-	massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_manufacturer|addslashes}{literal}' ;
-	massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
+	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_manufacturer|addslashes}' ;
+	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 </script>
-{/literal}
+

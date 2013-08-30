@@ -1,14 +1,14 @@
 <script type="text/javascript">
-{literal}
+
 	Backend.ProductBundle.links = {};
 	Backend.ProductBundle.messages = {};
 	with(Backend.ProductBundle)
 	{
-		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__{literal}';
-		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
-		messages.areYouSureYouWantToDelete = '{/literal}{t _confirm_bundle_delete|addslashes}{literal}';
+		links.selectProduct = '{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__';
+		messages.selectProductTitle = '{t _select_product|addslashes}';
+		messages.areYouSureYouWantToDelete = '{t _confirm_bundle_delete|addslashes}';
 	}
-{/literal}
+
 </script>
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>

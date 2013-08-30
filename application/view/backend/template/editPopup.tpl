@@ -7,7 +7,7 @@
 
 [[ partial("layout/backend/meta.tpl") ]]
 
-{literal}
+
 <style type="text/css">
 	body
 	{
@@ -16,7 +16,7 @@
 		padding-right: 10px;
 	}
 </style>
-{/literal}
+
 
 <div id="pageTitleContainer">
 	<div id="pageTitle">[[PAGE_TITLE]]</div>
@@ -54,10 +54,9 @@
 {/form}
 
 
-{literal}
+
 	<script type="text/javascript">
-		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
-		$('code_undefined').value = {/literal}decode64("[[code]]");{literal};
+		editAreaLoader.baseURL = "{baseUrl}javascript/library/editarea/";
+		$('code_undefined').value = decode64("[[code]]");;
 		new Backend.TemplateHandler($('templateForm'));
 	</script>
-{/literal}

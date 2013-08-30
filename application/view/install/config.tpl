@@ -14,8 +14,7 @@
 	<input type="submit" class="submit" value="Complete installation" />
 {/form}
 
-{literal}
+
 <script type="text/javascript">
 	$('name').focus();
 </script>
-{/literal}

@@ -51,10 +51,10 @@
 	Event.observe($('addRootCondition_[[condition.ID]]'), 'click', inst.createSubCondition.bind(inst));
 
 	var action = null;
-	{json array=$actions}.each(function(act) {literal}{action = Backend.Discount.Action.prototype.createAction(act); });
+	{json array=$actions}.each(function(act) {action = Backend.Discount.Action.prototype.createAction(act); });
 	if (action)
 	{
 		action.initializeList();
 	}
-	{/literal}
+
 </script>

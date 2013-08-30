@@ -57,17 +57,17 @@
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
 
-	{literal}
+
 	<script type="text/javascript">
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
-		Backend.Discount.Action.prototype.itemActions = {/literal}{json array=$itemActions}{literal};
+		Backend.Discount.Action.prototype.itemActions = {json array=$itemActions};
 		Event.observe($("cancel_user_edit"), "click", function(e) {
 			e.preventDefault();
 			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
 		});
 	</script>
-	{/literal}
+
 </div>
 
 {* Template nodes *}

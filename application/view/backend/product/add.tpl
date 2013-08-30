@@ -38,7 +38,7 @@
 			</div>
 
 			<div class="thumbTemplate" style="display: none; clear:both;">
-				<a href="#" class="deleteCross" onclick="{literal}try {$(this).up('div').remove();} catch(e){} return false;{/literal}"></a>
+				<a href="#" class="deleteCross" onclick="try {$(this).up('div').remove();} catch(e){} return false;"></a>
 				<div class="fileName" style="float:left;"></div>
 				<div class="fileImage">
 					<img src="" class="thumb" alt="" />
@@ -79,12 +79,12 @@
 
 	{/form}
 
-	{literal}
+
 	<script type="text/javascript">
-		Backend.Product.initAddForm({/literal}[[product.Category.ID]]{literal});
-		Backend.Product.setPath({/literal}[[product.Category.ID]], {json array=$path}{literal})
+		Backend.Product.initAddForm([[product.Category.ID]]);
+		Backend.Product.setPath([[product.Category.ID]], {json array=$path})
 	</script>
-	{/literal}
+
 
 </div>
 *}

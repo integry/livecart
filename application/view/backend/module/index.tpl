@@ -35,10 +35,10 @@
 </ul>
 <div class="clear"></div>
 
-{literal}
+
 	<script type="text/javascript">
 		window.moduleManager = new Backend.Module($('moduleList'));
 	</script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

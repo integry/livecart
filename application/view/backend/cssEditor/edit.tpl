@@ -1,7 +1,7 @@
 <h1>[[fileName]]</h1>
 
 <div
-	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabColors'));{/literal}"
+	onclick="TabControl.prototype.getInstance('tabContainer').activateTab($('tabColors'));"
 	class="warning cssAndStyleTab" id="notice_changes_colors_and_styles_tab_[[tabid]]" style="display:none;"
 >{t _notice_changes_colors_and_styles_tab}</div>
 
@@ -32,17 +32,17 @@
 	</fieldset>
 {/form}
 
-{literal}
+
 	<script type="text/javascript">
-		Backend.isCssEdited["{/literal}[[tabid]]{literal}"] = false;
-		if (Backend.Theme.prototype.isStyleTabChanged("{/literal}[[tabid]]{literal}"))
+		Backend.isCssEdited["[[tabid]]"] = false;
+		if (Backend.Theme.prototype.isStyleTabChanged("[[tabid]]"))
 		{
-			Backend.Theme.prototype.styleTabChanged("{/literal}[[tabid]]{literal}");
+			Backend.Theme.prototype.styleTabChanged("[[tabid]]");
 		}
-		$('code_{/literal}[[tabid]]{literal}').value = {/literal}decode64("[[code]]");{literal};
-		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
+		$('code_[[tabid]]').value = decode64("[[code]]");;
+		editAreaLoader.baseURL = "{baseUrl}javascript/library/editarea/";
 	</script>
-{/literal}
+
 
 {% if !empty(noTabHandling) %}
 	<script type="text/javascript">

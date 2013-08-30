@@ -24,11 +24,11 @@
 
 	{/form}
 
-	{literal}
+
 	<script type="text/javascript">
 		Backend.Newsletter.initAddForm();
-		// Backend.Product.setPath({/literal}[[product.Category.ID]], {json array=$path}{literal})
+		// Backend.Product.setPath([[product.Category.ID]], {json array=$path})
 	</script>
-	{/literal}
+
 
 </div>

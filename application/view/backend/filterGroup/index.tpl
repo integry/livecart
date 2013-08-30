@@ -1,20 +1,20 @@
-{literal}
+
 <script type="text/javascript">
 //<[!CDATA[
 	Backend.Filter.prototype.links = {};
-	Backend.Filter.prototype.links.deleteGroup = '{/literal}{link controller="backend.filterGroup" action=delete}/{literal}';
-	Backend.Filter.prototype.links.editGroup = '{/literal}{link controller="backend.filterGroup" action=item}/{literal}';
-	Backend.Filter.prototype.links.sortGroup = '{/literal}{link controller="backend.filterGroup" action=sort}/{literal}';
-	Backend.Filter.prototype.links.updateGroup = '{/literal}{link controller="backend.filterGroup" action=update}/{literal}';
-	Backend.Filter.prototype.links.createGroup = '{/literal}{link controller="backend.filterGroup" action=create}/{literal}';
-	Backend.Filter.prototype.links.deleteFilter = '{/literal}{link controller="backend.filter" action=delete}/{literal}';
-	Backend.Filter.prototype.links.sortFilter = '{/literal}{link controller="backend.filter" action=sort}/{literal}';
-	Backend.Filter.prototype.links.generateFilters = '{/literal}{link controller="backend.filter" action=generate}/{literal}';
+	Backend.Filter.prototype.links.deleteGroup = '{link controller="backend.filterGroup" action=delete}/';
+	Backend.Filter.prototype.links.editGroup = '{link controller="backend.filterGroup" action=item}/';
+	Backend.Filter.prototype.links.sortGroup = '{link controller="backend.filterGroup" action=sort}/';
+	Backend.Filter.prototype.links.updateGroup = '{link controller="backend.filterGroup" action=update}/';
+	Backend.Filter.prototype.links.createGroup = '{link controller="backend.filterGroup" action=create}/';
+	Backend.Filter.prototype.links.deleteFilter = '{link controller="backend.filter" action=delete}/';
+	Backend.Filter.prototype.links.sortFilter = '{link controller="backend.filter" action=sort}/';
+	Backend.Filter.prototype.links.generateFilters = '{link controller="backend.filter" action=generate}/';
 
 	Backend.Filter.prototype.msg = {};
-	Backend.Filter.prototype.msg.translateTo = '{/literal}{t _translate_to}{literal}';
-	Backend.Filter.prototype.msg.removeQuestion = '{/literal}{t _FilterGroup_remove_question|addslashes}{literal}';
-	{/literal}
+	Backend.Filter.prototype.msg.translateTo = '{t _translate_to}';
+	Backend.Filter.prototype.msg.removeQuestion = '{t _FilterGroup_remove_question|addslashes}';
+
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{% if $configKey == 'types' %}
 			Backend.Filter.prototype.[[configKey]] = Backend.Filter.prototype.createTypesOptions({json array=$configItem});
@@ -22,10 +22,10 @@
 			Backend.Filter.prototype.[[configKey]] = {json array=$configItem};
 		{% endif %}
 	{/foreach}
-	{literal}
+
 // ]!]>
 </script>
-{/literal}
+
 
 {% if $blankFilter.specFields|@count > 0 %}
 	<div>
@@ -55,22 +55,22 @@
 	{/foreach}
 	</ul>
 
-	{literal}
+
 	<script type="text/javascript">
 		 Backend.Filter.prototype.activeListMessages =
 		 {
-			 _activeList_edit:	'{/literal}{t _activeList_edit|addslashes}{literal}',
-			 _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
+			 _activeList_edit:	'{t _activeList_edit|addslashes}',
+			 _activeList_delete:  '{t _activeList_delete|addslashes}'
 		 }
 
-		 Event.observe($("filter_item_new_{/literal}[[categoryID]]{literal}_show"), "click", function(e)
+		 Event.observe($("filter_item_new_[[categoryID]]_show"), "click", function(e)
 		 {
 			 e.preventDefault();
-			 Backend.Filter.prototype.createNewAction('{/literal}[[categoryID]]{literal}')
+			 Backend.Filter.prototype.createNewAction('[[categoryID]]')
 		 });
-		 ActiveList.prototype.getInstance('filter_items_list_{/literal}[[categoryID]]{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
+		 ActiveList.prototype.getInstance('filter_items_list_[[categoryID]]', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
 	</script>
-	{/literal}
+
 {% else %}
 	<div class="noRecords">
 		<div>

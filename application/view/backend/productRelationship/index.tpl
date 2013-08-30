@@ -1,20 +1,20 @@
 <script type="text/javascript">
-{literal}
+
 	with(Backend.RelatedProduct.Group)
 	{
-		Links.sort = '{/literal}{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_[[productID]]{literal}';
-		Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_group|addslashes}{literal}'
+		Links.sort = '{link controller="backend.productRelationshipGroup" action=sort}?target=productRelationshipGroup_list_[[productID]]';
+		Messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_group|addslashes}'
 	}
 
 	Backend.RelatedProduct.links = {};
 	Backend.RelatedProduct.messages = {};
 	with(Backend.RelatedProduct)
 	{
-		links.selectProduct = '{/literal}{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__{literal}';
-		messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
-		messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
+		links.selectProduct = '{link controller="backend.productRelationship" action=selectProduct}#cat_[[categoryID]]#tabProducts__';
+		messages.selectProductTitle = '{t _select_product|addslashes}';
+		messages.areYouSureYouWantToDelete = '{t _are_you_sure_you_want_to_delete_this_relation|addslashes}';
 	}
-{/literal}
+
 </script>
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>

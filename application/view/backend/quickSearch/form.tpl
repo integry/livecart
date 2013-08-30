@@ -22,5 +22,5 @@
 </div>
 
 <script type="text/javascript">
-	Backend.QuickSearch.createInstance("[[formid]]", {literal}{{/literal}cn:"[[classNames]]"{literal}}{/literal});
+	Backend.QuickSearch.createInstance("[[formid]]", {cn:"[[classNames]]"});
 </script>

@@ -16,23 +16,23 @@
 	</ul>
 </fieldset>
 
-{literal}
+
 <script type="text/javascript">
-	Event.observe("{/literal}catImgMenu_[[ownerId]]_add{literal}", "click", function(e)
+	Event.observe("catImgMenu_[[ownerId]]_add", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.show("catImageAdd", "{/literal}catImgAdd_[[ownerId]]{literal}");
+		form.show("catImageAdd", "catImgAdd_[[ownerId]]");
 	});
 
-	Event.observe("{/literal}catImgMenu_[[ownerId]]_cancel{literal}", "click", function(e)
+	Event.observe("catImgMenu_[[ownerId]]_cancel", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.hide("catImageAdd", "{/literal}catImgAdd_[[ownerId]]{literal}");
+		form.hide("catImageAdd", "catImgAdd_[[ownerId]]");
 	});
 </script>
-{/literal}
+
 
 <div id="catImgAdd_[[ownerId]]" class="catImageEditform style="display: none;">
 {form handle=$form action="backend.categoryImage/upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
@@ -63,20 +63,20 @@
 		</fieldset>
 	</fieldset>
 
-	{literal}
+
 	<script type="text/javascript">
-		Element.observe($('{/literal}catImgAdd_[[ownerId]]{literal}').down("a.cancel"), "click", function(e)
+		Element.observe($('catImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
-			var form = ('{/literal}catImgAdd_[[ownerId]]{literal}');
+			var form = ('catImgAdd_[[ownerId]]');
 
-			$("{/literal}catImageList_[[ownerId]]{literal}").handler.cancelAdd();
+			$("catImageList_[[ownerId]]").handler.cancelAdd();
 
-			var menu = new ActiveForm.Slide('{/literal}catImgMenu_[[ownerId]]{literal}');
+			var menu = new ActiveForm.Slide('catImgMenu_[[ownerId]]');
 			menu.hide("catImageAdd", form);
 		});
 	</script>
-	{/literal}
+
 {/form}
 
 <iframe name="catImgUpload_[[ownerId]]" id="catImgUpload_[[ownerId]]" style="display: none"></iframe>
@@ -95,25 +95,25 @@
 	<div>{t _no_images}</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("{/literal}catImageList_[[ownerId]]{literal}"), 'cat');
-	handler.initList({/literal}[[images]]{literal});
+	var handler = new Backend.ObjectImage($("catImageList_[[ownerId]]"), 'cat');
+	handler.initList([[images]]);
 
-	handler.setDeleteUrl('{/literal}{link controller="backend.categoryImage" action=delete}{literal}');
-	handler.setSortUrl('{/literal}{link controller="backend.categoryImage" action=saveOrder}{literal}');
-	handler.setEditUrl('{/literal}{link controller="backend.categoryImage" action=edit}{literal}');
-	handler.setSaveUrl('{/literal}{link controller="backend.categoryImage" action=save}{literal}');
+	handler.setDeleteUrl('{link controller="backend.categoryImage" action=delete}');
+	handler.setSortUrl('{link controller="backend.categoryImage" action=saveOrder}');
+	handler.setEditUrl('{link controller="backend.categoryImage" action=edit}');
+	handler.setSaveUrl('{link controller="backend.categoryImage" action=save}');
 
-	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');
-	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');
-	handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');
+	handler.setDeleteMessage('{t _delete_confirm|addslashes}');
+	handler.setEditCaption('{t _edit_image|addslashes}');
+	handler.setSaveCaption('{t _save|addslashes}');
 
 
 	handler.activeListMessages =
 	{
-		_activeList_edit:	'{/literal}{t _activeList_edit|addslashes}{literal}',
-		_activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
+		_activeList_edit:	'{t _activeList_edit|addslashes}',
+		_activeList_delete:  '{t _activeList_delete|addslashes}'
 	}
 </script>
-{/literal}
+

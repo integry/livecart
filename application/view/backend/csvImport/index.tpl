@@ -99,12 +99,12 @@
 {/form}
 </div>
 
-{literal}
+
 	<script type="text/javascript">
-		Backend.SelectFile.url = {/literal}'{link controller="backend.selectFile"}'{literal};
-		Backend.Category.links.popup = {/literal}'{link controller="backend.category" action=popup}'{literal};
+		Backend.SelectFile.url = '{link controller="backend.selectFile"}';
+		Backend.Category.links.popup = '{link controller="backend.category" action=popup}';
 		Event.observe($('selectAtServer'), 'click', function() {new Backend.SelectFile($('atServer')); });
 	</script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

@@ -23,7 +23,7 @@
 
 
 
-{literal}
+
 <script type="text/javascript">
 	Event.observe($("class_new_show"), "click", function(e)
 	{
@@ -34,4 +34,4 @@
 
 	ActiveList.prototype.getInstance("class_classesList", Backend.ShippingClass.prototype.Callbacks, function() {});
 </script>
-{/literal}
+

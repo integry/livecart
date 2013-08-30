@@ -69,16 +69,16 @@
 	</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	curr = new Backend.Currency();
-	curr.setFormUrl('{/literal}{link controller="backend.currency" action=addForm}{literal}');
-	curr.setStatusUrl('{/literal}{link controller="backend.currency" action=setEnabled}{literal}/');
+	curr.setFormUrl('{link controller="backend.currency" action=addForm}');
+	curr.setStatusUrl('{link controller="backend.currency" action=setEnabled}/');
 
 	var messages =
 	{
-		_activeList_edit:	{/literal}'{t _activeList_edit|addslashes}'{literal},
-		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+		_activeList_edit:	'{t _activeList_edit|addslashes}',
+		_activeList_delete:  '{t _activeList_delete|addslashes}'
 	}
 
 	function initCurrencyList()
@@ -93,15 +93,15 @@
 					 return;
 				 }
 
-				 return '{/literal}{link controller="backend.currency" action=edit}{literal}?id=' + this.getRecordId(li);
+				 return '{link controller="backend.currency" action=edit}?id=' + this.getRecordId(li);
 			 },
 			 beforeSort:	 function(li, order)
 			 {
-				 return '{/literal}{link controller="backend.currency" action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order
+				 return '{link controller="backend.currency" action=saveorder}?draggedId=' + this.getRecordId(li) + '&' + order
 			   },
 			 beforeDelete:   function(li)
 			 {
-				 if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller="backend.currency" action=delete}{literal}?id=' + this.getRecordId(li)
+				 if(confirm('{tn _confirm_delete}')) return '{link controller="backend.currency" action=delete}?id=' + this.getRecordId(li)
 			 },
 			 afterEdit:	  function(li, response) { document.getElementsByClassName('currEdit', li)[0].update(response); },
 			 afterSort:	  function(li, response) { curr.resetRatesContainer(); },
@@ -109,7 +109,7 @@
 		 }, messages);
 	}
 
-	curr.renderList({/literal}[[currencies]]{literal});
+	curr.renderList([[currencies]]);
 	initCurrencyList();
 
 	TabControl.prototype.getInstance('tabContainer', Backend.Currency.prototype.getTabUrl, Backend.Currency.prototype.getContentTabId);
@@ -117,6 +117,6 @@
 	//new TabControl('tabContainer', 'sectionContainer');
 
 </script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

@@ -57,7 +57,7 @@
 	{compiledJs glue=true nameMethod=hash}
 	<script src="bootstrap/bootstrap/js/bootstrap.js"></script>
 
-	{literal}
+
 	<script language="javascript" type="text/javascript">
 	if(window.opener)
 	{
@@ -85,23 +85,23 @@
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_resizing : true,
 			theme_advanced_path_location : "bottom",
-			document_base_url : "{/literal}{baseUrl}{literal}",
+			document_base_url : "{baseUrl}",
 			remove_script_host : "true",
 			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,fontselect,fontsizeselect,formatselect,separator,forecolor,backcolor",
 			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,separator,table,separator,sub,sup,separator,charmap",
 			theme_advanced_buttons3 : "",
-			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
+			content_css: "{baseUrl}stylesheet/library/TinyMCE.css",
 			forced_root_block : '',
 			relative_urls : true,
 			remove_linebreaks : false,
 			extended_valid_elements : 'iframe[src|width|height|name|align|frameborder|scrolling|marginheight|marginwidth],embed[width|height|name|flashvars|src|bgcolor|align|play|loop|quality|allowscriptaccess|type|pluginspage]',
 			entities: '',
 			file_browser_callback : "ajaxfilemanager"
-			{/literal}
+
 			{% if 'TINYMCE_PARAMS'|config %}
 			, [[ config('TINYMCE_PARAMS') ]]
 			{% endif %}
-			{literal}
+
 		};
 	}
 
@@ -112,7 +112,7 @@
 
 	function onLoad()
 	{
-		Backend.locale = '{/literal}{localeCode}{literal}';
+		Backend.locale = '{localeCode}';
 		Backend.onLoad();
 	}
 
@@ -147,7 +147,7 @@
 			}
 		);
 	}
-	{/literal}
+
 
 	window.onload = onLoad;
 
@@ -160,10 +160,10 @@
 <body class="{req('controller')|replace:'.':'-'}Con {req('controller')|replace:'.':'-'}-[[request.action]] ui-widget">
 <div id="confirmations" class="messagesList" app-messages></div>
 <script type="text/javascript">
-{literal}
+
 	window.historystorage/init();
 	window.dhtmlHistory.create();
-{/literal}
+
 </script>
 
 <!-- Preload images -->

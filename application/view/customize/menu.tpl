@@ -67,5 +67,5 @@
 {% endif %}
 
 <script type="text/javascript">
-	new Customize.ThemesMenu({literal}${/literal}("themeMenu"));
+	new Customize.ThemesMenu($("themeMenu"));
 </script>

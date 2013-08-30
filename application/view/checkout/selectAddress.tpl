@@ -51,11 +51,11 @@
 
 		</div>
 
-		{literal}
+
 		<script type="text/javascript">
 			new User.ShippingFormToggler($('sameAsBilling'), $('shippingSelector'));
 		</script>
-		{/literal}
+
 
 	{% endif %}
 
@@ -64,11 +64,11 @@
 		[[ partial("checkout/orderFields.tpl") ]]
 	{% endif %}
 
-	{literal}
+
 	<script type="text/javascript">
 		new Order.AddressSelector($('content'));
 	</script>
-	{/literal}
+
 
 	[[ partial('block/submit.tpl', ['caption': "_continue"]) ]]
 

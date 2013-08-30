@@ -38,14 +38,14 @@
 	</span>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	window.ordersActiveGrid = {};
 
-	var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+	var users = new Backend.UserGroup({json array=$userGroups});
 	window.usersActiveGrid = {};
 </script>
-{/literal}
+
 
 </body>
 </html>

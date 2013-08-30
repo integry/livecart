@@ -17,24 +17,23 @@
 
 </div>
 
-{literal}
+
 <script type="text/javascript">
-{/literal}
+
 	var massHandler = new ActiveGrid.MassActionHandler(
 						$('reviewMass_[[id]]'),
 						window.activeGrids['reviews_[[id]]'],
-{literal}
+
 						{
 							'onComplete':
 								function()
 								{
 								}
 						}
-{/literal}
+
 						);
 	massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 
-{literal}
+
 </script>
-{/literal}

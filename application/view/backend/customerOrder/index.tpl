@@ -52,21 +52,21 @@
 [[ partial("backend/userGroup/userContainer.tpl") ]]
 
 
-{literal}
+
 <script type="text/javascript">
-	Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller="backend.customerOrder" action=switchCancelled}{literal}';
+	Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{link controller="backend.customerOrder" action=switchCancelled}';
 
-	Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller="backend.customerOrder" action=selectCustomer}{literal}';
-	Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller="backend.customerOrder" action=create}{literal}';
-	Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
-	Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '{/literal}{t _are_you_sure_you_want_to_update_order_status|escape}{literal}';
+	Backend.CustomerOrder.Links.selectCustomer = '{link controller="backend.customerOrder" action=selectCustomer}';
+	Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
+	Backend.CustomerOrder.Messages.selecCustomerTitle = '{t _select_customer_title}';
+	Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '{t _are_you_sure_you_want_to_update_order_status|escape}';
 
-	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order|escape}{literal}';
-	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order|escape}{literal}';
-	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
-	new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
+	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{t _are_you_sure_you_want_activate_this_order|escape}';
+	Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{t _are_you_sure_you_want_cancel_this_order|escape}';
+	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{t _order_number|escape}';
+	new Backend.CustomerOrder({json array=$orderGroups});
 
-	{/literal}
+
 		{allowed role="order"}
 			Backend.CustomerOrder.prototype.ordersMiscPermission = true;
 		{/allowed}
@@ -74,11 +74,11 @@
 		{allowed role="user"}
 			Backend.CustomerOrder.prototype.usersMiscPermission = true;
 		{/allowed}
-	{literal}
+
 	Backend.showContainer("orderGroupsManagerContainer");
 	window.ordersActiveGrid = {};
 </script>
-{/literal}
+
 
 
 [[ partial("layout/backend/footer.tpl") ]]

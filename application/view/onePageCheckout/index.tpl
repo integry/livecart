@@ -72,8 +72,7 @@
 		checkout.updateCompletedSteps({json array=$completedSteps});
 		checkout.updateEditableSteps({json array=$editableSteps});
 		Observer.process('order', {json array=$orderValues});
-{literal}
+
 		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
 		new User.ShippingFormToggler($('sameAsShipping'), $('checkout-billing').down('.addressSelector'));
 	</script>
-{/literal}

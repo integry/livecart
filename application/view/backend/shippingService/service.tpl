@@ -58,14 +58,14 @@
 			</fieldset>
 
 			<script type="text/jscript">
-				{literal}
-				Backend.DeliveryZone.ShippingRate.prototype.newRate = {/literal}{json array=$newRate}{literal}
 
-				Event.observe($("shippingService_new_rate_{/literal}[[service.DeliveryZone.ID]]{literal}_{/literal}[[service.ID]]{literal}_show"), "click", function(e)
+				Backend.DeliveryZone.ShippingRate.prototype.newRate = {json array=$newRate}
+
+				Event.observe($("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_show"), "click", function(e)
 				{
 					e.preventDefault();
 					var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-						$("shippingService_new_rate_{/literal}[[service.DeliveryZone.ID]]{literal}_{/literal}[[service.ID]]{literal}_form"),
+						$("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate
 					);
 
@@ -73,11 +73,11 @@
 				});
 
 				Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-						$("shippingService_new_rate_{/literal}[[service.DeliveryZone.ID]]{literal}_{/literal}[[service.ID]]{literal}_form"),
+						$("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate
 					);
-				ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}[[service.DeliveryZone.ID]]{literal}_{/literal}[[service.ID]]{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
-				{/literal}
+				ActiveList.prototype.getInstance("shippingService_ratesList_[[service.DeliveryZone.ID]]_[[service.ID]]", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
+
 			</script>
 		</fieldset>
 	</fieldset>

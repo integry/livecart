@@ -6,14 +6,14 @@
 {% block title %}{t _add_credit_card_payment}{{% endblock %}
 [[ partial("layout/backend/meta.tpl") ]]
 
-{literal}
+
 	<style>
 		body
 		{
 			background-image: none;
 		}
 	</style>
-{/literal}
+
 
 <div id="ccForm">
 

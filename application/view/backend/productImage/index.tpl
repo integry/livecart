@@ -12,23 +12,23 @@
 	</ul>
 </fieldset>
 
-{literal}
+
 <script type="text/javascript">
-	Event.observe("{/literal}prodImageAdd_[[ownerId]]_add{literal}", "click", function(e)
+	Event.observe("prodImageAdd_[[ownerId]]_add", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.show("prodImageAdd", "{/literal}prodImgAdd_[[ownerId]]{literal}");
+		form.show("prodImageAdd", "prodImgAdd_[[ownerId]]");
 	});
 
-	Event.observe("{/literal}prodImageAdd_[[ownerId]]_cancel{literal}", "click", function(e)
+	Event.observe("prodImageAdd_[[ownerId]]_cancel", "click", function(e)
 	{
 		e.preventDefault();
 		var form = new ActiveForm.Slide(this.up("ul"));
-		form.hide("prodImageAdd", "{/literal}prodImgAdd_[[ownerId]]{literal}");
+		form.hide("prodImageAdd", "prodImgAdd_[[ownerId]]");
 	});
 </script>
-{/literal}
+
 
 <div id="prodImgAdd_[[ownerId]]" class="prodImageEditForm" style="display: none;">
 {form handle=$form action="backend.productImage/upload" method="post" onsubmit="$('prodImageList_`$ownerId`').handler.upload(this);" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
@@ -59,20 +59,20 @@
 		</fieldset>
 	</fieldset>
 
-	{literal}
+
 	<script type="text/javascript">
-		Element.observe($('{/literal}prodImgAdd_[[ownerId]]{literal}').down("a.cancel"), "click", function(e)
+		Element.observe($('prodImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
-			var form = ('{/literal}prodImgAdd_[[ownerId]]{literal}');
+			var form = ('prodImgAdd_[[ownerId]]');
 
-			$("{/literal}prodImageList_[[ownerId]]{literal}").handler.cancelAdd();
+			$("prodImageList_[[ownerId]]").handler.cancelAdd();
 
-			var menu = new ActiveForm.Slide('{/literal}prodImgMenu_[[ownerId]]{literal}');
+			var menu = new ActiveForm.Slide('prodImgMenu_[[ownerId]]');
 			menu.hide("prodImageAdd", form);
 		});
 	</script>
-	{/literal}
+
 
 {/form}
 <iframe name="prodImgUpload_[[ownerId]]" id="prodImgUpload_[[ownerId]]" style="display: none;"></iframe>
@@ -91,24 +91,24 @@
 	<div>{t _no_images}</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("{/literal}prodImageList_[[ownerId]]{literal}"), 'prod');
-	handler.initList({/literal}[[images]]{literal});
+	var handler = new Backend.ObjectImage($("prodImageList_[[ownerId]]"), 'prod');
+	handler.initList([[images]]);
 
-	handler.setDeleteUrl('{/literal}{link controller="backend.productImage" action=delete}{literal}');
-	handler.setSortUrl('{/literal}{link controller="backend.productImage" action=saveOrder}{literal}');
-	handler.setEditUrl('{/literal}{link controller="backend.productImage" action=edit}{literal}');
-	handler.setSaveUrl('{/literal}{link controller="backend.productImage" action=save}{literal}');
+	handler.setDeleteUrl('{link controller="backend.productImage" action=delete}');
+	handler.setSortUrl('{link controller="backend.productImage" action=saveOrder}');
+	handler.setEditUrl('{link controller="backend.productImage" action=edit}');
+	handler.setSaveUrl('{link controller="backend.productImage" action=save}');
 
-	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');
-	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');
-	handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');
+	handler.setDeleteMessage('{t _delete_confirm|addslashes}');
+	handler.setEditCaption('{t _edit_image|addslashes}');
+	handler.setSaveCaption('{t _save|addslashes}');
 
 	handler.activeListMessages =
 	{
-		_activeList_edit:	'{/literal}{t _activeList_edit|addslashes}{literal}',
-		_activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
+		_activeList_edit:	'{t _activeList_edit|addslashes}',
+		_activeList_delete:  '{t _activeList_delete|addslashes}'
 	}
 </script>
-{/literal}
+

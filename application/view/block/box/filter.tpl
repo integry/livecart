@@ -2,7 +2,7 @@
 
 {% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterCheckboxes.tpl'}
-	{literal}<script type="text/javascript">var _checkboxFilterLoadHookObserved = false;</script>{/literal}
+	<script type="text/javascript">var _checkboxFilterLoadHookObserved = false;</script>
 {% else %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterLinks.tpl'}
 {% endif %}

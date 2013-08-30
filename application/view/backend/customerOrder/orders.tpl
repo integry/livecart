@@ -4,21 +4,21 @@
 		<li class="createNewOrder"><a href="#" id="createNewOrderLink_[[orderGroupID]]"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a><span class="progressIndicator" style="display: none;"></span></li>
 	</ul>
 
-	{literal}
+
 	<script type="text/javascript">
-		if ({/literal}{json array=$userID}{literal} != null)
+		if ({json array=$userID} != null)
 		{
-			Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller="backend.customerOrder" action=create}{literal}';
-			Event.observe($("{/literal}createNewOrderLink_[[orderGroupID]]{literal}"), "click", function(e)
+			Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
+			Event.observe($("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
 			{
-				Backend.CustomerOrder.prototype.createUserOrder('{/literal}[[userID]]{literal}', $("{/literal}createNewOrderLink_[[orderGroupID]]"), '{link controller="backend.customerOrder"}');
-				{literal}
+				Backend.CustomerOrder.prototype.createUserOrder('[[userID]]', $("createNewOrderLink_[[orderGroupID]]"), '{link controller="backend.customerOrder"}');
+
 				e.preventDefault();
 			});
 		}
 		else
 		{
-			Event.observe($("{/literal}createNewOrderLink_[[orderGroupID]]{literal}"), "click", function(e)
+			Event.observe($("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
 			{
 				e.preventDefault();
 
@@ -36,13 +36,13 @@
 			});
 		}
 	</script>
-	{/literal}
 
-{literal}
+
+
 <script type="text/javascript">
-	Backend.CustomerOrder.GridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
-	Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
-{/literal}
+	Backend.CustomerOrder.GridFormatter.orderUrl = '{backendOrderUrl}';
+	Backend.User.OrderGridFormatter.orderUrl = '{backendOrderUrl}';
+
 
 {% if !empty(userID) %}
 	{assign var=dataFormatter value="Backend.User.OrderGridFormatter"};
@@ -80,17 +80,17 @@
 	<a href="#" onclick="var grid = window.activeGrids['[[prefix]]_[[id]]']; window.location.href='{link controller="backend.customerOrder" action=exportDetailed}?' + grid.ricoGrid.getQueryString()+ '&selectedIDs=' + grid.getSelectedIDs().toJSON() + '&isInverse=' + (grid.isInverseSelection() ? 1 : 0); return false;">{t _detailed_export}</a>
 </li>
 
-{literal}
+
 <script type="text/javascript">
 
 /*
-	var detailedExport = $('detailedExportContainer_{/literal}[[orderGroupID]]{literal}');
+	var detailedExport = $('detailedExportContainer_[[orderGroupID]]');
 	var menu = detailedExport.up('.tabPageContainer').down('.activeGridColumns').down('.menu', 1);
 	menu.insertBefore(detailedExport, menu.firstChild);
 */
 
-	var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_[[orderGroupID]]{literal}'),
-													   window.activeGrids['{/literal}orders_[[orderGroupID]]{literal}'],
+	var massHandler = new ActiveGrid.MassActionHandler($('orderMass_[[orderGroupID]]'),
+													   window.activeGrids['orders_[[orderGroupID]]'],
 														{
 															onComplete:
 																function()
@@ -99,8 +99,8 @@
 																}
 														}
 													   );
-	massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
-	massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
-	ordersActiveGrid['{/literal}[[orderGroupID]]{literal}'] = window.activeGrids['{/literal}orders_[[orderGroupID]]{literal}'];
+	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_this_order|addslashes}' ;
+	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+	ordersActiveGrid['[[orderGroupID]]'] = window.activeGrids['orders_[[orderGroupID]]'];
 </script>
-{/literal}
+

@@ -29,7 +29,7 @@
 		<a id="cancel_[[tabid]]" class="cancel" href="{link controller="backend.template"}">{t _cancel}</a>
 	</fieldset>
 	<script type="text/javascript">
-		{literal}${/literal}('code_[[tabid]]').value = decode64("[[code]]");
+		$('code_[[tabid]]').value = decode64("[[code]]");
 		editAreaLoader.baseURL = "{baseUrl}javascript/library/editarea/";
 	</script>
 {/form}

@@ -49,44 +49,44 @@
 		[[ partial("backend/userGroup/userContainer.tpl") ]]
 	</span>
 
-{literal}
+
 <script type="text/javascript">
 	window.ordersActiveGrid = {};
 	Backend.showContainer("userGroupsManagerContainer");
-	{/literal}
+
 		{allowed role="order"}
 			Backend.CustomerOrder.prototype.ordersMiscPermission = true;
 		{/allowed}
-	{literal}
 
-	Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
-	Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';
-	Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';
-	Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{/literal}{t _you_cannot_delete_this_group}{literal}';
-	Backend.User.Group.prototype.Messages.savedMessage = '{/literal}{t _form_has_been_successfully_saved}{literal}';
 
-	Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller="backend.customerOrder" action=selectCustomer}{literal}';
-	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
-	Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
-	Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller="backend.customerOrder" action=create}{literal}';
+	Backend.UserGroup.prototype.Messages.confirmUserDelete = '{t _are_you_sure_you_want_to_delete_this_user}';
+	Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{t _are_you_sure_you_want_to_delete_this_user_group}';
+	Backend.UserGroup.prototype.Messages.defaultUserName = '{t _default_user}';
+	Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{t _you_cannot_delete_this_group}';
+	Backend.User.Group.prototype.Messages.savedMessage = '{t _form_has_been_successfully_saved}';
 
-	Backend.User.Group.prototype.Links.save = '{/literal}{link controller="backend.userGroup" action=save}{literal}';
-	Backend.User.Group.prototype.Links.remove = '{/literal}{link controller="backend.userGroup" action=delete}{literal}';
-	Backend.User.Group.prototype.Links.createNewUserGroup = '{/literal}{link controller="backend.userGroup" action=create}{literal}';
-	Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller="backend.userGroup" action=remove}{literal}';
-	Backend.User.Group.prototype.Links.create = '{/literal}{link controller="backend.userGroup" action=create}{literal}';
+	Backend.CustomerOrder.Links.selectCustomer = '{link controller="backend.customerOrder" action=selectCustomer}';
+	Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{t _order_number|escape}';
+	Backend.CustomerOrder.Messages.selecCustomerTitle = '{t _select_customer_title}';
+	Backend.CustomerOrder.Links.createOrder = '{link controller="backend.customerOrder" action=create}';
 
-	Backend.User.Editor.prototype.Links.create = '{/literal}{link controller="backend.user" action=create}{literal}';
-	Backend.User.Editor.prototype.Links.update = '{/literal}{link controller="backend.user" action=update}{literal}';
-	Backend.User.Editor.prototype.Links.generatePassword = '{/literal}{link controller="backend.user" action=generatePassword}{literal}';
+	Backend.User.Group.prototype.Links.save = '{link controller="backend.userGroup" action=save}';
+	Backend.User.Group.prototype.Links.remove = '{link controller="backend.userGroup" action=delete}';
+	Backend.User.Group.prototype.Links.createNewUserGroup = '{link controller="backend.userGroup" action=create}';
+	Backend.User.Group.prototype.Links.removeNewGroup = '{link controller="backend.userGroup" action=remove}';
+	Backend.User.Group.prototype.Links.create = '{link controller="backend.userGroup" action=create}';
 
-	Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
+	Backend.User.Editor.prototype.Links.create = '{link controller="backend.user" action=create}';
+	Backend.User.Editor.prototype.Links.update = '{link controller="backend.user" action=update}';
+	Backend.User.Editor.prototype.Links.generatePassword = '{link controller="backend.user" action=generatePassword}';
 
-	var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+	Backend.UserGroup.prototype.usersMiscPermision = {allowed role="user"}true{/allowed}{denied role="user"}false{/denied};
+
+	var users = new Backend.UserGroup({json array=$userGroups});
 	window.ordersActiveGrid = {};
 	window.usersActiveGrid = {};
 </script>
-{/literal}
+
 
 
 [[ partial("layout/backend/footer.tpl") ]]

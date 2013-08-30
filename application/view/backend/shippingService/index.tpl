@@ -21,24 +21,24 @@
 {/foreach}
 </ul>
 
-{literal}
+
 <script type="text/jscript">
 
-	Backend.DeliveryZone.prototype.Messages.weightBasedRates = '{/literal}{t _weight_based_rates}{literal}';
-	Backend.DeliveryZone.prototype.Messages.subtotalBasedRates = '{/literal}{t _subtotal_based_rates}{literal}';
+	Backend.DeliveryZone.prototype.Messages.weightBasedRates = '{t _weight_based_rates}';
+	Backend.DeliveryZone.prototype.Messages.subtotalBasedRates = '{t _subtotal_based_rates}';
 
-	Event.observe($("shippingService_new_{/literal}[[deliveryZone.ID]]{literal}_show"), "click", function(e)
+	Event.observe($("shippingService_new_[[deliveryZone.ID]]_show"), "click", function(e)
 	{
 		e.preventDefault();
 
 		var newForm = Backend.DeliveryZone.ShippingService.prototype.getInstance(
-			$("shippingService_new_service_{/literal}[[deliveryZone.ID]]{literal}_form").down('form'),
-			{/literal}{json array=$newService}{literal}
+			$("shippingService_new_service_[[deliveryZone.ID]]_form").down('form'),
+			{json array=$newService}
 		);
 
 		newForm.showNewForm();
 	});
 
-	ActiveList.prototype.getInstance("shippingService_servicesList_{/literal}[[deliveryZone.ID]]{literal}", Backend.DeliveryZone.ShippingService.prototype.Callbacks, function() {});
+	ActiveList.prototype.getInstance("shippingService_servicesList_[[deliveryZone.ID]]", Backend.DeliveryZone.ShippingService.prototype.Callbacks, function() {});
 </script>
-{/literal}
+

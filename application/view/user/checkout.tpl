@@ -61,9 +61,9 @@
 
 {% endblock %}
 
-{literal}
+
 <script type="text/javascript">
 	new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
 </script>
-{/literal}
+
 

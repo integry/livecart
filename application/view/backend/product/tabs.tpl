@@ -30,7 +30,7 @@
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
 </div>
-{literal}
+
 <script type="text/javascript">
 	Event.observe($("cancel_product_edit"), "click", function(e) {
 		e.preventDefault();
@@ -41,4 +41,3 @@
 		Backend.Breadcrumb.display(Backend.Category.activeCategoryId);
 	});
 </script>
-{/literal}

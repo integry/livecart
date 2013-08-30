@@ -30,6 +30,6 @@
 	{/form}
 
 </fieldset>
-{literal}<script type="text/javascript">{/literal}
+<script type="text/javascript">
 	new Backend.CustomerOrder.CustomFields([[order.ID]]);
 </script>

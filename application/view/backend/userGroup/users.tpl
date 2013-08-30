@@ -27,22 +27,22 @@
 		$("fromUsersPage").appendChild($("newUserForm_[[userGroupID]]"))
 	</script>
 
-	{literal}
+
 	<script type="text/javascript">
-		Element.observe($("{/literal}userGroup_[[userGroupID]]_addUser{literal}"), 'click', function(e)
+		Element.observe($("userGroup_[[userGroupID]]_addUser"), 'click', function(e)
 		{
 			e.preventDefault();
-			Backend.User.Add.prototype.getInstance({/literal}[[userGroupID]]{literal}).showAddForm({/literal}[[userGroupID]]{literal});
+			Backend.User.Add.prototype.getInstance([[userGroupID]]).showAddForm([[userGroupID]]);
 		});
 	</script>
-	{/literal}
+
 </fieldset>
 
-{literal}
+
 <script type="text/javascript">
-	Backend.UserGroup.GridFormatter.userUrl = '{/literal}{backendUserUrl}{literal}';
+	Backend.UserGroup.GridFormatter.userUrl = '{backendUserUrl}';
 </script>
-{/literal}
+
 
 {activeGrid
 	prefix="users"
@@ -61,12 +61,11 @@
 
 </div>
 
-{literal}
-<script type="text/javascript">
-	var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_[[userGroupID]]{literal}'), window.activeGrids['{/literal}users_[[userGroupID]]{literal}']);
-	massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_user|addslashes}{literal}' ;
-	massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
 
-	usersActiveGrid[{/literal}[[userGroupID]]{literal}] = window.activeGrids['{/literal}users_[[userGroupID]]{literal}'];
+<script type="text/javascript">
+	var massHandler = new Backend.UserGroup.massActionHandler($('userMass_[[userGroupID]]'), window.activeGrids['users_[[userGroupID]]']);
+	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_this_user|addslashes}' ;
+	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
+
+	usersActiveGrid[[[userGroupID]]] = window.activeGrids['users_[[userGroupID]]'];
 </script>
-{/literal}

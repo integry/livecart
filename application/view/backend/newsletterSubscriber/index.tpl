@@ -12,9 +12,9 @@
 }
 
 
-{literal}
+
 <script type="text/javascript">
-{/literal}
+
 
 	var massHandler = new ActiveGrid.MassActionHandler(
 						$('newsletterSubscriberMass_0'),
@@ -22,6 +22,5 @@
 						);
 	massHandler.deleteConfirmMessage = '{t _newsletter_delete_confirm|addslashes}' ;
 	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
-{literal}
+
 </script>
-{/literal}

@@ -244,10 +244,10 @@
 </div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	if(!window.activeGrids) window.activeGrids = {};
-{/literal};
+;
 	window.activeGrids['[[prefix]]_[[id]]'] = new ActiveGrid($('[[prefix]]_[[id]]'), '[[url]]', [[totalCount]], $("[[prefix]]LoadIndicator_[[id]]"), [[rowCount]], {json array=$filters});
 	window.activeGrids['[[prefix]]_[[id]]'].setController('[[controller]]');
 	window.activeGrids['[[prefix]]_[[id]]'].setColumnWidths({json array=$columnWidths});
@@ -269,20 +269,20 @@
 			{json array=$advancedSearchColumns},
 
 			/* misc properties */
-			{literal}
+
 			{
 				dateFilterValues:
 				{
-			{/literal}
+
 					_today:"today | now",
 					_yesterday:"yesterday | today",
 					_last_7_days:"-7 days | now",
 					_this_month:"[[thisMonth]]/1 | now",
 					_last_month:"[[lastMonth]]-1 | [[thisMonth]]/1"
-			{literal}
+
 				}
 			}
-			{/literal}
+
 		);
 	{% endif %}
 
@@ -304,6 +304,6 @@
 	$T("_last_month","{t _last_month}");
 	$T("_grid_date_range","{t _grid_date_range}");
 
-{literal}
+
 </script>
-{/literal}
+

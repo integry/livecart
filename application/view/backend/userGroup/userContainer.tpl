@@ -21,7 +21,7 @@
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
 
-	{literal}
+
 	<script type="text/javascript">
 		Event.observe($("cancel_user_edit"), "click", function(e) {
 			e.preventDefault();
@@ -29,5 +29,5 @@
 			user.cancelForm();
 		});
 	</script>
-	{/literal}
+
 </div>

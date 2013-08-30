@@ -90,20 +90,20 @@
 	<div id="sectionContainer" class="sectionContainer maxHeight  h--50"> </div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	Backend.Category.links = {};
-	Backend.Category.links.countTabsItems = '{/literal}{link controller="backend.category" action=countTabsItems id=_id_}{literal}';
+	Backend.Category.links.countTabsItems = '{link controller="backend.category" action=countTabsItems id=_id_}';
 
-	Backend.Category.init({/literal}{json array=$categoryList}{literal});
+	Backend.Category.init({json array=$categoryList});
 
-	{/literal}
+
 		{allowed role="product"}
 			Backend.Product.productsMiscPermision = true;
 		{/allowed}
-	{literal}
+
 </script>
-{/literal}
+
 
 </body>
 </html>

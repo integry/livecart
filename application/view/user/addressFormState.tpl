@@ -5,9 +5,9 @@
 		{textfield name="`$prefix`state_text" class="text" id="{uniqid assign=id_state_text}"}
 	{/input}
 
-	{literal}
+
 	<script type="text/javascript">
-	{/literal}
+
 		new User.StateSwitcher($('[[id_country]]'), $('[[id_state_select]]'), $('[[id_state_text]]'),
 				'{link controller=user action=states}');
 	</script>

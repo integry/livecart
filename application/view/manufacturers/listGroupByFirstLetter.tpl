@@ -17,9 +17,9 @@
 {assign var=numberOfColumns value='MANUFACTURER_PAGE_NUMBER_OF_COLUMNS'|config}
 <style type="text/css">
 	.manufacturerColumn
-	{literal}{{/literal}
+	{
 		width: {math equation="(100-2.5*x)/x" x=$numberOfColumns}%; {* .manufacturerColumn has 2.5% left margin *}
-	{literal}}{/literal}
+	}
 </style>
 {assign var=columns value=0}
 {foreach from=$manufacturers item=manufacturer key=index}

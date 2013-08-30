@@ -1,8 +1,8 @@
-{literal}
+
 <script type="text/javascript">
-	Backend.Discount.GridFormatter.url = '{/literal}{link controller="backend.discount"}{literal}';
+	Backend.Discount.GridFormatter.url = '{link controller="backend.discount"}';
 </script>
-{/literal}
+
 
 {activeGrid
 	prefix="discount"
@@ -18,10 +18,10 @@
 	count="backend/discount/gridCount.tpl"
 }
 
-{literal}
+
 <script type="text/javascript">
 	var massHandler = new ActiveGrid.MassActionHandler($('discountMass'), window.activeGrids['discount_0']);
-	massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_rule|addslashes}{literal}' ;
-	massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
+	massHandler.deleteConfirmMessage = '{t _are_you_sure_you_want_to_delete_rule|addslashes}' ;
+	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 </script>
-{/literal}
+

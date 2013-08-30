@@ -49,16 +49,16 @@
 	</fieldset>
 
 	<script type="text/javascript">
-		{literal}
-		if({/literal}[[someUser.ID]]{literal} > 0)
+
+		if([[someUser.ID]] > 0)
 		{
-			Backend.UserGroup.prototype.treeBrowser.selectItem({/literal}{$someUser.UserGroup.ID|default:-1}{literal}, false);
-			Backend.User.Editor.prototype.getInstance({/literal}[[someUser.ID]]{literal});
+			Backend.UserGroup.prototype.treeBrowser.selectItem({$someUser.UserGroup.ID|default:-1}, false);
+			Backend.User.Editor.prototype.getInstance([[someUser.ID]]);
 		}
 		else
 		{
-//				Backend.User.Add.prototype.getInstance({/literal}[[someUser.UserGroup.ID]]{literal});
+//				Backend.User.Add.prototype.getInstance([[someUser.UserGroup.ID]]);
 		}
-		{/literal}
+
 	</script>
 {/form}

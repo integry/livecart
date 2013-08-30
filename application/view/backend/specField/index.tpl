@@ -2,7 +2,7 @@
 	{assign var=controller value="backend.specField"}
 {% endif %}
 
-{literal}
+
 <script type="text/javascript">
 //<[!CDATA[
 	/**<b></b>
@@ -10,32 +10,32 @@
 	 * so we define them in
 	 */
 	Backend.SpecField.prototype.links = {};
-	Backend.SpecField.prototype.links.create		  = {/literal}'{link controller=$controller action=create}'{literal};
-	Backend.SpecField.prototype.links.update		  = {/literal}'{link controller=$controller action=update}'{literal};
-	Backend.SpecField.prototype.links.deleteField	 = {/literal}'{link controller=$controller action=delete}/'{literal};
-	Backend.SpecField.prototype.links.editField	   = {/literal}'{link controller=$controller action=item}/'{literal};
-	Backend.SpecField.prototype.links.sortField	   = {/literal}'{link controller=$controller action=sort}/'{literal};
-	Backend.SpecField.prototype.links.mergeValues	 = {/literal}'{link controller="`$controller`Value" action=mergeValues}/'{literal};
-	Backend.SpecField.prototype.links.deleteValue	 = {/literal}'{link controller="`$controller`Value" action=delete}/'{literal};
-	Backend.SpecField.prototype.links.sortValues	  = {/literal}'{link controller="`$controller`Value" action=sort}/'{literal};
-	Backend.SpecField.prototype.links.sortGroups	  = {/literal}'{link controller="`$controller`Group" action=sort}/'{literal};
-	Backend.SpecField.prototype.links.getGroup		= {/literal}'{link controller="`$controller`Group" action=item}/'{literal};
-	Backend.SpecField.prototype.links.deleteGroup	 = {/literal}'{link controller="`$controller`Group" action=delete}/'{literal};
-	Backend.SpecField.prototype.links.createGroup	 = {/literal}'{link controller="`$controller`Group" action=create}'{literal};
-	Backend.SpecField.prototype.links.updateGroup	 = {/literal}'{link controller="`$controller`Group" action=update}'{literal};
+	Backend.SpecField.prototype.links.create		  = '{link controller=$controller action=create}';
+	Backend.SpecField.prototype.links.update		  = '{link controller=$controller action=update}';
+	Backend.SpecField.prototype.links.deleteField	 = '{link controller=$controller action=delete}/';
+	Backend.SpecField.prototype.links.editField	   = '{link controller=$controller action=item}/';
+	Backend.SpecField.prototype.links.sortField	   = '{link controller=$controller action=sort}/';
+	Backend.SpecField.prototype.links.mergeValues	 = '{link controller="`$controller`Value" action=mergeValues}/';
+	Backend.SpecField.prototype.links.deleteValue	 = '{link controller="`$controller`Value" action=delete}/';
+	Backend.SpecField.prototype.links.sortValues	  = '{link controller="`$controller`Value" action=sort}/';
+	Backend.SpecField.prototype.links.sortGroups	  = '{link controller="`$controller`Group" action=sort}/';
+	Backend.SpecField.prototype.links.getGroup		= '{link controller="`$controller`Group" action=item}/';
+	Backend.SpecField.prototype.links.deleteGroup	 = '{link controller="`$controller`Group" action=delete}/';
+	Backend.SpecField.prototype.links.createGroup	 = '{link controller="`$controller`Group" action=create}';
+	Backend.SpecField.prototype.links.updateGroup	 = '{link controller="`$controller`Group" action=update}';
 
 	Backend.SpecField.prototype.msg = {};
-	Backend.SpecField.prototype.msg.removeGroupQuestion  = {/literal}'{t _SpecFieldGroup_remove_question|addslashes}'{literal};
-	Backend.SpecField.prototype.msg.removeFieldQuestion  = {/literal}'{t _SpecField_remove_question|addslashes}'{literal};
-	Backend.SpecField.prototype.msg.editActiveListItem   = {/literal}'{t _activeList_edit|addslashes}'{literal},
-	Backend.SpecField.prototype.msg.deleteActiveListItem = {/literal}'{t _activeList_delete|addslashes}'{literal}
+	Backend.SpecField.prototype.msg.removeGroupQuestion  = '{t _SpecFieldGroup_remove_question|addslashes}';
+	Backend.SpecField.prototype.msg.removeFieldQuestion  = '{t _SpecField_remove_question|addslashes}';
+	Backend.SpecField.prototype.msg.editActiveListItem   = '{t _activeList_edit|addslashes}',
+	Backend.SpecField.prototype.msg.deleteActiveListItem = '{t _activeList_delete|addslashes}'
 	Backend.SpecField.prototype.activeListMessages =
 	{
 		'_activeList_edit':	Backend.SpecField.prototype.msg.editActiveListItem,
 		'_activeList_delete':  Backend.SpecField.prototype.msg.deleteActiveListItem
 	}
 
-	{/literal}
+
 	{foreach from=$configuration item="configItem" key="configKey"}
 		{% if $configKey == 'types' %}
 			Backend.SpecField.prototype.[[configKey]] = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
@@ -61,13 +61,13 @@
 <div>
 	<fieldset class="addForm" id="specField_item_new_[[categoryID]]_form" style="display: none;">
 		<legend>{t _add_new_field|capitalize}</legend>
-		{literal}
+
 		<script type="text/javascript">
-		   var newSpecFieldForm = new Backend.SpecField('{/literal}{json array=$specFieldsList}{literal}');
+		   var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
 		   newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.incValueCounter(), true);
 		   newSpecFieldForm.bindDefaultFields();
 		</script>
-		{/literal}
+
 	</fieldset>
 
 	<fieldset class="addForm" id="specField_group_new_[[categoryID]]_form" class="specField_new_group" style="display: none;">

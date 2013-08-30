@@ -11,12 +11,12 @@
 
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();
-	{literal}
+
 	lng.activeListMessages = {
-		_activeList_edit:	{/literal}'{t _activeList_edit|addslashes}'{literal},
-		_activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+		_activeList_edit:	'{t _activeList_edit|addslashes}',
+		_activeList_delete:  '{t _activeList_delete|addslashes}'
 	}
-	{/literal}
+
 	lng.setFormUrl('{link controller="backend.language" action=addForm}');
 	lng.setStatusUrl("{link controller="backend.language" action=setEnabled}/");
 	lng.setEditUrl("{link controller="backend.language" action=edit}");
@@ -69,11 +69,11 @@
 </li>
 </ul>
 
-{literal}
+
 <script type="text/javascript">
-	lng.renderList({/literal}[[languageArray]]{literal});
+	lng.renderList([[languageArray]]);
 	lng.initLangList();
 </script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

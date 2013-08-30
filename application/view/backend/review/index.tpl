@@ -23,16 +23,16 @@
 	<div class="sectionContainer maxHeight h--50"></div>
 
 	<script type="text/javascript">
-		Event.observe("cancelReviewEdit_[[id]]"	{literal}, "click", function(e) {
+		Event.observe("cancelReviewEdit_[[id]]"	, "click", function(e) {
 			e.preventDefault();
 			var editor = Backend.Review.Editor.prototype.getInstance(Backend.Review.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
 		});
 	</script>
-	{/literal}
+
 </div>
 
-{literal}
+
 <script>
 	if (!$('reviewManagerContainer'))
 	{
@@ -43,4 +43,3 @@
 		$('managerContainer').parentNode.insertBefore($('reviewManagerContainer'), $('managerContainer'));
 	}
 </script>
-{/literal}

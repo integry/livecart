@@ -8,14 +8,14 @@
 
 [[ partial("layout/backend/meta.tpl") ]]
 
-{literal}
+
 <style>
 	body
 	{
 		background-image: none;
 	}
 </style>
-{/literal}
+
 
 <div id="popupCategoryContainer" class="treeContainer">
 
@@ -31,13 +31,13 @@
 
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	if (window.opener.popupOnload())
 	{
 		window.onload = window.opener.popupOnload;
 	}
-{/literal}
+
 	Backend.Category.init({json array=$categoryList});
 </script>
 

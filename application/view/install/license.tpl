@@ -4,10 +4,10 @@
 
 <div>
 	{form action="install/acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
-{literal}
+
 	<fieldset class="error">
 		<p id="agreeContainer" onclick="if (Event.element(event) != $('accept')) { $('accept').click(); }">
-	{/literal}
+
 			{checkbox name=accept id=accept class="checbox" style="float: left; margin-right: 5px;"}
 			<label class="checkbox">I accept the license agreement</label>
 			<span class="text-danger hidden"></span>
@@ -19,7 +19,7 @@
 	{/form}
 </div>
 
-{literal}
+
 <!--[if IE]>
 	<style>
 	label.checkbox
@@ -33,4 +33,4 @@
 	$('accept').focus();
 </script>
 
-{/literal}
+

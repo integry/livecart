@@ -25,9 +25,9 @@
 	{% endif %}
 </div>
 
-{literal}
+
 <script type="text/javascript">
-{/literal}
+
 	var imageData = $H();
 	var imageDescr = $H();
 	var imageProducts = $H();

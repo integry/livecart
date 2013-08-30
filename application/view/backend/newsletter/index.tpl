@@ -92,7 +92,7 @@
 	<div class="sectionContainer maxHeight h--50"></div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	Event.observe($("cancel_newsletter_edit"), "click", function(e) {
 		e.preventDefault();
@@ -106,12 +106,12 @@
 
 	Backend.Newsletter.links =
 	{
-		add: '{/literal}{link controller="backend.newsletter" action=add}{literal}',
-		recipientCount: '{/literal}{link controller="backend.newsletter" action=recipientCount}{literal}',
-		plaintext: '{/literal}{link controller="backend.newsletter" action=plaintext}{literal}',
+		add: '{link controller="backend.newsletter" action=add}',
+		recipientCount: '{link controller="backend.newsletter" action=recipientCount}',
+		plaintext: '{link controller="backend.newsletter" action=plaintext}',
 	}
 
-{/literal}
+
 
 	Backend.Newsletter.GridFormatter.url = '{link controller="backend.newsletter" action=edit}?id=';
 	window.activeGrids['newsletters_0'].setDataFormatter(Backend.Newsletter.GridFormatter);
@@ -119,7 +119,7 @@
 	var massHandler = new ActiveGrid.MassActionHandler(
 						$('newslettersMass_0'),
 						window.activeGrids['newsletters_0'],
-{literal}
+
 						{
 							'onComplete':
 								function()
@@ -127,11 +127,11 @@
 									Backend.Newsletter.resetEditors();
 								}
 						}
-{/literal}
+
 						);
 	massHandler.deleteConfirmMessage = '{t _newsletter_delete_confirm|addslashes}' ;
 	massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
-{literal}
+
 </script>
-{/literal}
+
 [[ partial("layout/backend/footer.tpl") ]]

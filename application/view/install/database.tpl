@@ -31,8 +31,7 @@
 	{/form}
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	$('server').focus();
 </script>
-{/literal}

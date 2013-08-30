@@ -84,7 +84,7 @@
 	{/foreach}
 </form>
 
-{literal}
+
 <script type="text/javascript">
 	if(window.opener)
 	{
@@ -115,27 +115,27 @@
 	}
 
 	Backend.Category.links = {};
-	Backend.Category.links.categoryRecursiveAutoloading = '{/literal}{link controller="backend.category" action=xmlRecursivePath}{literal}';
-	Backend.Category.links.countTabsItems = '{/literal}{link controller="backend.category" action=countTabsItems id=_id_}{literal}';
-	Backend.Category.links.categoryAutoloading = '{/literal}{link controller="backend.category" action=xmlBranch}{literal}';
+	Backend.Category.links.categoryRecursiveAutoloading = '{link controller="backend.category" action=xmlRecursivePath}';
+	Backend.Category.links.countTabsItems = '{link controller="backend.category" action=countTabsItems id=_id_}';
+	Backend.Category.links.categoryAutoloading = '{link controller="backend.category" action=xmlBranch}';
 
 	Backend.Category.init();
 
 	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
-	Backend.Category.addCategories({/literal}{json array=$categoryList}{literal});
+	Backend.Category.addCategories({json array=$categoryList});
 
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
 
 	Backend.Category.loadBookmarkedCategory();
 
-	{/literal}
+
 		{allowed role="product"}
 			Backend.Product.productsMiscPermision = true;
 		{/allowed}
-	{literal}
+
 </script>
-{/literal}
+
 
 </body>
 </html>

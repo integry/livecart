@@ -84,7 +84,7 @@
 
 <div id="activeDeliveryZonePath" class="treePath"></div>
 
-{literal}
+
 <script type="text/javascript">
 	Backend.showContainer('deliveryZoneManagerContainer');
 
@@ -96,31 +96,31 @@
 	Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_service');
 	Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = Backend.getTranslation('_are_you_sure_you_want_to_delete_this_rate');
 
-	Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller="backend.deliveryZone" action=edit}?id=_id_{literal}';
-	Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller="backend.deliveryZone" action=delete}{literal}';
-	Backend.DeliveryZone.prototype.Links.save = '{/literal}{link controller="backend.deliveryZone" action=save}{literal}';
-	Backend.DeliveryZone.prototype.Links.create = '{/literal}{link controller="backend.deliveryZone" action=create}{literal}';
-	Backend.DeliveryZone.prototype.Links.saveCountries = '{/literal}{link controller="backend.deliveryZone" action=saveCountries}{literal}';
-	Backend.DeliveryZone.prototype.Links.saveStates = '{/literal}{link controller="backend.deliveryZone" action=saveStates}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask = '{/literal}{link controller="backend.deliveryZone" action=deleteCityMask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask = '{/literal}{link controller="backend.deliveryZone" action=saveCityMask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteZipMask = '{/literal}{link controller="backend.deliveryZone" action=deleteZipMask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask = '{/literal}{link controller="backend.deliveryZone" action=saveZipMask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask = '{/literal}{link controller="backend.deliveryZone" action=deleteAddressMask}{literal}';
-	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask = '{/literal}{link controller="backend.deliveryZone" action=saveAddressMask}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.remove = '{/literal}{link controller="backend.shippingService" action=delete}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.sortServices = '{/literal}{link controller="backend.shippingService" action=sort}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.edit = '{/literal}{link controller="backend.shippingService" action=edit}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate = '{/literal}{link controller="backend.shippingRate" action=delete}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.sortRates = '{/literal}{link controller="backend.shippingRate" action=sort}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.editRate = '{/literal}{link controller="backend.shippingRate" action=edit}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.update = '{/literal}{link controller="backend.shippingService" action=update}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller="backend.shippingService" action=create}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller="backend.shippingService" action=validateRates}{literal}';
+	Backend.DeliveryZone.prototype.Links.edit = '{link controller="backend.deliveryZone" action=edit}?id=_id_';
+	Backend.DeliveryZone.prototype.Links.remove = '{link controller="backend.deliveryZone" action=delete}';
+	Backend.DeliveryZone.prototype.Links.save = '{link controller="backend.deliveryZone" action=save}';
+	Backend.DeliveryZone.prototype.Links.create = '{link controller="backend.deliveryZone" action=create}';
+	Backend.DeliveryZone.prototype.Links.saveCountries = '{link controller="backend.deliveryZone" action=saveCountries}';
+	Backend.DeliveryZone.prototype.Links.saveStates = '{link controller="backend.deliveryZone" action=saveStates}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask = '{link controller="backend.deliveryZone" action=deleteCityMask}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask = '{link controller="backend.deliveryZone" action=saveCityMask}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteZipMask = '{link controller="backend.deliveryZone" action=deleteZipMask}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask = '{link controller="backend.deliveryZone" action=saveZipMask}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask = '{link controller="backend.deliveryZone" action=deleteAddressMask}';
+	Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask = '{link controller="backend.deliveryZone" action=saveAddressMask}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.remove = '{link controller="backend.shippingService" action=delete}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.sortServices = '{link controller="backend.shippingService" action=sort}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.edit = '{link controller="backend.shippingService" action=edit}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate = '{link controller="backend.shippingRate" action=delete}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.sortRates = '{link controller="backend.shippingRate" action=sort}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.editRate = '{link controller="backend.shippingRate" action=edit}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.update = '{link controller="backend.shippingService" action=update}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.create = '{link controller="backend.shippingService" action=create}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{link controller="backend.shippingService" action=validateRates}';
 
-	var zones = new Backend.DeliveryZone({/literal}[[zones]]{literal});
+	var zones = new Backend.DeliveryZone([[zones]]);
 
 </script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

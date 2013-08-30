@@ -60,9 +60,8 @@
 	</fieldset>
 {/form}
 
-{literal}
+
 <script type="text/javascript">
-	$('body_{/literal}[[tabid]]{literal}').value = {/literal}decode64("[[template.bodyEncoded]]");{literal};
-	editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
+	$('body_[[tabid]]').value = decode64("[[template.bodyEncoded]]");;
+	editAreaLoader.baseURL = "{baseUrl}javascript/library/editarea/";
 </script>
-{/literal}

@@ -19,8 +19,8 @@
 	{/form}
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	$('firstName').focus();
 </script>
-{/literal}
+

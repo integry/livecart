@@ -8,9 +8,9 @@
 	</ul>
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	// global variable footerToolbar
 	footerToolbar = new FrontendToolbar("footpanel");
 </script>
-{/literal}
+

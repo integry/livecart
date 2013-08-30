@@ -3,7 +3,7 @@
 {% endif %}
 
 <div
-	onclick="{literal}TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));{/literal}"
+	onclick="TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));"
 	id="notice_changes_in_css_tab_[[theme]]" class="warning cssAndStyleTab" style="display:none;"
 >{t _notice_changes_in_css_tab}</div>
 
@@ -33,7 +33,7 @@
 					{% elseif 'color' == $property.type %}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
-							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
+							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
 						</script>
 					{% elseif 'size' == $property.type %}
 						<div class="sizeEntry">
@@ -46,7 +46,7 @@
 						{selectfield options=$borderStyles}
 						{textfield id=$property.id class="text color"}
 						<script type="text/javascript">
-							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {literal}{adjust: false, required: false, hash: true, caps: false}{/literal});
+							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
 						</script>
 					{% elseif 'text-decoration' == $property.type %}
 						{selectfield options=$textStyles}

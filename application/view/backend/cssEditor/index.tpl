@@ -34,12 +34,12 @@
 	</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
-	var settings = new Backend.CssEditor({/literal}[[categories]]{literal});
-	settings.urls['edit'] = '{/literal}{link controller="backend.cssEditor" action=edit query="file=_id_&tabid=_tabid_"}{literal}';
-	settings.urls['empty'] = '{/literal}{link controller="backend.cssEditor" action=emptyPage}{literal}';
-	settings.urls['templateData'] = '{/literal}{link controller="backend.cssEditor" action=templateData}?file=_id_&tabid=_tabid_&version=_version_{literal}';
+	var settings = new Backend.CssEditor([[categories]]);
+	settings.urls['edit'] = '{link controller="backend.cssEditor" action=edit query="file=_id_&tabid=_tabid_"}';
+	settings.urls['empty'] = '{link controller="backend.cssEditor" action=emptyPage}';
+	settings.urls['templateData'] = '{link controller="backend.cssEditor" action=templateData}?file=_id_&tabid=_tabid_&version=_version_';
 	settings.tabControl =  TabControl.prototype.getInstance(
 		'templateTabContainer',
 		Backend.CssEditor.prototype.getTabUrl,
@@ -49,6 +49,6 @@
 		}
 	);
 </script>
-{/literal}
+
 
 [[ partial("layout/backend/footer.tpl") ]]

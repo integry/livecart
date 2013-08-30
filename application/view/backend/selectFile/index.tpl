@@ -15,14 +15,14 @@
 
 [[ partial("layout/backend/meta.tpl") ]]
 
-{literal}
+
 <style>
 	body
 	{
 		background-image: none;
 	}
 </style>
-{/literal}
+
 
 <div id="pageTitleContainer">
 	<div id="pageTitle">[[PAGE_TITLE]]</div>
@@ -57,7 +57,7 @@
 
 </div>
 
-{literal}
+
 <script type="text/javascript">
 	var inst = window.selectFileInstance;
 	inst.grid = window.activeGrids['files_0'];
@@ -65,19 +65,19 @@
 	inst.grid.ricoGrid.metaData.options.largeBufferSize = 100;
 
 	inst.links = {};
-	inst.links.categoryRecursiveAutoloading = '{/literal}{link controller="backend.selectFile" action=xmlRecursivePath}{literal}';
-	inst.links.categoryAutoloading = '{/literal}{link controller="backend.selectFile" action=xmlBranch}{literal}';
+	inst.links.categoryRecursiveAutoloading = '{link controller="backend.selectFile" action=xmlRecursivePath}';
+	inst.links.categoryAutoloading = '{link controller="backend.selectFile" action=xmlBranch}';
 
 	inst.init();
-	inst.addCategories({/literal}{json array=$root}{literal});
+	inst.addCategories({json array=$root});
 	inst.treeBrowser.setXMLAutoLoading(inst.links.categoryAutoloading);
-	inst.addCategories({/literal}{json array=$directoryList}{literal});
+	inst.addCategories({json array=$directoryList});
 
 	inst.initPage();
 
-	inst.loadDirectory({/literal}{json array=$current}{literal});
+	inst.loadDirectory({json array=$current});
 </script>
-{/literal}
+
 
 </body>
 </html>

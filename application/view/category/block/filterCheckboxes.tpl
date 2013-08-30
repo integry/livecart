@@ -17,7 +17,7 @@
 			</div>
 		{/foreach}
 	</div>
-	{literal}
+
 		<script type="text/javascript">
 			function showCheckboxFilterControls()
 			{
@@ -35,5 +35,5 @@
 				_checkboxFilterLoadHookObserved = true;
 			}
 		</script>
-	{/literal}
+
 {% endif %}

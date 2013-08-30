@@ -115,20 +115,20 @@
 	</div>
 </div>
 
-{literal}
+
 <script type="text/javascript">
-	var pageHandler = new Backend.Theme({/literal}[[themes]]{literal});
-	pageHandler.urls['edit'] = '{/literal}{link controller="backend.theme" action=edit}?id=_id_{literal}';
-	pageHandler.urls['add'] = '{/literal}{link controller="backend.theme" action=add}{literal}';
-	pageHandler.urls['delete'] = '{/literal}{link controller="backend.theme" action=delete}?id=_id_{literal}';
-	pageHandler.urls['moveup'] = '{/literal}{link controller="backend.theme" action=reorder}?order=up&id=_id_{literal}';
-	pageHandler.urls['movedown'] = '{/literal}{link controller="backend.theme" action=reorder}?order=down&id=_id_{literal}';
-	pageHandler.urls['empty'] = '{/literal}{link controller="backend.theme" action=emptyPage}{literal}';
-	pageHandler.urls['create'] = '{/literal}{link controller="backend.theme" action=create}{literal}';
-	pageHandler.urls['update'] = '{/literal}{link controller="backend.theme" action=update}{literal}';
-	pageHandler.urls['export'] = '{/literal}{link controller="backend.theme" action=export}?id=_id_{literal}';
+	var pageHandler = new Backend.Theme([[themes]]);
+	pageHandler.urls['edit'] = '{link controller="backend.theme" action=edit}?id=_id_';
+	pageHandler.urls['add'] = '{link controller="backend.theme" action=add}';
+	pageHandler.urls['delete'] = '{link controller="backend.theme" action=delete}?id=_id_';
+	pageHandler.urls['moveup'] = '{link controller="backend.theme" action=reorder}?order=up&id=_id_';
+	pageHandler.urls['movedown'] = '{link controller="backend.theme" action=reorder}?order=down&id=_id_';
+	pageHandler.urls['empty'] = '{link controller="backend.theme" action=emptyPage}';
+	pageHandler.urls['create'] = '{link controller="backend.theme" action=create}';
+	pageHandler.urls['update'] = '{link controller="backend.theme" action=update}';
+	pageHandler.urls['export'] = '{link controller="backend.theme" action=export}?id=_id_';
 </script>
-{/literal}
+
 
 <div class="clear"></div>
 

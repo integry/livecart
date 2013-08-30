@@ -66,9 +66,9 @@
 		<label>{tip _city_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
-				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_cityMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksCity, function() {});
-				{/literal}
+
+					ActiveList.prototype.getInstance("countriesAndStates_[[zoneID]]_cityMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksCity, function() {});
+
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
 				<div class="countriesAndStates_maskForm" style="display: none">
@@ -98,9 +98,9 @@
 		<label>{tip _zip_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
-				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
-				{/literal}
+
+					ActiveList.prototype.getInstance("countriesAndStates_[[zoneID]]_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
+
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
 				<div class="countriesAndStates_maskForm" style="display: none">
@@ -130,9 +130,9 @@
 		<label>{tip _address_mask}</label>
 		<fieldset>
 			<script type="text/jscript">
-				{literal}
-					ActiveList.prototype.getInstance("countriesAndStates_{/literal}[[zoneID]]{literal}_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
-				{/literal}
+
+					ActiveList.prototype.getInstance("countriesAndStates_[[zoneID]]_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
+
 			</script>
 			<fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
 				<div class="countriesAndStates_maskForm" style="display: none">

@@ -47,11 +47,11 @@
 	[[ partial('backend/payment/transactions.tpl', ['transactions': transactions]) ]]
 </fieldset>
 
-{literal}
+
 <script type="text/javascript">
-	Backend.Payment.init($('{/literal}paymentMenu_[[order.ID]]{literal}'));
+	Backend.Payment.init($('paymentMenu_[[order.ID]]'));
 </script>
-{/literal}
+
 
 <div class="clear"></div>
 
