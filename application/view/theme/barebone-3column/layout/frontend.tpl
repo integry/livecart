@@ -1,2 +1,2 @@
 {includeCss file="/theme/barebone-3column/stylesheet/default.css" last="true"}
-{include file="@layout/frontend.tpl" bodyClass="threeColumn"}
+[[ partial('@layout/frontend.tpl', ['bodyClass': "threeColumn"]) ]]

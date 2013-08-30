@@ -5,7 +5,7 @@
 			<td colspan="{math equation="$extraColspanSize + 5"}">
 	{/header}
 	{content}
-			{include file="block/eav/fields.tpl" item=$cart filter="isDisplayed"}
+			[[ partial('block/eav/fields.tpl', ['item': $cart, 'filter': "isDisplayed"]) ]]
 	{/content}
 	{footer}
 				<p>

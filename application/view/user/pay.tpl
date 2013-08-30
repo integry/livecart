@@ -10,7 +10,7 @@
 		</div>
 	</div>
 
-	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
+	[[ partial('checkout/completeOverview.tpl', ['productsInSeparateLine': true]) ]]
 
 	<div class="paymentMethods">
 		[[ partial("checkout/paymentMethods.tpl") ]]

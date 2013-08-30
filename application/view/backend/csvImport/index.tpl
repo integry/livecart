@@ -15,7 +15,7 @@
 
 <div id="import">
 
-{include file="backend/csvImport/wizardProgress.tpl" class="stepSelect"}
+[[ partial('backend/csvImport/wizardProgress.tpl', ['class': "stepSelect"]) ]]
 
 {form action="backend.csvImport/setFile" method="POST" handle=$form}
 

@@ -5,7 +5,7 @@
 {% block content %}
 
 {foreach from=$news item=entry}
-	{include file="news/newsEntry.tpl" entry=$entry}
+	[[ partial('news/newsEntry.tpl', ['entry': $entry]) ]]
 {/foreach}
 
 {% endblock %}

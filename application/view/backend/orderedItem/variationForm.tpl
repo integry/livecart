@@ -5,7 +5,7 @@
 
 		<legend>{t _edit_variations}</legend>
 
-		{include file="product/variations.tpl" variations=$variations container="variationContainer_`$item.ID`"}
+		[[ partial('product/variations.tpl', ['variations': $variations, 'container': "variationContainer_`$item.ID`"]) ]]
 
 		<input type="hidden" name="id" value="[[item.ID]]" />
 		<input type="hidden" name="orderID" value="[[item.CustomerOrder.ID]]" />

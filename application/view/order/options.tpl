@@ -1,1 +1,1 @@
-{include file="order/index.tpl}
+[[ partial("order/index.tpl") ]]

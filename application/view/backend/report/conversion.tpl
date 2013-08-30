@@ -10,4 +10,4 @@
 	<div class="clear"></div>
 </div>
 
-{include file="backend/report/chart.tpl" activeMenu=$type width="100%"}
+[[ partial('backend/report/chart.tpl', ['activeMenu': $type, 'width': "100%"]) ]]

@@ -9,7 +9,7 @@
 {/capture}
 
 {capture assign="footer"}
-	{include file="order/block/navigationButtons.tpl" hideTos=true}
+	[[ partial('order/block/navigationButtons.tpl', ['hideTos': true]) ]]
 {/capture}
 
-{include file="block/modal.tpl" title="_item_added_title" body=$body footer=$footer}
+[[ partial('block/modal.tpl', ['title': "_item_added_title", 'body': $body, 'footer': $footer]) ]]

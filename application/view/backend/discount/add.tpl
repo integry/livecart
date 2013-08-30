@@ -6,7 +6,7 @@
 	<fieldset>
 		<legend>{t _create_rule|capitalize}</legend>
 
-		{include file="backend/discount/conditionForm.tpl" id="discountAddForm"}
+		[[ partial('backend/discount/conditionForm.tpl', ['id': "discountAddForm"]) ]]
 
 	</fieldset>
 

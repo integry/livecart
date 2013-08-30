@@ -14,7 +14,7 @@
 
 	[[ textareafld('msg', '_inquiry_msg') ]]
 
-	{include file="block/submit.tpl" caption="_form_submit"}
+	[[ partial('block/submit.tpl', ['caption': "_form_submit"]) ]]
 
 	<input type="hidden" name="id" value="[[product.ID]]" />
 

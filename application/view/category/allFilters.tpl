@@ -16,7 +16,7 @@
 		{% endif %}
 
 		<li>
-			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">[[filter.name_lang]]</a>&nbsp;{include file="block/count.tpl" count=$filter.count}
+			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">[[filter.name_lang]]</a>&nbsp;[[ partial('block/count.tpl', ['count': $filter.count]) ]]
 		</li>
 
 		{% if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last %}

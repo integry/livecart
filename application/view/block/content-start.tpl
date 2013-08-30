@@ -2,7 +2,7 @@
 
 {block BREADCRUMB}
 
-{% if $title && !$hideTitle %}
+{% if content('title') and !hideTitle %}
 	<h1>[[ content('title') ]]</h1>
 {% endif %}
 

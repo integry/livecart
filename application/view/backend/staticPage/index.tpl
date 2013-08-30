@@ -9,7 +9,7 @@
 
 <div id="staticPageContainer" ng-controller="TreeController" ng-init="setTree({$pages|escape})">
 	<div class="treeContainer">
-		{include file="block/backend/tree.tpl" sortable=true}
+		[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 
 		<ul class="verticalMenu">
 			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a ng-click="add()">{t _add_new}</a></li>
@@ -72,7 +72,7 @@
 						{textarea style="width: 100%; height: 4em;"}
 					{/input}
 
-					{include file="backend/eav/fields.tpl" item=$page angular="instance"}
+					[[ partial('backend/eav/fields.tpl', ['item': $page, 'angular': "instance"]) ]]
 
 					{language}
 						[[ textfld('title_`$lang.ID`', '_title', class: 'wider') ]]
@@ -87,7 +87,7 @@
 							{textarea style="width: 100%; height: 4em;"}
 						{/input}
 
-						{include file="backend/eav/fields.tpl" angular="instance" item=$page language=$lang.ID}
+						[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': $page, 'language': $lang.ID]) ]]
 					{/language}
 
 				</div>

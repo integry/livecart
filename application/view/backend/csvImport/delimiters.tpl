@@ -64,7 +64,7 @@
 
 <div id="importDelimiters">
 
-{include file="backend/csvImport/wizardProgress.tpl" class="stepDelimiters"}
+[[ partial('backend/csvImport/wizardProgress.tpl', ['class': "stepDelimiters"]) ]]
 
 {form action="backend.csvImport/preview" method="POST" id="delimitersform handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
 
@@ -192,7 +192,7 @@
 	<fieldset id="preview">
 		<legend>{maketext text=_preview_count params="`$previewCount`,`$total`"}</legend>
 			<div id="previewContainer">
-				{include file="backend/csvImport/preview.tpl" preview=$preview}
+				[[ partial('backend/csvImport/preview.tpl', ['preview': $preview]) ]]
 			</div>
 	</fieldset>
 

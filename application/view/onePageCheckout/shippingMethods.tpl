@@ -1,6 +1,6 @@
 <div class="accordion-group">
 	<div class="stepTitle accordion-heading">
-		{include file="onePageCheckout/block/title.tpl" title="_select_shipping"}
+		[[ partial('onePageCheckout/block/title.tpl', ['title': "_select_shipping"]) ]]
 	</div>
 
 	<div class="accordion-body">

@@ -46,7 +46,7 @@
 		[[ textareafld('text', '_review_text') ]]
 	</div>
 
-	{include file="block/submit.tpl" caption="_submit_review"}
+	[[ partial('block/submit.tpl', ['caption': "_submit_review"]) ]]
 {% endif %}
 
 {/form}

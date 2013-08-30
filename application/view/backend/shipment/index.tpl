@@ -102,7 +102,7 @@
 	<div id="orderShipments_list_[[orderID]]_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>
 		<ul id="orderShipmentsItems_list_[[orderID]]_downloadable" class="activeList_add_delete orderShipmentsItem activeList singleShipment">
 			<li id="orderShipments_list_[[orderID]]_[[downloadableShipment.ID]]" class="orderShipment" >
-				{include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
+				[[ partial('backend/shipment/shipment.tpl', ['shipment': $downloadableShipment, 'notShippable': true, 'downloadable': 1]) ]]
 				{% if $downloadableShipment.items|@count > 0 %}
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_downloadableShipments");

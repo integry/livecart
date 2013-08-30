@@ -4,7 +4,7 @@
 
 [[ partial("user/layout.tpl") ]]
 
-{include file="user/userMenu.tpl" current="fileMenu"}
+[[ partial('user/userMenu.tpl', ['current': "fileMenu"]) ]]
 {% block content %}
 
 	<div class="resultStats">
@@ -19,7 +19,7 @@
 		<h3>
 			<a href="{link controller=user action=item id=$item.ID}">[[item.Product.name_lang]]</a>
 		</h3>
-		{include file="user/fileList.tpl" item=$item}
+		[[ partial('user/fileList.tpl', ['item': $item]) ]]
 	{/foreach}
 
 {% endblock %}

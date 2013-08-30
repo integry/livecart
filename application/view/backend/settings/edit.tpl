@@ -8,7 +8,7 @@
 		</fieldset>
 	{% endif %}
 
-	{include file="backend/settings/sectionHelp.tpl" key="$sectionKey"}
+	[[ partial('backend/settings/sectionHelp.tpl', ['key': "$sectionKey"]) ]]
 
 	<fieldset class="settings" ng-show="activeID == '[[sectionId]]'">
 

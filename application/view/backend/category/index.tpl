@@ -65,7 +65,7 @@
 
 <div ng-controller="CategoryController" ng-init="setTree({$categoryList|escape}); expandRoot();">
 	<div class="treeContainer">
-		{include file="block/backend/tree.tpl" sortable=true}
+		[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 
 		{allowed role="category.create,category.remove,category.sort"}
 			{t _with_selected_category}:

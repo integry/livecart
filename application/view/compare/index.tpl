@@ -46,7 +46,7 @@
 						<td class="param">[[attr.name_lang]]</td>
 						{foreach from=$category.products item="product"}
 							<td class="value">
-								{include file="product/attributeValue.tpl" attr=$product.attributes[$attr.ID]}
+								[[ partial('product/attributeValue.tpl', ['attr': $product.attributes[$attr.ID]]) ]]
 							</td>
 						{/foreach}
 					</tr>

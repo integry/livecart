@@ -5,7 +5,7 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{include file="checkout/checkoutProgress.tpl" progress="progressShipping"}
+		[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressShipping"]) ]]
 	</div>
 
 	{% if $shipments|@count > 1 && !$order.isMultiAddress %}
@@ -36,7 +36,7 @@
 			[[ partial("checkout/orderFields.tpl") ]]
 		{% endif %}
 
-		{include file="block/submit.tpl" caption="_continue"}
+		[[ partial('block/submit.tpl', ['caption': "_continue"]) ]]
 
 		{/form}
 

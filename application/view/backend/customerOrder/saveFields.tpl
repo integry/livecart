@@ -12,14 +12,14 @@
 	<div class="clear"></div>
 
 	<div class="overview">
-		{include file="backend/eav/view.tpl" item=$order}
+		[[ partial('backend/eav/view.tpl', ['item': $order]) ]]
 		{% if !$order.attributes %}
 			<p>{t _no_info_entered_yet}</p>
 		{% endif %}
 	</div>
 
 	{form handle=$fieldsForm action="backend.customerOrder/saveFields" method="POST"}
-		{include file="backend/eav/fields.tpl" item=$order}
+		[[ partial('backend/eav/fields.tpl', ['item': $order]) ]]
 		<input type="hidden" name="id" value="[[order.ID]]" />
 		<fieldset class="controls">
 			<span style="display: none;" class="progressIndicator"></span>

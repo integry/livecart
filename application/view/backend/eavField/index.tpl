@@ -1,1 +1,1 @@
-{include file="backend/specField/index.tpl" controller="backend.eavField"}
+[[ partial('backend/specField/index.tpl', ['controller': "backend.eavField"]) ]]

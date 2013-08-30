@@ -46,7 +46,7 @@
 						</select>
 					{/input}
 
-					{include file="backend/user/address_edit.tpl" hideName=true}
+					[[ partial('backend/user/address_edit.tpl', ['hideName': true]) ]]
 
 					<div>
 						<input type="submit" class="submit" value="{tn _lookup_zone}" />

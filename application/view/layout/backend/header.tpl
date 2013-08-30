@@ -20,7 +20,7 @@
 				{% if 'BACKEND_SHOW_HELP'|config %} | {% endif %}
 				{backendLangMenu}
 				<a href="{link}" target="_blank">{t _frontend}</a> |
-				{include file="backend/quickSearch/form.tpl" formid="QuickSearch" hint=_hint_quick_search classNames="-SearchableTemplate"}
+				[[ partial('backend/quickSearch/form.tpl', ['formid': "QuickSearch", 'hint': _hint_quick_search, 'classNames': "-SearchableTemplate"]) ]]
 		</div>
 
 		<div id="topLogoImageContainer">

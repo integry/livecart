@@ -17,7 +17,7 @@
 
 <div id="templatePageContainer">
 
-	{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_template_search formid="TemplateSearch" classNames="SearchableTemplate"}
+	[[ partial('backend/quickSearch/form.tpl', ['limit': 10, 'hint': _hint_template_search, 'formid': "TemplateSearch", 'classNames': "SearchableTemplate"]) ]]
 
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>

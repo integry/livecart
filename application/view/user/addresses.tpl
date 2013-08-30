@@ -2,7 +2,7 @@
 
 {% block title %}{t _manage_addresses}{{% endblock %}
 [[ partial("user/layout.tpl") ]]
-{include file="user/userMenu.tpl" current="addressMenu"}
+[[ partial('user/userMenu.tpl', ['current': "addressMenu"]) ]]
 {% block content %}
 
 	<h2 id="billingAddresses">{t _billing_addresses}</h2>

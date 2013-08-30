@@ -23,7 +23,7 @@
 
 				{block SEND-TO-FRIEND-SUBMIT}
 
-				{include file="block/submit.tpl" caption="_send_to_friend"}
+				[[ partial('block/submit.tpl', ['caption': "_send_to_friend"]) ]]
 			{/form}
 		</div>
 	</div>

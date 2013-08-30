@@ -2,7 +2,7 @@
 
 {% block title %}{t _change_email}{{% endblock %}
 [[ partial("user/layout.tpl") ]]
-{include file="user/userMenu.tpl" current="emailMenu"}
+[[ partial('user/userMenu.tpl', ['current': "emailMenu"]) ]]
 {% block content %}
 
 	{form action="user/doChangeEmail" method="POST" handle=$form class="form-horizontal"}
@@ -14,7 +14,7 @@
 
 		[[ textfld('email', '_new_email') ]]
 
-		{include file="block/submit.tpl" caption="_complete_email_change" cancel="user"}
+		[[ partial('block/submit.tpl', ['caption': "_complete_email_change", 'cancel': "user"]) ]]
 
 	{/form}
 

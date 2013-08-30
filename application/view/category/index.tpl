@@ -6,7 +6,7 @@
 
 
 
-{include file="block/content-start.tpl" hideTitle=true}
+[[ partial('block/content-start.tpl', ['hideTitle': true]) ]]
 
 	[[ partial("category/head.tpl") ]]
 
@@ -47,7 +47,7 @@
 	{% if $subCatFeatured %}
 		<h2>{t _featured_products}</h2>
 
-		{include file="category/productListLayout.tpl" layout='FEATURED_LAYOUT'|config|default:$layout products=$subCatFeatured}
+		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': $subCatFeatured]) ]]
 	{% endif %}
 
 	{block FILTER_TOP}

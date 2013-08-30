@@ -9,7 +9,7 @@
 		<td class="details">
 			<div class="subCatName">
 				<a href="{categoryUrl data=$sub}">[[sub.name_lang]]</a>
-				{include file="block/count.tpl" count=$sub.count}
+				[[ partial('block/count.tpl', ['count': $sub.count]) ]]
 			</div>
 
 			{% if $sub.subCategories %}
@@ -17,7 +17,7 @@
 				{foreach from=$sub.subCategories item="subSub"}
 					<li>
 						<a href="{categoryUrl data=$subSub}">[[subSub.name_lang]]</a>
-						{include file="block/count.tpl" count=$subSub.count}
+						[[ partial('block/count.tpl', ['count': $subSub.count]) ]]
 					</li>
 				{/foreach}
 			</ul>

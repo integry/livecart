@@ -16,7 +16,7 @@
 	{% if $multiLingualSpecFieldss %}
 	<fieldset>
 		<legend>{t _specification_attributes}</legend>
-		{include file="backend/eav/language.tpl" item=$product cat=$cat language=$lang.ID}
+		[[ partial('backend/eav/language.tpl', ['item': $product, 'cat': $cat, 'language': $lang.ID]) ]]
 	</fieldset>
 	{% endif %}
 {/language}

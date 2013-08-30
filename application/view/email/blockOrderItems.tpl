@@ -7,9 +7,9 @@
 {% endif %}{*html*}
 {% if $html %}
 {% if !$noTable %}<table>{% endif %}
-{include file="email/blockItemHeader.tpl" noTable=true}
+[[ partial('email/blockItemHeader.tpl', ['noTable': true]) ]]
 {foreach from=$order.shipments item=shipment}
-{include file="email/blockShipment.tpl" noTable=true}
+[[ partial('email/blockShipment.tpl', ['noTable': true]) ]]
 {/foreach}
 {% if !$noTable %}</table>{% endif %}
 {% endif %}{*html*}

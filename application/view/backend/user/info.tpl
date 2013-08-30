@@ -11,7 +11,7 @@
 
 	[[ textfld('email', '_email') ]]
 
-	{include file="backend/eav/fields.tpl" item=$someUser}
+	[[ partial('backend/eav/fields.tpl', ['item': $someUser]) ]]
 
 	{input name="password"}
 		{label}{t _password}:{/label}
@@ -33,12 +33,12 @@
 
 	<fieldset id="user_[[someUser.UserGroup.ID]]_[[someUser.ID]]_billingAddress" class="user_billingAddress">
 		<legend>{t _billing_address}</legend>
-		{include file="backend/user/address_edit.tpl" namePrefix="billingAddress_" eavPrefix="billingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress" address=$someUser.defaultBillingAddress states=$billingAddressStates}
+		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "billingAddress_", 'eavPrefix': "billingAddress_", 'idPrefix': "user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress", 'address': $someUser.defaultBillingAddress, 'states': $billingAddressStates]) ]]
 	</fieldset>
 
 	<fieldset id="user_[[someUser.UserGroup.ID]]_[[someUser.ID]]_shippingAddress" class="user_shippingAddress">
 		<legend>{t _shipping_address}</legend>
-		{include file="backend/user/address_edit.tpl" namePrefix="shippingAddress_" eavPrefix="shippingAddress_" idPrefix="user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress" address=$someUser.defaultShippingAddress states=$shippingAddressStates}
+		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "shippingAddress_", 'eavPrefix': "shippingAddress_", 'idPrefix': "user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress", 'address': $someUser.defaultShippingAddress, 'states': $shippingAddressStates]) ]]
 	</fieldset>
 
 	<fieldset class="controls">

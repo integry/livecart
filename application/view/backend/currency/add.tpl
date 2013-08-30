@@ -1,1 +1,1 @@
-{include file="backend/currency/listItem.tpl" showContainer=true}
+[[ partial('backend/currency/listItem.tpl', ['showContainer': true]) ]]

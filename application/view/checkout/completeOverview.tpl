@@ -27,7 +27,7 @@
 			[[address.countryName]]
 		</p>
 		<p>
-			{include file="order/addressFieldValues.tpl" showLabels=true}
+			[[ partial('order/addressFieldValues.tpl', ['showLabels': true]) ]]
 		</p>
 	{% endif %}
 {/function}

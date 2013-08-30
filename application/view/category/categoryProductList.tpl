@@ -22,7 +22,7 @@
 
 	{% if $products %}
 		<form action="{link controller=category action=listAction returnPath=true}" method="post" class="form-horizontal">
-			{include file="category/productListLayout.tpl" products=$products}
+			[[ partial('category/productListLayout.tpl', ['products': $products]) ]]
 		</form>
 	{% endif %}
 

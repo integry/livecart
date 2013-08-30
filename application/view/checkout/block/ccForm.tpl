@@ -50,10 +50,10 @@
 		{/input}
 
 		{% if $ccVars %}
-			{include file="block/eav/fields.tpl" fieldList=$ccVars.specFieldList}
+			[[ partial('block/eav/fields.tpl', ['fieldList': $ccVars.specFieldList]) ]]
 		{% endif %}
 
-		{include file="block/submit.tpl" caption="_complete_now"}
+		[[ partial('block/submit.tpl', ['caption': "_complete_now"]) ]]
 
 		</div>
 	{/form}

@@ -1,1 +1,1 @@
-{include file="backend/template/edit.tpl" new=true}
+[[ partial('backend/template/edit.tpl', ['new': true]) ]]

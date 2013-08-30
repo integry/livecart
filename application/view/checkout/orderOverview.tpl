@@ -24,7 +24,7 @@
 				</td>
 			</tr>
 		{% endif %}
-		{include file="order/compactOrderTableDetails.tpl" hideTaxes=true}
+		[[ partial('order/compactOrderTableDetails.tpl', ['hideTaxes': true]) ]]
 	{/foreach}
 
 	{foreach from=$order.discounts item=discount}

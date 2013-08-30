@@ -35,7 +35,7 @@
 			[[ partial("order/block/recurringItem.tpl") ]]
 
 			{% if $multi %}
-				{include file="order/selectItemAddress.tpl" item=$item}
+				[[ partial('order/selectItemAddress.tpl', ['item': $item]) ]]
 			{% endif %}
 		</td>
 

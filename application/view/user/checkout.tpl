@@ -21,7 +21,7 @@
 		{% endif %}
 
 		{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
-		{include file="user/loginForm.tpl" return=$return}
+		[[ partial('user/loginForm.tpl', ['return': $return]) ]]
 	</div>
 
 	<div class="newCustomer">
@@ -33,7 +33,7 @@
 				<h3>{t _contact_info}</h3>
 			{% endif %}
 
-			{include file="user/block/registerAddress.tpl" prefix="billing_" showHeading=true}
+			[[ partial('user/block/registerAddress.tpl', ['prefix': "billing_", 'showHeading': true]) ]]
 
 			{% if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config %}
 			<h3>{t _shipping_address}</h3>
@@ -44,7 +44,7 @@
 				{/input}
 
 				<div id="shippingForm">
-					{include file="user/addressForm.tpl" prefix="shipping_" eavPrefix="shipping_" states=$shippingStates}
+					[[ partial('user/addressForm.tpl', ['prefix': "shipping_", 'eavPrefix': "shipping_", 'states': $shippingStates]) ]]
 				</div>
 
 			{% endif %}
@@ -54,7 +54,7 @@
 			{hidden name="return"}
 			{hidden name="regType"}
 
-			{include file="block/submit.tpl" caption="_continue"}
+			[[ partial('block/submit.tpl', ['caption': "_continue"]) ]]
 		{/form}
 	</div>
 	<div class="clear"></div>

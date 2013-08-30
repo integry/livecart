@@ -11,7 +11,7 @@
 					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
 
 					{% if 'DISPLAY_NUM_CAT'|config %}
-						{include file="block/count.tpl" count=$category.count}
+						[[ partial('block/count.tpl', ['count': $category.count]) ]]
 					{% endif %}
 					{% if $category.subCategories %}
 		   				{categoryTree node=$category.subCategories}

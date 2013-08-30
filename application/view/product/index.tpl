@@ -8,7 +8,7 @@
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
 [[ partial("product/layout.tpl") ]]
-{include file="block/content-start.tpl" hideTitle=true}
+[[ partial('block/content-start.tpl', ['hideTitle': true]) ]]
 
 [[ partial("product/head.tpl") ]]
 

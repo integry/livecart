@@ -3,7 +3,7 @@
 {% block title %}{t _personal_info}{{% endblock %}
 
 [[ partial("user/layout.tpl") ]]
-{include file="user/userMenu.tpl" current="personalMenu"}
+[[ partial('user/userMenu.tpl', ['current': "personalMenu"]) ]]
 {% block content %}
 
 	{form class="form-horizontal" action="user/savePersonal" method="POST" handle=$form class="form-horizontal"}
@@ -14,9 +14,9 @@
 
 		[[ textfld('companyName', '_company_name') ]]
 
-		{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+		[[ partial('block/eav/fields.tpl', ['item': $user, 'filter': "isDisplayed"]) ]]
 
-		{include file="block/submit.tpl" caption="_save" cancel="user"}
+		[[ partial('block/submit.tpl', ['caption': "_save", 'cancel': "user"]) ]]
 	{/form}
 
 {% endblock %}

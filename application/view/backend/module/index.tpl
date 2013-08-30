@@ -27,10 +27,10 @@
 		<legend>{translate text="_module_type_justInstalled"}</legend>
 	</fieldset>
 
-	{include file="backend/module/list.tpl" type="needUpdate"}
-	{include file="backend/module/list.tpl" type="enabled"}
-	{include file="backend/module/list.tpl" type="notEnabled"}
-	{include file="backend/module/list.tpl" type="notInstalled"}
+	[[ partial('backend/module/list.tpl', ['type': "needUpdate"]) ]]
+	[[ partial('backend/module/list.tpl', ['type': "enabled"]) ]]
+	[[ partial('backend/module/list.tpl', ['type': "notEnabled"]) ]]
+	[[ partial('backend/module/list.tpl', ['type': "notInstalled"]) ]]
 	<div class="clear"></div>
 </ul>
 <div class="clear"></div>

@@ -5,7 +5,7 @@
 
 		[[ checkbox('isEnabled', tip('_is_enabled _tip_is_enabled_condition')) ]]
 
-		{include file="backend/discount/conditionForm.tpl" id="userInfo_`$condition.ID`_form"}
+		[[ partial('backend/discount/conditionForm.tpl', ['id': "userInfo_`$condition.ID`_form"]) ]]
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>

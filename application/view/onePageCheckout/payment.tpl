@@ -1,6 +1,6 @@
 <div class="accordion-group">
 	<div class="stepTitle accordion-heading">
-		{include file="onePageCheckout/block/title.tpl" title="_payment_info"}
+		[[ partial('onePageCheckout/block/title.tpl', ['title': "_payment_info"]) ]]
 	</div>
 
 	<div class="accordion-body">
@@ -74,7 +74,7 @@
 			<div id="paymentMethodForms" style="display: none;">
 				{% if 'CC_ENABLE'|config %}
 					<div id="payForm_cc">
-						{include file="checkout/block/ccForm.tpl" controller="onePageCheckout"}
+						[[ partial('checkout/block/ccForm.tpl', ['controller': "onePageCheckout"]) ]]
 					</div>
 				{% endif %}
 
@@ -86,8 +86,8 @@
 									<h2>{"OFFLINE_NAME_`$key`"|config}</h2>
 								{/header}
 								{content}
-									{include file="checkout/offlineMethodInfo.tpl" method=$key}
-									{include file="block/eav/fields.tpl" fieldList=$offlineVars[$method].specFieldList}
+									[[ partial('checkout/offlineMethodInfo.tpl', ['method': $key]) ]]
+									[[ partial('block/eav/fields.tpl', ['fieldList': $offlineVars[$method].specFieldList]) ]]
 								{/content}
 							{/sect}
 						{/form}

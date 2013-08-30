@@ -1,1 +1,1 @@
-{include file="checkout/completeOverview.tpl" productsInSeparateLine=true hideSku=true hideAddress=true}
+[[ partial('checkout/completeOverview.tpl', ['productsInSeparateLine': true, 'hideSku': true, 'hideAddress': true]) ]]

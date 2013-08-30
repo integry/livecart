@@ -31,7 +31,7 @@
 			[[ partial("order/block/taxes.tpl") ]]
 		{% endif %}
 
-		{include file="order/block/total.tpl" extraColspanSize=$extraColspanSize}
+		[[ partial('order/block/total.tpl', ['extraColspanSize': $extraColspanSize]) ]]
 
 		[[ partial("order/block/customFields.tpl") ]]
 		[[ partial("order/block/coupons.tpl") ]]

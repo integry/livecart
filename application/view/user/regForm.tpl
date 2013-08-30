@@ -8,13 +8,14 @@
 
 	[[ textfld('email', '_your_email') ]]
 
-	{include file="user/block/passwordFields.tpl" required=true}
+	[[ partial("user/block/passwordFields.tpl", ['required': true]) ]]
+	[[ partial('user/block/passwordFields.tpl', ['required': true]) ]]
 
-	{include file="block/eav/fields.tpl" item=$user filter="isDisplayed"}
+	[[ partial('block/eav/fields.tpl', ['item': $user, 'filter': "isDisplayed"]) ]]
 
 	{block FORM-SUBMIT-REGISTER}
 
-	{include file="block/submit.tpl" caption="_complete_reg" cancelHref=req('return')}
+	[[ partial('block/submit.tpl', ['caption': "_complete_reg", 'cancelHref': req('return')]) ]]
 
 	<input type="hidden" name="return" value="{req('return')|escape}" />
 

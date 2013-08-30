@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {% block title %}{t _login}{{% endblock %}
-{include file="layout/frontend/layout.tpl" hideLeft=true}
+[[ partial('layout/frontend/layout.tpl', ['hideLeft': true]) ]]
 {% block content %}
 
 	<div class="returningCustomer">
@@ -18,7 +18,7 @@
 		</p>
 
 		{capture assign="return"}{link controller="user"}{/capture}
-		{include file="user/loginForm.tpl" return=$return}
+		[[ partial('user/loginForm.tpl', ['return': $return]) ]]
 	</div>
 
 	<div class="newCustomer">

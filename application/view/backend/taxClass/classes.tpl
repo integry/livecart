@@ -7,7 +7,7 @@
 
 <fieldset id="class_new_form" style="display: none;" class="addForm">
 	<legend>{t _add_new_class|capitalize}</legend>
-	{include file="backend/taxClass/class.tpl" class=$newClass classForm=$newClassForm}
+	[[ partial('backend/taxClass/class.tpl', ['class': $newClass, 'classForm': $newClassForm]) ]]
 </fieldset>
 
 <ul class="activeList activeList_add_delete activeList_add_sort activeList_add_edit class_classesList" id="class_classesList" >

@@ -3,9 +3,9 @@
 {% endif %}
 
 {% if 'GRID' == $layout %}
-	{include file="category/productGrid.tpl" products=$products}
+	[[ partial('category/productGrid.tpl', ['products': $products]) ]]
 {% elseif $layout == 'TABLE' %}
-	{include file="category/productTable.tpl" products=$products}
+	[[ partial('category/productTable.tpl', ['products': $products]) ]]
 {% else %}
-	{include file="category/productList.tpl" products=$products}
+	[[ partial('category/productList.tpl', ['products': $products]) ]]
 {% endif %}

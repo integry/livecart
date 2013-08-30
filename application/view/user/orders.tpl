@@ -2,7 +2,7 @@
 
 {% block title %}{t _your_orders}{{% endblock %}
 [[ partial("user/layout.tpl") ]]
-{include file="user/userMenu.tpl" current="orderMenu"}
+[[ partial('user/userMenu.tpl', ['current': "orderMenu"]) ]]
 {% block content %}
 
 	<div class="resultStats">
@@ -18,7 +18,7 @@
 	</div>
 
 	{foreach from=$orders item="order"}
-		{include file="user/orderEntry.tpl" order=$order}
+		[[ partial('user/orderEntry.tpl', ['order': $order]) ]]
 	{/foreach}
 
 	{% if $count > $perPage %}

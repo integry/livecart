@@ -6,7 +6,7 @@
 
 	<div class="checkoutHeader">
 		{% if $cart.cartItems && !$isOnePageCheckout %}
-			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
+			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressCart", 'order': cart]) ]]
 		{% endif %}
 	</div>
 

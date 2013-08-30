@@ -30,11 +30,7 @@
 			{/foreach}
 		</ul>
 
-		{include file="backend/quickSearch/paginate.tpl"
-			from=$result[$className].from
-			to=$result[$className].to
-			count=$result[$className].count
-			class=$className}
+		[[ partial('backend/quickSearch/paginate.tpl', ['from': $result[$className].from, 'to': $result[$className].to, 'count': $result[$className].count, 'class': $className]) ]]
 		</div>
 
 		{% if $fullSearch %}

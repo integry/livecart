@@ -19,7 +19,7 @@
 		</ul>
 		<fieldset  class="addForm newUserForm">
 			<legend>{t _add_new_user|capitalize}</legend>
-			{include file="backend/user/info.tpl" someUser=$newUser}
+			[[ partial('backend/user/info.tpl', ['someUser': $newUser]) ]]
 		</fieldset>
 	</div>
 

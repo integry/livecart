@@ -1,1 +1,1 @@
-{include file="@order/index.tpl" rightSide=true}
+[[ partial('@order/index.tpl', ['rightSide': true]) ]]

@@ -14,7 +14,7 @@
 
 	<form action="{link controller=checkout action=payExpressComplete}" method="post" id="expressComplete" class="form-horizontal">
 
-		{include file="block/submit.tpl" caption="_complete_now"}
+		[[ partial('block/submit.tpl', ['caption': "_complete_now"]) ]]
 
 	</form>
 

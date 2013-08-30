@@ -5,7 +5,7 @@
 		<ul class="compactProductList">
 			{foreach from=$bundleData item=item}
 				<li>
-					{include file="block/box/menuProductListItem.tpl" product=$item.RelatedProduct productInfoTemplate="product/block/bundleCount.tpl"}
+					[[ partial('block/box/menuProductListItem.tpl', ['product': $item.RelatedProduct, 'productInfoTemplate': "product/block/bundleCount.tpl"]) ]]
 				</li>
 			{/foreach}
 		</ul>

@@ -1,7 +1,7 @@
 {assign var=actionPrefix value=$prefix|@ucfirst}
 {% if !$addresses %}
 	<div id="[[prefix]]AddressForm">
-		{include file="user/addressForm.tpl" prefix="`$prefix`_" states=$states}
+		[[ partial('user/addressForm.tpl', ['prefix': "`$prefix`_", 'states': $states]) ]]
 	</div>
 {% else %}
 	<table class="addressSelector">
@@ -24,7 +24,7 @@
 				<label for="[[prefix]]_new" class="radio">{translate text="_new_`$prefix`_address"}</label>
 				<div class="address">
 					<div class="addressBlock">
-						{include file="user/addressForm.tpl" prefix="`$prefix`_" states=$states}
+						[[ partial('user/addressForm.tpl', ['prefix': "`$prefix`_", 'states': $states]) ]]
 					</div>
 				</div>
 			</td>

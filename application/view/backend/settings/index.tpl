@@ -10,7 +10,7 @@
 
 <div id="settingsContainer" ng-controller="SettingsController" ng-init="setTree({$categories|escape});">
 	<div class="treeContainer">
-		{include file="backend/quickSearch/form.tpl" limit=10 hint=_hint_settings_search formid="SettingsSearch" classNames="SearchableItem,-SearchableTemplate"}
+		[[ partial('backend/quickSearch/form.tpl', ['limit': 10, 'hint': _hint_settings_search, 'formid': "SettingsSearch", 'classNames': "SearchableItem,-SearchableTemplate"]) ]]
 
 		[[ partial("block/backend/tree.tpl") ]]
 	</div>

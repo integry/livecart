@@ -27,7 +27,7 @@
 		[[address.countryName]]
 	</p>
 	<p>
-		{include file="order/addressFieldValues.tpl" showLabels=false}
+		[[ partial('order/addressFieldValues.tpl', ['showLabels': false]) ]]
 	</p>
 {% endif %}
 {/function}
@@ -84,7 +84,7 @@
 					<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				{% endif %}
 
-				{include file="user/shipmentEntry.tpl" sku=true showTaxes=true}
+				[[ partial('user/shipmentEntry.tpl', ['sku': true, 'showTaxes': true]) ]]
 
 			{% endif %}
 

@@ -6,7 +6,7 @@
 		<legend>{t _edit_options}</legend>
 
 		{foreach from=$options[$item.ID] item=option}
-			{include file="backend/orderedItem/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
+			[[ partial('backend/orderedItem/optionItem.tpl', ['selectedChoice': $item.options[$option.ID]]) ]]
 		{/foreach}
 
 		<input type="hidden" name="id" value="[[item.ID]]" />

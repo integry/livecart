@@ -10,9 +10,9 @@
 
 		[[ textfld('email', '_email') ]]
 
-		[[ pswfld('password', '_password') ]]
+		[[ pwdfld('password', '_password') ]]
 
-		[[ pswfld('confirmPassword', '_confirm_password') ]]
+		[[ pwdfld('confirmPassword', '_confirm_password') ]]
 
 		<div class="clear"></div>
 		<input type="submit" value="Continue installation" />

@@ -16,4 +16,4 @@
 
 <p><label class="addressPhone">[[address.phone]]</label></p>
 
-{include file="backend/eav/view.tpl" item=$address format="row"}
+[[ partial('backend/eav/view.tpl', ['item': $address, 'format': "row"]) ]]

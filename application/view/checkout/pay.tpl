@@ -5,7 +5,7 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{include file="checkout/checkoutProgress.tpl" progress="progressPayment"}
+		[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressPayment"]) ]]
 	</div>
 
 	<div id="payTotal">
@@ -20,7 +20,7 @@
 		</div>
 	{% endif %}
 
-	{include file="checkout/completeOverview.tpl" productsInSeparateLine=true}
+	[[ partial('checkout/completeOverview.tpl', ['productsInSeparateLine': true]) ]]
 
 	<div class="paymentMethods">
 		[[ partial("checkout/paymentMethods.tpl") ]]

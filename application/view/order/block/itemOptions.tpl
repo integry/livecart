@@ -1,7 +1,7 @@
 {% if $options[$item.ID] || $moreOptions[$item.ID] %}
 	<div class="productOptions">
 		{foreach from=$options[$item.ID] item=option}
-			{include file="product/optionItem.tpl" selectedChoice=$item.options[$option.ID]}
+			[[ partial('product/optionItem.tpl', ['selectedChoice': $item.options[$option.ID]]) ]]
 			{% if 3 == $option.type %}
 				<a href="{link controller=order action=downloadOptionFile id=$item.ID query="option=`$option.ID`"}">{$item.options[$option.ID].fileName}</a>
 			{% endif %}

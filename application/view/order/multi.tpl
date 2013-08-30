@@ -6,7 +6,7 @@
 
 	<div class="checkoutHeader">
 		{% if $cart.cartItems %}
-			{include file="checkout/checkoutProgress.tpl" progress="progressCart" order=cart}
+			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressCart", 'order': cart]) ]]
 		{% endif %}
 	</div>
 
@@ -17,7 +17,7 @@
 	{% else %}
 
 	{% if $cart.cartItems %}
-		{include file="order/cartItems.tpl" multi=true}
+		[[ partial('order/cartItems.tpl', ['multi': true]) ]]
 	{% endif %}
 
 	{% if $cart.wishListItems && 'ENABLE_WISHLISTS'|config %}

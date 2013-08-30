@@ -27,14 +27,14 @@
 {% endif %}{*html*}
 {% if $html %}
 <table border="1">
-{include file="email/blockOrderItems.tpl" noTable=true}
+[[ partial('email/blockOrderItems.tpl', ['noTable': true]) ]]
 
 {% if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config %}
 <tr><td colspan="{% if $SHOW_SKU %}4{% else %}3{% endif %}">{t _subtotal}</td><td align="right">[[order.formatted_itemSubtotalWithoutTax]]</td></tr>
 {% endif %}
 {% if $order.formatted_shippingSubtotal %}
 	{% if $order.shipments|@count == 1 %}
-		{include file="email/blockShippingCost.tpl" shipment=$order.shipments.0}
+		[[ partial('email/blockShippingCost.tpl', ['shipment': $order.shipments.0]) ]]
 	{% else %}
 		<tr><td colspan="{% if $SHOW_SKU %}4{% else %}3{% endif %}">{t _shipping}</td><td align="right">[[order.formatted_shippingSubtotal]]</td></tr>
 	{% endif %}

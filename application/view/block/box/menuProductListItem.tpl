@@ -10,7 +10,7 @@
 
 <div class="productInfo">
 	{% if $productInfoTemplate %}
-		{include file=$productInfoTemplate}
+		[[ partial(productInfoTemplate) ]]
 	{% endif %}
 	<a href="{productUrl product=$product}" class="productName">[[product.name_lang]]</a>
 </div>

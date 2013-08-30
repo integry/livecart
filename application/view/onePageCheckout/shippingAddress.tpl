@@ -1,6 +1,6 @@
 <div class="accordion-group">
 	<div class="stepTitle accordion-heading">
-		{include file="onePageCheckout/block/title.tpl" title="_shipping_address"}
+		[[ partial('onePageCheckout/block/title.tpl', ['title': "_shipping_address"]) ]]
 	</div>
 
 	<div class="accordion-body">
@@ -15,7 +15,7 @@
 					</div>
 				{% endif %}
 
-				{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shippingStates}
+				[[ partial('checkout/block/selectAddress.tpl', ['addresses': $shippingAddresses, 'prefix': "shipping", 'states': $shippingStates]) ]]
 
 				[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 			{/form}

@@ -18,7 +18,7 @@
 
 	{block FORM-SUBMIT-CONTACT}
 
-	{include file="block/submit.tpl" caption="_form_submit"}
+	[[ partial('block/submit.tpl', ['caption': "_form_submit"]) ]]
 
 {/form}
 

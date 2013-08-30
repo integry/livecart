@@ -4,7 +4,7 @@
 		{selectfield options=$existingUserAddressOptions id="shipmentAddress_`$shipmentID`_existingAddress_select" name="existingUserAddress" class="existingUserAddress"}
 	</p>
 
-	{include file="backend/user/address_edit.tpl" idPrefix="shipmentAddress_`$shipmentID`"}
+	[[ partial('backend/user/address_edit.tpl', ['idPrefix': "shipmentAddress_`$shipmentID`"]) ]]
 	<fieldset class="controls" style="width: 400px;">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" name="save" value="{tn _save}" />

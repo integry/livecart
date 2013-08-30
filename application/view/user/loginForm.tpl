@@ -16,7 +16,7 @@
 		</div>
 	{/input}
 
-	{include file="block/submit.tpl" caption="_login" cancelRoute=$return}
+	[[ partial('block/submit.tpl', ['caption': "_login", 'cancelRoute': $return]) ]]
 
 	<input type="hidden" name="return" value="[[return]]" />
 

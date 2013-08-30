@@ -12,7 +12,7 @@
 			{assign var=index value=$index+1}
 
 			<td style="width: [[width]]%; page-break-inside: avoid;">
-				{include file="backend/customerOrder/block/shippingLabel.tpl" address=$shipment.ShippingAddress}
+				[[ partial('backend/customerOrder/block/shippingLabel.tpl', ['address': $shipment.ShippingAddress]) ]]
 			</td>
 
 			{% if $perRow == $index %}

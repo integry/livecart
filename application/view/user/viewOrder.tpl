@@ -2,7 +2,7 @@
 
 {% block title %}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
 [[ partial("user/layout.tpl") ]]
-{include file="user/userMenu.tpl" current="ordersMenu"}
+[[ partial('user/userMenu.tpl', ['current': "ordersMenu"]) ]]
 {% block content %}
 
 	<label class="title">{t _order_id}:</label>
@@ -18,7 +18,7 @@
 	<div class="clear"></div>
 
 	<label class="title">{t _order_status}:</label>
-	<label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
+	<label class="text">[[ partial('user/orderStatus.tpl', ['order': $order]) ]]</label>
 	<div class="clear"></div>
 
 	{% if $order.isRecurring %}
@@ -83,12 +83,12 @@
 			{% elseif $smarty.foreach.shipments.total > 1 %}
 				<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				<p>
-					{t _status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
+					{t _status}: [[ partial('user/shipmentStatus.tpl', ['shipment': $shipment]) ]]
 				</p>
 			{% else %}
 				<h2>{t _ordered_products}</h2>
 			{% endif %}
-			{include file="user/shipmentEntry.tpl" downloadLinks=true}
+			[[ partial('user/shipmentEntry.tpl', ['downloadLinks': true]) ]]
 
 		{% endif %}
 	{/foreach}
@@ -117,7 +117,7 @@
 				[[address.countryName]]
 			</p>
 			<p>
-				{include file="order/addressFieldValues.tpl" showLabels=false}
+				[[ partial('order/addressFieldValues.tpl', ['showLabels': false]) ]]
 			</p>
 		{% endif %}
 	{/function}
@@ -153,14 +153,7 @@
 
 	{% if $order.isRecurring && $orders %}
 		<h2>{t _invoices}</h2>
-		{include file="user/invoicesTable.tpl"
-			itemList=$orders
-			paginateAction="viewOrder"
-			textDisplaying=_displaying_invoices
-			textFound=_invoices_found
-			id=$order.ID
-			query='page=_000_'
-		}
+		[[ partial('user/invoicesTable.tpl', ['itemList': $orders, 'paginateAction': "viewOrder", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': $order.ID, 'query': 'page=_000_']) ]]
 	{% endif %}
 
 	<h2 id="m_s_g">{t _support}</h2>
@@ -169,14 +162,14 @@
 	{% if $notes %}
 	   <ul class="notes">
 		   {foreach from=$notes item=note}
-			   {include file="user/orderNote.tpl" note=$note}
+			   [[ partial('user/orderNote.tpl', ['note': $note]) ]]
 		   {/foreach}
 	   </ul>
 	{% endif %}
 	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm class="form-horizontal"}
 		[[ textareafld('text', '_enter_question') ]]
 
-		{include file="block/submit.tpl" caption="_submit_response"}
+		[[ partial('block/submit.tpl', ['caption': "_submit_response"]) ]]
 	{/form}
 
 {% endblock %}

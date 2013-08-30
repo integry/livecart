@@ -27,7 +27,7 @@
 
 		<p>
 			<label>{t _quantity}</label>
-			{include file="product/block/quantity.tpl" field="product_`$product.ID`_count" quantity=$quantities[$product.ID]}
+			[[ partial('product/block/quantity.tpl', ['field': "product_`$product.ID`_count", 'quantity': $quantities[$product.ID]]) ]]
 		</p>
 
 		{assign var="optionPrefix" value="product_`$product.ID`_"}
@@ -36,7 +36,7 @@
 	{/foreach}
 
 	<div id="productToCart" class="cartLinks">
-		{include file="block/submit.tpl" caption="_add_to_cart"}
+		[[ partial('block/submit.tpl', ['caption': "_add_to_cart"]) ]]
 		{hidden name="return" value=$catRoute}
 	</div>
 

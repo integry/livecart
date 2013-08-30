@@ -21,7 +21,7 @@
 	{% endif %}
 	<ul>
 		<li><a href="[[manufacturer.url]]">[[manufacturer.name]]</a>
-		{include file="block/count.tpl" count=$counts[$manufacturer.ID]}
+		[[ partial('block/count.tpl', ['count': $counts[$manufacturer.ID]]) ]]
 	</ul>
 	{assign var=lastLetter value=$manufacturer.name.0|@capitalize}
 {/foreach}

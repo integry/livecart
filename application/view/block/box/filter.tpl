@@ -41,12 +41,12 @@
 		</div>
 
 	{% endif %}
-		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$manGroup title=_by_brand allLink=$allManufacturers allTitle=_show_all_brands}
-		{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$priceGroup title=_by_price}
+		[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': $manGroup, 'title': _by_brand, 'allLink': $allManufacturers, 'allTitle': _show_all_brands]) ]]
+		[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': $priceGroup, 'title': _by_price]) ]]
 
 		{foreach from=$groups item="group"}
 			{% if $group.displayLocation == 0 %}
-				{include file=$FILTER_STYLE_TEMPLATE sectionFilters=$group title=$group.name_lang allLink=$group.more allTitle=_show_all}
+				[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': $group, 'title': $group.name_lang, 'allLink': $group.more, 'allTitle': _show_all]) ]]
 			{% endif %}
 		{/foreach}
 

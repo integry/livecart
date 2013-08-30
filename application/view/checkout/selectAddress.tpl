@@ -8,9 +8,9 @@
 
 	<div class="checkoutHeader">
 		{% if 'shipping' == $step %}
-			{include file="checkout/checkoutProgress.tpl" progress="progressShippingAddress"}
+			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressShippingAddress"]) ]]
 		{% else %}
-			{include file="checkout/checkoutProgress.tpl" progress="progressAddress"}
+			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressAddress"]) ]]
 		{% endif %}
 	</div>
 
@@ -25,7 +25,7 @@
 				<h2 id="billingAddress">{t _billing_address}</h2>
 			{% endif %}
 
-			{include file="checkout/block/selectAddress.tpl" addresses=$billingAddresses prefix="billing" states=$billing_states}
+			[[ partial('checkout/block/selectAddress.tpl', ['addresses': $billingAddresses, 'prefix': "billing", 'states': $billing_states]) ]]
 
 			{% if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step %}
 				<p>
@@ -47,7 +47,7 @@
 
 			<h2 id="shippingAddress">{t _shipping_address}</h2>
 
-			{include file="checkout/block/selectAddress.tpl" addresses=$shippingAddresses prefix="shipping" states=$shipping_states}
+			[[ partial('checkout/block/selectAddress.tpl', ['addresses': $shippingAddresses, 'prefix': "shipping", 'states': $shipping_states]) ]]
 
 		</div>
 
@@ -70,7 +70,7 @@
 	</script>
 	{/literal}
 
-	{include file="block/submit.tpl" caption="_continue"}
+	[[ partial('block/submit.tpl', ['caption': "_continue"]) ]]
 
 	<input type="hidden" name="step" value="[[step]]" />
 

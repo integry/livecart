@@ -3,7 +3,7 @@
 
 	[[ selectfld('existingUserAddress', '_use_existing_address', existingUserAddressOptions) ]]
 
-	{include file="backend/user/address_edit.tpl" idPrefix=$type states=$states}
+	[[ partial('backend/user/address_edit.tpl', ['idPrefix': $type, 'states': $states]) ]]
 
 	<fieldset class="controls">
 		<span style="display: none;" class="progressIndicator"></span>
@@ -15,7 +15,7 @@
 </fieldset>
 
 <fieldset id="[[type]]_view" class="container orderAddress_view">
-	{include file="backend/user/address_view.tpl" idPrefix=$type address=$address}
+	[[ partial('backend/user/address_view.tpl', ['idPrefix': $type, 'address': $address]) ]]
 </fieldset>
 
 <ul class="menu orderAddress_showEdit">

@@ -16,5 +16,5 @@
 {% if $address.stateName %}[[address.stateName]]{% if $address.postalCode %}, {% endif %}{% endif %}[[address.postalCode]]
 {% if $address.countryName %}
 [[address.countryName]]
-{% endif %}{include file="order/addressFieldValues.tpl" showLabels=false}
+{% endif %}[[ partial('order/addressFieldValues.tpl', ['showLabels': false]) ]]
 {% endif %}

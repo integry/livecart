@@ -13,7 +13,7 @@
 		</div>
 
 		{% if $fields.STATE %}
-			{include file="user/addressFormState.tpl" states=$states notRequired=true prefix="estimate_"}
+			[[ partial('user/addressFormState.tpl', ['states': $states, 'notRequired': true, 'prefix': "estimate_"]) ]]
 		{% endif %}
 
 		{% if $fields.POSTALCODE %}

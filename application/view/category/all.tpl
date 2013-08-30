@@ -18,7 +18,7 @@
 
 			<ul>
 				<li><a href="{categoryUrl data=$category}">[[category.name]]</a>
-				{include file="block/count.tpl" count=$category.count}
+				[[ partial('block/count.tpl', ['count': $category.count]) ]]
 			</ul>
 			{assign var=index value=$index+1}
 		{/foreach}

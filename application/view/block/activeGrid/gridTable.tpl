@@ -7,13 +7,13 @@
 		<div class="col col-lg-8">
 			{% if $addMenu %}
 				<div class="menu fg-buttonset fg-buttonset-single ui-helper-clearfix">
-					{include file=$addMenu}
+					[[ partial(addMenu) ]]
 				</div>
 			{% endif %}
 
 			{% if $count %}
 				<span class="gridCount">
-					{include file="custom:`$count`"}
+					[[ partial(count) ]]
 				</span>
 			{% endif %}
 
@@ -229,7 +229,7 @@
 <div class="ui-state-default ui-corner-bottom" >
 	<ul class="menu" style="float: left;">
 		{% if $massAction %}
-			{include file="custom:`$massAction`"}
+			[[ partial(massAction) ]]
 		{% endif %}
 	</ul>
 

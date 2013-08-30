@@ -30,7 +30,7 @@
 
 		[[ textfld('dbUser', '_database_user') ]]
 
-		[[ pswfld('dbPass', '_database_pass') ]]
+		[[ pwdfld('dbPass', '_database_pass') ]]
 
 		[[ textfld('filePath', '_file_path') ]]
 	</fieldset>
