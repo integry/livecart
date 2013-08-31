@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _password_sent}{{% endblock %}
+{% title %}{t _password_sent}{% endblock %}
 
 
 {% block content %}

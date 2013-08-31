@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{$results.meta.name|capitalize} &gt;&gt; "[[query]]"{{% endblock %}
+{% block title %}{$results.meta.name|capitalize} &gt;&gt; "[[query]]"{% endblock %}
 
 
 {% block content %}

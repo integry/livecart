@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _your_files}{{% endblock %}
+{% title %}{t _your_files}{% endblock %}
 
 [[ partial("user/layout.tpl") ]]
 

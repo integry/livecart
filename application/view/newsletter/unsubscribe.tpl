@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _unsubscribe}{{% endblock %}
+{% title %}{t _unsubscribe}{% endblock %}
 
 {% block content %}
 

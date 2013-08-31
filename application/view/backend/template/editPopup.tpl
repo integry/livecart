@@ -1,4 +1,4 @@
-{% block title %}{t _edit_template}: [[fileName]]{{% endblock %}
+{% block title %}{t _edit_template}: [[fileName]]{% endblock %}
 {includeCss file="backend/Template.css"}
 {includeJs file="backend/Template.js"}
 {includeJs file="library/form/ActiveForm.js"}

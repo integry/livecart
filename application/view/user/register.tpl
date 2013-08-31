@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _user_registration}{% endblock %}
+{% title %}{t _user_registration}{% endblock %}
 
 {% block content %}
 

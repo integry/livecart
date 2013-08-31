@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _personal_info}{{% endblock %}
+{% title %}{t _personal_info}{% endblock %}
 
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "personalMenu"]) ]]

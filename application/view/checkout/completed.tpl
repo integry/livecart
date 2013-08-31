@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _order_completed}{{% endblock %}
+{% title %}{t _order_completed}{% endblock %}
 [[ partial('layout/frontend/layout.tpl', ['hideLeft': true]) ]]
 {% block content %}
 

@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}[[news.title_lang]]{{% endblock %}
+{% block title %}[[news.title_lang]]{% endblock %}
 
 {% block content %}
 

@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _already_subscribed}{{% endblock %}
+{% title %}{t _already_subscribed}{% endblock %}
 
 {% block content %}
 

@@ -3,7 +3,7 @@
 {assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
 {% set metaKeywords = $product.keywords %}
 {canonical}{productUrl product=$product}{/canonical}
-{% block title %}{$product.pageTitle_lang|default:$product.name_lang}{{% endblock %}
+{% block title %}{$product.pageTitle_lang|default:$product.name_lang}{% endblock %}
 
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 

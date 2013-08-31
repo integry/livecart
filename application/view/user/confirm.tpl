@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _reg_confirm}{{% endblock %}
+{% title %}{t _reg_confirm}{% endblock %}
 
 {% block content %}
 

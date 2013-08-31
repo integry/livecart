@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _select_shipping_addresses}{{% endblock %}
+{% title %}{t _select_shipping_addresses}{% endblock %}
 [[ partial("checkout/layout.tpl") ]]
 {% block content %}
 

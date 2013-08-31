@@ -6,7 +6,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="backend/DatabaseImport.js"}
 
-{% block title %}{t _import_database}{{% endblock %}
+{% title %}{t _import_database}{% endblock %}
 
 [[ partial("layout/backend/header.tpl") ]]
 

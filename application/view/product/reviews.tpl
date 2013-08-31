@@ -5,7 +5,7 @@
 
 {% set metaDescription = $product.shortDescription_lang %}
 {% set metaKeywords = $product.keywords_lang %}
-{% block title %}[[product.name_lang]]{{% endblock %}
+{% block title %}[[product.name_lang]]{% endblock %}
 
 <div class="reviewIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 

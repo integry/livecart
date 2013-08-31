@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _change_pass}{{% endblock %}
+{% title %}{t _change_pass}{% endblock %}
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "passwordMenu"]) ]]
 {% block content %}

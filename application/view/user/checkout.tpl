@@ -3,9 +3,9 @@
 {assign var="fields" value='USER_FIELDS'|config}
 
 {% if req('action') == 'checkout' %}
-	{% block title %}{t _order_checkout}{{% endblock %}
+	{% title %}{t _order_checkout}{% endblock %}
 {% else %}
-	{% block title %}{t _user_registration}{{% endblock %}
+	{% title %}{t _user_registration}{% endblock %}
 {% endif %}
 
 [[ partial("checkout/layout.tpl") ]]

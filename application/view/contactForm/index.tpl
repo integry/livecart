@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _contact_us}{{% endblock %}
+{% title %}{t _contact_us}{% endblock %}
 
 {% block content %}
 

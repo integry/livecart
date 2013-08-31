@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _invoice} [[order.invoiceNumber]]{{% endblock %}
+{% block title %}{t _invoice} [[order.invoiceNumber]]{% endblock %}
 <div class="userOrderInvoice">
 
 {function name="address"}

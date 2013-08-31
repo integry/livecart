@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _your_orders}{{% endblock %}
+{% title %}{t _your_orders}{% endblock %}
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "orderMenu"]) ]]
 {% block content %}

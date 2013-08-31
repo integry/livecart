@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
 {includeJs file="frontend/OnePageCheckout.js"}
-{% block title %}{t _checkout}{{% endblock %}
+{% title %}{t _checkout}{% endblock %}
 
 <noscript>
 	<meta http-equiv="refresh" content="0;[[ url("onePageCheckout/fallback") ]]" />

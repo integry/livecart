@@ -2,8 +2,8 @@
 
 {block BREADCRUMB}
 
-{% if content('title') and !hideTitle %}
-	<h1>[[ content('title') ]]</h1>
+{% if title() and empty(hideTitle) %}
+	<h1>[[ title() ]]</h1>
 {% endif %}
 
 [[ partial("block/message.tpl") ]]

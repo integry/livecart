@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _manage_addresses}{{% endblock %}
+{% title %}{t _manage_addresses}{% endblock %}
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "addressMenu"]) ]]
 {% block content %}

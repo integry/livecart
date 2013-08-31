@@ -1,4 +1,4 @@
-{% block title %}{$category.pageTitle_lang|default:$category.name_lang}{{% endblock %}
+{% block title %}{$category.pageTitle_lang|default:$category.name_lang}{% endblock %}
 {assign var="metaDescription" value=$category.description_lang|@strip_tags}
 {% set metaKeywords = $category.keywords_lang %}
 

@@ -24,6 +24,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return '$this->setOrReturnGlobal(' . $resolvedArgs . ')';
 			});
 
+			$this->_compiler->addFunction('title', function($resolvedArgs, $exprArgs) {
+				return $resolvedArgs . ($resolvedArgs ? ' . ' : '') . ' $this->setOrReturnGlobal(\'pageTitle\'' . ($resolvedArgs ? ', ' : '') . $resolvedArgs . ')';
+			});
+
 			$this->_compiler->addFunction('t', function($resolvedArgs, $exprArgs) {
 				return '$GLOBALS[\'di\']->get(\'application\')->translate(' . $resolvedArgs . ')';
 			});
@@ -176,8 +180,8 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 	private function getThemePaths($theme, $includedThemes = array())
 	{
 		$paths = $inheritConf = array();
-		$paths[] = $this->config->getPath('storage/customize/view/theme.' . $theme . '.');
-		$paths[] = $this->config->getPath('application/view/theme.' . $theme . '.');
+		$paths[] = $this->config->getPath('storage/customize/view/theme/' . $theme . '.');
+		$paths[] = $this->config->getPath('application/view/theme/' . $theme . '.');
 
 		$inheritConf[] = $this->config->getPath('storage/customize/view/theme/' . $theme . '/inherit') . '.php';
 		$inheritConf[] = $this->config->getPath('application/view/theme/' . $theme . '/inherit') . '.php';
@@ -225,8 +229,13 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 		$source = preg_replace('/{t ([^\|]+?)}/', '[[t("$1")]]', $source);
 		$source = preg_replace('/{tn ([^\|]+?)}/', '[[t("$1", true)]]', $source);
 
+		$source = preg_replace('/\{\% title \%\}(.*)\{\% endblock \%\}/', '{% block title %}{{ title(\'$1\') }}{% endblock %}', $source);
+
 		//$source = '<' . '?php extract($this->getGlobals()); ?' . '>' . $source;
 
-		return parent::_compileSource($source, $something);
+		$compiled = parent::_compileSource($source, $something);
+		//var_dump($compiled);exit;
+
+		return $compiled;
 	}
 }

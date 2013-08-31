@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
+{% block title %}{t _view_order} [[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){% endblock %}
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "ordersMenu"]) ]]
 {% block content %}

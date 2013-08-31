@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _your_basket}{{% endblock %}
+{% title %}{t _your_basket}{% endblock %}
 [[ partial("checkout/layout.tpl") ]]
 {% block content %}
 

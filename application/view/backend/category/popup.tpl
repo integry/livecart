@@ -4,7 +4,7 @@
 {includeCss file="backend/Category.css"}
 [[ partial("backend/category/loadJsTree.tpl") ]]
 
-{% block title %}{t _select_category}{{% endblock %}
+{% title %}{t _select_category}{% endblock %}
 
 [[ partial("layout/backend/meta.tpl") ]]
 

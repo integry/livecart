@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _all_categories}{{% endblock %}
+{% title %}{t _all_categories}{% endblock %}
 
 {% block content %}
 

@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _manufacturers}{{% endblock %}
+{% title %}{t _manufacturers}{% endblock %}
 
 {% block content %}
 

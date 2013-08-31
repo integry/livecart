@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _confirming_email}{{% endblock %}
+{% title %}{t _confirming_email}{% endblock %}
 
 {% block content %}
 

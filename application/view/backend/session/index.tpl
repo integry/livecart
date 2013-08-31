@@ -1,5 +1,5 @@
 {includeCss file="backend/Session.css"}
-{% block title %}[[ branding({t _backend_login}) ]]{{% endblock %}
+{% block title %}[[ branding({t _backend_login}) ]]{% endblock %}
 
 [[ partial("layout/backend/meta.tpl") ]]
 

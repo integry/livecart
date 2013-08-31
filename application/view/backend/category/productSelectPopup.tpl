@@ -14,7 +14,7 @@
 
 [[ partial("backend/category/loadJsTree.tpl") ]]
 
-{% block title %}{t _select_product}{{% endblock %}
+{% title %}{t _select_product}{% endblock %}
 
 [[ partial("layout/backend/meta.tpl") ]]
 

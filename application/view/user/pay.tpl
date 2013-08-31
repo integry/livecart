@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _pay} #[[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){{% endblock %}
+{% block title %}{t _pay} #[[order.invoiceNumber]] ([[order.formatted_dateCompleted.date_long]]){% endblock %}
 [[ partial("checkout/layout.tpl") ]]
 {% block content %}
 

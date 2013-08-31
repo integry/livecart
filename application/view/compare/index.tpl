@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _compare_products}{{% endblock %}
+{% title %}{t _compare_products}{% endblock %}
 [[ partial("layout/frontend/header.tpl") ]]
 {% block content %}
 

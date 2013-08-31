@@ -16,7 +16,7 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
 
-{% block title %}{t _select_product}{{% endblock %}
+{% title %}{t _select_product}{% endblock %}
 
 [[ partial("layout/backend/meta.tpl") ]]
 

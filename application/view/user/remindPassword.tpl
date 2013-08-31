@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _remind_pass}{{% endblock %}
+{% title %}{t _remind_pass}{% endblock %}
 
 {% block content %}
 

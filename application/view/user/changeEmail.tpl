@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _change_email}{{% endblock %}
+{% title %}{t _change_email}{% endblock %}
 [[ partial("user/layout.tpl") ]]
 [[ partial('user/userMenu.tpl', ['current': "emailMenu"]) ]]
 {% block content %}
