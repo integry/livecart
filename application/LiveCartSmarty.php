@@ -188,7 +188,7 @@ class LiveCartSmarty extends Smarty
 			$msg = $check->getViolationMsg();
 			$params = $check->getParamList();
 
-			if ($check instanceof IsNotEmptyCheck)
+			if ($check instanceof PresenceOf)
 			{
 				$validation[] = array('ng-required', $msg, true);
 			}
@@ -230,7 +230,7 @@ class LiveCartSmarty extends Smarty
         {
         	if (!function_exists('smarty_custom_get_path'))
         	{
-        		include $this->config->getPath(application/helper/smarty/') . 'resource.custom.php';
+        		include $this->config->getPath('application/helper/smarty/') . 'resource.custom.php';
 			}
 
         	$resource_name = smarty_custom_get_path(substr($resource_name, 7), $this);

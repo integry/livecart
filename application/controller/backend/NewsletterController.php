@@ -59,7 +59,7 @@ class NewsletterController extends ActiveGridController
 
         usort($groupsArray, array($this, 'sortGroups'));
 		$this->set('groupsArray', $groupsArray);
-		
+
 		$newsletterArray = $newsletter->toArray();
 		$text = strlen($newsletterArray['text']);
 		$html =strlen($newsletterArray['html']);
@@ -101,7 +101,7 @@ class NewsletterController extends ActiveGridController
 		{
 			$newsletter = new NewsletterMessage;
 		}
-		
+
 		$format = $this->request->get('newsletter_'.$id.'_format');
 		if($format == self::FORMAT_TEXT)
 		{
@@ -129,7 +129,7 @@ class NewsletterController extends ActiveGridController
 		$response = new JSONResponse(null);
 
 		$data = $this->getRecipientData($this->request->toArray());
-	
+
 		$total = count($data);
 
 		$subscribers = $users = array();
@@ -184,21 +184,21 @@ class NewsletterController extends ActiveGridController
 	private function createValidator()
 	{
 		$validator = $this->getValidator('newsletter', $this->request);
-		$validator->addCheck('subject', new IsNotEmptyCheck($this->translate('_err_title_empty')));
-		// $validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
-		
-		
-		$validator->addCheck('text', 
+		$validator->add('subject', new PresenceOf(array('message' => $this->translate('_err_title_empty'))));
+		// $validator->add('text', new PresenceOf(array('message' => $this->translate('_err_text_empty'))));
+
+
+		$validator->add('text',
 			new OrCheck(
-				array('text', 'html'), 
+				array('text', 'html'),
 				array(
-					new IsNotEmptyCheck($this->translate('_err_text_empty')),
-					new IsNotEmptyCheck($this->translate('_err_text_empty'))
+					new PresenceOf(array('message' => $this->translate('_err_text_empty')),
+					new PresenceOf(array('message' => $this->translate('_err_text_empty'))
 				),
 				$this->request
 			)
 		);
-		
+
 		return $validator;
 	}
 
@@ -262,7 +262,7 @@ class NewsletterController extends ActiveGridController
 		}
 		return implode(' UNION ', $queries);
 	}
-	
+
 	public function plaintextAction()
 	{
 		$h2t = new HtmlToText(

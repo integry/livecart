@@ -4,13 +4,13 @@
  *  Determine if a check has been applied on a form field
  *
  *  @package application/helper/smarty
- *  @author Integry Systems 
+ *  @author Integry Systems
  */
-function smarty_modifier_isRequired(Form $form, $fieldName, $check = 'IsNotEmptyCheck')
+function smarty_modifier_isRequired(Form $form, $fieldName, $check = 'PresenceOf')
 {
-	$checkData = $form->getValidator()->getValidatorVar($fieldName)->getCheckData();  
-	
-	return isset($checkData[$check]);	
+	$checkData = $form->getValidator()->getValidatorVar($fieldName)->getCheckData();
+
+	return isset($checkData[$check]);
 }
 
 ?>

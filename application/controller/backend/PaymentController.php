@@ -321,8 +321,8 @@ class PaymentController extends StoreManagementController
 	private function buildCaptureValidator()
 	{
 		$validator = $this->getValidator("paymentCapture", $this->request);
-		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
-		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.000001));
+		$validator->add('amount', new PresenceOf(array('message' => $this->translate('_err_enter_amount'))));
+		$validator->add('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.000001));
 
 		$validator->addFilter('amount', new NumericFilter());
 
@@ -337,8 +337,8 @@ class PaymentController extends StoreManagementController
 	private function buildOfflinePaymentValidator()
 	{
 		$validator = $this->getValidator("offlinePayment", $this->request);
-		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
-		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.01));
+		$validator->add('amount', new PresenceOf(array('message' => $this->translate('_err_enter_amount'))));
+		$validator->add('amount', new MinValueCheck($this->translate('_err_amount_not_positive'), 0.01));
 
 		$validator->addFilter('amount', new NumericFilter());
 
@@ -354,13 +354,13 @@ class PaymentController extends StoreManagementController
 	{
 		$validator = $this->getValidator("creditCard", $this->request);
 
-		$validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
-		$validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));
+		$validator->add('amount', new PresenceOf(array('message' => $this->translate('_err_enter_amount'))));
+		$validator->add('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));
 
-		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
-//		$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
-		$validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
-		$validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
+		$validator->add('ccNum', new PresenceOf(array('message' => $this->translate('_err_enter_cc_num'))));
+//		$validator->add('ccType', new PresenceOf(array('message' => $this->translate('_err_select_cc_type'))));
+		$validator->add('ccExpiryMonth', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_month'))));
+		$validator->add('ccExpiryYear', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_year'))));
 
 		$validator->addFilter('ccCVV', new RegexFilter('[^0-9]'));
 		$validator->addFilter('amount', new NumericFilter);

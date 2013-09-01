@@ -56,7 +56,7 @@ class ThemeFileController extends StoreManagementController
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['image']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('image');
 
-		$validator->addCheck('image', $uploadCheck);
+		$validator->add('image', $uploadCheck);
 		*/
 
 		return $validator;

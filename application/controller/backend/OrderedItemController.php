@@ -289,9 +289,9 @@ class OrderedItemController extends StoreManagementController
 	private function createOrderedItemValidator()
 	{
 		$validator = $this->getValidator('orderedItem', $this->request);
-		$validator->addCheck('productID', new MinValueCheck('_err_invalid_product', 0));
-		$validator->addCheck('orderID', new MinValueCheck('_err_invalid_customer_order', 0));
-		$validator->addCheck('count', new MinValueCheck('_err_count_should_be_more_than_zero', 0));
+		$validator->add('productID', new MinValueCheck('_err_invalid_product', 0));
+		$validator->add('orderID', new MinValueCheck('_err_invalid_customer_order', 0));
+		$validator->add('count', new MinValueCheck('_err_count_should_be_more_than_zero', 0));
 
 		return $validator;
 	}

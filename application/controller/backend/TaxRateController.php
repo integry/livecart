@@ -131,8 +131,8 @@ class TaxRateController extends StoreManagementController
 	private function setFieldValidation(RequestValidator $validator, Tax $tax, TaxClass $class = null)
 	{
 		$field = $this->getFieldName($tax, $class);
-		$validator->addCheck($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
-		$validator->addCheck($field, new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero"), 0));
+		$validator->add($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
+		$validator->add($field, new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero"), 0));
 		$validator->addFilter($field, new NumericFilter());
 	}
 

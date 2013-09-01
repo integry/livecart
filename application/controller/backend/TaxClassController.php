@@ -115,7 +115,7 @@ class TaxClassController extends StoreManagementController
 	public function createClassFormValidatorAction(TaxClass $class)
 	{
 		$validator = $this->getValidator("classForm_" . $class->isExistingRecord() ? $class->getID() : '', $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("_error_the_name_should_not_be_empty"))));
 
 		return $validator;
 	}

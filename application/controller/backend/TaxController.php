@@ -112,7 +112,7 @@ class TaxController extends StoreManagementController
 	public function createTaxFormValidatorAction(Tax $tax)
 	{
 		$validator = $this->getValidator("taxForm_" . $tax->isExistingRecord() ? $tax->getID() : '', $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_the_name_should_not_be_empty")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("_error_the_name_should_not_be_empty"))));
 
 		$zones = DeliveryZone::getAll();
 		$zones->add(DeliveryZone::getDefaultZoneInstance());
@@ -234,8 +234,8 @@ class TaxController extends StoreManagementController
 	private function appendTaxRateFieldValidator(LiveCartValidator $validator, DeliveryZone $zone, TaxClass $class = null)
 	{
 		$field = $this->getFieldName($zone, $class);
-		$validator->addCheck($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
-		$validator->addCheck($field, new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero"), 0));
+		$validator->add($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
+		$validator->add($field, new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero"), 0));
 		$validator->addFilter($field, new NumericFilter());
 	}
 

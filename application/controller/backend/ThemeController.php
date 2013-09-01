@@ -464,7 +464,7 @@ class ThemeController extends StoreManagementController
 	private function buildValidator()
 	{
 		$validator = $this->getValidator("theme", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate('_err_theme_name_empty')));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate('_err_theme_name_empty'))));
 		$validator->addFilter("name", new RegexFilter('[^_-a-zA-Z0-9]'));
 
 		return $validator;
@@ -513,7 +513,7 @@ class ThemeController extends StoreManagementController
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['theme']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('theme');
 
-		$validator->addCheck('theme', $uploadCheck);
+		$validator->add('theme', $uploadCheck);
 
 		return $validator;
 	}

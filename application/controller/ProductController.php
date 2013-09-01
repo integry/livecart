@@ -721,11 +721,11 @@ class ProductController extends CatalogController
 			{
 				foreach ($variations['variations'] as $variation)
 				{
-					$validator->addCheck($prefix . 'variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+					$validator->add($prefix . 'variation_' . $variation['ID'], new PresenceOf(array('message' => $this->translate('_err_option_0'))));
 				}
 			}
 
-			$validator->addCheck($prefix . 'count', new IsNumericCheck(''));
+			$validator->add($prefix . 'count', new IsNumericCheck(''));
 			$validator->addFilter($prefix . 'count', new NumericFilter());
 		}
 
@@ -797,22 +797,22 @@ class ProductController extends CatalogController
 		// option validation
 		foreach ($ratingTypes as $type)
 		{
-			$validator->addCheck('rating_' . $type['ID'], new IsNotEmptyCheck($this->translate('_err_no_rating_selected')));
+			$validator->add('rating_' . $type['ID'], new PresenceOf(array('message' => $this->translate('_err_no_rating_selected'))));
 		}
 
 		if ($this->isRated($product, $isRating))
 		{
-			$validator->addCheck('rating', new VariableCheck(true, new IsEmptyCheck($this->translate('_err_already_rated'))));
+			$validator->add('rating', new VariableCheck(true, new IsEmptyCheck($this->translate('_err_already_rated'))));
 		}
 
-		$validator->addCheck('rating', new VariableCheck($this->isLoginRequiredToRate(), new IsEmptyCheck($this->maketext('_msg_rating_login_required', $this->router->createUrl(array('controller' => 'user', 'action' => 'login'))))));
-		$validator->addCheck('rating', new VariableCheck($this->isPurchaseRequiredToRate($product), new IsEmptyCheck($this->translate('_msg_rating_purchase_required'))));
+		$validator->add('rating', new VariableCheck($this->isLoginRequiredToRate(), new IsEmptyCheck($this->maketext('_msg_rating_login_required', $this->router->createUrl(array('controller' => 'user', 'action' => 'login'))))));
+		$validator->add('rating', new VariableCheck($this->isPurchaseRequiredToRate($product), new IsEmptyCheck($this->translate('_msg_rating_purchase_required'))));
 
 		if ($this->isAddingReview())
 		{
-			$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_no_review_nickname')));
-			$validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_no_review_summary')));
-			$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_no_review_text')));
+			$validator->add('nickname', new PresenceOf(array('message' => $this->translate('_err_no_review_nickname'))));
+			$validator->add('title', new PresenceOf(array('message' => $this->translate('_err_no_review_summary'))));
+			$validator->add('text', new PresenceOf(array('message' => $this->translate('_err_no_review_text'))));
 		}
 
 		return $validator;
@@ -823,19 +823,19 @@ class ProductController extends CatalogController
 				$validator = $this->getValidator('productSharingValidator', $this->getRequest());
 		if (!$this->config->get('ENABLE_PRODUCT_SHARING'))
 		{
-			$validator->addCheck(md5(time().mt_rand()), new IsNotEmptyCheck($this->translate('_feature_disabled')));
+			$validator->add(md5(time().mt_rand()), new PresenceOf(array('message' => $this->translate('_feature_disabled'))));
 		}
 
-		$validator->addCheck('friendemail', new IsNotEmptyCheck($this->translate('_err_enter_email')));
-		$validator->addCheck('friendemail', new IsValidEmailCheck($this->translate('_err_invalid_email')));
+		$validator->add('friendemail', new PresenceOf(array('message' => $this->translate('_err_enter_email'))));
+		$validator->add('friendemail', new IsValidEmailCheck($this->translate('_err_invalid_email')));
 
 		if ($this->sessionUser->getUser()->isAnonymous())
 		{
 			if (!$this->config->get('ENABLE_ANONYMOUS_PRODUCT_SHARING'))
 			{
-				$validator->addCheck(md5(time().mt_rand()), new IsNotEmptyCheck($this->translate('_feature_disabled_for_anonymous')));
+				$validator->add(md5(time().mt_rand()), new PresenceOf(array('message' => $this->translate('_feature_disabled_for_anonymous'))));
 			}
-			$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_enter_nickname')));
+			$validator->add('nickname', new PresenceOf(array('message' => $this->translate('_err_enter_nickname'))));
 		}
 
 		return $validator;
@@ -981,10 +981,10 @@ class ProductController extends CatalogController
 		$request = $request ? $request : $this->request;
 
 		$validator = $this->getValidator("productContactForm", $request);
-		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name')));
-		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email')));
-		$validator->addCheck('msg', new IsNotEmptyCheck($this->translate('_err_message')));
-		$validator->addCheck('surname', new MaxLengthCheck('Please do not enter anything here', 0));
+		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_name'))));
+		$validator->add('email', new PresenceOf(array('message' => $this->translate('_err_email'))));
+		$validator->add('msg', new PresenceOf(array('message' => $this->translate('_err_message'))));
+		$validator->add('surname', new MaxLengthCheck('Please do not enter anything here', 0));
 
 		return $validator;
 	}

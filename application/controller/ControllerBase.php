@@ -217,8 +217,8 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 
 	protected function getValidator($validatorName, Request $request = null)
 	{
-		$validator = new LiveCartValidator($validatorName, $request ? $request : $this->request);
-		$validator->setApplication($this->application);
+		$validator = new \Phalcon\Validation();
+		$validator->setDI($this->getDI());
 
 		return $validator;
 	}

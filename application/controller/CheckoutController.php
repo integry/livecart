@@ -1474,7 +1474,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($shipment->isShippable())
 			{
-				$validator->addCheck('shipping_' . $key, new IsNotEmptyCheck($this->translate('_err_select_shipping')));
+				$validator->add('shipping_' . $key, new PresenceOf(array('message' => $this->translate('_err_select_shipping'))));
 			}
 		}
 
@@ -1505,7 +1505,7 @@ class CheckoutController extends FrontendController
 
 		if (!$step || ('billing' == $step))
 		{
-			$validator->addCheck('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new IsNotEmptyCheck($this->translate('_select_billing_address')), new IsNotEmptyCheck('')), $this->request));
+			$validator->add('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new PresenceOf(array('message' => $this->translate('_select_billing_address')), new PresenceOf()), $this->request)));
 			$this->validateAddress($validator, 'billing_');
 		}
 
@@ -1513,7 +1513,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->isShippingRequired($order) && !$order->isMultiAddress)
 			{
-				$validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck(''), new IsNotEmptyCheck('')), $this->request));
+				$validator->add('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new PresenceOf(array('message' => $this->translate('_select_shipping_address')), new PresenceOf(), new PresenceOf()), $this->request)));
 				$this->validateAddress($validator, 'shipping_');
 			}
 		}
@@ -1543,7 +1543,7 @@ class CheckoutController extends FrontendController
 		{
 			foreach ($var->getChecks() as $check)
 			{
-				$validator->addCheck($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new IsNotEmptyCheck('')), $this->request));
+				$validator->add($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new PresenceOf()), $this->request));
 			}
 		}
 	}
@@ -1559,21 +1559,21 @@ class CheckoutController extends FrontendController
 	private function buildCreditCardValidator(CreditCardPayment $ccHandler = null)
 	{
 		$validator = $this->getValidator("creditCard", $this->request);
-		$validator->addCheck('ccName', new IsNotEmptyCheck($this->translate('_err_enter_cc_name')));
-		$validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
-		$validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
-		$validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
+		$validator->add('ccName', new PresenceOf(array('message' => $this->translate('_err_enter_cc_name'))));
+		$validator->add('ccNum', new PresenceOf(array('message' => $this->translate('_err_enter_cc_num'))));
+		$validator->add('ccExpiryMonth', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_month'))));
+		$validator->add('ccExpiryYear', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_year'))));
 
 		if ($ccHandler)
 		{
 			if ($ccHandler->isCardTypeNeeded())
 			{
-				$validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+				$validator->add('ccType', new PresenceOf(array('message' => $this->translate('_err_select_cc_type'))));
 			}
 
 			if ($this->config->get('REQUIRE_CVV') && $ccHandler->isCvvRequired())
 			{
-				$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
+				$validator->add('ccCVV', new PresenceOf(array('message' => $this->translate('_err_enter_cc_cvv'))));
 			}
 		}
 

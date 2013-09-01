@@ -184,8 +184,8 @@ class StaticPageController extends StoreManagementController
 	{
 
 		$val = $this->getValidator('staticPage', $this->request);
-		$val->addCheck('title', new IsNotEmptyCheck($this->translate('_err_title_empty')));
-		$val->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
+		$val->add('title', new PresenceOf(array('message' => $this->translate('_err_title_empty'))));
+		$val->add('text', new PresenceOf(array('message' => $this->translate('_err_text_empty'))));
 		$val->addFilter('handle', HandleFilter::create());
 
 		return $val;

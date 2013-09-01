@@ -409,8 +409,8 @@ class CustomerOrderController extends ActiveGridController
 	private function getDateCompletedValidator(\Phalcon\Http\Request $request)
 	{
 		$validator = $this->getValidator('dateCreatedValidator', $request);
-		$validator->addCheck('dateCompleted', new IsNotEmptyCheck($this->translate('_err_date_cannot_be_empty')));
-		$validator->addCheck('dateCompleted', new RegExpCheck($this->translate('_err_unknown_date_format'), '/^\d{4}\-\d{1,2}\-\d{1,2}$/'));
+		$validator->add('dateCompleted', new PresenceOf(array('message' => $this->translate('_err_date_cannot_be_empty'))));
+		$validator->add('dateCompleted', new RegExpCheck($this->translate('_err_unknown_date_format'), '/^\d{4}\-\d{1,2}\-\d{1,2}$/'));
 
 		return $validator;
 	}
@@ -1448,11 +1448,11 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$validator = $this->getValidator("userAddress", $this->request);
 
-		$validator->addCheck('countryID', new IsNotEmptyCheck($this->translate('_country_empty')));
-		$validator->addCheck('city',	  new IsNotEmptyCheck($this->translate('_city_empty')));
-		$validator->addCheck('address1',  new IsNotEmptyCheck($this->translate('_address_empty')));
-		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
-		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
+		$validator->add('countryID', new PresenceOf(array('message' => $this->translate('_country_empty'))));
+		$validator->add('city',	  new PresenceOf(array('message' => $this->translate('_city_empty'))));
+		$validator->add('address1',  new PresenceOf(array('message' => $this->translate('_address_empty'))));
+		$validator->add('firstName', new PresenceOf(array('message' => $this->translate('_first_name_is_empty'))));
+		$validator->add('lastName',  new PresenceOf(array('message' => $this->translate('_last_name_is_empty'))));
 
 		UserAddress::getNewInstance()->getSpecification()->setValidation($validator);
 
@@ -1489,8 +1489,8 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$validator = $this->getValidator("CustomerOrder", $this->request);
 
-		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));
+		$validator->add('status', new MinValueCheck($this->translate('_invalid_status'), 0));
+		$validator->add('status', new MaxValueCheck($this->translate('_invalid_status'), 4));
 
 		return $validator;
 	}

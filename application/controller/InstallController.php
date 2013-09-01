@@ -379,7 +379,7 @@ class InstallController extends FrontendController
 	private function buildLicenseValidator()
 	{
 		$validator = $this->getValidator("license", $this->request);
-		$validator->addCheck("accept", new IsNotEmptyCheck($this->translate("You must accept the LiveCart license agreement to continue with the installation")));
+		$validator->add("accept", new PresenceOf(array('message' => $this->translate("You must accept the LiveCart license agreement to continue with the installation"))));
 		return $validator;
 	}
 
@@ -397,9 +397,9 @@ class InstallController extends FrontendController
 	private function buildDatabaseValidator()
 	{
 		$validator = $this->getValidator("database", $this->request);
-		$validator->addCheck("server", new IsNotEmptyCheck($this->translate("Please enter the database server host name")));
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Please enter the database name")));
-		$validator->addCheck("username", new IsNotEmptyCheck($this->translate("Please enter the database user name")));
+		$validator->add("server", new PresenceOf(array('message' => $this->translate("Please enter the database server host name"))));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("Please enter the database name"))));
+		$validator->add("username", new PresenceOf(array('message' => $this->translate("Please enter the database user name"))));
 		return $validator;
 	}
 
@@ -418,13 +418,13 @@ class InstallController extends FrontendController
 	{
 
 		$validator = $this->getValidator("createAdmin", $this->request);
-		$validator->addCheck("firstName", new IsNotEmptyCheck($this->translate("Please enter the admin first name")));
-		$validator->addCheck("lastName", new IsNotEmptyCheck($this->translate("Please enter the admin last name")));
-		$validator->addCheck("email", new IsNotEmptyCheck($this->translate("Please enter the admin e-mail address")));
-		$validator->addCheck("email", new IsUniqueEmailCheck($this->translate("The e-mail address is already assigned to an existing user account")));
-		$validator->addCheck("password", new IsNotEmptyCheck($this->translate("Please enter the password")));
-		$validator->addCheck("confirmPassword", new IsNotEmptyCheck($this->translate("Please enter the password")));
-		$validator->addCheck("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->get('password'), 'password'));
+		$validator->add("firstName", new PresenceOf(array('message' => $this->translate("Please enter the admin first name"))));
+		$validator->add("lastName", new PresenceOf(array('message' => $this->translate("Please enter the admin last name"))));
+		$validator->add("email", new PresenceOf(array('message' => $this->translate("Please enter the admin e-mail address"))));
+		$validator->add("email", new IsUniqueEmailCheck($this->translate("The e-mail address is already assigned to an existing user account")));
+		$validator->add("password", new PresenceOf(array('message' => $this->translate("Please enter the password"))));
+		$validator->add("confirmPassword", new PresenceOf(array('message' => $this->translate("Please enter the password"))));
+		$validator->add("confirmPassword", new PasswordEqualityCheck($this->translate("Passwords do not match"), $this->request->get('password'), 'password'));
 		return $validator;
 	}
 
@@ -442,9 +442,9 @@ class InstallController extends FrontendController
 	private function buildConfigValidator()
 	{
 		$validator = $this->getValidator("installConfig", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Please enter the name of your store")));
-		$validator->addCheck("language", new IsNotEmptyCheck($this->translate("Please select the base language of your store")));
-		$validator->addCheck("curr", new IsNotEmptyCheck($this->translate("Please select the base currency of your store")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("Please enter the name of your store"))));
+		$validator->add("language", new PresenceOf(array('message' => $this->translate("Please select the base language of your store"))));
+		$validator->add("curr", new PresenceOf(array('message' => $this->translate("Please select the base currency of your store"))));
 
 		return $validator;
 	}

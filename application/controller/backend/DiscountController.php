@@ -510,7 +510,7 @@ class DiscountController extends ActiveGridController
 	private function buildValidator()
 	{
 		$validator = $this->getValidator("discountCondition", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_rule_name_empty")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("_rule_name_empty"))));
 
 		return $validator;
 	}

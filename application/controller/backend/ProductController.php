@@ -1032,18 +1032,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$validator = $this->getValidator("productFormValidator", $this->request);
 		//Product::setValidation($validator);
 
-		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));
+		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_name_empty'))));
 
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$isExisting && !$this->request->get('autosku'))
 		{
-			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));
+			$validator->add('sku', new PresenceOf(array('message' => $this->translate('_err_sku_empty'))));
 		}
 
 		// check if entered SKU is unique
 		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
 		{
-						//$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
+						//$validator->add('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
 		}
 
 		//$product->getSpecification()->setValidation($validator);
@@ -1147,20 +1147,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function addShippingValidatorAction(RequestValidator $validator)
 	{
 		// shipping related numeric field validations
-		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
+		$validator->add('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
 		$validator->addFilter('shippingSurchargeAmount', new NumericFilter());
 
-		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));
-		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));
+		$validator->add('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));
+		$validator->add('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));
 		$validator->addFilter('minimumQuantity', new NumericFilter());
 
 		$validator->addFilter('shippingHiUnit', new NumericFilter());
-		$validator->addCheck('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
-		$validator->addCheck('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
+		$validator->add('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->add('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
 
 		$validator->addFilter('shippingLoUnit', new NumericFilter());
-		$validator->addCheck('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
-		$validator->addCheck('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
+		$validator->add('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->add('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
 
 		return $validator;
 	}
@@ -1169,14 +1169,14 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		// price in base currency
 		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
-		$validator->addCheck($prefix.'price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
+		$validator->add($prefix.'price_' . $baseCurrency, new PresenceOf(array('message' => $this->translate('_err_price_empty'))));
 
 		$currencies = $this->getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
-			$validator->addCheck($prefix.'price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
-			$validator->addCheck($prefix.'price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
-			$validator->addCheck($prefix.'listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->add($prefix.'price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
+			$validator->add($prefix.'price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
+			$validator->add($prefix.'listPrice_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
 			$validator->addFilter($prefix.'price_' . $currency, new NumericFilter());
 			$validator->addFilter($prefix.'listPrice_' . $currency, new NumericFilter());
 		}
@@ -1188,18 +1188,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
-			$validator->addCheck('stockCount',
+			$validator->add('stockCount',
 				new OrCheck(
 					array('stockCount', 'isUnlimitedStock'),
 					array(
-						new IsNotEmptyCheck($this->translate('_err_stock_required')),
-						new IsNotEmptyCheck($this->translate('_err_stock_required'))
+						new PresenceOf(array('message' => $this->translate('_err_stock_required')),
+						new PresenceOf(array('message' => $this->translate('_err_stock_required'))
 					),
 					$this->request
-				));
+				)));
 
-			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));
-			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));
+			$validator->add('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));
+			$validator->add('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));
 		}
 
 		$validator->addFilter('stockCount', new NumericFilter());

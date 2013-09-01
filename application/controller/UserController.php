@@ -554,7 +554,7 @@ class UserController extends ControllerBase
 
 		$form = $this->buildRegForm();
 		$this->set('regForm', $form);
-		$this->set('regForm', $form);
+		$this->set('test', 'testing');
 
 		//$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
 	}
@@ -1278,8 +1278,8 @@ class UserController extends ControllerBase
 	{
 
 		$validator = $this->getValidator("passwordChange", $this->request);
-		$validator->addCheck('currentpassword', new IsNotEmptyCheck($this->translate('_err_enter_current_password')));
-		$validator->addCheck('currentpassword', new IsPasswordCorrectCheck($this->translate('_err_incorrect_current_password'), $this->user));
+		$validator->add('currentpassword', new PresenceOf(array('message' => $this->translate('_err_enter_current_password'))));
+		$validator->add('currentpassword', new IsPasswordCorrectCheck($this->translate('_err_incorrect_current_password'), $this->user));
 
 		$this->validatePassword($validator);
 
@@ -1377,21 +1377,21 @@ class UserController extends ControllerBase
 		foreach ($validation as $field => $error)
 		{
 			$field = $fieldPrefix . $field;
-			$check = new IsNotEmptyCheck($this->translate($error));
-			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($check, new IsNotEmptyCheck('')), $this->request) : $check;
-			$validator->addCheck($field, $check);
+			$check = new PresenceOf(array('message' => $this->translate($error)));
+			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($check, new PresenceOf()), $this->request) : $check;
+			$validator->add($field, $check);
 		}
 	}
 
 	private function validateEmail(RequestValidator $validator, $uniqueError = '_err_not_unique_email')
 	{
 
-		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));
-		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));
+		$validator->add('email', new PresenceOf(array('message' => $this->translate('_err_enter_email'))));
+		$validator->add('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));
 
 		$emailErr = $this->translate($uniqueError);
 		$emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email'))), true), $emailErr);
-		$validator->addCheck('email', new IsUniqueEmailCheck($emailErr));
+		$validator->add('email', new IsUniqueEmailCheck($emailErr));
 	}
 
 	public function validateAddressAction(RequestValidator $validator, $fieldPrefix = '', $orCheck = false)
@@ -1405,31 +1405,31 @@ class UserController extends ControllerBase
 		if ($this->config->get('REQUIRE_PHONE') && !empty($displayedFields['PHONE']))
 		{
 			$fields[] = $fieldPrefix . 'phone';
-			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_phone'));
+			$checks[] = new PresenceOf(array('message' => $this->translate('_err_enter_phone')));
 		}
 
 		if (!empty($displayedFields['ADDRESS1']))
 		{
 			$fields[] = $fieldPrefix . 'address1';
-			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_address'));
+			$checks[] = new PresenceOf(array('message' => $this->translate('_err_enter_address')));
 		}
 
 		if (!empty($displayedFields['CITY']))
 		{
 			$fields[] = $fieldPrefix . 'city';
-			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_city'));
+			$checks[] = new PresenceOf(array('message' => $this->translate('_err_enter_city')));
 		}
 
 		if (!empty($displayedFields['COUNTRY']))
 		{
 			$fields[] = $fieldPrefix . 'country';
-			$checks[] = new IsNotEmptyCheck($this->translate('_err_select_country'));
+			$checks[] = new PresenceOf(array('message' => $this->translate('_err_select_country')));
 		}
 
 		if (!empty($displayedFields['POSTALCODE']))
 		{
 			$fields[] = $fieldPrefix . 'postalCode';
-			$checks[] = new IsNotEmptyCheck($this->translate('_err_enter_zip'));
+			$checks[] = new PresenceOf(array('message' => $this->translate('_err_enter_zip')));
 		}
 
 		// custom field validation
@@ -1451,30 +1451,30 @@ class UserController extends ControllerBase
 
 		foreach ($fields as $key => $field)
 		{
-			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($checks[$key], new IsNotEmptyCheck('')), $this->request) : $checks[$key];
-			$validator->addCheck($field, $check);
+			$check = $orCheck ? new OrCheck(array($field, 'sameAsBilling'), array($checks[$key], new PresenceOf()), $this->request) : $checks[$key];
+			$validator->add($field, $check);
 		}
 
 		if (!empty($displayedFields['STATE']))
 		{
 			$fieldList = array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text');
-			$checkList = array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck(''));
+			$checkList = array(new PresenceOf(array('message' => $this->translate('_err_select_state')), new PresenceOf()));
 			if ($orCheck)
 			{
 				$fieldList[] = 'sameAsBilling';
-				$checkList[] = new IsNotEmptyCheck('');
+				$checkList[] = new PresenceOf();
 			}
 			$stateCheck = new OrCheck($fieldList, $checkList, $this->request);
-			$validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
+			$validator->add($fieldPrefix . 'state_select', $stateCheck);
 		}
 	}
 
 	private function validatePassword(RequestValidator $validator)
 	{
-				$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH));
-		$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password')));
-		$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password')));
-		$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));
+				$validator->add('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH));
+		$validator->add('password', new PresenceOf(array('message' => $this->translate('_err_enter_password'))));
+		$validator->add('confpassword', new PresenceOf(array('message' => $this->translate('_err_enter_password'))));
+		$validator->add('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));
 	}
 
 	private function buildNoteForm()
@@ -1485,7 +1485,7 @@ class UserController extends ControllerBase
 	private function buildNoteValidator()
 	{
 		$validator = $this->getValidator("orderNote", $this->request);
-		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_note')));
+		$validator->add('text', new PresenceOf(array('message' => $this->translate('_err_enter_note'))));
 		$validator->addFilter('text', new HtmlSpecialCharsFilter);
 		return $validator;
 	}

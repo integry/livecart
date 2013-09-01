@@ -204,8 +204,8 @@ class SettingsController extends StoreManagementController
 		{
 			if (('num' == $value['type']) || ('float' == $value['type']))
 			{
-				$val->addCheck($key, new IsNumericCheck($this->translate('_err_numeric')));
-				$val->addCheck($key, new MinValueCheck($this->translate('_err_negative'), 0));
+				$val->add($key, new IsNumericCheck($this->translate('_err_numeric')));
+				$val->add($key, new MinValueCheck($this->translate('_err_negative'), 0));
 				$val->addFilter($key, new NumericFilter());
 			}
 
@@ -222,7 +222,7 @@ class SettingsController extends StoreManagementController
 			{
 				foreach ($constraint as $c => $error)
 				{
-					$val->addCheck($field, new $validator($this->translate($error), $c));
+					$val->add($field, new $validator($this->translate($error), $c));
 				}
 			}
 		}

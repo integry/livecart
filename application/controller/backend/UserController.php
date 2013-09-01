@@ -59,22 +59,22 @@ class UserController extends StoreManagementController
 		$inst = new UserController(ActiveRecordModel::getApplication());
 		$validator = $inst->getValidator("UserForm", $controller->getRequest());
 
-		$validator->addCheck('email', new IsNotEmptyCheck($controller->translate('_err_email_empty')));
-		$validator->addCheck('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));
-		$validator->addCheck('firstName', new IsNotEmptyCheck($controller->translate('_err_first_name_empty')));
-		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
+		$validator->add('email', new PresenceOf(array('message' => $controller->translate('_err_email_empty')));
+		$validator->add('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));
+		$validator->add('firstName', new PresenceOf(array('message' => $controller->translate('_err_first_name_empty')));
+		$validator->add('lastName', new PresenceOf(array('message' => $controller->translate('_err_last_name_empty')));
 
 		$passwordLengthStart = 6;
 		$passwordLengthEnd = 30;
 		$allowEmpty = $user;
 
-		$validator->addCheck('password',
+		$validator->add('password',
 			new IsLengthBetweenCheck(
 				sprintf($controller->translate('_err_password_lenght_should_be_in_interval'), $passwordLengthStart, $passwordLengthEnd),
 				$passwordLengthStart, $passwordLengthEnd, $allowEmpty
 			));
 
-		$validator->addCheck('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
+		$validator->add('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
 
 		if (!$user)
 		{

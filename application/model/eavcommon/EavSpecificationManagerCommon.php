@@ -554,7 +554,7 @@ abstract class EavSpecificationManagerCommon
 		  	{
 				if (!$filtersOnly)
 				{
-					$validator->addCheck($fieldname, new IsNumericCheck($application->translate('_err_numeric')));
+					$validator->add($fieldname, new IsNumericCheck($application->translate('_err_numeric')));
 				}
 
 				$validator->addFilter($fieldname, new NumericFilter());
@@ -565,11 +565,11 @@ abstract class EavSpecificationManagerCommon
 		  	{
 				if (!($field->isSelector() && $field->isMultiValue->get()))
 				{
-					$validator->addCheck($fieldname, new IsNotEmptyCheck($application->translate('_err_specfield_required')));
+					$validator->add($fieldname, new PresenceOf(array('message' => $application->translate('_err_specfield_required'))));
 				}
 				else
 				{
-										$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($application->translate('_err_specfield_multivaluerequired'), $field, $application->getRequest()));
+					$validator->add($fieldname, new SpecFieldIsValueSelectedCheck($application->translate('_err_specfield_multivaluerequired'), $field, $application->getRequest()));
 				}
 			}
 		}

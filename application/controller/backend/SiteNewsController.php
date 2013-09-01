@@ -115,7 +115,7 @@ class SiteNewsController extends StoreManagementController
 	private function buildValidator()
 	{
 		$validator = $this->getValidator("newspost", $this->request);
-		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_text')));
+		$validator->add('text', new PresenceOf(array('message' => $this->translate('_err_enter_text'))));
 
 		return $validator;
 	}

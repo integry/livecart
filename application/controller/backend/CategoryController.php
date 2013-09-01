@@ -359,7 +359,7 @@ class CategoryController extends StoreManagementController
 	private function buildAddValidator()
 	{
 		$validator = $this->getValidator("category", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Category name should not be empty")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
 
 		return $validator;
 	}
@@ -382,7 +382,7 @@ class CategoryController extends StoreManagementController
 	private function buildValidator(Category $category)
 	{
 		$validator = $this->getValidator("category", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Category name should not be empty")));
+		$validator->add("name", new PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
 
 		$category->getSpecification()->setValidation($validator);
 

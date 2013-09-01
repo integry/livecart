@@ -43,10 +43,10 @@ class ContactFormController extends FrontendController
 		$request = $request ? $request : $this->request;
 
 		$validator = $this->getValidator("contactForm", $request);
-		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name')));
-		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email')));
-		$validator->addCheck('msg', new IsNotEmptyCheck($this->translate('_err_message')));
-		$validator->addCheck('surname', new MaxLengthCheck('Please do not enter anything here', 0));
+		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_name'))));
+		$validator->add('email', new PresenceOf(array('message' => $this->translate('_err_email'))));
+		$validator->add('msg', new PresenceOf(array('message' => $this->translate('_err_message'))));
+		$validator->add('surname', new MaxLengthCheck('Please do not enter anything here', 0));
 
 		return $validator;
 	}

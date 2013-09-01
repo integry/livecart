@@ -1092,7 +1092,7 @@ class OrderController extends FrontendController
 
 		if ($this->isTosInCartPage())
 		{
-			$validator->addCheck('tos', new IsNotEmptyCheck($this->translate('_err_agree_to_tos')));
+			$validator->add('tos', new PresenceOf(array('message' => $this->translate('_err_agree_to_tos'))));
 		}
 
 		return $validator;
@@ -1132,7 +1132,7 @@ class OrderController extends FrontendController
 		$validator = $this->getValidator('variationValidator', $this->request);
 		foreach ($variations['variations'] as $variation)
 		{
-			$validator->addCheck('variation_' . $variation['ID'], new IsNotEmptyCheck($this->translate('_err_option_0')));
+			$validator->add('variation_' . $variation['ID'], new PresenceOf(array('message' => $this->translate('_err_option_0'))));
 		}
 
 		return $validator;
@@ -1141,7 +1141,7 @@ class OrderController extends FrontendController
 	private function buildItemValidation(RequestValidator $validator, $item, $options, $id = null)
 	{
 		$name = 'item_' . $item->getID();
-		$validator->addCheck($name, new IsNumericCheck($this->translate('_err_not_numeric')));
+		$validator->add($name, new IsNumericCheck($this->translate('_err_not_numeric')));
 		$validator->addFilter($name, new NumericFilter());
 
 		$productID = $id ? $id : $item->getProduct()->getID();
@@ -1169,7 +1169,7 @@ class OrderController extends FrontendController
 					{
 						$this->addOptionValidation($validator, $option, $field);
 						/*
-						$validator->addCheck($field, new IsNotEmptyCheck($this->translate('_err_option_' . $option['type'])));
+						$validator->add($field, new PresenceOf(array('message' => $this->translate('_err_option_' . $option['type']))));
 						*/
 						if (!$this->request->get($field))
 						{
@@ -1187,21 +1187,21 @@ class OrderController extends FrontendController
 		if (ProductOption::TYPE_FILE == $option['type'])
 		{
 			$checks = array(new IsFileUploadedCheck($app->translate('_err_option_upload')),
-							new IsNotEmptyCheck($app->translate('_err_option_upload')),
+							new PresenceOf(array('message' => $this->translate('_err_option_upload')),
 							);
 
-			$validator->addCheck($fieldName, new OrCheck(array('upload_' . $fieldName, $fieldName), $checks, $validator->getRequest()));
+			$validator->add($fieldName, new OrCheck(array('upload_' . $fieldName, $fieldName), $checks, $validator->getRequest()));
 
 			if ($types = ProductOption::getFileExtensions($option['fileExtensions']))
 			{
-				$validator->addCheck('upload_' . $fieldName, new IsFileTypeValidCheck($app->maketext('_err_option_filetype', implode(', ', $types)), $types));
+				$validator->add('upload_' . $fieldName, new IsFileTypeValidCheck($app->maketext('_err_option_filetype', implode(', ', $types)), $types));
 			}
 
-			$validator->addCheck('upload_' . $fieldName, new MaxFileSizeCheck($app->maketext('_err_option_filesize', $option['maxFileSize']), $option['maxFileSize']));
+			$validator->add('upload_' . $fieldName, new MaxFileSizeCheck($app->maketext('_err_option_filesize', $option['maxFileSize']), $option['maxFileSize']));
 		}
 		else
 		{
-			$validator->addCheck($fieldName, new IsNotEmptyCheck($app->translate('_err_option_' . $option['type'])));
+			$validator->add($fieldName, new PresenceOf(array('message' => $app->translate('_err_option_' . $option['type'])));
 		}
 	}
 

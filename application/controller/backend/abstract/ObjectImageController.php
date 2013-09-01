@@ -248,13 +248,13 @@ abstract class ObjectImageController extends StoreManagementController
 
 		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['image']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('image');
-		$validator->addCheck('image', $uploadCheck);
+		$validator->add('image', $uploadCheck);
 
 		$manip = new ImageManipulator();
 		$imageCheck = new IsImageUploadedCheck($this->translate('_err_not_image'));
 		$imageCheck->setFieldName('image');
 		$imageCheck->setValidTypes($manip->getValidTypes());
-		$validator->addCheck('image', $imageCheck);
+		$validator->add('image', $imageCheck);
 
 		return $validator;
 	}

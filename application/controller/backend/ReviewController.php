@@ -181,12 +181,12 @@ class ReviewController extends ActiveGridController
 		// option validation
 		foreach (ProductRatingType::getProductRatingTypes($review->product)->toArray() as $type)
 		{
-			$validator->addCheck('rating_' . $type['ID'], new IsNotEmptyCheck($this->translate('_err_no_rating_selected')));
+			$validator->add('rating_' . $type['ID'], new PresenceOf(array('message' => $this->translate('_err_no_rating_selected'))));
 		}
 
-		$validator->addCheck('nickname', new IsNotEmptyCheck($this->translate('_err_no_review_nickname')));
-		$validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_no_review_summary')));
-		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_no_review_text')));
+		$validator->add('nickname', new PresenceOf(array('message' => $this->translate('_err_no_review_nickname'))));
+		$validator->add('title', new PresenceOf(array('message' => $this->translate('_err_no_review_summary'))));
+		$validator->add('text', new PresenceOf(array('message' => $this->translate('_err_no_review_text'))));
 
 		return $validator;
 	}
