@@ -1,25 +1,17 @@
 <?php
 
+namespace helper\check;
 
 /**
  * Checks if entered passwords match
  *
  * @package application/helper/check
- * @author Integry Systems 
+ * @author Integry Systems
  */
-class PasswordMatchCheck extends Check
+
+class PasswordMatchCheck extends \Phalcon\Validation\Validator
 {
-	private $request;
-	
-	public function __construct($violationMsg, Request $request, $fieldName, $confFieldName)
-	{
-		parent::__construct($violationMsg);
-		$this->setParam("fieldName", $fieldName);
-		$this->setParam("confFieldName", $confFieldName);
-		$this->request = $request;
-	}
-	
-	public function isValid($value)
+	public function validate()
 	{
 		return $this->request->get($this->getParam("fieldName"))
 				== $this->request->get($this->getParam("confFieldName"));

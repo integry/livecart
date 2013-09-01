@@ -805,7 +805,7 @@ class ProductController extends CatalogController
 			$validator->add('rating', new VariableCheck(true, new IsEmptyCheck($this->translate('_err_already_rated'))));
 		}
 
-		$validator->add('rating', new VariableCheck($this->isLoginRequiredToRate(), new IsEmptyCheck($this->maketext('_msg_rating_login_required', $this->router->createUrl(array('controller' => 'user', 'action' => 'login'))))));
+		$validator->add('rating', new VariableCheck($this->isLoginRequiredToRate(), new IsEmptyCheck($this->maketext('_msg_rating_login_required', $this->url->get('user/login')))));
 		$validator->add('rating', new VariableCheck($this->isPurchaseRequiredToRate($product), new IsEmptyCheck($this->translate('_msg_rating_purchase_required'))));
 
 		if ($this->isAddingReview())

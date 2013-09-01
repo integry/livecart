@@ -523,7 +523,7 @@ class CustomerOrderController extends ActiveGridController
 
 		$order->finalize();
 
-		$url = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID();
+		$url = $this->url->get('backend.customerOrder/index') . '#order_' . $order->getID();
 		return new RedirectResponse($url);
 	}
 
@@ -1294,7 +1294,7 @@ class CustomerOrderController extends ActiveGridController
 		$order->isFinalized->set(true);
 		$order->save();
 
-		$redirectUrl = $this->router->createUrl(array('controller' => 'backend.customerOrder', 'action' => 'index')) . '#order_' . $order->getID() . '__';
+		$redirectUrl = $this->url->get('backend.customerOrder/index') . '#order_' . $order->getID() . '__';
 		return new RedirectResponse($redirectUrl);
 	}
 

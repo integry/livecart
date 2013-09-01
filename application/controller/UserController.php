@@ -554,8 +554,7 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'registerAddress');
 		}
 
-		$validator = $this->buildRegValidator();
-		$this->set('regForm', $form);
+		$this->set('validator', $this->buildRegValidator());
 		$this->set('test', 'testing');
 
 		//$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
@@ -761,7 +760,7 @@ class UserController extends ControllerBase
 	{
 		if ($this->config->get('DISABLE_GUEST_CHECKOUT') && !$this->config->get('REQUIRE_REG_ADDRESS'))
 		{
-			return new ActionRedirectResponse('user', 'login', array('query' => array('return' => $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')))));
+			return new ActionRedirectResponse('user', 'login', array('query' => array('return' => $this->url->get('checkout/pay'))));
 		}
 
 		$form = $this->buildForm();
@@ -1391,8 +1390,8 @@ class UserController extends ControllerBase
 		$validator->add('email', new Validator\Email(array('message' => $this->translate('_err_invalid_email'))));
 
 		$emailErr = $this->translate($uniqueError);
-		$emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email'))), true), $emailErr);
-		$validator->add('email', new IsUniqueEmailCheck($emailErr));
+		$emailErr = str_replace('%1', $this->url->get('user/login', array('email' => $this->request->get('email'))), $emailErr);
+		//$validator->add('email', new IsUniqueEmailCheck($emailErr));
 	}
 
 	public function validateAddressAction(\Phalcon\Validation $validator, $fieldPrefix = '', $orCheck = false)
@@ -1472,10 +1471,13 @@ class UserController extends ControllerBase
 
 	private function validatePassword(\Phalcon\Validation $validator)
 	{
-				$validator->add('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH));
+		$validator->add('password', new Validator\StringLength(array(
+			'min' => self::PASSWORD_MIN_LENGTH,
+			'messageMinimum' => sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH)
+			)));
 		$validator->add('password', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_password'))));
 		$validator->add('confpassword', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_password'))));
-		$validator->add('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));
+		$validator->add('confpassword', new helper\check\PasswordMatchCheck(array('message' => $this->translate('_err_password_match'), 'field1' => 'password', 'field2' => 'confpassword')));
 	}
 
 	private function buildNoteForm()

@@ -10,6 +10,8 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 	{
 		if (empty($this->_compiler))
 		{
+			$GLOBALS['volt'] = $this;
+
 			$this->_compiler = new LiveVoltCompiler($this->getView());
 			$this->_compiler->setOptions($this->getOptions());
 			$this->_compiler->setDI($this->getDI());
@@ -17,27 +19,31 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 			$this->_compiler->addFunction('empty', 'empty');
 
 			$this->_compiler->addFunction('config', function($resolvedArgs, $exprArgs) {
-				return '$this->getDI()->get(\'config\')->get(' . $resolvedArgs . ')';
+				return '$volt->getDI()->get(\'config\')->get(' . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('global', function($resolvedArgs, $exprArgs) {
-				return '$this->setOrReturnGlobal(' . $resolvedArgs . ')';
+				return '$volt->setOrReturnGlobal(' . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('title', function($resolvedArgs, $exprArgs) {
-				return $resolvedArgs . ($resolvedArgs ? ' . ' : '') . ' $this->setOrReturnGlobal(\'pageTitle\'' . ($resolvedArgs ? ', ' : '') . $resolvedArgs . ')';
+				return $resolvedArgs . ($resolvedArgs ? ' . ' : '') . ' $volt->setOrReturnGlobal(\'pageTitle\'' . ($resolvedArgs ? ', ' : '') . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('t', function($resolvedArgs, $exprArgs) {
-				return '$GLOBALS[\'di\']->get(\'application\')->translate(' . $resolvedArgs . ')';
+				return '$volt->getDI()->get(\'application\')->translate(' . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('tip', function($resolvedArgs, $exprArgs) {
-				return '$GLOBALS[\'di\']->get(\'application\')->translate(' . $resolvedArgs . ')';
+				return '$volt->getDI()->get(\'application\')->translate(' . $resolvedArgs . ')';
 			});
 
 			$this->_compiler->addFunction('req', function($resolvedArgs, $exprArgs) {
-				return '$this->getDI()->get(\'request\')->get(' . $resolvedArgs . ')';
+				return '$volt->getDI()->get(\'request\')->get(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('param', function($resolvedArgs, $exprArgs) {
+				return '(!empty($params[' . $resolvedArgs . ']) ? $params[' . $resolvedArgs . '] : \'\')';
 			});
 		}
 
@@ -233,9 +239,42 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 
 		//$source = '<' . '?php extract($this->getGlobals()); ?' . '>' . $source;
 
+		$variable = '<' . '?php $volt = $GLOBALS[\'volt\']; ?' . '>';
 		$compiled = parent::_compileSource($source, $something);
+
+		if (is_array($compiled))
+		{
+			$compiled[0] = $variable . $compiled[0];
+			foreach ($compiled as &$entry)
+			{
+				$entry = $this->replaceThis($entry);
+			}
+		}
+		else
+		{
+			$compiled = $this->replaceThis($variable . $compiled);
+		}
+/*
+*/
 		//var_dump($compiled);exit;
 
 		return $compiled;
 	}
+
+	protected function replaceThis ($source)
+	{
+		if (is_array($source))
+		{
+			return $source;
+		}
+
+		$source = str_replace('$this', '$volt', $source);
+		$source = str_replace('$__this', '$this', $source);
+		$source = preg_replace('/function vmacro_([^\)]+)\)[\s]+\{/', 'function vmacro_$1) { global $volt; ', $source);
+
+		$source = preg_replace('/throw new \\\Phalcon\\\Mvc\\\View\\\Exception\("Macro [\_a-zA-Z0-9]+ was called without parameter: ([\_a-zA-Z0-9]+)"\)\;/', '\$$1 = \'\';', $source);
+
+		return $source;
+	}
+
 }

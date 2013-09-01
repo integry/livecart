@@ -1102,8 +1102,8 @@ class CheckoutController extends FrontendController
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
 		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class, 'query' => $notifyParams))));
 		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $order->getID()))));
-		$handler->setCancelUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'))));
-		$handler->setSiteUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
+		$handler->setCancelUrl($this->router->createFullUrl($this->url->get('checkout/pay')));
+		$handler->setSiteUrl($this->router->createFullUrl($this->url->get('index/index')));
 
 		// transaction information is not return back online, so the order is finalized right away
 		if (!$handler->isNotify())

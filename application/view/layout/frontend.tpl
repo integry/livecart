@@ -1,6 +1,6 @@
 [[ partial("macro/form.tpl") ]]
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="LiveCart">
 	<head>
 		<base href="/livecart2/public/"></base>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -8,6 +8,9 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+		<script src="javascript/frontend/Frontend.js"></script>
+		<script src="javascript/library/angular/directives.js"></script>
+
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>
 		<link href="upload/css/mrfeedback.css" rel="stylesheet"></link>

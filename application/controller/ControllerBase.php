@@ -42,7 +42,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	{
 		if (!$this->application->isInstalled() && !($this instanceof InstallController))
 		{
-			header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
+			header('Location: ' . $this->url->get('install/index'));
 			exit;
 		}
 
