@@ -240,7 +240,7 @@ abstract class ObjectImageController extends StoreManagementController
 	/**
 	 * Builds an image upload form validator
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	protected function buildValidator($catId)
 	{

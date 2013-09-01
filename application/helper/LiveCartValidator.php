@@ -6,7 +6,7 @@
  * @package application/helper
  * @author Integry Systems
  */
-class LiveCartValidator extends RequestValidator
+class LiveCartValidator extends \Phalcon\Validation
 {
 	protected $application;
 	protected $isPluginProcessed;

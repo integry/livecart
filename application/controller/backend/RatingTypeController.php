@@ -102,7 +102,7 @@ class RatingTypeController extends StoreManagementController
 	private function buildValidator()
 	{
 		$validator = $this->getValidator("ProductRatingType", $this->request);
-		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_enter_name'))));
+		$validator->add('name', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_name'))));
 
 		return $validator;
 	}

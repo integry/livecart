@@ -140,11 +140,11 @@ class DatabaseImportController extends StoreManagementController
 	{
 
 		$val = $this->getValidator('databaseImport', $this->request);
-		$val->add('cart', new PresenceOf(array('message' => $this->translate('_err_no_cart_selected'))));
-		$val->add('dbServer', new PresenceOf(array('message' => $this->translate('_err_no_database_server'))));
-		$val->add('dbType', new PresenceOf(array('message' => $this->translate('_err_no_db_type'))));
-		$val->add('dbName', new PresenceOf(array('message' => $this->translate('_err_no_database_name'))));
-		$val->add('dbUser', new PresenceOf(array('message' => $this->translate('_err_no_database_username'))));
+		$val->add('cart', new Validator\PresenceOf(array('message' => $this->translate('_err_no_cart_selected'))));
+		$val->add('dbServer', new Validator\PresenceOf(array('message' => $this->translate('_err_no_database_server'))));
+		$val->add('dbType', new Validator\PresenceOf(array('message' => $this->translate('_err_no_db_type'))));
+		$val->add('dbName', new Validator\PresenceOf(array('message' => $this->translate('_err_no_database_name'))));
+		$val->add('dbUser', new Validator\PresenceOf(array('message' => $this->translate('_err_no_database_username'))));
 
 		return $val;
 	}

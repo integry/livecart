@@ -31,7 +31,7 @@ class DeliveryZoneController extends StoreManagementController
 
 		$this->set('zones', json_encode($zones));
 		$this->set('countryGroups', json_encode($this->locale->info()->getCountryGroups()));
-		$this->set('testAddress', new Form(new RequestValidator('testAddress', $this->request)));
+		$this->set('testAddress', new Form(new \Phalcon\Validation('testAddress', $this->request)));
 		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		$this->loadLanguageFile('backend/ShippingService');
 	}

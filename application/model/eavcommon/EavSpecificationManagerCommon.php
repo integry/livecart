@@ -461,7 +461,7 @@ abstract class EavSpecificationManagerCommon
 
 		$request = new Request();
 		$request->setValueArray($this->getFormData());
-		$validator = new RequestValidator($validatorName, $request);
+		$validator = new \Phalcon\Validation($validatorName, $request);
 		$this->setValidation($validator);
 
 		return $validator->isValid();
@@ -539,7 +539,7 @@ abstract class EavSpecificationManagerCommon
 		$form->setData($this->getFormData($prefix));
 	}
 
-	public function setValidation(RequestValidator $validator, $filtersOnly = false, $fieldPrefix = '')
+	public function setValidation(\Phalcon\Validation $validator, $filtersOnly = false, $fieldPrefix = '')
 	{
 		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 
@@ -565,7 +565,7 @@ abstract class EavSpecificationManagerCommon
 		  	{
 				if (!($field->isSelector() && $field->isMultiValue->get()))
 				{
-					$validator->add($fieldname, new PresenceOf(array('message' => $application->translate('_err_specfield_required'))));
+					$validator->add($fieldname, new Validator\PresenceOf(array('message' => $application->translate('_err_specfield_required'))));
 				}
 				else
 				{

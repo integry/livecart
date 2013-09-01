@@ -135,15 +135,15 @@ class RecurringProductPeriodController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	public function createFormValidatorAction($rpp)
 	{
 		$validator = $this->getValidator(
 			'RecurringProductPeriodForm_'.( $rpp['ID'] ? $rpp['ID'] : ''), $this->request);
-		$validator->add('name', new PresenceOf(array('message' => $this->translate('_error_the_name_should_not_be_empty'))));
-		$validator->add('periodLength', new PresenceOf(array('message' => $this->translate('_error_period_length_should_not_be_empty'))));
-		// $validator->add('rebillCount', new PresenceOf(array('message' => $this->translate('_error_rebill_count_should_not_be_empty'))));
+		$validator->add('name', new Validator\PresenceOf(array('message' => $this->translate('_error_the_name_should_not_be_empty'))));
+		$validator->add('periodLength', new Validator\PresenceOf(array('message' => $this->translate('_error_period_length_should_not_be_empty'))));
+		// $validator->add('rebillCount', new Validator\PresenceOf(array('message' => $this->translate('_error_rebill_count_should_not_be_empty'))));
 		$validator->add('periodLength', new IsNumericCheck($this->translate('_error_period_length_expected_positive_numeric')));
 		// $validator->add('rebillCount', new IsNumericCheck($this->translate('_error_rebill_count_expected_positive_numeric')));
 		$validator->add('periodLength', new MinValueCheck($this->translate('_error_period_length_expected_positive_numeric'), 1));

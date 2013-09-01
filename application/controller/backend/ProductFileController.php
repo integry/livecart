@@ -162,17 +162,17 @@ class ProductFileController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildValidator($existingProductFile = true)
 	{
 		$validator = $this->getValidator("productFileValidator", $this->request);
 
-		$validator->add('title_' . $this->application->getDefaultLanguageCode(), new PresenceOf(array('message' => $this->translate('_err_file_title_is_empty'))));
+		$validator->add('title_' . $this->application->getDefaultLanguageCode(), new Validator\PresenceOf(array('message' => $this->translate('_err_file_title_is_empty'))));
 		$validator->add('allowDownloadDays', new IsNumericCheck($this->translate('_err_allow_download_days_should_be_a_number')));
-		$validator->add('allowDownloadDays', new PresenceOf(array('message' => $this->translate('_err_allow_download_days_is_empty'))));
+		$validator->add('allowDownloadDays', new Validator\PresenceOf(array('message' => $this->translate('_err_allow_download_days_is_empty'))));
 		if(!$existingProductFile && !$this->request->get('filePath')) $validator->add('uploadFile', new IsFileUploadedCheck($this->translate('_err_file_could_not_be_uploaded_to_the_server')));
-		if($existingProductFile) $validator->add('fileName', new PresenceOf(array('message' => $this->translate('_err_fileName_should_not_be_empty'))));
+		if($existingProductFile) $validator->add('fileName', new Validator\PresenceOf(array('message' => $this->translate('_err_fileName_should_not_be_empty'))));
 
 		return $validator;
 	}

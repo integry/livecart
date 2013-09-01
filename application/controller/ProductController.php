@@ -721,7 +721,7 @@ class ProductController extends CatalogController
 			{
 				foreach ($variations['variations'] as $variation)
 				{
-					$validator->add($prefix . 'variation_' . $variation['ID'], new PresenceOf(array('message' => $this->translate('_err_option_0'))));
+					$validator->add($prefix . 'variation_' . $variation['ID'], new Validator\PresenceOf(array('message' => $this->translate('_err_option_0'))));
 				}
 			}
 
@@ -797,7 +797,7 @@ class ProductController extends CatalogController
 		// option validation
 		foreach ($ratingTypes as $type)
 		{
-			$validator->add('rating_' . $type['ID'], new PresenceOf(array('message' => $this->translate('_err_no_rating_selected'))));
+			$validator->add('rating_' . $type['ID'], new Validator\PresenceOf(array('message' => $this->translate('_err_no_rating_selected'))));
 		}
 
 		if ($this->isRated($product, $isRating))
@@ -810,9 +810,9 @@ class ProductController extends CatalogController
 
 		if ($this->isAddingReview())
 		{
-			$validator->add('nickname', new PresenceOf(array('message' => $this->translate('_err_no_review_nickname'))));
-			$validator->add('title', new PresenceOf(array('message' => $this->translate('_err_no_review_summary'))));
-			$validator->add('text', new PresenceOf(array('message' => $this->translate('_err_no_review_text'))));
+			$validator->add('nickname', new Validator\PresenceOf(array('message' => $this->translate('_err_no_review_nickname'))));
+			$validator->add('title', new Validator\PresenceOf(array('message' => $this->translate('_err_no_review_summary'))));
+			$validator->add('text', new Validator\PresenceOf(array('message' => $this->translate('_err_no_review_text'))));
 		}
 
 		return $validator;
@@ -823,19 +823,19 @@ class ProductController extends CatalogController
 				$validator = $this->getValidator('productSharingValidator', $this->getRequest());
 		if (!$this->config->get('ENABLE_PRODUCT_SHARING'))
 		{
-			$validator->add(md5(time().mt_rand()), new PresenceOf(array('message' => $this->translate('_feature_disabled'))));
+			$validator->add(md5(time().mt_rand()), new Validator\PresenceOf(array('message' => $this->translate('_feature_disabled'))));
 		}
 
-		$validator->add('friendemail', new PresenceOf(array('message' => $this->translate('_err_enter_email'))));
-		$validator->add('friendemail', new IsValidEmailCheck($this->translate('_err_invalid_email')));
+		$validator->add('friendemail', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_email'))));
+		$validator->add('friendemail', new Validator\Email(array('message' => $this->translate('_err_invalid_email'))));
 
 		if ($this->sessionUser->getUser()->isAnonymous())
 		{
 			if (!$this->config->get('ENABLE_ANONYMOUS_PRODUCT_SHARING'))
 			{
-				$validator->add(md5(time().mt_rand()), new PresenceOf(array('message' => $this->translate('_feature_disabled_for_anonymous'))));
+				$validator->add(md5(time().mt_rand()), new Validator\PresenceOf(array('message' => $this->translate('_feature_disabled_for_anonymous'))));
 			}
-			$validator->add('nickname', new PresenceOf(array('message' => $this->translate('_err_enter_nickname'))));
+			$validator->add('nickname', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_nickname'))));
 		}
 
 		return $validator;
@@ -981,9 +981,9 @@ class ProductController extends CatalogController
 		$request = $request ? $request : $this->request;
 
 		$validator = $this->getValidator("productContactForm", $request);
-		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_name'))));
-		$validator->add('email', new PresenceOf(array('message' => $this->translate('_err_email'))));
-		$validator->add('msg', new PresenceOf(array('message' => $this->translate('_err_message'))));
+		$validator->add('name', new Validator\PresenceOf(array('message' => $this->translate('_err_name'))));
+		$validator->add('email', new Validator\PresenceOf(array('message' => $this->translate('_err_email'))));
+		$validator->add('msg', new Validator\PresenceOf(array('message' => $this->translate('_err_message'))));
 		$validator->add('surname', new MaxLengthCheck('Please do not enter anything here', 0));
 
 		return $validator;

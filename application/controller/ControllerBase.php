@@ -215,7 +215,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		return $msg;
 	}
 
-	protected function getValidator($validatorName, Request $request = null)
+	protected function getValidator($validatorName, \Phalcon\Http\Request $request = null)
 	{
 		$validator = new \Phalcon\Validation();
 		$validator->setDI($this->getDI());

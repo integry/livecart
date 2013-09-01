@@ -409,7 +409,7 @@ class CustomerOrderController extends ActiveGridController
 	private function getDateCompletedValidator(\Phalcon\Http\Request $request)
 	{
 		$validator = $this->getValidator('dateCreatedValidator', $request);
-		$validator->add('dateCompleted', new PresenceOf(array('message' => $this->translate('_err_date_cannot_be_empty'))));
+		$validator->add('dateCompleted', new Validator\PresenceOf(array('message' => $this->translate('_err_date_cannot_be_empty'))));
 		$validator->add('dateCompleted', new RegExpCheck($this->translate('_err_unknown_date_format'), '/^\d{4}\-\d{1,2}\-\d{1,2}$/'));
 
 		return $validator;
@@ -1442,17 +1442,17 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	public function createUserAddressFormValidatorAction()
 	{
 		$validator = $this->getValidator("userAddress", $this->request);
 
-		$validator->add('countryID', new PresenceOf(array('message' => $this->translate('_country_empty'))));
-		$validator->add('city',	  new PresenceOf(array('message' => $this->translate('_city_empty'))));
-		$validator->add('address1',  new PresenceOf(array('message' => $this->translate('_address_empty'))));
-		$validator->add('firstName', new PresenceOf(array('message' => $this->translate('_first_name_is_empty'))));
-		$validator->add('lastName',  new PresenceOf(array('message' => $this->translate('_last_name_is_empty'))));
+		$validator->add('countryID', new Validator\PresenceOf(array('message' => $this->translate('_country_empty'))));
+		$validator->add('city',	  new Validator\PresenceOf(array('message' => $this->translate('_city_empty'))));
+		$validator->add('address1',  new Validator\PresenceOf(array('message' => $this->translate('_address_empty'))));
+		$validator->add('firstName', new Validator\PresenceOf(array('message' => $this->translate('_first_name_is_empty'))));
+		$validator->add('lastName',  new Validator\PresenceOf(array('message' => $this->translate('_last_name_is_empty'))));
 
 		UserAddress::getNewInstance()->getSpecification()->setValidation($validator);
 
@@ -1483,7 +1483,7 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function createOrderFormValidator()
 	{
@@ -1507,7 +1507,7 @@ class CustomerOrderController extends ActiveGridController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function createFieldsFormValidator(CustomerOrder $order)
 	{

@@ -108,7 +108,7 @@ class TaxRateController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function createTaxRateFormValidator()
 	{
@@ -128,7 +128,7 @@ class TaxRateController extends StoreManagementController
 		return $validator;
 	}
 
-	private function setFieldValidation(RequestValidator $validator, Tax $tax, TaxClass $class = null)
+	private function setFieldValidation(\Phalcon\Validation $validator, Tax $tax, TaxClass $class = null)
 	{
 		$field = $this->getFieldName($tax, $class);
 		$validator->add($field, new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));

@@ -188,7 +188,7 @@ class LiveCartSmarty extends Smarty
 			$msg = $check->getViolationMsg();
 			$params = $check->getParamList();
 
-			if ($check instanceof PresenceOf)
+			if ($check instanceof Validator\PresenceOf)
 			{
 				$validation[] = array('ng-required', $msg, true);
 			}

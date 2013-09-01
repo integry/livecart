@@ -107,12 +107,12 @@ class TaxController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	public function createTaxFormValidatorAction(Tax $tax)
 	{
 		$validator = $this->getValidator("taxForm_" . $tax->isExistingRecord() ? $tax->getID() : '', $this->request);
-		$validator->add("name", new PresenceOf(array('message' => $this->translate("_error_the_name_should_not_be_empty"))));
+		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate("_error_the_name_should_not_be_empty"))));
 
 		$zones = DeliveryZone::getAll();
 		$zones->add(DeliveryZone::getDefaultZoneInstance());

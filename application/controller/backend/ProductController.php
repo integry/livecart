@@ -1025,19 +1025,19 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	/**
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	public function buildValidatorAction($isExisting)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
 		//Product::setValidation($validator);
 
-		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_name_empty'))));
+		$validator->add('name', new Validator\PresenceOf(array('message' => $this->translate('_err_name_empty'))));
 
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$isExisting && !$this->request->get('autosku'))
 		{
-			$validator->add('sku', new PresenceOf(array('message' => $this->translate('_err_sku_empty'))));
+			$validator->add('sku', new Validator\PresenceOf(array('message' => $this->translate('_err_sku_empty'))));
 		}
 
 		// check if entered SKU is unique
@@ -1144,7 +1144,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return array_reverse($ret);
 	}
 
-	public function addShippingValidatorAction(RequestValidator $validator)
+	public function addShippingValidatorAction(\Phalcon\Validation $validator)
 	{
 		// shipping related numeric field validations
 		$validator->add('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
@@ -1165,11 +1165,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addPricesValidatorAction(RequestValidator $validator, $prefix = '')
+	public function addPricesValidatorAction(\Phalcon\Validation $validator, $prefix = '')
 	{
 		// price in base currency
 		$baseCurrency = $this->getApplication()->getDefaultCurrency()->getID();
-		$validator->add($prefix.'price_' . $baseCurrency, new PresenceOf(array('message' => $this->translate('_err_price_empty'))));
+		$validator->add($prefix.'price_' . $baseCurrency, new Validator\PresenceOf(array('message' => $this->translate('_err_price_empty'))));
 
 		$currencies = $this->getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
@@ -1184,7 +1184,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function addInventoryValidatorAction(RequestValidator $validator)
+	public function addInventoryValidatorAction(\Phalcon\Validation $validator)
 	{
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
@@ -1192,8 +1192,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				new OrCheck(
 					array('stockCount', 'isUnlimitedStock'),
 					array(
-						new PresenceOf(array('message' => $this->translate('_err_stock_required')),
-						new PresenceOf(array('message' => $this->translate('_err_stock_required'))
+						new Validator\PresenceOf(array('message' => $this->translate('_err_stock_required')),
+						new Validator\PresenceOf(array('message' => $this->translate('_err_stock_required'))
 					),
 					$this->request
 				)));

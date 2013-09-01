@@ -6,7 +6,7 @@
  *  @package application/helper/smarty
  *  @author Integry Systems
  */
-function smarty_modifier_isRequired(Form $form, $fieldName, $check = 'PresenceOf')
+function smarty_modifier_isRequired(Form $form, $fieldName, $check = 'Validator\PresenceOf')
 {
 	$checkData = $form->getValidator()->getValidatorVar($fieldName)->getCheckData();
 

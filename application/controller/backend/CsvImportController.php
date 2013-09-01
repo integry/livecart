@@ -443,7 +443,7 @@ class CsvImportController extends StoreManagementController
 	private function getDelimiterValidator()
 	{
 
-		return new RequestValidator('csvDelimiters', $this->request);
+		return new \Phalcon\Validation('csvDelimiters', $this->request);
 	}
 
 	private function getFieldsForm()
@@ -454,7 +454,7 @@ class CsvImportController extends StoreManagementController
 	private function getFieldsValidator()
 	{
 
-		return new RequestValidator('csvFields', $this->request);
+		return new \Phalcon\Validation('csvFields', $this->request);
 	}
 
 	private function setCacheProgress($index)

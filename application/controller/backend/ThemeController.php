@@ -459,12 +459,12 @@ class ThemeController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildValidator()
 	{
 		$validator = $this->getValidator("theme", $this->request);
-		$validator->add("name", new PresenceOf(array('message' => $this->translate('_err_theme_name_empty'))));
+		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate('_err_theme_name_empty'))));
 		$validator->addFilter("name", new RegexFilter('[^_-a-zA-Z0-9]'));
 
 		return $validator;
@@ -479,7 +479,7 @@ class ThemeController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildColorsValidator($theme)
 	{
@@ -504,7 +504,7 @@ class ThemeController extends StoreManagementController
 	/**
 	 * Builds an theme import form validator
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	protected function buildImportValidator()
 	{

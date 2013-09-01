@@ -360,7 +360,7 @@ class OnePageCheckoutController extends CheckoutController
 		$validator = $this->getValidator('setPaymentMethod');
 		if ($this->isTosRequired)
 		{
-			$validator->add('tos', new PresenceOf(array('message' => $this->translate('_err_agree_to_tos'))));
+			$validator->add('tos', new Validator\PresenceOf(array('message' => $this->translate('_err_agree_to_tos'))));
 		}
 
 		return $validator;

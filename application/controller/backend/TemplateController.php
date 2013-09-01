@@ -64,7 +64,7 @@ class TemplateController extends StoreManagementController
 	public function addAction()
 	{
 		$response = $this->edit();
-		$response->get('form')->getValidator()->add('fileName', new PresenceOf(array('message' => $this->translate('_file_name_empty'))));
+		$response->get('form')->getValidator()->add('fileName', new Validator\PresenceOf(array('message' => $this->translate('_file_name_empty'))));
 		$this->set('tabid', $this->getRequest()->get('tabid'));
 	}
 

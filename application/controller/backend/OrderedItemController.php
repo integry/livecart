@@ -284,7 +284,7 @@ class OrderedItemController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function createOrderedItemValidator()
 	{

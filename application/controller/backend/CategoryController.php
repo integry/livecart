@@ -354,12 +354,12 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Builds a category form validator
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildAddValidator()
 	{
 		$validator = $this->getValidator("category", $this->request);
-		$validator->add("name", new PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
+		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
 
 		return $validator;
 	}
@@ -377,12 +377,12 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Builds a category form validator
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildValidator(Category $category)
 	{
 		$validator = $this->getValidator("category", $this->request);
-		$validator->add("name", new PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
+		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
 
 		$category->getSpecification()->setValidation($validator);
 

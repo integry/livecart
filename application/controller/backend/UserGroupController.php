@@ -135,12 +135,12 @@ class UserGroupController extends ActiveGridController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function createUserGroupFormValidator(UserGroup $group)
 	{
 		$validator = $this->getValidator("userGroupForm_" . $group->isExistingRecord() ? $group->getID() : '', $this->request);
-		$validator->add("name", new PresenceOf(array('message' => $this->translate("_error_name_should_not_be_empty"))));
+		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate("_error_name_should_not_be_empty"))));
 		$group->getSpecification()->setValidation($validator);
 		return $validator;
 	}

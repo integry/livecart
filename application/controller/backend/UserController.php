@@ -52,17 +52,17 @@ class UserController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	public static function createUserFormValidator(StoreManagementController $controller, $user = false)
 	{
 		$inst = new UserController(ActiveRecordModel::getApplication());
 		$validator = $inst->getValidator("UserForm", $controller->getRequest());
 
-		$validator->add('email', new PresenceOf(array('message' => $controller->translate('_err_email_empty')));
+		$validator->add('email', new Validator\PresenceOf(array('message' => $controller->translate('_err_email_empty')));
 		$validator->add('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));
-		$validator->add('firstName', new PresenceOf(array('message' => $controller->translate('_err_first_name_empty')));
-		$validator->add('lastName', new PresenceOf(array('message' => $controller->translate('_err_last_name_empty')));
+		$validator->add('firstName', new Validator\PresenceOf(array('message' => $controller->translate('_err_first_name_empty')));
+		$validator->add('lastName', new Validator\PresenceOf(array('message' => $controller->translate('_err_last_name_empty')));
 
 		$passwordLengthStart = 6;
 		$passwordLengthEnd = 30;

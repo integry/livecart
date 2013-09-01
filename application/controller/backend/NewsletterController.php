@@ -184,16 +184,16 @@ class NewsletterController extends ActiveGridController
 	private function createValidator()
 	{
 		$validator = $this->getValidator('newsletter', $this->request);
-		$validator->add('subject', new PresenceOf(array('message' => $this->translate('_err_title_empty'))));
-		// $validator->add('text', new PresenceOf(array('message' => $this->translate('_err_text_empty'))));
+		$validator->add('subject', new Validator\PresenceOf(array('message' => $this->translate('_err_title_empty'))));
+		// $validator->add('text', new Validator\PresenceOf(array('message' => $this->translate('_err_text_empty'))));
 
 
 		$validator->add('text',
 			new OrCheck(
 				array('text', 'html'),
 				array(
-					new PresenceOf(array('message' => $this->translate('_err_text_empty')),
-					new PresenceOf(array('message' => $this->translate('_err_text_empty'))
+					new Validator\PresenceOf(array('message' => $this->translate('_err_text_empty')),
+					new Validator\PresenceOf(array('message' => $this->translate('_err_text_empty'))
 				),
 				$this->request
 			)

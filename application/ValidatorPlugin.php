@@ -14,7 +14,7 @@ abstract class ValidatorPlugin
 
 	public abstract function process();
 
-	public function __construct(RequestValidator $validator, LiveCart $application)
+	public function __construct(\Phalcon\Validation $validator, LiveCart $application)
 	{
 		$this->validator = $validator;
 		$this->application = $application;

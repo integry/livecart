@@ -75,7 +75,7 @@ abstract class ProductListControllerCommon extends StoreManagementController
 	{
 		$validator = $this->getValidator(get_class($this) . "Validator", $this->request);
 
-		$validator->add('name', new PresenceOf(array('message' => $this->translate('_err_relationship_name_is_empty'))));
+		$validator->add('name', new Validator\PresenceOf(array('message' => $this->translate('_err_relationship_name_is_empty'))));
 
 		return $validator;
 	}

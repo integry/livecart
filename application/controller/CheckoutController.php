@@ -1474,7 +1474,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($shipment->isShippable())
 			{
-				$validator->add('shipping_' . $key, new PresenceOf(array('message' => $this->translate('_err_select_shipping'))));
+				$validator->add('shipping_' . $key, new Validator\PresenceOf(array('message' => $this->translate('_err_select_shipping'))));
 			}
 		}
 
@@ -1505,7 +1505,7 @@ class CheckoutController extends FrontendController
 
 		if (!$step || ('billing' == $step))
 		{
-			$validator->add('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new PresenceOf(array('message' => $this->translate('_select_billing_address')), new PresenceOf()), $this->request)));
+			$validator->add('billingAddress', new OrCheck(array('billingAddress', 'billing_address1'), array(new Validator\PresenceOf(array('message' => $this->translate('_select_billing_address')), new Validator\PresenceOf()), $this->request)));
 			$this->validateAddress($validator, 'billing_');
 		}
 
@@ -1513,7 +1513,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->isShippingRequired($order) && !$order->isMultiAddress)
 			{
-				$validator->add('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new PresenceOf(array('message' => $this->translate('_select_shipping_address')), new PresenceOf(), new PresenceOf()), $this->request)));
+				$validator->add('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling', 'shipping_address1'), array(new Validator\PresenceOf(array('message' => $this->translate('_select_shipping_address')), new Validator\PresenceOf(), new Validator\PresenceOf()), $this->request)));
 				$this->validateAddress($validator, 'shipping_');
 			}
 		}
@@ -1533,7 +1533,7 @@ class CheckoutController extends FrontendController
 		return !$this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired();
 	}
 
-	protected function validateAddress(RequestValidator $validator, $prefix)
+	protected function validateAddress(\Phalcon\Validation $validator, $prefix)
 	{
 		$someValidator = $this->getValidator('foo', $this->request);
 				$con = new UserController($this->application);
@@ -1543,7 +1543,7 @@ class CheckoutController extends FrontendController
 		{
 			foreach ($var->getChecks() as $check)
 			{
-				$validator->add($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new PresenceOf()), $this->request));
+				$validator->add($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new Validator\PresenceOf()), $this->request));
 			}
 		}
 	}
@@ -1559,21 +1559,21 @@ class CheckoutController extends FrontendController
 	private function buildCreditCardValidator(CreditCardPayment $ccHandler = null)
 	{
 		$validator = $this->getValidator("creditCard", $this->request);
-		$validator->add('ccName', new PresenceOf(array('message' => $this->translate('_err_enter_cc_name'))));
-		$validator->add('ccNum', new PresenceOf(array('message' => $this->translate('_err_enter_cc_num'))));
-		$validator->add('ccExpiryMonth', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_month'))));
-		$validator->add('ccExpiryYear', new PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_year'))));
+		$validator->add('ccName', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_cc_name'))));
+		$validator->add('ccNum', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_cc_num'))));
+		$validator->add('ccExpiryMonth', new Validator\PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_month'))));
+		$validator->add('ccExpiryYear', new Validator\PresenceOf(array('message' => $this->translate('_err_select_cc_expiry_year'))));
 
 		if ($ccHandler)
 		{
 			if ($ccHandler->isCardTypeNeeded())
 			{
-				$validator->add('ccType', new PresenceOf(array('message' => $this->translate('_err_select_cc_type'))));
+				$validator->add('ccType', new Validator\PresenceOf(array('message' => $this->translate('_err_select_cc_type'))));
 			}
 
 			if ($this->config->get('REQUIRE_CVV') && $ccHandler->isCvvRequired())
 			{
-				$validator->add('ccCVV', new PresenceOf(array('message' => $this->translate('_err_enter_cc_cvv'))));
+				$validator->add('ccCVV', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_cc_cvv'))));
 			}
 		}
 

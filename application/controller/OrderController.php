@@ -1073,7 +1073,7 @@ class OrderController extends FrontendController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildCartValidator(CustomerOrder $order, $options)
 	{
@@ -1092,7 +1092,7 @@ class OrderController extends FrontendController
 
 		if ($this->isTosInCartPage())
 		{
-			$validator->add('tos', new PresenceOf(array('message' => $this->translate('_err_agree_to_tos'))));
+			$validator->add('tos', new Validator\PresenceOf(array('message' => $this->translate('_err_agree_to_tos'))));
 		}
 
 		return $validator;
@@ -1132,13 +1132,13 @@ class OrderController extends FrontendController
 		$validator = $this->getValidator('variationValidator', $this->request);
 		foreach ($variations['variations'] as $variation)
 		{
-			$validator->add('variation_' . $variation['ID'], new PresenceOf(array('message' => $this->translate('_err_option_0'))));
+			$validator->add('variation_' . $variation['ID'], new Validator\PresenceOf(array('message' => $this->translate('_err_option_0'))));
 		}
 
 		return $validator;
 	}
 
-	private function buildItemValidation(RequestValidator $validator, $item, $options, $id = null)
+	private function buildItemValidation(\Phalcon\Validation $validator, $item, $options, $id = null)
 	{
 		$name = 'item_' . $item->getID();
 		$validator->add($name, new IsNumericCheck($this->translate('_err_not_numeric')));
@@ -1169,7 +1169,7 @@ class OrderController extends FrontendController
 					{
 						$this->addOptionValidation($validator, $option, $field);
 						/*
-						$validator->add($field, new PresenceOf(array('message' => $this->translate('_err_option_' . $option['type']))));
+						$validator->add($field, new Validator\PresenceOf(array('message' => $this->translate('_err_option_' . $option['type']))));
 						*/
 						if (!$this->request->get($field))
 						{
@@ -1181,13 +1181,13 @@ class OrderController extends FrontendController
 		}
 	}
 
-	public static function addOptionValidation(RequestValidator $validator, $option, $fieldName)
+	public static function addOptionValidation(\Phalcon\Validation $validator, $option, $fieldName)
 	{
 		$app = ActiveRecordModel::getApplication();
 		if (ProductOption::TYPE_FILE == $option['type'])
 		{
 			$checks = array(new IsFileUploadedCheck($app->translate('_err_option_upload')),
-							new PresenceOf(array('message' => $this->translate('_err_option_upload')),
+							new Validator\PresenceOf(array('message' => $this->translate('_err_option_upload')),
 							);
 
 			$validator->add($fieldName, new OrCheck(array('upload_' . $fieldName, $fieldName), $checks, $validator->getRequest()));
@@ -1201,7 +1201,7 @@ class OrderController extends FrontendController
 		}
 		else
 		{
-			$validator->add($fieldName, new PresenceOf(array('message' => $app->translate('_err_option_' . $option['type'])));
+			$validator->add($fieldName, new Validator\PresenceOf(array('message' => $app->translate('_err_option_' . $option['type'])));
 		}
 	}
 

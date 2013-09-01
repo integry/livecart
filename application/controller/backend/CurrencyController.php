@@ -371,14 +371,14 @@ class CurrencyController extends StoreManagementController
 	/**
 	 * Builds a currency form validator
 	 *
-	 * @return RequestValidator
+	 * @return \Phalcon\Validation
 	 */
 	private function buildValidator($currencies)
 	{
 		$validator = $this->getValidator("rate", $this->request);
 		foreach ($currencies as $currency)
 		{
-			$validator->add('rate_' . $currency['ID'], new PresenceOf(array('message' => $this->translate('_err_empty'))));
+			$validator->add('rate_' . $currency['ID'], new Validator\PresenceOf(array('message' => $this->translate('_err_empty'))));
 			$validator->add('rate_' . $currency['ID'], new IsNumericCheck($this->translate('_err_numeric')));
 			$validator->add('rate_' . $currency['ID'], new MinValueCheck($this->translate('_err_negative'), 0));
 			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());

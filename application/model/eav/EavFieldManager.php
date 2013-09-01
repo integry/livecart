@@ -45,7 +45,7 @@ class EavFieldManager implements iEavFieldManager
 		return ActiveRecordGroup::mergeGroupsWithFields('EavFieldGroup', $groups, $fields);
 	}
 
-	public function setValidation(RequestValidator $validator)
+	public function setValidation(\Phalcon\Validation $validator)
 	{
 		EavSpecificationManagerCommon::setValidation($validator);
 	}

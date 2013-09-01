@@ -88,7 +88,7 @@ class ProductFileGroupController extends StoreManagementController
 	{
 		$validator = $this->getValidator("productFileGroupValidator", $this->request);
 
-		$validator->add('name_' . $this->application->getDefaultLanguageCode(), new PresenceOf(array('message' => $this->translate('_err_group_name_is_empty'))));
+		$validator->add('name_' . $this->application->getDefaultLanguageCode(), new Validator\PresenceOf(array('message' => $this->translate('_err_group_name_is_empty'))));
 
 		return $validator;
 	}
