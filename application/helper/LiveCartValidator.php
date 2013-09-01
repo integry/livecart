@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  *
  * @package application/helper
@@ -8,24 +7,47 @@
  */
 class LiveCartValidator extends \Phalcon\Validation
 {
-	protected $application;
 	protected $isPluginProcessed;
 
-	public function setApplication(LiveCart $application)
+	public function getValidators($field)
 	{
-		$this->application = $application;
+		$validators = array();
+		foreach ($this->_validators as $validator)
+		{
+			if ($validator[0] == $field)
+			{
+				$validators[] = $validator[1];
+			}
+		}
+
+		return $validators;
 	}
 
-	public function isValid()
+	public function hasValidator($field, $type = null)
 	{
-		$this->processPlugins();
-		return parent::isValid();
+		$validators = $this->getValidators($field);
+		if ($type)
+		{
+			$filtered = array();
+			foreach ($validators as $val)
+			{
+				$parts = explode('\\', get_class($val));
+				$class = array_pop($parts);
+				if ($class == $type)
+				{
+					$filtered[] = $val;
+				}
+			}
+			$validators = $filtered;
+		}
+
+		return $validators;
 	}
 
-	public function getJSValidatorParams($requestVarName = null)
+	public function validate($data = array(), $entity = null)
 	{
-		$this->processPlugins();
-		return parent::getJSValidatorParams($requestVarName);
+		//$this->processPlugins();
+		return parent::validate($data, $entity);
 	}
 
 	protected function processPlugins()

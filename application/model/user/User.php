@@ -27,13 +27,25 @@ class User extends \ActiveRecordModel //implements EavAble
 	public $eavObjectID;
 	public $locale;
 	public $email;
-	public $password;
+	protected $password;
 	public $firstName;
 	public $lastName;
 	public $companyName;
 	public $dateCreated;
 	public $isEnabled;
 	public $preferences;
+
+	public function initialize()
+	{
+		$this->addBehavior(new \Phalcon\Mvc\Model\Behavior\Timestampable(
+			array(
+				'beforeCreate' => array(
+					'field' => 'dateCreated',
+					'format' => 'Y-m-d'
+				)
+			)
+		));
+	}
 
 	/*####################  Static method implementations ####################*/
 
@@ -50,14 +62,13 @@ class User extends \ActiveRecordModel //implements EavAble
 	{
 		$instance = new self();
 		$instance->email = $email;
-		$instance->dateCreated = new ARSerializableDateTime();
 
-		if($userGroup)
+		if ($userGroup)
 		{
 			$instance->userGroup = $userGroup;
 		}
 
-		if($password)
+		if ($password)
 		{
 			$instance->setPassword($password);
 		}

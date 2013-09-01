@@ -11,10 +11,10 @@ namespace helper\check;
 
 class PasswordMatchCheck extends \Phalcon\Validation\Validator
 {
-	public function validate()
+	public function validate(\LiveCartValidator $validator, $field)
 	{
-		return $this->request->get($this->getParam("fieldName"))
-				== $this->request->get($this->getParam("confFieldName"));
+		return $validator->request->get($this->getOption("fieldName"))
+				== $validator->request->get($this->getOption("confFieldName"));
 	}
 }
 

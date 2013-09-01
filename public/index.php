@@ -23,6 +23,7 @@ try
 		__ROOT__ . 'application/model/',
 		__ROOT__ . 'application/',
 		__ROOT__ . 'library/',
+		__ROOT__ . 'application/helper/',
 	))->register();
 
 	//Create a DI
@@ -74,7 +75,7 @@ try
 		$URI = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 		$path = parse_url($URI,  PHP_URL_PATH);
 
-		var_dump($_REQUEST['_url']);
+		//var_dump($_REQUEST['_url']);
 		//die($base);
 
 		$url->setBaseUri('/livecart2/');

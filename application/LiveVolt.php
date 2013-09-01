@@ -53,6 +53,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 	public function render($templatePath, $params, $mustClean = null)
 	{
 		$path = $this->getTemplatePath($this->getRelativeTemplatePath($templatePath));
+		if (!empty($params['validator']))
+		{
+			$this->setOrReturnGlobal('validator', $params['validator']);
+		}
 
 		return parent::render($path ? $path : $templatePath, $params, $mustClean);
 	}

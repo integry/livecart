@@ -1,6 +1,6 @@
 <div id="content" class="col col-lg-[[12 - global('layoutspanLeft') - global('layoutspanRight')]]">
 
-{block BREADCRUMB}
+{# block BREADCRUMB #}
 
 {% if title() and empty(hideTitle) %}
 	<h1>[[ title() ]]</h1>

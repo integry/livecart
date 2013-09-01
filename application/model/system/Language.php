@@ -88,15 +88,14 @@ class Language extends \ActiveRecordModel
 	public static function getLanguageList($di)
 	{
 		$languages = self::query()->order('position')->execute(array("cache" => array("key" => "languages")));
-		//$languages = self::find();
 
 		if (!count($languages))
 		{
 			$lang = new Language();
-			$lang->ID = en;
+			$lang->ID = 'en';
 			$lang->isEnabled = true;
 			$lang->isDefault = true;
-			$languages[] = $lang;
+			$languages = array($lang);
 		}
 
 		return $languages;

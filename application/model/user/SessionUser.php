@@ -80,17 +80,17 @@ class SessionUser extends \Phalcon\DI\Injectable
 		return $user;
 	}
 
-	public static function setUser(User $user)
+	public function setUser(User $user)
 	{
 		self::$currentUser = $user;
 
-		$app = ActiveRecordModel::getApplication();
+		$app = $this->getDI()->get('application');
 
 		$app->processRuntimePlugins('session/before-login');
 
-		$session = new Session();
+		$session = $this->getDI()->get('session');
 		$session->set('User', $user->getID());
-		$session->set('UserGroup', $user->userGroup->get() ? $user->userGroup->get()->getID() : 0);
+		//$session->set('UserGroup', $user->userGroup->get() ? $user->userGroup->get()->getID() : 0);
 
 		if ($app->getSessionHandler())
 		{

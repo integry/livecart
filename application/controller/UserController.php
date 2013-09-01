@@ -1,6 +1,7 @@
 <?php
 
 use Phalcon\Validation\Validator;
+use \user\User;
 
 /**
  *  Handles user account related logic
@@ -554,7 +555,7 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'registerAddress');
 		}
 
-		$this->set('validator', $this->buildRegValidator());
+		$this->setValidator($this->buildRegValidator());
 		$this->set('test', 'testing');
 
 		//$this->sessionUser->getAnonymousUser()->getSpecification()->setFormResponse($response, $form);
@@ -569,16 +570,14 @@ class UserController extends ControllerBase
 
 	public function doRegisterAction()
 	{
-		if (!$this->buildRegValidator()->isValid())
+		if (!$this->buildRegValidator()->validate($_REQUEST))
 		{
 			return new ActionRedirectResponse('user', 'register');
 		}
 
-		$this->order;
+		$this->createUser($this->request->get('password'));
 
-		$user = $this->createUser($this->request->get('password'));
-		$this->user = $user;
-		$this->mergeOrder();
+//		$this->mergeOrder();
 
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
@@ -1163,14 +1162,10 @@ class UserController extends ControllerBase
 	/**
 	 *	@return User
 	 */
-	private function createUser($password = '', $prefix = '')
+	private function createUser($password = '')
 	{
 		$user = User::getNewInstance($this->request->get('email'), $this->request->get('password'));
-		$user->firstName->set($this->request->get($prefix . 'firstName'));
-		$user->lastName->set($this->request->get($prefix . 'lastName'));
-		$user->companyName->set($this->request->get($prefix . 'companyName'));
-		$user->email->set($this->request->get('email'));
-		$user->isEnabled->set(!$this->config->get('REG_EMAIL_CONFIRM'));
+		$user->isEnabled = !$this->config->get('REG_EMAIL_CONFIRM');
 
 		// custom fields
 		$user->loadRequestData($this->request, array());
@@ -1186,7 +1181,7 @@ class UserController extends ControllerBase
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
 			$this->sessionUser->setUser($user);
-			$this->sendWelcomeEmail($user);
+			//$this->sendWelcomeEmail($user);
 		}
 		else
 		{
@@ -1194,11 +1189,13 @@ class UserController extends ControllerBase
 			$user->setPreference('confirmation', $code);
 			$user->save();
 
+			/*
 			$email = new Email($this->application);
 			$email->setUser($user);
 			$email->set('code', $code);
 			$email->setTemplate('user.confirm');
 			$email->send();
+			*/
 		}
 
 		return $user;

@@ -29,7 +29,7 @@
 {%- macro textfld(field, title, params) %}
     [[ startinput(field, 'textfld', params) ]]
         [[ label(t(title)) ]]
-        [[ text_field(field, 'class': "form-control", 'ng-model': field, 'ng-required': param('ng-required')) ]]
+        [[ text_field(field, 'class': "form-control", 'ng-model': field, 'ng-required': param('ng-required') or global('validator').getValidators(field)) ]]
     [[ endinput(field) ]]
 {%- endmacro %}
 

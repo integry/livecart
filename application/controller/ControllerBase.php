@@ -77,6 +77,11 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->view->$key = $value;
 	}
 
+	public function setValidator($validator)
+	{
+		$this->set('validator', $validator);
+	}
+
 	public function getBlockResponse(&$block)
 	{
 		if ('getGenericBlock' == $block['call'][1])
@@ -217,7 +222,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 
 	protected function getValidator($validatorName, \Phalcon\Http\Request $request = null)
 	{
-		$validator = new \Phalcon\Validation();
+		$validator = new LiveCartValidator();
 		$validator->setDI($this->getDI());
 
 		return $validator;

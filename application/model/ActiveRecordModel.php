@@ -111,8 +111,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
+	public function loadRequestData(\Phalcon\Http\Request $request)
 	{
+		$this->assign($request->get());
+
+		return;
+		//var_dump($request);exit;
 		$enabledFields = is_array($prefix) ? array_flip($prefix) : null;
 		$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 
