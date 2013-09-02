@@ -72,7 +72,7 @@ class CheckoutController extends FrontendController
 		$this->loadLanguageFile('User');
 
 		parent::initialize();
-		$this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index'), true));
+		$this->addBreadCrumb($this->translate('_checkout'), $this->url->get('order/index'), true));
 
 		$action = $this->router->getActionName();
 
@@ -81,21 +81,21 @@ class CheckoutController extends FrontendController
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_select_addresses'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress'), true));
+		$this->addBreadCrumb($this->translate('_select_addresses'), $this->url->get('checkout/selectAddress'), true));
 
 		if ('selectAddress' == $action)
 		{
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_shipping'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'shipping'), true));
+		$this->addBreadCrumb($this->translate('_shipping'), $this->url->get('checkout/shipping'), true));
 
 		if ('shipping' == $action)
 		{
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_pay'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay'), true));
+		$this->addBreadCrumb($this->translate('_pay'), $this->url->get('checkout/pay'), true));
 	}
 
 	/**
@@ -125,8 +125,8 @@ class CheckoutController extends FrontendController
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->setOrder($this->order);
 
-		$returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class), true));
-		$cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order'), true));
+		$returnUrl = $this->router->createFullUrl($this->url->get('checkout/expressReturn', 'id' => $class), true));
+		$cancelUrl = $this->router->createFullUrl($this->url->get('order'), true));
 		$url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
 
@@ -1100,8 +1100,8 @@ class CheckoutController extends FrontendController
 		$this->order = $order;
 
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
-		$handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class, 'query' => $notifyParams))));
-		$handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $order->getID()))));
+		$handler->setNotifyUrl($this->router->createFullUrl($this->url->get('checkout/notify', 'id' => $class, 'query' => $notifyParams))));
+		$handler->setReturnUrl($this->router->createFullUrl($this->url->get('checkout/completeExternal', 'id' => $order->getID()))));
 		$handler->setCancelUrl($this->router->createFullUrl($this->url->get('checkout/pay')));
 		$handler->setSiteUrl($this->router->createFullUrl($this->url->get('index/index')));
 
@@ -1174,7 +1174,7 @@ class CheckoutController extends FrontendController
 			$returnUrl = $handler->getReturnUrlFromRequest($this->request->toArray());
 			if (!$returnUrl)
 			{
-				$returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed', 'query' => array('id' => $this->order->getID())));
+				$returnUrl = $this->url->get('checkout/completed', 'query' => array('id' => $this->order->getID())));
 				$returnUrl = $this->router->createFullUrl($returnUrl);
 			}
 
@@ -1217,7 +1217,7 @@ class CheckoutController extends FrontendController
 		$order->loadAll();
 
 		$this->set('order', $order->toArray());
-		$this->set('url', $this->router->createUrl(array('controller' => 'user', 'action' => 'viewOrder', 'id' => $this->session->get('completedOrderID')), true));
+		$this->set('url', $this->url->get('user/viewOrder', 'id' => $this->session->get('completedOrderID')), true));
 
 		if (!$order->isPaid)
 		{

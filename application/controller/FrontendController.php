@@ -53,7 +53,7 @@ abstract class FrontendController extends ControllerBase
 	{
 		$initRes = parent::initialize();
 
-		$this->setLayout('frontend');
+/*
 		$this->addBlock('FOOTER_TOOLBAR', 'toolbar', 'block/toolbar');
 		$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 		$this->addBlock('ROOT_CATEGORIES', 'boxRootCategory', 'block/box/rootCategory');
@@ -77,7 +77,7 @@ abstract class FrontendController extends ControllerBase
 		$this->addBlock('MINI_CART', array('order', 'miniCart'), 'order/miniCartBlock');
 		$this->addBlock('QUICK_LOGIN', 'quickLogin', 'user/block/quickLoginBlock');
 		$this->addBlock('INVOICES_MENU', array('user', 'invoicesMenu'), 'user/block/invoicesMenu');
-
+*/
 		$this->application->logStat('Init FrontendController');
 
 		return $initRes;
@@ -105,7 +105,7 @@ abstract class FrontendController extends ControllerBase
 		$this->order = $order;
 	}
 
-	public function addBreadCrumbAction($title, $url)
+	public function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}

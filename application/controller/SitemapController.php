@@ -124,7 +124,7 @@ class SitemapController extends FrontendController
 			return new RawResponse('unauthorized');
 		}
 
-		$url = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'sitemap')));
+		$url = $this->router->createFullUrl($this->url->get('sitemap')));
 		$ping = array(
 			'Google' => 'http://www.google.com/webmasters/tools/ping?sitemap=' . $url,
 			'MSN Live' => 'http://www.bing.com/webmaster/ping.aspx?siteMap=' . $url,

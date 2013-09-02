@@ -4,7 +4,7 @@ class ContactFormController extends FrontendController
 {
 	public function indexAction()
 	{
-		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
+		$this->addBreadCrumb($this->translate('_contact_us'), $this->url->get('contactForm')));
 		$this->set('form', $this->buildForm());
 	}
 
@@ -27,7 +27,7 @@ class ContactFormController extends FrontendController
 
 	public function sentAction()
 	{
-		$this->addBreadCrumb($this->translate('_contact_us'), $this->router->createUrl(array('controller' => 'contactForm')));
+		$this->addBreadCrumb($this->translate('_contact_us'), $this->url->get('contactForm')));
 		$this->addBreadCrumb($this->translate('_form_sent'), '');
 
 

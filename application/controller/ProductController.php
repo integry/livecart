@@ -602,7 +602,7 @@ class ProductController extends CatalogController
 		$this->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount->get()));
 		$this->set('page', $page);
 		$this->set('perPage', $perPage);
-		$this->set('url', $this->router->createUrl(array('controller' => 'product', 'action' => 'reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
+		$this->set('url', $this->url->get('product/reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
 
 		$this->addBreadCrumb($this->translate('_reviews'), '');
 

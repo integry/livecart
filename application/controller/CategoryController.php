@@ -338,7 +338,7 @@ class CategoryController extends CatalogController
 
 		$response = 'subCategories', array());
 		$response = 'categoryNarrow', array());
-		$response = 'url', $this->router->createUrl(array('controller' => 'category', 'action' => 'allProducts', 'id' => 0)));
+		$response = 'url', $this->url->get('category/allProducts', 'id' => 0)));
 
 		$category = $response->get('category');
 		$category['name_lang'] = $this->translate('_all_products');

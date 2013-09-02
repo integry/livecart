@@ -9,7 +9,7 @@ use \user\User;
  *  @author Integry Systems
  *  @package application/controller
  */
-class UserController extends ControllerBase
+class UserController extends FrontendController
 {
  	const PASSWORD_MIN_LENGTH = 5;
 
@@ -30,17 +30,17 @@ class UserController extends ControllerBase
 
 	private function addAccountBreadcrumb()
 	{
-		$this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user'), true));
+		$this->addBreadCrumb($this->translate('_your_account'), $this->url->get('user'));
 	}
 
 	private function addAddressBreadcrumb()
 	{
-		$this->addBreadCrumb($this->translate('_manage_addresses'), $this->router->createUrl(array('controller' => 'user', 'action' => 'addresses'), true));
+		$this->addBreadCrumb($this->translate('_manage_addresses'), $this->url->get('user/addresses'));
 	}
 
 	private function addFilesBreadcrumb()
 	{
-		$this->addBreadCrumb($this->translate('_your_files'), $this->router->createUrl(array('controller' => 'user', 'action' => 'files'), true));
+		$this->addBreadCrumb($this->translate('_your_files'), $this->url->get('user/files'));
 	}
 
 	/**
@@ -48,6 +48,7 @@ class UserController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+		return $this->response->redirect('seller/index');
 		$this->addAccountBreadcrumb();
 
 		// get recent orders
@@ -408,7 +409,7 @@ class UserController extends ControllerBase
 		if ($order = $this->user->getOrder($id))
 		{
 			$this->addAccountBreadcrumb();
-			$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders'), true));
+			$this->addBreadCrumb($this->translate('_your_orders'), $this->url->get('user/orders'));
 			$this->addBreadCrumb($order->invoiceNumber->get(), '');
 
 			// mark all notes as read
@@ -587,6 +588,7 @@ class UserController extends ControllerBase
 			}
 			else
 			{
+				return $this->response->redirect('user/index');
 				return new ActionRedirectResponse('user', 'index');
 			}
 		}
@@ -635,7 +637,7 @@ class UserController extends ControllerBase
 			return new ActionRedirectResponse('user', 'registerAddress');
 		}
 
-		$this->addBreadCrumb($this->translate('_login'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
+		$this->addBreadCrumb($this->translate('_login'), $this->url->get('user/login'));
 
 		$form = $this->buildRegForm();
 
@@ -717,7 +719,7 @@ class UserController extends ControllerBase
 
 	public function remindPasswordAction()
 	{
-		$this->addBreadCrumb($this->translate('_remind_password'), $this->router->createUrl(array('controller' => 'user', 'action' => 'login'), true));
+		$this->addBreadCrumb($this->translate('_remind_password'), $this->url->get('user/login'));
 
 
 		$this->set('form', $this->buildPasswordReminderForm());

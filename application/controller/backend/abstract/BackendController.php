@@ -33,7 +33,7 @@ abstract class BackendController extends BaseController
 		{
 			$this->sessionUser->destroy();
 
-			$url = $this->router->createUrl(array('controller' => 'backend.session', 'action' => 'index', 'query' => array('return' => $_SERVER['REQUEST_URI'])));
+			$url = $this->url->get('backend.session/index', 'query' => array('return' => $_SERVER['REQUEST_URI'])));
 			if (!$this->isAjax())
 			{
 				header('Location: ' . $url);

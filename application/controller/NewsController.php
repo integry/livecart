@@ -40,7 +40,7 @@ class NewsController extends FrontendController
 	
 	private function addIndexBreadCrumb()
 	{
-		$this->addBreadCrumb($this->translate('_news'), $this->router->createUrl(array('controller' => 'news'), true));
+		$this->addBreadCrumb($this->translate('_news'), $this->url->get('news'), true));
 	}
 }
 

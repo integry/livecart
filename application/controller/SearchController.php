@@ -31,7 +31,7 @@ class SearchController extends FrontendController
 		$this->set('page', $page);
 		$this->set('query', $query);
 		$this->set('perPage', $perPage);
-		$this->set('url', $this->router->createUrl(array('controller' => 'search', 'action' => 'index', 'query' => array('type' => $inst->getClassName(), 'q' => $query, 'page' => '0'))));
+		$this->set('url', $this->url->get('search/index', 'query' => array('type' => $inst->getClassName(), 'q' => $query, 'page' => '0'))));
 	}
 
 	public function searchAllAction($searchTerm)
