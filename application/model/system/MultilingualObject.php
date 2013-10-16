@@ -1,7 +1,6 @@
 <?php
 
-ClassLoader::import("application/model/ActiveRecordModel");
-ClassLoader::import("application/model/system/MultilingualObjectInterface");
+namespace system;
 
 /**
  * Multilingual data object. Provides facilities to provide field data in various languages
@@ -10,7 +9,7 @@ ClassLoader::import("application/model/system/MultilingualObjectInterface");
  * @author Integry Systems <http://integry.com>
  * @package application/model/system
  */
-abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
+abstract class MultilingualObject extends \ActiveRecordModel implements MultilingualObjectInterface
 {
 	private static $defaultLanguageCode = null;
 
@@ -24,7 +23,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		{
 			if (!self::$defaultLanguageCode)
 			{
-				self::loadLanguageCodes();
+				$this->loadLanguageCodes();
 			}
 			$langCode = self::$defaultLanguageCode;
 		}
@@ -41,7 +40,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true)
 	{
-		$valueArray = $this->getFieldValue($fieldName);
+		$valueArray = $this->$fieldName;
+
+		if (is_string($valueArray))
+		{
+			$valueArray = unserialize($valueArray);
+		}
 
 		if ((!isset($valueArray[$langCode]) && $returnDefaultIfEmpty) || is_null($langCode))
 		{
@@ -60,7 +64,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 	public function getCurrentLangValue($fieldName)
 	{
-		return $this->getValueByLang($fieldName, self::getApplication()->getLocaleCode(), true);
+		return $this->getValueByLang($fieldName, $this->getDI()->get('application')->getLocaleCode(), true);
+	}
+
+	public function g($fieldName)
+	{
+		return $this->getCurrentLangValue($fieldName);
 	}
 
 	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
@@ -232,12 +241,24 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	  	return new ARExpressionHandle($expression);
 	}
 
-	private static function loadLanguageCodes()
+	private function loadLanguageCodes()
 	{
-		$app = self::getApplication();
+		$app = $this->getDI()->get('application');
 
 		self::$currentLanguageCode = $app->getLocaleCode();
 		self::$defaultLanguageCode = $app->getDefaultLanguageCode();
+	}
+
+	public function __call($method, $arguments = NULL)
+	{
+		if (isset($this->$method) && (empty($arguments) || (strlen($arguments[0]) == 2)))
+		{
+			return $this->getCurrentLangValue($method);
+		}
+		else
+		{
+			return parent::__call($method, $arguments);
+		}
 	}
 }
 
