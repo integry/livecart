@@ -1,6 +1,7 @@
 {% if empty(html) %}
 ------------------------
 [[ config('STORE_NAME') ]]
+
 [[ fullurl("/") ]]
 {% endif %}{*html*}
 {% if !empty(html) %}
