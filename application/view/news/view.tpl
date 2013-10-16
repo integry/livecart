@@ -1,17 +1,17 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}[[news.title_lang]]{% endblock %}
+{% block title %}[[news.title()]]{% endblock %}
+{% block left %}{% endblock %}
+{% block right %}{% endblock %}
 
 {% block content %}
 
-	<div class="newsDate">[[news.formatted_time.date_long]]</div>
+	<h1>[[news.title()]]</h1>
+	<div class="newsDate">[[news.time('d_long')]]</div>
 
 	<div class="newsEntry">
-		<p>[[news.text_lang]]</p>
-
-		{% if $news.moreText_lang %}
-			<p>[[news.moreText_lang]]</p>
-		{% endif %}
+		<p>[[news.text()]]</p>
+		<p>[[news.moreText()]]</p>
 	</div>
 
 {% endblock %}
