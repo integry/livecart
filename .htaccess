@@ -3,7 +3,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 	RewriteEngine on
 
-	RewriteRule ^$ public/index.php [L]
+	RewriteRule ^$ public/index.php?_url=/$1 [QSA,L]
 
 	#demo images
 	RewriteCond %{REQUEST_FILENAME} !-f
