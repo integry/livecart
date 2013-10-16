@@ -35,6 +35,8 @@ class User extends \ActiveRecordModel //implements EavAble
 	public $isEnabled;
 	public $preferences;
 
+	protected $hasBackendAccess;
+
 	public function initialize()
 	{
 		$this->addBehavior(new \Phalcon\Mvc\Model\Behavior\Timestampable(
@@ -45,7 +47,30 @@ class User extends \ActiveRecordModel //implements EavAble
 				)
 			)
 		));
+
+/*
+		$this->hasMany('ID', 'mrfeedback\application\model\MwsUser', 'userID', array(
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+*/
 	}
+
+    public function validation()
+    {
+		$emailErr = $this->getDI()->get('application')->translate('_err_not_unique_email');
+		$emailErr = str_replace('%1', $this->getDI()->get('url')->get('user/login', array('email' => $this->getDI()->get('request')->get('email'))), $emailErr);
+
+        $this->validate(new \Phalcon\Mvc\Model\Validator\Uniqueness(
+            array(
+                "field"   => "email",
+                "message" => $emailErr
+            )
+        ));
+
+        return $this->validationHasFailed() != true;
+    }
 
 	/*####################  Static method implementations ####################*/
 
@@ -74,21 +99,6 @@ class User extends \ActiveRecordModel //implements EavAble
 		}
 
 		return $instance;
-	}
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 *
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return User
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = array('UserGroup'), $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 
 	/**
@@ -142,20 +152,11 @@ class User extends \ActiveRecordModel //implements EavAble
 	 */
 	public static function getInstanceByLogin($email, $password)
 	{
-		$loginCond = new EqualsCond(new ARFieldHandle('User', 'email'), $email);
-		//$loginCond->addAND(new EqualsCond(new ARFieldHandle('User', 'password'), md5($password)));
-		$loginCond->addAND(new EqualsCond(new ARFieldHandle('User', 'isEnabled'), true));
+		$user = User::query()->where('email = :email:')->andWhere('isEnabled = 1')->bind(array('email' => $email))->execute()->getFirst();
 
-		$recordSet = ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter($loginCond));
-
-		if (!$recordSet->size())
+		if ($user && $user->isPasswordValid($password))
 		{
-			return null;
-		}
-		else
-		{
-			$user = $recordSet->get(0);
-			return $user->isPasswordValid($password) ? $user : null;
+			return $user;
 		}
 	}
 
@@ -167,18 +168,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	 */
 	public static function getInstanceByEmail($email)
 	{
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'email'), $email));
-		$recordSet = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
-
-		if (!$recordSet->size())
-		{
-			return null;
-		}
-		else
-		{
-			return $recordSet->get(0);
-		}
+		return User::query()->where('email = :email:')->bind(array('email' => $email))->execute()->getFirst();
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -217,6 +207,11 @@ class User extends \ActiveRecordModel //implements EavAble
 		$this->newPassword = $password;
 	}
 
+	public function getPassword()
+	{
+		return $this->newPassword;
+	}
+
 	public function isPasswordValid($password)
 	{
 		$password = trim($password);
@@ -241,7 +236,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	 */
 	public function hasAccess($roleName)
 	{
-		if ($this->hasBackendAccess || !empty($this->grantedRoles[$roleName]))
+		if ($this->hasBackendAccess() || !empty($this->grantedRoles[$roleName]))
 		{
 			return true;
 		}
@@ -314,7 +309,8 @@ class User extends \ActiveRecordModel //implements EavAble
 		}
 		else
 		{
-			$this->load(array('UserGroup'));
+			return false;
+//			$this->load(array('UserGroup'));
 			if (!$this->userGroup)
 			{
 				return false;
@@ -385,17 +381,6 @@ class User extends \ActiveRecordModel //implements EavAble
 	}
 
 	/*####################  Saving ####################*/
-
-	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = null)
-	{
-		if (!$request->get('password'))
-		{
-			$request->remove('password');
-		}
-
-		return parent::loadRequestData($request, $prefix);
-	}
-
 	protected function insert()
 	{
 		$res = parent::insert();
@@ -431,6 +416,7 @@ class User extends \ActiveRecordModel //implements EavAble
 
 	/*####################  Data array transformation ####################*/
 
+	/*
 	public function toArray($args = null)
 	{
 		$array = parent::toArray($args);
@@ -440,6 +426,7 @@ class User extends \ActiveRecordModel //implements EavAble
 
 		return $array;
 	}
+	*/
 
 	public static function transformArray($array, ARSchema $schema)
 	{
@@ -447,6 +434,11 @@ class User extends \ActiveRecordModel //implements EavAble
 		$array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
 
 		return $array;
+	}
+
+	public function getFullName()
+	{
+		return $this->firstName . ' ' . $this->lastName;
 	}
 
 	/*####################  Get related objects ####################*/

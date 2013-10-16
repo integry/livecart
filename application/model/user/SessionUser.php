@@ -50,21 +50,21 @@ class SessionUser extends \Phalcon\DI\Injectable
 			{
 				if ($session->get('userLocale') != $localeCode)
 				{
-					$user->load();
-					$user->locale->set($localeCode);
+					$user->locale = $localeCode;
 					$user->save();
 
 					$session->set('userLocale', $localeCode);
 				}
 
-				if (!$session->isValueSet('UserGroup') || is_null($session->get('UserGroup')))
+				if (!$session->has('UserGroup') || is_null($session->get('UserGroup')))
 				{
-					$user->load();
+					/*
 					$group = $user->userGroup->get() ? $user->userGroup->get()->getID() : 0;
 					$session->set('UserGroup', $group);
+					*/
 				}
 
-				$user->userGroup->set(UserGroup::getInstanceByID($session->get('UserGroup')));
+				//$user->userGroup->set(UserGroup::getInstanceByID($session->get('UserGroup')));
 			}
 			catch (ARNotFoundException $e)
 			{
@@ -90,6 +90,7 @@ class SessionUser extends \Phalcon\DI\Injectable
 
 		$session = $this->getDI()->get('session');
 		$session->set('User', $user->getID());
+
 		//$session->set('UserGroup', $user->userGroup->get() ? $user->userGroup->get()->getID() : 0);
 
 		if ($app->getSessionHandler())
@@ -100,14 +101,14 @@ class SessionUser extends \Phalcon\DI\Injectable
 		$app->processRuntimePlugins('session/login');
 	}
 
-	public static function destroy()
+	public function destroy()
 	{
-		$app = ActiveRecordModel::getApplication();
+		$app = $this->getDI()->get('application');
 		$app->processRuntimePlugins('session/before-logout');
 
-		$session = new Session();
-		$session->unsetValue('User');
-		$session->unsetValue('CustomerOrder');
+		$session = $this->getDI()->get('session');
+		$session->remove('User');
+		$session->remove('CustomerOrder');
 
 		$app->processRuntimePlugins('session/logout');
 	}
