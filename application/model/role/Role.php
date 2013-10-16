@@ -84,7 +84,7 @@ class Role extends \ActiveRecordModel
 		}
 
 		if(!is_array($roleNames) || empty($roleNames)) return;
-var_dump($roleNames);
+return;
 		$filter = new ARSelectFilter();
 		$deleteFilter = new ARDeleteFilter();
 

@@ -167,6 +167,10 @@ class RolesParser
 		{
 			return $this->roles["{$this->className}::$method"];
 		}
+		else if (isset($this->roles["{$this->className}"]))
+		{
+			return $this->roles["{$this->className}"];
+		}
 	}
 
 	/**
