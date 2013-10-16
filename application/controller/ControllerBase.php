@@ -77,9 +77,50 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->view->$key = $value;
 	}
 
+	public function get($key)
+	{
+		return $this->view->$key;
+	}
+
 	public function setValidator($validator)
 	{
+		$validator->processPlugins();
 		$this->set('validator', $validator);
+
+		$bag = new \Phalcon\Session\Bag('errors/' . $this->router->getControllerName() . '/' . $this->router->getActionName());
+		if ($bag->has('errors'))
+		{
+			foreach ($bag->get('errors') as $error)
+			{
+				$validator->appendMessage($error);
+			}
+			$validator->setRestoredValues($bag->get('request'));
+		}
+		$bag->destroy();
+	}
+
+	public function setErrors($errors, $action)
+	{
+		$bag = new \Phalcon\Session\Bag('errors/' . $action);
+		$bag->errors = $errors;
+		$bag->request = $_REQUEST;
+	}
+
+	public function returnErrors($action, LiveCartValidator $validator)
+	{
+		$this->setErrors($validator->getMessages(), $action);
+		return $this->response->redirect($action);
+	}
+
+	protected function getModelErrors($modelMessages)
+	{
+		$errors = array();
+		foreach ($modelMessages as $message)
+		{
+			$errors[$message->getField()][] = $message->getMessage();
+		}
+
+		return $errors;
 	}
 
 	public function getBlockResponse(&$block)
@@ -223,6 +264,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	protected function getValidator($validatorName, \Phalcon\Http\Request $request = null)
 	{
 		$validator = new LiveCartValidator();
+		$validator->setName($validatorName);
 		$validator->setDI($this->getDI());
 
 		return $validator;
@@ -360,14 +402,13 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		}
 
 		$role = $this->roles->getRole($this->router->getActionName());
-
 		if ($role)
 		{
 			if (!$this->user->hasAccess($role))
 			{
-				if($this->user->isAnonymous())
+				if ($this->user->isAnonymous())
 				{
-					throw new UnauthorizedException($this);
+					throw new UnauthorizedException();
 				}
 				else
 				{
@@ -375,6 +416,17 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 				}
 			}
 		}
+	}
+
+	public function afterExecuteRoute(\Phalcon\Mvc\Dispatcher $dispatcher)
+	{
+		$this->application->processActionPlugins($this, $dispatcher->getActionName());
+	}
+
+	public function di($set)
+	{
+		$a = $this->di;
+		return $a($set);
 	}
 }
 

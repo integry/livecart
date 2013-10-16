@@ -8,10 +8,8 @@
  */
 class IndexController extends ControllerBase
 {
-    public function indexActionAction()
+    public function indexAction()
     {
-		$test = new StaticpageController();
-		echo 'HOME PAGE';
     }
 }
 
