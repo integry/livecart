@@ -1,7 +1,8 @@
 {% extends "layout/frontend.tpl" %}
 
 {% title %}{t _login}{% endblock %}
-[[ partial('layout/frontend/layout.tpl', ['hideLeft': true]) ]]
+{% block left %}{% endblock %}
+
 {% block content %}
 
 	<div class="returningCustomer">
@@ -17,8 +18,7 @@
 			{% endif %}
 		</p>
 
-		{capture assign="return"}[[ url("user") ]]{/capture}
-		[[ partial('user/loginForm.tpl', ['return': return]) ]]
+		[[ partial('user/loginForm.tpl', ['ret': url("user")]) ]]
 	</div>
 
 	<div class="newCustomer">
@@ -29,13 +29,5 @@
 		[[ partial("user/regForm.tpl") ]]
 	</div>
 
-	<div class="clear"></div>
-
 {% endblock %}
-
-
-	<script type="text/javascript">
-		Event.observe(window, 'load', function() {$('email').focus()});
-	</script>
-
 

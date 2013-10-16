@@ -1,16 +1,17 @@
 {% extends "layout/frontend.tpl" %}
 
 {% title %}{t _remind_pass}{% endblock %}
+{% block left %}{% endblock %}
+{% block right %}{% endblock %}
 
 {% block content %}
 
-	{form action="user/doRemindPassword" method="post"  class="form-horizontal" handle=$form}
-		[[ textfld('email', '_your_email') ]]
+	[[ form("user/doRemindPassword", ["method": "POST"]) ]]>
 
-		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return, 'cancel': user]) ]]
+		[[ textfld('email', '_your_email', ['type': 'email']) ]]
 
-		<input type="hidden" name="return" value="[[return]]" />
+		[[ partial('block/submit.tpl', ['caption': "_continue"]) ]]
 
-	{/form}
+	</form>
 
 {% endblock %}

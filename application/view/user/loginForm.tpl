@@ -1,23 +1,15 @@
-<form action="[[ url("user/doLogin") ]]" method="post" id="loginForm" class="form-horizontal" />
-	{input name="email"}
-		{label}{t _your_email}:{/label}
-		<div class="controls">
-			<input type="text" class="text" id="email" name="email" value="{$email|escape}" />
-		</div>
-	{/input}
+[[ form("user/doLogin", ["method": "POST"]) ]] />
 
-	{input name="password"}
-		{label}{t _your_pass}:{/label}
-		<div class="controls">
-			<input type="password" class="text" id="password" name="password" />
-			<a href="[[ url("user/remindPassword", "return=$return") ]]" class="forgottenPassword">
-				{t _remind_password}
-			</a>
-		</div>
-	{/input}
+	[[ textfld('email', '_your_email', ['type': 'email']) ]]
 
-	[[ partial('block/submit.tpl', ['caption': "_login", 'cancelRoute': return]) ]]
+	[[ pwdfld('password', '_your_pass') ]]
 
-	<input type="hidden" name="return" value="[[return]]" />
+	<a href="[[ url("user/remindPassword") ]]" class="forgottenPassword">
+		{t _remind_password}
+	</a>
+
+	[[ partial('block/submit.tpl', ['caption': "_login", 'cancelRoute': ret]) ]]
+
+	<input type="hidden" name="return" value="[[ret]]" />
 
 </form>

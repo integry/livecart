@@ -6,7 +6,7 @@
 {% block content %}
 
 	<p>
-	   {maketext text=_has_been_sent_to params=$email}
+	   [[ maketext('_has_been_sent_to', [email]) ]]
 	</p>
 
 	<p>
