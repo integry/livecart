@@ -9,7 +9,7 @@
  * @package application/model
  * @author Integry Systems <http://integry.com>
  */
-class Currency extends ActiveRecordModel
+class Currency extends \ActiveRecordModel
 {
 	const NO_ROUNDING = 'NONE';
 	const ROUND = 'ROUND';
@@ -19,32 +19,21 @@ class Currency extends ActiveRecordModel
 	const TRIM_UP = 'TRIM_UP';
 	const TRIM_DOWN = 'TRIM_DOWN';
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Currency");
+	public $ID;
 
-		public $ID;
-
-		public $rate;
-		public $lastUpdated;
-		public $isDefault;
-		public $isEnabled;
-		public $position;
-		public $pricePrefix;
-		public $priceSuffix;
-		public $decimalSeparator;
-		public $thousandSeparator;
-		public $decimalCount;
-		public $rounding;
-	}
+	public $rate;
+	public $lastUpdated;
+	public $isDefault;
+	public $isEnabled;
+	public $position;
+	public $pricePrefix;
+	public $priceSuffix;
+	public $decimalSeparator;
+	public $thousandSeparator;
+	public $decimalCount;
+	public $rounding;
 
 	/*####################  Static method implementations ####################*/
-
-	public static function getInstanceById($id, $loadData = true)
-	{
-		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
-	}
 
 	public static function getNewInstance($id)
 	{
@@ -84,7 +73,7 @@ class Currency extends ActiveRecordModel
 
 	public function setAsDefault($default = true)
 	{
-	  	$this->isDefault = (bool)$default);
+	  	$this->isDefault = (bool)$default;
 	}
 
 	public function isDefault()
@@ -196,7 +185,7 @@ class Currency extends ActiveRecordModel
 	{
 		$rounding = unserialize($this->rounding);
 		$rounding[] = array('range' => $range, 'type' => $type, 'precision' => $precision);
-		$this->rounding = serialize($rounding));
+		$this->rounding = serialize($rounding);
 	}
 
 	public function clearRoundingRules()
@@ -246,25 +235,23 @@ class Currency extends ActiveRecordModel
 		}
 	}
 
-	public static function getCacheFile()
+	public function getCacheFile()
 	{
 		return $this->config->getPath('cache') . '/currencies.php';
 	}
 
-	public function save($forceOperation = 0)
+	public function beforeSave()
 	{
 		// do not allow 0 rates
 		if (!$this->rate)
 		{
-			$this->rate = 1);
+			$this->rate = 1;
 		}
 
-		self::deleteCache();
-
-		return parent::save($forceOperation);
+		//self::deleteCache();
 	}
 
-	protected function insert()
+	protected function beforeInsert()
 	{
 	  	// check currency symbol
 	  	if (!$this->pricePrefix && !$this->priceSuffix)
@@ -274,11 +261,11 @@ class Currency extends ActiveRecordModel
 			{
 				$signs = $prefixes[$this->getID()];
 
-				$this->pricePrefix = $signs[0]);
+				$this->pricePrefix = $signs[0];
 
 				if (isset($signs[1]))
 				{
-					$this->priceSuffix = $signs[1]);
+					$this->priceSuffix = $signs[1];
 				}
 			}
 		}
@@ -286,13 +273,11 @@ class Currency extends ActiveRecordModel
 		// check if default currency exists
 		if (!ActiveRecord::getRecordSet('Currency', select(eq('Currency.isDefault', 1)))->getTotalRecordCount())
 		{
-			$this->isDefault = true);
-			$this->isEnabled = true);
+			$this->isDefault = true;
+			$this->isEnabled = true;
 		}
 
 		$this->setLastPosition();
-
-		return parent::insert();
 	}
 
 	private function roundToNearest($number, $nearest, $type = null)

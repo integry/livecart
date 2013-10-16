@@ -1,5 +1,6 @@
 <?php
 
+namespace order;
 
 /**
  * Represents customers order - products placed in shopping basket or wish list
@@ -7,7 +8,7 @@
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOrderInterface
+class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRuleOrderInterface
 {
 	public $orderedItems = array();
 
@@ -57,46 +58,59 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 * @param string $className Schema name
 	 */
 
+	public $ID;
+//	public $parentID", "CustomerOrder", "ID", "CustomerOrder;
+	public $userID;
+//	public $shippingAddressID", "shippingAddress", "ID", 'UserAddress;
+//	public $billingAddressID", "billingAddress", "ID", 'UserAddress;
+	public $currencyID;
+//	public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+	public $invoiceNumber;
+	public $checkoutStep;
+	public $dateCreated;
+	public $dateCompleted;
+	public $dateDue;
+	public $startDate; // including (first day of period)
+	public $endDate; // including (last day of period)
+	public $totalAmount;
+	public $capturedAmount;
+	public $isMultiAddress;
+	public $isFinalized;
+	public $isPaid;
+	public $isCancelled;
+	public $isRecurring;
+	public $status;
+	public $shipping;
+	public $rebillsLeft;
 
+	public function initialize()
+	{
+        /*
+        $this->hasMany('ID', 'FeedbackMessage', 'orderID', array(
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+        */
 
-		public $ID;
-		public $parentID", "CustomerOrder", "ID", "CustomerOrder;
-		public $userID", "User", "ID", "User;
-		public $shippingAddressID", "shippingAddress", "ID", 'UserAddress;
-		public $billingAddressID", "billingAddress", "ID", 'UserAddress;
-		public $currencyID", "currency", "ID", 'Currency', ARChar::instance()));
-		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		public $invoiceNumber;
-		public $checkoutStep;
-		public $dateCreated;
-		public $dateCompleted;
-		public $dateDue;
-		public $startDate; // including (first day of period)
-		public $endDate; // including (last day of period)
-		public $totalAmount;
-		public $capturedAmount;
-		public $isMultiAddress;
-		public $isFinalized;
-		public $isPaid;
-		public $isCancelled;
-		public $isRecurring;
-		public $status;
-		public $shipping;
-		public $rebillsLeft;
+		$this->belongsTo('currencyID', '\Currency', 'ID', array('foreignKey' => true, 'alias' => 'Currency'));
+		$this->belongsTo('userID', 'user\User', 'ID', array('foreignKey' => true, 'alias' => 'User'));
+
+        $this->hasMany('ID', '\order\OrderedItem', 'customerOrderID', array(
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ),
+            'alias' => 'OrderedItem'
+        ));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(User $user)
+	public static function getNewInstance(\user\User $user)
 	{
 		$instance = new self();
-		$instance->user = $user;
-		$instance->currency = self::getApplication()->getDefaultCurrency());
-
-		if ($user->getID())
-		{
-			$instance->setUser($user);
-		}
+		$instance->userID = $user->getID();
+		$instance->currencyID = 'USD';
 
 		return $instance;
 	}
@@ -123,15 +137,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function loadItems()
 	{
-		if (!$this->isExistingRecord())
+		if (!$this->getID())
 		{
 			return false;
 		}
 
 		$this->event('before-load');
 
-		$itemSet = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
-		$this->orderedItems = $itemSet->getData();
+		$this->orderedItems = $this->getRelated('OrderedItem');//, new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'));
+
 		$products = $itemSet->extractReferencedItemSet('product');
 		ProductPrice::loadPricesForRecordSet($products);
 
@@ -150,16 +164,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				// @todo: should be loaded automatically
 				foreach ($this->shipments as $shipment)
 				{
-					if ($shipment->shippingAddress->get())
+					if ($shipment->shippingAddress)
 					{
-						$shipment->shippingAddress->get()->load();
+						$shipment->shippingAddress->load();
 					}
 				}
 			}
 
-			if (!$this->shipments->size() && !$this->isFinalized->get())
+			if (!$this->shipments->size() && !$this->isFinalized)
 			{
-				$this->shipments = unserialize($this->shipping->get());
+				$this->shipments = unserialize($this->shipping);
 			}
 
 			OrderedItemOption::loadOptionsForItemSet(ARSet::buildFromArray($this->orderedItems));
@@ -167,9 +181,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			foreach ($this->orderedItems as $key => $item)
 			{
-				if ($item->parent->get())
+				if ($item->parent)
 				{
-					$item->parent->get()->registerSubItem($item);
+					$item->parent->registerSubItem($item);
 					unset($this->orderedItems[$key]);
 				}
 			}
@@ -177,7 +191,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			Product::loadAdditionalCategoriesForSet(ARSet::buildFromArray($this->orderedItems)->extractReferencedItemSet('product'));
 		}
 
-		if (!$this->isFinalized->get() && $this->orderedItems)
+		if (!$this->isFinalized && $this->orderedItems)
 		{
 			return $this->updateToStock();
 		}
@@ -187,14 +201,14 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function loadAddresses()
 	{
-		$billingAddress = $this->billingAddress->get();
+		$billingAddress = $this->billingAddress;
 		if ($billingAddress)
 		{
 			$billingAddress->load(self::LOAD_REFERENCES);
 			$billingAddress->getSpecification(); // todo: why EavObject not loaded automaticaly?
 		}
 
-		$shippingAddress = $this->shippingAddress->get();
+		$shippingAddress = $this->shippingAddress;
 		if ($shippingAddress)
 		{
 			$shippingAddress->load(self::LOAD_REFERENCES);
@@ -214,7 +228,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function loadDiscounts()
 	{
-		if ($this->isExistingRecord())
+		if ($this->getID())
 		{
 			$discounts = array_merge((array)$this->fixedDiscounts, $this->getRelatedRecordSet('OrderDiscount')->getData());
 			$this->fixedDiscounts = array();
@@ -227,17 +241,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function validateCoupons()
 	{
-		if (!$this->isFinalized->get())
+		if (!$this->isFinalized)
 		{
 			foreach ($this->getCoupons() as $coupon)
 			{
-				if (!$coupon->discountCondition->get())
+				if (!$coupon->discountCondition)
 				{
-					$coupon->discountCondition = DiscountCondition::getInstanceByCoupon($coupon->couponCode->get()));
+					$coupon->discountCondition = DiscountCondition::getInstanceByCoupon($coupon->couponCode);
 					$coupon->save();
 				}
 
-				if (!$coupon->discountCondition->get() || ($coupon->discountCondition->get()->couponCode->get() != $coupon->couponCode->get()) || !$coupon->isValid())
+				if (!$coupon->discountCondition || ($coupon->discountCondition->couponCode != $coupon->couponCode) || !$coupon->isValid())
 				{
 					$coupon->delete();
 					$this->getCoupons()->removeRecord($coupon);
@@ -249,7 +263,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	/**
 	 *  Add a product to shopping basket
 	 */
-	public function addProduct(Product $product, $count = 1, $ignoreAvailability = false, Shipment $shipment = null)
+	public function addProduct(\product\Product $product, $count = 1, $ignoreAvailability = false, Shipment $shipment = null)
 	{
 		if (0 >= $count)
 		{
@@ -266,7 +280,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$item = OrderedItem::getNewInstance($this, $product, $count);
 			$this->orderedItems[] = $item;
 
-			if (!$this->isFinalized->get() || !$this->shipments || !$this->shipments->size())
+			if (!$this->isFinalized || !$this->shipments || !$this->shipments->size())
 			{
 				if ($shipment)
 				{
@@ -308,12 +322,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function updateCount(OrderedItem $item, $count)
 	{
-		$item->count = $this->validateCount($item->getProduct(), $count));
+		$item->count = $this->validateCount($item->getProduct(), $count);
 	}
 
-	private function validateCount(Product $product, $count)
+	private function validateCount(\product\Product $product, $count)
 	{
-		if (round($count) != $count && !$product->isFractionalUnit->get())
+		if (round($count) != $count && !$product->isFractionalUnit)
 		{
 			$count = round($count);
 		}
@@ -322,12 +336,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$count = 0;
 		}
-		else if ($product->minimumQuantity->get() > $count)
+		else if ($product->minimumQuantity > $count)
 		{
-			$count = $product->minimumQuantity->get();
+			$count = $product->minimumQuantity;
 		}
 
-		if ($step = $product->fractionalStep->get())
+		if ($step = $product->fractionalStep)
 		{
 			$count = floor($count / $step) * $step;
 		}
@@ -338,17 +352,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	/**
 	 *  Add a product to wish list
 	 */
-	public function addToWishList(Product $product)
+	public function addToWishList(\product\Product $product)
 	{
 		$item = OrderedItem::getNewInstance($this, $product, 1);
-		$item->isSavedForLater = true);
+		$item->isSavedForLater = true;
 		$this->orderedItems[] = $item;
 	}
 
 	/**
 	 *  Remove a product (all product items) from shopping basket or wish list
 	 */
-	public function removeProduct(Product $product)
+	public function removeProduct(\product\Product $product)
 	{
 		$id = $product->getID();
 
@@ -390,7 +404,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				for($i = 0; $i < count($this->orderedItems); $i++)
 				{
-					if($this->orderedItems[$i]->shipment->get() && ($this->orderedItems[$i]->shipment->get() === $removedShipment))
+					if($this->orderedItems[$i]->shipment && ($this->orderedItems[$i]->shipment === $removedShipment))
 					{
 						$this->removeItem($this->orderedItems[$i]);
 					}
@@ -445,9 +459,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$orderedItem->customerOrder = $this;
 		$this->orderedItems[] = $orderedItem;
 
-		if ($orderedItem->shipment->get())
+		if ($orderedItem->shipment)
 		{
-			$orderedItem->shipment->get()->addItem($orderedItem);
+			$orderedItem->shipment->addItem($orderedItem);
 		}
 	}
 
@@ -458,7 +472,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			// echo 'not recurring item!';
 			return false;
 		}
-		$parentID = $this->parentID->get()->getID();
+		$parentID = $this->parentID->getID();
 		if (!$parentID)
 		{
 			return false;
@@ -497,12 +511,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 		$rebillsLeft = 0;
 
-		if ($this->isFinalized->get() && empty($options['allowRefinalize']))
+		if ($this->isFinalized && empty($options['allowRefinalize']))
 		{
 			return;
 		}
 
-		self::beginTransaction();
+		$this->getDI()->get('db')->begin();
 
 		$this->event('before-finalize');
 
@@ -520,31 +534,31 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$shipment->save();
 
 			// clone shipping addresses
-			if ($shipment->shippingAddress->get())
+			if ($shipment->shippingAddress)
 			{
-				$shippingAddress = clone $shipment->shippingAddress->get();
+				$shippingAddress = clone $shipment->shippingAddress;
 				$shippingAddress->save();
 				$shipment->shippingAddress = $shippingAddress;
 			}
 		}
 
-		$reserveProducts = self::getApplication()->isInventoryTracking();
+		$reserveProducts = $this->getDI()->get('application')->isInventoryTracking();
 
 		$rebillsLeft = 0;
 
 		$groupedRebillsLeft=array();
 
-		$isFirstOrder = !$this->parentID->get();
+		$isFirstOrder = !$this->parentID;
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
 			if (empty($options['customPrice']))
 			{
-				$item->price = $item->getSubTotalBeforeTax() / $item->getCount());
+				$item->price = $item->getSubTotalBeforeTax() / $item->getCount();
 			}
 
-			$item->name = $item->getProduct()->getParent()->name->get());
-			$item->setValueByLang('name', 'sku', $item->getProduct()->sku->get());
+			$item->name = $item->getProduct()->getParent()->name;
+			$item->setValueByLang('name', 'sku', $item->getProduct()->sku);
 			$item->save();
 
 			// create sub-items for bundled products
@@ -552,7 +566,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				foreach ($item->getProduct()->getBundledProducts() as $bundled)
 				{
-					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct->get(), $bundled->getCount());
+					$bundledItem = OrderedItem::getNewInstance($this, $bundled->relatedProduct, $bundled->getCount());
 					$bundledItem->parent = $item;
 					$bundledItem->save();
 				}
@@ -570,10 +584,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$ri = RecurringItem::getInstanceByOrderedItem($item);
 				if ($ri && $ri->isExistingRecord())
 				{
-					$rebillCount = $ri->rebillCount->get();
+					$rebillCount = $ri->rebillCount;
 					// also here recurring item grouping
 					$key = sprintf('%s_%s_%s',
-						$ri->periodType->get(), $ri->periodLength->get(),
+						$ri->periodType, $ri->periodLength,
 						$rebillCount === null
 							? 'NULL'
 							: $rebillCount
@@ -586,12 +600,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					{
 						$groupedRebillsLeft[$key] = -1; // -1 means infinite rebill count
 					}
-					$this->isRecurring = true); // orders with at least one recurring billing plan must have isRecurring flag, if already not set.
+					$this->isRecurring = true; // orders with at least one recurring billing plan must have isRecurring flag, if already not set.
 				}
 			}
 			else
 			{
-				$rparentItem = $item->recurringParentID->get();
+				$rparentItem = $item->recurringParentID;
 				if ($rparentItem)
 				{
 					$ri = RecurringItem::getInstanceByOrderedItem($rparentItem, true);
@@ -600,7 +614,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					{
 						// are RecurringItems grouped?
 						// probably yes..
-						$rebillsLeft = $ri->rebillCount->get() - $ri->processedRebillCount->get();
+						$rebillsLeft = $ri->rebillCount - $ri->processedRebillCount;
 					}
 				}
 			}
@@ -622,26 +636,26 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
-		if (!$this->shippingAddress->get() && $this->user->get() && $this->user->get()->defaultShippingAddress->get() && $this->isShippingRequired())
+		if (!$this->shippingAddress && $this->user && $this->user->defaultShippingAddress && $this->isShippingRequired())
 		{
-			$this->shippingAddress = $this->user->get()->defaultShippingAddress->get()->userAddress->get());
+			$this->shippingAddress = $this->user->defaultShippingAddress->userAddress;
 		}
 
-		if (!$this->billingAddress->get() && $this->user->get() && $this->user->get()->defaultBillingAddress->get())
+		if (!$this->billingAddress && $this->user && $this->user->defaultBillingAddress)
 		{
-			$this->billingAddress = $this->user->get()->defaultBillingAddress->get()->userAddress->get());
+			$this->billingAddress = $this->user->defaultBillingAddress->userAddress;
 		}
 
 		// clone billing/shipping addresses
-		if (!$this->isFinalized->get())
+		if (!$this->isFinalized)
 		{
 			foreach (array('billingAddress', 'shippingAddress') as $address)
 			{
-				if ($this->$address->get())
+				if ($this->$address)
 				{
-					$this->$address->get()->load();
-					$this->$address->get()->getSpecification();
-					$cloned = clone $this->$address->get();
+					$this->$address->load();
+					$this->$address->getSpecification();
+					$cloned = clone $this->$address;
 					$cloned->save();
 					$cloned->loadEav();
 					$this->$address = $cloned;
@@ -652,7 +666,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		// move wish list items to a separate order
 		if ($this->getWishListItems())
 		{
-			$wishList = CustomerOrder::getNewInstance($this->user->get());
+			$wishList = CustomerOrder::getNewInstance($this->user);
 			foreach ($this->getWishListItems() as $item)
 			{
 				$wishList->addItem($item);
@@ -666,7 +680,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		// set order total
 
-		$this->totalAmount = $this->getTotal(true));
+		$this->totalAmount = $this->getTotal(true);
 
 		// save shipment taxes
 		foreach ($this->shipments as $shipment)
@@ -682,15 +696,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$this->setPaidStatus();
 
-		$this->dateCompleted = new ARSerializableDateTime());
+		$this->dateCompleted = new ARSerializableDateTime();
 
-		$this->isFinalized = true);
+		$this->isFinalized = true;
 
 		// @todo: fix order total calculation
 		$shipments = $this->shipments;
 		unset($this->shipments);
 
-		if (!$this->invoiceNumber->get())
+		if (!$this->invoiceNumber)
 		{
 			$generator = InvoiceNumberGenerator::getGenerator($this);
 			$saved = false;
@@ -698,7 +712,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			{
 				try
 				{
-					$this->invoiceNumber = $generator->getNumber());
+					$this->invoiceNumber = $generator->getNumber();
 					$this->save();
 					$saved = true;
 				}
@@ -708,16 +722,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
-		if ($this->isRecurring->get())
+		if ($this->isRecurring)
 		{
 			$changed = false;
-			if (!strlen($this->startDate->get()))
+			if (!strlen($this->startDate))
 			{
-				$this->startDate = date('Y-m-d H:i:s', time()));
+				$this->startDate = date('Y-m-d H:i:s', time());
 				$changed = true;
 			}
 
-			if ($rebillsLeft != $this->rebillsLeft->get())
+			if ($rebillsLeft != $this->rebillsLeft)
 			{
 				$this->rebillsLeft = $rebillsLeft;
 				$changed = true;
@@ -731,7 +745,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$this->event('after-finalize');
 
-		self::commit();
+		$this->getDI()->get('db')->commit();
 
 		// @todo: see above
 		$this->shipments = $shipments;
@@ -744,16 +758,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function cancel()
 	{
-		if ($this->isCancelled->get())
+		if ($this->isCancelled)
 		{
 			return;
 		}
 
-		self::beginTransaction();
+		$this->getDI()->get('db')->begin();
 
 		$this->event('before-cancel');
 
-		$this->isCancelled = true);
+		$this->isCancelled = true;
 
 		foreach ($this->shipments as $shipment)
 		{
@@ -768,17 +782,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$this->event('after-cancel');
 
-		self::commit();
+		$this->getDI()->get('db')->commit();
 	}
 
 	public function restore()
 	{
-		if (!$this->isCancelled->get())
+		if (!$this->isCancelled)
 		{
 			return;
 		}
 
-		$this->isCancelled = false);
+		$this->isCancelled = false;
 
 		foreach ($this->shipments as $shipment)
 		{
@@ -794,7 +808,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function addCapturedAmount($amount)
 	{
-		$this->capturedAmount = $this->capturedAmount->get() + $amount);
+		$this->capturedAmount = $this->capturedAmount + $amount;
 	}
 
 	/**
@@ -818,7 +832,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		$items = array($this->orderedItems);
 
-		if ($this->isMultiAddress->get())
+		if ($this->isMultiAddress)
 		{
 			$items = array();
 			foreach ($this->getShipments() as $shipment)
@@ -838,17 +852,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				$choiceHash = array();
 				foreach ($item->getOptions() as $choice)
 				{
-					$choiceHash[] = md5($choice->choice->get()->getID() . '_' . $choice->optionText->get());
+					$choiceHash[] = md5($choice->choice->getID() . '_' . $choice->optionText);
 				}
 
 				// do not merge items that has same product, but different recurring plans
-				if ($product->type->get() == Product::TYPE_RECURRING)
+				if ($product->type == Product::TYPE_RECURRING)
 				{
 					$recrurringItem = RecurringItem::getInstanceByOrderedItem($item, true);
-					$choiceHash[] = $recrurringItem->recurringID->get()->getID().'|';
+					$choiceHash[] = $recrurringItem->recurringID->getID().'|';
 				}
 				$hash = $choiceHash ? '_' . md5(implode('', $choiceHash)) : '';
-				$byProduct[$product->getID() . $hash][(int)$item->isSavedForLater->get()][] = $item;
+				$byProduct[$product->getID() . $hash][(int)$item->isSavedForLater][] = $item;
 			}
 
 			foreach ($byProduct as $productID => $itemsByStatus)
@@ -860,10 +874,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					{
 
 						$mainItem = array_shift($items);
-						$count = $mainItem->count->get();
+						$count = $mainItem->count;
 						foreach ($items as $item)
 						{
-							$count += $item->count->get();
+							$count += $item->count;
 							$this->removeItem($item);
 						}
 						$mainItem->count = $count;
@@ -875,7 +889,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function setUser(User $user)
 	{
-		if ($this->user->get() && ($this->user->get()->getID() == $user->getID()))
+		if ($this->user && ($this->user->getID() == $user->getID()))
 		{
 			return;
 		}
@@ -890,10 +904,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$userAd = array_shift(array_keys($pair));
 			$orderAd = reset($pair);
-			if ($user->$userAd->get() && !$this->$orderAd->get())
+			if ($user->$userAd && !$this->$orderAd)
 			{
-				$user->$userAd->get()->load();
-				$this->$orderAd = $user->$userAd->get()->userAddress->get());
+				$user->$userAd->load();
+				$this->$orderAd = $user->$userAd->userAddress;
 			}
 		}
 
@@ -903,7 +917,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function setCheckoutStep($step)
 	{
-		if ($step <= $this->checkoutStep->get())
+		if ($step <= $this->checkoutStep)
 		{
 			return false;
 		}
@@ -919,8 +933,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	/*####################  Saving ####################*/
 
-	public function save($allowEmpty = false)
+	public function beforeSave()
 	{
+		return;
 		if (!$this->orderedItems)
 		{
 			$this->loadItems();
@@ -929,7 +944,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		// remove zero-count items
 		foreach ($this->orderedItems as $item)
 		{
-			if (!$item->count->get())
+			if (!$item->count)
 			{
 				$this->removeItem($item);
 			}
@@ -939,10 +954,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->orderedItems as $item)
 		{
+			/*
 			if ($item->isDeleted())
 			{
 				$this->removeItem($item);
 			}
+			*/
 		}
 
 		// delete removed items
@@ -964,25 +981,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			foreach ($this->orderedItems as $item)
 			{
-				if ($item->isModified())
+				if (true || $item->isModified())
 				{
-					if (!$this->isExistingRecord())
+					if (!$this->getID())
 					{
-						parent::save();
+						//parent::save();
 					}
 
+					/*
 					if ($item->save())
 					{
 						$isModified = true;
 					}
+					*/
 				}
 
-				$item->markAsLoaded();
+				//$item->markAsLoaded();
 			}
 		}
 
 		// If shipment is modified
-		if ($this->isFinalized->get())
+		if ($this->isFinalized)
 		{
 			if ($this->shipments)
 			{
@@ -1004,7 +1023,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			// reorder shipments when cart items are modified
 			$this->resetShipments();
 
-			$this->totalAmount = $this->getTotal(true));
+			$this->totalAmount = $this->getTotal(true);
 		}
 		else
 		{
@@ -1014,28 +1033,27 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
+/*
 		if ($this->isModified() || $isModified)
 		{
 			$this->serializeShipments();
 		}
-
-		if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty && !self::$isEmptyAllowed)
+*/
+		if (!$this->isFinalized && !$this->orderedItems && !$allowEmpty && !self::$isEmptyAllowed)
 		{
 			$this->delete();
 			return false;
 		}
 
-		if ($this->user->get())
+		if ($this->user)
 		{
-			$this->user->get()->invalidateSessionCache();
+			$this->user->invalidateSessionCache();
 		}
-
-		return parent::save();
 	}
 
 	public function serializeShipments()
 	{
-		$this->shipping = ($this->isFinalized->get() || $this->isMultiAddress->get()) ? '' : serialize($this->shipments));
+		$this->shipping = ($this->isFinalized || $this->isMultiAddress) ? '' : serialize($this->shipments);
 	}
 
 	public function setStatus($status)
@@ -1059,9 +1077,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$shipments = ActiveRecordModel::getRecordSet('Shipment', $filter, Shipment::LOAD_REFERENCES);
 		foreach ($shipments as $key => $shipment)
 		{
-			if ($shipment->status->get() != $this->status->get())
+			if ($shipment->status != $this->status)
 			{
-				$shipment->status = $this->status->get());
+				$shipment->status = $this->status;
 				$shipment->save();
 			}
 		}
@@ -1073,7 +1091,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 		$status = $this->calculateStatusFromShipmensts($creatingNewRecord);
 
-		if($this->status->get() != $status)
+		if($this->status != $status)
 		{
 			$this->status = $status;
 		}
@@ -1091,20 +1109,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			if(is_null($lowestStatus))
 			{
-				$lowestStatus = $shipment->status->get();
+				$lowestStatus = $shipment->status;
 			}
-			else if($lowestStatus != $shipment->status->get())
+			else if($lowestStatus != $shipment->status)
 			{
 				$lowestStatus = Shipment::STATUS_PROCESSING;
 			}
 		}
 
-		if(!is_null($lowestStatus) && $lowestStatus != $this->status->get())
+		if(!is_null($lowestStatus) && $lowestStatus != $this->status)
 		{
 			return $lowestStatus;
 		}
 
-		return $this->status->get();
+		return $this->status;
 	}
 
 	public function getSubTotalByCurrency(Currency $currency)
@@ -1127,7 +1145,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$subTotal = 0;
 		foreach ($this->orderedItems as $item)
 		{
-			if (!$item->isSavedForLater->get())
+			if (!$item->isSavedForLater)
 			{
 				$subTotal += $item->getSubTotal(false, $applyDiscounts);
 			}
@@ -1159,17 +1177,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	 */
 	public function getTotal($recalculateAmount = false)
 	{
-		if (is_null($this->orderTotal) && $this->isFinalized->get())
+		if (is_null($this->orderTotal) && $this->isFinalized)
 		{
-			$this->orderTotal = $this->totalAmount->get();
+			$this->orderTotal = $this->totalAmount;
 		}
 
 		if (is_null($this->orderTotal) || $recalculateAmount)
 		{
-			if ($this->isFinalized->get() && !$recalculateAmount)
+			if ($this->isFinalized && !$recalculateAmount)
 			{
 				$this->getTaxes();
-				$total = $this->totalAmount->get();
+				$total = $this->totalAmount;
 			}
 			else
 			{
@@ -1226,12 +1244,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$amount = 0;
 		foreach ($this->fixedDiscounts as $discount)
 		{
-			$amount += $discount->amount->get();
+			$amount += $discount->amount;
 		}
 
 		foreach ($this->orderDiscounts as $discount)
 		{
-			$amount += $discount->amount->get();
+			$amount += $discount->amount;
 		}
 
 		return $amount;
@@ -1313,7 +1331,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 		foreach ($this->getCoupons() as $coupon)
 		{
-			if ($coupon->couponCode->get() == $code)
+			if ($coupon->couponCode == $code)
 			{
 				return true;
 			}
@@ -1338,7 +1356,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 				foreach ($shipment->getTaxes() as $tax)
 				{
-					$taxId = ($tax->taxRate->get() && $tax->taxRate->get()->tax->get()) ? $tax->taxRate->get()->tax->get()->getID() : 0;
+					$taxId = ($tax->taxRate && $tax->taxRate->tax) ? $tax->taxRate->tax->getID() : 0;
 					if (!isset($this->taxes[$taxId]))
 					{
 						$this->taxes[$taxId] = 0;
@@ -1347,10 +1365,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$this->taxes[$taxId] += $tax->getAmount();
 
 					// in case the tax has different rates (tax classes)
-					$rateId = $tax->taxRate->get()->getID();
+					$rateId = $tax->taxRate->getID();
 					if (!isset($this->taxDetails[$rateId]))
 					{
-						$this->taxDetails[$rateId] = array('amount' => 0, 'rate' => $tax->taxRate->get()->toArray());
+						$this->taxDetails[$rateId] = array('amount' => 0, 'rate' => $tax->taxRate->toArray());
 					}
 
 					$this->taxDetails[$rateId]['amount'] += $tax->getAmount();
@@ -1374,22 +1392,22 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function isProcessing()
 	{
-		return $this->status->get() == self::STATUS_PROCESSING;
+		return $this->status == self::STATUS_PROCESSING;
 	}
 
 	public function isAwaitingShipment()
 	{
-		return $this->status->get() == self::STATUS_AWAITING;
+		return $this->status == self::STATUS_AWAITING;
 	}
 
 	public function isShipped()
 	{
-		return $this->status->get() == self::STATUS_SHIPPED;
+		return $this->status == self::STATUS_SHIPPED;
 	}
 
 	public function isReturned()
 	{
-		return $this->status->get() == self::STATUS_RETURNED;
+		return $this->status == self::STATUS_RETURNED;
 	}
 
 	/**
@@ -1439,7 +1457,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 
 
-		$app = $this->getApplication();
+		$app = $this->getDI()->get('application');
 		$c = $app->getConfig();
 
 		if (!is_null($this->isOrderable) && !$this->isOrderable)
@@ -1471,7 +1489,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		// check order total
 		$maxTotal = $c->get('MAX_TOTAL');
 		$minTotal = $c->get('MIN_TOTAL');
-		$total = $this->getSubTotalByCurrency($this->getApplication()->getDefaultCurrency());
+		$total = $this->getSubTotalByCurrency($this->getDI()->get('application')->getDefaultCurrency());
 
 		if ($maxTotal && ($total > $maxTotal))
 		{
@@ -1516,7 +1534,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		foreach ($this->getOrderedItems() as $item)
 		{
 			$product = $item->getProduct();
-			if (!$product || (!$product->isEnabled->get() || !$product->getParent()->isEnabled->get()))
+			if (!$product || (!$product->isEnabled || !$product->getParent()->isEnabled))
 			{
 				$item->delete();
 				$this->removeItem($item);
@@ -1524,7 +1542,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 		}
 
-		if (!self::getApplication()->isInventoryTracking())
+		if (!$this->getDI()->get('application')->isInventoryTracking())
 		{
 			return $result;
 		}
@@ -1534,26 +1552,26 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$product = $item->getProduct();
 
 			// previously out-of-stock item now back in stock
-			if ((OrderedItem::OUT_OF_STOCK == $item->isSavedForLater->get()) && $product->isAvailable())
+			if ((OrderedItem::OUT_OF_STOCK == $item->isSavedForLater) && $product->isAvailable())
 			{
-				$item->isSavedForLater = OrderedItem::CART);
+				$item->isSavedForLater = OrderedItem::CART;
 				$result['in'][] = array('id' => $item->getID());
 			}
 
-			if (!$product->isBackOrderable->get() && !$item->isSavedForLater->get() && !$product->isBundle())
+			if (!$product->isBackOrderable && !$item->isSavedForLater && !$product->isBundle())
 			{
 				if ($product->isInventoryTracked())
 				{
-					if (($product->stockCount->get() <= 0))
+					if (($product->stockCount <= 0))
 					{
-						$item->isSavedForLater = OrderedItem::OUT_OF_STOCK);
+						$item->isSavedForLater = OrderedItem::OUT_OF_STOCK;
 						$result['out'][] = array('id' => $item->getID());
 					}
-					else if ($product->stockCount->get() < $item->count->get())
+					else if ($product->stockCount < $item->count)
 					{
-						$count = $item->count->get();
-						$item->count = $product->stockCount->get());
-						$result['count'][] = array('id' => $item->getID(), 'from' => $count, 'to' => $item->count->get());
+						$count = $item->count;
+						$item->count = $product->stockCount;
+						$result['count'][] = array('id' => $item->getID(), 'from' => $count, 'to' => $item->count);
 					}
 				}
 			}
@@ -1585,8 +1603,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$this->currency = $currency;
 		foreach ($this->getOrderedItems() as $item)
 		{
-			$item->price = $item->getProduct()->getItemPrice($item, true, $currency));
-			$item->setItemPrice($item->price->get());
+			$item->price = $item->getProduct()->getItemPrice($item, true, $currency);
+			$item->setItemPrice($item->price);
 
 			if ($save)
 			{
@@ -1609,7 +1627,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$paid = 0;
 		foreach ($transactions as $transaction)
 		{
-			$paid += $transaction->amount->get();
+			$paid += $transaction->amount;
 		}
 
 		return $paid;
@@ -1635,18 +1653,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function getPaymentMethod()
 	{
-		if ($this->isFinalized->get() && is_null($this->paymentMethod))
+		if ($this->isFinalized && is_null($this->paymentMethod))
 		{
 			foreach ($this->getTransactions($this->getPaidTransactionFilter()) as $transaction)
 			{
-				if ($transaction->method->get())
+				if ($transaction->method)
 				{
-					$this->paymentMethod = $transaction->method->get();
+					$this->paymentMethod = $transaction->method;
 					break;
 				}
 
 				// offline methods
-				else if ($transaction->serializedData->get())
+				else if ($transaction->serializedData)
 				{
 					$array = $transaction->toArray();
 					if (!empty($array['serializedData']['handlerID']))
@@ -1668,17 +1686,17 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function getCurrency()
 	{
-		if(!$this->currency->get())
+		if(!$this->currency)
 		{
-			$this->currency = self::getApplication()->getDefaultCurrency());
+			$this->currency = $this->getDI()->get('application')->getDefaultCurrency();
 		}
 
-		return $this->currency->get();
+		return $this->currency;
 	}
 
 	public function getCompletionDate()
 	{
-		return $this->dateCompleted->get();
+		return $this->dateCompleted;
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -1714,7 +1732,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			foreach ($this->orderedItems as $item)
 			{
-				if ($item->isSavedForLater->get())
+				if ($item->isSavedForLater)
 				{
 					$array['wishListItems'][] = $item->toArray();
 				}
@@ -1821,7 +1839,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$array['itemSubtotal'] += $item->getSubtotal(true);
 			$array['itemSubtotalWithoutTax'] += $item->getSubtotal(false);
-			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count->get();
+			$array['itemDisplayPriceTotal'] += $item->getDisplayPrice($currency) * $item->count;
 		}
 
 		$array['itemDiscount'] = $array['itemDisplayPriceTotal'] - $array['itemSubtotal'];
@@ -1858,7 +1876,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		foreach (array_merge($this->fixedDiscounts, $this->orderDiscounts) as $key => $discount)
 		{
 			$array['discounts'][$discount->getID() ? $discount->getID() : $key] = $discount->toArray();
-			$array['discountAmount'] -= $discount->amount->get();
+			$array['discountAmount'] -= $discount->amount;
 		}
 
 		// percentage discount applied to finalized order
@@ -1887,20 +1905,20 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$array['isOrderable'] = !($isOrderable instanceof OrderException) && $isOrderable;
 
 			$array['isShippingSelected'] = $this->isShippingSelected();
-			$array['isAddressSelected'] = ($this->shippingAddress->get() && $this->billingAddress->get());
+			$array['isAddressSelected'] = ($this->shippingAddress && $this->billingAddress);
 		}
 
 		// otherwise left empty on payment page for some reason...
-		if ($this->billingAddress->get())
+		if ($this->billingAddress)
 		{
-			$array['BillingAddress'] = $this->billingAddress->get()->toArray();
+			$array['BillingAddress'] = $this->billingAddress->toArray();
 		}
 
 		$array['isLocalPickup'] = $this->isLocalPickup();
 		$array['paymentMethod'] = $this->paymentMethod;
 		if ($array['paymentMethod'])
 		{
-			$array['paymentMethodName'] = (substr($array['paymentMethod'], 0, 7) == 'OFFLINE') ? OfflineTransactionHandler::getMethodName($array['paymentMethod']) : ActiveRecordModel::getApplication()->translate($array['paymentMethod']);
+			$array['paymentMethodName'] = (substr($array['paymentMethod'], 0, 7) == 'OFFLINE') ? OfflineTransactionHandler::getMethodName($array['paymentMethod']) : $this->getDI()->get('application')->translate($array['paymentMethod']);
 		}
 
 		$this->setArrayData($array);
@@ -1916,7 +1934,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->orderedItems as $item)
 		{
-			if (!$item->isSavedForLater->get())
+			if (!$item->isSavedForLater)
 			{
 				$items[] = $item;
 			}
@@ -1938,7 +1956,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$items = array();
 		foreach ($this->orderedItems as $item)
 		{
-			if ($item->isSavedForLater->get())
+			if ($item->isSavedForLater)
 			{
 				$items[] = $item;
 			}
@@ -1958,7 +1976,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$count += $item->count->get();
+			$count += $item->count;
 		}
 
 		return $count;
@@ -1969,7 +1987,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		return count($this->getWishListItems());
 	}
 
-	public function getItemsByProduct(Product $product)
+	public function getItemsByProduct(\product\Product $product)
 	{
 		$items = array();
 		foreach ($this->orderedItems as $item)
@@ -2017,7 +2035,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 			if (isset($products[$id]))
 			{
-				$item->product = $products[$id]);
+				$item->product = $products[$id];
 			}
 			else
 			{
@@ -2035,7 +2053,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 		if (!$this->shipments || !$this->shipments->size())
 		{
-			if ($this->getID() && ($this->isFinalized->get() || $this->isMultiAddress->get()))
+			if ($this->getID() && ($this->isFinalized || $this->isMultiAddress))
 			{
 				$this->loadItems();
 
@@ -2070,7 +2088,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				if (!$this->shipments || !$this->shipments->size())
 				{
 
-					$this->shipments = new ARSet();
+					$this->shipments = array();
 
 					foreach ($this->getShoppingCartItems() as $item)
 					{
@@ -2083,7 +2101,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 							$downloadable->addItem($item);
 						}
-						else if ($item->getProduct()->isSeparateShipment->get())
+						else if ($item->getProduct()->isSeparateShipment)
 						{
 							$shipment = Shipment::getNewInstance($this);
 							$shipment->addItem($item);
@@ -2112,7 +2130,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 				$this->event('getShipments');
 
-				$this->shipping = serialize($this->shipments));
+				$this->shipping = serialize($this->shipments);
 			}
 		}
 
@@ -2141,9 +2159,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$context = new BusinessRuleContext();
 			$context->setOrder($this);
-			if ($this->user->get())
+			if ($this->user)
 			{
-				$context->setUser($this->user->get());
+				$context->setUser($this->user);
 			}
 
 			$this->businessRuleContext = $context;
@@ -2170,7 +2188,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function processBusinessRules($reload = false)
 	{
-		if ($this->isFinalized->get())
+		if ($this->isFinalized)
 		{
 			return;
 		}
@@ -2221,9 +2239,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), array_keys($set))), array('Category')) as $additional)
 		{
-			foreach ($set[$additional->product->get()->getID()] as $item)
+			foreach ($set[$additional->product->getID()] as $item)
 			{
-				$item->registerAdditionalCategory($additional->category->get());
+				$item->registerAdditionalCategory($additional->category);
 			}
 		}
 	}
@@ -2232,9 +2250,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 				if (!$this->taxZone || $forceReset)
 		{
-			if ($this->isShippingRequired() && $this->shippingAddress->get())
+			if ($this->isShippingRequired() && $this->shippingAddress)
 			{
-				$this->taxZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get(), DeliveryZone::TAX_RATES);
+				$this->taxZone = DeliveryZone::getZoneByAddress($this->shippingAddress, DeliveryZone::TAX_RATES);
 			}
 			else
 			{
@@ -2248,9 +2266,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	{
 				if (!$this->deliveryZone || $forceReset)
 		{
-			if ($this->isShippingRequired() && $this->shippingAddress->get())
+			if ($this->isShippingRequired() && $this->shippingAddress)
 			{
-				$this->deliveryZone = DeliveryZone::getZoneByAddress($this->shippingAddress->get(), DeliveryZone::SHIPPING_RATES);
+				$this->deliveryZone = DeliveryZone::getZoneByAddress($this->shippingAddress, DeliveryZone::SHIPPING_RATES);
 			}
 			else
 			{
@@ -2297,9 +2315,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function resetShipments()
 	{
-		if (!$this->isFinalized->get() && !$this->isMultiAddress->get())
+		if (!$this->isFinalized && !$this->isMultiAddress)
 		{
-			$this->shipments = new ARSet();
+			$this->shipments = array();
 		}
 	}
 
@@ -2387,7 +2405,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		switch ($name)
 		{
 			case 'shipments':
-				$this->shipments = new ARSet();
+				$this->shipments = array();
 				return $this->shipments;
 			break;
 
@@ -2399,35 +2417,36 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 	public function setPaidStatus()
 	{
 		// @todo: remove the 0.99 multiplicator for currency conversion "tolerance" (a cent going missing when converting amounts between currencies back and forth)
-		if ((round($this->totalAmount->get(), 2)  * 0.99) <= round($this->getPaidAmount(), 2))
+		if ((round($this->totalAmount, 2)  * 0.99) <= round($this->getPaidAmount(), 2))
 		{
-			$this->isPaid = true);
+			$this->isPaid = true;
 		}
 	}
 
+/*
 	public function __clone()
 	{
 		parent::__clone();
 
-		$this->isFinalized = false);
-		$this->isPaid = false);
-		$this->isCancelled = false);
-		$this->dateCompleted = null);
-		$this->invoiceNumber = null);
+		$this->isFinalized = false;
+		$this->isPaid = false;
+		$this->isCancelled = false;
+		$this->dateCompleted = null;
+		$this->invoiceNumber = null;
 
 		$original = $this->originalRecord;
 
 		$this->shipments = new ARSet();
 		$this->orderedItems = array();
 
-		if ($original->isFinalized->get())
+		if ($original->isFinalized)
         {
                 foreach ($original->getShipments() as $shipment)
                 {
                         $cloned = clone $shipment;
                         $cloned->order = $this;
 
-                        if ($this->isMultiAddress->get())
+                        if ($this->isMultiAddress)
                         {
                                 $this->addShipment($cloned);
                         }
@@ -2448,15 +2467,15 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
                 }
         }
 
-		if ($this->isMultiAddress->get())
+		if ($this->isMultiAddress)
 		{
 			$this->save(true);
 
 			foreach ($this->getShipments() as $shipment)
 			{
-				if ($shipment->shippingAddress->get())
+				if ($shipment->shippingAddress)
 				{
-					$shipment->shippingAddress = $this->getClonedAddress($shipment->shippingAddress->get(), false));
+					$shipment->shippingAddress = $this->getClonedAddress($shipment->shippingAddress, false);
 				}
 
 				$shipment->save();
@@ -2470,18 +2489,18 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		}
 
 		// addresses
-		if ($this->billingAddress->get())
+		if ($this->billingAddress)
 		{
-			$this->billingAddress = $this->getClonedAddress($this->billingAddress->get(), true));
+			$this->billingAddress = $this->getClonedAddress($this->billingAddress, true);
 		}
 
-		if ($this->shippingAddress->get())
+		if ($this->shippingAddress)
 		{
-			$this->shippingAddress = $this->getClonedAddress($this->shippingAddress->get(), false));
+			$this->shippingAddress = $this->getClonedAddress($this->shippingAddress, false);
 		}
 		$this->save();
 	}
-
+*?
 	/**
 	 *  Try to match an order address to user address and return ID on success
 	 *
@@ -2495,28 +2514,29 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		$address = $address->toArray();
 		$addressString = $address['compact'];
 
-		$user = $this->user->get();
+		$user = $this->user;
 		$addresses = $isBilling ? $user->getBillingAddressSet() : $user->getShippingAddressSet();
 
 		foreach ($addresses as $address)
 		{
 			$address->reload();
-			$address->userAddress->get()->reload();
+			$address->userAddress->reload();
 
-			if ($address->userAddress->get()->toString(", ") == $addressString)
+			if ($address->userAddress->toString(", ") == $addressString)
 			{
-				return $address->userAddress->get();
+				return $address->userAddress;
 			}
 		}
 
 		if ($addresses->size())
 		{
-			return $addresses->get(0)->userAddress->get();
+			return $addresses->get(0)->userAddress;
 		}
 
 		return null;
 	}
 
+/*
 	public function __destruct()
 	{
 		foreach ($this->orderedItems as $item)
@@ -2550,7 +2570,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		parent::destruct(array('userID', 'billingAddressID', 'shippingAddressID'));
 	}
-
+*/
 	public static function getStatusName($status)
 	{
 		$statuses = array(
@@ -2643,7 +2663,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		');
 
 		$date = null;
-		$locale = self::getApplication()->getLocale();
+		$locale = $this->getDI()->get('application')->getLocale();
 		if (count($data) > 0)
 		{
 			$row = $data[0]; // if more??
@@ -2763,7 +2783,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		echo "\n";
 		*/
 
-		$config = self::getApplication()->getConfig();
+		$config = $this->getDI()->get('application')->getConfig();
 		$daysDue = $config->get('RECURRING_BILLING_PAYMENT_DUE_DATE_DAYS');
 		$daysBefore = $config->get('RECURRING_BILLING_GENERATE_INVOICE');
 
@@ -2771,7 +2791,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$mainOrder = $order;
 			$foundOrderID = $order->getID(); // order found with sql, this id is used in customerOrder+recurringItem mapping as key.
-			$parent = $order->parentID->get();
+			$parent = $order->parentID;
 			if ($parent)
 			{
 				$mainOrder = $parent;
@@ -2782,7 +2802,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			}
 
 			$mainOrderID = $mainOrder->getID();
-			$mainOrder->isRecurring = true);
+			$mainOrder->isRecurring = true;
 			$mainOrder->save();
 
 			// group by recurring period type, length, (rebill count?)
@@ -2794,9 +2814,9 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 				if (isset($orderIDrecurringItemIDMapping[$foundOrderID]) &&
 					in_array($recurringItemID, $orderIDrecurringItemIDMapping[$foundOrderID])
 				) {
-					$rpp = $recurringItem->recurringID->get();
+					$rpp = $recurringItem->recurringID;
 					$groupedRecurringItems[
-						sprintf('%s_%s_%s',$rpp->periodType->get(), $rpp->periodLength->get(), $rpp->rebillCount->get() === null ? 'NULL' : $rpp->rebillCount->get() )
+						sprintf('%s_%s_%s',$rpp->periodType, $rpp->periodLength, $rpp->rebillCount === null ? 'NULL' : $rpp->rebillCount )
 					][] = array('item'=>$item, 'recurringItem'=>$recurringItem);
 				}
 			}
@@ -2808,11 +2828,11 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 				$newOrder = clone $mainOrder;
 				$newOrder->parentID = $mainOrder;
-				$newOrder->isFinalized = false);
-				$newOrder->invoiceNumber = $newOrder->getCalculatedRecurringInvoiceNumber());
-				$newOrder->dateDue = date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', $ts)));
+				$newOrder->isFinalized = false;
+				$newOrder->invoiceNumber = $newOrder->getCalculatedRecurringInvoiceNumber();
+				$newOrder->dateDue = date('Y-m-d H:i:s', strtotime('+'. ($daysBefore + $daysDue) .' day', $ts));
 
-				$newOrder->isRecurring = true);
+				$newOrder->isRecurring = true;
 				$newOrder->save(true); // order must be saved for setting recurringItem lastInvoiceID.
 
 				// !! don't save order while it dont have any item or order will be deleted.
@@ -2832,12 +2852,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 					$recurringItem = $itemGroup['recurringItem'];
 					$newOrderShipment = Shipment::getNewInstance($newOrder); // ~ should have multiple shipments?
 					$recurringItem->saveLastInvoice($newOrder);
-					$periodLength = $recurringItem->periodLength->get();
-					$periodType = $recurringItem->periodType->get();
+					$periodLength = $recurringItem->periodLength;
+					$periodType = $recurringItem->periodType;
 					$recurringItemIDs[] = $recurringItem->getID(); // collect IDs for batch processedRebillCount update.
 					$clone = clone $item;
 					$clone->recurringParentID = $item;
-					$clone->shipmentID = null);
+					$clone->shipmentID = null;
 					$clone->save();
 					$newOrderShipment->addItem($clone);
 					$newOrder->addShipment($newOrderShipment);
@@ -2912,8 +2932,8 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		if ($data && count($data) == 1)
 		{
 			$data = array_shift($data);
-			$this->startDate = $data['startDate']);
-			$this->endDate = $data['endDate']);
+			$this->startDate = $data['startDate'];
+			$this->endDate = $data['endDate'];
 
 			return true;
 		}
@@ -2927,10 +2947,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	public function getCalculatedRecurringInvoiceNumber()
 	{
-		$parent = $this->parentID->get();
+		$parent = $this->parentID;
 		if (!$parent)
 		{
-			return $this->invoiceNumber->get();
+			return $this->invoiceNumber;
 		}
 		$filter = new ARSelectFilter();
 		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
@@ -2944,16 +2964,16 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 			$invoiceOrderID = $invoiceOrder->getID();
 			if ($invoiceOrderID == $this->getID())
 			{
-				return $parent->invoiceNumber->get().'-'.$count;
+				return $parent->invoiceNumber.'-'.$count;
 			}
 			$count++;
 		}
-		return $parent->invoiceNumber->get().'-'.$count; // for last unsaved order
+		return $parent->invoiceNumber.'-'.$count; // for last unsaved order
 	}
 
 	private static function sqlForAddedDate($field)
 	{
-		$generateInvoiceDays = (int)ActiveRecordModel::getApplication()->getConfig()->get('RECURRING_BILLING_GENERATE_INVOICE');
+		$generateInvoiceDays = (int)$this->getDI()->get('application')->getConfig()->get('RECURRING_BILLING_GENERATE_INVOICE');
 		if (!is_numeric($generateInvoiceDays) || $generateInvoiceDays < 0)
 		{
 			$generateInvoiceDays = 3;
@@ -3003,7 +3023,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 		return ;
 		$id = $this->getID();
-		$userID = $this->userID->get()->getID();
+		$userID = $this->userID->getID();
 		$update = new ARUpdateFilter();
 		$update->setCondition(
 			new OrChainCondition(array(
@@ -3050,7 +3070,7 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	private function canUserCancelRebillsImpl($forceRecheck)
 	{
-		if (false == ActiveRecordModel::getApplication()->getConfig()->get('ALLOW_USER_TO_CANCEL_RECURRING_REBILLS', false))
+		if (false == $this->getDI()->get('application')->getConfig()->get('ALLOW_USER_TO_CANCEL_RECURRING_REBILLS', false))
 		{
 			return false; // forbidden in configuration.
 		}
@@ -3071,12 +3091,12 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 
 	private function getSubscriptionStatusImpl($forceRecheck)
 	{
-		if ($this->isRecurring->get() == false)
+		if ($this->isRecurring == false)
 		{
 			return false; // not even a recurring order.
 		}
 
-		$rebillsLeft = $this->rebillsLeft->get();
+		$rebillsLeft = $this->rebillsLeft;
 		if ($rebillsLeft == -1 || $rebillsLeft > 0) // rebill forever or at least one more rebill
 		{
 			return self::ACTIVE_SUBSCRIPTION;

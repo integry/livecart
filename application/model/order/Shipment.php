@@ -1,5 +1,6 @@
 <?php
 
+namespace order;
 
 /**
  * Represents a collection of ordered items that are shipped in the same package
@@ -7,7 +8,7 @@
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class Shipment extends ActiveRecordModel
+class Shipment extends \ActiveRecordModel
 {
 	public $items = array();
 
@@ -35,29 +36,22 @@ class Shipment extends ActiveRecordModel
 
 	const WITHOUT_TAXES = false;
 
-	/**
-	 * Define database schema used by this active record instance
-	 *
-	 * @param string $className Schema name
-	 */
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $orderID;
+	//public $shippingServiceID", "ShippingService", "ID", "ShippingService;
+	//public $shippingAddressID", "shippingAddress", "ID", 'UserAddress;
+
+	public $trackingCode;
+	public $dateShipped;
+	public $amount;
+	public $taxAmount;
+	public $shippingAmount;
+	public $status;
+	public $shippingServiceData;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-
-
-		public $ID;
-		public $orderID", "CustomerOrder", "ID", "CustomerOrder;
-		public $shippingServiceID", "ShippingService", "ID", "ShippingService;
-		public $shippingAddressID", "shippingAddress", "ID", 'UserAddress;
-
-		public $trackingCode;
-		public $dateShipped;
-		public $amount;
-		public $taxAmount;
-		public $shippingAmount;
-		public $status;
-		public $shippingServiceData;
-		//$schema->registerAutoReference('shippingAddressID');
+		$this->belongsTo('orderID', 'order\CustomerOrder', 'ID', array('foreignKey' => true, 'alias' => 'CustomerOrder'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -73,7 +67,7 @@ class Shipment extends ActiveRecordModel
 
 	public function loadItems()
 	{
-		if (empty($this->items) && $this->isExistingRecord())
+		if (empty($this->items) && $this->getID())
 		{
 			$filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
@@ -277,15 +271,15 @@ class Shipment extends ActiveRecordModel
 
 		$this->selectedRateId = $serviceId;
 
-		if ($this->order->isMultiAddress)
+		if ($this->getCustomerOrder()->isMultiAddress)
 		{
-			$this->shippingServiceData = serialize($this->getSelectedRate()));
+			$this->shippingServiceData = serialize($this->getSelectedRate());
 		}
 	}
 
 	public function getRateId()
 	{
-		if ($this->order->isMultiAddress && !$this->selectedRateId)
+		if ($this->getCustomerOrder()->isMultiAddress && !$this->selectedRateId)
 		{
 			$this->selectedRateId = unserialize($this->shippingServiceData)->getServiceId();
 		}
@@ -428,16 +422,16 @@ class Shipment extends ActiveRecordModel
 
 		foreach ($this->getTaxes() as $tax)
 		{
-			$tax->amount = $tax->amount * $discountMultiplier);
+			$tax->amount = $tax->amount * $discountMultiplier;
 		}
 
 		$origShippingAmount = $this->shippingAmount;
 		foreach (array('amount', 'shippingAmount', 'taxAmount') as $amount)
 		{
-			$this->$amount = $this->$amount * $discountMultiplier);
+			$this->$amount = $this->$amount * $discountMultiplier;
 		}
 
-		$this->amount = $this->amount + ($this->shippingAmount - $origShippingAmount));
+		$this->amount = $this->amount + ($this->shippingAmount - $origShippingAmount);
 		$this->shippingAmount = $origShippingAmount;
 	}
 
@@ -485,7 +479,7 @@ class Shipment extends ActiveRecordModel
 	{
 		$this->loadItems();
 
-		$currency = $this->order->getCurrency();
+		$currency = $this->getCustomerOrder()->getCurrency();
 
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
 		$this->amount = $itemAmount;
@@ -495,9 +489,9 @@ class Shipment extends ActiveRecordModel
 		{
 			$deleted = false;
 
-			if ($this->order->isFinalized)
+			if ($this->getCustomerOrder()->isFinalized)
 			{
-				if ($this->isExistingRecord())
+				if ($this->getID())
 				{
 					$this->deleteRelatedRecordSet('ShipmentTax');
 				}
@@ -538,12 +532,12 @@ class Shipment extends ActiveRecordModel
 					$amount = $tax->getAmount();
 					if ($diff > 0)
 					{
-						$tax->amount = floor($amount * 100) / 100);
+						$tax->amount = floor($amount * 100) / 100;
 						$roundedTaxAmount[$type] -= 0.01;
 					}
 					else
 					{
-						$tax->amount = ceil($amount * 100) / 100);
+						$tax->amount = ceil($amount * 100) / 100;
 						$roundedTaxAmount[$type] += 0.01;
 					}
 				}
@@ -553,7 +547,7 @@ class Shipment extends ActiveRecordModel
 			$totalTaxes = 0;
 			foreach ($this->getTaxes() as $tax)
 			{
-				$tax->amount = $currency->round($tax->getAmount()));
+				$tax->amount = $currency->round($tax->getAmount());
 				$totalTaxes += $tax->getAmount();
 			}
 
@@ -570,10 +564,10 @@ class Shipment extends ActiveRecordModel
 				$amount = $this->reduceTaxesFromShippingAmount($amount);
 			}
 
-			$this->shippingAmount = $calculateTax ? $currency->round($amount) : $amount);
+			$this->shippingAmount = $calculateTax ? $currency->round($amount) : $amount;
 		}
 
-		$this->amount = $currency->round($itemAmount));
+		$this->amount = $currency->round($itemAmount);
 	}
 
 	public function addFixedTax(ShipmentTax $tax)
@@ -595,7 +589,7 @@ class Shipment extends ActiveRecordModel
 		foreach ($this->items as $key => $item)
 		{
 			// Don't try to delete new records
-			if(!$item->isExistingRecord()) continue;
+			if(!$item->getID()) continue;
 
 			if ($item->isDeleted())
 			{
@@ -618,12 +612,12 @@ class Shipment extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	public function save($downloadable = false)
+	public function beforeSave()
 	{
 		$this->removeDeletedItems();
 
 		// make sure the shipment doesn't consist of downloadable files only
-		if (!$this->isShippable() && !$this->order->isFinalized)
+		if (!$this->isShippable() && !$this->getCustomerOrder()->isFinalized)
 		{
 			//return false;
 		}
@@ -644,30 +638,31 @@ class Shipment extends ActiveRecordModel
 			$serviceId = $rate->getServiceID();
 			if (is_numeric($serviceId))
 			{
-				$this->shippingService = ShippingService::getInstanceByID($serviceId));
+				$this->shippingService = ShippingService::getInstanceByID($serviceId);
 			}
 			else
 			{
-				$this->shippingService = null);
-				$this->shippingServiceData = serialize($rate));
+				$this->shippingService = null;
+				$this->shippingServiceData = serialize($rate);
 			}
 		}
 
 		// Update order status if to reflect it's shipments statuses
-		if (!$downloadable && $this->isShippable() && $this->order->isFinalized)
+		if (!$downloadable && $this->isShippable() && $this->getCustomerOrder()->isFinalized)
 		{
-			$this->order->updateStatusFromShipments(!$this->isExistingRecord());
+			$this->getCustomerOrder()->updateStatusFromShipments(!$this->getID());
 		}
+	}
 
-		parent::save();
-
+	public function afterSave()
+	{
 		// save ordered items
 		foreach ($this->items as $item)
 		{
 			if(!$item->isDeleted())
 			{
 				$item->shipment = $this;
-				$item->customerOrder = $this->order);
+				$item->customerOrder = $this->order;
 				$item->save();
 			}
 		}
@@ -709,24 +704,22 @@ class Shipment extends ActiveRecordModel
 		}
 
 		// Save updated order status
-		if ($this->order->isFinalized)
+		if ($this->getCustomerOrder()->isFinalized)
 		{
-			$this->order->save();
+			$this->getCustomerOrder()->save();
 		}
 
 		if(!$this->status)
 		{
-			$this->status = self::STATUS_NEW);
+			$this->status = self::STATUS_NEW;
 		}
 
 		return parent::insert();
 	}
 
-	protected function update()
+	protected function afterUpdate()
 	{
-		parent::update();
-
-		$this->order->save();
+		$this->getCustomerOrder()->save();
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -751,8 +744,8 @@ class Shipment extends ActiveRecordModel
 
 		// total amount
 		$array['totalAmount'] = $this->getTotal();
-		$array['formatted_totalAmount'] = $this->order->currency->getFormattedPrice($array['totalAmount']);
-		$array['formatted_amount'] = $this->order->currency->getFormattedPrice($array['amount']);
+		$array['formatted_totalAmount'] = $this->getCustomerOrder()->currency->getFormattedPrice($array['totalAmount']);
+		$array['formatted_amount'] = $this->getCustomerOrder()->currency->getFormattedPrice($array['amount']);
 
 		// formatted subtotal
 		$array['formattedSubTotal'] = $array['formattedSubTotalBeforeTax'] = array();
@@ -779,7 +772,7 @@ class Shipment extends ActiveRecordModel
 		{
 			$array['shippingAmountWithoutTax'] = $array['shippingAmount'];
 			$array['shippingAmount'] = $this->applyTaxesToShippingAmount($array['shippingAmount']);
-			$orderCurrency = $this->order->currency;
+			$orderCurrency = $this->getCustomerOrder()->currency;
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)
 			{
@@ -834,8 +827,8 @@ class Shipment extends ActiveRecordModel
 	public function getCurrency()
 	{
 		$this->load();
-		$this->order->load();
-		return $this->order->getCurrency();
+		$this->getCustomerOrder()->load();
+		return $this->getCustomerOrder()->getCurrency();
 	}
 
 	public function getSelectedRate()
@@ -844,7 +837,7 @@ class Shipment extends ActiveRecordModel
 		{
 			$rate->setApplication($this->getApplication());
 
-			if (($this->getRateId() == $rate->getServiceId()) || ($this->order->isFinalized))
+			if (($this->getRateId() == $rate->getServiceId()) || ($this->getCustomerOrder()->isFinalized))
 			{
 				return $rate;
 			}
@@ -876,7 +869,7 @@ class Shipment extends ActiveRecordModel
 		{
 			$this->load();
 
-			if ($this->isLoaded() && $this->order->isFinalized)
+			if ($this->isLoaded() && $this->getCustomerOrder()->isFinalized)
 			{
 				$this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
 				foreach ($this->fixedTaxes as $tax)

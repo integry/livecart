@@ -1,19 +1,6 @@
 <?php
 
-ClassLoader::import('application/model/product/ProductSet', true);
-ClassLoader::import('application/model/product/ProductVariationTypeSet', true);
-ClassLoader::import('application/model/product/ProductSpecification');
-ClassLoader::import('application/model/product/ProductPricing');
-ClassLoader::import('application/model/product/ProductImage');
-ClassLoader::import('application/model/product/Manufacturer');
-ClassLoader::import('application/model/system/Language');
-ClassLoader::import('application/model/system/MultilingualObject');
-ClassLoader::import('application/model/category.*');
-ClassLoader::import('application/model/specification.*');
-ClassLoader::import('application/model/product.*');
-ClassLoader::import('application/model/delivery/ShippingClass');
-ClassLoader::import('application/model/tax/TaxClass');
-ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
+namespace product;
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -22,8 +9,9 @@ ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class Product extends MultilingualObject
+class Product extends \ActiveRecordModel
 {
+	/*
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
 
 	protected $specificationInstance = null;
@@ -31,6 +19,7 @@ class Product extends MultilingualObject
 	private $pricingHandlerInstance = null;
 
 	private $temporaryTaxClass = null;
+	*/
 
 	const DO_NOT_RECALCULATE_PRICE = false;
 
@@ -47,73 +36,69 @@ class Product extends MultilingualObject
 	 * Related products
 	 * @return ARSet
 	 */
-	private $relationships = null;
+
+	//private $relationships = null;
 
 	/**
 	 * Removed relationships
 	 * @return ARSet
 	 */
-	private $removedRelationships = null;
+	//private $removedRelationships = null;
 
-	private $bundledProducts = null;
+	//private $bundledProducts = null;
 
-	private $additionalCategories = null;
+	//private $additionalCategories = null;
 
-	private $variations = array();
+	//private $variations = array();
+/*
+	public $ID;
+	//public $categoryID", "Category", "ID", null, ARInteger::instance()));
+	//public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
+	//public $defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
+	public $parentID;//", "Product", "ID", null, ARInteger::instance()));
+	//public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
+	//public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Product");
+	public $isEnabled;
+	public $sku;
+	public $name;
+	public $shortDescription;
+	public $longDescription;
+	public $keywords;
+	public $pageTitle;
 
-		public $ID;
-		public $categoryID", "Category", "ID", null, ARInteger::instance()));
-		public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
-		public $defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
-		public $parentID", "Product", "ID", null, ARInteger::instance()));
-		public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
-		public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
+	public $dateCreated;
+	public $dateUpdated;
 
-		public $isEnabled;
-		public $sku", ARVarchar::instance()))->validate('required', 'IsUniqueSkuCheck');
-		public $name", ARArray::instance()))->validate('required');
-		public $shortDescription;
-		public $longDescription;
-		public $keywords;
-		public $pageTitle;
+	public $URL;
+	public $isFeatured;
+	public $type;
 
-		public $dateCreated;
-		public $dateUpdated;
+	public $ratingSum;
+	public $ratingCount;
+	public $rating;
+	public $reviewCount;
 
-		public $URL;
-		public $isFeatured;
-		public $type;
+	public $minimumQuantity;
+	public $shippingSurchargeAmount;
+	public $isSeparateShipment;
+	public $isFreeShipping;
+	public $isBackOrderable;
+	public $isFractionalUnit;
+	public $isUnlimitedStock;
 
-		public $ratingSum;//->protect();
-		public $ratingCount;
-		public $rating;
-		public $reviewCount;
+	public $shippingWeight;
 
-		public $minimumQuantity;
-		public $shippingSurchargeAmount;
-		public $isSeparateShipment;
-		public $isFreeShipping;
-		public $isBackOrderable;
-		public $isFractionalUnit;
-		public $isUnlimitedStock;
+	public $stockCount;
+	public $reservedCount;
+	public $salesRank;
+	public $childSettings;
+	public $fractionalStep;
+	public $position;
+	public $categoryIntervalCache;
 
-		public $shippingWeight;
-
-		public $stockCount;
-		public $reservedCount;
-		public $salesRank;
-		public $childSettings;
-		public $fractionalStep;
-		public $position;
-		public $categoryIntervalCache;
-
-		public $isRecurring;
-	}
+	public $isRecurring;
+	*/
 
 	/**
 	 * Creates a new product instance
@@ -140,7 +125,7 @@ class Product extends MultilingualObject
 	 *
 	 * @return Product
 	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
+	public static function zgetInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
@@ -194,7 +179,7 @@ class Product extends MultilingualObject
 
 	public function getChildSetting($setting)
 	{
-		$settings = unserialize($this->childSettings->get());
+		$settings = unserialize($this->childSettings);
 		if (isset($settings[$setting]))
 		{
 			return $settings[$setting];
@@ -203,9 +188,9 @@ class Product extends MultilingualObject
 
 	public function setChildSetting($setting, $value)
 	{
-		$settings = unserialize($this->childSettings->get());
+		$settings = unserialize($this->childSettings);
 		$settings[$setting] = $value;
-		$this->childSettings = serialize($settings));
+		$this->childSettings = serialize($settings);
 	}
 
 	public function belongsTo(Category $category)
@@ -236,25 +221,22 @@ class Product extends MultilingualObject
 	 */
 	public function isAvailable($requireEnabled = true)
 	{
-		if (!$this->isLoaded())
-		{
-			$this->load();
-		}
+		return true;
 
 		if (!$this->isBundle())
 		{
-			return self::isAvailableForOrdering($this->isEnabled->get() || $this->getParent()->isEnabled->get() || !$requireEnabled, $this->stockCount->get(), $this->getParent()->isBackOrderable->get(),  $this->getParent()->isUnlimitedStock->get(), $this->getParent()->type->get());
+			return self::isAvailableForOrdering($this->isEnabled || $this->getParent()->isEnabled || !$requireEnabled, $this->stockCount, $this->getParent()->isBackOrderable,  $this->getParent()->isUnlimitedStock, $this->getParent()->type);
 		}
 		else
 		{
-			if (!$this->isEnabled->get())
+			if (!$this->isEnabled)
 			{
 				return false;
 			}
 
 			foreach ($this->getBundledProducts() as $item)
 			{
-				if (!$item->relatedProduct->get()->isAvailable(false))
+				if (!$item->relatedProduct->isAvailable(false))
 				{
 					return false;
 				}
@@ -272,7 +254,7 @@ class Product extends MultilingualObject
 			{
 				if (is_null($$var))
 				{
-					$$var = $this->getParent()->$var->get();
+					$$var = $this->getParent()->$var;
 				}
 			}
 		}
@@ -301,14 +283,14 @@ class Product extends MultilingualObject
 	{
 		if (!$this->isBundle())
 		{
-			return $this->getParent()->type->get() == self::TYPE_DOWNLOADABLE;
+			return $this->getParent()->type == self::TYPE_DOWNLOADABLE;
 		}
 		else
 		{
 			$isDownloadable = true;
 			foreach ($this->getBundledProducts() as $product)
 			{
-				if (!$product->relatedProduct->get()->isDownloadable())
+				if (!$product->relatedProduct->isDownloadable())
 				{
 					$isDownloadable = false;
 					break;
@@ -324,7 +306,7 @@ class Product extends MultilingualObject
 	 */
 	public function isBundle()
 	{
-		return $this->type->get() == self::TYPE_BUNDLE;
+		return $this->type == self::TYPE_BUNDLE;
 	}
 
 	public static function isOrderable($array)
@@ -362,12 +344,12 @@ class Product extends MultilingualObject
 	{
 		$config = self::getApplication()->getConfig();
 
-		if (!$this->isInventoryTracked() || $this->isBackOrderable->get())
+		if (!$this->isInventoryTracked() || $this->isBackOrderable)
 		{
 			return null;
 		}
 
-		return $this->stockCount->get();
+		return $this->stockCount;
 	}
 
 	private function loadPricingFromRequest(\Phalcon\Http\Request $request, $listPrice = false, $removeMissing = false)
@@ -391,7 +373,7 @@ class Product extends MultilingualObject
 		// basic data
 		parent::loadRequestData($request);
 
-	  	if(!$this->isExistingRecord())
+	  	if(!$this->getID())
 		{
 			$this->save();
 		}
@@ -399,7 +381,7 @@ class Product extends MultilingualObject
 		// set manufacturer
 		if ($man = $request->get('Manufacturer'))
 		{
-			$this->manufacturer = !empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null);
+			$this->manufacturer = !empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null;
 		}
 
 		$this->getSpecification()->loadRequestData($request);
@@ -412,12 +394,12 @@ class Product extends MultilingualObject
 		{
 			foreach ($this->getRelatedRecordSet('ProductPrice', new ARSelectFilter()) as $price)
 			{
-				$id = $price->currency->get()->getID();
+				$id = $price->currency->getID();
 				if (!empty($quantities[$id]['serializedRules']))
 				{
 					$prices = $quantities[$id]['serializedRules'];
 					ksort($prices);
-					$price->serializedRules = serialize($prices));
+					$price->serializedRules = serialize($prices);
 					$price->save();
 				}
 			}
@@ -586,10 +568,10 @@ class Product extends MultilingualObject
 		{
 			if (!$this->isDownloadable())
 			{
-				if ($this->parent->get())
+				if ($this->parent)
 				{
-					$parentWeight = $this->parent->get()->getShippingWeight();
-					$weight = $this->shippingWeight->get();
+					$parentWeight = $this->parent->getShippingWeight();
+					$weight = $this->shippingWeight;
 
 					if ($this->getChildSetting('weight') == Product::CHILD_ADD)
 					{
@@ -610,7 +592,7 @@ class Product extends MultilingualObject
 				}
 				else
 				{
-					return $this->shippingWeight->get();
+					return $this->shippingWeight;
 				}
 			}
 		}
@@ -619,7 +601,7 @@ class Product extends MultilingualObject
 			$weight = 0;
 			foreach ($this->getBundledProducts() as $item)
 			{
-				$weight += $item->relatedProduct->get()->getShippingWeight();
+				$weight += $item->relatedProduct->getShippingWeight();
 			}
 
 			return $weight;
@@ -650,11 +632,11 @@ class Product extends MultilingualObject
 
 		$catUpdate->addModifier('totalProductCount', new ARExpressionHandle('totalProductCount ' . $sign . ' 1'));
 
-		if ($this->isEnabled->get())
+		if ($this->isEnabled)
 		{
 			$catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . $sign . ' 1'));
 
-			if ($this->stockCount->get() > 0)
+			if ($this->stockCount > 0)
 			{
 				$catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . $sign . ' 1'));
 			}
@@ -673,14 +655,14 @@ class Product extends MultilingualObject
 
 		try
 		{
-			$this->dateCreated = new ARSerializableDateTime());
-			$this->dateUpdated = new ARSerializableDateTime());
+			$this->dateCreated = new ARSerializableDateTime();
+			$this->dateUpdated = new ARSerializableDateTime();
 
 			parent::insert();
 
-			if ($this->category->get())
+			if ($this->category)
 			{
-				$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category->get());
+				$this->updateCategoryCounters($this->getCountUpdateFilter(), $this->category);
 			}
 
 			ActiveRecordModel::commit();
@@ -696,7 +678,7 @@ class Product extends MultilingualObject
 	 * Updates product record
 	 *
 	 */
-	protected function update()
+	public function beforeUpdate()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -712,25 +694,25 @@ class Product extends MultilingualObject
 			// when isEnabled flag is modified the activeProductCount will always either increase or decrease
 			if ($this->isEnabled->isModified())
 			{
-				$activeChange = $this->isEnabled->get() ? 1 : -1;
+				$activeChange = $this->isEnabled ? 1 : -1;
 
 				// when the stock count is larger than 0, the availableProductCount should also change by one
-				if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount->get() > 0))
+				if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount > 0))
 				{
-					$availableChange = $this->isEnabled->get() ? 1 : -1;
+					$availableChange = $this->isEnabled ? 1 : -1;
 				}
 			}
 
-			if ($this->stockCount->isModified() && $this->isEnabled->get())
+			if ($this->stockCount->isModified() && $this->isEnabled)
 			{
 				// decrease available product count
-				if ($this->stockCount->get() == 0 && $this->stockCount->getInitialValue() > 0)
+				if ($this->stockCount == 0 && $this->stockCount->getInitialValue() > 0)
 				{
 					$availableChange = -1;
 				}
 
 				// increase available product count
-				else if ($this->stockCount->get() > 0 && $this->stockCount->getInitialValue() == 0)
+				else if ($this->stockCount > 0 && $this->stockCount->getInitialValue() == 0)
 				{
 					$availableChange = 1;
 				}
@@ -753,9 +735,9 @@ class Product extends MultilingualObject
 				$this->load(array('Category'));
 			}
 
-			if ($this->category->get())
+			if ($this->category)
 			{
-				$this->updateCategoryCounters($catUpdate, $this->category->get());
+				$this->updateCategoryCounters($catUpdate, $this->category);
 			}
 
 			$update = new ARUpdateFilter();
@@ -775,32 +757,32 @@ class Product extends MultilingualObject
 	/**
 	 *  @todo move the SKU checking to insert() - otherwise seems to break some tests for now
 	 */
-	public function save($forceOperation = null)
+	public function beforeSave($forceOperation = null)
 	{
 		self::beginTransaction();
 
-		if ($this->manufacturer->get())
+		if ($this->manufacturer)
 		{
-			$this->manufacturer->get()->save();
+			$this->manufacturer->save();
 		}
 
 		// update parent inventory counter
-		if ($this->stockCount->isModified() && $this->parent->get())
+		if ($this->stockCount->isModified() && $this->parent)
 		{
-			$stockDifference = $this->stockCount->get() - $this->stockCount->getInitialValue();
+			$stockDifference = $this->stockCount - $this->stockCount->getInitialValue();
 
-			$this->parent->get()->stockCount = $this->parent->get()->stockCount->get() + $stockDifference);
-			$this->parent->get()->save();
+			$this->parent->stockCount = $this->parent->stockCount + $stockDifference;
+			$this->parent->save();
 		}
 
 		parent::save($forceOperation);
 
 		// generate SKU automatically if not set
-		if (!$this->sku->get())
+		if (!$this->sku)
 		{
 			ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
 
-			if (!$this->parent->get())
+			if (!$this->parent)
 			{
 				$sku = $this->getID();
 
@@ -819,7 +801,7 @@ class Product extends MultilingualObject
 			}
 			else
 			{
-				$sku = $this->parent->get()->sku->get() . '-';
+				$sku = $this->parent->sku . '-';
 
 				$k = 0;
 				do
@@ -862,9 +844,9 @@ class Product extends MultilingualObject
 
 			$filter = $product->getCountUpdateFilter(true);
 
-			if ($product->category->get())
+			if ($product->category)
 			{
-				$product->updateCategoryCounters($filter, $product->category->get());
+				$product->updateCategoryCounters($filter, $product->category);
 			}
 
 			foreach ($product->getAdditionalCategories() as $category)
@@ -934,7 +916,7 @@ class Product extends MultilingualObject
 		return ProductSpecification::sortAttributesByHandle('ProductSpecification', $array);
 	}
 
-	public function toArray()
+	public function ztoArray()
 	{
 	  	$array = parent::toArray();
 		$array['attributes'] = $this->getSpecification()->toArray();
@@ -944,9 +926,9 @@ class Product extends MultilingualObject
 			$array = array_merge($array, $this->getPricesFields());
 		}
 
-		if ($this->parent->get())
+		if ($this->parent)
 		{
-			$array = array_merge($this->parent->get()->toArray(), array_filter($array));
+			$array = array_merge($this->parent->toArray(), array_filter($array));
 		}
 
 		foreach ($this->variations as $variation)
@@ -1020,7 +1002,8 @@ class Product extends MultilingualObject
 
 	public function getParent()
 	{
-		return $this->parent->get() ? $this->parent->get() : $this;
+		return $this;
+		return $this->parent ? $this->parent : $this;
 	}
 
 	public function getCategory()
@@ -1032,7 +1015,7 @@ class Product extends MultilingualObject
 			$parent->load(array('Category', 'ProductImage'));
 		}
 
-		return $parent->category->get();
+		return $parent->category;
 	}
 
 	public function getTaxClass()
@@ -1043,15 +1026,15 @@ class Product extends MultilingualObject
 
 	public function getParentValue($field)
 	{
-		foreach (array($this, $this->parent->get()) as $rec)
+		foreach (array($this, $this->parent) as $rec)
 		{
-			if ($rec && $rec->$field->get())
+			if ($rec && $rec->$field)
 			{
-				return $rec->$field->get();
+				return $rec->$field;
 			}
 		}
 
-		return $this->$field->get();
+		return $this->$field;
 	}
 
 	public function getName($languageCode = null)
@@ -1070,8 +1053,8 @@ class Product extends MultilingualObject
 
 	public function getMinimumQuantity()
 	{
-		$quant = $this->minimumQuantity->get();
-		if ($step = $this->fractionalStep->get())
+		$quant = $this->minimumQuantity;
+		if ($step = $this->fractionalStep)
 		{
 			$quant = floor($quant / $step) * $step;
 			if (!$quant)
@@ -1090,9 +1073,9 @@ class Product extends MultilingualObject
 
 	public function getQuantityStep()
 	{
-		if ($this->fractionalStep->get())
+		if ($this->fractionalStep)
 		{
-			return $this->fractionalStep->get();
+			return $this->fractionalStep;
 		}
 		else
 		{
@@ -1214,7 +1197,7 @@ class Product extends MultilingualObject
 
 			foreach ($this->getParent()->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
 			{
-				$this->registerAdditionalCategory($productCat->category->get());
+				$this->registerAdditionalCategory($productCat->category);
 			}
 		}
 
@@ -1226,7 +1209,7 @@ class Product extends MultilingualObject
 		$map = $set->getIDMap();
 		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), $set->getRecordIDs())), array('Category')) as $additional)
 		{
-			$map[$additional->product->get()->getID()]->registerAdditionalCategory($additional->category->get());
+			$map[$additional->product->getID()]->registerAdditionalCategory($additional->category);
 		}
 	}
 
@@ -1297,7 +1280,7 @@ class Product extends MultilingualObject
 
 		foreach($this->getRelationships($type) as $relationship)
 		{
-			$relatedProducts->add($relationship->relatedProduct->get());
+			$relatedProducts->add($relationship->relatedProduct);
 		}
 		return $relatedProducts;
 	}
@@ -1585,6 +1568,7 @@ class Product extends MultilingualObject
 		return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
 	}
 
+/*
 	public function __clone()
 	{
 		parent::__clone();
@@ -1601,7 +1585,7 @@ class Product extends MultilingualObject
 		$this->save();
 
 		// images
-		if ($original->defaultImage->get())
+		if ($original->defaultImage)
 		{
 			foreach ($original->getRelatedRecordSet('ProductImage', $original->getImageFilter()) as $image)
 			{
@@ -1621,7 +1605,7 @@ class Product extends MultilingualObject
 		$groups[] = array();
 		foreach ($original->getRelationships() as $relationship)
 		{
-			$group = $relationship->productRelationshipGroup->get();
+			$group = $relationship->productRelationshipGroup;
 			$id = $group ? $group->getID() : null;
 			if ($id)
 			{
@@ -1630,11 +1614,13 @@ class Product extends MultilingualObject
 				$groups[$id]->save();
 			}
 
-			$cloned = ProductRelationship::getNewInstance($this, $relationship->relatedProduct->get(), $id ? $groups[$id] : null);
+			$cloned = ProductRelationship::getNewInstance($this, $relationship->relatedProduct, $id ? $groups[$id] : null);
 			$cloned->save();
 		}
 	}
+*/
 
+/*
 	public function __destruct()
 	{
 		unset($this->specificationInstance);
@@ -1658,6 +1644,7 @@ class Product extends MultilingualObject
 
 		parent::destruct(array('defaultImageID', 'parentID'));
 	}
+*/
 }
 
 ?>
