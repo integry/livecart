@@ -1,5 +1,6 @@
 <?php
 
+namespace session;
 
 /**
  * Handles session data storage in database
@@ -7,19 +8,13 @@
  * @package application/model/session
  * @author Integry Systems <http://integry.com>
  */
-class SessionData extends ActiveRecordModel
+class SessionData extends \ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-
-
-		public $ID;
-		public $userID;
-		public $lastUpdated;
-		public $cacheUpdated;
-		public $data;
-	}
+	public $ID;
+	public $userID;
+	public $lastUpdated;
+	public $cacheUpdated;
+	public $data;
 
 	/*####################  Static method implementations ####################*/
 
