@@ -34,9 +34,8 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 	public function __construct($mountPath, \Phalcon\DI\FactoryDefault $di)
 	{
 		$this->setDI($di);
-		$this->mountPath = $mountPath;
+		$this->mountPath = preg_replace('/^[\/]{0,}/', '', $mountPath);
 		$this->directory = $this->config->getPath($mountPath);
-
 		$this->directory = preg_replace('/\\' . DIRECTORY_SEPARATOR . '{2,}/', DIRECTORY_SEPARATOR, $this->directory);
 
 		foreach (array( 'configDirectory' => 'application/configuration/registry',
@@ -45,7 +44,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 						'controllerDirectory' => 'application/controller',
 						'pluginDirectory' => 'plugin') as $var => $path)
 		{
-			$dir = $this->config->getPath($mountPath . '.' . $path);
+			$dir = $this->config->getPath($mountPath . '/' . $path);
 			$this->$var = is_dir($dir) ? realpath($dir) : null;
 		}
 
@@ -53,7 +52,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 		{
 			foreach (array('ini', 'php') as $ext)
 			{
-				$path = $this->config->getPath($mountPath . '.' . $dir) . '/block.' . $ext;
+				$path = $this->config->getPath($mountPath . '/' . $dir) . '/block.' . $ext;
 				if (file_exists($path))
 				{
 					$this->blockConfiguration[] = $path;
@@ -177,7 +176,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 	{
 		$directories = array();
 
-		$dir = $this->config->getPath($this->mountPath . '.' . $mountPath);
+		$dir = $this->config->getPath($this->mountPath . '/' . $mountPath);
 		if (file_exists($dir))
 		{
 			$directories[] = $dir;
@@ -246,7 +245,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 
 	public function getAvailableModules()
 	{
-		$modulePath = $this->mountPath . '.module';
+		$modulePath = $this->mountPath . '/module';
 		$modulePath = preg_replace('/^\.+/', '', $modulePath);
 
 		$moduleDir = $this->config->getPath($modulePath);
@@ -257,7 +256,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 			{
 				if ($node->isDir() && !$node->isDot())
 				{
-					$module = new ConfigurationContainer($modulePath . '.' . $node->getFileName(), $this->getDI());
+					$module = new ConfigurationContainer($modulePath . '/' . $node->getFileName(), $this->getDI());
 					$modules[$module->getMountPath()] = $module;
 					$modules = array_merge($modules, $module->getAvailableModules());
 				}
@@ -491,7 +490,6 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 		{
 			$this->childPlugins = $this->getChildPlugins();
 		}
-
 		$path = strtolower($path);
 
 		// directory selection
@@ -519,6 +517,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 	{
 		$this->loadPlugins();
 		$plugins = (array)$this->plugins;
+
 		foreach ($this->getModules() as $module)
 		{
 			$plugins = array_merge_recursive($plugins, $module->getChildPlugins());
