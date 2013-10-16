@@ -1,12 +1,13 @@
 {% extends "layout/frontend.tpl" %}
 
-{% extends "layout/frontend.tpl" %}
+{% block title %}[[ page.title() ]]{% endblock %}
 
-{% block title %}Index{% endblock %}
+{% block left %}{% endblock %}
+{% block right %}{% endblock %}
 
 {% block content %}
-test
-    <p class="important">Welcome on my awesome {{homepage}}.</p>
+	<h1>[[ page.title() ]]</h1>
+	<div class="staticPageText">[[ page.text() ]]</div>
 {% endblock %}
 
 {#

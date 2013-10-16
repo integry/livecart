@@ -8,15 +8,11 @@
  */
 class StaticpageController extends ControllerBase
 {
-	public function viewActionAction()
+	public function viewAction($handle)
 	{
-		$pages = \staticpage\StaticPage::query()->execute();
-		//var_dump($pages->toArray());
-		$this->view->setRenderLevel(\Phalcon\MVC\View::LEVEL_ACTION_VIEW);
-		$this->view->pages = $pages->toArray();
+		$page = \staticpage\StaticPage::query()->where('handle = :handle:')->bind(array('handle' => $handle))->execute()->getFirst();
+		$this->set('page', $page);
 		$this->view->pick('staticpage/view');
-
-		$this->config->get('STORE_NAME');
 
 		/*
 		$this->loadLanguageFile('Frontend');

@@ -8,7 +8,7 @@ namespace staticpage;
  * @package application/model/staticpage
  * @author Integry Systems <http://integry.com>
  */
-class StaticPage extends \ActiveRecordModel // MultilingualObject implements EavAble
+class StaticPage extends \system\MultilingualObject // implements EavAble
 {
 	private $isFileLoaded = false;
 
@@ -106,6 +106,7 @@ class StaticPage extends \ActiveRecordModel // MultilingualObject implements Eav
 		return parent::delete();
 	}
 
+	/*
 	public function toArray()
 	{
 		$array = parent::toArray();
@@ -139,6 +140,7 @@ class StaticPage extends \ActiveRecordModel // MultilingualObject implements Eav
 		}
 		return $array;
 	}
+	*/
 
 	public function getSubPageArray()
 	{
