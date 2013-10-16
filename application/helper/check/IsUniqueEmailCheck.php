@@ -1,21 +1,26 @@
 <?php
 
+namespace helper\check;
 
 /**
  * Checks if user email is unique
  *
  * @package application/helper/check
- * @author Integry Systems 
+ * @author Integry Systems
  */
-class IsUniqueEmailCheck extends Check
+class IsUniqueEmailCheck extends \Phalcon\Validation\Validator
 {
-	public function isValid($value)
+	public function validate(\LiveCartValidator $validator, $field)
 	{
+ 		$email = $validator->getValue($field);
 
-		$filter = new ARSelectFilter();
-		$cond = new EqualsCond(new ARFieldHandle('User', 'email'), $value);
-		$filter->setCondition($cond);
-		return (ActiveRecordModel::getRecordCount('User', $filter) == 0);
+        if (is_object(\user\User::getInstanceByEmail($email)))
+        {
+            $validator->appendMessage(new \Phalcon\Validation\Message($this->getOption('message'), $field));
+            return false;
+        }
+
+        return true;
 	}
 }
 

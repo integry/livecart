@@ -6,18 +6,16 @@
  * @package application
  * @author Integry Systems
  */
-abstract class ValidatorPlugin
+abstract class ValidatorPlugin extends \Phalcon\DI\Injectable
 {
 	protected $validator;
 
-	protected $application;
-
 	public abstract function process();
 
-	public function __construct(\Phalcon\Validation $validator, LiveCart $application)
+	public function __construct(\Phalcon\Validation $validator, \Phalcon\DI\FactoryDefault $di)
 	{
 		$this->validator = $validator;
-		$this->application = $application;
+		$this->setDI($di);
 	}
 }
 

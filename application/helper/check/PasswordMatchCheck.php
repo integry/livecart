@@ -9,12 +9,22 @@ namespace helper\check;
  * @author Integry Systems
  */
 
-class PasswordMatchCheck extends \Phalcon\Validation\Validator
+class PasswordMatchCheck extends \Phalcon\Validation\Validator implements \AngularValidation
 {
 	public function validate(\LiveCartValidator $validator, $field)
 	{
-		return $validator->request->get($this->getOption("fieldName"))
-				== $validator->request->get($this->getOption("confFieldName"));
+		return $validator->request->get($this->getOption("field1"))
+				== $validator->request->get($this->getOption("field2"));
+	}
+
+	public function getAngularErrType()
+	{
+		return 'passwordmatch';
+	}
+
+	public function getAngularValidation()
+	{
+		return 'password-match="' . $this->getOption("field1") . '"';
 	}
 }
 
