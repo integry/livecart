@@ -1,17 +1,12 @@
 <?php
 
-
-ClassLoader::ignoreMissingClasses();
-ClassLoader::ignoreMissingClasses(false);
-
-
 /**
  * E-mail handler
  *
  * @package application/model
  * @author Integry Systems <http://integry.com>
  */
-class Email
+class Email extends \Phalcon\DI\Injectable
 {
 	private $connection;
 
@@ -33,20 +28,19 @@ class Email
 
 	private $relativeTemplatePath;
 
-	private $application;
-
 	private $locale;
 
 	private $message;
 
-	public function __construct(LiveCart $application)
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
 	{
-		$this->application = $application;
-		$this->set('request', $application->getRequest()->toArray());
+		$this->setDI($di);
 
-		$config = $this->application->getConfig();
+		$this->set('request', $_REQUEST);
 
-		ClassLoader::ignoreMissingClasses();
+		$config = $this->config;
+
+		require_once($this->config->getPath('library/swiftmailer/lib/swift_required.php'));
 
 		if ('SMTP' == $config->get('EMAIL_METHOD'))
 		{
@@ -78,8 +72,6 @@ class Email
 		$this->message = Swift_Message::newInstance();
 
 		$this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
-
-		ClassLoader::ignoreMissingClasses(false);
 	}
 
 	public function getMessage()
@@ -207,26 +199,25 @@ class Email
 				$path = $parts[2];
 
 				$paths = array(
-								'storage/customize/view.email.' . $locale . '.' . $templateFile,
-								'module.' . $module . '.application/view/email.' . $locale . '.' . $path,
-								'storage/customize/view.email.en.' . $templateFile,
-								'module.' . $module . '.application/view/email/en.' . $path,
+								'storage/customize/view/email/' . $locale . '/' . $templateFile,
+								'module/' . $module . '/application/view/email/' . $locale . '/' . $path,
+								'storage/customize/view/email/en/' . $templateFile,
+								'module/' . $module . '.application/view/email/en/' . $path,
 							);
 			}
 			else
 			{
 				$paths = array(
-								'storage/customize/view.email.' . $locale . '.' . $templateFile,
-								'application/view/email.' . $locale . '.' . $templateFile,
-								'storage/customize/view.email.en.' . $templateFile,
-								'application/view/email/en.' . $templateFile,
+								'storage/customize/view/email/' . $locale . '/' . $templateFile,
+								'application/view/email/' . $locale . '/' . $templateFile,
+								'storage/customize/view/email/en/' . $templateFile,
+								'application/view/email/en/' . $templateFile,
 							);
 			}
 
 			foreach ($paths as $path)
 			{
-				$templateFile = array_shift(ClassLoader::mapToMountPoint($path)) . '.tpl';
-
+				$templateFile = $this->config->getPath($path) . '.tpl';
 				if (file_exists($templateFile))
 				{
 					break;
@@ -247,19 +238,11 @@ class Email
 		$this->values[$key] = $value;
 	}
 
-	public function setUser(User $user)
+	public function setUser(\user\User $user)
 	{
-		if (!$user->isLoaded())
-		{
-			$user->load();
-		}
-
-		$user->resetArrayData();
-
-		$array = $user->toArray();
-		$this->locale = $user->locale->get();
-		$this->set('user', $array);
-		$this->setTo($array['email'], $array['fullName']);
+		$this->locale = $user->locale;
+		$this->set('usr', $user);
+		$this->setTo($user->email, $user->getFullName());
 		$this->user = $user;
 	}
 
@@ -275,33 +258,38 @@ class Email
 
 	public function send()
 	{
-		ClassLoader::ignoreMissingClasses();
-
 		$this->application->processInstancePlugins('email-prepare-send', $this);
 		$this->application->processInstancePlugins('email-prepare-send/' . $this->relativeTemplatePath, $this);
 
 		if ($this->template)
 		{
 			$originalLocale = $this->application->getLocale();
-			$emailLocale = Locale::getInstance($this->getLocale());
+			$emailLocale = \locale\Locale::getInstance($this->getLocale(), $this->getDI());
 			$this->application->setLocale($emailLocale);
 			$this->application->getLocale()->translationManager()->loadFile('User');
 			$this->application->loadLanguageFiles();
 
-			$smarty = $this->application->getRenderer()->getSmartyInstance();
+			$view = new \Phalcon\Mvc\View\Simple();
+			$view->setDI($this->getDI());
+			$view->setViewsDir(dirname($this->template) . '/');
+
+			$view->registerEngines(array(
+				".tpl" => function($view, $di)
+				{
+					$volt = new LiveVolt($view, $di);
+					$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
+					return $volt;
+				}
+			));
 
 			foreach ($this->values as $key => $value)
 			{
-				$smarty->assign($key, $value);
+				$view->$key = $value;
 			}
 
-			$router = $this->application->getRouter();
+			$view->html = false;
 
-			$smarty->assign('html', false);
-
-			$smarty->disableTemplateLocator();
-			$text = $smarty->fetch($this->template);
-			$smarty->enableTemplateLocator();
+			$text = $view->render(basename($this->template, '.tpl'));
 
 			$parts = explode("\n", $text, 2);
 			$this->subject = array_shift($parts);
@@ -312,14 +300,20 @@ class Email
 
 			if ($this->application->getConfig()->get('HTML_EMAIL'))
 			{
-				$smarty->assign('html', true);
-				$html = array_pop(explode("\n", $smarty->fetch($this->template), 2));
+				$view->html = true;
+				$view->setViewsDir(dirname($this->template) . '/');
+				$text = $view->render(basename($this->template, '.tpl'));
 
-				$css = new EditedCssFile('email');
-				$smarty->assign('cssStyle', str_replace("\n", ' ', $css->getCode()));
+				$parts = explode("\n", $text, 2);
+				$html = array_pop($parts);
 
-				$smarty->assign('messageHtml', $html);
-				$html = $smarty->fetch($this->getTemplatePath('htmlWrapper'));
+				$css = new \template\EditedCssFile('email', null, $this->getDI());
+				$view->cssStyle = str_replace("\n", ' ', $css->getCode());
+
+				$view->messageHtml = $html;
+				$wrapper = $this->getTemplatePath('htmlWrapper');
+				$view->setViewsDir(dirname($wrapper) . '/');
+				$html = $view->render(basename($wrapper, '.tpl'));
 
 				$this->setHtml($html);
 			}
@@ -331,6 +325,9 @@ class Email
 		$this->application->processInstancePlugins('email-before-send/' . $this->relativeTemplatePath, $this);
 
 		$this->message->setSubject($this->subject);
+
+		$this->text = str_replace('{*html*}', '', $this->text);
+		$this->html = str_replace('{*html*}', '', $this->html);
 
 		if ($this->html)
 		{
@@ -357,13 +354,11 @@ class Email
 		try
 		{
 			$res = $this->swiftInstance->send($this->message);
-			ClassLoader::ignoreMissingClasses(false);
 		}
 		catch (Exception $e)
 		{
 			$this->application->processInstancePlugins('email-fail-send/' . $this->relativeTemplatePath, $this, array('exception' => $e));
 			$this->application->processInstancePlugins('email-fail-send', $this, array('exception' => $e));
-			ClassLoader::ignoreMissingClasses(false);
 			return false;
 		}
 
