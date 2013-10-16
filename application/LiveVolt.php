@@ -38,13 +38,39 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return '$volt->getDI()->get(\'application\')->translate(' . $resolvedArgs . ')';
 			});
 
+			$this->_compiler->addFunction('maketext', function($resolvedArgs, $exprArgs) {
+				return '$volt->getDI()->get(\'application\')->maketext(' . $resolvedArgs . ')';
+			});
+
 			$this->_compiler->addFunction('req', function($resolvedArgs, $exprArgs) {
 				return '$volt->getDI()->get(\'request\')->get(' . $resolvedArgs . ')';
 			});
 
+			// read macro param
 			$this->_compiler->addFunction('param', function($resolvedArgs, $exprArgs) {
 				return '(!empty($params[' . $resolvedArgs . ']) ? $params[' . $resolvedArgs . '] : \'\')';
 			});
+
+			$this->_compiler->addFunction('page', function($resolvedArgs, $exprArgs) {
+				return '\staticpage\StaticPage::find(' . $resolvedArgs . ')[0]->text()';
+			});
+
+			$this->_compiler->addFunction('ptitle', function($resolvedArgs, $exprArgs) {
+				return '\staticpage\StaticPage::find(' . $resolvedArgs . ')[0]->title()';
+			});
+
+			$this->_compiler->addFunction('fullurl', function($resolvedArgs, $exprArgs) {
+				return '$this->url->get(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('count', 'count');
+			$this->_compiler->addFunction('round', 'round');
+			$this->_compiler->addFunction('is_null', 'is_null');
+
+			if (!function_exists('vmacro_form'))
+			{
+				$this->partial("macro/form.tpl");
+			}
 		}
 
 		return $this->_compiler;
@@ -52,6 +78,9 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 	public function render($templatePath, $params, $mustClean = null)
 	{
+		$this->getView()->setViewsDir(__ROOT__ . 'application/view/');
+		$this->paths = array();
+
 		$path = $this->getTemplatePath($this->getRelativeTemplatePath($templatePath));
 		if (!empty($params['validator']))
 		{
@@ -61,9 +90,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 		return parent::render($path ? $path : $templatePath, $params, $mustClean);
 	}
 
-	public function partial($partialPath, $params = array())
+	public function partial($partialPath, $params = array(), $currentScope = array())
 	{
-		return parent::render($this->getTemplatePath($partialPath), array_merge($this->globals, $params));
+		$params = array_merge($this->globals, $params, $currentScope);
+		return parent::render($this->getTemplatePath($partialPath), $params);
 	}
 
 	public function setOrReturnGlobal($key, $value = null)
@@ -119,6 +149,13 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 	public function getTemplatePath($template)
 	{
+/*
+		if (strpos($template, 'seller/leftSide.tpl'))
+		{
+			var_dump($this->getTemplatePaths($template));exit;
+			die($this->getTemplatePath($partialPath));
+		}
+*/
 		if (!isset($this->cachedTemplatePath[$template]))
 		{
 			foreach ($this->getTemplatePaths($template) as $path)
@@ -230,18 +267,26 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 {
 	protected function _compileSource($source, $something = null)
 	{
+		$source = str_replace("\r", '', $source);
 		$source = str_replace('{{', '<' . '?php $ng = <<<NG' . "\n" . '\x7B\x7B', $source);
 		$source = str_replace('}}', '\x7D\x7D' . "\n" . 'NG;' . "\n" . ' echo $ng; ?' . '>', $source);
 
 		$source = str_replace('[[', '{{', $source);
 		$source = str_replace(']]', '}}', $source);
 
-		$source = preg_replace('/{t ([^\|]+?)}/', '[[t("$1")]]', $source);
-		$source = preg_replace('/{tn ([^\|]+?)}/', '[[t("$1", true)]]', $source);
-
+		// special {% title %} block
+		$source = preg_replace('/\{\% title \%\}\{t (.*)\}\{\% endblock \%\}/', '{% block title %}{{ title(t(\'$1\')) }}{% endblock %}', $source);
 		$source = preg_replace('/\{\% title \%\}(.*)\{\% endblock \%\}/', '{% block title %}{{ title(\'$1\') }}{% endblock %}', $source);
 
+		$source = preg_replace('/{t ([^\|]+?)}/', '{{t("$1")}}', $source);
+		$source = preg_replace('/{tn ([^\|]+?)}/', '{{t("$1", true)}}', $source);
+
+		// using module template path as extendable
+		$source = preg_replace('/\{\% extends "module\/([^\/]+)\/([^"]+)" \%\}/', '{% extends "../../module/$1/application/view/$2" %}', $source);
+
 		//$source = '<' . '?php extract($this->getGlobals()); ?' . '>' . $source;
+
+		$source = str_replace('}}' . "\n", '}}<' . '?php echo "\n"; ?' . '>', $source);
 
 		$variable = '<' . '?php $volt = $GLOBALS[\'volt\']; ?' . '>';
 		$compiled = parent::_compileSource($source, $something);
@@ -277,6 +322,8 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 		$source = preg_replace('/function vmacro_([^\)]+)\)[\s]+\{/', 'function vmacro_$1) { global $volt; ', $source);
 
 		$source = preg_replace('/throw new \\\Phalcon\\\Mvc\\\View\\\Exception\("Macro [\_a-zA-Z0-9]+ was called without parameter: ([\_a-zA-Z0-9]+)"\)\;/', '\$$1 = \'\';', $source);
+		
+		$source = preg_replace('/\-\>partial\(([^;]+)\);/', '->partial($1, get_defined_vars())', $source);
 
 		return $source;
 	}
