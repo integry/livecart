@@ -1,5 +1,13 @@
 <?php
 
+class MyRouter extends \Phalcon\Mvc\Router
+{
+	public function setModule($module)
+	{
+		$this->_module = $module;
+	}
+}
+
 /*
 $f = new ReflectionMethod('\Phalcon\Mvc\View\Engine\Volt\Compiler::_compileSource');
 var_dump($f->getParameters());
@@ -20,8 +28,10 @@ try
 	$loader = new \Phalcon\Loader();
 	$loader->registerDirs(array(
 		__ROOT__ . 'application/controller/',
+		//__ROOT__ . 'module/mrfeedback/application/controller/',
 		__ROOT__ . 'application/model/',
 		__ROOT__ . 'application/',
+		__ROOT__ . 'module/',
 		__ROOT__ . 'library/',
 		__ROOT__ . 'application/helper/',
 	))->register();
@@ -29,21 +39,34 @@ try
 	//Create a DI
 	$di = new Phalcon\DI\FactoryDefault();
 
+	$di->set('loader', $loader);
+
+	$view = new \Phalcon\Mvc\View();
+	$view->setViewsDir(__ROOT__ . 'application/view/');
+
+	$view->registerEngines(array(
+		".tpl" => function($view, $di)
+		{
+			$volt = new LiveVolt($view, $di);
+			$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
+			return $volt;
+		}
+	));
+
 	//Setting up the view component
-	$di->set('view', function(){
-		$view = new \Phalcon\Mvc\View();
-		$view->setViewsDir(__ROOT__ . 'application/view/');
+	$di->set('view', $view);
 
-		$view->registerEngines(array(
-			".tpl" => function($view, $di)
-			{
-				$volt = new LiveVolt($view, $di);
-				$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
-				return $volt;
-			}
-		));
+ 	// Specify routes for modules
+	$di->set('router', function () {
 
-		return $view;
+		$router = new MyRouter();
+		$router->setDefaultModule("frontend");
+
+		$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"));
+		//$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
+		$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
+
+		return $router;
 	});
 
 	// configuration handler
@@ -78,7 +101,8 @@ try
 		//var_dump($_REQUEST['_url']);
 		//die($base);
 
-		$url->setBaseUri('/livecart2/');
+		$base = 'http://' . $_SERVER['HTTP_HOST'] . substr($_SERVER['PHP_SELF'], 0, -1 * strlen('/public/index.php')) . '/';
+		$url->setBaseUri($base);
 
 		return $url;
 	});
@@ -91,14 +115,91 @@ try
 		return $di->get('sessionUser')->getUser();
 	});
 
+	$di->set('session', function() {
+		$session = new Phalcon\Session\Adapter\Files();
+		$session->start();
+		return $session;
+	});
+
+	$di->set('flashSession', function(){
+		$flash = new \Phalcon\Flash\Session(array(
+			'error' => 'alert alert-danger',
+			'warning' => 'alert alert-warning',
+			'success' => 'alert alert-success',
+			'notice' => 'alert alert-info',
+		));
+		return $flash;
+	});
+
+	$di->set('di', function() use ($di) {
+		return function($set) use ($di) {
+			foreach ($set as $model)
+			{
+				$model->setDI($di);
+			}
+
+			return $set;
+		};
+	});
+
 	//Handle the request
 	$application = new LiveCart($di);
 	//$application->useImplicitView(true);
 
+	// Register the installed modules
+
+	$application->registerModules(
+		array(
+			'frontend' => function($di) use ($view) {
+				$di->setShared('view', function() use ($view) {
+					$view->setViewsDir(__ROOT__ . 'application/view/');
+					return $view;
+				});
+			},
+			'mrfeedback' => function($di) use ($view) {
+				$di->setShared('view', function() use ($view) {
+					$view->setViewsDir(__ROOT__ . 'module/mrfeedback/application/view/');
+					return $view;
+				});
+			}
+		)
+	);
+
+	$di->get('loader')->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
+
+/*
+    $application->registerModules(
+        array(
+            'frontend' => array(
+                'className' => '\Module',
+                'path'      => __ROOT__ . 'application/Module.php',
+            ),
+            'mrfeedback'  => array(
+                'className' => 'module\mrfeedback\Module',
+                'path'      => __ROOT__ . 'module/mrfeedback/Module.php',
+            )
+        )
+    );
+*/
+
+/*
+    $application->registerModules(
+        array(
+            'frontend' => new Module(__ROOT__),
+            'mrfeedback'  => new Module(__ROOT__ . 'module/mrfeedback')
+        )
+    );
+*/
+
 	$di->set('application', $application);
 
 	echo $application->handle()->getContent();
-} catch(Exception $e)
+}
+catch(UnauthorizedException $e)
+{
+	$di->get('response')->redirect('user/login')->send();
+}
+catch(Exception $e)
 {
      echo dump_livecart_trace($e);
 }
