@@ -31,6 +31,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		$this->ID = $id;
 	}
 
+	public static function getInstanceByID($id)
+	{
+		$class = get_called_class();
+		return $class::query()->where('ID = :id:')->bind(array('id' => $id))->execute()->getFirst();
+	}
+
 	public function loadRequestModel(\Phalcon\Http\Request $request, $key = '')
 	{
 		$json = $request->getJSON();
@@ -78,7 +84,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 				else
 				{
 					$modelReq->set('specField_' . $key, $value['value']);
-					foreach (self::getApplication()->getLanguageArray() as $lang)
+					foreach ($this->getDI()->get('application')->getLanguageArray() as $lang)
 					{
 						if (!empty($value['value_' . $lang]))
 						{
@@ -118,7 +124,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return;
 		//var_dump($request);exit;
 		$enabledFields = is_array($prefix) ? array_flip($prefix) : null;
-		$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
+		$languages = $this->getDI()->get('application')->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
@@ -156,7 +162,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 					switch ($dataType)
 					{
 						case 'ARArray':
-							$this->setValueArrayByLang(array($name), self::getApplication()->getDefaultLanguageCode(), self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT), $request);
+							$this->setValueArrayByLang(array($name), $this->getDI()->get('application')->getDefaultLanguageCode(), $this->getDI()->get('application')->getLanguageArray(LiveCart::INCLUDE_DEFAULT), $request);
 						break;
 
 						case 'ARBool':
@@ -302,7 +308,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 		$this->executePlugins($this, 'after-save');
 
-		$cache = self::getApplication()->getCache();
+		$cache = $this->getDI()->get('application')->getCache();
 		if ($cache instanceof MemCachedCache)
 		{
 			$cache->set($this->getRecordIdentifier($this), $this);
@@ -328,7 +334,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 				if (!isset($locale))
 				{
-					$locale = self::getApplication()->getLocale();
+					$locale = $this->getDI()->get('application')->getLocale();
 				}
 
 				$array['formatted_' . $name] = $locale->getFormattedTime($time);
@@ -358,6 +364,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return self::$isEav[$className];
 	}
 
+	/*
 	public function toArray($force = false)
 	{
 		$array = parent::toArray($force);
@@ -372,6 +379,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 		return $array;
 	}
+	*/
 
 	public function processBusinessRules(BusinessRuleManager $manager)
 	{
@@ -464,10 +472,10 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 		// get plugins
 		$path = 'model/' . strtolower($className) . '/' . $action;
-		foreach (self::getApplication()->getPlugins($path) as $plugin)
+		foreach ($this->getDI()->get('application')->getPlugins($path) as $plugin)
 		{
 			include_once $plugin['path'];
-			new $plugin['class']($object, self::getApplication());
+			new $plugin['class']($object, $this->getDI()->get('application'));
 		}
 	}
 
@@ -493,6 +501,24 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	}
 	*/
 
+	public function getFormattedTime($field, $type)
+	{
+		$type = str_replace('t_', 'time_', str_replace('d_', 'date_', $type));
+		return $this->getDI()->get('application')->getLocale()->getFormattedTime($this->$field, $type);
+	}
+
+	public function __call($method, $arguments = NULL)
+	{
+		if (isset($this->$method) && (!empty($arguments) && (in_array(substr($arguments[0], 0, 2), array('d_', 't_')))))
+		{
+			return $this->getFormattedTime($method, $arguments[0]);
+		}
+		else
+		{
+			return parent::__call($method, $arguments);
+		}
+	}
+
 	/**
 	 *	Assign an entirely new specification (custom field) container. Usually necessary after cloning, etc.
 	 */
@@ -513,6 +539,11 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		}
 
 		return $res;
+	}
+
+	public function toAngular()
+	{
+		return htmlentities(json_encode($this->toArray()));
 	}
 }
 
