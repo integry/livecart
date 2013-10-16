@@ -1,13 +1,14 @@
 <?php
 
+namespace template;
+
 /**
  * CommonTemplate
  * @author Integry Systems
  */
- 
-abstract class CommonFile
-{
 
+abstract class CommonFile extends \Phalcon\DI\Injectable
+{
 	protected $version;
 
 	const BACKUP_FILE_COUNT = 10;
@@ -17,6 +18,11 @@ abstract class CommonFile
 	protected abstract function getFileName();
 
 	protected abstract function getCode();
+
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
+	{
+		$this->setDI($di);
+	}
 
 	protected function setVersion($version)
 	{

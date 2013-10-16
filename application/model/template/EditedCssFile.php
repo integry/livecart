@@ -1,5 +1,6 @@
 <?php
 
+namespace template;
 
 class EditedCssFile extends CommonFile
 {
@@ -7,8 +8,10 @@ class EditedCssFile extends CommonFile
 
 	private $code;
 
-	public function __construct($theme = null, $version=null)
+	public function __construct($theme = null, $version=null, \Phalcon\DI\FactoryDefault $di)
 	{
+		parent::__construct($di);
+
 		$theme = basename($theme, '.css');
 
 		$this->theme = $theme;
@@ -89,7 +92,7 @@ class EditedCssFile extends CommonFile
 
 	protected function getBackupPath()
 	{
-		return $this->config->getPath('storage/backup.cssfile/');
+		return $this->config->getPath('storage/backup/cssfile/');
 	}
 
 }
