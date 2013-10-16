@@ -1,5 +1,6 @@
 <div class="form-actions">
 	<submit>[[ t(caption) ]]</submit>
+	{% if !empty(extra) %}[[ extra ]]{% endif %}
 	<span class="progressIndicator" style="display: none;"></span>
 
 	{% if !empty(cancelRoute) %}

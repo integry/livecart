@@ -1,1 +1,1 @@
-<p><?php $this->flashSession->output() ?></p>
+<?php $this->flashSession->output() ?>
