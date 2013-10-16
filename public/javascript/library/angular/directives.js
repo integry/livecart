@@ -154,17 +154,59 @@ backendComponents.directive('submit', function($compile)
 {
     return {
         restrict: "E",
+        replace: true,
         transclude: true,
         link: function(scope, element, attrs)
         {
+			var form = attrs.tabform ?  element.closest('.modal').find('.' + attrs.tabform) : element.closest('form');
+			var formScope = angular.element(form).scope();
+			formScope.customErrors = {};
+
+			formScope.checkErrors = function(event, form)
+			{
+				var errors = _.without(_.values(form.$error), false);
+				if (errors.length)
+				{
+					event.preventDefault();
+				}
+			};
+
+			formScope.setCustomErrors = function(errors)
+			{
+				formScope.customErrors = errors;
+			};
+
 			scope.markSubmitted = function()
 			{
-				var form = attrs.tabform ?  element.closest('.modal').find('.' + attrs.tabform) : element.closest('form');
-				var formScope = angular.element(form).scope();
+				formScope.customErrors = {};
 				formScope.isSubmitted = 1;
-			}
+			};
 		},
         template: '<button type="submit" class="btn btn-primary" ng-click=";markSubmitted();" ng-transclude></button>'
+   		//template: '<input type="submit" class="btn btn-primary" ng-click=";markSubmitted();" ng-transclude></input>'
+    };
+});
+
+backendComponents.directive('customErrors', function($compile)
+{
+    return {
+        restrict: "E",
+        replace: true,
+        scope: true,
+        link: function(scope, element, attrs)
+        {
+			var formScope = angular.element(element.closest('form')).scope();
+			var field = attrs.field;
+
+			scope.getErrors = function()
+			{
+				if (formScope.customErrors && formScope.customErrors[field])
+				{
+					return formScope.customErrors[field];
+				}
+			}
+		},
+        template: '<div ng-repeat="message in getErrors()" class="text-danger">{{ message }}</div>'
     };
 });
 
@@ -599,4 +641,60 @@ backendComponents.directive('eavMultiselect', function($parse)
 			}, true);
 		}
     };
+});
+
+app.directive('defaultValues', function () {
+    return {
+        link: function (scope, elm, attrs, ctrl)
+        {
+			scope.vals = window[attrs.defaultValues];
+        }
+    };
+});
+
+app.directive('passwordMatch', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ctrl)
+        {
+			ctrl.$parsers.unshift(function (viewValue) {
+				ctrl.$setValidity('passwordmatch', viewValue == scope.vals[attrs.passwordMatch]);
+				return viewValue;
+			});
+            scope.$watch('vals.' + attrs.passwordMatch, function(value) {
+				ctrl.$setValidity('passwordmatch', ctrl.$viewValue == value);
+            });
+        }
+    };
+});
+
+app.directive('filterNumber', function(){
+   return {
+     require: 'ngModel',
+     link: function(scope, element, attrs, modelCtrl)
+     {
+		modelCtrl.$parsers.push(function (inputValue)
+		{
+			if (!inputValue)
+			{
+				return '';
+			}
+
+			if (!inputValue.replace)
+			{
+				return inputValue;
+			}
+
+			var transformedInput = parseFloat(inputValue.replace(/,/g,'').replace(/^[^-0-9]*/,''));
+
+			if (transformedInput != inputValue)
+			{
+				modelCtrl.$setViewValue(transformedInput);
+				modelCtrl.$render();
+			}
+
+			return transformedInput;
+		});
+     }
+   };
 });
