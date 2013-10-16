@@ -117,6 +117,12 @@ class LiveCart extends \Phalcon\Mvc\Application
 			//Set the database service
 			$di->set('db', function() use ($dsnPath) {
 				$dsn = parse_url(include $dsnPath);
+
+				if (!empty($dsn['pass']))
+				{
+					$dsn['password'] = $dsn['pass'];
+				}
+
 				return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
 					"host" => $dsn['host'],
 					"username" => $dsn['user'],
@@ -326,27 +332,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 			return parent::getLayoutPath($layout);
 		}
-	}
-
-	/**
-	 * Gets renderer for application
-	 *
-	 * @return Renderer
-	 */
-	public function getRenderer()
-	{
-		if (is_null($this->renderer))
-		{
-						$this->renderer = new LiveCartRenderer($this);
-
-			if ($this->isTemplateCustomizationMode() && !$this->isBackend)
-			{
-				$this->renderer->getSmartyInstance()->registerFilter('prefilter', array($this, 'templateLocator'));
-			}
-			$this->logStat('Init renderer');
-		}
-
-		return $this->renderer;
 	}
 
 	public function isBackend()
@@ -606,15 +591,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		return $this->processPlugins($controllerInstance, new RawResponse, $action);
 	}
 
-	/**
- `	 * Execute response post-processor plugins
-	 */
-	private function processActionPlugins(Controller $controllerInstance, Response $response, $actionName)
-	{
-		return $this->processPlugins($controllerInstance, $response, $actionName);
-	}
-
-	private function getControllerHierarchy(Controller $controllerInstance)
+	private function getControllerHierarchy(ControllerBase $controllerInstance)
 	{
 		static $cache;
 
@@ -624,15 +601,19 @@ class LiveCart extends \Phalcon\Mvc\Application
 		{
 			do
 			{
-				$hierarchy[strtolower(substr($parent, 0, -10))] = true;
+				if (substr($parent, 0, 7) !== 'Phalcon')
+				{
+					$name = $parent == 'ControllerBase' ? 'base' : strtolower(substr($parent, 0, -10));
+					$hierarchy[$name] = true;
+				}
 				$parent = get_parent_class($parent);
 			}
 			while ($parent);
 
 			// remove the last controller (identified by it's path instead)
-			array_shift($hierarchy);
+			// array_shift($hierarchy);
 
-			$hierarchy[str_replace('.', '/', $controllerInstance->getControllerName())] = true;
+			// $hierarchy[str_replace('.', '/', $controllerInstance->getControllerName())] = true;
 			$hierarchy = array_keys($hierarchy);
 
 			$cache[$top] = $hierarchy;
@@ -641,7 +622,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		return $cache[$top];
 	}
 
-	private function processPlugins(Controller $controllerInstance, Response $response, $action)
+	public function processActionPlugins(ControllerBase $controllerInstance, $action)
 	{
 		if (!is_array($action))
 		{
@@ -661,28 +642,26 @@ class LiveCart extends \Phalcon\Mvc\Application
 			foreach ($plugins as $plugin)
 			{
 				include_once($plugin['path']);
-				$plugin = new $plugin['class']($response, $controllerInstance);
+				$plugin = new $plugin['class']($controllerInstance, $this->getDI());
 				$plugin->process();
 
+				/*
 				$response = $plugin->getResponse();
 				if ($plugin->isStopped())
 				{
 					return $response;
 				}
+				*/
 			}
 		}
 
-		return $response;
+		//return $response;
 	}
 
 	public function processRuntimePlugins($path)
 	{
 		foreach($this->getPlugins($path) as $plugin)
 		{
-			if (!class_exists('ProcessPlugin', false))
-			{
-							}
-
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this);
 			$inst->process();
@@ -693,10 +672,6 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		foreach($this->getPlugins('instance/' . $path) as $plugin)
 		{
-			if (!class_exists('InstancePlugin', false))
-			{
-							}
-
 			include_once $plugin['path'];
 			$inst = new $plugin['class']($this, $instance, $params);
 
@@ -711,9 +686,9 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 	public function getPluginClasses($mountPath, $extension = 'php')
 	{
-		if (substr($mountPath, -1) != '.')
+		if (substr($mountPath, -1) != '/')
 		{
-			$mountPath .= '.';
+			$mountPath .= '/';
 		}
 
 		$classes = array();
@@ -731,9 +706,9 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 	public function getPluginClassPath($mountPath, $class, $extension = 'php')
 	{
-		if (substr($mountPath, -1) != '.')
+		if (substr($mountPath, -1) != '/')
 		{
-			$mountPath .= '.';
+			$mountPath .= '/';
 		}
 
 		foreach ($this->configContainer->getDirectoriesByMountPath($mountPath) as $dir)
@@ -869,7 +844,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (empty($this->locale))
 		{
-			$this->locale =	\locale\Locale::getInstance($this->localeName);
+			$this->locale =	\locale\Locale::getInstance($this->localeName, $this->getDI());
 			$this->locale->translationManager()->setCacheFileDir($this->config->getPath('storage/language'));
 
 			foreach ($this->getConfigContainer()->getLanguageDirectories() as $dir)
@@ -946,7 +921,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	  	return $this->locale;
 	}
 
-	public function setLocale(Locale $locale)
+	public function setLocale(\locale\Locale $locale)
 	{
 	  	$this->locale = $locale;
 	  	$this->localeName = $locale->getLocaleCode();
@@ -1441,7 +1416,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	 */
 	private function loadCurrencyData()
 	{
-		$useCache = true;
+		$useCache = false;
 		$cache = Currency::getCacheFile();
 
 		if (file_exists($cache) && $useCache)
@@ -1450,13 +1425,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 		else
 		{
-			$filter = new ArSelectFilter();
-			$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
-			$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
-			$currencies = ActiveRecord::getRecordSet('Currency', $filter);
-			$this->currencies = array();
-
-			foreach ($currencies as $currency)
+			foreach (Currency::query()->where('isEnabled = 1')->order('position ASC')->execute() as $currency)
 			{
 				$this->currencies[$currency->getID()] = $currency;
 			}
@@ -1534,7 +1503,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 			}
 			else
 			{
-				$this->configContainer = new ConfigurationContainer('.', $this->getDI());
+				$this->configContainer = new ConfigurationContainer('/', $this->getDI());
 				$this->configContainer->getModules();
 				$this->configContainer->getChildPlugins();
 				$serialized = serialize($this->configContainer);
