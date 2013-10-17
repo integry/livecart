@@ -27,7 +27,8 @@ try
 	//Register an autoloader
 	$loader = new \Phalcon\Loader();
 	$loader->registerDirs(array(
-		__ROOT__ . 'application/controller/',
+		//__ROOT__ . 'application/controller/',
+		//__ROOT__ . 'application/controller/backend',
 		//__ROOT__ . 'module/mrfeedback/application/controller/',
 		__ROOT__ . 'application/model/',
 		__ROOT__ . 'application/',
@@ -65,6 +66,31 @@ try
 		$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"));
 		//$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
 		$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
+
+		$router->add('/backend/:controller/:action/:params', array(
+			'module' => 'backend',
+			'controller' => 1,
+			'action' => 2,
+			'params' => 3
+		));
+		
+
+		$router->add('/backend/:controller/:action', array(
+			'module' => 'backend',
+			'controller' => 1,
+			'action' => 2,
+		));
+
+		$router->add('/backend/:controller', array(
+			'module' => 'backend',
+			'controller' => 1
+		));
+
+		$router->add('/backend', array(
+			'module' => 'backend',
+			'controller' => 'index',
+			'action' => 'index'
+		));
 
 		return $router;
 	});
@@ -150,13 +176,28 @@ try
 
 	$application->registerModules(
 		array(
-			'frontend' => function($di) use ($view) {
+			'frontend' => function($di) use ($view, $loader) 
+			{
+				$loader->registerDirs(array(__ROOT__ . 'application/controller'), true);
+				$loader->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
+				
 				$di->setShared('view', function() use ($view) {
 					$view->setViewsDir(__ROOT__ . 'application/view/');
 					return $view;
 				});
 			},
-			'mrfeedback' => function($di) use ($view) {
+			'backend' => function($di) use ($view, $loader) 
+			{
+				$loader->registerDirs(array(__ROOT__ . 'application/controller/backend'), true);
+				$di->setShared('view', function() use ($view) {
+					$view->setViewsDir(__ROOT__ . 'application/view/backend/');
+					return $view;
+				});
+			},
+			'mrfeedback' => function($di) use ($view, $loader) 
+			{
+				$loader->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
+				
 				$di->setShared('view', function() use ($view) {
 					$view->setViewsDir(__ROOT__ . 'module/mrfeedback/application/view/');
 					return $view;
@@ -164,32 +205,6 @@ try
 			}
 		)
 	);
-
-	$di->get('loader')->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
-
-/*
-    $application->registerModules(
-        array(
-            'frontend' => array(
-                'className' => '\Module',
-                'path'      => __ROOT__ . 'application/Module.php',
-            ),
-            'mrfeedback'  => array(
-                'className' => 'module\mrfeedback\Module',
-                'path'      => __ROOT__ . 'module/mrfeedback/Module.php',
-            )
-        )
-    );
-*/
-
-/*
-    $application->registerModules(
-        array(
-            'frontend' => new Module(__ROOT__),
-            'mrfeedback'  => new Module(__ROOT__ . 'module/mrfeedback')
-        )
-    );
-*/
 
 	$di->set('application', $application);
 
