@@ -1,51 +1,33 @@
-{includeCss file="backend/Session.css"}
-{% block title %}[[ branding({t _backend_login}) ]]{% endblock %}
+{% extends "layout/backend.tpl" %}
 
-[[ partial("layout/backend/meta.tpl") ]]
+{% title %}{t _backend_login}{% endblock %}
 
-<h1 id="loginHeader">[[ branding({t _backend_login}) ]]</h1>
+{% block content %}
 
-<div id="logoContainer">
-	{img src='BACKEND_LOGIN_LOGO'|config|@or:"image/promo/transparentlogo.png"}
-</div>
+	<div id="logoContainer">
+		<img src="[[ config('BACKEND_LOGIN_LOGO') ]]" />
+	</div>
 
-<div id="loginContainer">
-{% if req('failed') %}
-	<div class="loginFailed">{t _login_failed}</div>
-{% endif %}
-<form action="[[ url("backend.session/doLogin") ]]" method="post" />
-	<p>
-	   <label for="email">{t _email}:</label>
-	   <input type="text" class="text" id="email" name="email" value="{$email|escape}" />
-	</p>
-	<p>
-		<label for="password">{t _password}:</label>
-		<fieldset class="container">
-			<input type="password" class="text" id="password" name="password" value="{$password|escape}" />
-			<a href="[[ url("user/remindPassword", "return=`$return`") ]]" class="forgottenPassword">
-				{t _remind_password}
-			</a>
-		</fieldset>
-	</p>
+	<div id="loginContainer">
 
-   	<p>
-		<label></label>
-		<input type="submit" class="submit" value="{t _login}" />
-	</p>
+	{% if req('failed') %}
+		<div class="loginFailed">{t _login_failed}</div>
+	{% endif %}
 
-	<input type="hidden" name="return" value="[[return]]" />
+	<form action="[[ url("backend.session/doLogin") ]]" method="post" />
 
-</form>
+		[[ textfld('email', '_email', ['type': 'email']) ]]
 
-</div>
+		[[ pwdfld('password', '_your_pass') ]]
+		<a href="[[ url("user/remindPassword") ]]" class="forgottenPassword">
+			{t _remind_password}
+		</a>
+		
+		[[ partial('block/submit.tpl', ['caption': "_login"]) ]]
+		
+		<input type="hidden" name="return" value="[[ret]]" />
 
+	</form>
+	</div>
 
-	<script type="text/javascript">
-		Event.observe(window, 'load', function() {$('email').focus()});
-	</script>
-
-
-</body>
-</html>
-
-{* include file="layout/backend/footer.tpl" *}
+{% endblock %}

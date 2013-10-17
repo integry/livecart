@@ -10,9 +10,9 @@ require_once(dirname(dirname(__FILE__)) . '/ControllerBase.php');
  */
 abstract class ControllerBackend extends ControllerBase
 {
+/*
 	public function initialize()
 	{
-/*
 		if ($application->getConfig()->get('SSL_BACKEND'))
 		{
 			$application->getRouter()->setSslAction('');
@@ -48,9 +48,9 @@ abstract class ControllerBackend extends ControllerBase
 
 			exit;
 		}
-	*/
 	}
-
+	*/
+	
 /*
 	public function initialize()
 	{

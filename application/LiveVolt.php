@@ -289,6 +289,7 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 		$source = str_replace('}}' . "\n", '}}<' . '?php echo "\n"; ?' . '>', $source);
 
 		$variable = '<' . '?php $volt = $GLOBALS[\'volt\']; ?' . '>';
+		
 		$compiled = parent::_compileSource($source, $something);
 
 		if (is_array($compiled))
@@ -317,6 +318,8 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 			return $source;
 		}
 
+		$source = '<' . '?php $error_reporting_level = error_reporting(); error_reporting($error_reporting_level ^ E_NOTICE); ?' . '>' . $source . '<' . '?php error_reporting($error_reporting_level); ?' . '>';
+		
 		$source = str_replace('$this', '$volt', $source);
 		$source = str_replace('$__this', '$this', $source);
 		$source = preg_replace('/function vmacro_([^\)]+)\)[\s]+\{/', 'function vmacro_$1) { global $volt; ', $source);
