@@ -54,7 +54,7 @@ class InstallController extends FrontendController
 			}
 		}
 
-		return new ActionRedirectResponse('install', 'license');
+		return $this->response->redirect('install/license');
 	}
 
 	public function licenseAction()
@@ -72,10 +72,10 @@ class InstallController extends FrontendController
 	{
 		if (!$this->buildLicenseValidator()->isValid())
 		{
-			return new ActionRedirectResponse('install', 'license');
+			return $this->response->redirect('install/license');
 		}
 
-		return new ActionRedirectResponse('install', 'database');
+		return $this->response->redirect('install/database');
 	}
 
 	public function databaseAction()
@@ -95,7 +95,7 @@ class InstallController extends FrontendController
 
 		if (!$this->buildDatabaseValidator()->isValid())
 		{
-			return new ActionRedirectResponse('install', 'database');
+			return $this->response->redirect('install/database');
 		}
 
 		$type = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
@@ -158,7 +158,7 @@ class InstallController extends FrontendController
 			ActiveRecord::commit();
 
 
-			//return new ActionRedirectResponse('install', 'admin');
+			//return $this->response->redirect('install/admin');
 		}
 		catch (SQLException $e)
 		{
@@ -167,7 +167,7 @@ class InstallController extends FrontendController
 			$validator->saveState();
 
 			$this->set('step', 'database');
-			//return new ActionRedirectResponse('install', 'database');
+			//return $this->response->redirect('install/database');
 		}
 	}
 
@@ -185,7 +185,7 @@ class InstallController extends FrontendController
 	{
 		if (!$this->buildAdminValidator()->isValid())
 		{
-			return new ActionRedirectResponse('install', 'admin');
+			return $this->response->redirect('install/admin');
 		}
 
 
@@ -214,7 +214,7 @@ class InstallController extends FrontendController
 		$this->config->set('NEWSLETTER_EMAIL', $this->request->get('email'));
 		$this->config->save();
 
-		return new ActionRedirectResponse('install', 'config');
+		return $this->response->redirect('install/config');
 	}
 
 	public function configAction()
@@ -248,7 +248,7 @@ class InstallController extends FrontendController
 	{
 		if (!$this->buildConfigValidator()->isValid())
 		{
-			return new ActionRedirectResponse('install', 'config');
+			return $this->response->redirect('install/config');
 		}
 
 		Language::deleteCache();
@@ -324,7 +324,7 @@ class InstallController extends FrontendController
 		$news->isEnabled->set(true);
 		$news->save();
 
-		return new ActionRedirectResponse('install', 'finish');
+		return $this->response->redirect('install/finish');
 	}
 
 	public function finishAction()
@@ -337,7 +337,7 @@ class InstallController extends FrontendController
 		if (!file_exists($this->getDsnFile()))
 		{
 			@unlink($this->getStepFile());
-			return new ActionRedirectResponse('install', 'index');
+			return $this->response->redirect('install/index');
 		}
 
 

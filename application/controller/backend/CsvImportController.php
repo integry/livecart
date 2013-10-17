@@ -68,7 +68,7 @@ class CsvImportController extends StoreManagementController
 			$validator = $this->buildValidator();
 			$validator->triggerError('atServer', $this->translate('_err_no_file'));
 			$validator->saveState();
-			return new ActionRedirectResponse('backend.csvImport', 'index');
+			return $this->response->redirect('backend/csvImport/index');
 		}
 
 		return new ActionRedirectResponse('backend.csvImport', 'delimiters', array('query' => array('file' => $filePath, 'category' => $this->request->get('category'), 'type' => $this->request->get('type'), 'options' => base64_encode(serialize($this->request->get('options'))))));
@@ -79,7 +79,7 @@ class CsvImportController extends StoreManagementController
 		$file = $this->request->get('file');
 		if (!file_exists($file))
 		{
-			return new ActionRedirectResponse('backend.csvImport', 'index');
+			return $this->response->redirect('backend/csvImport/index');
 		}
 
 		// try to guess the delimiter

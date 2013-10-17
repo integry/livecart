@@ -12,7 +12,7 @@ class ContactFormController extends FrontendController
 	{
 		if (!$this->buildValidator()->isValid())
 		{
-			return new ActionRedirectResponse('contactForm', 'index');
+			return $this->response->redirect('contactForm/index');
 		}
 
 		$email = new Email($this->application);
@@ -22,7 +22,7 @@ class ContactFormController extends FrontendController
 		$email->set('message', $this->request->get('msg'));
 		$email->send();
 
-		return new ActionRedirectResponse('contactForm', 'sent');
+		return $this->response->redirect('contactForm/sent');
 	}
 
 	public function sentAction()

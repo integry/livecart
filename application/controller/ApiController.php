@@ -18,7 +18,7 @@ class ApiController extends BaseController
 
 	public function indexAction()
 	{
-		return new ActionRedirectResponse('api', 'doc');
+		return $this->response->redirect('api/doc');
 	}
 
 	public function xmlAction()

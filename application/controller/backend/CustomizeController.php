@@ -29,7 +29,7 @@ class CustomizeController extends StoreManagementController
 			$this->session->set('translationMode', true);
 		}
 
-		return new ActionRedirectResponse('backend.customize', 'index');
+		return $this->response->redirect('backend/customize/index');
 	}
 
 	public function modeAction()
@@ -47,7 +47,7 @@ class CustomizeController extends StoreManagementController
 
 		if (!$this->request->isValueSet('return'))
 		{
-			return new ActionRedirectResponse('backend.customize', 'index');
+			return $this->response->redirect('backend/customize/index');
 		}
 		else
 		{

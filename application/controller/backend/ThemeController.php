@@ -427,7 +427,7 @@ class ThemeController extends StoreManagementController
 		$files = $this->getThemeFiles($id);
 		if ($files === null)
 		{
-			return new ActionRedirectResponse('backend.theme', 'index');
+			return $this->response->redirect('backend/theme/index');
 		}
 
 		do

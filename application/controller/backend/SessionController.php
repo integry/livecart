@@ -8,13 +8,12 @@
  * @author Integry Systems
  *
  */
-class SessionController extends StoreManagementController
+class SessionController extends ControllerBackend
 {
 	public function indexAction()
 	{
 		$this->loadLanguageFile('User');
 		$this->set('email', $this->request->get('email'));
-		$response->setHeader('NeedLogin', 1);
 		$this->set('return', $this->request->get('return'));
 	}
 
@@ -38,14 +37,14 @@ class SessionController extends StoreManagementController
 		}
 		else
 		{
-			return new ActionRedirectResponse('backend.index', 'index');
+			return $this->response->redirect('backend/index/index');
 		}
 	}
 
 	public function logoutAction()
 	{
 		$this->sessionUser->destroy();
-		return new ActionRedirectResponse('backend.session', 'index');
+		return $this->response->redirect('backend/session/index');
 	}
 }
 

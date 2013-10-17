@@ -64,7 +64,7 @@ class CheckoutController extends FrontendController
 			{
 				if (!$this->order->isMultiAddress && !$this->session->get('noJS'))
 				{
-					return new ActionRedirectResponse('onePageCheckout', 'index');
+					return $this->response->redirect('onePageCheckout/index');
 				}
 			}
 		}
@@ -106,11 +106,11 @@ class CheckoutController extends FrontendController
 		if ($this->user->isLoggedIn())
 		{
 			// try to go to payment page
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->response->redirect('checkout/pay');
 		}
 		else
 		{
-			return new ActionRedirectResponse('user', 'checkout');
+			return $this->response->redirect('user/checkout');
 		}
 	}
 
@@ -183,7 +183,7 @@ class CheckoutController extends FrontendController
 
 		$order->save();
 
-		return new ActionRedirectResponse('checkout', 'shipping');
+		return $this->response->redirect('checkout/shipping');
 	}
 
 	/**
@@ -198,7 +198,7 @@ class CheckoutController extends FrontendController
 
 		if ($this->config->get('REQUIRE_SAME_ADDRESS') && ('shipping' == $step))
 		{
-			return new ActionRedirectResponse('checkout', 'shipping');
+			return $this->response->redirect('checkout/shipping');
 		}
 
 		// address step disabled?
@@ -222,7 +222,7 @@ class CheckoutController extends FrontendController
 			}
 			else
 			{
-				return new ActionRedirectResponse('checkout', 'pay');
+				return $this->response->redirect('checkout/pay');
 			}
 		}
 
@@ -472,7 +472,7 @@ class CheckoutController extends FrontendController
 		}
 		else
 		{
-			return new ActionRedirectResponse('checkout', 'shipping');
+			return $this->response->redirect('checkout/shipping');
 		}
 	}
 
@@ -512,7 +512,7 @@ class CheckoutController extends FrontendController
 
 		if (!$this->order->isShippingRequired())
 		{
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->response->redirect('checkout/pay');
 		}
 
 		foreach($shipments as $shipment)
@@ -550,7 +550,7 @@ class CheckoutController extends FrontendController
 				$validator->triggerError('selectedAddress', $this->translate('_err_no_rates_for_address'));
 				$validator->saveState();
 
-			 	return new ActionRedirectResponse('checkout', 'selectAddress');
+			 	return $this->response->redirect('checkout/selectAddress');
 			}
 			else
 			{
@@ -575,7 +575,7 @@ class CheckoutController extends FrontendController
 		{
 			$this->order->serializeShipments();
 			SessionOrder::save($this->order);
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->response->redirect('checkout/pay');
 		}
 
 		$rateArray = array();
@@ -678,7 +678,7 @@ class CheckoutController extends FrontendController
 
 		if (!$this->buildShippingValidator($shipments)->isValid())
 		{
-			return new ActionRedirectResponse('checkout', 'shipping');
+			return $this->response->redirect('checkout/shipping');
 		}
 
 		$selectedRateCache = array();
@@ -693,7 +693,7 @@ class CheckoutController extends FrontendController
 				if (!$rates->getByServiceId($selectedRateId))
 				{
 					throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
-					return new ActionRedirectResponse('checkout', 'shipping');
+					return $this->response->redirect('checkout/shipping');
 				}
 
 				$shipment->setRateId($selectedRateId);
@@ -718,7 +718,7 @@ class CheckoutController extends FrontendController
 
 		SessionOrder::save($this->order);
 
-		return new ActionRedirectResponse('checkout', 'pay');
+		return $this->response->redirect('checkout/pay');
 	}
 
 	/**
@@ -765,7 +765,7 @@ class CheckoutController extends FrontendController
 		// check for express checkout data for this order
 		if (ExpressCheckout::getInstanceByOrder($this->order))
 		{
-			return new ActionRedirectResponse('checkout', 'payExpress');
+			return $this->response->redirect('checkout/payExpress');
 		}
 
 		$currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
@@ -894,7 +894,7 @@ class CheckoutController extends FrontendController
 		// already paid?
 		if ($order->isPaid)
 		{
-			return new ActionRedirectResponse('checkout', 'completed');
+			return $this->response->redirect('checkout/completed');
 		}
 
 		ActiveRecordModel::beginTransaction();
@@ -972,7 +972,7 @@ class CheckoutController extends FrontendController
 		}
 		else
 		{
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->response->redirect('checkout/pay');
 		}
 	}
 
@@ -987,7 +987,7 @@ class CheckoutController extends FrontendController
 
 		if (!OfflineTransactionHandler::isMethodEnabled($method) || !$this->getOfflinePaymentValidator($method)->isValid())
 		{
-			return new ActionRedirectResponse('checkout', 'pay');
+			return $this->response->redirect('checkout/pay');
 		}
 
 		$order = $this->order;
@@ -1200,7 +1200,7 @@ class CheckoutController extends FrontendController
 		}
 
 		$this->session->set('completedOrderID', $order->getID());
-		return new ActionRedirectResponse('checkout', 'completed');
+		return $this->response->redirect('checkout/completed');
 	}
 
 	/**
@@ -1288,7 +1288,7 @@ class CheckoutController extends FrontendController
 		if (Transaction::getInstance($this->order, $result->gatewayTransactionID))
 		{
 			$this->session->set('completedOrderID', $this->order->getID());
-			return new ActionRedirectResponse('checkout', 'completed');
+			return $this->response->redirect('checkout/completed');
 		}
 
 		$transaction = Transaction::getNewInstance($this->order, $result);
@@ -1349,7 +1349,7 @@ class CheckoutController extends FrontendController
 			SessionOrder::destroy();
 		}
 
-		return new ActionRedirectResponse('checkout', 'completed');
+		return $this->response->redirect('checkout/completed');
 	}
 
 	private function getTransaction()
@@ -1384,7 +1384,7 @@ class CheckoutController extends FrontendController
 			}
 			else
 			{
-				return new ActionRedirectResponse('index', 'index');
+				return $this->response->redirect('index/index');
 			}
 		}
 
@@ -1392,7 +1392,7 @@ class CheckoutController extends FrontendController
 		$isOrderable = $order->isOrderable(true, false);
 		if (!$isOrderable || $isOrderable instanceof OrderException)
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		$valStep = $this->config->get('CHECKOUT_CUSTOM_FIELDS');
@@ -1406,7 +1406,7 @@ class CheckoutController extends FrontendController
 		// custom fields selected in cart page?
 		if (('CART_PAGE' == $valStep) && !$isOrderable)
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		// shipping address selected
@@ -1425,7 +1425,7 @@ class CheckoutController extends FrontendController
 			{
 				if (!$shipment->getSelectedRate() && $shipment->isShippable())
 				{
-					return new ActionRedirectResponse('checkout', 'shipping');
+					return $this->response->redirect('checkout/shipping');
 				}
 			}
 		}
@@ -1444,7 +1444,7 @@ class CheckoutController extends FrontendController
 
 		if (!$expressInstance)
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		$this->order->setPaymentMethod(get_class($expressInstance));

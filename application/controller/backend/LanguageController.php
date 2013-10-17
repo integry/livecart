@@ -354,7 +354,7 @@ class LanguageController extends StoreManagementController
 
 		ActiveRecord::commit();
 
-		return new ActionRedirectResponse('backend.language', 'index');
+		return $this->response->redirect('backend/language/index');
 	}
 
 	/**

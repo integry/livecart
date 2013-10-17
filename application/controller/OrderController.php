@@ -19,7 +19,7 @@ class OrderController extends FrontendController
 	{
 		if ($this->order->isMultiAddress->get())
 		{
-			return new ActionRedirectResponse('order', 'multi');
+			return $this->response->redirect('order/multi');
 		}
 
 		if (!$this->user->isAnonymous())
@@ -97,7 +97,7 @@ class OrderController extends FrontendController
 	{
 		if (!$this->order->isMultiAddress->get())
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		$response = $this->getCartPageResponse();
@@ -403,7 +403,7 @@ class OrderController extends FrontendController
 
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		$this->order->loadRequestData($this->request);
@@ -485,7 +485,7 @@ class OrderController extends FrontendController
 		// proceed with the checkout
 		if ($this->request->get('proceed'))
 		{
-			return new ActionRedirectResponse('checkout', 'index');
+			return $this->response->redirect('checkout/index');
 		}
 
 		// redirect to payment gateway
@@ -614,7 +614,7 @@ class OrderController extends FrontendController
 		{
 			if ($this->config->get('SKIP_CART'))
 			{
-				return new ActionRedirectResponse('checkout', 'index');
+				return $this->response->redirect('checkout/index');
 			}
 			else
 			{
@@ -631,7 +631,7 @@ class OrderController extends FrontendController
 	{
 		if ($this->order->isMultiAddress->get())
 		{
-			return new ActionRedirectResponse('order', 'multi');
+			return $this->response->redirect('order/multi');
 		}
 		else
 		{
@@ -892,7 +892,7 @@ class OrderController extends FrontendController
 	{
 		if (!$this->config->get('ENABLE_MULTIADDRESS'))
 		{
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 
 		$this->order->isMultiAddress->set(true);
@@ -914,7 +914,7 @@ class OrderController extends FrontendController
 
 		$this->order->save();
 
-		return new ActionRedirectResponse('order', 'multi');
+		return $this->response->redirect('order/multi');
 	}
 
 	public function setSingleAddressAction()
@@ -930,7 +930,7 @@ class OrderController extends FrontendController
 
 		SessionOrder::save($this->order);
 		$this->order->deleteRelatedRecordSet('Shipment');
-		return new ActionRedirectResponse('order', 'index');
+		return $this->response->redirect('order/index');
 	}
 
 	public function getVariationFromRequestAction(array $variations)

@@ -28,13 +28,13 @@ class NewsletterController extends FrontendController
 
 		if (!$this->user->isAnonymous() || User::getInstanceByEmail($email))
 		{
-			return new ActionRedirectResponse('newsletter', 'alreadySubscribed');
+			return $this->response->redirect('newsletter/alreadySubscribed');
 		}
 
 		$validator = $this->getSubscribeValidator();
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('index', 'index');
+			return $this->response->redirect('index/index');
 		}
 
 		$instance = NewsletterSubscriber::getInstanceByEmail($email);

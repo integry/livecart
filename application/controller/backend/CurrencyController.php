@@ -97,7 +97,7 @@ class CurrencyController extends StoreManagementController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('backend.currency', 'index');
+			return $this->response->redirect('backend/currency/index');
 		}
 
 		ActiveRecord::beginTransaction();
@@ -129,7 +129,7 @@ class CurrencyController extends StoreManagementController
 
 		ActiveRecord::commit();
 
-		return new ActionRedirectResponse('backend.currency', 'index');
+		return $this->response->redirect('backend/currency/index');
 	}
 
 	/**

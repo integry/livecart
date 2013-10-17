@@ -266,7 +266,7 @@ class UserController extends FrontendController
 		$fileArray = $this->loadDownloadableItems($f);
 		if (!$fileArray && !$subItems)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 
@@ -306,7 +306,7 @@ class UserController extends FrontendController
 	{
 		if (!$this->buildPasswordChangeValidator()->isValid())
 		{
-			return new ActionRedirectResponse('user', 'changePassword');
+			return $this->response->redirect('user/changePassword');
 		}
 
 		$this->user->setPassword($this->request->get('password'));
@@ -314,7 +314,7 @@ class UserController extends FrontendController
 
 		$this->session->set('userConfirm', $this->translate('_confirm_password_change'));
 
-		return new ActionRedirectResponse('user', 'index');
+		return $this->response->redirect('user/index');
 	}
 
 	/**
@@ -337,7 +337,7 @@ class UserController extends FrontendController
 	{
 		if (!$this->buildEmailChangeValidator()->isValid())
 		{
-			return new ActionRedirectResponse('user', 'changeEmail');
+			return $this->response->redirect('user/changeEmail');
 		}
 
 		$this->user->email->set($this->request->get('email'));
@@ -345,7 +345,7 @@ class UserController extends FrontendController
 
 		$this->session->set('userConfirm', $this->translate('_confirm_email_change'));
 
-		return new ActionRedirectResponse('user', 'index');
+		return $this->response->redirect('user/index');
 	}
 
 	/**
@@ -370,7 +370,7 @@ class UserController extends FrontendController
 		$validator = $this->buildPersonalDataValidator($this->user);
 		if (!$validator->isValid())
 		{
-			return new ActionRedirectResponse('user', 'personal');
+			return $this->response->redirect('user/personal');
 		}
 
 		$this->user->loadRequestData($this->request, array('firstName', 'lastName', 'companyName'));
@@ -378,7 +378,7 @@ class UserController extends FrontendController
 
 		$this->setMessage($this->translate('_personal_data_saved'));
 
-		return new ActionRedirectResponse('user', 'index');
+		return $this->response->redirect('user/index');
 	}
 
 	/**
@@ -466,7 +466,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -480,11 +480,11 @@ class UserController extends FrontendController
 		{
 						$newOrder = clone $order;
 			SessionOrder::save($newOrder);
-			return new ActionRedirectResponse('order', 'index');
+			return $this->response->redirect('order/index');
 		}
 		else
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -499,7 +499,7 @@ class UserController extends FrontendController
 		$set = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 		if (!$set->size() || !$this->buildNoteValidator()->isValid())
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		$order = $set->get(0);
@@ -536,7 +536,7 @@ class UserController extends FrontendController
 
 		if (!$order)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 
@@ -548,7 +548,7 @@ class UserController extends FrontendController
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
-			return new ActionRedirectResponse('user', 'registerAddress');
+			return $this->response->redirect('user/registerAddress');
 		}
 
 		$this->setValidator($this->buildRegValidator());
@@ -591,7 +591,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			return new ActionRedirectResponse('user', 'unconfirmed');
+			return $this->response->redirect('user/unconfirmed');
 		}
 	}
 
@@ -631,7 +631,7 @@ class UserController extends FrontendController
 	{
 		if ($this->config->get('REQUIRE_REG_ADDRESS'))
 		{
-			return new ActionRedirectResponse('user', 'registerAddress');
+			return $this->response->redirect('user/registerAddress');
 		}
 
 		$this->addBreadCrumb($this->translate('_login'), $this->url->get('user/login'));
@@ -818,7 +818,7 @@ class UserController extends FrontendController
 		}
 		else
 		{
-			return new ActionRedirectResponse('checkout', 'shipping');
+			return $this->response->redirect('checkout/shipping');
 		}
 	}
 
@@ -872,7 +872,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -887,7 +887,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -909,7 +909,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -925,7 +925,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 	}
 
@@ -969,7 +969,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));
@@ -986,7 +986,7 @@ class UserController extends FrontendController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));
@@ -1099,7 +1099,7 @@ class UserController extends FrontendController
 		// OrderedItem does not exist
 		if (!$s->size())
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		$item = $s->get(0);
@@ -1108,7 +1108,7 @@ class UserController extends FrontendController
 		// file does not exist for OrderedItem
 		if (!$file)
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		OrderedFile::getInstance($item, $file)->registerDownload();
@@ -1117,7 +1117,7 @@ class UserController extends FrontendController
 		if (!$item->isDownloadable($file))
 		{
 			$this->setMessage($this->translate('_download_limit_reached'));
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 		return new ObjectFileResponse($file);
@@ -1137,7 +1137,7 @@ class UserController extends FrontendController
 
 		if (!$order || $order->isPaid->get())
 		{
-			return new ActionRedirectResponse('user', 'index');
+			return $this->response->redirect('user/index');
 		}
 
 

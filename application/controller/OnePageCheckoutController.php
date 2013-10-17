@@ -28,7 +28,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_MULTISTEP')
 		{
-			return new ActionRedirectResponse('checkout', 'index');
+			return $this->response->redirect('checkout/index');
 		}
 
 		$this->isTosRequired = $this->config->get('REQUIRE_TOS');
@@ -110,7 +110,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (!$this->order->getShoppingCartItemCount())
 		{
-			return new ActionRedirectResponse('index', 'index');
+			return $this->response->redirect('index/index');
 		}
 
 		$this->session->set('OrderPaymentMethod_' . $this->order->getID(), '');
@@ -390,7 +390,7 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		parent::doSelectShippingMethod();
 
-		return new ActionRedirectResponse('onePageCheckout', 'update');
+		return $this->response->redirect('onePageCheckout/update');
 	}
 
 	public function updateAction()
@@ -492,7 +492,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		$this->config->setRuntime('REQUIRE_SAME_ADDRESS', $sameAddress);
 
-		return new ActionRedirectResponse('onePageCheckout', 'update');
+		return $this->response->redirect('onePageCheckout/update');
 
 		//return $this->getUpdateResponse('shippingMethods', 'shippingAddress', 'billingAddress');
 	}
@@ -563,7 +563,7 @@ class OnePageCheckoutController extends CheckoutController
 			}
 		}
 
-		return new ActionRedirectResponse('onePageCheckout', 'update');
+		return $this->response->redirect('onePageCheckout/update');
 		//return $this->getUpdateResponse('shippingAddress', 'billingAddress');
 	}
 
@@ -598,7 +598,7 @@ class OnePageCheckoutController extends CheckoutController
 		}
 		else
 		{
-			return new ActionRedirectResponse('onePageCheckout', 'index');
+			return $this->response->redirect('onePageCheckout/index');
 		}
 
 	}
@@ -606,7 +606,7 @@ class OnePageCheckoutController extends CheckoutController
 	public function fallbackAction()
 	{
 		$this->session->set('noJS', true);
-		return new ActionRedirectResponse('checkout', 'index');
+		return $this->response->redirect('checkout/index');
 	}
 
 	public function setPaymentMethodAction()

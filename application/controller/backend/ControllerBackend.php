@@ -1,5 +1,6 @@
 <?php
 
+require_once(dirname(dirname(__FILE__)) . '/ControllerBase.php');
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
@@ -7,10 +8,11 @@
  * @author Integry Systems
  * @package application/backend/controller/abstract
  */
-abstract class BackendController extends BaseController
+abstract class ControllerBackend extends ControllerBase
 {
-	public function __constructAction(LiveCart $application)
+	public function initialize()
 	{
+/*
 		if ($application->getConfig()->get('SSL_BACKEND'))
 		{
 			$application->getRouter()->setSslAction('');
@@ -46,8 +48,10 @@ abstract class BackendController extends BaseController
 
 			exit;
 		}
+	*/
 	}
 
+/*
 	public function initialize()
 	{
 	  	$this->setLayout('empty');
@@ -103,6 +107,8 @@ abstract class BackendController extends BaseController
 			)
 		);
 	}
+*/
+	
 }
 
 ?>

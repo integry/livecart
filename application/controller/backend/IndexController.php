@@ -16,6 +16,7 @@ class IndexController extends StoreManagementController
 {
 	public function indexAction()
 	{
+		die('testing');
 		$this->updateApplicationUri();
 
 		// order stats

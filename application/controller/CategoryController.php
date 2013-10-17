@@ -111,7 +111,7 @@ class CategoryController extends CatalogController
 		// root category?
 		if ($this->getCategory()->isRoot() && !$this->filters && !($this instanceof IndexController) && !$this->request->get('includeSub') && ($currentPage > 1))
 		{
-			return new ActionRedirectResponse('index', 'index');
+			return $this->response->redirect('index/index');
 		}
 
 		// sorting
