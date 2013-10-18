@@ -31,9 +31,9 @@ class BillingAddress extends UserAddressType
 	{
 		parent::save($forceOperation);
 		
-		$user = $this->user->get();
+		$user = $this->user;
 		$user->load();	 
-		if (!$user->defaultBillingAddress->get() || ($user->defaultBillingAddress->get() === $this))
+		if (!$user->defaultBillingAddress || ($user->defaultBillingAddress === $this))
 		{
 			$user->defaultBillingAddress->set($this);
 			$user->defaultBillingAddress->setAsModified();

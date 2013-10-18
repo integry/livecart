@@ -110,16 +110,16 @@ class ProductRelationship extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	// get max position
-	  	$f = self::getRelatedProductsSetFilter($this->product->get(), $this->type->get());
-	  	$f->setLimit(1);
+	  	$f = self::getRelatedProductsSetFilter($this->product, $this->type);
+	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
 		$this->position = $position;
 
-		return parent::insert();
+
 	}
 
 	/*####################  Get related objects ####################*/
@@ -151,8 +151,8 @@ class ProductRelationship extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 
 		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');
-		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->order(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
 		$filter->mergeCOndition(new EqualsCond(new ARFieldHandle(__CLASS__, "type"), $type));
 

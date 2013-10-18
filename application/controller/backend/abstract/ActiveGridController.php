@@ -46,7 +46,7 @@ abstract class ActiveGridController extends StoreManagementController
 		if ($exportBufferIndex)
 		{
 			$exportFrom = ($exportBufferIndex - 1) * self::EXPORT_BUFFER_ROW_COUNT;
-			$filter->setLimit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
+			$filter->limit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
 
 		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
@@ -475,7 +475,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 			foreach ($fields as $field)
 			{
-				if (!$field->isMultiValue->get())
+				if (!$field->isMultiValue)
 				{
 					if ($needsJoin)
 					{
@@ -508,7 +508,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)
 	{
-		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+		$filter->order(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
 	protected function getMassValidator()

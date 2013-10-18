@@ -147,7 +147,7 @@ abstract class ApiReader implements Iterator
 		$limit = $this->getActionAtribute('limit', 999999999999999999); // mysql does not have offset, should use limit <offset>, <some large number>
 		if($limit>-1)
 		{
-			$arsf->setLimit($limit, (integer)$this->getActionAtribute('offset', 0));
+			$arsf->limit($limit, (integer)$this->getActionAtribute('offset', 0));
 		}
 		return $arsf;
 	}

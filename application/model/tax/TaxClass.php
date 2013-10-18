@@ -56,7 +56,7 @@ class TaxClass extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
@@ -70,7 +70,7 @@ class TaxClass extends MultilingualObject
 	public static function getAllClasses($loadReferencedRecords = false)
 	{
 		$f = select();
-		$f->setOrder(f('TaxClass.position'));
+		$f->order(f('TaxClass.position'));
 
 		return self::getRecordSet($f, $loadReferencedRecords);
 	}
@@ -90,7 +90,7 @@ class TaxClass extends MultilingualObject
 		return ActiveRecordModel::getRecordSet('TaxClass', $f)->get(0);
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	$this->setLastPosition();
 

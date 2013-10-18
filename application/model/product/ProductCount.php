@@ -86,7 +86,7 @@ class ProductCount
 		// get product counts
 		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
-		$selectFilter->setLimit(0);
+		$selectFilter->limit(0);
 
 		$query = new ARSelectQueryBuilder();
 		$query->includeTable('Product');
@@ -109,13 +109,13 @@ class ProductCount
 	{
 		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
-		$selectFilter->setLimit(0);
-		$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+		$selectFilter->limit(0);
+		$selectFilter->order(new ARExpressionHandle('cnt'), 'DESC');
 		$selectFilter->setGrouping(new ARFieldHandle('Product', 'manufacturerID'));
 		$selectFilter->mergeHavingCondition(new MoreThanCond(new ARExpressionHandle('cnt'), 0));
 		$selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$selectFilter->resetOrder();
-		$selectFilter->setOrder(new ARFieldHandle('Manufacturer', 'name'));
+		$selectFilter->reorder();
+		$selectFilter->order(new ARFieldHandle('Manufacturer', 'name'));
 
 		$query = new ARSelectQueryBuilder();
 		$query->includeTable('Product');
@@ -167,7 +167,7 @@ class ProductCount
 	{
 		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
-		$selectFilter->setLimit(0);
+		$selectFilter->limit(0);
 
 		foreach ($filters as $filter)
 		{

@@ -17,14 +17,14 @@ class OrderController extends FrontendController
 	 */
 	public function indexAction()
 	{
-		if ($this->order->isMultiAddress->get())
+		if ($this->order->isMultiAddress)
 		{
 			return $this->response->redirect('order/multi');
 		}
 
 		if (!$this->user->isAnonymous())
 		{
-			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
+			if (!$this->order->user || ($this->order->user->getID() != $this->user->getID()))
 			{
 				$this->order->setUser($this->user);
 				$this->order->save();
@@ -49,7 +49,7 @@ class OrderController extends FrontendController
 	{
 		if (!$this->user->isAnonymous())
 		{
-			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
+			if (!$this->order->user || ($this->order->user->getID() != $this->user->getID()))
 			{
 				$this->order->setUser($this->user);
 				$this->order->save();
@@ -73,7 +73,7 @@ class OrderController extends FrontendController
 	{
 		if (!$this->user->isAnonymous())
 		{
-			if (!$this->order->user->get() || ($this->order->user->get()->getID() != $this->user->getID()))
+			if (!$this->order->user || ($this->order->user->getID() != $this->user->getID()))
 			{
 				$this->order->setUser($this->user);
 				$this->order->save();
@@ -95,7 +95,7 @@ class OrderController extends FrontendController
 	 */
 	public function multiAction()
 	{
-		if (!$this->order->isMultiAddress->get())
+		if (!$this->order->isMultiAddress)
 		{
 			return $this->response->redirect('order/index');
 		}
@@ -155,15 +155,15 @@ class OrderController extends FrontendController
 				$this->set('isShippingEstimated', true);
 			}
 
-			$address = $this->order->shippingAddress->get();
+			$address = $this->order->shippingAddress;
 			foreach (array('countryID' => 'country', 'stateName' => 'state_text', 'postalCode' => 'postalCode', 'city' => 'city') as $addressKey => $formKey)
 			{
-				$form->set('estimate_' . $formKey, $address->$addressKey->get());
+				$form->set('estimate_' . $formKey, $address->$addressKey);
 			}
 
-			if ($address->state->get() && $address->state->get()->getID())
+			if ($address->state && $address->state->getID())
 			{
-				$form->set('estimate_state_select', $address->state->get()->getID());
+				$form->set('estimate_state_select', $address->state->getID());
 			}
 
 			$this->set('countries', $this->getCountryList($form));
@@ -172,9 +172,9 @@ class OrderController extends FrontendController
 			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
 			$hideForm = (!empty($hideConf['UNREGISTERED']) && $this->user->isAnonymous()) ||
 						(!empty($hideConf['ALL_REGISTERED']) && !$this->user->isAnonymous()) ||
-						(!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->isAnonymous() && !$this->user->defaultBillingAddress->get()) ||
+						(!empty($hideConf['REGISTERED_WITH_ADDRESS']) && !$this->user->isAnonymous() && !$this->user->defaultBillingAddress) ||
 						!$this->order->isShippingRequired() ||
-						$this->order->isMultiAddress->get();
+						$this->order->isMultiAddress;
 
 			$this->set('hideShippingEstimationForm', $hideForm);
 		}
@@ -216,7 +216,7 @@ class OrderController extends FrontendController
 		$this->set('orderTotal', $currency->getFormattedPrice($this->order->getTotal()));
 		$this->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		$this->set('isCouponCodes', DiscountCondition::isCouponCodes());
-		$this->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress->get() && !$this->session->get('noJS'));
+		$this->set('isOnePageCheckout', ($this->config->get('CHECKOUT_METHOD') == 'CHECKOUT_ONEPAGE') && !$this->order->isMultiAddress && !$this->session->get('noJS'));
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
@@ -348,7 +348,7 @@ class OrderController extends FrontendController
 
 			$invalid = !empty($_SESSION['optionError'][$item->getID()][$option->getID()]) && ('isDisplayedInCart' == $filter);
 
-			if (!$filter || $option->$filter->get() || $invalid)
+			if (!$filter || $option->$filter || $invalid)
 			{
 				$out[] = $arr;
 			}
@@ -423,7 +423,7 @@ class OrderController extends FrontendController
 			}
 		}
 
-		if ($this->order->isMultiAddress->get())
+		if ($this->order->isMultiAddress)
 		{
 			$addresses = $this->user->getShippingAddressSet();
 			$this->order->getShipments();
@@ -432,17 +432,17 @@ class OrderController extends FrontendController
 			{
 				if ($addressId = $this->request->get('address_' . $item->getID()))
 				{
-					if (!$item->shipment->get() || !$item->shipment->get()->shippingAddress->get() || ($item->shipment->get()->shippingAddress->get()->getID() != $addressId))
+					if (!$item->shipment || !$item->shipment->shippingAddress || ($item->shipment->shippingAddress->getID() != $addressId))
 					{
 						foreach ($this->order->getShipments() as $shipment)
 						{
-							if ($shipment->shippingAddress->get() && ($shipment->shippingAddress->get()->getID() == $addressId))
+							if ($shipment->shippingAddress && ($shipment->shippingAddress->getID() == $addressId))
 							{
-								if (!$item->shipment->get() || ($item->shipment->get()->getID() != $shipment->getID()))
+								if (!$item->shipment || ($item->shipment->getID() != $shipment->getID()))
 								{
-									if ($item->shipment->get())
+									if ($item->shipment)
 									{
-										$item->shipment->get()->removeItem($item);
+										$item->shipment->removeItem($item);
 									}
 
 									$shipment->addItem($item);
@@ -455,7 +455,7 @@ class OrderController extends FrontendController
 
 						if (!isset($shipment) || !$shipment)
 						{
-							$address = ActiveRecordModel::getInstanceById('UserAddress', $addressId, true);
+							$address = UserAddress::getInstanceByID($addressId, true);
 
 							$shipment = Shipment::getNewInstance($this->order);
 							$shipment->shippingAddress->set($address);
@@ -469,11 +469,11 @@ class OrderController extends FrontendController
 					}
 				}
 
-				if ($item->shipment->get())
+				if ($item->shipment)
 				{
-					$item->shipment->get()->shippingAmount->set(0);
-					$item->shipment->get()->shippingServiceData->set(null);
-					$item->shipment->get()->save();
+					$item->shipment->shippingAmount->set(0);
+					$item->shipment->shippingServiceData->set(null);
+					$item->shipment->save();
 				}
 			}
 		}
@@ -528,7 +528,7 @@ class OrderController extends FrontendController
 	 */
 	public function deleteAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('Product'));
 		$this->setMessage($this->makeText('_removed_from_cart', array($item->getProduct()->getName($this->getRequestLanguage()))));
 		$this->order->removeItem($item);
 		SessionOrder::save($this->order);
@@ -569,9 +569,9 @@ class OrderController extends FrontendController
 				}
 			}
 
-			if ($res->count->get() < $this->request->get('count'))
+			if ($res->count < $this->request->get('count'))
 			{
-				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count->get(), $this->request->get('count'))));
+				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count, $this->request->get('count'))));
 			}
 
 			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));
@@ -629,7 +629,7 @@ class OrderController extends FrontendController
 
 	public function cartUpdateAction()
 	{
-		if ($this->order->isMultiAddress->get())
+		if ($this->order->isMultiAddress)
 		{
 			return $this->response->redirect('order/multi');
 		}
@@ -683,7 +683,7 @@ class OrderController extends FrontendController
 			return $productRedirect;
 		}
 
-		$variations = !$product->parent->get() ? $product->getVariationData($this->application) : array();
+		$variations = !$product->parent ? $product->getVariationData($this->application) : array();
 
 
 		// add first variations by default?
@@ -739,18 +739,18 @@ class OrderController extends FrontendController
 		$item = $this->order->addProduct($product, $count);
 		if ($item instanceof OrderedItem)
 		{
-			$item->name->set($product->name->get());
+			$item->name->set($product->name);
 			foreach ($product->getOptions(true) as $option)
 			{
 				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
 			}
 
-			if ($this->order->isMultiAddress->get())
+			if ($this->order->isMultiAddress)
 			{
 				$item->save();
 			}
 
-			if ($product->type->get() == Product::TYPE_RECURRING)
+			if ($product->type == Product::TYPE_RECURRING)
 			{
 				if ($item->isExistingRecord() == false)
 				{
@@ -842,7 +842,7 @@ class OrderController extends FrontendController
 		{
 			if ($request->get($varName))
 			{
-				$item->addOptionChoice($option->defaultChoice->get());
+				$item->addOptionChoice($option->defaultChoice);
 			}
 			else
 			{
@@ -857,7 +857,7 @@ class OrderController extends FrontendController
 				if (!empty($file['name']))
 				{
 					$item->removeOption($option);
-					$choice = $item->addOptionChoice($option->defaultChoice->get());
+					$choice = $item->addOptionChoice($option->defaultChoice);
 					$choice->setFile($_FILES['upload_' . $varName]);
 				}
 			}
@@ -874,7 +874,7 @@ class OrderController extends FrontendController
 
 				if ($text)
 				{
-					$choice = $item->addOptionChoice($option->defaultChoice->get());
+					$choice = $item->addOptionChoice($option->defaultChoice);
 					$choice->optionText->set($text);
 				}
 				else
@@ -901,9 +901,9 @@ class OrderController extends FrontendController
 		// split items
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			if ($item->count->get() > 1)
+			if ($item->count > 1)
 			{
-				$count = $item->count->get();
+				$count = $item->count;
 				$item->count->set(1);
 				for ($k = 1; $k < $count; $k++)
 				{
@@ -968,7 +968,7 @@ class OrderController extends FrontendController
 	{
 
 		$field = 'upload_' . $this->request->get('field');
-		$option = ActiveRecordModel::getInstanceById('ProductOption', $this->request->get('id'), true);
+		$option = ProductOption::getInstanceByID($this->request->get('id'), true);
 		$validator = $this->getValidator('optionFile');
 		$this->addOptionValidation($validator, $option->toArray(), $field);
 
@@ -1014,9 +1014,9 @@ class OrderController extends FrontendController
 		{
 			$this->setFormItem($item, $form);
 
-			if ($this->order->isMultiAddress->get() && $item->shipment->get() && $item->shipment->get()->shippingAddress->get())
+			if ($this->order->isMultiAddress && $item->shipment && $item->shipment->shippingAddress)
 			{
-				$form->set('address_' . $item->getID(), $item->shipment->get()->shippingAddress->get()->getID());
+				$form->set('address_' . $item->getID(), $item->shipment->shippingAddress->getID());
 			}
 		}
 
@@ -1039,11 +1039,11 @@ class OrderController extends FrontendController
 	private function setFormItem(OrderedItem $item, Form $form)
 	{
 		$name = 'item_' . $item->getID();
-		$form->set($name, $item->count->get());
+		$form->set($name, $item->count);
 
 		foreach ($item->getOptions() as $option)
 		{
-			$productOption = $option->choice->get()->option->get();
+			$productOption = $option->choice->option;
 
 			if ($productOption->isBool())
 			{
@@ -1051,15 +1051,15 @@ class OrderController extends FrontendController
 			}
 			else if ($productOption->isText())
 			{
-				$value = $option->optionText->get();
+				$value = $option->optionText;
 			}
 			else if ($productOption->isSelect())
 			{
-				$value = $option->choice->get()->getID();
+				$value = $option->choice->getID();
 			}
 			else if ($productOption->isFile())
 			{
-				$value = $option->optionText->get();
+				$value = $option->optionText;
 			}
 
 			$form->set($this->getFormFieldName($item, $productOption), $value);
@@ -1104,7 +1104,7 @@ class OrderController extends FrontendController
 		$orderedItemID = $request->get('id');
 		$billingPlandropdownName = $request->get('recurringBillingPlan');
 		$recurringID = $request->get($billingPlandropdownName);
-		$orderedItem = ActiveRecordModel::getInstanceByID('OrderedItem', $orderedItemID, true);
+		$orderedItem = OrderedItem::getInstanceByID($orderedItemID, true);
 		$recurringItem = RecurringItem::getInstanceByOrderedItem($orderedItem);
 		if ($recurringItem)
 		{

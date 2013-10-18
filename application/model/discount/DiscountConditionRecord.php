@@ -49,7 +49,7 @@ class DiscountConditionRecord extends ActiveRecordModel
 		return parent::save();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		parent::insert();
 		$this->updateConditionRecordCount();

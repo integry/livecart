@@ -28,7 +28,7 @@ class RoleTest extends LiveCartTest
 
 		$role->reload();
 
-		$this->assertEqual($role->name->get(), 'testing');
+		$this->assertEqual($role->name, 'testing');
 	}
 
 	public function testGetRoleByName()

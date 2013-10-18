@@ -60,7 +60,7 @@ class UserAddressImport extends DataImport
 		$fields = $profile->getSortedFields();
 		if (isset($fields['UserAddress']['ID']))
 		{
-			$instance = ActiveRecordModel::getInstanceByID('UserAddress', $record[$fields['UserAddress']['ID']], true);
+			$instance = UserAddress::getInstanceByID($record[$fields['UserAddress']['ID']], true);
 		}
 		else if (isset($fields['AddressUser']['ID']))
 		{
@@ -96,8 +96,8 @@ class UserAddressImport extends DataImport
 			if ($isDefault)
 			{
 				$field = 'default' . $type;
-				$addressType = $owner->$field->get();
-				$instance = $addressType->userAddress->get();
+				$addressType = $owner->$field;
+				$instance = $addressType->userAddress;
 			}
 
 			if (empty($addressType))

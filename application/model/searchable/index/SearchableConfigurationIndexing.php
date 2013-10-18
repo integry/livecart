@@ -204,7 +204,7 @@ class SearchableConfigurationIndexing
 	{
 
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
 		
 		if (count($this->limitToLocales) > 0)

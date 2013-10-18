@@ -45,15 +45,15 @@ abstract class ObjectImage extends MultilingualObject
 		// check if main image is being deleted
 		$owner = $inst->getOwner();
 		$owner->load(array(get_class($inst)));
-		if ($owner->defaultImage->get()->getID() == $id)
+		if ($owner->defaultImage->getID() == $id)
 		{
 			// set next image (by position) as the main image
 			$f = new ARSelectFilter();
 			$cond = new EqualsCond(new ARFieldHandle(get_class($inst), $foreignKeyName), $owner->getID());
 			$cond->addAND(new NotEqualsCond(new ARFieldHandle(get_class($inst), 'ID'), $inst->getID()));
 			$f->setCondition($cond);
-			$f->setOrder(new ARFieldHandle(get_class($inst), 'position'));
-			$f->setLimit(1);
+			$f->order(new ARFieldHandle(get_class($inst), 'position'));
+			$f->limit(1);
 			$newDefaultImage = ActiveRecordModel::getRecordSet(get_class($inst), $f);
 			if ($newDefaultImage->size() > 0)
 			{
@@ -117,12 +117,12 @@ abstract class ObjectImage extends MultilingualObject
 		// get current max image position
 	  	$filter = new ARSelectFilter();
 	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
-	  	$filter->setOrder(new ARFieldHandle($className, 'position'), 'DESC');
-	  	$filter->setLimit(1);
+	  	$filter->order(new ARFieldHandle($className, 'position'), 'DESC');
+	  	$filter->limit(1);
 	  	$maxPosSet = ActiveRecord::getRecordSet($className, $filter);
 		if ($maxPosSet->size() > 0)
 		{
-			$maxPos = $maxPosSet->get(0)->position->get() + 1;
+			$maxPos = $maxPosSet->get(0)->position + 1;
 		}
 		else
 		{
@@ -131,7 +131,7 @@ abstract class ObjectImage extends MultilingualObject
 
 		$this->position = $maxPos;
 
-		return parent::insert();
+
 	}
 
 	protected static function getImageRoot($className)
@@ -187,7 +187,7 @@ abstract class ObjectImage extends MultilingualObject
 		parent::save();
 
 		// set as main image if it's the first image being uploaded
-		if ($this->position->get() == 0)
+		if ($this->position == 0)
 		{
 			$owner = $this->getOwner();
 			$owner->defaultImage = $this;

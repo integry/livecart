@@ -253,7 +253,7 @@ class ProductImport extends DataImport
 						}
 					}
 
-					if (('shippingWeight' == $field) && ($product->parent->get()))
+					if (('shippingWeight' == $field) && ($product->parent))
 					{
 						$value = $this->setChildSetting($product, 'weight', $value);
 					}
@@ -266,7 +266,7 @@ class ProductImport extends DataImport
 				}
 				else if ('ProductPrice.price' == $column)
 				{
-					if ($product->parent->get())
+					if ($product->parent)
 					{
 						$value = $this->setChildSetting($product, 'price', $value);
 					}
@@ -305,7 +305,7 @@ class ProductImport extends DataImport
 				}
 				else if ('ProductVariation' == $className)
 				{
-					if ($parent = $product->parent->get())
+					if ($parent = $product->parent)
 					{
 						$this->importProductVariationValue($product, $field, $value);
 					}
@@ -325,7 +325,7 @@ class ProductImport extends DataImport
 
 			if (isset($fields['ProductImage']['mainurl']))
 			{
-				if (!$image = $product->defaultImage->get())
+				if (!$image = $product->defaultImage)
 				{
 					$image = ProductImage::getNewInstance($product);
 				}
@@ -393,7 +393,7 @@ class ProductImport extends DataImport
 			}
 
 			// create variation by name
-			if ((isset($fields['Product']['parentID']) || isset($fields['Parent']['parentSKU'])) && !isset($fields['ProductVariation']) && $product->parent->get())
+			if ((isset($fields['Product']['parentID']) || isset($fields['Parent']['parentSKU'])) && !isset($fields['ProductVariation']) && $product->parent)
 			{
 				$this->importProductVariationValue($product, 1, $product->getValueByLang('name', 'en'));
 			}
@@ -588,8 +588,8 @@ class ProductImport extends DataImport
 	private function getVariationTypeByIndex(Product $product, $index)
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->setLimit(1, $index - 1);
+		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->limit(1, $index - 1);
 
 		if ($product->getID())
 		{
@@ -610,7 +610,7 @@ class ProductImport extends DataImport
 
 	private function importProductVariationValue(Product $product, $index, $name)
 	{
-		$parent = $product->parent->get();
+		$parent = $product->parent;
 		$type = $this->getVariationTypeByIndex($parent, $index);
 		if (!$type->getID())
 		{

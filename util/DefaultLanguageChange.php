@@ -25,8 +25,8 @@ ActiveRecordModel::beginTransaction();
 for ($k = 0; $k < $parts; $k++)
 {
 	$filter = new ARSelectFilter();
-	$filter->setLimit(BUFFER, BUFFER * $k);
-	$filter->setOrder(new ARFieldHandle('Product', 'ID'));
+	$filter->limit(BUFFER, BUFFER * $k);
+	$filter->order(new ARFieldHandle('Product', 'ID'));
 
 	$products = ActiveRecordModel::getRecordSet('Product', $filter);
 	foreach ($products as $product)

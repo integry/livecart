@@ -191,7 +191,7 @@ class Currency extends \ActiveRecordModel
 	public function clearRoundingRules()
 	{
 		$this->roundingRules = null;
-		$this->rounding->setNull();
+		$this->rounding = null;
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -212,7 +212,7 @@ class Currency extends \ActiveRecordModel
 		self::deleteCache();
 
 		// make sure the currency record exists
-		$inst = ActiveRecord::getInstanceById('Currency', $id, true);
+		$inst = Currency::getInstanceByID($id, true);
 
 		// make sure it's not the default currency
 		if (true != $inst->isDefault)

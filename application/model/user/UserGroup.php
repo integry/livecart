@@ -225,7 +225,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 			// Unset already applied nodes
 			foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $appliedRolesFilter, self::LOAD_REFERENCES) as $assoc)
 			{
-				unset($this->appliedRoles[$assoc->role->get()->getID()]);
+				unset($this->appliedRoles[$assoc->role->getID()]);
 			}
 
 			// Apply roles
@@ -268,7 +268,7 @@ class UserGroup extends ActiveRecordModel implements EavAble
 
 		foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $filter) as $association)
 		{
-			$rolesRecordSet->add($association->role->get());
+			$rolesRecordSet->add($association->role);
 		}
 
 		return $rolesRecordSet;

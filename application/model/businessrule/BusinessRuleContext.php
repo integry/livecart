@@ -19,7 +19,7 @@ class BusinessRuleContext
 
 	private $messages = array();
 
-	public function setOrder(BusinessRuleOrderInterface $order)
+	public function order(BusinessRuleOrderInterface $order)
 	{
 		$this->order = $order;
 	}
@@ -98,7 +98,7 @@ class BusinessRuleContext
 		if (empty($pastOrders))
 		{
 			$f = select(eq('CustomerOrder.userID', $this->user->getID()), eq('CustomerOrder.isFinalized', true), eq('CustomerOrder.isCancelled', 0), eq('CustomerOrder.isPaid', true));
-			$f->setOrder(f('OrderedItem.customerOrderID'), 'DESC');
+			$f->order(f('OrderedItem.customerOrderID'), 'DESC');
 			$records = ActiveRecordModel::getRecordSetArray('OrderedItem', $f, array('CustomerOrder', 'Product'));
 
 			// load variation parent products separately
@@ -179,7 +179,7 @@ class BusinessRuleContext
 			return 0;
 		}
 
-		return is_null($this->user->userGroup->get()) ? 0 : $this->user->userGroup->get()->getID();
+		return is_null($this->user->userGroup) ? 0 : $this->user->userGroup->getID();
 	}
 
 	public function addMessage($type, $text)

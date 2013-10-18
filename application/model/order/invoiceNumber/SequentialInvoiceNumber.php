@@ -57,8 +57,8 @@ class SequentialInvoiceNumber extends InvoiceNumberGenerator
 		if (!$this->selectFilter)
 		{
 			$this->selectFilter = select(eq('CustomerOrder.isFinalized', true), isnotnull('CustomerOrder.invoiceNumber'));
-			$this->selectFilter->setOrder(f('CustomerOrder.dateCompleted'), 'DESC');
-			$this->selectFilter->setLimit(1);
+			$this->selectFilter->order(f('CustomerOrder.dateCompleted'), 'DESC');
+			$this->selectFilter->limit(1);
 		}
 
 		return $this->selectFilter;

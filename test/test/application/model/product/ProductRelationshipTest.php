@@ -104,17 +104,17 @@ class ProductRelationshipTest extends LiveCartTest
 		$relationship->reload(array('RelatedProduct' => 'Product'));
 
 		// Check if product and related products are not null
-		$this->assertNotNull($relationship->product->get());
-		$this->assertNotNull($relationship->relatedProduct->get());
+		$this->assertNotNull($relationship->product);
+		$this->assertNotNull($relationship->relatedProduct);
 		// Check group
-		$this->assertNull($relationship->productRelationshipGroup->get());
+		$this->assertNull($relationship->productRelationshipGroup);
 
 		// Check if product is product and related product is related
-		$this->assertTrue($relationship->product->get() === $this->product1);
-		$this->assertTrue($relationship->relatedProduct->get() === $this->product2);
+		$this->assertTrue($relationship->product === $this->product1);
+		$this->assertTrue($relationship->relatedProduct === $this->product2);
 
 		// Check if related and main products are not the same
-		$this->assertFalse($relationship->product->get() === $relationship->relatedProduct->get());
+		$this->assertFalse($relationship->product === $relationship->relatedProduct);
 		$this->assertFalse($this->product1 === $this->product2);
 
 		$relationship->productRelationshipGroup->set($this->group);
@@ -124,7 +124,7 @@ class ProductRelationshipTest extends LiveCartTest
 		$relationship->reload();
 
 		// Check group
-		$this->assertTrue($relationship->productRelationshipGroup->get() === $this->group);
+		$this->assertTrue($relationship->productRelationshipGroup === $this->group);
 	}
 
 	public function testDeleteRelationship()
@@ -171,8 +171,8 @@ class ProductRelationshipTest extends LiveCartTest
 		$productPosition = -1;
 		foreach(ProductRelationship::getRelationships($product, false, ProductRelationship::TYPE_CROSS) as $relationship)
 		{
-			$currentGroupPosition = $relationship->productRelationshipGroup->get() ? $relationship->productRelationshipGroup->get()->position->get() : $groupPosition;
-			$currentProductPosition = $relationship->position->get();
+			$currentGroupPosition = $relationship->productRelationshipGroup ? $relationship->productRelationshipGroup->position : $groupPosition;
+			$currentProductPosition = $relationship->position;
 
 			$this->assertTrue($productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition, "$productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition");
 

@@ -62,7 +62,7 @@ class ProductBundleTest extends LiveCartTest
 
 		foreach ($list as $index => $item)
 		{
-			$this->assertSame($item->relatedProduct->get(), $products[$index]);
+			$this->assertSame($item->relatedProduct, $products[$index]);
 		}
 
 		$this->assertEqual(ProductBundle::getTotalBundlePrice($this->container, $this->usd), 6);

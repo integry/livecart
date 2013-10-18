@@ -50,14 +50,14 @@ class UserTest extends LiveCartTest
 
 		$user->reload();
 
-		$this->assertEqual($user->firstName->get(), 'Yuri');
-		$this->assertEqual($user->lastName->get(), 'Gagarin');
-		$this->assertEqual(array_shift(explode(':', $user->password->get())), md5('tester' . array_pop(explode(':', $user->password->get()))));
-		$this->assertEqual($user->companyName->get(), 'Integry Systams');
-		$this->assertTrue((bool)$user->isEnabled->get());
-		$this->assertSame($user->userGroup->get(), $this->group);
+		$this->assertEqual($user->firstName, 'Yuri');
+		$this->assertEqual($user->lastName, 'Gagarin');
+		$this->assertEqual(array_shift(explode(':', $user->password)), md5('tester' . array_pop(explode(':', $user->password))));
+		$this->assertEqual($user->companyName, 'Integry Systams');
+		$this->assertTrue((bool)$user->isEnabled);
+		$this->assertSame($user->userGroup, $this->group);
 
-		$this->assertSame($dateCreated->format('Y-m-d H:i:s'), $user->dateCreated->get()->format('Y-m-d H:i:s'));
+		$this->assertSame($dateCreated->format('Y-m-d H:i:s'), $user->dateCreated->format('Y-m-d H:i:s'));
 	}
 
 	public function ___testGetUsersByGroup()

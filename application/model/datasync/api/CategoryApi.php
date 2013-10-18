@@ -107,7 +107,7 @@ class CategoryApi extends ModelApi
 		{
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'ID'), $id));
 		}
-		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+		$f->order(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		if($emptyListIsException && count($categories) == 0)

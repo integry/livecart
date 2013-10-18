@@ -69,7 +69,7 @@ class ManufacturerImage extends ObjectImage
 		parent::deleteByID(__CLASS__, $id, 'manufacturerID');
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		return parent::insert('manufacturerID');
 	}

@@ -55,15 +55,15 @@ class CustomerReport extends Report
 		$q = $this->getQuery('ROUND(SUM(CustomerOrder.totalAmount * ' . $this->getCurrencyMultiplier() . '), 2)');
 
 		$f = $q->getFilter();
-		$f->resetOrder();
+		$f->reorder();
 		$f->resetGrouping();
-		$f->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+		$f->order(new ARExpressionHandle('cnt'), 'DESC');
 		$q->addField('userID');
 		$f->setGrouping(new ARExpressionHandle('userID'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 1));
-		$f->setLimit(self::TABLE_LIMIT);
+		$f->limit(self::TABLE_LIMIT);
 		$q->joinTable('CustomerOrder', 'User', 'userID', 'ID');
 
 		$this->getReportData($q);

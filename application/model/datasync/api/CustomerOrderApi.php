@@ -67,7 +67,7 @@ class CustomerOrderApi extends ModelApi
 		$order = CustomerOrder::getInstanceByID($this->getRequestID());
 		foreach ($order->getTransactions() as $transaction)
 		{
-			$transaction->capture($transaction->amount->get());
+			$transaction->capture($transaction->amount);
 		}
 
 		return $this->statusResponse($order->getID(), 'captured');

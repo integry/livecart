@@ -37,12 +37,12 @@ class LiveCartApplicationTest extends LiveCartTest
 		$currency = Currency::getNewInstance('ZZZ');
 		$currency->save();
 
-		$this->assertEquals($currency->rate->get(), 0.5);
-		$this->assertFalse((bool)$currency->isEnabled->get());
+		$this->assertEquals($currency->rate, 0.5);
+		$this->assertFalse((bool)$currency->isEnabled);
 
 		$currency->rate->set(0.6);
 		$currency->save();
-		$this->assertTrue((bool)$currency->isEnabled->get());
+		$this->assertTrue((bool)$currency->isEnabled);
 
 		$array = $currency->toArray();
 		$this->assertTrue($array['testValue']);

@@ -164,7 +164,7 @@ class CategoryController extends StoreManagementController
 				// move to aditional category, that is not in categoryIDs
 				foreach($products as $product)
 				{
-					$chunks = explode(',',$product->categoryIntervalCache->get());
+					$chunks = explode(',',$product->categoryIntervalCache);
 					while($pair = array_shift($chunks))
 					{
 						$sequence = explode('-',$pair);
@@ -241,11 +241,11 @@ class CategoryController extends StoreManagementController
 
 		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
 
-		$reviewCond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$reviewCond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		$reviewCond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft);
+		$reviewCond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt));
 
 		return array(
-			'tabProducts' => $category->totalProductCount->get(),
+			'tabProducts' => $category->totalProductCount,
 			'tabFilters' => $this->getFilterCount($category),
 			'tabFields' => $this->getSpecFieldCount($category),
 			'tabImages' => $this->getCategoryImageCount($category),

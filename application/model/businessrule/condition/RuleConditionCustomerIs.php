@@ -19,7 +19,7 @@ class RuleConditionCustomerIs extends RuleCondition implements RuleOrderConditio
 			return;
 		}
 
-		$userGroup = $user->userGroup->get();
+		$userGroup = $user->userGroup;
 		$userID = $user->getID();
 		$userGroupID = $userGroup ? $userGroup->getID() : null;
 

@@ -47,13 +47,13 @@ class ShipmentTax extends ActiveRecordModel
 	 */
 	public function recalculateAmount($recalculateShipping = true)
 	{
-		if (!$this->taxRate->get())
+		if (!$this->taxRate)
 		{
-			return $this->amount->get();
+			return $this->amount;
 		}
 
-		$shipment = $this->shipment->get();
-		$tax = $this->taxRate->get()->tax->get();
+		$shipment = $this->shipment;
+		$tax = $this->taxRate->tax;
 		$currency = $shipment->getCurrency();
 
 		if ($recalculateShipping)
@@ -63,7 +63,7 @@ class ShipmentTax extends ActiveRecordModel
 
 		$shipment->load();
 
-		if (self::TYPE_SHIPPING == $this->type->get())
+		if (self::TYPE_SHIPPING == $this->type)
 		{
 			$totalAmount = $shipment->getShippingTotalBeforeTax();
 
@@ -74,28 +74,28 @@ class ShipmentTax extends ActiveRecordModel
 			}
 
 			$otherTaxes = 0;
-			foreach ($this->shipment->get()->getAppliedTaxes() as $appliedTax)
+			foreach ($this->shipment->getAppliedTaxes() as $appliedTax)
 			{
-				if (($this->type->get() == $appliedTax->type->get()))
+				if (($this->type == $appliedTax->type))
 				{
-					if ($tax->includesTax($appliedTax->taxRate->get()->tax->get()))
+					if ($tax->includesTax($appliedTax->taxRate->tax))
 					{
-						$otherTaxes += $appliedTax->amount->get();
+						$otherTaxes += $appliedTax->amount;
 					}
 				}
 			}
 
 			$totalAmount += $otherTaxes;
-			$taxAmount = $this->taxRate->get()->getTaxAmount($totalAmount);
+			$taxAmount = $this->taxRate->getTaxAmount($totalAmount);
 		}
-		else if (self::TYPE_SUBTOTAL == $this->type->get())
+		else if (self::TYPE_SUBTOTAL == $this->type)
 		{
 			$taxAmount = 0;
 
 			foreach ($shipment->getItems() as $item)
 			{
 				$class = $item->getProduct()->getTaxClass();
-				if ($class !== $this->taxRate->get()->taxClass->get())
+				if ($class !== $this->taxRate->taxClass)
 				{
 					continue;
 				}
@@ -104,13 +104,13 @@ class ShipmentTax extends ActiveRecordModel
 				$otherTaxes = 0;
 				foreach ($item->getTaxRates() as $taxRate)
 				{
-					if ($tax->includesTax($taxRate->tax->get()))
+					if ($tax->includesTax($taxRate->tax))
 					{
 						$otherTaxes += $taxRate->getTaxAmount($itemTotal + $otherTaxes);
 					}
 				}
 
-				$res = $this->taxRate->get()->getTaxAmount($itemTotal + $otherTaxes);
+				$res = $this->taxRate->getTaxAmount($itemTotal + $otherTaxes);
 				$taxAmount += $res;
 			}
 		}
@@ -120,17 +120,17 @@ class ShipmentTax extends ActiveRecordModel
 
 	public function getAmount($amount = null)
 	{
-		return is_null($amount) ? $this->amount->get() : $amount;
+		return is_null($amount) ? $this->amount : $amount;
 	}
 
 	public function isItemTax()
 	{
-		return self::TYPE_SUBTOTAL == $this->type->get();
+		return self::TYPE_SUBTOTAL == $this->type;
 	}
 
 	public function isShippingTax()
 	{
-		return self::TYPE_SHIPPING == $this->type->get();
+		return self::TYPE_SHIPPING == $this->type;
 	}
 
 	public function toArray($amount = null)
@@ -138,7 +138,7 @@ class ShipmentTax extends ActiveRecordModel
 		$array = parent::toArray();
 		$array['formattedAmount'] = array();
 
-		$amountCurrency = $this->shipment->get()->getCurrency();
+		$amountCurrency = $this->shipment->getCurrency();
 
 		// get and format prices
 		$array['formattedAmount'][$amountCurrency->getID()] = $amountCurrency->getFormattedPrice($this->getAmount($amount));
@@ -151,14 +151,14 @@ class ShipmentTax extends ActiveRecordModel
 		return $array;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		if (!$this->shipment->get()->isExistingRecord())
+		if (!$this->shipment->isExistingRecord())
 		{
 			return false;
 		}
 
-		return parent::insert();
+
 	}
 }
 

@@ -117,7 +117,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	{
 		if ($this->isModified())
 		{
-			@unlink($this->userGroup->get()->getRoleCacheFile());
+			@unlink($this->userGroup->getRoleCacheFile());
 		}
 
 		return parent::save();

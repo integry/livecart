@@ -75,11 +75,11 @@ class GoogleCheckoutController extends CheckoutController
 		$user = User::getInstanceByEmail($email);
 		if (!$user)
 		{
-			$address = $order->billingAddress->get();
+			$address = $order->billingAddress;
 			$user = User::getNewInstance($email);
 			foreach (array('firstName', 'lastName', 'companyName') as $field)
 			{
-				$user->$field->set($address->$field->get());
+				$user->$field->set($address->$field);
 			}
 
 			$user->save();
@@ -103,14 +103,14 @@ class GoogleCheckoutController extends CheckoutController
 		}
 
 		// state lookup
-		if ($stateID = State::getStateIDByName($ua->countryID->get(), $ua->stateName->get()))
+		if ($stateID = State::getStateIDByName($ua->countryID, $ua->stateName))
 		{
 			$ua->state->set(State::getInstanceByID($stateID, true));
 		}
 
 		$ua->countryID->set($address['COUNTRY-CODE'][0]['VALUE']);
 
-		$names = explode(' ', $ua->firstName->get(), 2);
+		$names = explode(' ', $ua->firstName, 2);
 		$ua->firstName->set(array_shift($names));
 		$ua->lastName->set(array_shift($names));
 
@@ -254,7 +254,7 @@ class GoogleCheckoutController extends CheckoutController
 			}
 
 			// state lookup
-			if ($stateID = State::getStateIDByName($ua->countryID->get(), $ua->stateName->get()))
+			if ($stateID = State::getStateIDByName($ua->countryID, $ua->stateName))
 			{
 				$ua->state->set(State::getInstanceByID($stateID, true));
 			}

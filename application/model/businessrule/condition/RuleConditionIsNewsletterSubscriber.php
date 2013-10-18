@@ -20,8 +20,8 @@ class RuleConditionIsNewsletterSubscriber extends RuleCondition implements RuleO
 		if (is_null($user->_isSubscriber))
 		{
 			$user->load();
-			$subscriber = NewsletterSubscriber::getInstanceByEmail($user->email->get());
-			if ($subscriber && !$subscriber->isEnabled->get())
+			$subscriber = NewsletterSubscriber::getInstanceByEmail($user->email);
+			if ($subscriber && !$subscriber->isEnabled)
 			{
 				$user->_isSubscriber = false;
 			}

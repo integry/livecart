@@ -104,7 +104,7 @@ class Shipment extends \ActiveRecordModel
 			if($shipmentItem === $item)
 			{
 				unset($this->items[$key]);
-				$item->shipment->setNull();
+				$item->shipment = null;
 
 				$this->markAsModified();
 				break;
@@ -692,7 +692,7 @@ class Shipment extends \ActiveRecordModel
 		$order->save();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		// the shipment objects are often restored from serialized state, so we must mark all fields as modified
 		foreach ($this->data as $field)
@@ -714,7 +714,7 @@ class Shipment extends \ActiveRecordModel
 			$this->status = self::STATUS_NEW;
 		}
 
-		return parent::insert();
+
 	}
 
 	protected function afterUpdate()
@@ -987,7 +987,7 @@ class Shipment extends \ActiveRecordModel
 				{
 					try
 					{
-						$this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id, ActiveRecordModel::LOAD_DATA);
+						$this->items[] = OrderedItem::getInstanceByID($id, ActiveRecordModel::LOAD_DATA);
 					}
 					catch (ARNotFoundException $e)
 					{

@@ -23,7 +23,7 @@ class RatingTypeController extends StoreManagementController
 	public function editAction()
 	{
 		$form = $this->buildForm();
-		$type = ActiveRecordModel::getInstanceByID('ProductRatingType', $this->request->get('id'), ProductRatingType::LOAD_DATA);
+		$type = ProductRatingType::getInstanceByID($this->request->get('id'), ProductRatingType::LOAD_DATA);
 		$form->loadData($type->toArray());
 		$this->set('form', $form);
 	}
@@ -39,7 +39,7 @@ class RatingTypeController extends StoreManagementController
 			return new JSONResponse(array('err' => $validator->getErrorList()));
 		}
 
-		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('ProductRatingType', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ProductRatingType::getNewInstance(Category::getInstanceByID($this->request->get('categoryId'), Category::LOAD_DATA));
+		$post = $this->request->get('id') ? ProductRatingType::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA) : ProductRatingType::getNewInstance(Category::getInstanceByID($this->request->get('categoryId'), Category::LOAD_DATA));
 		$post->loadRequestData($this->request);
 		$post->save();
 

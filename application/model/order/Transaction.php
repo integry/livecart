@@ -81,32 +81,32 @@ class Transaction extends ActiveRecordModel implements EavAble
 	{
 		$instance = new self();
 		$instance->order = $order;
-		$instance->gatewayTransactionID = $result->gatewayTransactionID->get());
+		$instance->gatewayTransactionID = $result->gatewayTransactionID);
 
 		// determine currency
-		if ($result->currency->get())
+		if ($result->currency)
 		{
-			$instance->realCurrency = Currency::getInstanceById($result->currency->get()));
+			$instance->realCurrency = Currency::getInstanceById($result->currency));
 		}
 		else
 		{
-			$instance->realCurrency = $order->currency->get());
+			$instance->realCurrency = $order->currency);
 		}
 
 		// amount
-		$instance->realAmount = $result->amount->get());
+		$instance->realAmount = $result->amount);
 
 		// different currency than initial order currency?
-		if ($order->currency->get()->getID() != $result->currency->get())
+		if ($order->currency->getID() != $result->currency)
 		{
-			$instance->amount = $order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
-			$instance->currency = $order->currency->get());
+			$instance->amount = $order->currency->convertAmount($instance->realCurrency, $instance->realAmount));
+			$instance->currency = $order->currency);
 
 			// test if some amount is not missing due to currency conversion rounding (a difference of 0.01, etc)
-			$total = $order->totalAmount->get();
-			if ($instance->amount->get() < $total)
+			$total = $order->totalAmount;
+			if ($instance->amount < $total)
 			{
-				$largerAmount = $order->currency->get()->convertAmount($instance->realCurrency->get(), 0.01 + $instance->realAmount->get());
+				$largerAmount = $order->currency->convertAmount($instance->realCurrency, 0.01 + $instance->realAmount);
 				if ($largerAmount >= $total)
 				{
 					$instance->amount = $total;
@@ -117,14 +117,14 @@ class Transaction extends ActiveRecordModel implements EavAble
 		// transaction type
 		$instance->type = $result->getTransactionType());
 
-		if ($instance->type->get() != self::TYPE_AUTH)
+		if ($instance->type != self::TYPE_AUTH)
 		{
 			$instance->isCompleted = true);
 		}
 
-		if ($result->details->get())
+		if ($result->details)
 		{
-			$instance->comment = $result->details->get());
+			$instance->comment = $result->details);
 		}
 
 		return $instance;
@@ -137,9 +137,9 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public static function getNewSubTransaction(Transaction $transaction, TransactionResult $result)
 	{
-		$instance = self::getNewInstance($transaction->order->get(), $result);
+		$instance = self::getNewInstance($transaction->order, $result);
 		$instance->parentTransaction = $transaction;
-		$instance->method = $transaction->method->get());
+		$instance->method = $transaction->method);
 		return $instance;
 	}
 
@@ -147,7 +147,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	{
 		$instance = new self();
 		$instance->order = $order;
-		$instance->realCurrency = $order->currency->get());
+		$instance->realCurrency = $order->currency);
 		$instance->type = self::TYPE_SALE);
 		$instance->methodType = self::METHOD_OFFLINE);
 		$instance->isCompleted = true);
@@ -178,7 +178,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	 */
 	public function loadHandlerClass()
 	{
-		$className = $this->isOffline() ? 'OfflineTransactionHandler' : $this->method->get();
+		$className = $this->isOffline() ? 'OfflineTransactionHandler' : $this->method;
 
 		if (!class_exists($className, false))
 		{
@@ -221,7 +221,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	 */
 	public function isCreditCard()
 	{
-		return self::METHOD_CREDITCARD == $this->methodType->get();
+		return self::METHOD_CREDITCARD == $this->methodType;
 	}
 
 	/**
@@ -231,7 +231,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	 */
 	public function isOffline()
 	{
-		return (self::METHOD_OFFLINE == $this->methodType->get()) && !$this->method->get();
+		return (self::METHOD_OFFLINE == $this->methodType) && !$this->method;
 	}
 
 	/**
@@ -241,7 +241,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 	 */
 	public function isVoidable()
 	{
-		if (!$this->isVoided->get() && self::TYPE_VOID != $this->type->get())
+		if (!$this->isVoided && self::TYPE_VOID != $this->type)
 		{
 			if ($this->isOffline())
 			{
@@ -250,8 +250,8 @@ class Transaction extends ActiveRecordModel implements EavAble
 			else
 			{
 				$class = $this->loadHandlerClass();
-				if ((self::TYPE_AUTH == $this->type->get()) ||
-					((self::TYPE_SALE == $this->type->get()) && call_user_func(array($class, 'isCapturedVoidable')))
+				if ((self::TYPE_AUTH == $this->type) ||
+					((self::TYPE_SALE == $this->type) && call_user_func(array($class, 'isCapturedVoidable')))
 				   )
 				{
 					return call_user_func(array($class, 'isVoidable'));
@@ -264,7 +264,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public function isCapturable()
 	{
-		return (self::TYPE_AUTH == $this->type->get()) && !$this->isCompleted->get() && !$this->isOffline() && !$this->isVoided->get();
+		return (self::TYPE_AUTH == $this->type) && !$this->isCompleted && !$this->isOffline() && !$this->isVoided;
 	}
 
 	/**
@@ -304,19 +304,19 @@ class Transaction extends ActiveRecordModel implements EavAble
 		self::beginTransaction();
 
 		$instance = self::getNewSubTransaction($this, $result);
-		$instance->amount = $this->amount->get() * -1);
-		$instance->realAmount = $this->realAmount->get() * -1);
-		$instance->currency = $this->currency->get());
-		$instance->realCurrency = $this->realCurrency->get());
+		$instance->amount = $this->amount * -1);
+		$instance->realAmount = $this->realAmount * -1);
+		$instance->currency = $this->currency);
+		$instance->realCurrency = $this->realCurrency);
 		$instance->save();
 
 		$this->isVoided = true);
 		$this->save();
 
-		if ($this->order->get()->getDueAmount() > 0)
+		if ($this->order->getDueAmount() > 0)
 		{
-			$this->order->get()->isPaid = false);
-			$this->order->get()->save();
+			$this->order->isPaid = false);
+			$this->order->save();
 		}
 
 		self::commit();
@@ -346,7 +346,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		}
 
 		$instance = self::getNewSubTransaction($this, $result);
-		$instance->realAmount = $result->amount->get());
+		$instance->realAmount = $result->amount);
 		$instance->save();
 
 		return $instance;
@@ -360,9 +360,9 @@ class Transaction extends ActiveRecordModel implements EavAble
 	protected function getSubTransactionHandler($amount = null)
 	{
 		// set up transaction parameters object
-		$details = new LiveCartTransaction($this->order->get(), $this->currency->get());
-		$details->amount = is_null($amount) ? $this->amount->get() : $amount);
-		$details->gatewayTransactionID = $this->gatewayTransactionID->get());
+		$details = new LiveCartTransaction($this->order, $this->currency);
+		$details->amount = is_null($amount) ? $this->amount : $amount);
+		$details->gatewayTransactionID = $this->gatewayTransactionID);
 
 		// set up payment handler instance
 		$className = $this->loadHandlerClass();
@@ -374,38 +374,38 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public function save($forceOperation = null)
 	{
-		if (!$this->currency->get())
+		if (!$this->currency)
 		{
-			$this->currency = $this->realCurrency->get());
-			$this->amount = $this->realAmount->get());
+			$this->currency = $this->realCurrency);
+			$this->amount = $this->realAmount);
 		}
 
 		// encrypt card number
 		if ($this->ccLastDigits->isModified())
 		{
-			$this->ccLastDigits = $this->encrypt($this->ccLastDigits->get()));
+			$this->ccLastDigits = $this->encrypt($this->ccLastDigits));
 		}
 
 		return parent::save($forceOperation);
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 
-		if (self::TYPE_CAPTURE == $this->type->get() || self::TYPE_SALE == $this->type->get())
+		if (self::TYPE_CAPTURE == $this->type || self::TYPE_SALE == $this->type)
 		{
-			$this->order->get()->addCapturedAmount($this->amount->get());
+			$this->order->addCapturedAmount($this->amount);
 		}
-		else if (self::TYPE_VOID == $this->type->get())
+		else if (self::TYPE_VOID == $this->type)
 		{
-			$parentType = $this->parentTransaction->get()->type->get();
+			$parentType = $this->parentTransaction->type;
 			if (self::TYPE_CAPTURE == $parentType || self::TYPE_SALE == $parentType)
 			{
-				$this->order->get()->addCapturedAmount(-1 * $this->parentTransaction->get()->amount->get());
+				$this->order->addCapturedAmount(-1 * $this->parentTransaction->amount);
 			}
 		}
 
-		$this->order->get()->save();
+		$this->order->save();
 
 		if ($this->handler instanceof CreditCardPayment)
 		{
@@ -427,7 +427,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 				$this->ccCVV = self::encrypt($this->handler->getCardCode()));
 			}
 
-			$this->ccLastDigits = self::encrypt($this->ccLastDigits->get()));
+			$this->ccLastDigits = self::encrypt($this->ccLastDigits));
 		}
 
 		if ($this->handler)
@@ -435,14 +435,14 @@ class Transaction extends ActiveRecordModel implements EavAble
 			$this->method = get_class($this->handler));
 		}
 
-		return parent::insert();
+
 	}
 
 	public function truncateCcNumber()
 	{
 		$this->ccCVV = null);
-		$this->ccLastDigits = self::decrypt($this->ccLastDigits->get()));
-		$this->ccLastDigits = substr($this->ccLastDigits->get(), -1 * self::LAST_DIGIT_COUNT));
+		$this->ccLastDigits = self::decrypt($this->ccLastDigits));
+		$this->ccLastDigits = substr($this->ccLastDigits, -1 * self::LAST_DIGIT_COUNT));
 	}
 
 	public function setOfflineHandler($method)
@@ -453,7 +453,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 
 	public function setData($key, $value)
 	{
-		$data = unserialize($this->serializedData->get());
+		$data = unserialize($this->serializedData);
 		$data[$key] = $value;
 		$this->serializedData = serialize($data));
 	}
@@ -490,7 +490,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		$array['isVoidable'] = $this->isVoidable();
 		$array['isCapturable'] = $this->isCapturable();
 		$array['isMultiCapture'] = $this->isMultiCapture();
-		$array['hasFullNumber'] = strlen(self::decrypt($this->ccLastDigits->get())) > self::LAST_DIGIT_COUNT;
+		$array['hasFullNumber'] = strlen(self::decrypt($this->ccLastDigits)) > self::LAST_DIGIT_COUNT;
 
 		return $array;
 	}

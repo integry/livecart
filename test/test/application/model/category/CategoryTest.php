@@ -171,7 +171,7 @@ class CategoryTest extends LiveCartTest
 
 		// New category rgt should be equal to it's parent's (rgt + 1)
 		$this->assertTrue($newCategory->isLoaded());
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME) + 1, $newCategory->getField(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->get()->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME) + 1, $newCategory->getField(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 	}
 
 	public function testMoveCategoryBetweenSiblings()
@@ -484,9 +484,9 @@ class CategoryTest extends LiveCartTest
 	{
 		$this->root->reload();
 
-		$rootActiveProductCount = $this->root->activeProductCount->get();
-		$rootAotalProductCount = $this->root->totalProductCount->get();
-		$rootAvailableProductCount = $this->root->availableProductCount->get();
+		$rootActiveProductCount = $this->root->activeProductCount;
+		$rootAotalProductCount = $this->root->totalProductCount;
+		$rootAvailableProductCount = $this->root->availableProductCount;
 
 		$subCategory = Category::getNewInstance($this->root);
 		$subCategory->setValueByLang("name", 'en', "New Category 1" );
@@ -498,14 +498,14 @@ class CategoryTest extends LiveCartTest
 
 		$this->root->reload();
 
-		$this->assertEqual($rootActiveProductCount, $this->root->activeProductCount->get());
+		$this->assertEqual($rootActiveProductCount, $this->root->activeProductCount);
 
 		$subCategory->isEnabled->set(true);
 		$subCategory->save();
 
 		$this->root->reload();
 
-		$this->assertEqual($rootActiveProductCount + 1, $this->root->activeProductCount->get());
+		$this->assertEqual($rootActiveProductCount + 1, $this->root->activeProductCount);
 	}
 }
 

@@ -109,7 +109,7 @@ class ProductVariationController extends StoreManagementController
 			}
 			else
 			{
-				$type = ActiveRecordModel::getInstanceByID('ProductVariationType', $id);
+				$type = ProductVariationType::getInstanceByID($id);
 			}
 
 			$type->setValueByLang('name', null, $request['variationType'][$index]);
@@ -132,7 +132,7 @@ class ProductVariationController extends StoreManagementController
 		$typeIndex = -1;
 		foreach ($variations as $typeID => $typeVars)
 		{
-			$type = is_numeric($typeID) ? ActiveRecordModel::getInstanceByID('ProductVariationType', $typeID) : $idMap[$typeID];
+			$type = is_numeric($typeID) ? ProductVariationType::getInstanceByID($typeID) : $idMap[$typeID];
 			$typeIndex++;
 
 			foreach ($typeVars as $index => $id)
@@ -144,7 +144,7 @@ class ProductVariationController extends StoreManagementController
 				}
 				else
 				{
-					$variation = ActiveRecordModel::getInstanceByID('ProductVariation', $id);
+					$variation = ProductVariation::getInstanceByID($id);
 				}
 
 				$variation->position->set($index);
@@ -177,19 +177,19 @@ class ProductVariationController extends StoreManagementController
 			}
 			else
 			{
-				$item = ActiveRecordModel::getInstanceByID('Product', $id);
+				$item = Product::getInstanceByID($id);
 			}
 
 			$item->isEnabled->set(!empty($request['isEnabled'][$id]));
 
 			if (!$request['sku'][$index])
 			{
-				$request['sku'][$index] = $item->sku->get();
+				$request['sku'][$index] = $item->sku;
 			}
 
 			foreach (array('sku', 'stockCount', 'shippingWeight') as $field)
 			{
-				if ($item->$field->get() || $request[$field][$index])
+				if ($item->$field || $request[$field][$index])
 				{
 					$item->$field->set($request[$field][$index]);
 				}
@@ -211,8 +211,8 @@ class ProductVariationController extends StoreManagementController
 			$currentVariationValues = $currentVariations = array();
 			foreach ($item->getRelatedRecordSet('ProductVariationValue') as $variationValue)
 			{
-				$currentVariations[$variationValue->variation->get()->getID()] = $variationValue->variation->get();
-				$currentVariationValues[$variationValue->variation->get()->getID()] = $variationValue;
+				$currentVariations[$variationValue->variation->getID()] = $variationValue->variation;
+				$currentVariationValues[$variationValue->variation->getID()] = $variationValue;
 			}
 
 			foreach ($this->getItemVariations($tree, $index) as $variation)
@@ -233,10 +233,10 @@ class ProductVariationController extends StoreManagementController
 			// set image
 			if ($_FILES['image']['tmp_name'][$index])
 			{
-				if ($item->defaultImage->get())
+				if ($item->defaultImage)
 				{
-					$item->defaultImage->get()->load();
-					$image = $item->defaultImage->get();
+					$item->defaultImage->load();
+					$image = $item->defaultImage;
 				}
 				else
 				{

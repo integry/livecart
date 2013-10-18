@@ -23,7 +23,7 @@ class SearchableOrder extends SearchableModel
 		$c = new ARExpressionHandle($this->getWeighedSearchCondition(array('invoiceNumber' => 1), $searchTerm));
 
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
-		$f->setOrder($c, 'DESC');
+		$f->order($c, 'DESC');
 		return $f;
 	}
 

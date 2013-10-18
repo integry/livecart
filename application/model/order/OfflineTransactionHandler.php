@@ -49,8 +49,8 @@ class OfflineTransactionHandler extends TransactionPayment
 	public function void()
 	{
 		$result = new TransactionResult();
-		$result->amount->set($this->details->amount->get());
-		$result->currency->set($this->details->currency->get());
+		$result->amount->set($this->details->amount);
+		$result->currency->set($this->details->currency);
 		$result->setTransactionType(TransactionResult::TYPE_VOID);
 		return $result;
 	}

@@ -133,11 +133,11 @@ class ShipmentTaxTest extends OrderTestCommon
 		$item = $this->order->addProduct($this->products[0], 1, false, $shipment); // $100
 		$shipment->recalculateAmounts();
 		$this->order->save();
-		$this->assertEqual($shipment->taxAmount->get(), 10);
+		$this->assertEqual($shipment->taxAmount, 10);
 
 		$this->order->updateCount($item, 2);
 		$shipment->recalculateAmounts();
-		$this->assertEqual($shipment->taxAmount->get(), 20);
+		$this->assertEqual($shipment->taxAmount, 20);
 
 		$this->order->save();
 		$shipment->save();
@@ -169,21 +169,21 @@ class ShipmentTaxTest extends OrderTestCommon
 		{
 			echo
 				'shipment tax id:', $item->getID(),
-				', type:', $item->type->get(),
-				', amount:', $item->getAmount(), ' ('. 	$item->shipmentID->get()->getTaxAmount() .')',
-				', shipment id:', $item->shipmentID->get()->getID(),
-				', taxRate id:', $item->taxRateID->get()->getID(),
-				', taxClass:', implode(';', $item->taxRateID->get()->taxID->get()->name->get()).'('. $item->taxRateID->get()->taxID->get()->getID() .')',
-				', zone:',  $item->taxRateID->get()->deliveryZoneID->get()->name->get(),'(', $item->taxRateID->get()->deliveryZoneID->get()->getID() ,')', // blame canada!!
+				', type:', $item->type,
+				', amount:', $item->getAmount(), ' ('. 	$item->shipmentID->getTaxAmount() .')',
+				', shipment id:', $item->shipmentID->getID(),
+				', taxRate id:', $item->taxRateID->getID(),
+				', taxClass:', implode(';', $item->taxRateID->taxID->name).'('. $item->taxRateID->taxID->getID() .')',
+				', zone:',  $item->taxRateID->deliveryZoneID->name,'(', $item->taxRateID->deliveryZoneID->getID() ,')', // blame canada!!
 				"\n";
 		}
 		*/
 		$this->assertEquals(1, $order->getShipments()->size(), 'expecting one shipment');
-		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->get(0)->shipmentID->get()->getTaxAmount(), 40);
+		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->get(0)->shipmentID->getTaxAmount(), 40);
 
 		// @todo: fix failing assertion
 		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
-		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount->get(), 40);
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount, 40);
 	}
 
 	/**
@@ -212,7 +212,7 @@ class ShipmentTaxTest extends OrderTestCommon
 		$pstRate->reload();
 
 		// there have been some problems with saving/retrieving floats, so these would be caught here..
-		$this->assertEquals(7.5, $pstRate->rate->get());
+		$this->assertEquals(7.5, $pstRate->rate);
 
 		// shipping rates
 		$service = ShippingService::getNewInstance($zone, 'def', ShippingService::SUBTOTAL_BASED);
@@ -236,7 +236,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		$this->order->finalize();
 
-		$this->assertEquals($this->order->shipments->get(0)->shippingAmount->get(), 16.95);
+		$this->assertEquals($this->order->shipments->get(0)->shippingAmount, 16.95);
 
 		$expectedTotal = round(50 * 1.05 * 1.075, 2) + round(16.95 * 1.05 * 1.075, 2);
 		$this->assertEquals($this->order->getTotal(true), $expectedTotal);

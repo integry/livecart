@@ -18,10 +18,10 @@ class RuleConditionTotalOrderWeightIs extends RuleCondition implements RuleOrder
 		$totalWeight = 0;
 		foreach($items as $item)
 		{
-			$product = $item->productID->get();
+			$product = $item->productID;
 			if($product)
 			{
-				$totalWeight += (float)$product->shippingWeight->get() * $item->count->get();
+				$totalWeight += (float)$product->shippingWeight * $item->count;
 			}
 		}
 		return $this->compareValues($this->toGrams($totalWeight), $this->params['subTotal']);

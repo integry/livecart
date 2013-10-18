@@ -109,27 +109,27 @@ class ProductBundle extends ActiveRecordModel
 
 	public function getCount()
 	{
-		return $this->count->get() ? $this->count->get() : 1;
+		return $this->count ? $this->count : 1;
 	}
 
 	public function getProduct()
 	{
-		return $this->product->get();
+		return $this->product;
 	}
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	// get max position
-	  	$f = new ARSelectFilter(self::getFilter($this->product->get())->getCondition());
-	  	$f->setOrder(new ARFieldHandle(__CLASS__, "position"), 'DESC');
-	  	$f->setLimit(1);
+	  	$f = new ARSelectFilter(self::getFilter($this->product)->getCondition());
+	  	$f->order(new ARFieldHandle(__CLASS__, "position"), 'DESC');
+	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
 		$this->position = $position;
 
-		return parent::insert();
+
 	}
 
 	/*####################  Get related objects ####################*/
@@ -162,14 +162,14 @@ class ProductBundle extends ActiveRecordModel
 		$bundle = self::getBundledProductSet($product);
 		foreach ($bundle as $item)
 		{
-			$products->add($item->relatedProduct->get());
+			$products->add($item->relatedProduct);
 		}
 		ProductPrice::loadPricesForRecordSet($products);
 
 		$total = 0;
 		foreach ($bundle as $item)
 		{
-			$itemTotal = $item->relatedProduct->get()->getPrice($currency) * $item->getCount();
+			$itemTotal = $item->relatedProduct->getPrice($currency) * $item->getCount();
 			$total += $itemTotal;
 		}
 
@@ -179,7 +179,7 @@ class ProductBundle extends ActiveRecordModel
 	private static function getFilter(Product $product)
 	{
 		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 
 		return $filter;
 	}

@@ -57,7 +57,7 @@ class ActiveGrid
 		$request = $this->application->getRequest();
 
 		// set recordset boundaries (limits)
-		$filter->setLimit($request->get('page_size', 10), $request->get('offset', 0));
+		$filter->limit($request->get('page_size', 10), $request->get('offset', 0));
 
 		// set order
 		if ($request->isValueSet('sort_col'))
@@ -66,7 +66,7 @@ class ActiveGrid
 
 			if ($handle)
 			{
-				$filter->setOrder($handle, $request->get('sort_dir'));
+				$filter->order($handle, $request->get('sort_dir'));
 			}
 		}
 
@@ -315,7 +315,7 @@ class ActiveGrid
 		{
 			$eavField = call_user_func_array(array($this->getEavFieldClass(), 'getInstanceByID'), array($fieldName, true));
 
-			if (!$eavField->isMultiValue->get())
+			if (!$eavField->isMultiValue)
 			{
 				$schemaName = $eavField->getValueTableName();
 			}
@@ -399,7 +399,7 @@ class ActiveGrid
 			$specField = call_user_func(array($this->getEavFieldClass(), 'getInstanceByID'), $fieldID);
 			if ($specField->isSelector())
 			{
-				if ($specField->isMultiValue->get())
+				if ($specField->isMultiValue)
 				{
 					return $specField;
 				}

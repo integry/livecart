@@ -183,7 +183,7 @@ abstract class FrontendController extends ControllerBase
 	protected function boxInformationMenuBlock()
 	{
 				$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
-		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		$f->order(new ARFieldHandle('StaticPage', 'position'));
 		$response = new BlockResponse();
 		$this->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
@@ -399,7 +399,7 @@ abstract class FrontendController extends ControllerBase
 			$currentCategory = $this->getCategory();
 
 			// get path of the current category (except for top categories)
-			if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode->get() && (1 < $currentCategory->parentNode->get()->getID())))
+			if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode && (1 < $currentCategory->parentNode->getID())))
 			{
 				$path = $currentCategory->getPathNodeArray();
 
@@ -440,7 +440,7 @@ abstract class FrontendController extends ControllerBase
 		$currentCategory = $this->getCategory();
 
 		// get sibling (same-level) categories (except for top categories)
-		if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode->get() && (1 < $currentCategory->parentNode->get()->getID())))
+		if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode && (1 < $currentCategory->parentNode->getID())))
 		{
 			$siblings = $currentCategory->getSiblingArray();
 
@@ -533,8 +533,8 @@ abstract class FrontendController extends ControllerBase
 				}
 			}
 			$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-			$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
-			$f->setOrder(new ARFieldHandle('Category', 'lft'));
+			$f->order(new ARFieldHandle('Category', 'parentNodeID'));
+			$f->order(new ARFieldHandle('Category', 'lft'));
 			$subCategories = array();
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
 			{
@@ -547,7 +547,7 @@ abstract class FrontendController extends ControllerBase
 
 		$f = new ARSelectFilter(new IsNullCond(new ARFieldHandle('StaticPage', 'parentID')));
 		$f->mergeCondition(StaticPage::getIsRootCategoriesMenuCondition());
-		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		$f->order(new ARFieldHandle('StaticPage', 'position'));
 		$pages = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 		$ids = array();
 		$subPages = array();
@@ -556,7 +556,7 @@ abstract class FrontendController extends ControllerBase
 			$ids[] = $page['ID'];
 		}
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('StaticPage', 'parentID'), $ids));
-		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		$f->order(new ARFieldHandle('StaticPage', 'position'));
 		foreach (ActiveRecordModel::getRecordSetArray('StaticPage', $f) as $page)
 		{
 			$subPages[$page['parentID']][] = $page;
@@ -584,8 +584,8 @@ abstract class FrontendController extends ControllerBase
 		$filter->setEnabledOnly();
 
 		$selectFilter = $filter->getSelectFilter();
-		$selectFilter->setLimit($this->config->get('SALE_ITEMS_COUNT'));
-		$selectFilter->setOrder(new ARExpressionHandle('RAND()'));
+		$selectFilter->limit($this->config->get('SALE_ITEMS_COUNT'));
+		$selectFilter->order(new ARExpressionHandle('RAND()'));
 
 		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
 
@@ -610,8 +610,8 @@ abstract class FrontendController extends ControllerBase
 		$filter->setEnabledOnly();
 
 		$selectFilter = $filter->getSelectFilter();
-		$selectFilter->setLimit($this->config->get('NEWEST_ITEMS_COUNT'));
-		$selectFilter->setOrder(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+		$selectFilter->limit($this->config->get('NEWEST_ITEMS_COUNT'));
+		$selectFilter->order(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
 
 		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
 
@@ -641,8 +641,8 @@ abstract class FrontendController extends ControllerBase
 			$filter->setEnabledOnly();
 
 			$selectFilter = $filter->getSelectFilter();
-			$selectFilter->setLimit($this->config->get('BESTSELLING_ITEMS_COUNT'));
-			$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+			$selectFilter->limit($this->config->get('BESTSELLING_ITEMS_COUNT'));
+			$selectFilter->order(new ARExpressionHandle('cnt'), 'DESC');
 
 			$q = new ARSelectQueryBuilder();
 			$q->includeTable('Product');
@@ -708,8 +708,8 @@ abstract class FrontendController extends ControllerBase
 	{
 		$this->application->logStat('Starting latestNewsBlock');
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
-		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
+		$f->order(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->limit($this->config->get('NUM_NEWS_INDEX') + 1);
 
 		$this->application->logStat('Before fetching news from DB');
 		$news = array();
@@ -750,7 +750,7 @@ abstract class FrontendController extends ControllerBase
 			foreach ($this->filters as $filter)
 		  	{
 				if (!($filter instanceof SpecificationFilterInterface) ||
-					$filter->getSpecField()->category->get()->getID() == $category['ID'])
+					$filter->getSpecField()->category->getID() == $category['ID'])
 				{
 					$categoryFilters[$filter->getID()] = true;
 				}
@@ -805,7 +805,7 @@ abstract class FrontendController extends ControllerBase
 								$this->order = SessionOrder::getOrder();
 
 				// check if order currency matches the request currency
-				if (!$this->order->currency->get() || ($this->order->currency->get()->getID() != $this->getRequestCurrency()))
+				if (!$this->order->currency || ($this->order->currency->getID() != $this->getRequestCurrency()))
 				{
 					$this->order->changeCurrency(Currency::getInstanceByID($this->getRequestCurrency()));
 				}

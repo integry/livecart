@@ -83,7 +83,7 @@ class BackendToolbarItem extends ActiveRecordModel
 			$filter = new ARSelectFilter();
 		}
 		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), $this->sessionUser->getUser()->getID()));
-		$filter->setOrder(f(__CLASS__.'.position'), $order);
+		$filter->order(f(__CLASS__.'.position'), $order);
 
 		$m = array(
 			BackendToolbarItem::TYPE_MENU =>'',
@@ -224,7 +224,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		}
 
 		$filter = new ARSelectFilter();
-		$filter->setLimit(999, BackendToolbarItem::LAST_VIEWED_COUNT);
+		$filter->limit(999, BackendToolbarItem::LAST_VIEWED_COUNT);
 		$items = self::getUserToolbarItems(
 			array(BackendToolbarItem::TYPE_PRODUCT, BackendToolbarItem::TYPE_USER, BackendToolbarItem::TYPE_ORDER),
 			$filter,

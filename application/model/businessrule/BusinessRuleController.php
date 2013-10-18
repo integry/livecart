@@ -144,7 +144,7 @@ class BusinessRuleController
 		}
 
 		$f = select(eq('DiscountCondition.isEnabled', true));
-		$f->setOrder(f('DiscountCondition.position'));
+		$f->order(f('DiscountCondition.position'));
 		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', $f);
 
 		$idMap = array();
@@ -161,7 +161,7 @@ class BusinessRuleController
 
 		// get actions
 		$f = select();
-		$f->setOrder(f('DiscountAction.position'));
+		$f->order(f('DiscountAction.position'));
 		foreach (ActiveRecord::getRecordSetArray('DiscountAction', $f) as $action)
 		{
 			if (!empty($action['actionConditionID']))

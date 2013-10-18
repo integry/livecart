@@ -170,18 +170,18 @@ class DiscountConditionTest extends LiveCartTest
 		$condition->isEnabled->set(true);
 		$condition->save();
 
-		$this->assertEquals(0, (int)$condition->recordCount->get());
+		$this->assertEquals(0, (int)$condition->recordCount);
 
 		$record = DiscountConditionRecord::getNewInstance($condition, $this->product1);
 		$record->save();
-		$this->assertEquals(1, $condition->recordCount->get());
+		$this->assertEquals(1, $condition->recordCount);
 
 		$record = DiscountConditionRecord::getNewInstance($condition, $this->product2);
 		$record->save();
-		$this->assertEquals(2, $condition->recordCount->get());
+		$this->assertEquals(2, $condition->recordCount);
 
 		$record->delete();
-		$this->assertEquals(1, $condition->recordCount->get());
+		$this->assertEquals(1, $condition->recordCount);
 	}
 
 	public function testIsProductMatching()

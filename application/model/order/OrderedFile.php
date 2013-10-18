@@ -47,7 +47,7 @@ class OrderedFile extends ActiveRecordModel
 
 	public function registerDownload()
 	{
-		$this->timesDownloaded = $this->timesDownloaded->get() + 1);
+		$this->timesDownloaded = $this->timesDownloaded + 1);
 		$this->save();
 	}
 }

@@ -59,7 +59,7 @@ class SessionUser extends \Phalcon\DI\Injectable
 				if (!$session->has('UserGroup') || is_null($session->get('UserGroup')))
 				{
 					/*
-					$group = $user->userGroup->get() ? $user->userGroup->get()->getID() : 0;
+					$group = $user->userGroup ? $user->userGroup->getID() : 0;
 					$session->set('UserGroup', $group);
 					*/
 				}
@@ -91,7 +91,7 @@ class SessionUser extends \Phalcon\DI\Injectable
 		$session = $this->getDI()->get('session');
 		$session->set('User', $user->getID());
 
-		//$session->set('UserGroup', $user->userGroup->get() ? $user->userGroup->get()->getID() : 0);
+		//$session->set('UserGroup', $user->userGroup ? $user->userGroup->getID() : 0);
 
 		if ($app->getSessionHandler())
 		{

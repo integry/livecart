@@ -154,13 +154,13 @@ class FilterGroup extends MultilingualObject
 			{
 				$filter->rangeDateStart = $value['rangeDateStart']);
 				$filter->rangeDateEnd = $value['rangeDateEnd']);
-				$filter->rangeStart->setNull();
-				$filter->rangeEnd->setNull();
+				$filter->rangeStart = null;
+				$filter->rangeEnd = null;
 			}
 			else
 			{
-				$filter->rangeDateStart->setNull();
-				$filter->rangeDateEnd->setNull();
+				$filter->rangeDateStart = null;
+				$filter->rangeDateEnd = null;
 				$filter->rangeStart = $value['rangeStart']);
 				$filter->rangeEnd = $value['rangeEnd']);
 			}
@@ -179,10 +179,10 @@ class FilterGroup extends MultilingualObject
 		return $newIDs;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition();
-		return parent::insert();
+
 	}
 
 	/*####################  Get related objects ####################*/
@@ -195,7 +195,7 @@ class FilterGroup extends MultilingualObject
 	public function getFiltersList()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("Filter", "position"));
+		$filter->order(new ARFieldHandle("Filter", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
 		return Filter::getRecordSet($filter);

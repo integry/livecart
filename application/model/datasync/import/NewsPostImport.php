@@ -33,7 +33,7 @@ class NewsPostImport extends DataImport
 		{
 			try
 			{
-				$instance = ActiveRecordModel::getInstanceByID('NewsPost', $record[$fields['NewsPost']['ID']], true);
+				$instance = NewsPost::getInstanceByID($record[$fields['NewsPost']['ID']], true);
 			}
 			catch (ARNotFoundException $e)
 			{

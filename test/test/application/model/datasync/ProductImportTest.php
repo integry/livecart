@@ -42,7 +42,7 @@ class ProductImportTest extends LiveCartTest
 
 		$test = Product::getInstanceBySKU('test');
 		$this->assertTrue($test instanceof Product);
-		$this->assertEquals($test->shippingWeight->get(), '15');
+		$this->assertEquals($test->shippingWeight, '15');
 		$this->assertEquals($test->getValueByLang('name', 'en'), 'Test Product');
 
 		$another = Product::getInstanceBySKU('another');

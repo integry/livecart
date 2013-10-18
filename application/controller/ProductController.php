@@ -41,7 +41,7 @@ class ProductController extends CatalogController
 		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
 		$this->product = $product;
 
-		if (!$product->isEnabled->get() || $product->parent->get())
+		if (!$product->isEnabled || $product->parent)
 		{
 			throw new ARNotFoundException('Product', $product->getID());
 		}
@@ -92,9 +92,9 @@ class ProductController extends CatalogController
 		}
 
 		// manufacturer filter
-		if ($product->manufacturer->get())
+		if ($product->manufacturer)
 		{
-			$manFilter = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
+			$manFilter = new ManufacturerFilter($product->manufacturer->getID(), $product->manufacturer->name);
 		}
 
 		// get category page route
@@ -113,7 +113,7 @@ class ProductController extends CatalogController
 		// ratings
 		if ($this->config->get('ENABLE_RATINGS'))
 		{
-			if ($product->ratingCount->get() > 0)
+			if ($product->ratingCount > 0)
 			{
 				// rating summaries
 								$this->set('rating', ProductRatingSummary::getProductRatingsArray($product));
@@ -169,10 +169,10 @@ class ProductController extends CatalogController
 		$this->set('variations', $this->getVariations());
 
 		// reviews
-		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount->get() && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
+		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
 		{
 			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
-			$f->setLimit($numReviews);
+			$f->limit($numReviews);
 			$reviews = $product->getRelatedRecordSetArray('ProductReview', $f);
 			$this->pullRatingDetailsForReviewArray($reviews);
 			$this->set('reviews', $reviews);
@@ -219,7 +219,7 @@ class ProductController extends CatalogController
 
 		// product images
 		$images = $product->getImageArray();
-		if ($theme && $theme->isVariationImages->get())
+		if ($theme && $theme->isVariationImages)
 		{
 			if ($variations = $this->getVariations())
 			{
@@ -240,7 +240,7 @@ class ProductController extends CatalogController
 
 		// additional categories
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('Category', 'lft'));
+		$f->order(new ARFieldHandle('Category', 'lft'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled') , true));
 
 		$pathC = new OrChainCondition();
@@ -257,7 +257,7 @@ class ProductController extends CatalogController
 
 		if ($categories)
 		{
-			$pathF->setOrder(new ARFieldHandle('Category', 'lft') , 'DESC');
+			$pathF->order(new ARFieldHandle('Category', 'lft') , 'DESC');
 			$pathF->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $pathF, array('Category')) as $parent)
 			{
@@ -308,7 +308,7 @@ class ProductController extends CatalogController
 	public function recurringBlockAction()
 	{
 		$response = new BlockResponse();
-		if ($this->product->type->get() == Product::TYPE_RECURRING)
+		if ($this->product->type == Product::TYPE_RECURRING)
 		{
 									$this->set('isRecurring', true);
 			$this->set('periodTypesPlural', RecurringProductPeriod::getAllPeriodTypes(RecurringProductPeriod::PERIOD_TYPE_NAME_PLURAL));
@@ -495,7 +495,7 @@ class ProductController extends CatalogController
 			else
 			{
 				$user->load();
-				$friendName = $user->firstName->get().' '.$user->lastName->get();
+				$friendName = $user->firstName.' '.$user->lastName;
 			}
 			$email->set('friendName', trim($friendName));
 			$email->set('notes', $request->get('notes'));
@@ -592,14 +592,14 @@ class ProductController extends CatalogController
 		$offsetStart = ($this->request->get('page', 1) - 1) * $perPage;
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
-		$f->setLimit($perPage, $offsetStart);
-		$f->setOrder(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
+		$f->limit($perPage, $offsetStart);
+		$f->order(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
 		$reviews = $this->product->getRelatedRecordSetArray('ProductReview', $f);
 		$this->pullRatingDetailsForReviewArray($reviews);
 
 		$this->set('reviews', $reviews);
 		$this->set('offsetStart', $offsetStart + 1);
-		$this->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount->get()));
+		$this->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount));
 		$this->set('page', $page);
 		$this->set('perPage', $perPage);
 		$this->set('url', $this->url->get('product/reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
@@ -657,7 +657,7 @@ class ProductController extends CatalogController
 	public function previousAction($diff = -1)
 	{
 		$product = Product::getInstanceByID($this->request->get('id'), true, array('Category'));
-		$this->category = (!$this->request->get('category') ? $product->category->get() : Category::getInstanceByID($this->request->get('category'), true));
+		$this->category = (!$this->request->get('category') ? $product->category : Category::getInstanceByID($this->request->get('category'), true));
 
 		$this->getAppliedFilters();
 		$this->getSelectFilter();
@@ -757,7 +757,7 @@ class ProductController extends CatalogController
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductRating', 'reviewID'), $ids));
-		$f->setOrder(new ARFieldHandle('ProductRatingType', 'position'));
+		$f->order(new ARFieldHandle('ProductRatingType', 'position'));
 		$ratings = ActiveRecordModel::getRecordSetArray('ProductRating', $f, array('ProductRatingType'));
 
 		foreach ($ratings as $rating)
@@ -845,7 +845,7 @@ class ProductController extends CatalogController
 	{
 		include_once($this->config->getPath('application/helper/smarty') . '/function.productUrl.php');
 
-		$nodeArray = $this->addCategoriesToBreadCrumb($this->product->category->get()->getPathNodeArray());
+		$nodeArray = $this->addCategoriesToBreadCrumb($this->product->category->getPathNodeArray());
 		$this->addFiltersToBreadCrumb($nodeArray);
 
 		$this->addBreadCrumb($productArray['name_lang'], createProductUrl(array('product' => $productArray), $this->application));
@@ -908,7 +908,7 @@ class ProductController extends CatalogController
 								$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID()));
 				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-				$f->setLimit(1);
+				$f->limit(1);
 
 				$this->isPurchaseRequiredToRate = ActiveRecordModel::getRecordCount('OrderedItem', $f, array('CustomerOrder')) < 1;
 			}
@@ -963,8 +963,8 @@ class ProductController extends CatalogController
 	private function getPublicFiles()
 	{
 		$f = select(eq('ProductFile.isPublic', true));
-		$f->setOrder(f('ProductFileGroup.position'));
-		$f->setOrder(f('ProductFile.position'));
+		$f->order(f('ProductFileGroup.position'));
+		$f->order(f('ProductFile.position'));
 
 		return $this->product->getRelatedRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
 	}

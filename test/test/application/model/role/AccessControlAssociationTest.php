@@ -50,8 +50,8 @@ class AccessControlAssociationTest extends LiveCartTest
 
 		$assoc->reload();
 
-		$this->assertSame($this->userGroup, $assoc->userGroup->get());
-		$this->assertSame($this->role, $assoc->role->get());
+		$this->assertSame($this->userGroup, $assoc->userGroup);
+		$this->assertSame($this->role, $assoc->role);
 	}
 
 	public function testGetAssociationsByGroup()
@@ -62,7 +62,7 @@ class AccessControlAssociationTest extends LiveCartTest
 		$associations = AccessControlAssociation::getRecordSetByUserGroup($this->userGroup, new ARSelectFilter());
 
 		$this->assertEqual($associations->getTotalRecordCount(), 1);
-		$this->assertSame($associations->get(0)->role->get(), $this->role);
+		$this->assertSame($associations->get(0)->role, $this->role);
 	}
 
 	public function testGetAssociationsByRole()
@@ -73,7 +73,7 @@ class AccessControlAssociationTest extends LiveCartTest
 		$associations = AccessControlAssociation::getRecordSetByRole($this->role, new ARSelectFilter());
 
 		$this->assertEqual($associations->getTotalRecordCount(), 1);
-		$this->assertSame($associations->get(0)->userGroup->get(), $this->userGroup);
+		$this->assertSame($associations->get(0)->userGroup, $this->userGroup);
 	}
 }
 ?>

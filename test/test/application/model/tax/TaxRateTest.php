@@ -90,9 +90,9 @@ class TaxRateTest extends LiveCartTest
 
 		$taxRate->reload();
 
-		$this->assertEqual($taxRate->rate->get(), 15);
-		$this->assertTrue($taxRate->deliveryZone->get() === $this->deliveryZone);
-		$this->assertTrue($taxRate->tax->get() === $this->tax);
+		$this->assertEqual($taxRate->rate, 15);
+		$this->assertTrue($taxRate->deliveryZone === $this->deliveryZone);
+		$this->assertTrue($taxRate->tax === $this->tax);
 	}
 
 	public function testSimpleTax()

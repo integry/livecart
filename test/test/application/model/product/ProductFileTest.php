@@ -74,8 +74,8 @@ class ProductFileTest extends LiveCartTest
 
 		$productFile->reload();
 
-		$this->assertEqual($productFile->fileName->get(), 'some_file');
-		$this->assertEqual($productFile->extension->get(), $extension);
+		$this->assertEqual($productFile->fileName, 'some_file');
+		$this->assertEqual($productFile->extension, $extension);
 		$this->assertEqual($productFile->getPath(), $this->config->getPath('storage/productfile') . DIRECTORY_SEPARATOR . $productFile->getID());
 
 		$productFile->delete();

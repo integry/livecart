@@ -41,16 +41,16 @@ class ProductCategory extends ActiveRecordModel
 
 	public function delete()
 	{
-		$this->product->get()->updateCategoryCounters($this->product->get()->getCountUpdateFilter(true), $this->category->get());
+		$this->product->updateCategoryCounters($this->product->getCountUpdateFilter(true), $this->category);
 		parent::delete();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		$this->product->get()->updateCategoryCounters($this->product->get()->getCountUpdateFilter(), $this->category->get());
-		$this->product->get()->registerAdditionalCategory($this->category->get());
+		$this->product->updateCategoryCounters($this->product->getCountUpdateFilter(), $this->category);
+		$this->product->registerAdditionalCategory($this->category);
 		$insertResult = parent::insert();
-		Category::updateCategoryIntervals($this->product->get());
+		Category::updateCategoryIntervals($this->product);
 		return $insertResult;
 	}
 

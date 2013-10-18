@@ -87,8 +87,8 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 		$shipping->save();
 
 		$this->order = CustomerOrder::getNewInstance($user);
-		$this->order->shippingAddress->set($shipping->userAddress->get());
-		$this->order->billingAddress->set($billing->userAddress->get());
+		$this->order->shippingAddress->set($shipping->userAddress);
+		$this->order->billingAddress->set($billing->userAddress);
 
 		// set up products
 		$product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test1');

@@ -19,7 +19,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
-		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
+		$filter->order(new ARFieldHandle($this->getModelClass(), 'position'));
 
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
 
@@ -210,7 +210,7 @@ abstract class ObjectImageController extends StoreManagementController
 
 		do
 		{
-			$f->setLimit($chunk, $offset);
+			$f->limit($chunk, $offset);
 			$set = ActiveRecordModel::getRecordSet($class, $f);
 			foreach ($set as $image)
 			{

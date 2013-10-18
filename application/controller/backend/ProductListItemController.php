@@ -20,7 +20,7 @@ class ProductListItemController extends StoreManagementController
 		$productID = $this->request->get('relatedownerID');
 		$ownerID = $this->request->get('id');
 
-		$list = ActiveRecordModel::getInstanceById('ProductList', $ownerID, ActiveRecordModel::LOAD_DATA);
+		$list = ProductList::getInstanceByID($ownerID, ActiveRecordModel::LOAD_DATA);
 		$product = Product::getInstanceByID($productID, Product::LOAD_DATA, array('ProductImage'));
 
 		if(!$list->contains($product))
@@ -42,7 +42,7 @@ class ProductListItemController extends StoreManagementController
 	 */
 	public function deleteAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('ProductListItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA);
+		$item = ProductListItem::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
 
 		return new JSONResponse(false, 'success');
@@ -58,12 +58,12 @@ class ProductListItemController extends StoreManagementController
 
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $id)
 		{
-			$item = ActiveRecordModel::getInstanceByID('ProductListItem', $id);
+			$item = ProductListItem::getInstanceByID($id);
 			$item->position->set($position);
 
 			if (isset($match[1]))
 			{
-				$item->productList->set(ActiveRecordModel::getInstanceById('ProductList', $match[1]));
+				$item->productList->set(ProductList::getInstanceByID($match[1]));
 			}
 
 			$item->save();

@@ -43,8 +43,8 @@ class SearchableConfiguration extends SearchableModel
 				)
 			)
 		);
-		$f->setOrder(f('SearchableItem.sort'), 'DESC');
-		$f->setOrder($c, 'DESC');
+		$f->order(f('SearchableItem.sort'), 'DESC');
+		$f->order($c, 'DESC');
 		return $f;
 	}
 

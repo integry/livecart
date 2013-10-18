@@ -35,13 +35,13 @@ class OrderDiscount extends ActiveRecordModel
 	public function save()
 	{
 		parent::save();
-		$this->order->get()->registerFixedDiscount($this);
+		$this->order->registerFixedDiscount($this);
 	}
 
 	public function toArray()
 	{
 		$array = parent::toArray();
-		$array['formatted_amount'] = $this->order->get()->currency->get()->getFormattedPrice($array['amount'] * -1);
+		$array['formatted_amount'] = $this->order->currency->getFormattedPrice($array['amount'] * -1);
 		return $array;
 	}
 }

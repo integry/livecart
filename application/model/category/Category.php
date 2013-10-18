@@ -125,14 +125,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	public function isEnabled()
 	{
 		$this->load();
-		return $this->isEnabled->get();
+		return $this->isEnabled;
 	}
 
 	public function getActiveProductCount()
 	{
 		$field = $this->getProductCountField();
 
-		return $this->$field->get();
+		return $this->$field;
 	}
 
 	public function getProductCount(ProductFilter $productFilter)
@@ -141,7 +141,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$query->includeTable('Product');
 		$query->addField('COUNT(*) AS cnt');
 		$filter = $this->getProductsFilter($productFilter);
-		$filter->setLimit(0);
+		$filter->limit(0);
 		$query->setFilter($filter);
 		$data = ActiveRecord::getDataBySQL($query->getPreparedStatement(ActiveRecord::getDBConnection()));
 		return $data[0]['cnt'];
@@ -155,7 +155,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	public function getSubcategoryCount()
 	{
 		$this->load();
-		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
+		$productCount = ($this->rgt - $this->lft - 1) / 2;
 		return $productCount;
 	}
 
@@ -187,7 +187,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		try
 		{
 			parent::update();
-			$activeProductCount = $this->activeProductCount->get();
+			$activeProductCount = $this->activeProductCount;
 			if ($this->isEnabled->isModified())
 			{
 				if ($this->isEnabled())
@@ -231,9 +231,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		try
 		{
-			$activeProductCount = $this->activeProductCount->get();
-			$totalProductCount = $this->totalProductCount->get();
-			$availableProductCount = $this->availableProductCount->get();
+			$activeProductCount = $this->activeProductCount;
+			$totalProductCount = $this->totalProductCount;
+			$availableProductCount = $this->availableProductCount;
 
 			foreach ($this->getPathNodeSet(true) as $node)
 			{
@@ -323,7 +323,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->order(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
@@ -361,7 +361,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	private function getSiblingFilter($loadSelf)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->get()->getID());
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
 
 		if (!$loadSelf)
@@ -370,7 +370,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->order(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
@@ -392,9 +392,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$filter = new ARSelectFilter();
 		}
 
-		$filter->setOrder(new ARFieldHandle("Category", "lft"), 'ASC');
-		$filter->mergeCondition(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft->get()));
-		$filter->mergeCondition(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get()));
+		$filter->order(new ARFieldHandle("Category", "lft"), 'ASC');
+		$filter->mergeCondition(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft));
+		$filter->mergeCondition(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt));
 
 		return $filter;
 	}
@@ -455,12 +455,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		{
 			if (!$this->isRoot())
 			{
-				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft->get());
-				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt->get()));
+				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft);
+				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt));
 
 				if ($this->hasProductsAsSecondaryCategory())
 				{
-					$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft->get() . ' AND Category.rgt<=' . $this->rgt->get()));
+					$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft . ' AND Category.rgt<=' . $this->rgt));
 				}
 			}
 			else
@@ -550,8 +550,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
 			$filterFilter = new ARSelectFilter();
 			$filterFilter->setCondition($filterCond);
-			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
-			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+			$filterFilter->order(new ARFieldHandle('Filter', 'filterGroupID'));
+			$filterFilter->order(new ARFieldHandle('Filter', 'position'));
 
 			$valueFilters = ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));
 			foreach ($valueFilters as $filter)
@@ -565,13 +565,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		{
 			$selectFilter = new ARSelectFilter();
 			$selectFilter->setCondition(new INCond(new ARFieldHandle('SpecFieldValue', 'specFieldID'), $specFields));
-			$selectFilter->setOrder(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
-			$selectFilter->setOrder(new ARFieldHandle('SpecFieldValue', 'position'));
+			$selectFilter->order(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
+			$selectFilter->order(new ARFieldHandle('SpecFieldValue', 'position'));
 
 			$specFieldValues = ActiveRecord::getRecordSet('SpecFieldValue', $selectFilter);
 			foreach ($specFieldValues as $value)
 			{
-				$ret[] = new SelectorFilter($value, FilterGroup::getInstanceByID($filterGroups[$value->specField->get()->getID()]));
+				$ret[] = new SelectorFilter($value, FilterGroup::getInstanceByID($filterGroups[$value->specField->getID()]));
 			}
 		}
 
@@ -644,8 +644,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$ids = array_keys($ids);
 
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
-		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
+		$filter->order(new ARFieldHandle("SpecField", "categoryID"));
+		$filter->order(new ARFieldHandle("FilterGroup", "position"));
 
 		$cond = new INCond(new ARFieldHandle("FilterGroup", "specFieldID"), $ids);
 
@@ -670,7 +670,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
-		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
+		$filter->order(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
 
 		return $filter;
 	}
@@ -740,7 +740,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			foreach(array_reverse($this->getPathNodeArray(true)) as $cat)
 			{
 				$ids[] = $cat['ID'];
-				$f->setOrder(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
+				$f->order(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
 			}
 
 			$f->setCondition(new INCond(new ARFieldHandle('ProductOption', 'categoryID'), $ids));
@@ -750,7 +750,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$f->setCondition(new EqualsCond(new ARFieldHandle('ProductOption', 'categoryID'), $this->getID()));
 		}
 
-		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->order(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 
 		return ProductOption::getRecordSet($f, array('ProductOptionChoice'));
 	}
@@ -766,8 +766,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$filter = new ARSelectFilter();
 
-		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"), 'ASC');
+		$filter->order(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
+		$filter->order(new ARFieldHandle("SpecField", "position"), 'ASC');
 
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
 
@@ -793,7 +793,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		ClassLoader::import("application/model/category/SpecFieldGroup");
 
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecFieldGroup", "categoryID"), $this->getID()));
 
 		return $filter;
@@ -1016,14 +1016,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		foreach ($category->getSubCategorySet() as $sub)
 		{
 			self::updateProductCount($sub);
-			$countTotal += $sub->totalProductCount->get();
-			$countAvailable += $sub->availableProductCount->get();
-			$countActive += $sub->activeProductCount->get();
+			$countTotal += $sub->totalProductCount;
+			$countAvailable += $sub->availableProductCount;
+			$countActive += $sub->activeProductCount;
 		}
 
-		$category->totalProductCount = $category->totalProductCount->get() + $countTotal);
-		$category->activeProductCount = $category->activeProductCount->get() + $countActive);
-		$category->availableProductCount = $category->availableProductCount->get() + $countAvailable);
+		$category->totalProductCount = $category->totalProductCount + $countTotal);
+		$category->activeProductCount = $category->activeProductCount + $countActive);
+		$category->availableProductCount = $category->availableProductCount + $countAvailable);
 		$category->save();
 	}
 

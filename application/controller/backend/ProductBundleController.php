@@ -17,7 +17,7 @@ class ProductBundleController extends ProductListControllerCommon
 
 
 		$this->set('ownerID', $productID);
-		$this->set('categoryID', $product->category->get()->getID());
+		$this->set('categoryID', $product->category->getID());
 		$this->set('items', ProductBundle::getBundledProductArray($product));
 
 		$currency = $this->application->getDefaultCurrency();

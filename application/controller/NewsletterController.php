@@ -63,7 +63,7 @@ class NewsletterController extends FrontendController
 	public function confirmAction()
 	{
 		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->get('email'));
-		if ($instance && ($instance->confirmationCode->get() == $this->request->get('code')))
+		if ($instance && ($instance->confirmationCode == $this->request->get('code')))
 		{
 			$instance->isEnabled->set(true);
 			$instance->save();

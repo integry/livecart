@@ -30,11 +30,11 @@ class CategoryRelationship extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition('category');
 
-		return parent::insert();
+
 	}
 }
 

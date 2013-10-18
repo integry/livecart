@@ -41,15 +41,15 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	public static function getNewInstanceByTransaction(TransactionDetails $details)
 	{
 		$instance = self::getNewInstance();
-		$instance->firstName = $details->firstName->get());
-		$instance->lastName = $details->lastName->get());
-		$instance->companyName = $details->companyName->get());
-		$instance->address1 = $details->address->get());
-		$instance->city = $details->city->get());
-		$instance->stateName = $details->state->get());
-		$instance->postalCode = $details->postalCode->get());
-		$instance->countryID = $details->country->get());
-		$instance->phone = $details->phone->get());
+		$instance->firstName = $details->firstName);
+		$instance->lastName = $details->lastName);
+		$instance->companyName = $details->companyName);
+		$instance->address1 = $details->address);
+		$instance->city = $details->city);
+		$instance->stateName = $details->state);
+		$instance->postalCode = $details->postalCode);
+		$instance->countryID = $details->country);
+		$instance->phone = $details->phone);
 		return $instance;
 	}
 
@@ -82,7 +82,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 	public function getFullName()
 	{
-		return $this->firstName->get() . ' ' . $this->lastName->get();
+		return $this->firstName . ' ' . $this->lastName;
 	}
 
 	private static function getAddressString(array $addressArray, $separator)
@@ -132,10 +132,10 @@ class UserAddress extends ActiveRecordModel implements EavAble
 		$properties[] = 'serializedState';
 
 		// for some reason directly unserializing State class causes a segfault...
-		if ($this->state->get())
+		if ($this->state)
 		{
-			$this->serializedState = $this->state->get()->getID();
-			$this->state->setNull();
+			$this->serializedState = $this->state->getID();
+			$this->state = null;
 		}
 
 		return parent::serialize($skippedRelations, $properties);

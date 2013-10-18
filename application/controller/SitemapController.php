@@ -203,7 +203,7 @@ class SitemapController extends FrontendController
 
 	private function getPage($class, $page, ARSelectFilter $f, $fields)
 	{
-		$f->setLimit(self::MAX_URLS, $page * self::MAX_URLS);
+		$f->limit(self::MAX_URLS, $page * self::MAX_URLS);
 
 		$query = new ARSelectQueryBuilder();
 		$query->setFilter($f);
@@ -229,7 +229,7 @@ class SitemapController extends FrontendController
 		}
 
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle($class, 'ID'));
+		$f->order(new ARFieldHandle($class, 'ID'));
 
 		if ('StaticPage' != $class)
 		{

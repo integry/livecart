@@ -44,7 +44,7 @@ class EavObjectTest extends LiveCartTest
 		$object = EavObject::getInstance($manufacturer);
 		$object->save();
 
-		$this->assertEqual($object->manufacturer->get(), $manufacturer);
+		$this->assertEqual($object->manufacturer, $manufacturer);
 		$this->assertEqual($object, EavObject::getInstance($manufacturer));
 	}
 
@@ -72,7 +72,7 @@ class EavObjectTest extends LiveCartTest
 		unset($user);
 		ActiveRecordModel::clearPool();
 
-		$user = ActiveRecordModel::getInstanceByID('User', $id, ActiveRecordModel::LOAD_DATA);
+		$user = User::getInstanceByID($id, ActiveRecordModel::LOAD_DATA);
 		$spec = $user->getSpecification();
 		$attr = $spec->getAttribute($field);
 		$this->assertEqual($testValue, $attr->getValueByLang('value', 'en'));

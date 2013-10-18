@@ -35,14 +35,14 @@ abstract class ProductParametersGroup extends MultilingualObject
 		if(!is_integer(self::$nextPosition))
 		{
 			$filter = new ARSelectFilter();
-			$filter->setCondition(new EqualsCond(new ARFieldHandle($className, 'productID'), $this->product->get()->getID()));
-			$filter->setOrder(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
-			$filter->setLimit(1);
+			$filter->setCondition(new EqualsCond(new ARFieldHandle($className, 'productID'), $this->product->getID()));
+			$filter->order(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
+			$filter->limit(1);
 
 			self::$nextPosition = 0;
 			foreach(ActiveRecord::getRecordSet($className, $filter) as $relatedProductGroup)
 			{
-				self::$nextPosition = $relatedProductGroup->position->get();
+				self::$nextPosition = $relatedProductGroup->position;
 			}
 		}
 

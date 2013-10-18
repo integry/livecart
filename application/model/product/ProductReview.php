@@ -60,18 +60,18 @@ class ProductReview extends ActiveRecordModel
 		return parent::delete();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->updateProductCounter();
 		$this->dateCreated = new ARSerializableDateTime());
-		return parent::insert();
+
 	}
 
 	private function updateProductCounter($increase = true)
 	{
 		$update = new ARUpdateFilter();
 		$update->addModifier('reviewCount', new ARExpressionHandle('reviewCount ' . ($increase ? '+' : '-' ) . ' 1'));
-		$this->product->get()->updateRecord($update);
+		$this->product->updateRecord($update);
 	}
 }
 

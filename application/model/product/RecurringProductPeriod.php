@@ -30,13 +30,13 @@ class RecurringProductPeriod extends MultilingualObject
 
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 

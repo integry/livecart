@@ -60,7 +60,7 @@ class ObjectFile extends MultilingualObject
 	public function deleteFile()
 	{
 		$path = $this->getPath();
-		if(is_file($path) && !$this->filePath->get())
+		if(is_file($path) && !$this->filePath)
 		{
 			return unlink($path);
 		}
@@ -103,9 +103,9 @@ class ObjectFile extends MultilingualObject
 			}
 		}
 
-		if ($this->filePath->get())
+		if ($this->filePath)
 		{
-			return $this->filePath->get();
+			return $this->filePath;
 		}
 
 		return $this->config->getPath('storage/' . strtolower(get_class($this))) . DIRECTORY_SEPARATOR . $this->getID();
@@ -121,12 +121,12 @@ class ObjectFile extends MultilingualObject
 
 		$baseTypes = array_merge($baseTypes, $extendedTypes);
 
-		return isset($baseTypes[$this->extension->get()]) ? $baseTypes[$this->extension->get()] : 'application/octet-stream';
+		return isset($baseTypes[$this->extension]) ? $baseTypes[$this->extension] : 'application/octet-stream';
 	}
 
 	public function getBaseName()
 	{
-		return $this->fileName->get().'.'.$this->extension->get();
+		return $this->fileName.'.'.$this->extension;
 	}
 
 	public function getSize()
@@ -141,7 +141,7 @@ class ObjectFile extends MultilingualObject
 
 	public function isLocalFile()
 	{
-		$path = strtolower($this->filePath->get());
+		$path = strtolower($this->filePath);
 		return !((substr($path, 0, 7) == 'http://') || (substr($path, 0, 8) == 'https://'));
 	}
 

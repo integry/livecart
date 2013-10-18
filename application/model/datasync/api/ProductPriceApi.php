@@ -94,7 +94,7 @@ class ProductPriceApi extends ModelApi
 			{
 				$productPrice->serializedRules->set(serialize(array()));
 			}
-			$currencyID = $productPrice->currency->get()->getID();
+			$currencyID = $productPrice->currency->getID();
 			if(array_key_exists($currencyID, $groupedQuantityPrices))
 			{
 				foreach($groupedQuantityPrices[$currencyID] as $quanty => $qItem)

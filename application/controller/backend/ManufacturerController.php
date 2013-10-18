@@ -27,7 +27,7 @@ class ManufacturerController extends ActiveGridController
 
 	public function editAction()
 	{
-		$manufacturer = ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
+		$manufacturer = Manufacturer::getInstanceByID($this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES);
 		$manufacturer->getSpecification();
 
 		$this->set('manufacturer', $manufacturer->toArray());
@@ -46,7 +46,7 @@ class ManufacturerController extends ActiveGridController
 
 	public function updateAction()
 	{
-		return $this->save(ActiveRecordModel::getInstanceById('Manufacturer', $this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
+		return $this->save(Manufacturer::getInstanceByID($this->request->get('id'), Manufacturer::LOAD_DATA, Manufacturer::LOAD_REFERENCES));
 	}
 
 	protected function save(Manufacturer $manufacturer)
@@ -101,7 +101,7 @@ class ManufacturerController extends ActiveGridController
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)
 	{
-		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'name'), 'ASC');
+		$filter->order(new ARFieldHandle($this->getClassName(), 'name'), 'ASC');
 	}
 
 	public function autoCompleteAction()

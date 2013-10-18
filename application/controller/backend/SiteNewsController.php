@@ -11,7 +11,7 @@ class SiteNewsController extends StoreManagementController
 	public function indexAction()
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->order(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$this->set('form', $this->buildForm());
 	}
@@ -37,7 +37,7 @@ class SiteNewsController extends StoreManagementController
 			return new JSONResponse(array('err' => $validator->getErrorList()));
 		}
 
-		$post = $this->request->get('id') ? ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), ActiveRecordModel::LOAD_DATA) : new NewsPost;
+		$post = $this->request->get('id') ? NewsPost::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA) : new NewsPost;
 		$post->loadRequestData($this->request);
 		$post->save();
 
@@ -100,7 +100,7 @@ class SiteNewsController extends StoreManagementController
 	 */
 	public function setEnabledAction()
 	{
-		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), NewsPost::LOAD_DATA);
+		$post = NewsPost::getInstanceByID($this->request->get('id'), NewsPost::LOAD_DATA);
 		$post->isEnabled->set($this->request->get("status"));
 		$post->save();
 

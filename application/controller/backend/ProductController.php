@@ -583,7 +583,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
-		$f->setLimit(20);
+		$f->limit(20);
 
 		$resp = array();
 
@@ -594,7 +594,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->get($field) . '%');
 		  	$f->setCondition($c);
 
-			$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
+			$f->order(new ARFieldHandle('Product', $field), 'ASC');
 
 		  	$query = new ARSelectQueryBuilder();
 		  	$query->setFilter($f);
@@ -618,7 +618,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->get($field) . '%');
 			$c->addAND($langCond);
 
-		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
+		  	$f->order(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 
@@ -642,7 +642,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
 			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
-		  	$f->setOrder($searchHandle, 'ASC');
+		  	$f->order($searchHandle, 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('SpecificationStringValue', $f);
 
@@ -728,7 +728,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// pricing
 		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
-		$f->setOrder(new ARFieldHandle('Currency', 'position'));
+		$f->order(new ARFieldHandle('Currency', 'position'));
 		$otherCurrencies = array();
 		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
 		{
@@ -994,7 +994,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// get user groups
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('UserGroup', 'name'));
+		$f->order(new ARFieldHandle('UserGroup', 'name'));
 		$groups[0] = $this->translate('_all_customers');
 		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
 		{

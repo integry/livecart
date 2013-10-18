@@ -58,10 +58,10 @@ class ProductRelationshipGroupTest extends LiveCartTest
 		// Reload
 		$group->reload(array('Product'));
 
-		$name = $group->name->get();
+		$name = $group->name;
 		$this->assertEqual($name['en'], 'TEST_GROUP');
-		$this->assertEqual($this->product->getID(), $group->product->get()->getID());
-		$this->assertTrue($this->product === $group->product->get());
+		$this->assertEqual($this->product->getID(), $group->product->getID());
+		$this->assertTrue($this->product === $group->product);
 	}
 
 	public function testDeleteGroup()

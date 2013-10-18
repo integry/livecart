@@ -28,7 +28,7 @@ class ShippingServiceController extends StoreManagementController
 		foreach($shippingServices as $service)
 		{
 			$shippingServicesArray[$service->getID()] = $service->toArray();
-			$shippingServicesArray[$service->getID()]['rangeTypeString'] = $this->translate($service->rangeType->get() == 0 ? '_weight_based_rates' : '_subtotal_based_rates');
+			$shippingServicesArray[$service->getID()]['rangeTypeString'] = $this->translate($service->rangeType == 0 ? '_weight_based_rates' : '_subtotal_based_rates');
 			$shippingServicesArray[$service->getID()]['ratesCount'] = $service->getRates()->getTotalRecordCount();
 		}
 
@@ -267,12 +267,12 @@ class ShippingServiceController extends StoreManagementController
 				{
 					continue;
 				}
-				if($shippingService->rangeType->get() == ShippingService::WEIGHT_BASED)
+				if($shippingService->rangeType == ShippingService::WEIGHT_BASED)
 				{
 					$rangeStart = $data['weightRangeStart'];
 					$rangeEnd = $data['weightRangeEnd'];
 				}
-				else if($shippingService->rangeType->get() == ShippingService::SUBTOTAL_BASED)
+				else if($shippingService->rangeType == ShippingService::SUBTOTAL_BASED)
 				{
 					$rangeStart = $data['subtotalRangeStart'];
 					$rangeEnd = $data['subtotalRangeEnd'];

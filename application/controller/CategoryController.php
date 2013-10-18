@@ -60,7 +60,7 @@ class CategoryController extends CatalogController
 				$this->application->setTheme($theme->getTheme());
 			}
 
-			if ($layout = $theme->listStyle->get())
+			if ($layout = $theme->listStyle)
 			{
 				$this->request = 'layout', strtolower($layout));
 				$this->config = 'LIST_LAYOUT', $layout);
@@ -105,7 +105,7 @@ class CategoryController extends CatalogController
 
 		if ($currentPage)
 		{
-			$productFilter->getBaseFilter()->setLimit($perPage, $offsetStart - 1);
+			$productFilter->getBaseFilter()->limit($perPage, $offsetStart - 1);
 		}
 
 		// root category?
@@ -307,7 +307,7 @@ class CategoryController extends CatalogController
 		$root = Category::getRootNode();
 		$f = new ARSelectFilter(new MoreThanCond(new ARFieldHandle('Category', $root->getProductCountField()), 0));
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
-		$f->setOrder(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+		$f->order(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
 
 		$allCategories = ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage'));
 
@@ -421,9 +421,9 @@ class CategoryController extends CatalogController
 			$query->includeTable('Product');
 
 			$filter = clone $selectFilter;
-			$filter->setLimit(0);
-			$filter->resetOrder();
-			$filter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+			$filter->limit(0);
+			$filter->reorder();
+			$filter->order(new ARExpressionHandle('cnt'), 'DESC');
 			$filter->setGrouping(new ARExpressionHandle('ID'));
 
 			foreach ($this->filters as $f)
@@ -471,8 +471,8 @@ class CategoryController extends CatalogController
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
-		$f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
-		$f->setOrder(new ARFieldHandle('Category', 'lft'));
+		$f->order(new ARFieldHandle('Category', 'parentNodeID'));
+		$f->order(new ARFieldHandle('Category', 'lft'));
 
 		$a = ActiveRecordModel::getRecordSetArray('Category', $f, Category::LOAD_REFERENCES);
 		foreach ($a as $cat)
@@ -507,14 +507,14 @@ class CategoryController extends CatalogController
 		}
 		else
 		{
-			$selFilter->setOrder(new ARExpressionHandle('Product.isFeatured=1'), 'DESC');
+			$selFilter->order(new ARExpressionHandle('Product.isFeatured=1'), 'DESC');
 		}
 
 		$featuredFilter = new ProductFilter($this->getCategory(), $selFilter);
 		$featuredFilter->includeSubcategories();
 
-		$selFilter->setOrder(new ARExpressionHandle('RAND()'));
-		$selFilter->setLimit($count);
+		$selFilter->order(new ARExpressionHandle('RAND()'));
+		$selFilter->limit($count);
 
 		$ids = ActiveRecord::getRecordSetFields('Product', $featuredFilter->getSelectFilter(), array('Product.ID'), array('Category', 'Manufacturer'));
 		$rand = array();
@@ -554,11 +554,11 @@ class CategoryController extends CatalogController
 	protected function relatedCategoriesBlock()
 	{
 		$f = select(eq('CategoryRelationship.categoryID', $this->getCategory()->getID()));
-		$f->setOrder(f('CategoryRelationship.position'));
+		$f->order(f('CategoryRelationship.position'));
 		$categories = array();
 		foreach (ActiveRecordModel::getRecordSet('CategoryRelationship', $f, array('Category')) as $rel)
 		{
-			$category = $rel->relatedCategory->get();
+			$category = $rel->relatedCategory;
 			$category->getPathNodeSet();
 			$categories[] = $category->toArray();
 		}
@@ -573,9 +573,9 @@ class CategoryController extends CatalogController
 	{
 		// get list items
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductList', 'categoryID'), $this->getCategory()->getID()));
-		$f->setOrder(new ARFieldHandle('ProductList', 'position'));
-		$f->setOrder(new ARFieldHandle('ProductListItem', 'productListID'));
-		$f->setOrder(new ARFieldHandle('ProductListItem', 'position'));
+		$f->order(new ARFieldHandle('ProductList', 'position'));
+		$f->order(new ARFieldHandle('ProductListItem', 'productListID'));
+		$f->order(new ARFieldHandle('ProductListItem', 'position'));
 
 		$items = array();
 		foreach (ActiveRecordModel::getRecordSetArray('ProductListItem', $f, array('ProductList', 'Product', 'ProductImage')) as $item)
@@ -762,7 +762,7 @@ class CategoryController extends CatalogController
 				if (($filter instanceof PriceFilter && !$this->config->get('TOP_FILTER_PRICE')) ||
 					($filter instanceof ManufacturerFilter && !$this->config->get('TOP_FILTER_MANUFACTURER')) ||
 					($filter instanceof SearchFilter) ||
-					($filter instanceof SpecificationFilterInterface && ($filter->getFilterGroup()->displayLocation->get() != FilterGroup::LOC_TOP))
+					($filter instanceof SpecificationFilterInterface && ($filter->getFilterGroup()->displayLocation != FilterGroup::LOC_TOP))
 					)
 				{
 					$appliedFilters[] = $filter;
@@ -938,7 +938,7 @@ class CategoryController extends CatalogController
 			foreach ($filters as $filter)
 			{
 				$cnt = isset($filterArray[$filter->getID()]) ? $filterArray[$filter->getID()] : 0;
-				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation->get() == FilterGroup::LOC_SIDE)
+				if ((!$cnt || $cnt == $this->totalCount) && $filter->getFilterGroup()->displayLocation == FilterGroup::LOC_SIDE)
 				{
 					// when filter style is set to checkboxes and filtering by only one selector filter
 					// this continue removes (ignores here) selected filter from side menu.
@@ -951,7 +951,7 @@ class CategoryController extends CatalogController
 				$array = $filter->toArray();
 				$array['count'] = $cnt;
 
-				$specFieldID = $filter instanceof SelectorFilter ? $filter->getSpecField()->getID() : $filter->filterGroup->get()->specField->get()->getID();
+				$specFieldID = $filter instanceof SelectorFilter ? $filter->getSpecField()->getID() : $filter->filterGroup->specField->getID();
 				$sorted[$specFieldID][] = $array;
 			}
 
@@ -1068,8 +1068,8 @@ class CategoryController extends CatalogController
 			$pf->includeSubcategories();
 			$f = $cat->getProductsFilter($pf);
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
-			$f->setLimit(1);
-			$f->setOrder(new ARExpressionHandle('RAND()'));
+			$f->limit(1);
+			$f->order(new ARExpressionHandle('RAND()'));
 
 			$product = array_pop(ActiveRecordModel::getRecordSetArray('Product', $f, array('ProductImage', 'Category', 'Manufacturer')));
 			if (!$product)

@@ -347,7 +347,7 @@ abstract class DataImport
 				}
 				else if ($attr->isSelector())
 				{
-					if ($attr->isMultiValue->get())
+					if ($attr->isMultiValue)
 					{
 						$values = explode(',', $record[$csvIndex]);
 					}
@@ -369,13 +369,13 @@ abstract class DataImport
 									$fieldValue . '%'
 								)
 							);
-						$f->setLimit(1);
+						$f->limit(1);
 
 						if (!($value = $attr->getRelatedRecordSet($valueClass, $f)->shift()))
 						{
 							$value = call_user_func_array(array($valueClass, 'getNewInstance'), array($attr));
 
-							if ($attr->type->get() == EavFieldCommon::TYPE_NUMBERS_SELECTOR)
+							if ($attr->type == EavFieldCommon::TYPE_NUMBERS_SELECTOR)
 							{
 								$value->value->set($fieldValue);
 							}
@@ -387,7 +387,7 @@ abstract class DataImport
 							$value->save();
 						}
 
-						if (!$attr->isMultiValue->get())
+						if (!$attr->isMultiValue)
 						{
 							$impReq->set($attr->getFormFieldName(), $value->getID());
 						}

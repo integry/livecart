@@ -43,7 +43,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('Manufacturer', 'name'), $name));
-		$filter->setLimit(1);
+		$filter->limit(1);
 		$set = ActiveRecordModel::getRecordSet('Manufacturer', $filter);
 		if ($set->size() > 0)
 		{
@@ -87,13 +87,13 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		{
 			$f->mergeCondition(new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $startingWith.'%'));
 		}
-		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
+		$f->order(new ARFieldHandle('Manufacturer', 'name'));
 
 		if ($perPage > 0)
 		{
 			$offsetStart = (($currentPage - 1) * $perPage) + 1;
 			$offsetEnd = $currentPage * $perPage;
-			$f->setLimit($perPage, $offsetStart - 1);
+			$f->limit($perPage, $offsetStart - 1);
 		}
 		$manufacturers = ActiveRecordModel::getRecordSetArray(__CLASS__, $f);
 		foreach($manufacturers as $item)
@@ -116,7 +116,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
 		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$f->setOrder(new ARFieldHandle('Manufacturer', 'name'));
+		$f->order(new ARFieldHandle('Manufacturer', 'name'));
 
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 		foreach($manufacturers as $item)

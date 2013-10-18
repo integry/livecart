@@ -32,11 +32,11 @@ class ProductListItem extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition('productList');
 
-		return parent::insert();
+
 	}
 }
 

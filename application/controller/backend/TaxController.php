@@ -205,7 +205,7 @@ class TaxController extends StoreManagementController
 			$taxRates = $zone->getTaxRates();
 			foreach ($taxRates as $rate)
 			{
-				if($rate->taxID->get()->getID() == $tax->getID())
+				if($rate->taxID->getID() == $tax->getID())
 				{
 					$rate->delete();
 				}

@@ -110,7 +110,7 @@ class PaymentController extends StoreManagementController
 		$transaction->user->set($this->user);
 		$transaction->save();
 
-		if ($order->totalAmount->get() <= $order->capturedAmount->get())
+		if ($order->totalAmount <= $order->capturedAmount)
 		{
 			$order->isPaid->set(true);
 			$order->save();
@@ -125,7 +125,7 @@ class PaymentController extends StoreManagementController
 	{
 		$transaction = Transaction::getInstanceById($this->request->get('id'));
 
-		$this->set('order', $transaction->order->get()->toArray(array('payments' => true)));
+		$this->set('order', $transaction->order->toArray(array('payments' => true)));
 	}
 
 	/**
@@ -136,9 +136,9 @@ class PaymentController extends StoreManagementController
 	public function transactionAction()
 	{
 		$transaction = Transaction::getInstanceById($this->request->get('id'));
-		$transactions = $this->getTransactionArray($transaction->order->get());
+		$transactions = $this->getTransactionArray($transaction->order);
 
-		$orderArray = $transaction->order->get()->toArray(array('payments' => true));
+		$orderArray = $transaction->order->toArray(array('payments' => true));
 		$captureForm = $this->buildCaptureForm();
 		$captureForm->set('amount', $orderArray['amountNotCaptured']);
 
@@ -174,7 +174,7 @@ class PaymentController extends StoreManagementController
 		$orderArray = $order->toArray(array('payments' => true));
 		$form = $this->buildCreditCardForm();
 		$form->set('amount', $orderArray['amountDue']);
-		$form->set('name', $order->user->get()->getName());
+		$form->set('name', $order->user->getName());
 
 		$this->set('ccTypes', $this->application->getCardTypes($ccHandler));
 		$this->set('order', $orderArray);
@@ -194,7 +194,7 @@ class PaymentController extends StoreManagementController
 		}
 
 		// set up transaction details
-		$transaction = new LiveCartTransaction($order, $order->currency->get());
+		$transaction = new LiveCartTransaction($order, $order->currency);
 		$transaction->amount->set($this->request->get('amount'));
 
 		// process payment
@@ -224,7 +224,7 @@ class PaymentController extends StoreManagementController
 			$transaction->comment->set($this->request->get('comment'));
 			$transaction->save();
 
-			if ($order->totalAmount->get() <= $order->capturedAmount->get())
+			if ($order->totalAmount <= $order->capturedAmount)
 			{
 				$order->isPaid->set(true);
 				$order->save();

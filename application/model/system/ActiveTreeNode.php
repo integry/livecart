@@ -210,7 +210,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		}
 
 		$nodeFilter->setCondition($cond);
-		$nodeFilter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+		$nodeFilter->order(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
 
 		return $nodeFilter;
 	}
@@ -218,8 +218,8 @@ class ActiveTreeNode extends ActiveRecordModel
 	public function getChildNodeCondition()
 	{
 		$className = get_class($this);
-		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
+		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME), ">");
+		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME), "<"));
 
 		return $cond;
 	}
@@ -307,7 +307,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function getParentNode()
 	{
-		return $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
+		return $this->getField(self::PARENT_NODE_FIELD_NAME);
 	}
 
 	/**
@@ -403,7 +403,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		}
 
 		$filter->setCondition($cond);
-		$filter->setOrder(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
 
 		return $filter;
 	}
@@ -555,7 +555,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 *
 	 * @throws Exception If failed to commit the transaction
 	 */
-	protected function insert()
+	public function beforeCreate()
 	{
 		ActiveRecordModel::beginTransaction();
 		try
@@ -563,7 +563,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			$className = get_class($this);
 
 			// Inserting new node
-			$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
+			$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME);
 			if ($parentNode)
 			{
 				if (!$parentNode->isLoaded())
@@ -611,7 +611,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			throw $e;
 		}
 
-		return parent::insert();
+
 	}
 
 	/**
@@ -689,7 +689,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	   // Create a filter for selecting all child categories
 	   $filter = new ARSelectFilter();
 	   $filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $parentNodeID));
-	   $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+	   $filter->order(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
 
 	   foreach(ActiveRecord::getRecordSet($className, $filter) as $record)
 	   {
@@ -714,9 +714,9 @@ class ActiveTreeNode extends ActiveRecordModel
 
 		foreach ($this->data as $name => $field)
 		{
-			if ($name == self::PARENT_NODE_FIELD_NAME && $field->get() != null)
+			if ($name == self::PARENT_NODE_FIELD_NAME && $field != null)
 			{
-				$data['parent'] = $field->get()->getID();
+				$data['parent'] = $field->getID();
 			}
 		}
 
@@ -784,11 +784,11 @@ class ActiveTreeNode extends ActiveRecordModel
 		if(!$this->isLoaded()) $this->load();
 		$className = get_class($this);
 		$filter = new ARSelectFilter();
-		$cond = new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->get()->getID());
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), self::DIRECTION_RIGHT == $direction ? "<" : ">"));
+		$cond = new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->getID());
+		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? "<" : ">"));
 		$filter->setCondition($cond);
-		$filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC);
-		$filter->setLimit(1, $count);
+		$filter->order(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC);
+		$filter->limit(1, $count);
 		$recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
 
 		foreach($recordSet as $record) return $record;
@@ -845,9 +845,9 @@ class ActiveTreeNode extends ActiveRecordModel
 		$className = get_class($this);
 
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->get()->getID()));
-		$filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
-		$filter->setLimit(1);
+		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->getID()));
+		$filter->order(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+		$filter->limit(1);
 
 		$recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
 

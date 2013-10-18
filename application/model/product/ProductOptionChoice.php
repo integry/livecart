@@ -62,13 +62,13 @@ class ProductOptionChoice extends MultilingualObject
 
 	public function getPriceDiff($currencyCode, $basePrice = false)
 	{
-		$basePrice = false === $basePrice ? $this->priceDiff->get() : $basePrice;
+		$basePrice = false === $basePrice ? $this->priceDiff : $basePrice;
 		return ProductPrice::convertPrice(Currency::getInstanceByID($currencyCode), $basePrice);
 	}
 
 	public function setColor($color)
 	{
-		$config = unserialize($this->config->get());
+		$config = unserialize($this->config);
 		$config['color'] = $color;
 		$this->config = serialize($config));
 	}

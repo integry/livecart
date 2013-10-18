@@ -141,7 +141,7 @@ abstract class EavFieldControllerCommon extends StoreManagementController
 				}
 				else
 				{
-					$specField->getGroup()->setNull();
+					$specField->getGroup() = null;
 				}
 
 				$specField->save();

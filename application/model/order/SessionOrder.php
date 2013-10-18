@@ -53,8 +53,8 @@ class SessionOrder
 			{
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userId));
 				$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-				$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-				$f->setLimit(1);
+				$f->order(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+				$f->limit(1);
 				$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 				if ($orders->size())
 				{
@@ -69,13 +69,13 @@ class SessionOrder
 			$instance->user->set(NULL);
 		}
 
-		if (!$instance->user->get() && $this->sessionUser->getUser()->getID() > 0)
+		if (!$instance->user && $this->sessionUser->getUser()->getID() > 0)
 		{
 			$instance->setUser($this->sessionUser->getUser());
 			$instance->save();
 		}
 
-		if ($instance->isFinalized->get())
+		if ($instance->isFinalized)
 		{
 			$session->unsetValue('CustomerOrder');
 			return self::getOrder();
@@ -87,11 +87,11 @@ class SessionOrder
 		{
 			$instance->save(true);
 		}
-		self::setOrder($instance);
+		self::order($instance);
 		return $instance;
 	}
 
-	public static function setOrder(CustomerOrder $order)
+	public static function order(CustomerOrder $order)
 	{
 		$session = new Session();
 		$session->set('CustomerOrder', $order->getID());
@@ -135,7 +135,7 @@ class SessionOrder
 
 	public static function getOrderData()
 	{
-		self::setOrder(self::getOrder());
+		self::order(self::getOrder());
 		$session = new Session();
 		return $session->get('orderData');
 	}
@@ -151,22 +151,22 @@ class SessionOrder
 		else
 		{
 			$order = self::getOrder();
-			if ($order->shippingAddress->get())
+			if ($order->shippingAddress)
 			{
-				return $order->shippingAddress->get();
+				return $order->shippingAddress;
 			}
 
-			$user = $order->user->get();
+			$user = $order->user;
 			if ($user && !$user->isAnonymous())
 			{
 				$user->load(true);
 				foreach (array('defaultShippingAddress', 'defaultBillingAddress') as $key)
 				{
-					if ($address = $user->$key->get())
+					if ($address = $user->$key)
 					{
 						$address->load(array('UserAddress'));
-						$address->userAddress->get()->load();
-						return $address->userAddress->get();
+						$address->userAddress->load();
+						return $address->userAddress;
 					}
 				}
 			}
@@ -204,7 +204,7 @@ class SessionOrder
 		$order->getShipments();
 
 		$order->save();
-		self::setOrder($order);
+		self::order($order);
 	}
 
 	public static function destroy()

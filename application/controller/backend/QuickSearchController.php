@@ -91,7 +91,7 @@ class QuickSearchController extends StoreManagementController
 			}
 			$searchable->setOption('BACKEND_QUICK_SEARCH', true);
 			$f = $searchable->getSelectFilter($this->query);
-			$f->setLimit($this->getLimit(), $offset);
+			$f->limit($this->getLimit(), $offset);
 			$res[$searchable->getClassName()] = $this->fetchData($searchable, $f);
 		}
         // deal with non-ar-searchable models

@@ -102,7 +102,7 @@ class CustomerOrderImport extends DataImport
 	protected function import_User($instance, $record, CsvImportProfile $profile)
 	{
 		$user = $this->getImporterInstance('User')->getInstance($record, $profile);
-		if (!$user->email->get())
+		if (!$user->email)
 		{
 			return;
 		}
@@ -124,7 +124,7 @@ class CustomerOrderImport extends DataImport
 
 	private function importAddress($instance, $record, CsvImportProfile $profile, $type)
 	{
-		$address = $instance->$type->get();
+		$address = $instance->$type;
 		if (!$address)
 		{
 			$address = UserAddress::getNewInstance();
@@ -136,14 +136,14 @@ class CustomerOrderImport extends DataImport
 		
 		$profile->renameType(ucfirst($type), 'UserAddress');
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
-		$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+		$address = UserAddress::getInstanceByID($id, true);
 		$address->save();
 		
 		$instance->$type->set($address);
 		
 		// if billing or shipping address is not provided, use the same address
 		$otherType = 'billingAddress' == $type ? 'shippingAddress' : 'billingAddress';
-		if (!$instance->$otherType->get())
+		if (!$instance->$otherType)
 		{
 			$clone = clone $address;
 			$clone->save();
@@ -231,7 +231,7 @@ class CustomerOrderImport extends DataImport
 				
 				foreach ($items as $item)
 				{
-					if ($item->shipment->get() == $shipment)
+					if ($item->shipment == $shipment)
 					{
 						break;
 					}

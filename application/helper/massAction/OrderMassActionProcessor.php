@@ -36,14 +36,14 @@ class OrderMassActionProcessor extends MassActionProcessor
 				$order->cancel();
 				break;
 			case 'setFinalized':
-				if (!$order->isFinalized->get() && $order->user->get())
+				if (!$order->isFinalized && $order->user)
 				{
 					$order->finalize();
 				}
 				break;
 		}
 
-		if (isset($status) && ($status != $order->status->get()))
+		if (isset($status) && ($status != $order->status))
 		{
 			$order->setStatus($status);
 			$this->params['controller']->sendStatusNotifyEmail($order);

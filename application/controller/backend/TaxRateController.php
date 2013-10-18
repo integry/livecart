@@ -35,7 +35,7 @@ class TaxRateController extends StoreManagementController
 		$form = $this->createTaxRateForm();
 		foreach($taxRates as $tax)
 		{
-			$form->set($this->getFieldName($tax->tax->get(), $tax->taxClass->get()), $tax->rate->get());
+			$form->set($this->getFieldName($tax->tax, $tax->taxClass), $tax->rate);
 		}
 
 

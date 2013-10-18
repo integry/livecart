@@ -12,7 +12,7 @@ class RuleActionRemoveFromCart extends RuleAction implements RuleItemAction
 	{
 		if ($item instanceof OrderedItem)
 		{
-			$item->customerOrder->get()->removeItem($item);
+			$item->customerOrder->removeItem($item);
 		}
 	}
 }

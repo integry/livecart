@@ -123,6 +123,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 	 * @todo cleanup
 	 * @return array
 	 */
+	/*
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
@@ -152,13 +153,14 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 				$array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
 
 				reset($data);
-				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : (!empty($array[$fieldName]) ? $array[$fieldName] : $data[key($data)]); /* use data from any language if the default language is empty */
+				$array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : (!empty($array[$fieldName]) ? $array[$fieldName] : $data[key($data)]); // use data from any language if the default language is empty 
 				$array[$fieldName . '_current_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : '';
 			}
 		}
 
 		return $array;
 	}
+	*/
 
 	/**
 	 *	Creates an ARExpressionHandle for ordering a record set by field value in particular language

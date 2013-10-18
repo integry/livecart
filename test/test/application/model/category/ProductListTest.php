@@ -40,8 +40,8 @@ class ProductListTest extends LiveCartTest
 		$this->assertSame($lists->get(0), $list);
 		$this->assertSame($lists->get(1), $list2);
 
-		$this->assertEqual($list->position->get(), 0);
-		$this->assertEqual($list2->position->get(), 1);
+		$this->assertEqual($list->position, 0);
+		$this->assertEqual($list2->position, 1);
 	}
 
 	public function testAddItems()

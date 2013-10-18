@@ -57,7 +57,7 @@ class ProductBundleItemController extends StoreManagementController
 		$relatedProductID = (int)$this->request->get('id');
 		$productID = (int)$this->request->get('relatedProductID');
 
-		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
+		$item = ProductBundle::getInstanceByID(array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
 		$item->delete();
 
 		return new JSONResponse(array('total' => $this->getTotal($item->getProduct())), 'success');
@@ -71,7 +71,7 @@ class ProductBundleItemController extends StoreManagementController
 		$productID = (int)$this->request->get('id');
 		$relatedProductID = (int)$this->request->get('relatedownerID');
 
-		$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
+		$item = ProductBundle::getInstanceByID(array('productID' => $productID, 'relatedProductID' => $relatedProductID), ActiveRecordModel::LOAD_DATA);
 
 		$count = $this->request->get('count');
 		if ($count < 0 || !$count)
@@ -95,7 +95,7 @@ class ProductBundleItemController extends StoreManagementController
 
 		foreach($this->request->get($this->request->get('target'), array()) as $position => $id)
 		{
-			$item = ActiveRecordModel::getInstanceByID('ProductBundle', array('productID' => $productID, 'relatedProductID' => $id), ActiveRecord::LOAD_DATA);
+			$item = ProductBundle::getInstanceByID(array('productID' => $productID, 'relatedProductID' => $id), ActiveRecord::LOAD_DATA);
 			$item->position->set($position);
 			$item->save();
 		}

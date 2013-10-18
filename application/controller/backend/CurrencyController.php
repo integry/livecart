@@ -16,7 +16,7 @@ class CurrencyController extends StoreManagementController
 	public function indexAction()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'ASC');
+		$filter->order(new ARFieldHandle('Currency', 'position'), 'ASC');
 
 		$curr = ActiveRecord::getRecordSet("Currency", $filter, true)->toArray();
 
@@ -93,7 +93,7 @@ class CurrencyController extends StoreManagementController
 	{
 		try
 		{
-			$r = ActiveRecord::getInstanceByID('Currency', $this->request->get('id'), true);
+			$r = Currency::getInstanceByID$this->request->get('id'), true);
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -158,7 +158,7 @@ class CurrencyController extends StoreManagementController
 	public function setEnabledAction()
 	{
 		$id = $this->request->get('id');
-		$curr = ActiveRecord::getInstanceById('Currency', $id, true);
+		$curr = Currency::getInstanceByID$id, true);
 		$curr->isEnabled->set((int)(bool)$this->request->get("status"));
 		$curr->save();
 
@@ -341,7 +341,7 @@ class CurrencyController extends StoreManagementController
 
 		foreach($currencies as &$currency)
 		{
-			$values[$currency->getID()] = $currency->rate->get();
+			$values[$currency->getID()] = $currency->rate;
 		}
 
 		return new JSONResponse(array('values' => $values), 'success', $this->translate('_rate_save_conf'));
@@ -351,8 +351,8 @@ class CurrencyController extends StoreManagementController
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ARFieldHandle("Currency", "isDefault"), 1));
-		$filter->setOrder(new ARFieldHandle("Currency", "isEnabled"), 'DESC');
-		$filter->setOrder(new ARFieldHandle("Currency", "position"), 'ASC');
+		$filter->order(new ARFieldHandle("Currency", "isEnabled"), 'DESC');
+		$filter->order(new ARFieldHandle("Currency", "position"), 'ASC');
 		return ActiveRecord::getRecordSet('Currency', $filter);
 	}
 

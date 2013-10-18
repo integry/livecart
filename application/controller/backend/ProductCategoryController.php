@@ -13,7 +13,7 @@ class ProductCategoryController extends StoreManagementController
 	public function indexAction()
 	{
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
-		$product->category->get()->getPathNodeSet();
+		$product->category->getPathNodeSet();
 
 		$additional = $product->getAdditionalCategories();
 		foreach ($additional as $category)
@@ -49,7 +49,7 @@ class ProductCategoryController extends StoreManagementController
 
 		// check if the product is not assigned to this category already
 		$relation = ActiveRecordModel::getInstanceByIdIfExists('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $category->getID()));
-		if ($relation->isExistingRecord() || ($product->category->get() === $category))
+		if ($relation->isExistingRecord() || ($product->category === $category))
 		{
 			return new JSONResponse(false, 'failure', $this->translate('_err_already_assigned'));
 		}
@@ -64,7 +64,7 @@ class ProductCategoryController extends StoreManagementController
 		$product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, array('Category'));
 		$category = Category::getInstanceByID($this->request->get('categoryId'), ActiveRecord::LOAD_DATA);
 
-		$relation = ActiveRecordModel::getInstanceById('ProductCategory', array('productID' => $product->getID(), 'categoryID' => $category->getID()));
+		$relation = ProductCategory::getInstanceByID(array('productID' => $product->getID(), 'categoryID' => $category->getID()));
 		$relation->delete();
 
 		return new JSONResponse(array('data' => $relation->toFlatArray()));

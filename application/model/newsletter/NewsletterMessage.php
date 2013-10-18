@@ -63,28 +63,28 @@ class NewsletterMessage extends ActiveRecordModel
 
 		$email = new Email($application);
 		$email->setTemplate('newsletter/template');
-		$email = 'subject', $this->subject->get());
-		$email = 'htmlMessage', $this->html->get());
-		$email = 'text', $this->text->get());
-		$email = 'email', $this->text->get());
+		$email = 'subject', $this->subject);
+		$email = 'htmlMessage', $this->html);
+		$email = 'text', $this->text);
+		$email = 'email', $this->text);
 
 		$email->setFrom($config->get('NEWSLETTER_EMAIL') ? $config->get('NEWSLETTER_EMAIL') : $config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
 
-		if ($user = $sent->user->get())
+		if ($user = $sent->user)
 		{
-			$email->setTo($user->email->get(), $user->getName());
-			$email = 'email', $user->email->get());
+			$email->setTo($user->email, $user->getName());
+			$email = 'email', $user->email);
 		}
-		else if ($subscriber = $sent->subscriber->get())
+		else if ($subscriber = $sent->subscriber)
 		{
-			$email->setTo($subscriber->email->get());
-			$email = 'email', $subscriber->email->get());
+			$email->setTo($subscriber->email);
+			$email = 'email', $subscriber->email);
 		}
 
 		//$sent->time = new ARExpressionHandle('NOW()'));
 		$sent->save();
 
-		if ($this->status->get() == self::STATUS_NOT_SENT)
+		if ($this->status == self::STATUS_NOT_SENT)
 		{
 			$this->status = self::STATUS_PARTIALLY_SENT);
 			$this->time = new ARExpressionHandle('NOW()'));

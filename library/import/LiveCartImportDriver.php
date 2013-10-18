@@ -409,17 +409,17 @@ abstract class LiveCartImportDriver
 		$order->isFinalized->set(true);
 		$order->save();
 
-		if ($order->shippingAddress->get())
+		if ($order->shippingAddress)
 		{
-			$order->shippingAddress->get()->save();
+			$order->shippingAddress->save();
 		}
 
-		if ($order->billingAddress->get())
+		if ($order->billingAddress)
 		{
-			$order->billingAddress->get()->save();
+			$order->billingAddress->save();
 		}
 
-		$order->totalAmount->set($order->calculateTotal($order->currency->get()));
+		$order->totalAmount->set($order->calculateTotal($order->currency));
 
 		return $order->save();
 	}
@@ -427,8 +427,8 @@ abstract class LiveCartImportDriver
 	public function saveState(State $state)
 	{
 		// make sure that such state doesn't exist already
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('State', 'countryID'), $state->countryID->get()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'code'), $state->code->get()));
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('State', 'countryID'), $state->countryID));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'code'), $state->code));
 		if (!ActiveRecordModel::getRecordCount('State', $f))
 		{
 			return $state->save();
@@ -440,20 +440,20 @@ abstract class LiveCartImportDriver
 		$this->setUniqueEmail($user);
 		$user->save(ActiveRecordModel::PERFORM_INSERT);
 
-		if ($user->defaultBillingAddress->get())
+		if ($user->defaultBillingAddress)
 		{
-			$user->defaultBillingAddress->get()->save();
+			$user->defaultBillingAddress->save();
 		}
 
-		if ($user->defaultShippingAddress->get())
+		if ($user->defaultShippingAddress)
 		{
-			$user->defaultShippingAddress->get()->save();
+			$user->defaultShippingAddress->save();
 		}
 	}
 
 	private function setUniqueEmail(User $user, $suffix = '')
 	{
-		$newEmail = $user->email->get() . $suffix;
+		$newEmail = $user->email . $suffix;
 		$existing = User::getInstanceByEmail($newEmail);
 		if ($existing)
 		{

@@ -49,13 +49,13 @@ class ProductCategoryTest extends LiveCartTest
 	public function testCategoryCount()
 	{
 		$this->reloadCategories();
-		$this->assertEquals(1, $this->categories[2]->totalProductCount->get());
-		$this->assertEquals(2, $this->root->totalProductCount->get());
+		$this->assertEquals(1, $this->categories[2]->totalProductCount);
+		$this->assertEquals(2, $this->root->totalProductCount);
 
 		$this->secondCategory->delete();
 		$this->reloadCategories();
-		$this->assertEquals(0, $this->categories[2]->totalProductCount->get());
-		$this->assertEquals(1, $this->root->totalProductCount->get());
+		$this->assertEquals(0, $this->categories[2]->totalProductCount);
+		$this->assertEquals(1, $this->root->totalProductCount);
 	}
 
 	public function testCountRecalculate()
@@ -66,9 +66,9 @@ class ProductCategoryTest extends LiveCartTest
 		Category::recalculateProductsCount();
 		$this->reloadCategories();
 
-		$this->assertEquals(1, $this->categories[1]->totalProductCount->get());
-		$this->assertEquals(1, $this->categories[2]->totalProductCount->get());
-		$this->assertEquals(1, $this->root->totalProductCount->get());
+		$this->assertEquals(1, $this->categories[1]->totalProductCount);
+		$this->assertEquals(1, $this->categories[2]->totalProductCount);
+		$this->assertEquals(1, $this->root->totalProductCount);
 	}
 
 	public function testDeleteProduct()
@@ -76,9 +76,9 @@ class ProductCategoryTest extends LiveCartTest
 		$this->product->delete();
 		$this->reloadCategories();
 
-		$this->assertEquals(0, $this->categories[1]->totalProductCount->get());
-		$this->assertEquals(0, $this->categories[2]->totalProductCount->get());
-		$this->assertEquals(0, $this->root->totalProductCount->get());
+		$this->assertEquals(0, $this->categories[1]->totalProductCount);
+		$this->assertEquals(0, $this->categories[2]->totalProductCount);
+		$this->assertEquals(0, $this->root->totalProductCount);
 	}
 
 	private function reloadCategories()

@@ -83,7 +83,7 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	private static function getProductGroupsFilter(Product $product, $type)
 	{
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
+		$filter->order(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
 		$filter->mergeCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "type"), $type));
 

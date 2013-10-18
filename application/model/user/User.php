@@ -381,7 +381,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	}
 
 	/*####################  Saving ####################*/
-	protected function insert()
+	public function beforeCreate()
 	{
 		$res = parent::insert();
 
@@ -536,7 +536,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	{
 		if ($filter)
 		{
-			$filter->setLimit(1);
+			$filter->limit(1);
 		}
 		return (bool)$this->countInvoices($filter);
 	}
@@ -545,7 +545,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 0));
-		$filter->setLimit(1);
+		$filter->limit(1);
 
 		return (bool)$this->countInvoices($filter);
 	}
@@ -556,7 +556,7 @@ class User extends \ActiveRecordModel //implements EavAble
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->getID()));
 		if (!$defaultFirst)
 		{
-			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->getID()));
+			$f->order(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->getID()));
 		}
 
 		return $f;
@@ -568,7 +568,7 @@ class User extends \ActiveRecordModel //implements EavAble
 		$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
 		if (!$defaultFirst)
 		{
-			$f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->getID()));
+			$f->order(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->getID()));
 		}
 
 		return $f;

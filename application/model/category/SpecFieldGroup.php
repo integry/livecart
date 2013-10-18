@@ -53,7 +53,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->getCategory()->getID());
+		return new EqualsCond('categoryID', $this->getCategory()->getID());
 	}
 }
 

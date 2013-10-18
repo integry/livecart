@@ -17,7 +17,7 @@ class OrderNoteController extends StoreManagementController
 		$notes = $order->getNotes();
 		foreach ($notes as $note)
 		{
-			if (!$note->isRead->get() && !$note->isAdmin->get())
+			if (!$note->isRead && !$note->isAdmin)
 			{
 				$note->isRead->set(true);
 				$note->save();
@@ -32,7 +32,7 @@ class OrderNoteController extends StoreManagementController
 
 	public function viewAction()
 	{
-		return new ActionResponse('note', ActiveRecordModel::getInstanceById('OrderNote', $this->request->get('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
+		return new ActionResponse('note', OrderNote::getInstanceByID($this->request->get('id'), OrderNote::LOAD_DATA, OrderNote::LOAD_REFERENCES)->toArray());
 	}
 
 	public function addAction()
@@ -48,10 +48,10 @@ class OrderNoteController extends StoreManagementController
 
 			if ($this->config->get('EMAIL_ORDERNOTE'))
 			{
-				$order->user->get()->load();
+				$order->user->load();
 
 				$email = new Email($this->application);
-				$email->setUser($order->user->get());
+				$email->setUser($order->user);
 				$email->setTemplate('order.message');
 				$email->set('order', $order->toArray(array('payments' => true)));
 				$email->set('message', $note->toArray());

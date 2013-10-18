@@ -127,7 +127,7 @@ class ProductApi extends ModelApi
 		{
 			throw new Exception('Product not found');
 		}		
-		$id = $instance->sku->get(); // SKU of deleted record, not SKU of requested to delete record (if finding item by SKU fails or smth)
+		$id = $instance->sku; // SKU of deleted record, not SKU of requested to delete record (if finding item by SKU fails or smth)
 		$instance->delete();
 
 		return $this->statusResponse($id, 'deleted');
@@ -178,7 +178,7 @@ class ProductApi extends ModelApi
 
 	public function importCallback($record)
 	{
-		$this->importedIDs[] = $record->sku->get();
+		$this->importedIDs[] = $record->sku;
 	}
 }
 

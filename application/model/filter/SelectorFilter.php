@@ -38,7 +38,7 @@ class SelectorFilter implements SpecificationFilterInterface
 
 	public function getID()
 	{
-		return $this->specFieldValue->specField->get()->getID() . '_' . $this->specFieldValue->getID();
+		return $this->specFieldValue->specField->getID() . '_' . $this->specFieldValue->getID();
 	}
 
 	public function toArray()
@@ -56,7 +56,7 @@ class SelectorFilter implements SpecificationFilterInterface
 
 	public function getSpecField()
 	{
-		return $this->specFieldValue->specField->get();
+		return $this->specFieldValue->specField;
 	}
 
 	public function getFilterGroup()

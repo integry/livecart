@@ -66,7 +66,7 @@ class UserImport extends DataImport
 			$instance = User::getNewInstance('');
 			$instance->isEnabled->set(true);
 		}
-		$this->setLastImportedRecordName($instance->email->get());
+		$this->setLastImportedRecordName($instance->email);
 		return $instance;
 	}
 
@@ -100,7 +100,7 @@ class UserImport extends DataImport
 	{
 		$field = 'default' . $type;
 		$instance->loadAddresses();
-		if (!$instance->$field->get())
+		if (!$instance->$field)
 		{
 			$address = UserAddress::getNewInstance();
 			$address->firstName->setAsModified();
@@ -110,15 +110,15 @@ class UserImport extends DataImport
 		}
 		else
 		{
-			$address = $instance->$field->get()->userAddress->get();
+			$address = $instance->$field->userAddress;
 		}
 		$id = $this->importRelatedRecord('UserAddress', $address, $record, $profile);
-		$related = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+		$related = UserAddress::getInstanceByID($id, true);
 		foreach (array('firstName', 'lastName', 'companyName') as $field)
 		{
-			if (!$related->$field->get() && $instance->$field->get())
+			if (!$related->$field && $instance->$field)
 			{
-				$related->$field->set($instance->$field->get());
+				$related->$field->set($instance->$field);
 			}
 		}
 		$related->save();

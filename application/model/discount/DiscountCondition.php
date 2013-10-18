@@ -97,7 +97,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 	private function hasSubConditions()
 	{
-		return ($this->rgt->get() - $this->lft->get()) > 1;
+		return ($this->rgt - $this->lft) > 1;
 	}
 
 	public static function getRootNode()
@@ -148,7 +148,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		$ids = array();
 		foreach ($conditionSet as $condition)
 		{
-			if ($condition->recordCount->get())
+			if ($condition->recordCount)
 			{
 				$ids[] = $condition->getID();
 			}
@@ -160,11 +160,11 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $ids));
-		$f->setOrder(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
-		$f->setOrder(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
+		$f->order(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
+		$f->order(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
 		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, $referencedRecords) as $record)
 		{
-			$record->condition->get()->registerRecord($record);
+			$record->condition->registerRecord($record);
 		}
 	}
 
@@ -189,7 +189,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 		foreach ($subConditions as $condition)
 		{
-			$condition->parentNode->get()->registerSubCondition($condition);
+			$condition->parentNode->registerSubCondition($condition);
 		}
 
 		return $subConditions;
@@ -289,19 +289,19 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		return parent::save();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		if (is_null($this->isAnyRecord->get()))
+		if (is_null($this->isAnyRecord))
 		{
 			$this->isAnyRecord = 1);
 		}
 
-		if (!$this->position->get())
+		if (!$this->position)
 		{
 			$this->setLastPosition();
 		}
 
-		return parent::insert();
+
 	}
 
 	/**

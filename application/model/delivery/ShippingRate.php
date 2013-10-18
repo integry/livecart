@@ -119,12 +119,12 @@ class ShippingRate extends MultilingualObject
 
 	public function getRangeStart()
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->get() : $this->subtotalRangeStart->get();
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart : $this->subtotalRangeStart;
 	}
 
 	public function getRangeEnd()
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->get() : $this->subtotalRangeEnd->get();
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd : $this->subtotalRangeEnd;
 	}
 
 	public function getRangeType()
@@ -134,13 +134,13 @@ class ShippingRate extends MultilingualObject
 			$this->load();
 		}
 
-		$service = $this->shippingService->get();
+		$service = $this->shippingService;
 		if(!$service->isLoaded())
 		{
 			$service->load();
 		}
 
-		return $service->rangeType->get();
+		return $service->rangeType;
 	}
 
 	public function setClassItemCharge(ShippingClass $class, $charge)
@@ -160,16 +160,16 @@ class ShippingRate extends MultilingualObject
 			$product->load();
 		}
 
-		$class = $product->shippingClass->get();
+		$class = $product->shippingClass;
 		if (!$class)
 		{
-			return $this->perItemCharge->get();
+			return $this->perItemCharge;
 		}
 
 		$charge = $this->getValueByLang('perItemChargeClass', $class->getID());
 		if (is_null($charge) || !strlen($charge))
 		{
-			return $this->perItemCharge->get();
+			return $this->perItemCharge;
 		}
 
 		return $charge;

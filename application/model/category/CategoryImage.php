@@ -33,7 +33,7 @@ class CategoryImage extends ObjectImage
 			$this->load();
 		}
 
-	  	return self::getImagePath($this->getID(), $this->category->get()->getID(), $size);
+	  	return self::getImagePath($this->getID(), $this->category->getID(), $size);
 	}
 
 	public static function getImageSizes()
@@ -62,7 +62,7 @@ class CategoryImage extends ObjectImage
 		parent::deleteByID(__CLASS__, $id, 'categoryID');
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		return parent::insert('categoryID');
 	}
@@ -76,7 +76,7 @@ class CategoryImage extends ObjectImage
 
 	public function getOwner()
 	{
-		return $this->category->get();
+		return $this->category;
 	}
 }
 

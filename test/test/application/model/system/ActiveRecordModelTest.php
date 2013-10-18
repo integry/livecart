@@ -53,7 +53,7 @@ class ActiveRecordModelTest extends LiveCartTest
 		$user->lastName->set('Uzkalns');
 		$user->save();
 
-		$state = ActiveRecordModel::getInstanceByID('State', 2, ActiveRecordModel::LOAD_DATA);
+		$state = State::getInstanceByID(2, ActiveRecordModel::LOAD_DATA);
 		$address = UserAddress::getNewInstance();
 		$address->city->set('Vilnius');
 		$address->state->set($state);

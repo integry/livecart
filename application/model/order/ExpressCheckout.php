@@ -55,19 +55,19 @@ class ExpressCheckout extends ActiveRecordModel
 		ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		$this->deleteInstancesByOrder($this->order->get());
+		$this->deleteInstancesByOrder($this->order);
 
-		return parent::insert();
+
 	}
 
 	/*####################  Get related objects ####################*/
 
 	public function getHandler(TransactionDetails $transaction = null)
 	{
-		$handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
-		$handler->setData(unserialize($this->paymentData->get()));
+		$handler = $this->getApplication()->getExpressPaymentHandler($this->method, $transaction);
+		$handler->setData(unserialize($this->paymentData));
 		return $handler;
 	}
 

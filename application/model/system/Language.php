@@ -66,7 +66,7 @@ class Language extends \ActiveRecordModel
 		self::deleteCache();
 
 		// make sure the language record exists
-		$inst = ActiveRecord::getInstanceById('Language', $id, true);
+		$inst = Language::getInstanceByID($id, true);
 
 		// make sure it's not the default currency
 		if (true != $inst->isDefault)
@@ -101,7 +101,7 @@ class Language extends \ActiveRecordModel
 		return $languages;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition();
 

@@ -1029,7 +1029,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		{
 			if (!$this->isShippingRequired())
 			{
-				//$this->shippingAddress->setNull();
+				//$this->shippingAddress = null;
 			}
 		}
 
@@ -2058,7 +2058,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 				$this->loadItems();
 
 				$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
-				$filter->setOrder(new ARFieldHandle('Shipment', 'status'));
+				$filter->order(new ARFieldHandle('Shipment', 'status'));
 
 				$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
 				foreach($this->shipments as $shipment)
@@ -2158,7 +2158,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		if (!$this->businessRuleContext)
 		{
 			$context = new BusinessRuleContext();
-			$context->setOrder($this);
+			$context->order($this);
 			if ($this->user)
 			{
 				$context->setUser($this->user);
@@ -2302,14 +2302,14 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+		$filter->order(new ARFieldHandle('Transaction', 'ID'), 'ASC');
 		return $this->getRelatedRecordSet('Transaction', $filter);
 	}
 
 	public function getNotes()
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+		$f->order(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
 		return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
 	}
 
@@ -2954,8 +2954,8 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		}
 		$filter = new ARSelectFilter();
 		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
 
 		$rs = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
 		$count = 1;

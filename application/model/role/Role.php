@@ -70,7 +70,7 @@ class Role extends \ActiveRecordModel
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "name"), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, "name"), 'ASC');
 
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
@@ -108,9 +108,9 @@ return;
 		$invertedRoleNames = array_flip($roleNames);
 		foreach(self::getRecordSet($filter) as $role)
 		{
-			if(isset($invertedRoleNames[$role->name->get()]))
+			if(isset($invertedRoleNames[$role->name]))
 			{
-				unset($invertedRoleNames[$role->name->get()]);
+				unset($invertedRoleNames[$role->name]);
 			}
 		}
 		// Add new roles to database

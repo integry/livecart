@@ -16,7 +16,7 @@ class UserController extends StoreManagementController
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
 		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
 		{
-			$availableUserGroups[$group->getID()] = $group->name->get();
+			$availableUserGroups[$group->getID()] = $group->name;
 		}
 
 
@@ -105,10 +105,10 @@ class UserController extends StoreManagementController
 
 			foreach (array('defaultShippingAddress' => 'shippingAddress_', 'defaultBillingAddress' => 'billingAddress_') as $field => $prefix)
 			{
-				if ($user->$field->get())
+				if ($user->$field)
 				{
-					$user->$field->get()->load(array('UserAddress'));
-					$address = $user->$field->get()->userAddress->get();
+					$user->$field->load(array('UserAddress'));
+					$address = $user->$field->userAddress;
 					$addressArray = $address->toFlatArray();
 					$addresses[] = $addressArray;
 					foreach($addressArray as $property => $value)
@@ -130,8 +130,8 @@ class UserController extends StoreManagementController
 				$address->getSpecification()->setFormResponse($response, $form, $prefix);
 			}
 
-			if(!$user->defaultBillingAddress->get() ||
-			!$user->defaultBillingAddress->get() ||
+			if(!$user->defaultBillingAddress ||
+			!$user->defaultBillingAddress ||
 			(array_diff_key($addresses[0], array('ID' => 0)) == array_diff_key($addresses[1], array('ID' => 0))))
 			{
 				$userArray['sameAddresses'] = 1;
@@ -223,7 +223,7 @@ class UserController extends StoreManagementController
 			$email = $this->request->get('email');
 			$password = $this->request->get('password');
 
-			if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) ||
+			if(($user && $email != $user->email && User::getInstanceByEmail($email)) ||
 			   (!$user && User::getInstanceByEmail($email)))
 			{
 				return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
@@ -271,19 +271,19 @@ class UserController extends StoreManagementController
 
 		foreach (array('defaultBillingAddress' => 'billingAddress', 'defaultShippingAddress' => 'shippingAddress') as $field => $prefix)
 		{
-			$address = $user->$field->get() ? $user->$field->get()->userAddress->get() : UserAddress::getNewInstance();
+			$address = $user->$field ? $user->$field->userAddress : UserAddress::getNewInstance();
 			$address->loadRequestData($this->request, $prefix . '_');
 
 			// get address state
 			if ($stateID = $this->request->get($prefix . '_stateID'))
 			{
-				$address->state->set(ActiveRecordModel::getInstanceByID('State', $stateID, ActiveRecordModel::LOAD_DATA));
-				$address->stateName->setNull();
+				$address->state->set(State::getInstanceByID($stateID, ActiveRecordModel::LOAD_DATA));
+				$address->stateName = null;
 			}
 			else
 			{
 				$address->stateName->set($this->request->get($prefix . '_stateName'));
-				$address->state->setNull();
+				$address->state = null;
 			}
 
 			$modified = false;
@@ -299,7 +299,7 @@ class UserController extends StoreManagementController
 			{
 				$address->save();
 
-				if(!$user->$field->get())
+				if(!$user->$field)
 				{
 					$addressType = call_user_func_array(array($prefix, 'getNewInstance'), array($user, $address));
 					$addressType->save();
@@ -307,9 +307,9 @@ class UserController extends StoreManagementController
 			}
 		}
 
-		if($this->request->get('sameAddresses') && $user->defaultBillingAddress->get())
+		if($this->request->get('sameAddresses') && $user->defaultBillingAddress)
 		{
-			$shippingAddress = ShippingAddress::getNewInstance($user, clone $user->defaultBillingAddress->get()->userAddress->get());
+			$shippingAddress = ShippingAddress::getNewInstance($user, clone $user->defaultBillingAddress->userAddress);
 			$shippingAddress->save();
 		}
 	}

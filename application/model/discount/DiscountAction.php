@@ -61,7 +61,7 @@ class DiscountAction extends ActiveRecordModel
 
 	public function setParamValue($key, $value)
 	{
-		$params = unserialize($this->serializedData->get());
+		$params = unserialize($this->serializedData);
 		$params[$key] = $value;
 		$this->serializedData = serialize($params));
 	}
@@ -72,10 +72,10 @@ class DiscountAction extends ActiveRecordModel
 		return parent::save();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition();
-		return parent::insert();
+
 	}
 
 	/**

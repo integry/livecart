@@ -491,14 +491,14 @@ class OsCommerceImport extends LiveCartImportDriver
 
 	public function saveBillingAddress(BillingAddress $address)
 	{
-		$address->userAddress->get()->save();
+		$address->userAddress->save();
 		return $address->save();
 	}
 
 	public function saveCustomerOrder(CustomerOrder $order)
 	{
-		$order->shippingAddress->get()->save();
-		$order->billingAddress->get()->save();
+		$order->shippingAddress->save();
+		$order->billingAddress->save();
 
 		$order->save();
 

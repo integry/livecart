@@ -34,17 +34,17 @@ class ProductList extends MultilingualObject
 	public static function getCategoryLists(Category $category)
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
+		$f->order(new ARFieldHandle(__CLASS__, 'position'));
 		return $category->getRelatedRecordSet(__CLASS__, $f);
 	}
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->setLastPosition('category');
 
-		return parent::insert();
+
 	}
 
 	public function addProduct(Product $product)

@@ -90,9 +90,9 @@ class FilterGroupController extends StoreManagementController
 			$filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->get('specFieldID')));
 			$filterGroup->save();
 
-			$specField = $filterGroup->specField->get();
+			$specField = $filterGroup->specField;
 			$specField->load();
-			$specFieldType = $specField->type->get();
+			$specFieldType = $specField->type;
 
 			$newIDs = array();
 			if(!empty($filters) && !$specField->isSelector())
@@ -130,9 +130,9 @@ class FilterGroupController extends StoreManagementController
 			$filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false);
 		}
 
-		if($filterGroup->specField->get()->isSelector())
+		if($filterGroup->specField->isSelector())
 		{
-			$filterGroupArray['filtersCount'] = $filterGroup->specField->get()->getValuesSet()->getTotalRecordCount();
+			$filterGroupArray['filtersCount'] = $filterGroup->specField->getValuesSet()->getTotalRecordCount();
 		}
 		else
 		{
@@ -273,7 +273,7 @@ class FilterGroupController extends StoreManagementController
 				$filterGroupArray = $filterGroup->toArray();
 				$filterGroupArray['filtersCount'] = 0;
 
-				$field = $filterGroup->specField->get();
+				$field = $filterGroup->specField;
 				if($field->isDate() || $field->isSimpleNumbers())
 				{
 					for($i = 0; $i < $filtersResultCount; $i++)

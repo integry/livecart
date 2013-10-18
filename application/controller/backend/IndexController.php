@@ -1,21 +1,16 @@
 <?php
 
-ClassLoader::import("application/controller/backend/abstract/StoreManagementController");
-ClassLoader::import("application/model/order/CustomerOrder");
-ClassLoader::import("application/model/order/OrderNote");
-ClassLoader::import("application/model/category/Category");
-ClassLoader::importNow("application/helper/getDateFromString");
-
 /**
  * Main backend controller which stands as an entry point to administration functionality
  *
  * @package application/controller/backend
  * @author Integry Systems <http://integry.com>
  */
-class IndexController extends StoreManagementController
+class IndexController extends ControllerBackend
 {
 	public function indexAction()
 	{
+		/*
 		die('testing');
 		$this->updateApplicationUri();
 
@@ -75,6 +70,7 @@ class IndexController extends StoreManagementController
 		$this->set('ordersLastMonth', $this->getOrderCount($response->get('lastMonth') . '-1', date('m') . '/1'));
 
 		$this->set('lastOrders', $this->getLastOrders());
+		*/
 	}
 
 	public function totalOrdersAction()
@@ -98,8 +94,8 @@ class IndexController extends StoreManagementController
 		$f = select();
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
-		$f->setLimit(10);
+		$f->order(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
+		$f->limit(10);
 
 		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 		$ordersArray = array();

@@ -29,8 +29,8 @@ class UserGroupTest extends LiveCartTest
 
 		$group->reload();
 
-		$this->assertEqual($group->name->get(), 'testing');
-		$this->assertEqual($group->description->get(), 'testing');
+		$this->assertEqual($group->name, 'testing');
+		$this->assertEqual($group->description, 'testing');
 	}
 
 	public function testGetAllGroups()

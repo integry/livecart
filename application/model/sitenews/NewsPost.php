@@ -19,10 +19,10 @@ class NewsPost extends \system\MultilingualObject
 	public $moreText;
 
 	/*
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	$this->setLastPosition();
-		return parent::insert();
+
 	}
 	*/
 }

@@ -30,10 +30,10 @@ class SearchLog extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->time = new ARSerializableDateTime());
-		return parent::insert();
+
 	}
 }
 

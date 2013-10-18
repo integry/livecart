@@ -99,7 +99,7 @@ class ShippingService extends MultilingualObject implements EavAble
 	{
  		$filter = new ARSelectFilter();
 
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 
 		if (!$deliveryZone)
 		{

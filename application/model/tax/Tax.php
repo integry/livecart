@@ -57,7 +57,7 @@ class Tax extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->order(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
@@ -80,7 +80,7 @@ class Tax extends MultilingualObject
 			$zoneRatesIDs = array();
 			foreach($rates as $rate)
 			{
-				$taxIDs[] = $rate->tax->get()->getID();
+				$taxIDs[] = $rate->tax->getID();
 			}
 
 			$notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
@@ -100,16 +100,16 @@ class Tax extends MultilingualObject
 	public static function getAllTaxes($loadReferencedRecords = false)
 	{
 		$f = select();
-		$f->setOrder(f('Tax.position'));
+		$f->order(f('Tax.position'));
 		return self::getRecordSet($f, $loadReferencedRecords);
 	}
 
 	public function includesTax(Tax $tax)
 	{
-		return $tax->position->get() < $this->position->get();
+		return $tax->position < $this->position;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	$this->setLastPosition();
 

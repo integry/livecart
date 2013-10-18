@@ -82,7 +82,7 @@ class ProductFilter
 		}
 		$selectFilter->setCondition(new AndChainCondition($list)); // all merged with and
 
-		$selectFilter->setOrder(f('Product.ID'), 'DESC');
+		$selectFilter->order(f('Product.ID'), 'DESC');
 
 		ActiveRecordModel::getApplication()->processInstancePlugins('finalProductFilter', $selectFilter);
 		return $selectFilter;
@@ -96,7 +96,7 @@ class ProductFilter
 		}
 
 		$currency->defineProductJoin($this->selectFilter);
-		$this->selectFilter->setOrder(new ARFieldHandle($currency->getJoinAlias(), 'price'), $direction);
+		$this->selectFilter->order(new ARFieldHandle($currency->getJoinAlias(), 'price'), $direction);
 	}
 
 	public function getCategory()

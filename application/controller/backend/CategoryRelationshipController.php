@@ -15,14 +15,14 @@ class CategoryRelationshipController extends StoreManagementController
 		$category = Category::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA);
 
 		$f = select();
-		$f->setOrder(f('CategoryRelationship.position'));
+		$f->order(f('CategoryRelationship.position'));
 		$additional = $category->getRelatedRecordSet('CategoryRelationship', $f, array('Category_RelatedCategory'));
 		$categories = array();
 		foreach ($additional as $cat)
 		{
 			$categories[] = $cat;
-			$cat->relatedCategory->get()->load();
-			$cat->relatedCategory->get()->getPathNodeSet();
+			$cat->relatedCategory->load();
+			$cat->relatedCategory->getPathNodeSet();
 		}
 
 		$this->set('category', $category->toArray());
@@ -65,7 +65,7 @@ class CategoryRelationshipController extends StoreManagementController
 
 	public function deleteAction()
 	{
-		$relation = ActiveRecordModel::getInstanceById('CategoryRelationship', $this->request->get('categoryId'));
+		$relation = CategoryRelationship::getInstanceByID($this->request->get('categoryId'));
 		$relation->delete();
 
 		return new JSONResponse(array('data' => $relation->toFlatArray()));

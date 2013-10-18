@@ -590,7 +590,7 @@ class ShopScriptImport extends LiveCartImportDriver
 
 		$order->status->set($this->getOrderStatus($data['statusID']));
 
-		if ($order->status->get() == CustomerOrder::STATUS_SHIPPED)
+		if ($order->status == CustomerOrder::STATUS_SHIPPED)
 		{
 			$order->isPaid->set(true);
 		}
@@ -627,8 +627,8 @@ class ShopScriptImport extends LiveCartImportDriver
 
 	public function saveCustomerOrder(CustomerOrder $order)
 	{
-		$order->shippingAddress->get()->save();
-		$order->billingAddress->get()->save();
+		$order->shippingAddress->save();
+		$order->billingAddress->save();
 
 		$order->save();
 
@@ -636,7 +636,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		if ($shipment)
 		{
 			$shipment->shippingAmount->set($order->rawData['shipping_cost']);
-			if ($order->status->get() == CustomerOrder::STATUS_SHIPPED)
+			if ($order->status == CustomerOrder::STATUS_SHIPPED)
 			{
 				$shipment->status->set(Shipment::STATUS_SHIPPED);
 			}

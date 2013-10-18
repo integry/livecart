@@ -90,7 +90,7 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	 */
 	public function getCondition()
 	{
-		$specField = $this->filterGroup->get()->specField->get();
+		$specField = $this->filterGroup->specField;
 
 		// number range
 		if ($specField->isSimpleNumbers())
@@ -99,14 +99,14 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 
 			$conditions = array();
 
-			if ($this->rangeStart->get())
+			if ($this->rangeStart)
 			{
-				$conditions[] = new EqualsOrMoreCond($field, $this->rangeStart->get());
+				$conditions[] = new EqualsOrMoreCond($field, $this->rangeStart);
 			}
 
-			if ($this->rangeEnd->get())
+			if ($this->rangeEnd)
 			{
-				$conditions[] = new EqualsOrLessCond($field, $this->rangeEnd->get());
+				$conditions[] = new EqualsOrLessCond($field, $this->rangeEnd);
 			}
 
 			$cond = Condition::mergeFromArray($conditions);
@@ -119,14 +119,14 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 
 			$conditions = array();
 
-			if ($this->rangeDateStart->get())
+			if ($this->rangeDateStart)
 			{
-				$conditions[] = new EqualsOrMoreCond($field, $this->rangeDateStart->get());
+				$conditions[] = new EqualsOrMoreCond($field, $this->rangeDateStart);
 			}
 
-			if ($this->rangeDateEnd->get())
+			if ($this->rangeDateEnd)
 			{
-				$conditions[] = new EqualsOrLessCond($field, $this->rangeDateEnd->get());
+				$conditions[] = new EqualsOrLessCond($field, $this->rangeDateEnd);
 			}
 
 			$cond = Condition::mergeFromArray($conditions);
@@ -157,21 +157,21 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 
 	public function getSpecField()
 	{
-		return $this->filterGroup->get()->specField->get();
+		return $this->filterGroup->specField;
 	}
 
 	public function getFilterGroup()
 	{
-		return $this->filterGroup->get();
+		return $this->filterGroup;
 	}
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	$this->setLastPosition();
 
-		return parent::insert();
+
 	}
 
 	/**

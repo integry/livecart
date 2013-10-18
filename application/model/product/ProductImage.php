@@ -35,7 +35,7 @@ class ProductImage extends ObjectImage
 			$this->load(array('Product'));
 		}
 
-		return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
+		return self::getImagePath($this->getID(), $this->product->getID(), $size);
 	}
 
 	public static function getImageSizes()
@@ -93,7 +93,7 @@ class ProductImage extends ObjectImage
 		parent::deleteByID(__CLASS__, $id, 'productID');
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		return parent::insert('productID');
 	}
@@ -113,7 +113,7 @@ class ProductImage extends ObjectImage
 
 	public function getOwner()
 	{
-		return $this->product->get();
+		return $this->product;
 	}
 }
 

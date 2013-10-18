@@ -30,9 +30,9 @@ class ProductVariationType extends MultilingualObject
 		return $instance;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		if (is_null($this->position->get()))
+		if (is_null($this->position))
 		{
 			$this->setLastPosition('product');
 		}

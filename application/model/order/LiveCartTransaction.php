@@ -20,24 +20,24 @@ class LiveCartTransaction extends TransactionDetails
 		$order->loadAll();
 
 		// billing address
-		if ($address = $order->billingAddress->get())
+		if ($address = $order->billingAddress)
 		{
 			$fields = array('firstName', 'lastName', 'companyName', 'phone', 'city', 'postalCode', 'countryID' => 'country');
 			foreach ($fields as $key => $field)
 			{
 				$addressField = is_numeric($key) ? $field : $key;
-				$this->$field->set($address->$addressField->get());
+				$this->$field->set($address->$addressField);
 			}
 
 			$this->state->set($this->getStateValue($address));
-			$this->address->set($address->address1->get() . ' ' . $address->address2->get());
+			$this->address->set($address->address1 . ' ' . $address->address2);
 		}
 
 		// shipping address
-		$address = $order->shippingAddress->get();
+		$address = $order->shippingAddress;
 		if (!$address)
 		{
-			$address = $order->billingAddress->get();
+			$address = $order->billingAddress;
 		}
 
 		if ($address)
@@ -46,11 +46,11 @@ class LiveCartTransaction extends TransactionDetails
 			{
 				$addressField = is_numeric($key) ? $field : $key;
 				$field = 'shipping' . ucfirst($field);
-				$this->$field->set($address->$addressField->get());
+				$this->$field->set($address->$addressField);
 			}
 
 			$this->shippingState->set($this->getStateValue($address));
-			$this->shippingAddress->set($address->address1->get() . ' ' . $address->address2->get());
+			$this->shippingAddress->set($address->address1 . ' ' . $address->address2);
 		}
 
 		// amount
@@ -67,12 +67,12 @@ class LiveCartTransaction extends TransactionDetails
 		}
 
 		// customer identification
-		if ($order->user->get())
+		if ($order->user)
 		{
-			$order->user->get()->load();
-			$this->shippingEmail->set($order->user->get()->email->get());
-			$this->email->set($order->user->get()->email->get());
-			$this->clientID->set($order->user->get()->getID());
+			$order->user->load();
+			$this->shippingEmail->set($order->user->email);
+			$this->email->set($order->user->email);
+			$this->clientID->set($order->user->getID());
 		}
 
 		// order details
@@ -81,9 +81,9 @@ class LiveCartTransaction extends TransactionDetails
 		$variations = new ProductSet();
 		foreach ($order->getShoppingCartItems() as $item)
 		{
-			if ($item->product->get() && $item->product->get()->parent->get())
+			if ($item->product && $item->product->parent)
 			{
-				$variations->unshift($item->product->get());
+				$variations->unshift($item->product);
 			}
 		}
 
@@ -116,8 +116,8 @@ class LiveCartTransaction extends TransactionDetails
 			$this->addLineItem(
 				$name . ($variations ? ' (' . implode(' / ', $variations) . ')' : ''),
 				$item->getPrice(false),
-				$item->count->get(),
-				$product->sku->get(),
+				$item->count,
+				$product->sku,
 				$ri
 			);
 		}
@@ -154,25 +154,25 @@ class LiveCartTransaction extends TransactionDetails
 
 	private function getStateValue(UserAddress $address)
 	{
-		if ($state = $address->state->get())
+		if ($state = $address->state)
 		{
 			if (!$state->isLoaded())
 			{
 				$state->load();
 			}
 
-			if ($state->code->get() && !is_numeric($state->code->get()))
+			if ($state->code && !is_numeric($state->code))
 			{
-				return $state->code->get();
+				return $state->code;
 			}
 			else
 			{
-				return $state->name->get();
+				return $state->name;
 			}
 		}
 		else
 		{
-			return $address->stateName->get();
+			return $address->stateName;
 		}
 	}
 }

@@ -305,7 +305,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		else
 		{
 			$product = empty($product['Parent']) ? $product : $product['Parent'];
-			$class = empty($product['taxClassID']) ? null: ActiveRecordModel::getInstanceById('TaxClass', $product['taxClassID']);
+			$class = empty($product['taxClassID']) ? null: TaxClass::getInstanceByID($product['taxClassID']);
 		}
 
 		foreach (DeliveryZone::getDefaultZoneInstance()->getTaxRates() as $rate)
@@ -615,11 +615,11 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
   	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		if ($this->shipment && !$this->shipment->isExistingRecord())
 		{
-			$this->shipment->setNull();
+			$this->shipment = null;
 		}
 
 		if (!$this->price)
@@ -627,7 +627,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$this->price = $this->getProduct()->getItemPrice($this);
 		}
 
-		return parent::insert();
+
 	}
 
 	public function beforeSave()

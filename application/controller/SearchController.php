@@ -24,7 +24,7 @@ class SearchController extends FrontendController
 
 		$perPage = $this->config->get('SEARCH_MODEL_PER_PAGE');
 		$page = $this->request->get('page', 1);
-		$f->setLimit($perPage, $perPage * ($page - 1));
+		$f->limit($perPage, $perPage * ($page - 1));
 
 
 		$this->set('results', $this->fetchData($inst, $f));
@@ -41,7 +41,7 @@ class SearchController extends FrontendController
 		foreach (SearchableModel::getInstances(SearchableModel::FRONTEND_SEARCH_MODEL) as $searchable)
 		{
 			$f = $searchable->getSelectFilter($searchTerm);
-			$f->setLimit($this->config->get('SEARCH_MODEL_PREVIEW'));
+			$f->limit($this->config->get('SEARCH_MODEL_PREVIEW'));
 			$res[$searchable->getClassName()] = $this->fetchData($searchable, $f);
 		}
 

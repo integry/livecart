@@ -33,9 +33,9 @@ class ProductFileController extends StoreManagementController
 		$productFile->fileName->set($this->request->get('fileName'));
 		$productFile->filePath->set($this->request->get('filePath'));
 
-		if ($productFile->filePath->get())
+		if ($productFile->filePath)
 		{
-			$productFile->extension->set(pathinfo($productFile->filePath->get(), PATHINFO_EXTENSION));
+			$productFile->extension->set(pathinfo($productFile->filePath, PATHINFO_EXTENSION));
 		}
 
 		$uploadFile = $this->request->get('uploadFile');
@@ -153,7 +153,7 @@ class ProductFileController extends StoreManagementController
 			$file->position->set((int)$position);
 
 			if(isset($match[1])) $file->productFileGroup->set(ProductFileGroup::getInstanceByID((int)$match[1]));
-			else $file->productFileGroup->setNull();
+			else $file->productFileGroup = null;
 
 			$file->save();
 		}

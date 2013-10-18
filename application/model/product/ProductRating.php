@@ -57,7 +57,7 @@ class ProductRating extends ActiveRecordModel
 		$this->updateRatings($f);
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		self::beginTransaction();
 

@@ -31,7 +31,7 @@ class ProductRatingType extends MultilingualObject
 	public static function getCategoryRatingTypes(Category $category)
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle(__CLASS__, 'position'));
+		$f->order(new ARFieldHandle(__CLASS__, 'position'));
 		return $category->getRelatedRecordSet(__CLASS__, $f);
 	}
 
@@ -75,8 +75,8 @@ class ProductRatingType extends MultilingualObject
 
 		$filter = new ARSelectFilter();
 
-		$filter->setOrder(new ARFieldHandle("Category", "lft"), 'ASC');
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->order(new ARFieldHandle("Category", "lft"), 'ASC');
+		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 
 		$cond = new EqualsCond(new ARFieldHandle(__CLASS__, "categoryID"), $product->getCategory()->getID());
 
@@ -97,18 +97,18 @@ class ProductRatingType extends MultilingualObject
 		return $this->category;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		// get max position
 	  	$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->getCategory()->getID()));
-	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
-	  	$f->setLimit(1);
+	  	$f->order('position', 'DESC');
+	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		$this->position = $position;
 
-		return parent::insert();
+
 	}
 }
 

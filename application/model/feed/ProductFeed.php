@@ -18,7 +18,7 @@ class ProductFeed extends ARFeed
 		parent::__construct($filter->getSelectFilter(), 'Product', array('Category', 'ProductImage', 'Manufacturer'));
 	}
 
-	public function setLimit($size)
+	public function limit($size)
 	{
 		$this->size = $size;
 	}

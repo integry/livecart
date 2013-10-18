@@ -46,11 +46,11 @@ class ProductReviewImport extends DataImport
 		$fields = $profile->getSortedFields();
 		if (isset($fields['ProductReview']['ID']))
 		{
-			$instance = ActiveRecordModel::getInstanceByID('ProductReview', $record[$fields['ProductReview']['ID']], true);
+			$instance = ProductReview::getInstanceByID($record[$fields['ProductReview']['ID']], true);
 		}
 		else if (isset($fields['Product']['ID']))
 		{
-			$parent = ActiveRecordModel::getInstanceByID('Product', $record[$fields['Product']['ID']], true);
+			$parent = Product::getInstanceByID($record[$fields['Product']['ID']], true);
 		}
 		else if (isset($fields['Product']['sku']))
 		{

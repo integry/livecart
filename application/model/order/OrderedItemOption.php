@@ -51,7 +51,7 @@ class OrderedItemOption extends ActiveRecordModel
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItemOption', 'orderedItemID'), $ids));
 		foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('DefaultChoice' => 'ProductOptionChoice', 'Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice')) as $itemOption)
 		{
-			$itemOption->orderedItem->get()->loadOption($itemOption);
+			$itemOption->orderedItem->loadOption($itemOption);
 		}
 	}
 
@@ -59,7 +59,7 @@ class OrderedItemOption extends ActiveRecordModel
 
 	public function save()
 	{
-		if (!$this->orderedItem->get()->customerOrder->get()->isFinalized->get())
+		if (!$this->orderedItem->customerOrder->isFinalized)
 		{
 			$this->updatePriceDiff();
 		}
@@ -67,11 +67,11 @@ class OrderedItemOption extends ActiveRecordModel
 		return parent::save();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->updatePriceDiff();
 
-		return parent::insert();
+
 	}
 
 	public function delete()
@@ -88,16 +88,16 @@ class OrderedItemOption extends ActiveRecordModel
 
 	public function deleteFile()
 	{
-		if ($this->optionText->get() && $this->choice->get()->option->get()->isFile())
+		if ($this->optionText && $this->choice->option->isFile())
 		{
-			unlink(self::getFilePath($this->optionText->get()));
+			unlink(self::getFilePath($this->optionText));
 		}
 	}
 
 	public function updatePriceDiff()
 	{
-		$currency = $this->orderedItem->get()->customerOrder->get()->currencyID->get()->getID();
-		$this->priceDiff = $this->choice->get()->getPriceDiff($currency));
+		$currency = $this->orderedItem->customerOrder->currencyID->getID();
+		$this->priceDiff = $this->choice->getPriceDiff($currency));
 	}
 
 	public function setFile($fileArray)
@@ -105,8 +105,8 @@ class OrderedItemOption extends ActiveRecordModel
 		// avoid breaking out of directory
 		$fileArray['name'] = str_replace(array('/', '\\'), '', $fileArray['name']);
 
-		$item = $this->orderedItem->get();
-		$fileName = $item->customerOrder->get()->getID() . '_' . rand(1, 10000) . time() . '___' . $fileArray['name'];
+		$item = $this->orderedItem;
+		$fileName = $item->customerOrder->getID() . '_' . rand(1, 10000) . time() . '___' . $fileArray['name'];
 		$path = self::getFilePath($fileName);
 
 		$dir = dirname($path);
@@ -129,7 +129,7 @@ class OrderedItemOption extends ActiveRecordModel
 
 	public function getFile()
 	{
-		return ObjectFile::getNewInstance('ObjectFile', self::getFilePath($this->optionText->get()), self::getFileName($this->optionText->get()));
+		return ObjectFile::getNewInstance('ObjectFile', self::getFilePath($this->optionText), self::getFileName($this->optionText));
 	}
 
 	public function resizeImage($source, $target, $confSuffix)

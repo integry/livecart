@@ -101,7 +101,7 @@ class DatabaseSessionHandler extends BaseSessionHandler
 	{
 		try
 		{
-			$inst = ActiveRecordModel::getInstanceByID('SessionData', $id, true);
+			$inst = SessionData::getInstanceByID($id, true);
 			$inst->delete();
 			return true;
 		}

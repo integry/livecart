@@ -37,7 +37,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$this->controller = new OrderController(self::getApplication());
 		$this->initOrder();
-		$this->controller->setOrder($this->order);
+		$this->controller->order($this->order);
 		$this->controller->setUser($this->user);
 	}
 
@@ -47,7 +47,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->order->addProduct($this->products[1], 2);
 		$this->order->save();
 
-		$this->controller->setOrder($this->reloadOrder($this->order));
+		$this->controller->order($this->reloadOrder($this->order));
 
 		$response = $this->controller->setMultiAddress();
 		$order = $this->reloadOrder($this->order);
@@ -59,7 +59,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 	public function testSetSingleAddress()
 	{
 		$this->order->addProduct($this->products[0], 1);
-		$this->controller->setOrder($this->order);
+		$this->controller->order($this->order);
 		$this->controller->setMultiAddress();
 
 		$shipment1 = Shipment::getNewInstance($this->order);
@@ -75,7 +75,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEqual($order->getShipments()->size(), 2);
 		$this->assertEqual(count($order->getOrderedItems()), 3);
 
-		$this->controller->setOrder($order = $this->reloadOrder($this->order));
+		$this->controller->order($order = $this->reloadOrder($this->order));
 		$response = $this->controller->setSingleAddress();
 
 		$order = $this->reloadOrder($order);

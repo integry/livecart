@@ -276,12 +276,12 @@ class OnePageCheckoutController extends CheckoutController
 		/*
 		if ($tempShipping)
 		{
-			$this->order->shippingAddress->setNull();
+			$this->order->shippingAddress = null;
 		}
 
 		if ($tempBilling)
 		{
-			$this->order->billingAddress->setNull();
+			$this->order->billingAddress = null;
 		}
 		*/
 
@@ -316,7 +316,7 @@ class OnePageCheckoutController extends CheckoutController
 	{
 		if (!$this->order->isShippingRequired())
 		{
-			$this->order->shippingAddress->setNull();
+			$this->order->shippingAddress = null;
 		}
 
 		$this->order->resetArrayData();
@@ -516,8 +516,8 @@ class OnePageCheckoutController extends CheckoutController
 			$response = $controller->processCheckoutRegistration();
 			$user = $controller->getUser();
 
-			$this->order->shippingAddress->setNull();
-			$user->defaultShippingAddress->setNull();
+			$this->order->shippingAddress = null;
+			$user->defaultShippingAddress = null;
 
 			if ($shipping)
 			{
@@ -657,7 +657,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (!$this->order->isShippingRequired())
 		{
-			$this->order->shippingAddress->setNull();
+			$this->order->shippingAddress = null;
 		}
 
 		// reload order data
@@ -772,7 +772,7 @@ class OnePageCheckoutController extends CheckoutController
 
 		if (!empty($tempBilling))
 		{
-			$order->billingAddress->setNull();
+			$order->billingAddress = null;
 		}
 
 		return $res;
@@ -944,7 +944,7 @@ class OnePageCheckoutController extends CheckoutController
 			if ($this->isSameAddress())
 			{
 				$this->user->defaultShippingAddress->delete();
-				$this->user->defaultShippingAddress->setNull();
+				$this->user->defaultShippingAddress = null;
 			}
 
 			$this->user->save();

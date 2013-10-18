@@ -54,7 +54,7 @@ class UserGroupController extends ActiveGridController
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
 		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
 		{
-			$availableUserGroups[$group->getID()] = $group->name->get();
+			$availableUserGroups[$group->getID()] = $group->name;
 		}
 
 		$form = UserController::createUserForm($this, null, $response);

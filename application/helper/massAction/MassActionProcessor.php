@@ -34,7 +34,7 @@ class MassActionProcessor
 		$this->deleteCancelFile();
 
 		$filter = $this->grid->getFilter();
-		$filter->setLimit(0);
+		$filter->limit(0);
 
 		$ids = array();
 		foreach (ActiveRecordModel::getFieldValues($this->grid->getModelClass(), $filter, array('ID'), ActiveRecordModel::LOAD_REFERENCES) as $row)

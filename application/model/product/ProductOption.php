@@ -105,22 +105,22 @@ class ProductOption extends MultilingualObject
 
 	public function isBool()
 	{
-		return $this->type->get() == self::TYPE_BOOL;
+		return $this->type == self::TYPE_BOOL;
 	}
 
 	public function isText()
 	{
-		return $this->type->get() == self::TYPE_TEXT;
+		return $this->type == self::TYPE_TEXT;
 	}
 
 	public function isSelect()
 	{
-		return $this->type->get() == self::TYPE_SELECT;
+		return $this->type == self::TYPE_SELECT;
 	}
 
 	public function isFile()
 	{
-		return $this->type->get() == self::TYPE_FILE;
+		return $this->type == self::TYPE_FILE;
 	}
 
 	public function addChoice(ProductOptionChoice $choice)
@@ -158,9 +158,9 @@ class ProductOption extends MultilingualObject
 			}
 
 			$productIDs[] = $product->getID();
-			if ($product->parent->get())
+			if ($product->parent)
 			{
-				$productIDs[] = $product->parent->get()->getID();
+				$productIDs[] = $product->parent->getID();
 			}
 		}
 
@@ -170,8 +170,8 @@ class ProductOption extends MultilingualObject
 			{
 				$category->load();
 			}
-			$c = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-			$c->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+			$c = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft);
+			$c->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt));
 
 			if (!isset($categoryCond))
 			{
@@ -197,9 +197,9 @@ class ProductOption extends MultilingualObject
 		$f->setCondition($categoryCond);
 
 		// ordering
-		$f->setOrder(new ARFieldHandle('ProductOption', 'productID'), 'DESC');
-		$f->setOrder(new ARFieldHandle('Category', 'lft'), 'DESC');
-		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'DESC');
+		$f->order(new ARFieldHandle('ProductOption', 'productID'), 'DESC');
+		$f->order(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->order(new ARFieldHandle('ProductOption', 'position'), 'DESC');
 
 
 		$options = ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice', 'Category'));
@@ -212,17 +212,17 @@ class ProductOption extends MultilingualObject
 		{
 			foreach ($options as $index => $option)
 			{
-				if ($option->product->get() && (($option->product->get()->getID() == $product->getID()) || ($product->parent->get() && ($option->product->get()->getID() == $product->parent->get()->getID()))))
+				if ($option->product && (($option->product->getID() == $product->getID()) || ($product->parent && ($option->product->getID() == $product->parent->getID()))))
 				{
 					$sorted[$product->getID()][] = $option;
 				}
 
-				if ($option->category->get())
+				if ($option->category)
 				{
-					$option->category->get()->load();
+					$option->category->load();
 					foreach ($product->getAllCategories() as $category)
 					{
-						if ($option->category->get()->isAncestorOf($category))
+						if ($option->category->isAncestorOf($category))
 						{
 							$sorted[$product->getID()][] = $option;
 							break;
@@ -251,11 +251,11 @@ class ProductOption extends MultilingualObject
 		if ($ids)
 		{
 			$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductOptionChoice', 'optionID'), $ids));
-			$f->setOrder(new ARFieldHandle('ProductOptionChoice', 'position'));
+			$f->order(new ARFieldHandle('ProductOptionChoice', 'position'));
 
 			foreach (ActiveRecordModel::getRecordSet('ProductOptionChoice', $f) as $choice)
 			{
-				$refs[$choice->option->get()->getID()]->addChoice($choice);
+				$refs[$choice->option->getID()]->addChoice($choice);
 			}
 		}
 	}
@@ -294,7 +294,7 @@ class ProductOption extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	$this->setLastPosition();
 
@@ -332,7 +332,7 @@ class ProductOption extends MultilingualObject
 	public function getChoiceSet()
 	{
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('ProductOptionChoice', 'position'));
+		$f->order(new ARFieldHandle('ProductOptionChoice', 'position'));
 
 		return $this->getRelatedRecordSet('ProductOptionChoice', $f);
 	}
@@ -344,7 +344,7 @@ class ProductOption extends MultilingualObject
 		$this->choices = null;
 		$this->save();
 
-		$defaultChoice = $this->originalRecord->defaultChoice->get();
+		$defaultChoice = $this->originalRecord->defaultChoice;
 
 		foreach ($this->originalRecord->getChoiceSet() as $choice)
 		{

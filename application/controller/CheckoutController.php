@@ -123,7 +123,7 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 		$this->order->setPaymentMethod($class);
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-		$handler->setOrder($this->order);
+		$handler->order($this->order);
 
 		$returnUrl = $this->router->createFullUrl($this->url->get('checkout/expressReturn', 'id' => $class), true));
 		$cancelUrl = $this->router->createFullUrl($this->url->get('order'), true));
@@ -139,7 +139,7 @@ class CheckoutController extends FrontendController
 		$this->order->setPaymentMethod($class);
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-		$handler->setOrder($this->order);
+		$handler->order($this->order);
 
 		$details = $handler->getTransactionDetails($this->request->toArray());
 
@@ -322,7 +322,7 @@ class CheckoutController extends FrontendController
 			{
 				try
 				{
-					$address = ActiveRecordModel::getInstanceByID('UserAddress', $id, true);
+					$address = UserAddress::getInstanceByID($id, true);
 				}
 				catch (ARNotFoundException $e)
 				{

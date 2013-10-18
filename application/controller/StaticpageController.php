@@ -19,18 +19,18 @@ class StaticpageController extends ControllerBase
 
 		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 
-		if ($parent = $page->parent->get())
+		if ($parent = $page->parent)
 		{
 			while ($parent)
 			{
 				$parent->load();
 				$urlParams = array('controller' => 'staticPage',
 								   'action' => 'view',
-								   'handle' => $parent->handle->get(),
+								   'handle' => $parent->handle,
 								   );
 
 				$this->addBreadCrumb($parent->getValueByLang('title'), $this->router->createUrl($urlParams, true));
-				$parent = $parent->parent->get();
+				$parent = $parent->parent;
 			}
 		}
 

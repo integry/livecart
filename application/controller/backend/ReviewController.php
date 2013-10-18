@@ -18,7 +18,7 @@ class ReviewController extends ActiveGridController
 
 	public function editAction()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ProductReview::getInstanceByID($this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
 		//$manufacturer->getSpecification();
 
 		$this->set('review', $review->toArray());
@@ -44,7 +44,7 @@ class ReviewController extends ActiveGridController
 
 	public function updateAction()
 	{
-		$review = ActiveRecordModel::getInstanceById('ProductReview', $this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
+		$review = ProductReview::getInstanceByID($this->request->get('id'), ProductReview::LOAD_DATA, array('Product'));
 		$validator = $this->buildValidator($review);
 
 		if ($validator->isValid())
@@ -129,7 +129,7 @@ class ReviewController extends ActiveGridController
 
 	protected function setDefaultSortOrder(ARSelectFilter $filter)
 	{
-		$filter->setOrder(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+		$filter->order(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
 	protected function getSelectFilter()

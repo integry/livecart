@@ -26,7 +26,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 	{
 		$instance = new self();
 		$instance->user->set($user);
-		$instance->email->set($user->email->get());
+		$instance->email->set($user->email);
 		return $instance;
 	}
 
@@ -46,7 +46,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 		}
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$str = '';
 		for ($k = 0; $k < 20; $k++)
@@ -56,7 +56,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 
 		$this->confirmationCode->set(substr(md5($str), 0, 12));
 
-		return parent::insert();
+
 	}
 }
 

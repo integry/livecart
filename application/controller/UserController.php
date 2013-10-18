@@ -48,7 +48,7 @@ class UserController extends FrontendController
 
 		// get recent orders
 		$f = new ARSelectFilter();
-		$f->setLimit($this->config->get('USER_COUNT_RECENT_ORDERS'));
+		$f->limit($this->config->get('USER_COUNT_RECENT_ORDERS'));
 		$f->setCondition(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
 		$orders = $this->loadOrders($f);
 		$orderArray = $this->getOrderArray($orders);
@@ -60,7 +60,7 @@ class UserController extends FrontendController
 		if ($pendingInvoiceCount)
 		{
 			$f = new ARSelectFilter();
-			$f->setLimit(1);
+			$f->limit(1);
 			$f->setCondition(new AndChainCondition(array(
 				new IsNotNullCond(new ARFieldHandle('CustomerOrder', 'parentID')))
 			));
@@ -69,7 +69,7 @@ class UserController extends FrontendController
 
 		// get downloadable items
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->setLimit(self::COUNT_RECENT_FILES);
+		$f->limit(self::COUNT_RECENT_FILES);
 
 
 
@@ -80,7 +80,7 @@ class UserController extends FrontendController
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
-		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+		$f->order(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
 		$this->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
 		// feedback/confirmation message that was stored in session by some other action
@@ -119,7 +119,7 @@ class UserController extends FrontendController
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
 			))
 		);
-		$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+		$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
 		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 	}
 
@@ -138,7 +138,7 @@ class UserController extends FrontendController
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isPaid'), 0)
 			))
 		);
-		$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+		$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
 		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 	}
 
@@ -180,7 +180,7 @@ class UserController extends FrontendController
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->setLimit($perPage, ($page - 1) * $perPage);
+		$filter->limit($perPage, ($page - 1) * $perPage);
 
 		return $filter;
 	}
@@ -189,7 +189,7 @@ class UserController extends FrontendController
 	{
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'DESC');
+		$f->order(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'DESC');
 
 		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 
@@ -250,8 +250,8 @@ class UserController extends FrontendController
 	 */
 	public function itemAction()
 	{
-		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
-		$item->customerOrder->get()->loadAll();
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item->customerOrder->loadAll();
 		$item->loadOptions();
 		$subItems = $item->getSubitems();
 		$item = $item->toArray();
@@ -405,13 +405,13 @@ class UserController extends FrontendController
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->url->get('user/orders'));
-			$this->addBreadCrumb($order->invoiceNumber->get(), '');
+			$this->addBreadCrumb($order->invoiceNumber, '');
 
 			// mark all notes as read
 			$notes = $order->getNotes();
 			foreach ($notes as $note)
 			{
-				if (!$note->isRead->get() && $note->isAdmin->get())
+				if (!$note->isRead && $note->isAdmin)
 				{
 					$note->isRead->set(true);
 					$note->save();
@@ -421,7 +421,7 @@ class UserController extends FrontendController
 			$response = null;
 			$orderArray = $order->toArray();
 
-			if ($order->isRecurring->get() == true)
+			if ($order->isRecurring == true)
 			{
 				// find invoices
 				$page = $this->request->get('page', 1);
@@ -433,7 +433,7 @@ class UserController extends FrontendController
 						new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
 					))
 				);
-				$f->setOrder(new ARFieldHandle('CustomerOrder','dateDue'));
+				$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
 				$response = $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 
 				$recurringProductPeriods = array();
@@ -510,7 +510,7 @@ class UserController extends FrontendController
 
 		if ($this->config->get('NOTIFY_NEW_NOTE'))
 		{
-			$order->user->get()->load();
+			$order->user->load();
 
 			$email = new Email($this->application);
 			$email->setTo($this->config->get('NOTIFICATION_EMAIL'), $this->config->get('STORE_NAME'));
@@ -605,7 +605,7 @@ class UserController extends FrontendController
 		$success = false;
 
 		$user = User::getInstanceByEmail($this->request->get('email'));
-		if ($user && !$user->isEnabled->get() && $user->getPreference('confirmation'))
+		if ($user && !$user->isEnabled && $user->getPreference('confirmation'))
 		{
 			if ($this->request->get('code') == $user->getPreference('confirmation'))
 			{
@@ -679,11 +679,11 @@ class UserController extends FrontendController
 		// load the last un-finalized order by this user
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
-		$f->setLimit(1);
+		$f->order(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
+		$f->limit(1);
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-		if (!$this->order->user->get() || $this->order->user->get()->getID() == $this->user->getID())
+		if (!$this->order->user || $this->order->user->getID() == $this->user->getID())
 		{
 			if ($s->size())
 			{
@@ -694,7 +694,7 @@ class UserController extends FrontendController
 					$order->loadItems();
 					$order->merge($sessionOrder);
 					$order->save();
-					SessionOrder::setOrder($order);
+					SessionOrder::order($order);
 					$this->order->delete();
 				}
 			}
@@ -798,12 +798,12 @@ class UserController extends FrontendController
 		$user->save();
 
 		// set order addresses
-		$this->order->billingAddress->set($billingAddress->userAddress->get());
+		$this->order->billingAddress->set($billingAddress->userAddress);
 
 		$this->order->loadItems();
 		if ($this->order->isShippingRequired())
 		{
-			$this->order->shippingAddress->set($shippingAddress->userAddress->get());
+			$this->order->shippingAddress->set($shippingAddress->userAddress);
 		}
 
 		$this->order->save();
@@ -829,14 +829,14 @@ class UserController extends FrontendController
 		{
 			try
 			{
-				$state = ActiveRecordModel::getInstanceByID('State', $this->request->get($prefix . 'state_select'), ActiveRecordModel::LOAD_DATA);
+				$state = State::getInstanceByID($this->request->get($prefix . 'state_select'), ActiveRecordModel::LOAD_DATA);
 			}
 			catch (Exception $e)
 			{
 				throw new ApplicationException('State not found');
 			}
 
-			$country = $state->countryID->get();
+			$country = $state->countryID;
 		}
 		else
 		{
@@ -935,15 +935,15 @@ class UserController extends FrontendController
 		$this->addAddressBreadcrumb();
 
 		$form = $this->buildAddressForm();
-		$address = $addressType->userAddress->get();
+		$address = $addressType->userAddress;
 
 		$form->setData($address->toArray());
-		$form->set('country', $address->countryID->get());
-		$form->set('state_text', $address->stateName->get());
+		$form->set('country', $address->countryID);
+		$form->set('state_text', $address->stateName);
 
-		if ($address->state->get())
+		if ($address->state)
 		{
-			$form->set('state_select', $address->state->get()->getID());
+			$form->set('state_select', $address->state->getID());
 		}
 
 
@@ -994,7 +994,7 @@ class UserController extends FrontendController
 
 	private function doSaveAddress(UserAddressType $address, ActionRedirectResponse $invalidResponse)
 	{
-		$address = $address->userAddress->get();
+		$address = $address->userAddress;
 		if ($this->buildAddressValidator()->isValid())
 		{
 			$this->saveAddress($address);
@@ -1020,16 +1020,16 @@ class UserController extends FrontendController
 
 		$form = $this->buildAddressForm();
 
-		$form->set('firstName', $this->user->firstName->get());
-		$form->set('lastName', $this->user->lastName->get());
-		$form->set('companyName', $this->user->companyName->get());
+		$form->set('firstName', $this->user->firstName);
+		$form->set('lastName', $this->user->lastName);
+		$form->set('companyName', $this->user->companyName);
 
 		$this->user->loadAddresses();
 
-		if ($this->user->defaultBillingAddress->get())
+		if ($this->user->defaultBillingAddress)
 		{
-			$form->set('country', $this->user->defaultBillingAddress->get()->userAddress->get()->countryID->get());
-			$form->set('phone', $this->user->defaultBillingAddress->get()->userAddress->get()->phone->get());
+			$form->set('country', $this->user->defaultBillingAddress->userAddress->countryID);
+			$form->set('phone', $this->user->defaultBillingAddress->userAddress->phone);
 		}
 		else
 		{
@@ -1135,7 +1135,7 @@ class UserController extends FrontendController
 
 		$order = $this->getOrder($this->request->get('id'));
 
-		if (!$order || $order->isPaid->get())
+		if (!$order || $order->isPaid)
 		{
 			return $this->response->redirect('user/index');
 		}
@@ -1501,9 +1501,9 @@ class UserController extends FrontendController
 			$order = $s->get(0);
 			$order->loadAll();
 
-			if ($order->user->get())
+			if ($order->user)
 			{
-				$order->user->get()->getSpecification();
+				$order->user->getSpecification();
 			}
 
 			return $order;
@@ -1539,8 +1539,8 @@ class UserController extends FrontendController
 		$order = CustomerOrder::getInstanceById($id, true);
 		$userID = $this->user->getID();
 		if(
-			$order->userID->get()->getID()
-			&& $order->userID->get()->getID() == $userID
+			$order->userID->getID()
+			&& $order->userID->getID() == $userID
 			&& true == $order->canUserCancelRebills()
 		) {
 			$status = $order->cancelRecurring($this->getRequestCurrency());

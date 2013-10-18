@@ -11,7 +11,7 @@ class ProductVariationTypeSet extends ARSet
 	public function getVariations()
 	{
 		$f = new ARSelectFilter(new INCOnd(new ARFieldHandle('ProductVariation', 'typeID'), $this->getRecordIDs()));
-		$f->setOrder(new ARFieldHandle('ProductVariation', 'position'));
+		$f->order(new ARFieldHandle('ProductVariation', 'position'));
 
 		return ActiveRecordModel::getRecordSet('ProductVariation', $f);
 	}

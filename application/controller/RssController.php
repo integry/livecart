@@ -23,7 +23,7 @@ class RssController extends FrontendController
 		set_time_limit(0);
 		$response = new XMLResponse();
 		$filter = new ARSelectFilter();
-		$filter->setOrder(f('Product.dateCreated'), ARSelectFilter::ORDER_DESC);		
+		$filter->order(f('Product.dateCreated'), ARSelectFilter::ORDER_DESC);
 		$categoryId = $this->getRequest()->get('id');
 		if(preg_match('/^\d+$/', $categoryId))
 		{
@@ -40,7 +40,7 @@ class RssController extends FrontendController
 		}
 		$feed = new ProductFeed($filter);
 		$feed->setFlush();
-		$feed->setLimit($this->config->get('NUMBER_OF_PRODUCTS_TO_INCLUDE'));
+		$feed->limit($this->config->get('NUMBER_OF_PRODUCTS_TO_INCLUDE'));
 		$this->set('feed', $feed);
 		$this->set('category', $category->toArray());
 	}
@@ -51,8 +51,8 @@ class RssController extends FrontendController
 		$this->setLayout('empty');
 		$response = new XMLResponse();
 		$f = select(eq(f('NewsPost.isEnabled'), true));
-		$f->setLimit($this->config->get('NUMBER_OF_NEWS_POSTS_TO_INCLUDE'));
-		$f->setOrder(f('NewsPost.position'), ARSelectFilter::ORDER_DESC);
+		$f->limit($this->config->get('NUMBER_OF_NEWS_POSTS_TO_INCLUDE'));
+		$f->order(f('NewsPost.position'), ARSelectFilter::ORDER_DESC);
 		$this->set('feed', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$this->application->getLocale()->translationManager()->loadFile('News');
 	}

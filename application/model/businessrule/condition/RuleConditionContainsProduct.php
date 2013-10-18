@@ -122,9 +122,9 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		{
 			$productID = $product->getID();
 			$parentID = $product->getParent()->getID();
-			$manufacturerID = $product->manufacturer->get() ? $product->manufacturer->get()->getID() : null;
+			$manufacturerID = $product->manufacturer ? $product->manufacturer->getID() : null;
 
-			$categoryIntervals = $product->getParent()->categoryIntervalCache->get();
+			$categoryIntervals = $product->getParent()->categoryIntervalCache;
 		}
 		else if (is_array($product))
 		{

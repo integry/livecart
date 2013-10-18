@@ -32,28 +32,28 @@ class TransactionTest extends OrderTestCommon
 		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$order->loadAll();
 
-		$this->assertEquals($details->amount->get(), '2.89');
+		$this->assertEquals($details->amount, '2.89');
 
 		$result = new TransactionResult();
-		$result->amount->set($details->amount->get());
-		$result->currency->set($details->currency->get());
+		$result->amount->set($details->amount);
+		$result->currency->set($details->currency);
 
 		$transaction = Transaction::getNewInstance($order, $result);
 		$transaction->type->set(Transaction::TYPE_SALE);
 
-		$this->assertEquals($transaction->amount->get(), '9.99');
-		$this->assertEquals($transaction->realAmount->get(), '2.89');
+		$this->assertEquals($transaction->amount, '9.99');
+		$this->assertEquals($transaction->realAmount, '2.89');
 
 		$transaction->save();
 
-		$this->assertFalse((bool)$order->isFinalized->get());
+		$this->assertFalse((bool)$order->isFinalized);
 		$order->finalize();
-		$this->assertTrue((bool)$order->isFinalized->get());
+		$this->assertTrue((bool)$order->isFinalized);
 
 		$this->assertEquals($order->getPaidAmount(), '9.99');
-		$this->assertEquals($order->totalAmount->get(), '9.99');
+		$this->assertEquals($order->totalAmount, '9.99');
 
-		$this->assertTrue((bool)$order->isPaid->get());
+		$this->assertTrue((bool)$order->isPaid);
 	}
 
 }

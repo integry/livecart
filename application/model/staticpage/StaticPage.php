@@ -89,7 +89,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 	{
 		$this->loadFile();
 
-		if (!$this->handle->get())
+		if (!$this->handle)
 		{
 			$this->handle = createHandleString($this->getValueByLang('title')));
 		}
@@ -121,7 +121,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 		// when the instance is not loaded
 		if (!$array['handle'])
 		{
-			$array['handle'] = $this->handle->get();
+			$array['handle'] = $this->handle;
 		}
 
 		$array['menuInformation'] = false;
@@ -145,7 +145,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 	public function getSubPageArray()
 	{
 		$f = select();
-		$f->setOrder(f('StaticPage.position'));
+		$f->order(f('StaticPage.position'));
 		return $this->getRelatedRecordSetArray('StaticPage', $f);
 	}
 
@@ -169,24 +169,24 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 		return $pages;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	  	// get max position
 	  	$f = new ARSelectFilter();
-	  	$f->setOrder(new ARFieldHandle('StaticPage', 'position'), 'DESC');
-	  	$f->setLimit(1);
+	  	$f->order(new ARFieldHandle('StaticPage', 'position'), 'DESC');
+	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('StaticPage', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		$this->position = $position;
 
-		return parent::insert();
+
 	}
 
 	private function saveFile()
 	{
-		$fileData = array('handle' => $this->handle->get(),
-						  'title' => $this->title->get(),
+		$fileData = array('handle' => $this->handle,
+						  'title' => $this->title,
 						 );
 
 		$dir = dirname($this->getFileName());
@@ -212,7 +212,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 			include $this->getFileName();
 			$this->title = $pageData['title'];
 
-			if (!$this->handle->get())
+			if (!$this->handle)
 			{
 				$this->handle = $pageData['handle'];
 			}

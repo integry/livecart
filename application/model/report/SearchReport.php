@@ -27,12 +27,12 @@ class SearchReport extends Report
 		$q = $this->getQuery('COUNT(*)');
 
 		$f = $q->getFilter();
-		$f->resetOrder();
+		$f->reorder();
 		$f->resetGrouping();
-		$f->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+		$f->order(new ARExpressionHandle('cnt'), 'DESC');
 		$q->addField('keywords');
 		$f->setGrouping(new ARExpressionHandle('keywords'));
-		$f->setLimit(self::TABLE_LIMIT);
+		$f->limit(self::TABLE_LIMIT);
 
 		$this->getReportData($q);
 

@@ -16,7 +16,7 @@ class ProductRelationshipController extends StoreManagementController
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 
 
-		$this->set('categoryID', $product->category->get()->getID());
+		$this->set('categoryID', $product->category->getID());
 		$this->set('productID', $productID);
 		$this->set('relationships', $product->getRelationships($this->request->get('type'))->toArray());
 		$this->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray($this->request->get('type')));
@@ -135,7 +135,7 @@ class ProductRelationshipController extends StoreManagementController
 			}
 			else
 			{
-				$relationship->productRelationshipGroup->setNull();
+				$relationship->productRelationshipGroup = null;
 			}
 
 			$relationship->save();

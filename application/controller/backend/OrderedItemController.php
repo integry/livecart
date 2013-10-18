@@ -520,7 +520,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function optionFormAction()
 	{
-		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), true, true);
 		$item->customerOrder->loadAll();
 
 		$c = new OrderController($this->application);
@@ -534,7 +534,7 @@ class OrderedItemController extends StoreManagementController
 		$this->loadLanguageFile('Frontend');
 		$this->loadLanguageFile('Product');
 		$this->loadLanguageFile('backend/Shipment');
-		$item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), true, true);
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), true, true);
 		$item->customerOrder->loadAll();
 
 		$c = new OrderController($this->application);
@@ -546,7 +546,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function saveOptionsAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->loadAll();
 		foreach ($item->getProduct()->getOptions(true) as $option)
 		{
@@ -564,7 +564,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function saveVariationsAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), OrderedItem::LOAD_DATA, OrderedItem::LOAD_REFERENCES);
 		$item->customerOrder->loadAll();
 
 		$variations = $item->getProduct()->getVariationData($this->application);
@@ -595,7 +595,7 @@ class OrderedItemController extends StoreManagementController
 		$set = new ProductSet();
 		foreach($ids as $id)
 		{
-			$item = ActiveRecordModel::getInstanceByID('OrderedItem', $id, OrderedItem::LOAD_DATA);
+			$item = OrderedItem::getInstanceByID($id, OrderedItem::LOAD_DATA);
 			$item->customerOrder->load();
 			$item->customerOrder->loadItems();
 			if ($image = $item->getProduct()->defaultImage)
@@ -616,7 +616,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function itemAction()
 	{
-		$item = ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id'), OrderedItem::LOAD_DATA);
+		$item = OrderedItem::getInstanceByID($this->request->get('id'), OrderedItem::LOAD_DATA);
 		return $this->getItemResponse($item);
 	}
 

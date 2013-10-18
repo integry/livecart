@@ -59,8 +59,8 @@ class ProductRatingTypeTest extends LiveCartTest
 		$type2 = ProductRatingType::getNewInstance(Category::getRootNode());
 		$type2->save();
 
-		$this->assertEqual($type1->position->get(), 1);
-		$this->assertEqual($type2->position->get(), 2);
+		$this->assertEqual($type1->position, 1);
+		$this->assertEqual($type2->position, 2);
 	}
 }
 ?>

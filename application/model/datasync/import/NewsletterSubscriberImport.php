@@ -33,7 +33,7 @@ class NewsletterSubscriberImport extends DataImport
 		$fields = $profile->getSortedFields();
 		if (isset($fields['NewsletterSubscriber']['ID']))
 		{
-			$instance = ActiveRecordModel::getInstanceByID('NewsletterSubscriber', $record[$fields['NewsletterSubscriber']['ID']], true);
+			$instance = NewsletterSubscriber::getInstanceByID($record[$fields['NewsletterSubscriber']['ID']], true);
 		}
 		else if (isset($fields['NewsletterSubscriber']['email']))
 		{
@@ -49,7 +49,7 @@ class NewsletterSubscriberImport extends DataImport
 			$instance = NewsletterSubscriber::getNewInstanceByEmail($record[$fields['NewsletterSubscriber']['email']]);
 		}
 
-		$this->setLastImportedRecordName($instance->email->get());
+		$this->setLastImportedRecordName($instance->email);
 		return $instance;
 	}
 }

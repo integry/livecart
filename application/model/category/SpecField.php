@@ -70,7 +70,7 @@ class SpecField extends EavFieldCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond(new ARFieldHandle(get_class($this), 'categoryID'), $this->category->getID());
+		return new EqualsCond('categoryID', $this->category->getID());
 	}
 
 	/*####################  Static method implementations ####################*/

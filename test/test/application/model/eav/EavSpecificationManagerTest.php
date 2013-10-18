@@ -59,9 +59,9 @@ class EavSpecificationManagerTest extends LiveCartTest
 		$this->assertEquals($cloned->getSpecification()->getAttribute($text)->getValueByLang('value', 'en'), 'text');
 
 		ActiveRecordModel::clearPool();
-		$reloaded = ActiveRecordModel::getInstanceByID('User', $cloned->getID(), true);
+		$reloaded = User::getInstanceByID($cloned->getID(), true);
 		$this->assertEquals($reloaded->getSpecification()->getAttribute($text)->getValueByLang('value', 'en'), 'text');
-		$this->assertEquals($reloaded->getSpecification()->getAttribute($singleSel)->getValue()->get()->getID(), $value1->getID());
+		$this->assertEquals($reloaded->getSpecification()->getAttribute($singleSel)->getValue()->getID(), $value1->getID());
 	}
 }
 

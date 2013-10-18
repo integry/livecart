@@ -521,8 +521,8 @@ class XCartImport extends LiveCartImportDriver
 
 	public function saveCustomerOrder(CustomerOrder $order)
 	{
-		$order->shippingAddress->get()->save();
-		$order->billingAddress->get()->save();
+		$order->shippingAddress->save();
+		$order->billingAddress->save();
 
 		$order->save();
 

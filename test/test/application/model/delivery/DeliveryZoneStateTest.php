@@ -53,8 +53,8 @@ class DeliveryZoneStateTest extends LiveCartTest
 
 		$deliveryState->reload();
 
-		$this->assertEquals($deliveryState->deliveryZone->get(), $this->zone);
-		$this->assertTrue($deliveryState->state->get() === $this->alaska);
+		$this->assertEquals($deliveryState->deliveryZone, $this->zone);
+		$this->assertTrue($deliveryState->state === $this->alaska);
 	}
 }
 ?>

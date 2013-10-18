@@ -142,7 +142,7 @@ class Product extends \ActiveRecordModel
 	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $sku));
-		$f->setLimit(1);
+		$f->limit(1);
 
 		$set = self::getRecordSet($f, $loadReferencedRecords);
 		if (!$set->size())
@@ -649,7 +649,7 @@ class Product extends \ActiveRecordModel
 	 * Inserts new product record to a database
 	 *
 	 */
-	protected function insert()
+	public function beforeCreate()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -1132,7 +1132,7 @@ class Product extends \ActiveRecordModel
 	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
-		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
+		$f->order(new ARFieldHandle('ProductImage', 'position'));
 
 		return $f;
 	}
@@ -1193,7 +1193,7 @@ class Product extends \ActiveRecordModel
 
 			$categories = new ARSet();
 			$filter = new ARSelectFilter();
-			$filter->setOrder(new ARFieldHandle('Category', 'lft'));
+			$filter->order(new ARFieldHandle('Category', 'lft'));
 
 			foreach ($this->getParent()->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
 			{
@@ -1223,7 +1223,7 @@ class Product extends \ActiveRecordModel
 		}
 
 		$filter = select(Condition::mergeFromArray($conditions, true));
-		$filter->setOrder(f('Category.lft'));
+		$filter->order(f('Category.lft'));
 		$categories = ActiveRecord::getRecordSetArray('Category', $filter);
 		foreach ($productArray as &$product)
 		{
@@ -1345,7 +1345,7 @@ class Product extends \ActiveRecordModel
 		$parent = $this->getParent();
 		ClassLoader::import('application/model/product/ProductOption');
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->order(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
 
 		if ($includeInheritedOptions)
@@ -1544,7 +1544,7 @@ class Product extends \ActiveRecordModel
 	public function getDefaultRecurringProductPeriod()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setLimit(1);
+		$filter->limit(1);
 		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
 		if ($rs->size() == 0)
 		{

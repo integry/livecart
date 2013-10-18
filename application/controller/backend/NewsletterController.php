@@ -45,7 +45,7 @@ class NewsletterController extends ActiveGridController
 
 	public function editAction()
 	{
-		$newsletter = ActiveRecordModel::getInstanceById('NewsletterMessage', $this->request->get('id'), ActiveRecordModel::LOAD_DATA);
+		$newsletter = NewsletterMessage::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA);
 
 		$form = $this->getForm();
 		$form->setData($newsletter->toArray());
@@ -95,7 +95,7 @@ class NewsletterController extends ActiveGridController
 
 		if ($id = $this->request->get('id'))
 		{
-			$newsletter = ActiveRecordModel::getInstanceByID('NewsletterMessage', $id);
+			$newsletter = NewsletterMessage::getInstanceByID($id);
 		}
 		else
 		{

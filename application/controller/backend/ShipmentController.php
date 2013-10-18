@@ -20,8 +20,8 @@ class ShipmentController extends StoreManagementController
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 		$shipment->loadItems();
-		$order = $shipment->order->get();
-		$shipment->order->get()->loadAll();
+		$order = $shipment->order;
+		$shipment->order->loadAll();
 		$zone = $shipment->getDeliveryZone();
 		$shipmentRates = $zone->getShippingRates($shipment);
 
@@ -53,14 +53,14 @@ class ShipmentController extends StoreManagementController
 		return new JSONResponse(array(
 				'shipment' => array(
 					   'ID' => $shipment->getID(),
-					   'amount' => $shipment->amount->get(),
-					   'shippingAmount' => (float)$shipment->shippingAmount->get(),
-					   'taxAmount' => $shipment->taxAmount->get(),
-					   'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-					   'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-					   'suffix' => $shipment->getCurrency()->priceSuffix->get(),
+					   'amount' => $shipment->amount,
+					   'shippingAmount' => (float)$shipment->shippingAmount,
+					   'taxAmount' => $shipment->taxAmount,
+					   'total' => $shipment->shippingAmount + $shipment->amount + (float)$shipment->taxAmount,
+					   'prefix' => $shipment->getCurrency()->pricePrefix,
+					   'suffix' => $shipment->getCurrency()->priceSuffix,
 					   'ShippingService' => $shipmentArray['ShippingService'],
-					   'Order' => $shipment->order->get()->toFlatArray(),
+					   'Order' => $shipment->order->toFlatArray(),
 				   )
 			),
 			'success'
@@ -78,14 +78,14 @@ class ShipmentController extends StoreManagementController
 		$shipmentRates = $zone->getShippingRates($shipment);
 		$shipment->setAvailableRates($shipmentRates);
 
-		$history = new OrderHistory($shipment->order->get(), $this->user);
+		$history = new OrderHistory($shipment->order, $this->user);
 
 		$shipment->status->set($status);
 		$shipment->save();
 
 		$history->saveLog();
 
-		$status = $shipment->status->get();
+		$status = $shipment->status;
 		$enabledStatuses = $this->config->get('EMAIL_STATUS_UPDATE_STATUSES');
 		$m = array(
 			'EMAIL_STATUS_UPDATE_NEW'=>Shipment::STATUS_NEW,
@@ -104,13 +104,13 @@ class ShipmentController extends StoreManagementController
 
 		if ($sendEmail || $this->config->get('EMAIL_STATUS_UPDATE'))
 		{
-			$user = $shipment->order->get()->user->get();
+			$user = $shipment->order->user;
 			$user->load();
 
 			$email = new Email($this->application);
 			$email->setUser($user);
 			$email->setTemplate('order.status');
-			$email->set('order', $shipment->order->get()->toArray(array('payments' => true)));
+			$email->set('order', $shipment->order->toArray(array('payments' => true)));
 			$email->set('shipments', array($shipment->toArray()));
 			$email->send();
 		}
@@ -127,9 +127,9 @@ class ShipmentController extends StoreManagementController
 			$shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder'));
 			$shipment->loadItems();
 
-			if ($shipment->shippingAddress->get())
+			if ($shipment->shippingAddress)
 			{
-				$shipment->shippingAddress->get()->load();
+				$shipment->shippingAddress->load();
 			}
 
 			$zone = $shipment->getDeliveryZone();
@@ -144,12 +144,12 @@ class ShipmentController extends StoreManagementController
 				$shippingRatesArray[$rateArray['serviceID']] = $rateArray;
 				$shippingRatesArray[$rateArray['serviceID']]['shipment'] = array(
 					'ID' => $shipment->getID(),
-					'amount' => $shipment->amount->get(),
+					'amount' => $shipment->amount,
 					'shippingAmount' => (float)$rateArray['costAmount'],
-					'taxAmount' => $shipment->taxAmount->get(),
-					'total' => (float)$shipment->taxAmount->get() + (float)$shipment->amount->get() + (float)$rateArray['costAmount'],
-					'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-					'suffix' => $shipment->getCurrency()->priceSuffix->get()
+					'taxAmount' => $shipment->taxAmount,
+					'total' => (float)$shipment->taxAmount + (float)$shipment->amount + (float)$rateArray['costAmount'],
+					'prefix' => $shipment->getCurrency()->pricePrefix,
+					'suffix' => $shipment->getCurrency()->priceSuffix
 				);
 			}
 
@@ -184,14 +184,14 @@ class ShipmentController extends StoreManagementController
 
 				$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
 
-		if (!$shipment->shippingAddress->get())
+		if (!$shipment->shippingAddress)
 		{
 			$shipment->shippingAddress->set(UserAddress::getNewInstance());
-			$shipment->shippingAddress->get()->save();
+			$shipment->shippingAddress->save();
 		}
 
-		$shipment->shippingAddress->get()->load();
-		$address = $shipment->shippingAddress->get()->toArray();
+		$shipment->shippingAddress->load();
+		$address = $shipment->shippingAddress->toArray();
 
 
 		$controller = new CustomerOrderController($this->application);
@@ -203,7 +203,7 @@ class ShipmentController extends StoreManagementController
 
 		$addressOptions = array('' => '');
 		$addresses = array();
-		foreach(array_merge($shipment->order->get()->user->get()->getShippingAddressArray(), $shipment->order->get()->user->get()->getBillingAddressArray()) as $address)
+		foreach(array_merge($shipment->order->user->getShippingAddressArray(), $shipment->order->user->getBillingAddressArray()) as $address)
 		{
 			$addressOptions[$address['ID']] = $address['UserAddress']['compact'];
 			$addresses[$address['ID']] = $address;
@@ -218,7 +218,7 @@ class ShipmentController extends StoreManagementController
 		$this->loadLanguageFile('backend/Shipment');
 
 				$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
-		$address = $shipment->shippingAddress->get();
+		$address = $shipment->shippingAddress;
 
 		if (!$address)
 		{
@@ -239,7 +239,7 @@ class ShipmentController extends StoreManagementController
 		{
 			$address->loadRequestData($this->request);
 			$address->save();
-			return new JSONResponse($shipment->shippingAddress->get()->toArray(), 'success', $this->translate('_shipment_address_changed'));
+			return new JSONResponse($shipment->shippingAddress->toArray(), 'success', $this->translate('_shipment_address_changed'));
 		}
 		else
 		{
@@ -267,7 +267,7 @@ class ShipmentController extends StoreManagementController
 	public function updateShippingAmountAction()
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', $this->request->get('id'), true, array('CustomerOrder', 'User'));
-		$order = $shipment->order->get();
+		$order = $shipment->order;
 
 		$order->loadAll();
 
@@ -304,7 +304,7 @@ class ShipmentController extends StoreManagementController
 
 			if($this->request->get('noStatus'))
 			{
-				$shipment->status->set($shipment->order->get()->status->get());
+				$shipment->status->set($shipment->order->status);
 			}
 			else if($this->request->get('shippingServiceID') || ((int)$this->request->get('status') < 3))
 			{
@@ -317,14 +317,14 @@ class ShipmentController extends StoreManagementController
 				array(
 					'shipment' => array(
 						'ID' => $shipment->getID(),
-						'amount' => $shipment->amount->get(),
-						'shippingAmount' => $shipment->shippingAmount->get(),
-						'ShippingService' => array('ID' => ($shipment->shippingService->get() ? $shipment->shippingService->get()->getID() : 0) ),
-						'taxAmount' => $shipment->taxAmount->get(),
-						'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-						'prefix' => $shipment->getCurrency()->pricePrefix->get(),
-						'status' => $shipment->status->get(),
-						'suffix' => $shipment->getCurrency()->priceSuffix->get()
+						'amount' => $shipment->amount,
+						'shippingAmount' => $shipment->shippingAmount,
+						'ShippingService' => array('ID' => ($shipment->shippingService ? $shipment->shippingService->getID() : 0) ),
+						'taxAmount' => $shipment->taxAmount,
+						'total' => $shipment->shippingAmount + $shipment->amount + (float)$shipment->taxAmount,
+						'prefix' => $shipment->getCurrency()->pricePrefix,
+						'status' => $shipment->status,
+						'suffix' => $shipment->getCurrency()->priceSuffix
 					)
 				),
 				'success',
@@ -356,14 +356,14 @@ class ShipmentController extends StoreManagementController
 	public function deleteAction()
 	{
 		$shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder'));
-		$shipment->order->get()->loadAll();
+		$shipment->order->loadAll();
 
-		$history = new OrderHistory($shipment->order->get(), $this->user);
+		$history = new OrderHistory($shipment->order, $this->user);
 
 		$shipment->delete();
 
-		$shipment->order->get()->updateStatusFromShipments();
-		$shipment->order->get()->save();
+		$shipment->order->updateStatusFromShipments();
+		$shipment->order->save();
 
 		$history->saveLog();
 

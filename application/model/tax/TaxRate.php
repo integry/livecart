@@ -74,7 +74,7 @@ class TaxRate extends MultilingualObject
 		{
 			$loadReferencedRecords = array('Tax');
 		}
-		$filter->setOrder(new ARFieldHandle('Tax', 'position'));
+		$filter->order(new ARFieldHandle('Tax', 'position'));
 
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
@@ -110,28 +110,28 @@ class TaxRate extends MultilingualObject
 
 	public function getTaxAmount($amount)
 	{
-		return $amount * ($this->rate->get() / 100);
+		return $amount * ($this->rate / 100);
 	}
 
 	public function getPosition()
 	{
-		$position = $this->tax->get()->position->get() * 10000;
-		if ($class = $this->taxClass->get())
+		$position = $this->tax->position * 10000;
+		if ($class = $this->taxClass)
 		{
-			$position += $class->position->get() + 1;
+			$position += $class->position + 1;
 		}
 
 		return $position;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
-		if (!$this->deliveryZone->get() || $this->deliveryZone->get()->isDefault())
+		if (!$this->deliveryZone || $this->deliveryZone->isDefault())
 		{
-			$this->deliveryZone->setNull();
+			$this->deliveryZone = null;
 		}
 
-		return parent::insert();
+
 	}
 }
 

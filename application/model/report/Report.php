@@ -276,7 +276,7 @@ abstract class Report
 			$f->setGrouping(new ARExpressionHandle($alias));
 		}
 
-		$f->setOrder(new ARExpressionHandle($alias));
+		$f->order(new ARExpressionHandle($alias));
 	}
 
 	protected function getPieChartData($array)
@@ -475,7 +475,7 @@ abstract class Report
 		$curr = array();
 		foreach ($this->application->getCurrencySet() as $currency)
 		{
-			$curr[] = 'IF (currencyID = "' . $currency->getID() . '", ' . $currency->rate->get();
+			$curr[] = 'IF (currencyID = "' . $currency->getID() . '", ' . $currency->rate;
 		}
 
 		return implode(', ', $curr) . ', 1' . str_repeat(')', count($curr));

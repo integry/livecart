@@ -43,7 +43,7 @@ class CategoryPresentation extends ActiveRecordModel
 
 	public function getTheme()
 	{
-		return $this->theme->get();
+		return $this->theme;
 	}
 
 	public static function getNewInstance(ActiveRecordModel $parent)
@@ -76,7 +76,7 @@ class CategoryPresentation extends ActiveRecordModel
 		$c = eq(__CLASS__ . '.productID', $product->getID());
 		$c->addOr(self::getCategoryCondition($category));
 		$f = select($c);
-		$f->setOrder(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
+		$f->order(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
 		self::setCategoryOrder($category, $f);
 
 		// check if a theme is defined for this product particularly
@@ -96,9 +96,9 @@ class CategoryPresentation extends ActiveRecordModel
 			{
 				foreach (array('theme', 'isAllVariations', 'isVariationImages', 'listStyle') as $field)
 				{
-					if (!$prod->$field->get())
+					if (!$prod->$field)
 					{
-						$prod->$field->set($cat->$field->get());
+						$prod->$field->set($cat->$field);
 					}
 				}
 			}
@@ -110,8 +110,8 @@ class CategoryPresentation extends ActiveRecordModel
 	private static function getCategoryCondition(Category $category)
 	{
 		$own = new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $category->getID());
-		$parent = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$parent->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		$parent = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft);
+		$parent->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt));
 		$parent->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isSubcategories'), true));
 		$own->addOR($parent);
 
@@ -120,8 +120,8 @@ class CategoryPresentation extends ActiveRecordModel
 
 	private static function setCategoryOrder(Category $category, ARSelectFilter $f)
 	{
-		$f->setOrder(new ARExpressionHandle('CategoryPresentation.categoryID=' . $category->getID()), 'DESC');
-		$f->setOrder(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->order(new ARExpressionHandle('CategoryPresentation.categoryID=' . $category->getID()), 'DESC');
+		$f->order(new ARFieldHandle('Category', 'lft'), 'DESC');
 	}
 }
 

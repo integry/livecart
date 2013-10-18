@@ -78,7 +78,7 @@ class ProductPricing
 
 	public function setPrice(ProductPrice $price)
 	{
-		$this->prices[$price->currency->get()->getID()] = $price;
+		$this->prices[$price->currency->getID()] = $price;
 	}
 
 	/**
@@ -120,7 +120,7 @@ class ProductPricing
 		{
 			if ($listPrice)
 			{
-				$this->prices[$currencyCode]->listPrice->setNull();
+				$this->prices[$currencyCode]->listPrice = null;
 				return false;
 			}
 
@@ -180,8 +180,8 @@ class ProductPricing
 
 		foreach ($this->prices as $inst)
 		{
-			$defPrice = $inst->$field->get();
-			$curr = $inst->currency->get()->getID();
+			$defPrice = $inst->$field;
+			$curr = $inst->currency->getID();
 			if ('price' == $field)
 			{
 				$defined[$curr] = $inst->getPriceByGroup($ruleController->getContext()->getUserGroupID());
@@ -195,7 +195,7 @@ class ProductPricing
 				$defined[$curr] = $defPrice;
 			}
 
-			$definedListPrice[$curr] = $inst->listPrice->get();
+			$definedListPrice[$curr] = $inst->listPrice;
 		}
 
 		if ($listPrice)
@@ -208,7 +208,7 @@ class ProductPricing
 
 		$formattedPrice = $calculated = array();
 
-		$parent = $this->product->parent->get();
+		$parent = $this->product->parent;
 		$setting = $this->product->getChildSetting('price');
 
 		foreach ($this->application->getCurrencySet() as $id => $currency)
@@ -275,7 +275,7 @@ class ProductPricing
 		$prices = array();
 		foreach ($price->getUserPrices($user) as $quant => $pr)
 		{
-			$pr = $currency->convertAmount($price->currency->get(), $pr);
+			$pr = $currency->convertAmount($price->currency, $pr);
 			$pr = $this->application->getDisplayTaxPrice($pr, $this->product);
 			$prices[$quant] = array(
 								'price' => $pr,

@@ -30,7 +30,7 @@ class SearchableNewsPost extends SearchableModel
 				$searchTerm
 			));
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
-		$f->setOrder($c, 'DESC');
+		$f->order($c, 'DESC');
 		return $f;
 	}
 }

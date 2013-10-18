@@ -91,7 +91,7 @@ class RecurringProductPeriodController extends StoreManagementController
 			$rebillCount=floor($rebillCount);
 			$rpp->rebillCount->set(is_numeric($rebillCount) && $rebillCount <= 0 ? $rebillCount : NULL);
 			$rpp->save();
-			$product = $rpp->product->get();
+			$product = $rpp->product;
 			$currencies = array();
 			foreach ($this->application->getCurrencyArray(true) as $currency)
 			{
