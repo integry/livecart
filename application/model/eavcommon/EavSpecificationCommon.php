@@ -17,7 +17,7 @@ abstract class EavSpecificationCommon extends ActiveRecordModel implements iEavS
 
 	public function getFieldInstance()
 	{
-		return $this->getField()->get();
+		return $this->getField();
 	}
 
 	public function getOwnerVarName()

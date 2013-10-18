@@ -1,5 +1,8 @@
 <?php
 
+namespace eav;
+
+use \eavcommon\EavValueCommon;
 
 /**
  * Attribute selector value. The same selector value can be assigned to multiple products and usually
@@ -12,14 +15,11 @@
  */
 class EavValue extends EavValueCommon
 {
-	/**
-	 * Define schema in database
-	 */
-	public static function defineSchema()
-	{
-		$schema = parent::defineSchema(__CLASS__);
-		public $fieldID", "EavField", "ID", "EavField;
-	}
+//	public $fieldID", "EavField", "ID", "EavField;
+
+	public $ID;
+	public $position;
+	public $value;
 
 	protected function getFieldClass()
 	{
@@ -31,52 +31,29 @@ class EavValue extends EavValueCommon
 	/**
 	 *  Get new instance of specification field value
 	 *
-	 *	@param EavField $field Instance of EavField (must be a selector field)
-	 *  @return EavValue
+	 *	@param SpecField $field Instance of SpecField (must be a selector field)
+	 *  @return SpecFieldValue
 	 */
 	public static function getNewInstance(EavField $field)
 	{
-		return parent::getNewInstance(__CLASS__, $field);
-	}
+		if (!in_array($field->type, array(EavFieldCommon::TYPE_NUMBERS_SELECTOR, EavFieldCommon::TYPE_TEXT_SELECTOR)))
+		{
+			throw new Exception('Cannot create an EavValue for non-selector field!');
+		}
 
-	/**
-	 * Get active record instance
-	 *
-	 * @param integer $recordID
-	 * @param boolean $loadRecordData
-	 * @param boolean $loadReferencedRecords
-	 * @return EavValue
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
+		$instance = new EavValue;
+		$instance->fieldID = $field->getID();
 
-	/**
-	 * Loads a record set of specification field values belonging to specification field
-	 *
-	 * @param integer $fieldID
-	 * @return ARSet
-	 */
-	public static function getRecordSet($fieldID)
-	{
-		return parent::getRecordSet(__CLASS__, $fieldID);
+		return $instance;
 	}
-
-	/**
-	 * Loads a record set of specification field values belonging to specification field and returns it as array
-	 *
-	 * @param integer $fieldID
-	 * @return ARSet
-	 */
-	public static function getRecordSetArray($fieldID)
+	
+	public static function restoreInstance(EavFieldCommon $field, $valueId, $value)
 	{
-		return parent::getRecordSetArray(__CLASS__, $fieldID);
-	}
+		$instance = self::getNewInstance($field);
+		$instance->setID($valueId);
+		$instance->value = unserialize($value);
 
-	public static function restoreInstance(EavField $field, $valueId, $value)
-	{
-		return parent::restoreInstance(__CLASS__, $field, $valueId, $value);
+		return $instance;
 	}
 }
 ?>

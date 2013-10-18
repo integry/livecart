@@ -1,5 +1,6 @@
 <?php
 
+namespace Eav;
 
 /**
  * Custom field container for a particular EAV type (users, manufacturers, orders, etc)
@@ -7,7 +8,7 @@
  * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
-class EavFieldManager implements iEavFieldManager
+class EavFieldManager
 {
 	private $classID;
 	private $stringIdentifier;
@@ -76,8 +77,8 @@ class EavFieldManager implements iEavFieldManager
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->stringIdentifier));
 		}
 
-		$filter->setOrder(new ARFieldHandle('EavFieldGroup', 'position'));
-		$filter->setOrder(new ARFieldHandle('EavField', 'position'));
+		$filter->order(new ARFieldHandle('EavFieldGroup', 'position'));
+		$filter->order(new ARFieldHandle('EavField', 'position'));
 
 		return $filter;
 	}
@@ -94,7 +95,7 @@ class EavFieldManager implements iEavFieldManager
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'stringIdentifier'), $this->stringIdentifier));
 		}
 
-		$filter->setOrder(new ARFieldHandle('EavFieldGroup', 'position'));
+		$filter->order(new ARFieldHandle('EavFieldGroup', 'position'));
 
 		return $filter;
 	}

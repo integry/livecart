@@ -987,7 +987,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		foreach ($langList as $lang)
 		{
 			if (($defaultLangCode != $lang->getID() || $includeDefaultLanguage) &&
-				(($lang->isEnabled->get() == 1) || $includeInactiveLanguages))
+				(($lang->isEnabled == 1) || $includeInactiveLanguages))
 			{
 				$langArray[] = $lang->getID();
 			}
@@ -1217,7 +1217,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 		if ($details instanceof LiveCartTransaction)
 		{
-			$inst->setOrder($details->getOrder());
+			$inst->order($details->getOrder());
 		}
 
 		$c = $this->config->getSection('payment/' . $className);
@@ -1229,10 +1229,10 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 
 		// check if the currency is supported by the payment handler
-		$currency = $inst->getValidCurrency($details->currency->get());
-		if (($details->currency->get() != $currency) && !is_null($details->currency->get()))
+		$currency = $inst->getValidCurrency($details->currency);
+		if (($details->currency != $currency) && !is_null($details->currency))
 		{
-			$newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
+			$newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency, Currency::LOAD_DATA), $details->amount);
 			$details->currency->set($currency);
 			$details->amount->set(round($newAmount, 2));
 		}
@@ -1351,7 +1351,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 			if ($items = SessionOrder::getOrderItems())
 			{
-				$context->setOrder($items);
+				$context->order($items);
 			}
 
 			if ($this->sessionUser->getUser())

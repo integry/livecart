@@ -1,0 +1,79 @@
+# Confirmations
+_could_not_save_attribute=Could not save attribute
+_attribute_was_successfully_saved=Attribute was successfully saved
+_could_not_remove_attribute=Could not remove attribute
+_attribute_was_successfully_removed=Attribute was successfully removed
+
+_add_new_field=Add new attribute
+_add_new_group=Add new group
+_delete_field=Delete field
+_remove_field_question=Are you sure you want to remove this field?
+_SpecField_remove_question=Are you sure you want to remove this attribute?
+_SpecFieldGroup_remove_question=Are you sure you want to remove this group?
+_edit_group=Edit attribute group
+_cancel_adding_new_field=Cancel adding new attribute
+_cancel_adding_new_group=Cancel adding new attribute group
+
+# errors
+_error_handle_exists=Such handle already exists in current category
+_error_handle_empty=Please enter handle
+_error_handle_invalid=Please enter valid handle
+_error_value_empty=You are required to fill this field
+_error_value_is_not_a_number=Field value should be a valid number
+_error_name_empty=Name empty
+_error_record_id_is_not_valid=Record with such id does not exist
+_error_you_should_provide_default_group_name=Group name should be provided
+
+_custom_fields=Custom Fields
+_offline_methods=Offline Payment Methods
+
+Category=Categories
+CustomerOrder=Orders
+Manufacturer=Manufacturers
+User=Users
+UserGroup=User groups
+UserAddress=Addresses
+ShippingService=Shipping methods
+StaticPage=Pages
+
+_SpecField_displayed_on_front_page=Editable by customer
+_SpecField_displayed_in_product_list=Visible to customer
+
+_show_in_invoice=Show in invoice
+_show_in_regform=Show in registration form
+
+# SpecField
+_SpecField_main=Main
+_SpecField_values=Values
+_SpecField_translations=Translations
+_SpecField_title=Title
+_SpecField_handle=Handle
+_SpecField_description=Description
+_SpecField_value_type=Value type
+_SpecField_type=Type
+_SpecField_add_values=Enter more values
+_SpecField_select_multiple=Can select multiple values
+_SpecField_is_required=Required
+_specField_group_title=Title
+_SpecField_formated_text=Formated text
+_specField_merge_values=Merge values
+_specField_cancel_merge_values=Cancel merge
+
+# specification fields types
+_SpecField_text=Text
+_SpecField_numbers=Number
+_SpecField_type_numbers=Field
+_SpecField_type_numbers_selector=Options
+_SpecField_type_simple_text=Field
+_SpecField_type_formatted_text=Advanced
+_SpecField_type_text_selector=Options
+_SpecField_type_date=Date
+
+_SpecField_sortable=Allow sorting products by attribute value
+_SpecField_displayed_on_front_page=Display attribute in product page
+_SpecField_displayed_in_product_list=Display attribute in product list
+_SpecField_valuePrefix=Value prefix
+_SpecField_valueSuffix=Value suffix
+_SpecField_upload_image=Upload value image
+_SpecField_select_image=Select image file to upload
+_SpecField_delete_image=Delete uploaded image

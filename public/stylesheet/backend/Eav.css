@@ -1,3 +1,9 @@
+.hideTabs .nav-tabs
+{
+	display: none;
+}
+
+/*
 fieldset.specification
 {
   	margin-top: 10px;
@@ -47,3 +53,4 @@ input.newOptionValue
 	margin-bottom: 10px;
 	margin-top: 0;
 }
+*/

@@ -57,13 +57,13 @@ abstract class EavItemCommon extends EavSpecificationCommon
 		}
 
 		// test whether the value belongs to the same field
-		if ($value->getField()->get()->getID() != $this->getField()->get()->getID())
+		if ($value->getField()->getID() != $this->getField()->getID())
 		{
-			$class = get_class($value->getField()->get());
-			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->get()->getID() . ' value to ' . $class . ':' . $this->getField()->get()->getID());
+			$class = get_class($value->getField());
+			throw new Exception('Cannot assign ' . $class . ':' . $value->getField()->getID() . ' value to ' . $class . ':' . $this->getField()->getID());
 		}
 
-		if($value !== $this->getValue()->get()) $this->getValue() = $value;
+		if($value !== $this->getValue()) $this->getValue() = $value;
 	}
 
 	public function getField()
@@ -73,7 +73,7 @@ abstract class EavItemCommon extends EavSpecificationCommon
 
 	public function save($params = null)
 	{
-		if ($this->value && !$this->value->get())
+		if ($this->value && !$this->value)
 		{
 			return;
 		}
@@ -83,9 +83,9 @@ abstract class EavItemCommon extends EavSpecificationCommon
 
 	public function toArray()
 	{
-		if ($value = $this->getValue()->get())
+		if ($value = $this->getValue())
 		{
-			return $this->getValue()->get()->toArray();
+			return $this->getValue()->toArray();
 		}
 	}
 

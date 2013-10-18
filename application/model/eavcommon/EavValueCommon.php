@@ -1,5 +1,6 @@
 <?php
 
+namespace eavcommon;
 
 /**
  * Attribute selector value. The same selector value can be assigned to multiple products and usually
@@ -10,7 +11,7 @@
  * @package application/model/category
  * @author Integry Systems <http://integry.com>
  */
-abstract class EavValueCommon extends MultilingualObject
+abstract class EavValueCommon extends \system\MultilingualObject
 {
 	private $mergedFields = array();
 
@@ -19,51 +20,6 @@ abstract class EavValueCommon extends MultilingualObject
 	protected function getFieldIDColumnName()
 	{
 		return call_user_func(array($this->getFieldClass(), 'getFieldIDColumnName'));
-	}
-
-	/**
-	 * Define SpecFieldValue schema in database
-	 */
-	public static function defineSchema($className)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("value", ARArray::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-
-		return $schema;
-	}
-
-	/**
-	 *  Get new instance of specification field value
-	 *
-	 *	@param SpecField $field Instance of SpecField (must be a selector field)
-	 *  @return SpecFieldValue
-	 */
-	public static function getNewInstance($className, EavFieldCommon $field)
-	{
-		if (!in_array($field->type->get(), array(EavFieldCommon::TYPE_NUMBERS_SELECTOR, EavFieldCommon::TYPE_TEXT_SELECTOR)))
-		{
-			throw new Exception('Cannot create a ' . $className . ' for non-selector field!');
-		}
-
-		$instance = parent::getNewInstance($className);
-		$instance->getField()->set($field);
-
-		return $instance;
-	}
-
-	public static function restoreInstance($className, EavFieldCommon $field, $valueId, $value)
-	{
-		$instance = self::getNewInstance($className, $field);
-		$instance->setID($valueId);
-		$instance->value->set(unserialize($value));
-		$instance->resetModifiedStatus();
-
-		return $instance;
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -89,7 +45,7 @@ abstract class EavValueCommon extends MultilingualObject
 	public static function getRecordSet($className, $specFieldId)
 	{
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle($className, "position"));
+		$filter->order(new ARFieldHandle($className, "position"));
 		$fieldColumn = call_user_func(array(call_user_func(array($className, 'getFieldClass')), 'getFieldIDColumnName'));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $fieldColumn), $specFieldId));
 
@@ -105,7 +61,7 @@ abstract class EavValueCommon extends MultilingualObject
 	public static function getRecordSetArray($className, $specFieldId)
 	{
 		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle($className, "position"));
+		$filter->order(new ARFieldHandle($className, "position"));
 		$fieldColumn = call_user_func(array(call_user_func(array($className, 'getFieldClass')), 'getFieldIDColumnName'));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $fieldColumn), $specFieldId));
 
@@ -149,27 +105,26 @@ abstract class EavValueCommon extends MultilingualObject
 		return $isFullPath ? $this->config->getPath('public/') . $path : $path;
 	}
 
-	public function save($forceOperation = false)
+	public function beforeSave()
 	{
-		parent::save($forceOperation);
 		$this->mergeFields();
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 	   	// get current max position
-		if (!$this->position->get())
+		if (!$this->position)
 		{
 			$filter = new ARSelectFilter();
-		   	$cond = new EqualsCond(new ARFieldHandle(get_class($this), $this->getFieldIDColumnName()), $this->getField()->get()->getID());
+		   	$cond = new EqualsCond(new ARFieldHandle(get_class($this), $this->getFieldIDColumnName()), $this->getField()->getID());
 		   	$filter->setCondition($cond);
-			$filter->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
-		   	$filter->setLimit(1);
+			$filter->order('position', 'DESC');
+		   	$filter->limit(1);
 		   	$res = ActiveRecordModel::getRecordSet(get_class($this), $filter);
 		   	if ($res->size() > 0)
 		   	{
 			 	$item = $res->get(0);
-				$pos = $item->position->get() + 1;
+				$pos = $item->position + 1;
 			}
 			else
 			{
@@ -179,7 +134,7 @@ abstract class EavValueCommon extends MultilingualObject
 			$this->position->set($pos);
 		}
 
-		return parent::insert();
+
 	}
 
 	/**

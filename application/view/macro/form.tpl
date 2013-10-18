@@ -4,7 +4,7 @@
 	{% if validator and validator.getAngularValues() %}
 		<script type="text/javascript">window.vals = [[ validator.getAngularValues() ]];</script>
 	{% endif %}
-	<form name="form" ng-submit="checkErrors($event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; vals={};" {% if validator %}default-values="vals"{% endif %}
+	<form name="form" ng-submit="checkErrors($event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; {% if empty(params['ng-init']) %}vals={};{% else %} [[ params['ng-init'] ]]{% endif %}" {% if validator %}default-values="vals"{% endif %}
 
 	{% if action %}
 		action="[[ url(action) ]]"

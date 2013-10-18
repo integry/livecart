@@ -56,7 +56,7 @@ abstract class EavValueSpecificationCommon extends EavSpecificationCommon
 
 	public function setValueByLang($langCode, $value)
 	{
-		$currentValue = $this->value->get();
+		$currentValue = $this->value;
 		if (!is_array($currentValue))
 		{
 		  	$currentValue = array();
@@ -88,7 +88,7 @@ abstract class EavValueSpecificationCommon extends EavSpecificationCommon
 
 	public function getValue()
 	{
-		return $this->value->get();
+		return $this->value;
 	}
 }
 

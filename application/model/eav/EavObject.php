@@ -102,7 +102,7 @@ class EavObject extends ActiveRecordModel
 		return parent::serialize($skippedRelations, $properties);
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		parent::insert();
 		$this->parent->save();

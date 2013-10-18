@@ -34,12 +34,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	public static function getInstanceByID($id)
 	{
 		$class = get_called_class();
-		return $class::query()->where('ID = :id:')->bind(array('id' => $id))->execute()->getFirst();
+		return $class::query()->where('ID = :id:', array('id' => $id))->execute()->getFirst();
 	}
 
 	public function loadRequestModel(\Phalcon\Http\Request $request, $key = '')
 	{
-		$json = $request->getJSON();
+		$json = $request-> getJsonRawBody();
 		if ($key)
 		{
 			$json = $json[$key];
@@ -100,8 +100,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public static function getRequestInstance(\Phalcon\Http\Request $request, $field = 'ID')
 	{
-		$data = $request->getJSON();
-		return ActiveRecordModel::getInstanceByID(get_called_class(), $data[$field], true);
+		return ActiveRecordModel::getInstanceByID(get_called_class(), $request->getJson($field), true);
 	}
 
 	public static function updateFromRequest(\Phalcon\Http\Request $request)
@@ -117,9 +116,16 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-	public function loadRequestData(\Phalcon\Http\Request $request)
+	public function loadRequestData(LiveCartRequest $request)
 	{
-		$this->assign($request->get());
+		if ($json = $request->getJsonRawBody())
+		{
+			$this->assign($json);
+		}
+		else
+		{
+			$this->assign($request);
+		}
 
 		return;
 		//var_dump($request);exit;
@@ -203,7 +209,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function removeSpecification()
 	{
-		$this->eavObject->setNull();
+		$this->eavObject = null;
 		unset($this->specificationInstance);
 	}
 
@@ -219,7 +225,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function loadSpecification($specificationData = null)
 	{
-
 		if ($this->isSpecificationLoaded() && !$specificationData)
 		{
 			return;
@@ -230,67 +235,66 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
 		}
 
-
 		$obj = $this instanceof EavObject ? $this : EavObject::getInstance($this);
 
 		$this->specificationInstance = new EavSpecificationManager($obj, $specificationData);
 	}
 
-	protected function setLastPosition($parentField = null, ARValueMapper $parent = null)
+	protected function setLastPosition($parentField = null, $parent = null)
 	{
 		if ($parentField && !$parent)
 		{
 			$parent = $this->$parentField;
 		}
 
-		$parentField .= 'ID';
-
 		// get max position
-	  	$cond = $parent ? new EqualsCond(new ARFieldHandle(get_class($this), $parentField), $parent->getID()) : null;
+	  	$query = $this->query();
+	  	if ($parent)
+	  	{
+	  		$query->where($parentField . '= :parent:', array('parent' => $parent));
+	  	}
+		$query->order('position DESC')->limit(1);
 
-		$f = new ARSelectFilter($cond);
-		$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
-		$f->setLimit(1);
-		$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-
-		// default new language state
-		$this->position->set($position);
+		$rec = $query->execute()->getFirst();
+		$this->position = $rec ? $rec->position + 1 : 0;
 	}
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		$this->executePlugins($this, 'before-insert');
-		$res = parent::insert();
+	}
+
+	public function afterCreate()
+	{
 		$this->executePlugins($this, 'insert');
 		$this->executePlugins($this, 'save');
-		return $res;
 	}
 
-	protected function _update()
+	protected function beforeUpdate()
+	{
+		$this->executePlugins($this, 'before-update');
+	}
+
+	public function afterUpdate()
 	{
 		$this->executePlugins($this, 'update');
-		$res = parent::update();
 		$this->executePlugins($this, 'save');
-		return $res;
 	}
 
-	public function __save($forceOperation = null)
+	public function beforeSave()
 	{
 		$this->executePlugins($this, 'before-save');
 
 		if (($this instanceof EavAble) && $this->eavObject && !$this->eavObject->getID() && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
 		{
 			$eavObject = $this->eavObject;
-			$this->eavObject->setNull();
+			$this->eavObject = null;
 		}
-
-		$res = parent::save($forceOperation);
 
 		if (isset($eavObject))
 		{
 			$eavObject->save();
-			$this->eavObject->set($eavObject);
+			$this->eavObject = $eavObject;
 			$this->save();
 		}
 
@@ -305,18 +309,14 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 				$this->eavObject->delete();
 			}
 		}
-
-		$this->executePlugins($this, 'after-save');
-
-		$cache = $this->getDI()->get('application')->getCache();
-		if ($cache instanceof MemCachedCache)
-		{
-			$cache->set($this->getRecordIdentifier($this), $this);
-		}
-
-		return $res;
 	}
 
+	public function afterSave()
+	{
+		$this->executePlugins($this, 'after-save');
+	}
+
+/*
 	protected static function transformArray($array, ARSchema $schema)
 	{
 		$schemaName = $schema->getName();
@@ -353,6 +353,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 		return $data;
 	}
+*/
 
 	public static function isEav($className)
 	{
@@ -417,7 +418,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		{
 			return false;
 		}
-
 
 		// create array of EavObject gateway objects for all queued records
 		$eavObjects = array();
@@ -531,7 +531,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function unserialize($serialized)
 	{
-				$res = parent::unserialize($serialized);
+		$res = parent::unserialize($serialized);
 
 		if (!empty($this->specificationInstance))
 		{

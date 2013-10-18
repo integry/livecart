@@ -95,6 +95,13 @@ try
 		return $router;
 	});
 
+	$di->set('request', function() use ($di)
+	{
+		$request = new \LiveCartRequest();
+		$request->setDI($di);
+		return $request;
+	});
+	
 	// configuration handler
 	$di->set('config', function() use ($di)
 	{

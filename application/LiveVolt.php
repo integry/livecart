@@ -63,6 +63,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return '$this->url->get(' . $resolvedArgs . ')';
 			});
 
+			$this->_compiler->addFunction('json', function($resolvedArgs, $exprArgs) {
+				return 'htmlspecialchars(json_encode(' . $resolvedArgs . '))';
+			});
+
 			$this->_compiler->addFunction('count', 'count');
 			$this->_compiler->addFunction('round', 'round');
 			$this->_compiler->addFunction('is_null', 'is_null');
@@ -278,6 +282,7 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 		$source = preg_replace('/\{\% title \%\}\{t (.*)\}\{\% endblock \%\}/', '{% block title %}{{ title(t(\'$1\')) }}{% endblock %}', $source);
 		$source = preg_replace('/\{\% title \%\}(.*)\{\% endblock \%\}/', '{% block title %}{{ title(\'$1\') }}{% endblock %}', $source);
 
+		$source = preg_replace('/{tip ([^\|]+?)}/', '{{tip("$1")}}', $source);
 		$source = preg_replace('/{t ([^\|]+?)}/', '{{t("$1")}}', $source);
 		$source = preg_replace('/{tn ([^\|]+?)}/', '{{t("$1", true)}}', $source);
 

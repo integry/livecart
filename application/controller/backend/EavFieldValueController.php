@@ -48,7 +48,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
-		$f->setLimit(20);
+		$f->limit(20);
 
 		$resp = array();
 
@@ -66,7 +66,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
 			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
-		  	$f->setOrder($searchHandle, 'ASC');
+		  	$f->order($searchHandle, 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('EavStringValue', $f);
 

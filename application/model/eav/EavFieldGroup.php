@@ -43,22 +43,9 @@ class EavFieldGroup extends EavFieldGroupCommon
 		return $array;
 	}
 
-	/**
-	 * Get specification group item instance
-	 *
-	 * @param int|array $recordID Record id
-	 * @param bool $loadRecordData If true loads record's structure and data
-	 * @param bool $loadReferencedRecords If true loads all referenced records
-	 * @return EavFieldGroup
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
 	protected function getParentCondition()
 	{
-		return new EqualsCond(new ARFieldHandle(get_class($this), 'classID'), $this->classID->get());
+		return new EqualsCond('classID', $this->classID);
 	}
 }
 

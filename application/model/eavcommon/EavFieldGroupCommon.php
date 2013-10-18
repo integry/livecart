@@ -25,19 +25,19 @@ class EavFieldGroupCommon extends MultilingualObject
 
 	/*####################  Saving ####################*/
 
-	protected function insert()
+	public function beforeCreate()
 	{
 		// get max position
 	  	$f = new ARSelectFilter();
 	  	$f->setCondition($this->getParentCondition());
-	  	$f->setOrder(new ARFieldHandle(get_class($this), 'position'), 'DESC');
-	  	$f->setLimit(1);
+	  	$f->order('position', 'DESC');
+	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
 
 		$this->position = $position;
 
-		return parent::insert();
+
 	}
 }
 
