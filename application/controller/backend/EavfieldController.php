@@ -1,6 +1,9 @@
 <?php
 
+require_once(dirname(__FILE__) . '/abstract/ActiveGridController.php');
+
 use eav\EavField;
+use eav\EavValue;
 use eav\EavFieldManager;
 use Phalcon\Validation\Validator;
 
@@ -10,7 +13,7 @@ use Phalcon\Validation\Validator;
  * @package application/controller/backend
  * @author Integry Systems
  */
-class EavfieldController extends ControllerBackend
+class EavfieldController extends ActiveGridController
 {
 	/**
 	 * Configuration data
@@ -20,6 +23,16 @@ class EavfieldController extends ControllerBackend
 	 */
 	protected $specFieldConfig = array();
 
+	protected function getClassName()
+	{
+		return 'eav\EavField';
+	}
+	
+	protected function getDefaultColumns()
+	{
+		return array('eav\EavField.ID', 'eav\EavField.name');
+	}
+	
 	/**
 	 * Displays form for creating a new or editing existing one product group specification field
 	 *
@@ -29,11 +42,13 @@ class EavfieldController extends ControllerBackend
 	{
 		if ($id)
 		{
-			
+			$field = EavField::getInstanceByID($id);
+			$array = $field->toArray();
+			$array['values'] = $field->getValues()->toArray();
 		}
 		else
 		{
-			$array = array('type' => '3', 'values' => array(array('title' => '')));
+			$array = array('type' => '3', 'values' => array(array('value' => '')));
 		}
 		
 		echo json_encode($array);
@@ -188,26 +203,65 @@ class EavfieldController extends ControllerBackend
 		}
 		else
 		{
-			$specField = EavField::getNewInstance($this->getParent($this->request->get('categoryID')));
+			$specField = new EavField;
+			$specField->classID = $this->request->getJson('eavType');
 		}
 
-		if (!is_numeric($this->request->get('eavType')))
+		if (!is_numeric($this->request->getJson('eavType')))
 		{
-			$specField->stringIdentifier = $this->request->get('eavType');
+			$specField->stringIdentifier = $this->request->getJson('eavType');
 		}
 		
 		$specField->loadRequestData($this->request);
 		
-		$type = $this->request->get('advancedText') ? EavField::TYPE_TEXT_ADVANCED : (int)$this->request->get('type');
+		$type = $this->request->getJson('advancedText') ? EavField::TYPE_TEXT_ADVANCED : (int)$this->request->getJson('type');
 		$dataType = EavField::getDataTypeFromType($type);
-		$categoryID = $this->request->get('categoryID');
 
 		$specField->dataType = $dataType;
 		$specField->type = $type;
 
 		$specField->save();
 		
-		echo json_encode($specField->toArray());
+		$values = $this->request->getJson('values');
+		if (is_array($values))
+		{
+			$existingValues = array();
+			foreach ($specField->getValues() as $value)
+			{
+				$existingValues[$value->getID()] = $value;
+			}
+			
+			foreach ($values as &$value)
+			{
+				if (empty($value['ID']))
+				{
+					$val = EavValue::getNewInstance($specField);
+				}
+				else
+				{
+					$val = isset($existingValues[$value['ID']]) ? $existingValues[$value['ID']] : EavValue::getNewInstance($specField);
+					if (empty($value['value']))
+					{
+						continue;
+					}
+					unset($existingValues[$value['ID']]);
+				}
+				
+				$val->assign($value);
+				$val->save();
+			}
+			
+			// existing values not present in the posted data are deleted
+			foreach ($existingValues as $deleted)
+			{
+				$deleted->delete();
+			}
+		}
+		
+		$arr = $specField->toArray();
+		$arr['values'] = $specField->getValues()->toArray();
+		
+		echo json_encode($arr);
 	}
 
 	/**
@@ -323,6 +377,18 @@ class EavfieldController extends ControllerBackend
 	public function addAction()
 	{
 		$this->setValidator($this->getEavFieldValidator());
+	}
+
+	public function editAction()
+	{
+		$this->setValidator($this->getEavFieldValidator());
+	}
+	
+	protected function getSelectFilter()
+	{
+		$f = parent::getSelectFilter();
+		$f->andWhere('classID = :classid:', array('classid' => $this->dispatcher->getParam(0)));
+		return $f;
 	}
 
 	public function aindexAction()

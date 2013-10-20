@@ -30,7 +30,7 @@ class EavFieldGroupCommon extends MultilingualObject
 		// get max position
 	  	$f = new ARSelectFilter();
 	  	$f->setCondition($this->getParentCondition());
-	  	$f->order('position', 'DESC');
+	  	$f->orderBy('position', 'DESC');
 	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(get_class($this), $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;

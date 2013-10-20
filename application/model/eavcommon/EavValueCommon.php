@@ -45,7 +45,7 @@ abstract class EavValueCommon extends \system\MultilingualObject
 	public static function getRecordSet($className, $specFieldId)
 	{
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle($className, "position"));
+		$filter->orderBy(new ARFieldHandle($className, "position"));
 		$fieldColumn = call_user_func(array(call_user_func(array($className, 'getFieldClass')), 'getFieldIDColumnName'));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $fieldColumn), $specFieldId));
 
@@ -61,7 +61,7 @@ abstract class EavValueCommon extends \system\MultilingualObject
 	public static function getRecordSetArray($className, $specFieldId)
 	{
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle($className, "position"));
+		$filter->orderBy(new ARFieldHandle($className, "position"));
 		$fieldColumn = call_user_func(array(call_user_func(array($className, 'getFieldClass')), 'getFieldIDColumnName'));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $fieldColumn), $specFieldId));
 
@@ -112,29 +112,10 @@ abstract class EavValueCommon extends \system\MultilingualObject
 
 	public function beforeCreate()
 	{
-	   	// get current max position
 		if (!$this->position)
 		{
-			$filter = new ARSelectFilter();
-		   	$cond = new EqualsCond(new ARFieldHandle(get_class($this), $this->getFieldIDColumnName()), $this->getField()->getID());
-		   	$filter->setCondition($cond);
-			$filter->order('position', 'DESC');
-		   	$filter->limit(1);
-		   	$res = ActiveRecordModel::getRecordSet(get_class($this), $filter);
-		   	if ($res->size() > 0)
-		   	{
-			 	$item = $res->get(0);
-				$pos = $item->position + 1;
-			}
-			else
-			{
-				$pos = 0;
-			}
-
-			$this->position->set($pos);
+			$this->setLastPosition('fieldID');
 		}
-
-
 	}
 
 	/**

@@ -356,6 +356,8 @@ backendComponents.directive('grid', function($compile)
         replace: true,
         link: function(scope, element, attrs)
 		{
+			scope.columnDefs = [];
+			
 			scope.pagingOptions = {
 										pageSizes: [10],
 										pageSize: 10,
@@ -380,18 +382,75 @@ backendComponents.directive('grid', function($compile)
 										new ngGridSelectAll({scope: scope})
 										]
 								 };
-
+								 
 			if (attrs.primarykey)
 			{
 				scope.gridOptions.primaryKey = attrs.primarykey;
 			}
+			
+			scope.setColumnDefs = function(defs)
+			{
+				scope.columnDefs = defs;
+			};
+
+			scope.setItemCount = function(count)
+			{
+				scope.totalServerItems = count;
+			};
+			
+			var getSelectedIDs = function()
+			{
+				if (scope.allSelected)
+				{
+					var ids = [];
+					_.each(scope.unselectedItems, function(val, key) 
+					{
+						if (val) 
+						{
+							ids.push(key);
+						}
+					});
+				}
+				else
+				{
+					var ids = _.pluck(scope.gridOptions.selectedItems, scope.gridOptions.primaryKey);
+				}
+
+				return ids;
+			};
+			
+			scope.massAction = function(action, params)
+			{
+				var ids = getSelectedIDs();
+				if (!scope.isMassAllowed())
+				{
+					return;
+				}
+				
+				scope.resource.mass({action: action, ids: ids, allSelected: scope.allSelected}, function()
+				{
+					scope.refresh();
+				});
+			};
+			
+			scope.isMassAllowed = function()
+			{
+				return scope.allSelected || (getSelectedIDs().length > 0);
+			};
+			
+			scope.remove = function()
+			{
+				scope.massAction('delete');
+			};
 
 			var actionsButtonTemplate = element.find('actions').html();
-
+			var menu = element.find('menu').html();
+			
 			var newElem = angular.element('<div></div>');
 			backendComponents.copyAttrs(element, attrs);
 
 			newElem.attr('ng-grid', 'gridOptions');
+			newElem.append(menu);
 
 			newElem = $compile(newElem)(scope);
 			element.replaceWith(newElem);
@@ -402,9 +461,8 @@ backendComponents.directive('grid', function($compile)
 				{
 					window.setTimeout(function()
 					{
-						if (ev.targetScope.columnDefs && !ev.targetScope.isActionColumnAdded)
+						if (ev.targetScope.columnDefs.length && (_.pluck(ev.targetScope.columnDefs, 'field').indexOf('actions') == -1))
 						{
-							ev.targetScope.isActionColumnAdded = true;
 							ev.targetScope.columnDefs.unshift({field: 'actions', displayName: '', visible: true, cellTemplate: '<div class="editColumn">' + actionsButtonTemplate + '</div>', width: 'auto'});
 							ev.targetScope.$apply();
 						}
@@ -441,7 +499,7 @@ backendComponents.directive('editButton', function($compile)
         priority: 1,
         link: function(scope, element, attrs)
 		{
-			var newElem = angular.element('<button class="btn btn-primary btn-mini">' + element.html() + '</button>');
+			var newElem = angular.element('<button class="btn btn-primary btn-xs">' + element.html() + '</button>');
 			backendComponents.copyAttrs(element, attrs);
 			newElem.attr('ng-click', '; $event.stopPropagation(); startEditor(row);');
 
@@ -475,6 +533,17 @@ backendComponents.directive('legend', function($compile)
         transclude: true,
         scope: false,
         template: '<div class="panel-heading" ng-transclude></div>'
+    };
+});
+
+backendComponents.directive('dragIcon', function($compile)
+{
+    return {
+        restrict: "E",
+        replace: true,
+        transclude: true,
+        scope: false,
+        template: '<span class="glyphicon glyphicon-move drag-icon"></span>'
     };
 });
 
@@ -643,16 +712,19 @@ backendComponents.directive('eavMultiselect', function($parse)
     };
 });
 
-app.directive('defaultValues', function () {
+backendComponents.directive('defaultValues', function () {
     return {
         link: function (scope, elm, attrs, ctrl)
         {
-			scope.vals = window[attrs.defaultValues];
+			if (window[attrs.defaultValues])
+			{
+				scope.vals = window[attrs.defaultValues];
+			}
         }
     };
 });
 
-app.directive('passwordMatch', function () {
+backendComponents.directive('passwordMatch', function () {
     return {
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl)
@@ -668,7 +740,7 @@ app.directive('passwordMatch', function () {
     };
 });
 
-app.directive('filterNumber', function(){
+backendComponents.directive('filterNumber', function(){
    return {
      require: 'ngModel',
      link: function(scope, element, attrs, modelCtrl)

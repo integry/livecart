@@ -107,7 +107,7 @@
     [[ startinput(field, 'pwdfld') ]]
         [[ open_label() ]]
         	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
-        	<input type="checkbox" ng-true-value="on" ng-false-value="" value="on" [[ inputattributes(field, params) ]] />
+        	<input type="checkbox" ng-true-value="1" ng-false-value="0" value="1" [[ inputattributes(field, params) ]] />
         	[[ t(title) ]]
         </label>
     [[ endinput(field) ]]

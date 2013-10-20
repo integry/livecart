@@ -153,7 +153,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 				{
 					foreach ($languages as $lang)
 					{
-						if ($request->isValueSet($reqName . '_' . $lang))
+						if ($request->has($reqName . '_' . $lang))
 						{
 							$hasLangValue = true;
 							break;
@@ -161,8 +161,8 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 					}
 				}
 
-				if ($hasLangValue || $request->isValueSet($reqName) ||
-				   ($request->isValueSet('checkbox_' . $reqName) && ('ARBool' == get_class($field->getDataType())))
+				if ($hasLangValue || $request->has($reqName) ||
+				   ($request->has('checkbox_' . $reqName) && ('ARBool' == get_class($field->getDataType())))
 					)
 				{
 					switch ($dataType)
@@ -253,7 +253,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	  	{
 	  		$query->where($parentField . '= :parent:', array('parent' => $parent));
 	  	}
-		$query->order('position DESC')->limit(1);
+		$query->orderBy('position DESC')->limit(1);
 
 		$rec = $query->execute()->getFirst();
 		$this->position = $rec ? $rec->position + 1 : 0;

@@ -66,7 +66,7 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
 			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
-		  	$f->order($searchHandle, 'ASC');
+		  	$f->orderBy($searchHandle, 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('EavStringValue', $f);
 

@@ -18,6 +18,7 @@
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.0/angular-ui-router.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
 
 		<script src="javascript/library/angular/tree.js"></script>
 		<script src="javascript/library/angular/tinymce.js"></script>
@@ -37,6 +38,7 @@
 		<link href="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.css" rel="stylesheet"></link>
 		<script src="http://code.angularjs.org/1.2.0-rc.3/angular-resource.min.js"></script>
 		
+		<link href="stylesheet/backend/Backend.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Eav.css" rel="stylesheet"></link>
 
 		{% block head %}{% endblock %}

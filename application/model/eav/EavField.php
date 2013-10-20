@@ -37,6 +37,18 @@ class EavField extends EavFieldCommon
 	public $valuePrefix;
 	public $valueSuffix;
 
+	public function initialize()
+	{
+        $this->hasMany('fieldID', 'eav\EavValue', 'ID', array(
+            'alias' => 'EavValue',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+        
+		$this->belongsTo('userID', 'user\User', 'ID', array('alias' => 'User'));
+	}
+
 	const DATATYPE_TEXT = 1;
 	const DATATYPE_NUMBERS = 2;
 
@@ -47,6 +59,11 @@ class EavField extends EavFieldCommon
 	const TYPE_TEXT_ADVANCED = 4;
 	const TYPE_TEXT_SELECTOR = 5;
 	const TYPE_TEXT_DATE = 6;
+	
+	public function getLangFields()
+	{
+		return array('name');
+	}
 
 	public static function getClassID($className)
 	{
@@ -190,7 +207,7 @@ class EavField extends EavFieldCommon
 	public static function getFieldsByClass($className)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), EavField::getClassID($className)));
-		$f->order(new ARFieldHandle('EavField', 'position'));
+		$f->orderBy(new ARFieldHandle('EavField', 'position'));
 
 		return self::getRecordSet('EavField', $f);
 	}
@@ -403,28 +420,14 @@ class EavField extends EavFieldCommon
 		$this->setLastPosition();
 	}
 
-	/*####################  Get related objects ####################*/
-
-	/**
-	 * Loads a set of spec field records in current category
-	 *
-	 * @return array
-	 */
-	public function getValuesList()
-	{
-		$valueClass = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
-		return call_user_func(array($valueClass, 'getRecordSetArray'), $this->getID());
-	}
-
 	/**
 	 * Loads a set of spec field records in current category
 	 *
 	 * @return ARSet
 	 */
-	public function getValuesSet()
+	public function getValues()
 	{
-		$valueClass = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
-		return call_user_func(array($valueClass, 'getRecordSet'), $this->getID());
+		return EavValue::query()->where('fieldID = :field:', array('field' => $this->getID()))->orderBy('position')->execute();
 	}
 
 	/*####################  Data array transformation ####################*/

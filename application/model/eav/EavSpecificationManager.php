@@ -37,7 +37,7 @@ class EavSpecificationManager
 			$f->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->owner->getStringIdentifier()));
 		}
 
-		$f->order(new ARFieldHandle('EavField', 'position'));
+		$f->orderBy(new ARFieldHandle('EavField', 'position'));
 		return ActiveRecordModel::getRecordSet('EavField', $f, $loadReferencedRecords);
 	}
 
@@ -317,7 +317,7 @@ class EavSpecificationManager
 		$application = ActiveRecordModel::getApplication();
 
 		// create new select values
-		if ($request->isValueSet($prefix . 'other'))
+		if ($request->has($prefix . 'other'))
 		{
 			foreach ($request->get($prefix . 'other') as $fieldID => $values)
 			{
@@ -363,7 +363,7 @@ class EavSpecificationManager
 			{
 				if (!$field->isMultiValue)
 				{
-					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other')))
+					if ($request->has($fieldName) && !in_array($request->get($fieldName), array('other')))
 				  	{
 				  		if ($request->get($fieldName))
 				  		{
@@ -382,7 +382,7 @@ class EavSpecificationManager
 
 					foreach ($values as $value)
 					{
-						if ($request->isValueSet($prefix . $value->getFormFieldName()) || $request->isValueSet($prefix . 'removeEmpty_' . $field->getID()))
+						if ($request->has($prefix . $value->getFormFieldName()) || $request->has($prefix . 'removeEmpty_' . $field->getID()))
 						{
 						  	if ($request->get($prefix . $value->getFormFieldName()))
 						  	{
@@ -398,13 +398,13 @@ class EavSpecificationManager
 			}
 			else
 			{
-				if ($request->isValueSet($fieldName))
+				if ($request->has($fieldName))
 			  	{
 			  		if ($field->isTextField())
 					{
 						foreach ($languages as $language)
 						{
-							if ($request->isValueSet($prefix . $field->getFormFieldName($language)))
+							if ($request->has($prefix . $field->getFormFieldName($language)))
 							{
 								$this->setAttributeValueByLang($field, $language, $request->get($prefix . $field->getFormFieldName($language)));
 							}
@@ -475,7 +475,6 @@ class EavSpecificationManager
 
 	public function isValid($validatorName = 'eavValidator')
 	{
-
 		$request = new Request();
 		$request->setValueArray($this->getFormData());
 		$validator = new \Phalcon\Validation($validatorName, $request);

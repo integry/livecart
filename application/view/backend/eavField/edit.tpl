@@ -6,7 +6,8 @@
 		[[ form("", ["method": "POST", "ng-submit": "save()", "ng-init": "setEmptyValue()"]) ]]>
 		<div class="modal-header">
 			<button type="button" class="close" aria-hidden="true" ng-click="$close(0)">&times;</button>
-			<h3>{t _add_new_field}</h3>
+			<h3 ng-show="!vals.ID">{t _add_new_field}</h3>
+			<h3 ng-show="vals.ID">{t _edit_field}</h3>
 		</div>
 		<div class="modal-body" ng-class="{'hideTabs': !isSelect()}">
 			<tabset>
@@ -14,7 +15,7 @@
 					<div class="form-group">
 						<label class="specField_form_type_label">{tip _SpecField_type}</label>
 
-						<select ng-model="vals.type">
+						<select ng-model="vals.type" ng-disabled="vals.ID">
 							<optgroup label="{t _SpecField_text}">
 								<option value="5">{t _SpecField_type_text_selector}</option>
 								<option value="3">{t _SpecField_type_simple_text}</option>
@@ -52,17 +53,20 @@
 					[[ checkbox('isSortable', tip('_SpecField_sortable')) ]]
 				</tab>
 				<tab heading="{t _SpecField_values}">
+					<div ui-sortable ng-model="vals.values">
 					<div ng-repeat="value in vals.values">
 						<div class="form-group">
-							<input type="text" class="form-control" ng-change="addRemoveValues()" ng-model="value.title" />
+							<drag-icon></drag-icon>
+							<input type="text" class="form-control" ng-change="addRemoveValues()" ng-model="value.value" />
 						</div>
+					</div>
 					</div>
 				</tab>
 			</tabset>
 		</div>
 		<div class="modal-footer">
-			<submit>{t _save}</submit>
 			<button class="btn btn-warning cancel" ng-click="$close(0)">{t _cancel}</button>
+			<submit>{t _save}</submit>
 		</div>
 		</form>
 	</div>

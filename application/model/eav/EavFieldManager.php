@@ -77,8 +77,8 @@ class EavFieldManager
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->stringIdentifier));
 		}
 
-		$filter->order(new ARFieldHandle('EavFieldGroup', 'position'));
-		$filter->order(new ARFieldHandle('EavField', 'position'));
+		$filter->orderBy(new ARFieldHandle('EavFieldGroup', 'position'));
+		$filter->orderBy(new ARFieldHandle('EavField', 'position'));
 
 		return $filter;
 	}
@@ -95,7 +95,7 @@ class EavFieldManager
 			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'stringIdentifier'), $this->stringIdentifier));
 		}
 
-		$filter->order(new ARFieldHandle('EavFieldGroup', 'position'));
+		$filter->orderBy(new ARFieldHandle('EavFieldGroup', 'position'));
 
 		return $filter;
 	}

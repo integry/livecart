@@ -77,7 +77,7 @@ angular
 
 */
 
-var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.router', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
+var app = angular.module('LiveCart', ['ui.bootstrap', 'ui', 'ui.router', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
 
 app.config(function($stateProvider)
 {
@@ -165,45 +165,51 @@ app.controller('EavController', function ($scope, treeService, $http, $element, 
 
 app.controller('EavFieldController', function ($scope, $resource, $modal)
 {
-	$scope.resource = $resource(Router.createUrl('backend/eavField', 'lists', {id: $scope.type}), {}, {'query':  {method:'GET', isArray: false}});
-
-	/*
-	$http.get(Router.createUrl('backend/eavproduct', 'category', {id: $scope.category.id})).
-		success(function(data, status, headers, config)
-		{
-			$scope.columnDefs = data.options.columnDefs;
-			$scope.data = data.data;
-			$scope.totalServerItems = data.totalCount;
-		});
-	*/
+    $scope.resource = $resource('../backend/eavField/:verb/:id', 
+    	{id: $scope.type, verb: '@verb'}, 
+    	{
+    		query:  {method:'GET', isArray: false, params: { verb: 'lists' }},
+    		mass:  {method:'POST', params: { verb: 'mass' }}
+    	}
+    );
 
 	$scope.edit = function(id)
 	{
-		var d = $dialog.dialog({dialogFade: false, resolve: {id: function(){ return id; }, categoryID: function(){ return null; }  }});
-		d.open(Router.createUrl('backend.product', 'edit'), 'EditProductController');
+		$modal.open({templateUrl: Router.createUrl('backend/eavField', 'edit', {type: $scope.type}), 
+					controller: 'EavFieldEditController',
+					resolve: {
+							type: function() { return $scope.type },
+							id: function() { return id } }
+							});
 	};
 
 	$scope.add = function()
 	{
 		$modal.open({templateUrl: Router.createUrl('backend/eavField', 'add', {type: $scope.type}), 
 					controller: 'EavFieldEditController',
-					resolve: {type: function() { return $scope.type } }});
+					resolve: {
+							type: function() { return $scope.type },
+							id: function() { return null } }
+							});
 	};
 });
 
-app.controller('EavFieldEditController', function ($scope, $resource, $modal, type)
+app.controller('EavFieldEditController', function ($scope, $resource, $modal, type, id)
 {
 	$scope.form = null;
 	$scope.eavType = type;
     var resource = $resource('../backend/eavField/:verb/:id', 
-    	{id: $scope.id, verb: '@verb'}, 
+    	{id: id, verb: '@verb'}, 
     	{ 
     		get: { method: 'GET', params: { verb: 'get' }},
     		save: { method: 'POST', params: { verb: 'save' }} 
     	}
     );
     
-	$scope.vals = resource.get();
+	$scope.vals = resource.get(function(vals)
+	{
+		vals.eavType = type;
+	});
 
 	$scope.isSelect = function()
 	{
@@ -217,16 +223,32 @@ app.controller('EavFieldEditController', function ($scope, $resource, $modal, ty
 	
 	$scope.addRemoveValues = function()
 	{
-		$scope.vals.values = _.filter($scope.vals.values, function(value) { return value.title != ''; });
-		$scope.vals.values.push({title: ''});
+		if (!$scope.vals.values)
+		{
+			return;
+		}
+		
+		var filtered = _.filter($scope.vals.values, function(value) { return value.value != ''; });
+		
+		if (filtered.length == $scope.vals.values.length - 1)
+		{
+			return;
+		}
+		
+		$scope.vals.values = filtered;
+		$scope.vals.values.push({value: ''});
 	};
+	
+	$scope.$watch('vals.values', function()
+	{
+		$scope.addRemoveValues();
+	});
 	
 	$scope.save = function()
 	{
 		if (!$scope.getChildScopeForm($scope).$invalid)
 		{
 			resource.save($scope.vals);
-			console.log($scope.vals);
 		}
 	};
 });

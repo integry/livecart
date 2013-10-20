@@ -1,14 +1,10 @@
 <?php
 
-ClassLoader::importNow("application/helper/getDateFromString");
-ClassLoader::importNow("application/model/eav/EavField");
-ClassLoader::importNow("application/model/category/SpecField");
-
 /**
  * @package application/helper
  * @author Integry Systems
  */
-class ActiveGrid
+class ActiveGrid extends \Phalcon\DI\Injectable
 {
 	const SORT_HANDLE =   0;
 	const FILTER_HANDLE = 1;
@@ -18,55 +14,27 @@ class ActiveGrid
 	private $modelClass;
 	private $columnTypes;
 
-	public static function getFieldType(ARField $field)
+	public function __construct(\Phalcon\DI\FactoryDefault $di, \Phalcon\Mvc\Model\Query\Builder $filter, $modelClass = false, $columnTypes=array())
 	{
-		$fieldType = $field->getDataType();
-
-		if ($field instanceof ARForeignKeyField || $field instanceof ARPrimaryKeyField)
-		{
-		  	return null;
-		}
-
-		if ($fieldType instanceof ARBool)
-		{
-		  	$type = 'bool';
-		}
-		elseif ($fieldType instanceof ARNumeric)
-		{
-			$type = 'numeric';
-		}
-		elseif ($fieldType instanceof ARPeriod)
-		{
-			$type = 'date';
-		}
-		else
-		{
-		  	$type = 'text';
-		}
-
-		return $type;
-	}
-
-	public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false, $columnTypes=array())
-	{
-		$this->application = $application;
+		$this->setDI($di);
+		
 		$this->modelClass = $modelClass;
 		$this->filter = $filter;
 		$this->columnTypes = $columnTypes;
 
-		$request = $this->application->getRequest();
+		$request = $this->request;
 
 		// set recordset boundaries (limits)
-		$filter->limit($request->get('page_size', 10), $request->get('offset', 0));
+		$filter->limit($request->get('page_size'), $request->get('offset'));
 
 		// set order
-		if ($request->isValueSet('sort_col'))
+		if ($request->has('sort_col'))
 		{
 			$handle = $this->getFieldHandle($request->get('sort_col'), self::SORT_HANDLE);
 
 			if ($handle)
 			{
-				$filter->order($handle, $request->get('sort_dir'));
+				$filter->orderBy($handle, $request->get('sort_dir'));
 			}
 		}
 
@@ -75,11 +43,6 @@ class ActiveGrid
 		if (!is_array($filters))
 		{
 			$filters = (array)json_decode($request->get('filters'));
-		}
-		$conds = array();
-		if ($filter->getCondition())
-		{
-			$conds[] = $filter->getCondition();
 		}
 
 		foreach ($filters as $field => $value)
@@ -260,15 +223,39 @@ class ActiveGrid
 			}
 		}
 
-		if ($conds)
-		{
-			$filter->setCondition(new AndChainCondition($conds));
-		}
-
 		if (!empty($having))
 		{
 			$filter->setHavingCondition(new AndChainCondition($having));
 		}
+	}
+
+	public static function getFieldType(ARField $field)
+	{
+		$fieldType = $field->getDataType();
+
+		if ($field instanceof ARForeignKeyField || $field instanceof ARPrimaryKeyField)
+		{
+		  	return null;
+		}
+
+		if ($fieldType instanceof ARBool)
+		{
+		  	$type = 'bool';
+		}
+		elseif ($fieldType instanceof ARNumeric)
+		{
+			$type = 'numeric';
+		}
+		elseif ($fieldType instanceof ARPeriod)
+		{
+			$type = 'date';
+		}
+		else
+		{
+		  	$type = 'text';
+		}
+
+		return $type;
 	}
 
 	private function parseOperatorAndValue($c)
@@ -462,17 +449,17 @@ class ActiveGrid
 
 	private function getEavFieldClass()
 	{
-		return $this->modelClass == 'Product' ? 'SpecField' : 'EavField';
+		return 'EavField';
 	}
 
 	private function getEavValueClass()
 	{
-		return $this->modelClass == 'Product' ? 'SpecFieldValue' : 'EavValue';
+		return 'EavValue';
 	}
 
 	private function getEavTableAlias()
 	{
-		return $this->modelClass == 'Product' ? 'specField' : 'eavField';
+		return 'eavField';
 	}
 }
 

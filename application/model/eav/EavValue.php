@@ -3,6 +3,7 @@
 namespace eav;
 
 use \eavcommon\EavValueCommon;
+use Phalcon\Mvc\Model\Validator;
 
 /**
  * Attribute selector value. The same selector value can be assigned to multiple products and usually
@@ -15,11 +16,26 @@ use \eavcommon\EavValueCommon;
  */
 class EavValue extends EavValueCommon
 {
-//	public $fieldID", "EavField", "ID", "EavField;
-
 	public $ID;
+	public $fieldID;
 	public $position;
 	public $value;
+
+	public function initialize()
+	{
+		$this->belongsTo('fieldID', 'eav\EavField', 'ID', array('alias' => 'EavField'));
+	}
+
+    public function validation()
+    {
+        $this->validate(new Validator\PresenceOf(
+            array(
+                "field"  => "value"
+            )
+        ));
+
+        return $this->validationHasFailed() != true;
+    }
 
 	protected function getFieldClass()
 	{
@@ -36,7 +52,7 @@ class EavValue extends EavValueCommon
 	 */
 	public static function getNewInstance(EavField $field)
 	{
-		if (!in_array($field->type, array(EavFieldCommon::TYPE_NUMBERS_SELECTOR, EavFieldCommon::TYPE_TEXT_SELECTOR)))
+		if (!in_array($field->type, array(EavField::TYPE_NUMBERS_SELECTOR, EavField::TYPE_TEXT_SELECTOR)))
 		{
 			throw new Exception('Cannot create an EavValue for non-selector field!');
 		}
@@ -47,7 +63,7 @@ class EavValue extends EavValueCommon
 		return $instance;
 	}
 	
-	public static function restoreInstance(EavFieldCommon $field, $valueId, $value)
+	public static function restoreInstance(EavField $field, $valueId, $value)
 	{
 		$instance = self::getNewInstance($field);
 		$instance->setID($valueId);

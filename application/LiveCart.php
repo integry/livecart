@@ -1217,7 +1217,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 		if ($details instanceof LiveCartTransaction)
 		{
-			$inst->order($details->getOrder());
+			$inst->orderBy($details->getorderBy());
 		}
 
 		$c = $this->config->getSection('payment/' . $className);
@@ -1260,7 +1260,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	public function getCardTypes(CreditCardPayment $handler)
 	{
 		$key = get_class($handler) . '_customCardTypes';
-		if ($this->config->isValueSet($key))
+		if ($this->config->has($key))
 		{
 			if ($types = trim($this->config->get($key)))
 			{
@@ -1275,7 +1275,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 
 		$key = get_class($handler) . '_cardTypes';
-		if ($this->config->isValueSet($key))
+		if ($this->config->has($key))
 		{
 			$types = array_keys($this->config->get($key));
 			return array_combine($types, $types);
@@ -1351,7 +1351,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 
 			if ($items = SessionOrder::getOrderItems())
 			{
-				$context->order($items);
+				$context->orderBy($items);
 			}
 
 			if ($this->sessionUser->getUser())
@@ -1425,7 +1425,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 		}
 		else
 		{
-			foreach (Currency::query()->where('isEnabled = 1')->order('position ASC')->execute() as $currency)
+			foreach (Currency::query()->where('isEnabled = 1')->orderBy('position ASC')->execute() as $currency)
 			{
 				$this->currencies[$currency->getID()] = $currency;
 			}
