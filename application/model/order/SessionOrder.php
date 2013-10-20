@@ -15,7 +15,7 @@ class SessionOrder
 	 *
 	 * @return CustomerOrder
 	 */
-	public static function getOrder()
+	public static function getorderBy()
 	{
 		if (self::$instance)
 		{
@@ -53,7 +53,7 @@ class SessionOrder
 			{
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userId));
 				$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-				$f->order(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+				$f->orderBy(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
 				$f->limit(1);
 				$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 				if ($orders->size())
@@ -78,7 +78,7 @@ class SessionOrder
 		if ($instance->isFinalized)
 		{
 			$session->unsetValue('CustomerOrder');
-			return self::getOrder();
+			return self::getorderBy();
 		}
 
 		// fixes issue when trying to add OrderedItem to unsaved(without ID) CustomerOrder.
@@ -87,11 +87,11 @@ class SessionOrder
 		{
 			$instance->save(true);
 		}
-		self::order($instance);
+		self::orderBy($instance);
 		return $instance;
 	}
 
-	public static function order(CustomerOrder $order)
+	public static function orderBy(CustomerOrder $order)
 	{
 		$session = new Session();
 		$session->set('CustomerOrder', $order->getID());
@@ -135,7 +135,7 @@ class SessionOrder
 
 	public static function getOrderData()
 	{
-		self::order(self::getOrder());
+		self::orderBy(self::getorderBy());
 		$session = new Session();
 		return $session->get('orderData');
 	}
@@ -150,7 +150,7 @@ class SessionOrder
 		}
 		else
 		{
-			$order = self::getOrder();
+			$order = self::getorderBy();
 			if ($order->shippingAddress)
 			{
 				return $order->shippingAddress;
@@ -191,7 +191,7 @@ class SessionOrder
 
 	public static function setEstimateAddress(UserAddress $address)
 	{
-		$order = self::getOrder();
+		$order = self::getorderBy();
 		$estimateAddress = clone $address;
 		$estimateAddress->removeSpecification();
 		$session = new Session();
@@ -204,7 +204,7 @@ class SessionOrder
 		$order->getShipments();
 
 		$order->save();
-		self::order($order);
+		self::orderBy($order);
 	}
 
 	public static function destroy()

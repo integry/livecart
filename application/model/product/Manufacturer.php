@@ -87,7 +87,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		{
 			$f->mergeCondition(new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $startingWith.'%'));
 		}
-		$f->order(new ARFieldHandle('Manufacturer', 'name'));
+		$f->orderBy(new ARFieldHandle('Manufacturer', 'name'));
 
 		if ($perPage > 0)
 		{
@@ -116,7 +116,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
 		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$f->order(new ARFieldHandle('Manufacturer', 'name'));
+		$f->orderBy(new ARFieldHandle('Manufacturer', 'name'));
 
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 		foreach($manufacturers as $item)

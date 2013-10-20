@@ -38,8 +38,8 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 		ActiveRecordModel::executeUpdate('DELETE FROM EavField');
 
 		$this->controller = new UserController(self::getApplication());
-		$this->initOrder();
-		$this->controller->order($this->order);
+		$this->initorderBy();
+		$this->controller->orderBy($this->order);
 		$this->controller->setUser($this->user);
 	}
 
@@ -50,7 +50,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$this->assertTrue($this->order->isShippingRequired());
 
-		$this->controller->order($this->reloadOrder($this->order));
+		$this->controller->orderBy($this->reloadorderBy($this->order));
 
 		$request = $this->controller->getRequest();
 		$request->set('email', 'usercheckout@example.com');
@@ -103,7 +103,7 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$this->assertTrue($this->order->isShippingRequired());
 
-		$this->controller->order($this->reloadOrder($this->order));
+		$this->controller->orderBy($this->reloadorderBy($this->order));
 
 		$request = $this->controller->getRequest();
 		$request->set('sameAsBilling', '');
@@ -168,12 +168,12 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 
 	private function setUpController(FrontendController $controller)
 	{
-		$this->initOrder();
-		$controller->order($this->order);
+		$this->initorderBy();
+		$controller->orderBy($this->order);
 		$controller->setUser($this->user);
 	}
 
-	private function reloadOrder(CustomerOrder $order)
+	private function reloadorderBy(CustomerOrder $order)
 	{
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceById($order->getID(), true);

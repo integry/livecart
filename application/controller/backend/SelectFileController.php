@@ -213,7 +213,7 @@ class SelectFileController extends ActiveGridController
 		}
 
 		// sorting
-		if (!$this->request->isValueSet('sort_col'))
+		if (!$this->request->has('sort_col'))
 		{
 			$this->request->set('sort_col', 'name');
 		}

@@ -11,7 +11,7 @@ class SiteNewsController extends StoreManagementController
 	public function indexAction()
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$this->set('form', $this->buildForm());
 	}

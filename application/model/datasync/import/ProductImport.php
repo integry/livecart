@@ -588,7 +588,7 @@ class ProductImport extends DataImport
 	private function getVariationTypeByIndex(Product $product, $index)
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
 		$f->limit(1, $index - 1);
 
 		if ($product->getID())

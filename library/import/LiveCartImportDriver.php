@@ -65,7 +65,7 @@ abstract class LiveCartImportDriver
 		return false;
 	}
 
-	public function isCustomerOrder()
+	public function isCustomerorderBy()
 	{
 		return false;
 	}
@@ -404,7 +404,7 @@ abstract class LiveCartImportDriver
 		}
 	}
 
-	public function saveCustomerOrder(CustomerOrder $order)
+	public function saveCustomerorderBy(CustomerOrder $order)
 	{
 		$order->isFinalized->set(true);
 		$order->save();

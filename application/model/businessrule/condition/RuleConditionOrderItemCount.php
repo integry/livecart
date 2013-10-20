@@ -12,10 +12,10 @@ class RuleConditionOrderItemCount extends RuleCondition implements RuleOrderCond
 {
 	public function isApplicable()
 	{
-		return $this->compareValues($this->getOrder()->getShoppingCartItemCount(), $this->params['count']);
+		return $this->compareValues($this->getorderBy()->getShoppingCartItemCount(), $this->params['count']);
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 3;
 	}

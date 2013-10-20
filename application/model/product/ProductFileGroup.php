@@ -74,7 +74,7 @@ class ProductFileGroup extends ProductParametersGroup
 	{
 		$filter = new ARSelectFilter();
 
-		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
 
 		return $filter;

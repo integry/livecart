@@ -240,7 +240,7 @@ class ProductController extends CatalogController
 
 		// additional categories
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('Category', 'lft'));
+		$f->orderBy(new ARFieldHandle('Category', 'lft'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled') , true));
 
 		$pathC = new OrChainCondition();
@@ -257,7 +257,7 @@ class ProductController extends CatalogController
 
 		if ($categories)
 		{
-			$pathF->order(new ARFieldHandle('Category', 'lft') , 'DESC');
+			$pathF->orderBy(new ARFieldHandle('Category', 'lft') , 'DESC');
 			$pathF->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $pathF, array('Category')) as $parent)
 			{
@@ -593,7 +593,7 @@ class ProductController extends CatalogController
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
 		$f->limit($perPage, $offsetStart);
-		$f->order(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
+		$f->orderBy(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
 		$reviews = $this->product->getRelatedRecordSetArray('ProductReview', $f);
 		$this->pullRatingDetailsForReviewArray($reviews);
 
@@ -757,7 +757,7 @@ class ProductController extends CatalogController
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductRating', 'reviewID'), $ids));
-		$f->order(new ARFieldHandle('ProductRatingType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductRatingType', 'position'));
 		$ratings = ActiveRecordModel::getRecordSetArray('ProductRating', $f, array('ProductRatingType'));
 
 		foreach ($ratings as $rating)
@@ -963,8 +963,8 @@ class ProductController extends CatalogController
 	private function getPublicFiles()
 	{
 		$f = select(eq('ProductFile.isPublic', true));
-		$f->order(f('ProductFileGroup.position'));
-		$f->order(f('ProductFile.position'));
+		$f->orderBy(f('ProductFileGroup.position'));
+		$f->orderBy(f('ProductFile.position'));
 
 		return $this->product->getRelatedRecordSetArray('ProductFile', $f, array('ProductFileGroup'));
 	}

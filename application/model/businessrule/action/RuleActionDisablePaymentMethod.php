@@ -8,7 +8,7 @@
  */
 class RuleActionDisablePaymentMethod extends RuleAction implements RuleOrderAction
 {
-	public function applyToOrder(CustomerOrder $order)
+	public function applyToorderBy(CustomerOrder $order)
 	{
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$method = $this->getFieldValue('method', '');

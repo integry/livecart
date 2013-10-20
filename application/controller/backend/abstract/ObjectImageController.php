@@ -19,7 +19,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
-		$filter->order(new ARFieldHandle($this->getModelClass(), 'position'));
+		$filter->orderBy(new ARFieldHandle($this->getModelClass(), 'position'));
 
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
 
@@ -190,7 +190,7 @@ abstract class ObjectImageController extends StoreManagementController
 		return $resp;
 	}
 
-	private function filterOrder($item)
+	private function filterorderBy($item)
 	{
 		return trim($item);
 	}

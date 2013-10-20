@@ -229,7 +229,7 @@ class SitemapController extends FrontendController
 		}
 
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle($class, 'ID'));
+		$f->orderBy(new ARFieldHandle($class, 'ID'));
 
 		if ('StaticPage' != $class)
 		{

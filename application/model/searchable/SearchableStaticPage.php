@@ -31,7 +31,7 @@ class SearchableStaticPage extends SearchableModel
 			));
 
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
-		$f->order($c, 'DESC');
+		$f->orderBy($c, 'DESC');
 		return $f;
 	}
 }

@@ -461,7 +461,7 @@ class User extends \ActiveRecordModel //implements EavAble
 		}
 	}
 
-	public function getOrder($id)
+	public function getorderBy($id)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()));
@@ -556,7 +556,7 @@ class User extends \ActiveRecordModel //implements EavAble
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->getID()));
 		if (!$defaultFirst)
 		{
-			$f->order(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->getID()));
+			$f->orderBy(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->getID()));
 		}
 
 		return $f;
@@ -568,7 +568,7 @@ class User extends \ActiveRecordModel //implements EavAble
 		$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
 		if (!$defaultFirst)
 		{
-			$f->order(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->getID()));
+			$f->orderBy(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->getID()));
 		}
 
 		return $f;

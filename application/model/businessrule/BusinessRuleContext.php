@@ -19,7 +19,7 @@ class BusinessRuleContext
 
 	private $messages = array();
 
-	public function order(BusinessRuleOrderInterface $order)
+	public function orderBy(BusinessRuleOrderInterface $order)
 	{
 		$this->order = $order;
 	}
@@ -29,7 +29,7 @@ class BusinessRuleContext
 		$this->user = $user;
 	}
 
-	public function getOrder()
+	public function getorderBy()
 	{
 		return $this->order;
 	}
@@ -98,7 +98,7 @@ class BusinessRuleContext
 		if (empty($pastOrders))
 		{
 			$f = select(eq('CustomerOrder.userID', $this->user->getID()), eq('CustomerOrder.isFinalized', true), eq('CustomerOrder.isCancelled', 0), eq('CustomerOrder.isPaid', true));
-			$f->order(f('OrderedItem.customerOrderID'), 'DESC');
+			$f->orderBy(f('OrderedItem.customerOrderID'), 'DESC');
 			$records = ActiveRecordModel::getRecordSetArray('OrderedItem', $f, array('CustomerOrder', 'Product'));
 
 			// load variation parent products separately

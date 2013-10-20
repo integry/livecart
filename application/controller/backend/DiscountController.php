@@ -75,8 +75,8 @@ class DiscountController extends ActiveGridController
 	{
 				$methods = array();
 		$f = select();
-		$f->order(f('DeliveryZone.ID'));
-		$f->order(f('ShippingService.position'));
+		$f->orderBy(f('DeliveryZone.ID'));
+		$f->orderBy(f('ShippingService.position'));
 		foreach (ActiveRecord::getRecordSetArray('ShippingService', $f, array('DeliveryZone')) as $service)
 		{
 			$methods[$service['ID']] = $service['name_lang'] . ' (' . $service['DeliveryZone']['name'] . ')';
@@ -139,7 +139,7 @@ class DiscountController extends ActiveGridController
 
 		// actions
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('DiscountAction', 'position'));
+		$f->orderBy(new ARFieldHandle('DiscountAction', 'position'));
 		$actions = $condition->getRelatedRecordSet('DiscountAction', $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
 		foreach ($actions as $action)
 		{
@@ -497,13 +497,13 @@ class DiscountController extends ActiveGridController
 		return $f;
 	}
 
-	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	protected function setDefaultSortorderBy(ARSelectFilter $filter)
 	{
 		$handle = new ARFieldHandle($this->getClassName(), 'position');
 
 		if (!$filter->isSortedBy($handle))
 		{
-			$filter->order($handle, 'ASC');
+			$filter->orderBy($handle, 'ASC');
 		}
 	}
 

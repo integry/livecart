@@ -147,7 +147,7 @@ class LiveCartTransaction extends TransactionDetails
 		}
 	}
 
-	public function getOrder()
+	public function getorderBy()
 	{
 		return $this->order;
 	}

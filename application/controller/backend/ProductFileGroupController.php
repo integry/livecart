@@ -36,7 +36,7 @@ class ProductFileGroupController extends StoreManagementController
 		{
 			foreach ($this->application->getLanguageArray(true) as $lang)
 			{
-				if ($this->request->isValueSet('name_' . $lang))
+				if ($this->request->has('name_' . $lang))
 				{
 					$fileGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
 				}

@@ -22,14 +22,14 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 
 		if ($this->getParam('isOrderLevel'))
 		{
-			if ($this->getContext()->getOrder())
+			if ($this->getContext()->getorderBy())
 			{
 				$step = 0;
 				$previousItems = 0;
 				$totalCount = 0;
 				$stop = false;
 
-				$items = $this->getContext()->getOrder()->getShoppingCartItems();
+				$items = $this->getContext()->getorderBy()->getShoppingCartItems();
 				usort($items, array($this, 'sortByPrice'));
 
 				// calculate total number of applicable item products and how many have higher priority (have already been processed)
@@ -93,7 +93,7 @@ class RuleActionPercentageDiscount extends RuleAction implements RuleItemAction
 		return $price * ($this->getParam('amount', 0) / 100);
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 1;
 	}

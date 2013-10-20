@@ -27,9 +27,9 @@ class SearchReport extends Report
 		$q = $this->getQuery('COUNT(*)');
 
 		$f = $q->getFilter();
-		$f->reorder();
+		$f->reorderBy();
 		$f->resetGrouping();
-		$f->order(new ARExpressionHandle('cnt'), 'DESC');
+		$f->orderBy(new ARExpressionHandle('cnt'), 'DESC');
 		$q->addField('keywords');
 		$f->setGrouping(new ARExpressionHandle('keywords'));
 		$f->limit(self::TABLE_LIMIT);

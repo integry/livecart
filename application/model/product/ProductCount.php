@@ -65,7 +65,7 @@ class ProductCount
 		$k = 0;
 		$filters = array();
 		$config = $this->application->getConfig();
-		while ($config->isValueSet('PRICE_FILTER_NAME_' . ++$k))
+		while ($config->has('PRICE_FILTER_NAME_' . ++$k))
 		{
 			if ($config->get('PRICE_FILTER_NAME_' . $k) && !is_array($config->get('PRICE_FILTER_NAME_' . $k)))
 			{
@@ -110,12 +110,12 @@ class ProductCount
 		$selectFilter = $this->productFilter->getSelectFilter(!$includeAppliedFilters);
 		$selectFilter->removeFieldList();
 		$selectFilter->limit(0);
-		$selectFilter->order(new ARExpressionHandle('cnt'), 'DESC');
+		$selectFilter->orderBy(new ARExpressionHandle('cnt'), 'DESC');
 		$selectFilter->setGrouping(new ARFieldHandle('Product', 'manufacturerID'));
 		$selectFilter->mergeHavingCondition(new MoreThanCond(new ARExpressionHandle('cnt'), 0));
 		$selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$selectFilter->reorder();
-		$selectFilter->order(new ARFieldHandle('Manufacturer', 'name'));
+		$selectFilter->reorderBy();
+		$selectFilter->orderBy(new ARFieldHandle('Manufacturer', 'name'));
 
 		$query = new ARSelectQueryBuilder();
 		$query->includeTable('Product');

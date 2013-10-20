@@ -36,7 +36,7 @@ class NewsController extends FrontendController
 		$this->addIndexBreadCrumb();
 
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->order(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 
 		return new ActionResponse('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 	}

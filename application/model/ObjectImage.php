@@ -52,7 +52,7 @@ abstract class ObjectImage extends MultilingualObject
 			$cond = new EqualsCond(new ARFieldHandle(get_class($inst), $foreignKeyName), $owner->getID());
 			$cond->addAND(new NotEqualsCond(new ARFieldHandle(get_class($inst), 'ID'), $inst->getID()));
 			$f->setCondition($cond);
-			$f->order(new ARFieldHandle(get_class($inst), 'position'));
+			$f->orderBy(new ARFieldHandle(get_class($inst), 'position'));
 			$f->limit(1);
 			$newDefaultImage = ActiveRecordModel::getRecordSet(get_class($inst), $f);
 			if ($newDefaultImage->size() > 0)
@@ -117,7 +117,7 @@ abstract class ObjectImage extends MultilingualObject
 		// get current max image position
 	  	$filter = new ARSelectFilter();
 	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
-	  	$filter->order(new ARFieldHandle($className, 'position'), 'DESC');
+	  	$filter->orderBy(new ARFieldHandle($className, 'position'), 'DESC');
 	  	$filter->limit(1);
 	  	$maxPosSet = ActiveRecord::getRecordSet($className, $filter);
 		if ($maxPosSet->size() > 0)

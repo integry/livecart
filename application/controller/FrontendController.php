@@ -26,7 +26,7 @@ abstract class FrontendController extends ControllerBase
 		// variables to append automatically to all URLs
 		foreach (array('currency', 'sort', 'layout') as $key)
 		{
-			if ($this->request->isValueSet($key))
+			if ($this->request->has($key))
 			{
 				$this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
 			}
@@ -183,7 +183,7 @@ abstract class FrontendController extends ControllerBase
 	protected function boxInformationMenuBlock()
 	{
 				$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
-		$f->order(new ARFieldHandle('StaticPage', 'position'));
+		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
 		$response = new BlockResponse();
 		$this->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
@@ -533,8 +533,8 @@ abstract class FrontendController extends ControllerBase
 				}
 			}
 			$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-			$f->order(new ARFieldHandle('Category', 'parentNodeID'));
-			$f->order(new ARFieldHandle('Category', 'lft'));
+			$f->orderBy(new ARFieldHandle('Category', 'parentNodeID'));
+			$f->orderBy(new ARFieldHandle('Category', 'lft'));
 			$subCategories = array();
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
 			{
@@ -547,7 +547,7 @@ abstract class FrontendController extends ControllerBase
 
 		$f = new ARSelectFilter(new IsNullCond(new ARFieldHandle('StaticPage', 'parentID')));
 		$f->mergeCondition(StaticPage::getIsRootCategoriesMenuCondition());
-		$f->order(new ARFieldHandle('StaticPage', 'position'));
+		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
 		$pages = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 		$ids = array();
 		$subPages = array();
@@ -556,7 +556,7 @@ abstract class FrontendController extends ControllerBase
 			$ids[] = $page['ID'];
 		}
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('StaticPage', 'parentID'), $ids));
-		$f->order(new ARFieldHandle('StaticPage', 'position'));
+		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
 		foreach (ActiveRecordModel::getRecordSetArray('StaticPage', $f) as $page)
 		{
 			$subPages[$page['parentID']][] = $page;
@@ -585,7 +585,7 @@ abstract class FrontendController extends ControllerBase
 
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->limit($this->config->get('SALE_ITEMS_COUNT'));
-		$selectFilter->order(new ARExpressionHandle('RAND()'));
+		$selectFilter->orderBy(new ARExpressionHandle('RAND()'));
 
 		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
 
@@ -611,7 +611,7 @@ abstract class FrontendController extends ControllerBase
 
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->limit($this->config->get('NEWEST_ITEMS_COUNT'));
-		$selectFilter->order(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+		$selectFilter->orderBy(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
 
 		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
 
@@ -642,7 +642,7 @@ abstract class FrontendController extends ControllerBase
 
 			$selectFilter = $filter->getSelectFilter();
 			$selectFilter->limit($this->config->get('BESTSELLING_ITEMS_COUNT'));
-			$selectFilter->order(new ARExpressionHandle('cnt'), 'DESC');
+			$selectFilter->orderBy(new ARExpressionHandle('cnt'), 'DESC');
 
 			$q = new ARSelectQueryBuilder();
 			$q->includeTable('Product');
@@ -708,7 +708,7 @@ abstract class FrontendController extends ControllerBase
 	{
 		$this->application->logStat('Starting latestNewsBlock');
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->order(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->limit($this->config->get('NUM_NEWS_INDEX') + 1);
 
 		$this->application->logStat('Before fetching news from DB');
@@ -802,7 +802,7 @@ abstract class FrontendController extends ControllerBase
 		switch ($name)
 	  	{
 			case 'order':
-								$this->order = SessionOrder::getOrder();
+								$this->order = SessionOrder::getorderBy();
 
 				// check if order currency matches the request currency
 				if (!$this->order->currency || ($this->order->currency->getID() != $this->getRequestCurrency()))

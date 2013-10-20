@@ -123,7 +123,7 @@ class CheckoutController extends FrontendController
 		$class = $this->request->get('id');
 		$this->order->setPaymentMethod($class);
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-		$handler->order($this->order);
+		$handler->orderBy($this->order);
 
 		$returnUrl = $this->router->createFullUrl($this->url->get('checkout/expressReturn', 'id' => $class), true));
 		$cancelUrl = $this->router->createFullUrl($this->url->get('order'), true));
@@ -139,7 +139,7 @@ class CheckoutController extends FrontendController
 		$this->order->setPaymentMethod($class);
 
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-		$handler->order($this->order);
+		$handler->orderBy($this->order);
 
 		$details = $handler->getTransactionDetails($this->request->toArray());
 
@@ -150,7 +150,7 @@ class CheckoutController extends FrontendController
 
 		// @todo - determine if the order is new or completed earlier, but unpaid
 		// for now only new orders can be paid with express checkout methods
-		$order = $this->getPaymentOrder();
+		$order = $this->getPaymentorderBy();
 		$express = ExpressCheckout::getNewInstance($order, $handler);
 		$express->address->set($address);
 		$express->paymentData->set(serialize($paymentData));
@@ -226,7 +226,7 @@ class CheckoutController extends FrontendController
 			}
 		}
 
-		if ($redirect = $this->validateOrder($this->order))
+		if ($redirect = $this->validateorderBy($this->order))
 		{
 			return $redirect;
 		}
@@ -505,7 +505,7 @@ class CheckoutController extends FrontendController
 
 		$this->restoreShippingMethodSelection();
 
-		if ($redirect = $this->validateOrder($this->order, self::STEP_SHIPPING))
+		if ($redirect = $this->validateorderBy($this->order, self::STEP_SHIPPING))
 		{
 			return $redirect;
 		}
@@ -748,7 +748,7 @@ class CheckoutController extends FrontendController
 		// @todo: variation prices appear as 0.00 without the extra toArray() call :/
 		$this->order->toArray();
 
-		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+		if ($redirect = $this->validateorderBy($this->order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
@@ -763,7 +763,7 @@ class CheckoutController extends FrontendController
 		}
 
 		// check for express checkout data for this order
-		if (ExpressCheckout::getInstanceByOrder($this->order))
+		if (ExpressCheckout::getInstanceByorderBy($this->order))
 		{
 			return $this->response->redirect('checkout/payExpress');
 		}
@@ -884,9 +884,9 @@ class CheckoutController extends FrontendController
 			$this->request->set('order', $id);
 		}
 
-		$order = $this->getPaymentOrder();
+		$order = $this->getPaymentorderBy();
 
-		if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
+		if ($redirect = $this->validateorderBy($order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
@@ -910,7 +910,7 @@ class CheckoutController extends FrontendController
 
 		$handler = $this->application->getCreditCardHandler($transaction);
 
-		if ($this->request->isValueSet('ccType'))
+		if ($this->request->has('ccType'))
 		{
 			$handler->setCardType($this->request->get('ccType'));
 		}
@@ -992,7 +992,7 @@ class CheckoutController extends FrontendController
 
 		$order = $this->order;
 		$this->order->setPaymentMethod($method);
-		$response = $this->finalizeOrder();
+		$response = $this->finalizeorderBy();
 
 		$transaction = Transaction::getNewOfflineTransactionInstance($order, 0);
 		$transaction->setOfflineHandler($method);
@@ -1060,7 +1060,7 @@ class CheckoutController extends FrontendController
 		}
 		elseif ($result instanceof TransactionError)
 		{
-			ExpressCheckout::deleteInstancesByOrder($this->order);
+			ExpressCheckout::deleteInstancesByorderBy($this->order);
 			return $this->getPaymentPageRedirect();
 
 			// set error message for credit card form
@@ -1087,13 +1087,13 @@ class CheckoutController extends FrontendController
 	 */
 	public function redirectAction()
 	{
-		$order = $this->getPaymentOrder();
-		if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
+		$order = $this->getPaymentorderBy();
+		if ($redirect = $this->validateorderBy($order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
 
-		$notifyParams = $this->request->isValueSet('order') ? array('order' => $this->request->get('order')) : array();
+		$notifyParams = $this->request->has('order') ? array('order' => $this->request->get('order')) : array();
 
 		$class = $this->request->get('id');
 		$order->setPaymentMethod($class);
@@ -1108,7 +1108,7 @@ class CheckoutController extends FrontendController
 		// transaction information is not return back online, so the order is finalized right away
 		if (!$handler->isNotify())
 		{
-			$this->finalizeOrder();
+			$this->finalizeorderBy();
 		}
 
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
@@ -1188,7 +1188,7 @@ class CheckoutController extends FrontendController
 	 */
 	public function completeExternalAction()
 	{
-		if (SessionOrder::getOrder()->getID() != $this->request->get('id'))
+		if (SessionOrder::getorderBy()->getID() != $this->request->get('id'))
 		{
 			SessionOrder::destroy();
 		}
@@ -1208,7 +1208,7 @@ class CheckoutController extends FrontendController
 	 */
 	public function completedAction()
 	{
-		if ($this->request->isValueSet('id'))
+		if ($this->request->has('id'))
 		{
 			return new ActionRedirectResponse('checkout', 'completeExternal', array('id' => $this->request->get('id')));
 		}
@@ -1253,7 +1253,7 @@ class CheckoutController extends FrontendController
 		return $addressType;
 	}
 
-	private function getPaymentOrder()
+	private function getPaymentorderBy()
 	{
 		if (!$this->paymentOrder)
 		{
@@ -1301,10 +1301,10 @@ class CheckoutController extends FrontendController
 			$this->order->save();
 		}
 
-		return $this->finalizeOrder();
+		return $this->finalizeorderBy();
 	}
 
-	protected function finalizeOrder($options = array())
+	protected function finalizeorderBy($options = array())
 	{
 		if (!count($this->order->getShipments()))
 		{
@@ -1368,7 +1368,7 @@ class CheckoutController extends FrontendController
 	 *	@return ActionRedirectResponse
 	 *	@return false
 	 */
-	protected function validateOrder(CustomerOrder $order, $step = 0)
+	protected function validateorderBy(CustomerOrder $order, $step = 0)
 	{
 		if ($order->isFinalized)
 		{
@@ -1378,7 +1378,7 @@ class CheckoutController extends FrontendController
 		// no items in shopping cart
 		if (!count($order->getShoppingCartItems()))
 		{
-			if ($this->request->isValueSet('return'))
+			if ($this->request->has('return'))
 			{
 				return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
 			}
@@ -1435,12 +1435,12 @@ class CheckoutController extends FrontendController
 
 	private function validateExpressCheckout()
 	{
-		if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+		if ($redirect = $this->validateorderBy($this->order, self::STEP_PAYMENT))
 		{
 			return $redirect;
 		}
 
-		$expressInstance = ExpressCheckout::getInstanceByOrder($this->order);
+		$expressInstance = ExpressCheckout::getInstanceByorderBy($this->order);
 
 		if (!$expressInstance)
 		{

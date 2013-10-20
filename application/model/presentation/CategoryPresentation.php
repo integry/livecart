@@ -64,7 +64,7 @@ class CategoryPresentation extends ActiveRecordModel
 	public static function getThemeByCategory(Category $category)
 	{
 		$f = new ARSelectFilter(self::getCategoryCondition($category));
-		self::setCategoryOrder($category, $f);
+		self::setCategoryorderBy($category, $f);
 
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('Category'));
 		return self::getInheritedConfig($set);
@@ -76,8 +76,8 @@ class CategoryPresentation extends ActiveRecordModel
 		$c = eq(__CLASS__ . '.productID', $product->getID());
 		$c->addOr(self::getCategoryCondition($category));
 		$f = select($c);
-		$f->order(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
-		self::setCategoryOrder($category, $f);
+		$f->orderBy(new ARExpressionHandle('CategoryPresentation.productID=' . $product->getID()), 'DESC');
+		self::setCategoryorderBy($category, $f);
 
 		// check if a theme is defined for this product particularly
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, $f, array('Category'));
@@ -118,10 +118,10 @@ class CategoryPresentation extends ActiveRecordModel
 		return $own;
 	}
 
-	private static function setCategoryOrder(Category $category, ARSelectFilter $f)
+	private static function setCategoryorderBy(Category $category, ARSelectFilter $f)
 	{
-		$f->order(new ARExpressionHandle('CategoryPresentation.categoryID=' . $category->getID()), 'DESC');
-		$f->order(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->orderBy(new ARExpressionHandle('CategoryPresentation.categoryID=' . $category->getID()), 'DESC');
+		$f->orderBy(new ARFieldHandle('Category', 'lft'), 'DESC');
 	}
 }
 

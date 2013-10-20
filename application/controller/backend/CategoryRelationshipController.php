@@ -15,7 +15,7 @@ class CategoryRelationshipController extends StoreManagementController
 		$category = Category::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA);
 
 		$f = select();
-		$f->order(f('CategoryRelationship.position'));
+		$f->orderBy(f('CategoryRelationship.position'));
 		$additional = $category->getRelatedRecordSet('CategoryRelationship', $f, array('Category_RelatedCategory'));
 		$categories = array();
 		foreach ($additional as $cat)

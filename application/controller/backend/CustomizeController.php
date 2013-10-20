@@ -35,7 +35,7 @@ class CustomizeController extends StoreManagementController
 	public function modeAction()
 	{
 
-	  	if (($this->application->isCustomizationMode() && !$this->request->isValueSet('mode')) || ('exit' == $this->request->get('mode')))
+	  	if (($this->application->isCustomizationMode() && !$this->request->has('mode')) || ('exit' == $this->request->get('mode')))
 	  	{
 			$this->session->unsetValue('customizationMode');
 		}
@@ -45,7 +45,7 @@ class CustomizeController extends StoreManagementController
 			$this->session->set('customizationModeType', $this->request->get('mode', 'template'));
 		}
 
-		if (!$this->request->isValueSet('return'))
+		if (!$this->request->has('return'))
 		{
 			return $this->response->redirect('backend/customize/index');
 		}

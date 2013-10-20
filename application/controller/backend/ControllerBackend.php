@@ -70,7 +70,7 @@ abstract class ControllerBackend extends ControllerBase
 		$config = $application->getConfig();
 
 		// modules needing update
-		if (!$config->isValueSet('MODULE_STATS_UPDATED') || (time() - $config->get('MODULE_STATS_UPDATED') > 3600))
+		if (!$config->has('MODULE_STATS_UPDATED') || (time() - $config->get('MODULE_STATS_UPDATED') > 3600))
 		{
 			$config->set('MODULE_STATS_UPDATED', time());
 			$config->save();

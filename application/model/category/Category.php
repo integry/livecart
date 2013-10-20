@@ -323,7 +323,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->order(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->orderBy(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
@@ -370,7 +370,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->order(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->orderBy(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
@@ -392,7 +392,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$filter = new ARSelectFilter();
 		}
 
-		$filter->order(new ARFieldHandle("Category", "lft"), 'ASC');
+		$filter->orderBy(new ARFieldHandle("Category", "lft"), 'ASC');
 		$filter->mergeCondition(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft));
 		$filter->mergeCondition(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt));
 
@@ -550,8 +550,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
 			$filterFilter = new ARSelectFilter();
 			$filterFilter->setCondition($filterCond);
-			$filterFilter->order(new ARFieldHandle('Filter', 'filterGroupID'));
-			$filterFilter->order(new ARFieldHandle('Filter', 'position'));
+			$filterFilter->orderBy(new ARFieldHandle('Filter', 'filterGroupID'));
+			$filterFilter->orderBy(new ARFieldHandle('Filter', 'position'));
 
 			$valueFilters = ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));
 			foreach ($valueFilters as $filter)
@@ -565,8 +565,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		{
 			$selectFilter = new ARSelectFilter();
 			$selectFilter->setCondition(new INCond(new ARFieldHandle('SpecFieldValue', 'specFieldID'), $specFields));
-			$selectFilter->order(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
-			$selectFilter->order(new ARFieldHandle('SpecFieldValue', 'position'));
+			$selectFilter->orderBy(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
+			$selectFilter->orderBy(new ARFieldHandle('SpecFieldValue', 'position'));
 
 			$specFieldValues = ActiveRecord::getRecordSet('SpecFieldValue', $selectFilter);
 			foreach ($specFieldValues as $value)
@@ -644,8 +644,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$ids = array_keys($ids);
 
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle("SpecField", "categoryID"));
-		$filter->order(new ARFieldHandle("FilterGroup", "position"));
+		$filter->orderBy(new ARFieldHandle("SpecField", "categoryID"));
+		$filter->orderBy(new ARFieldHandle("FilterGroup", "position"));
 
 		$cond = new INCond(new ARFieldHandle("FilterGroup", "specFieldID"), $ids);
 
@@ -670,7 +670,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
-		$filter->order(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
+		$filter->orderBy(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
 
 		return $filter;
 	}
@@ -740,7 +740,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			foreach(array_reverse($this->getPathNodeArray(true)) as $cat)
 			{
 				$ids[] = $cat['ID'];
-				$f->order(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
+				$f->orderBy(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
 			}
 
 			$f->setCondition(new INCond(new ARFieldHandle('ProductOption', 'categoryID'), $ids));
@@ -750,7 +750,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$f->setCondition(new EqualsCond(new ARFieldHandle('ProductOption', 'categoryID'), $this->getID()));
 		}
 
-		$f->order(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->orderBy(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 
 		return ProductOption::getRecordSet($f, array('ProductOptionChoice'));
 	}
@@ -766,8 +766,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$filter = new ARSelectFilter();
 
-		$filter->order(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
-		$filter->order(new ARFieldHandle("SpecField", "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle("SpecField", "position"), 'ASC');
 
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
 
@@ -793,7 +793,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		ClassLoader::import("application/model/category/SpecFieldGroup");
 
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
+		$filter->orderBy(new ARFieldHandle("SpecFieldGroup", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecFieldGroup", "categoryID"), $this->getID()));
 
 		return $filter;

@@ -33,7 +33,7 @@ class SearchableProduct extends SearchableModel
 		}
 		$c = new ARExpressionHandle($this->getWeighedSearchCondition(array('name' => 1, 'sku'=>1), $searchTerm));
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
-		$f->order($c, 'DESC');
+		$f->orderBy($c, 'DESC');
 		return $f;
 	}
 

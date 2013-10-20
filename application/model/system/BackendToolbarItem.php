@@ -33,8 +33,8 @@ class BackendToolbarItem extends ActiveRecordModel
 		public $ownerID", "User", "ID", "User;
 	}
 
-	// BackendToolbarItem::registerLastViewedOrder($order);
-	public static function registerLastViewedOrder(CustomerOrder $order)
+	// BackendToolbarItem::registerLastViewedorderBy($order);
+	public static function registerLastViewedorderBy(CustomerOrder $order)
 	{
 		self::registerLastViewed(array('orderID' => $order->getID(), 'instance'=>$order));
 	}
@@ -83,7 +83,7 @@ class BackendToolbarItem extends ActiveRecordModel
 			$filter = new ARSelectFilter();
 		}
 		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), $this->sessionUser->getUser()->getID()));
-		$filter->order(f(__CLASS__.'.position'), $order);
+		$filter->orderBy(f(__CLASS__.'.position'), $order);
 
 		$m = array(
 			BackendToolbarItem::TYPE_MENU =>'',

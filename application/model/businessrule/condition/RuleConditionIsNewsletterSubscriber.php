@@ -34,7 +34,7 @@ class RuleConditionIsNewsletterSubscriber extends RuleCondition implements RuleO
 		return $user->_isSubscriber;
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 5;
 	}

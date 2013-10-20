@@ -33,7 +33,7 @@ abstract class OrderTestCommon extends LiveCartTest
 
 		BusinessRuleController::clearCache();
 
-		$this->initOrder();
+		$this->initorderBy();
 
 		$this->config->setRuntime('DELIVERY_TAX', '');
 	}

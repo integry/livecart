@@ -8,7 +8,7 @@
  */
 class RuleActionDisableCheckout extends RuleAction implements RuleOrderAction
 {
-	public function applyToOrder(CustomerOrder $order)
+	public function applyToorderBy(CustomerOrder $order)
 	{
 		$order->setOrderable(false);
 	}
@@ -18,7 +18,7 @@ class RuleActionDisableCheckout extends RuleAction implements RuleOrderAction
 		$item->customerOrder->setOrderable(false);
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 5;
 	}

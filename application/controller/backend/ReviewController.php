@@ -127,9 +127,9 @@ class ReviewController extends ActiveGridController
 		return array();
 	}
 
-	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	protected function setDefaultSortorderBy(ARSelectFilter $filter)
 	{
-		$filter->order(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+		$filter->orderBy(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
 	protected function getSelectFilter()

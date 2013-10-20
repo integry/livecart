@@ -86,7 +86,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		return true;
 	}
 
-	public function isCustomerOrder()
+	public function isCustomerorderBy()
 	{
 		return true;
 	}
@@ -530,7 +530,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		return $rec;
 	}
 
-	public function getNextCustomerOrder()
+	public function getNextCustomerorderBy()
 	{
 		if (!$data = $this->loadRecord('SELECT * FROM ' . $this->getTablePrefix() . 'orders WHERE customerID > 0'))
 		{
@@ -540,7 +540,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		$user = ActiveRecordModel::getInstanceByIDIfExists('User', $this->getRealId('User', $data['customerID'], false));
 		if (!$user || !$user->isExistingRecord())
 		{
-			return $this->getNextCustomerOrder();
+			return $this->getNextCustomerorderBy();
 		}
 
 		$currCode = $data['currency_code'];
@@ -625,7 +625,7 @@ class ShopScriptImport extends LiveCartImportDriver
 		return $address;
 	}
 
-	public function saveCustomerOrder(CustomerOrder $order)
+	public function saveCustomerorderBy(CustomerOrder $order)
 	{
 		$order->shippingAddress->save();
 		$order->billingAddress->save();
@@ -643,7 +643,7 @@ class ShopScriptImport extends LiveCartImportDriver
 			$shipment->save();
 		}
 
-		return parent::saveCustomerOrder($order);
+		return parent::saveCustomerorderBy($order);
 	}
 
 	private function sortCategories($a, $b)

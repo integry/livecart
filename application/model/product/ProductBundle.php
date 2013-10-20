@@ -123,7 +123,7 @@ class ProductBundle extends ActiveRecordModel
 	{
 	  	// get max position
 	  	$f = new ARSelectFilter(self::getFilter($this->product)->getCondition());
-	  	$f->order(new ARFieldHandle(__CLASS__, "position"), 'DESC');
+	  	$f->orderBy(new ARFieldHandle(__CLASS__, "position"), 'DESC');
 	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
@@ -179,7 +179,7 @@ class ProductBundle extends ActiveRecordModel
 	private static function getFilter(Product $product)
 	{
 		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
-		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 
 		return $filter;
 	}

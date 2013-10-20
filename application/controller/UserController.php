@@ -80,7 +80,7 @@ class UserController extends FrontendController
 				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
-		$f->order(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
 		$this->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
 		// feedback/confirmation message that was stored in session by some other action
@@ -119,7 +119,7 @@ class UserController extends FrontendController
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
 			))
 		);
-		$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
+		$f->orderBy(new ARFieldHandle('CustomerOrder','dateDue'));
 		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 	}
 
@@ -138,7 +138,7 @@ class UserController extends FrontendController
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isPaid'), 0)
 			))
 		);
-		$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
+		$f->orderBy(new ARFieldHandle('CustomerOrder','dateDue'));
 		return $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 	}
 
@@ -189,7 +189,7 @@ class UserController extends FrontendController
 	{
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->order(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'DESC');
+		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'DESC');
 
 		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 
@@ -401,7 +401,7 @@ class UserController extends FrontendController
 	public function viewOrderAction()
 	{
 		$id = $this->request->get('id');
-		if ($order = $this->user->getOrder($id))
+		if ($order = $this->user->getorderBy($id))
 		{
 			$this->addAccountBreadcrumb();
 			$this->addBreadCrumb($this->translate('_your_orders'), $this->url->get('user/orders'));
@@ -433,7 +433,7 @@ class UserController extends FrontendController
 						new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
 					))
 				);
-				$f->order(new ARFieldHandle('CustomerOrder','dateDue'));
+				$f->orderBy(new ARFieldHandle('CustomerOrder','dateDue'));
 				$response = $this->getOrdersListResponse($this->loadOrders($f), $page, $perPage);
 
 				$recurringProductPeriods = array();
@@ -475,7 +475,7 @@ class UserController extends FrontendController
 	 */
 	public function reorderAction()
 	{
-		$order = $this->user->getOrder($this->request->get('id'));
+		$order = $this->user->getorderBy($this->request->get('id'));
 		if ($order)
 		{
 						$newOrder = clone $order;
@@ -532,7 +532,7 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->application->setTheme('');
 
-		$order = $this->getOrder($this->request->get('id'));
+		$order = $this->getorderBy($this->request->get('id'));
 
 		if (!$order)
 		{
@@ -576,7 +576,7 @@ class UserController extends FrontendController
 			return $this->returnErrors('user/register', $validator);
 		}
 
-//		$this->mergeOrder();
+//		$this->mergeorderBy();
 
 		if (!$this->config->get('REG_EMAIL_CONFIRM'))
 		{
@@ -661,7 +661,7 @@ class UserController extends FrontendController
 		$this->sessionUser->setUser($user);
 
 		$this->user = $user;
-		$this->mergeOrder();
+		$this->mergeorderBy();
 
 		if ($return = $this->request->get('return'))
 		{
@@ -673,13 +673,13 @@ class UserController extends FrontendController
 		}
 	}
 
-	private function mergeOrder()
+	private function mergeorderBy()
 	{
 		return;
 		// load the last un-finalized order by this user
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->order(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
+		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
 		$f->limit(1);
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
@@ -690,11 +690,11 @@ class UserController extends FrontendController
 				$order = $s->get(0);
 				if ($this->order->getID() != $order->getID())
 				{
-					$sessionOrder = SessionOrder::getOrder();
+					$sessionOrder = SessionOrder::getorderBy();
 					$order->loadItems();
 					$order->merge($sessionOrder);
 					$order->save();
-					SessionOrder::order($order);
+					SessionOrder::orderBy($order);
 					$this->order->delete();
 				}
 			}
@@ -1133,7 +1133,7 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		$this->addBreadCrumb($this->translate('_pay'), '');
 
-		$order = $this->getOrder($this->request->get('id'));
+		$order = $this->getorderBy($this->request->get('id'));
 
 		if (!$order || $order->isPaid)
 		{
@@ -1488,7 +1488,7 @@ class UserController extends FrontendController
 		return $validator;
 	}
 
-	private function getOrder($id)
+	private function getorderBy($id)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));

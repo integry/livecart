@@ -35,7 +35,7 @@ class ExpressCheckout extends ActiveRecordModel
 		return $instance;
 	}
 
-	public static function getInstanceByOrder(CustomerOrder $order)
+	public static function getInstanceByorderBy(CustomerOrder $order)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
 		$s = self::getRecordSet(__CLASS__, $f);
@@ -47,7 +47,7 @@ class ExpressCheckout extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	public function deleteInstancesByOrder(CustomerOrder $order)
+	public function deleteInstancesByorderBy(CustomerOrder $order)
 	{
 		// remove other ExpressCheckout instances for this order
 		$f = new ARDeleteFilter();
@@ -57,7 +57,7 @@ class ExpressCheckout extends ActiveRecordModel
 
 	public function beforeCreate()
 	{
-		$this->deleteInstancesByOrder($this->order);
+		$this->deleteInstancesByorderBy($this->order);
 
 
 	}

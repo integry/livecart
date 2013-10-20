@@ -1132,7 +1132,7 @@ class Product extends \ActiveRecordModel
 	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
-		$f->order(new ARFieldHandle('ProductImage', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductImage', 'position'));
 
 		return $f;
 	}
@@ -1193,7 +1193,7 @@ class Product extends \ActiveRecordModel
 
 			$categories = new ARSet();
 			$filter = new ARSelectFilter();
-			$filter->order(new ARFieldHandle('Category', 'lft'));
+			$filter->orderBy(new ARFieldHandle('Category', 'lft'));
 
 			foreach ($this->getParent()->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
 			{
@@ -1223,7 +1223,7 @@ class Product extends \ActiveRecordModel
 		}
 
 		$filter = select(Condition::mergeFromArray($conditions, true));
-		$filter->order(f('Category.lft'));
+		$filter->orderBy(f('Category.lft'));
 		$categories = ActiveRecord::getRecordSetArray('Category', $filter);
 		foreach ($productArray as &$product)
 		{
@@ -1345,7 +1345,7 @@ class Product extends \ActiveRecordModel
 		$parent = $this->getParent();
 		ClassLoader::import('application/model/product/ProductOption');
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->orderBy(new ARFieldHandle('ProductOption', 'position'), 'ASC');
 		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
 
 		if ($includeInheritedOptions)

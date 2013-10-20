@@ -8,7 +8,7 @@
  */
 class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements RuleOrderAction, RuleItemAction
 {
-	public function applyToOrder(CustomerOrder $order)
+	public function applyToorderBy(CustomerOrder $order)
 	{
 		$amount = $order->getCurrency()->convertAmount(CustomerOrder::getApplication()->getDefaultCurrency(), $this->getDiscountAmount($order->totalAmount));
 		$orderDiscount = OrderDiscount::getNewInstance($order);
@@ -22,7 +22,7 @@ class RuleActionFixedDiscount extends RuleActionPercentageDiscount implements Ru
 		return $this->getParam('amount');
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 2;
 	}

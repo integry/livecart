@@ -53,7 +53,7 @@ class SettingsController extends StoreManagementController
 			}
 			else
 			{
-				if ($this->config->isValueSet($key))
+				if ($this->config->has($key))
 				{
 					$form->set($key, $this->config->get($key));
 				}
@@ -177,7 +177,7 @@ class SettingsController extends StoreManagementController
 		// set multi-select values
 		foreach ($settings as $key => $value)
 		{
-			if ($this->config->isValueSet($value['title']))
+			if ($this->config->has($value['title']))
 			{
 				if ('multi' == $value['extra'])
 				{

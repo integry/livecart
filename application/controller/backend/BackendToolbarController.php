@@ -66,7 +66,7 @@ class BackendToolbarController extends StoreManagementController
 
 		if (BackendToolbarItem::deleteMenuItem($request->get('id'), $request->get('position')))
 		{
-			$this->fixSortOrder();
+			$this->fixSortorderBy();
 			return new JSONResponse(null, 'success', $this->translate('_button_removed'));
 		}
 		else
@@ -105,7 +105,7 @@ class BackendToolbarController extends StoreManagementController
 		}
 	}
 
-	private function fixSortOrder()
+	private function fixSortorderBy()
 	{
 		BackendToolbarItem::saveItemArray(BackendToolbarItem::getUserToolbarItems(BackendToolbarItem::TYPE_MENU));
 	}

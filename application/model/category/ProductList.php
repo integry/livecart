@@ -34,7 +34,7 @@ class ProductList extends MultilingualObject
 	public static function getCategoryLists(Category $category)
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle(__CLASS__, 'position'));
+		$f->orderBy(new ARFieldHandle(__CLASS__, 'position'));
 		return $category->getRelatedRecordSet(__CLASS__, $f);
 	}
 

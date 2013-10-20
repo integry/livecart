@@ -48,7 +48,7 @@ class State extends ActiveRecordModel
 	{
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $countryCode));
-		$f->order(new ARFieldHandle('State', 'name'));
+		$f->orderBy(new ARFieldHandle('State', 'name'));
 		$stateArray = ActiveRecordModel::getRecordSetArray('State', $f);
 
 		$states = array();
@@ -79,7 +79,7 @@ class State extends ActiveRecordModel
 		$nameCond->addOr(new EqualsCond(new ARFieldHandle('State', 'code'), $name));
 		$f->mergeCondition($nameCond);
 
-		$f->order(new ARFieldHandle('State', 'name'));
+		$f->orderBy(new ARFieldHandle('State', 'name'));
 		$f->limit(1);
 		$stateArray = ActiveRecordModel::getRecordSetArray('State', $f);
 

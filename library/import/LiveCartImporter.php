@@ -190,7 +190,7 @@ class LiveCartImporter
 			foreach ($types as $type)
 			{
 				$f = new ARSelectFilter();
-				$f->order(new ARFieldHandle($type, 'ID'), 'DESC');
+				$f->orderBy(new ARFieldHandle($type, 'ID'), 'DESC');
 				$f->limit(1);
 				$record = array_shift(ActiveRecordModel::getRecordSetArray($type, $f));
 

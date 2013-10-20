@@ -36,8 +36,8 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		parent::setUp();
 
 		$this->controller = new OrderController(self::getApplication());
-		$this->initOrder();
-		$this->controller->order($this->order);
+		$this->initorderBy();
+		$this->controller->orderBy($this->order);
 		$this->controller->setUser($this->user);
 	}
 
@@ -47,10 +47,10 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->order->addProduct($this->products[1], 2);
 		$this->order->save();
 
-		$this->controller->order($this->reloadOrder($this->order));
+		$this->controller->orderBy($this->reloadorderBy($this->order));
 
 		$response = $this->controller->setMultiAddress();
-		$order = $this->reloadOrder($this->order);
+		$order = $this->reloadorderBy($this->order);
 
 		$this->assertIsA($response, 'ActionRedirectResponse');
 		$this->assertEqual($order->isMultiAddress, '1');
@@ -59,7 +59,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 	public function testSetSingleAddress()
 	{
 		$this->order->addProduct($this->products[0], 1);
-		$this->controller->order($this->order);
+		$this->controller->orderBy($this->order);
 		$this->controller->setMultiAddress();
 
 		$shipment1 = Shipment::getNewInstance($this->order);
@@ -71,14 +71,14 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->order->addProduct($this->products[1], 2, true, $shipment2);
 		$this->order->save();
 
-		$order = $this->reloadOrder($this->order);
+		$order = $this->reloadorderBy($this->order);
 		$this->assertEqual($order->getShipments()->size(), 2);
 		$this->assertEqual(count($order->getOrderedItems()), 3);
 
-		$this->controller->order($order = $this->reloadOrder($this->order));
+		$this->controller->orderBy($order = $this->reloadorderBy($this->order));
 		$response = $this->controller->setSingleAddress();
 
-		$order = $this->reloadOrder($order);
+		$order = $this->reloadorderBy($order);
 
 		$this->assertIsA($response, 'ActionRedirectResponse');
 		$this->assertEqual($order->isMultiAddress, '0');
@@ -86,7 +86,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEqual(count($order->getOrderedItems()), 2);
 	}
 
-	private function reloadOrder(CustomerOrder $order)
+	private function reloadorderBy(CustomerOrder $order)
 	{
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceById($order->getID(), true);

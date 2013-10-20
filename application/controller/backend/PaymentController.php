@@ -199,7 +199,7 @@ class PaymentController extends StoreManagementController
 
 		// process payment
 		$handler = $this->application->getCreditCardHandler($transaction);
-		if ($this->request->isValueSet('ccType'))
+		if ($this->request->has('ccType'))
 		{
 			$handler->setCardType($this->request->get('ccType'));
 		}

@@ -87,7 +87,7 @@ class Language extends \ActiveRecordModel
 
 	public static function getLanguageList($di)
 	{
-		$languages = self::query()->order('position')->execute(array("cache" => array("key" => "languages")));
+		$languages = self::query()->orderBy('position')->execute(array("cache" => array("key" => "languages")));
 
 		if (!count($languages))
 		{

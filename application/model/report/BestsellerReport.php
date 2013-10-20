@@ -35,9 +35,9 @@ class BestsellerReport extends Report
 		$q = $this->getQuery($sql);
 
 		$f = $q->getFilter();
-		$f->reorder();
+		$f->reorderBy();
 		$f->resetGrouping();
-		$f->order(new ARExpressionHandle('cnt'), $order);
+		$f->orderBy(new ARExpressionHandle('cnt'), $order);
 		$q->addField('OrderedItem.productID');
 		$f->setGrouping(new ARExpressionHandle('OrderedItem.productID'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));

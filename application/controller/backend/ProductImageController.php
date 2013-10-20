@@ -57,7 +57,7 @@ class ProductImageController extends ObjectImageController
 	 */
 	public function saveOrderAction()
 	{
-		return parent::saveOrder();
+		return parent::saveorderBy();
 	}
 
 	protected function getModelClass()

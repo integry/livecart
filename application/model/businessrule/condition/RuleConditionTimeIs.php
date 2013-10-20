@@ -17,7 +17,7 @@ class RuleConditionTimeIs extends RuleCondition implements RuleOrderCondition
 		$from = $this->fixTime($params['from'], '0:00');
 		$to = $this->fixTime($params['to'], '24:00');
 
-		$order = $this->getContext()->getOrder();
+		$order = $this->getContext()->getorderBy();
 		$date = strtotime($order->getCompletionDate());
 
 		if (!$date)

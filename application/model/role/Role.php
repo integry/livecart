@@ -70,7 +70,7 @@ class Role extends \ActiveRecordModel
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->order(new ARFieldHandle(__CLASS__, "name"), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, "name"), 'ASC');
 
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}

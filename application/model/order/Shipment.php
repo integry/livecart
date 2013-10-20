@@ -271,7 +271,7 @@ class Shipment extends \ActiveRecordModel
 
 		$this->selectedRateId = $serviceId;
 
-		if ($this->getCustomerOrder()->isMultiAddress)
+		if ($this->getCustomerorderBy()->isMultiAddress)
 		{
 			$this->shippingServiceData = serialize($this->getSelectedRate());
 		}
@@ -279,7 +279,7 @@ class Shipment extends \ActiveRecordModel
 
 	public function getRateId()
 	{
-		if ($this->getCustomerOrder()->isMultiAddress && !$this->selectedRateId)
+		if ($this->getCustomerorderBy()->isMultiAddress && !$this->selectedRateId)
 		{
 			$this->selectedRateId = unserialize($this->shippingServiceData)->getServiceId();
 		}
@@ -479,7 +479,7 @@ class Shipment extends \ActiveRecordModel
 	{
 		$this->loadItems();
 
-		$currency = $this->getCustomerOrder()->getCurrency();
+		$currency = $this->getCustomerorderBy()->getCurrency();
 
 		$itemAmount = $this->getSubTotal(self::WITHOUT_TAXES);
 		$this->amount = $itemAmount;
@@ -489,7 +489,7 @@ class Shipment extends \ActiveRecordModel
 		{
 			$deleted = false;
 
-			if ($this->getCustomerOrder()->isFinalized)
+			if ($this->getCustomerorderBy()->isFinalized)
 			{
 				if ($this->getID())
 				{
@@ -617,7 +617,7 @@ class Shipment extends \ActiveRecordModel
 		$this->removeDeletedItems();
 
 		// make sure the shipment doesn't consist of downloadable files only
-		if (!$this->isShippable() && !$this->getCustomerOrder()->isFinalized)
+		if (!$this->isShippable() && !$this->getCustomerorderBy()->isFinalized)
 		{
 			//return false;
 		}
@@ -648,9 +648,9 @@ class Shipment extends \ActiveRecordModel
 		}
 
 		// Update order status if to reflect it's shipments statuses
-		if (!$downloadable && $this->isShippable() && $this->getCustomerOrder()->isFinalized)
+		if (!$downloadable && $this->isShippable() && $this->getCustomerorderBy()->isFinalized)
 		{
-			$this->getCustomerOrder()->updateStatusFromShipments(!$this->getID());
+			$this->getCustomerorderBy()->updateStatusFromShipments(!$this->getID());
 		}
 	}
 
@@ -704,9 +704,9 @@ class Shipment extends \ActiveRecordModel
 		}
 
 		// Save updated order status
-		if ($this->getCustomerOrder()->isFinalized)
+		if ($this->getCustomerorderBy()->isFinalized)
 		{
-			$this->getCustomerOrder()->save();
+			$this->getCustomerorderBy()->save();
 		}
 
 		if(!$this->status)
@@ -719,7 +719,7 @@ class Shipment extends \ActiveRecordModel
 
 	protected function afterUpdate()
 	{
-		$this->getCustomerOrder()->save();
+		$this->getCustomerorderBy()->save();
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -744,8 +744,8 @@ class Shipment extends \ActiveRecordModel
 
 		// total amount
 		$array['totalAmount'] = $this->getTotal();
-		$array['formatted_totalAmount'] = $this->getCustomerOrder()->currency->getFormattedPrice($array['totalAmount']);
-		$array['formatted_amount'] = $this->getCustomerOrder()->currency->getFormattedPrice($array['amount']);
+		$array['formatted_totalAmount'] = $this->getCustomerorderBy()->currency->getFormattedPrice($array['totalAmount']);
+		$array['formatted_amount'] = $this->getCustomerorderBy()->currency->getFormattedPrice($array['amount']);
 
 		// formatted subtotal
 		$array['formattedSubTotal'] = $array['formattedSubTotalBeforeTax'] = array();
@@ -772,7 +772,7 @@ class Shipment extends \ActiveRecordModel
 		{
 			$array['shippingAmountWithoutTax'] = $array['shippingAmount'];
 			$array['shippingAmount'] = $this->applyTaxesToShippingAmount($array['shippingAmount']);
-			$orderCurrency = $this->getCustomerOrder()->currency;
+			$orderCurrency = $this->getCustomerorderBy()->currency;
 			$array['selectedRate']['formattedPrice'] = array();
 			foreach ($currencies as $id => $currency)
 			{
@@ -827,8 +827,8 @@ class Shipment extends \ActiveRecordModel
 	public function getCurrency()
 	{
 		$this->load();
-		$this->getCustomerOrder()->load();
-		return $this->getCustomerOrder()->getCurrency();
+		$this->getCustomerorderBy()->load();
+		return $this->getCustomerorderBy()->getCurrency();
 	}
 
 	public function getSelectedRate()
@@ -837,7 +837,7 @@ class Shipment extends \ActiveRecordModel
 		{
 			$rate->setApplication($this->getApplication());
 
-			if (($this->getRateId() == $rate->getServiceId()) || ($this->getCustomerOrder()->isFinalized))
+			if (($this->getRateId() == $rate->getServiceId()) || ($this->getCustomerorderBy()->isFinalized))
 			{
 				return $rate;
 			}
@@ -869,7 +869,7 @@ class Shipment extends \ActiveRecordModel
 		{
 			$this->load();
 
-			if ($this->isLoaded() && $this->getCustomerOrder()->isFinalized)
+			if ($this->isLoaded() && $this->getCustomerorderBy()->isFinalized)
 			{
 				$this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
 				foreach ($this->fixedTaxes as $tax)

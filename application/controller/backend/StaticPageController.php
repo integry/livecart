@@ -16,8 +16,8 @@ class StaticPageController extends StoreManagementController
 	public function indexAction()
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('StaticPage', 'position'));
-		$f->order(new ARFieldHandle('StaticPage', 'parentID'));
+		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
+		$f->orderBy(new ARFieldHandle('StaticPage', 'parentID'));
 		$s = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 
 		$pages = array();

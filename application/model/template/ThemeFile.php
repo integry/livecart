@@ -229,7 +229,7 @@ class ThemeFile
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$sizes = array();
 		$k = 0;
-		while ($config->isValueSet('IMG_O_W_' . ++$k))
+		while ($config->has('IMG_O_W_' . ++$k))
 		{
 			$sizes[$k] = array($config->get('IMG_O_W_' . $k), $config->get('IMG_O_H_' . $k));
 			$sizes[$k]['area'] = $sizes[$k][0] * $sizes[$k][1];

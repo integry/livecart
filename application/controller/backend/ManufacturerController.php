@@ -99,9 +99,9 @@ class ManufacturerController extends ActiveGridController
 		return array('Manufacturer.ID', 'Manufacturer.name');
 	}
 
-	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	protected function setDefaultSortorderBy(ARSelectFilter $filter)
 	{
-		$filter->order(new ARFieldHandle($this->getClassName(), 'name'), 'ASC');
+		$filter->orderBy(new ARFieldHandle($this->getClassName(), 'name'), 'ASC');
 	}
 
 	public function autoCompleteAction()

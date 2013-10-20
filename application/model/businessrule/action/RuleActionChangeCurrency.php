@@ -8,7 +8,7 @@
  */
 class RuleActionChangeCurrency extends RuleAction implements RuleOrderAction
 {
-	public function applyToOrder(CustomerOrder $order)
+	public function applyToorderBy(CustomerOrder $order)
 	{
 		$currencyID = $this->getFieldValue('currency', '');
 		if($currencyID)

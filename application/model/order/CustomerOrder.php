@@ -2058,7 +2058,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 				$this->loadItems();
 
 				$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
-				$filter->order(new ARFieldHandle('Shipment', 'status'));
+				$filter->orderBy(new ARFieldHandle('Shipment', 'status'));
 
 				$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
 				foreach($this->shipments as $shipment)
@@ -2158,7 +2158,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		if (!$this->businessRuleContext)
 		{
 			$context = new BusinessRuleContext();
-			$context->order($this);
+			$context->orderBy($this);
 			if ($this->user)
 			{
 				$context->setUser($this->user);
@@ -2210,7 +2210,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		{
 			if ($ruleAction->isOrderAction())
 			{
-				$ruleAction->applyToOrder($this);
+				$ruleAction->applyToorderBy($this);
 			}
 			else
 			{
@@ -2302,14 +2302,14 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->order(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+		$filter->orderBy(new ARFieldHandle('Transaction', 'ID'), 'ASC');
 		return $this->getRelatedRecordSet('Transaction', $filter);
 	}
 
 	public function getNotes()
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
 		return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
 	}
 
@@ -2586,7 +2586,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		return isset($statuses[$status]) ? $statuses[$status] : '_status_processing';
 	}
 
-	public static function hasRecurringOrder()
+	public static function hasRecurringorderBy()
 	{
 
 		$filter = new ARSelectFilter();
@@ -2954,8 +2954,8 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		}
 		$filter = new ARSelectFilter();
 		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
-		$filter->order(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
-		$filter->order(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
 
 		$rs = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
 		$count = 1;
@@ -3048,7 +3048,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		$this->loadAll();
 		$transaction = new LiveCartTransaction($this, Currency::getValidInstanceById($currencyID));
 		// ~
-		$expressInstance = ExpressCheckout::getInstanceByOrder($this);
+		$expressInstance = ExpressCheckout::getInstanceByorderBy($this);
 		$handler = $expressInstance->getHandler($transaction);
 		$status = $handler->cancelRecurring();
 

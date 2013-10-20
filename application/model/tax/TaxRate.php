@@ -74,7 +74,7 @@ class TaxRate extends MultilingualObject
 		{
 			$loadReferencedRecords = array('Tax');
 		}
-		$filter->order(new ARFieldHandle('Tax', 'position'));
+		$filter->orderBy(new ARFieldHandle('Tax', 'position'));
 
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}

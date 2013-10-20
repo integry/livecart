@@ -13,7 +13,7 @@ class RuleActionFixedSurcharge extends RuleActionFixedDiscount
 		return parent::getDiscountAmount($price) * -1;
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 4;
 	}

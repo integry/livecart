@@ -558,7 +558,7 @@ class ProductPrice extends ActiveRecordModel
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
 
 		$filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
-		$filter->order(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
+		$filter->orderBy(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
 		return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);
 	}
 

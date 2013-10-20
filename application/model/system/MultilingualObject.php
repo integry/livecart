@@ -86,7 +86,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 				{
 					$requestVarName = $fieldName . "_" . $langCode;
 				}
-				if ($request->isValueSet($requestVarName))
+				if ($request->has($requestVarName))
 				{
 					$this->setValueByLang($fieldName, $langCode, $request->get($requestVarName));
 				}

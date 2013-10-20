@@ -82,8 +82,8 @@ class ProductSet extends ARSet
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
-		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->order(new ARFieldHandle('ProductVariation', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariation', 'position'));
 
 		$productValues = array();
 		$variations = array();
@@ -178,8 +178,8 @@ class ProductSet extends ARSet
 	public function loadVariations()
 	{
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $this->getRecordIDs()));
-		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->order(new ARFieldHandle('ProductVariation', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariation', 'position'));
 
 		foreach (ActiveRecordModel::getRecordSet('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType')) as $value)
 		{
@@ -191,7 +191,7 @@ class ProductSet extends ARSet
 	{
 		$index = self::getProductIndex($array);
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationType', 'productID'), array_keys($index)));
-		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
 
 		foreach (ActiveRecordModel::getRecordSetArray('ProductVariationType', $f) as $value)
 		{
@@ -204,7 +204,7 @@ class ProductSet extends ARSet
 	{
 		$index = self::getProductIndex($array);
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), array_keys($index)));
-		$f->order(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
 
 		foreach (ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType')) as $value)
 		{

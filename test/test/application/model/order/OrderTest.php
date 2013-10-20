@@ -439,7 +439,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($product->reservedCount, 0);
 	}
 
-	public function testInventoryForCancelledOrder()
+	public function testInventoryForCancelledorderBy()
 	{
 		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
@@ -460,7 +460,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($product->reservedCount, 0);
 	}
 
-	public function testInventoryForRestoredOrder()
+	public function testInventoryForRestoredorderBy()
 	{
 		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
@@ -491,7 +491,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($product->reservedCount, 0);
 	}
 
-	public function testInventoryForReturnedOrder()
+	public function testInventoryForReturnedorderBy()
 	{
 		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 
@@ -519,7 +519,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($product->reservedCount, 1);
 	}
 
-	public function testInventoryForChangedOrder()
+	public function testInventoryForChangedorderBy()
 	{
 		$this->config->setRuntime('INVENTORY_TRACKING', 'ENABLE_AND_HIDE');
 

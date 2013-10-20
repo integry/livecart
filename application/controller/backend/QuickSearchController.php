@@ -180,7 +180,7 @@ class QuickSearchController extends StoreManagementController
 		return $ret;
 	}
 
-	private function toArray_CustomerOrder($records)
+	private function toArray_CustomerorderBy($records)
 	{
 		foreach($records as &$order)
 		{

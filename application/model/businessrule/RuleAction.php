@@ -83,7 +83,7 @@ abstract class RuleAction
 		return $this->condition->isProductMatching($item->getProduct());
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 999;
 	}

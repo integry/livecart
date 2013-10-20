@@ -10,10 +10,10 @@ class RuleConditionOrderTotal extends RuleCondition implements RuleOrderConditio
 {
 	public function isApplicable()
 	{
-		return $this->compareValues($this->getOrder()->getSubTotal(false), $this->params['subTotal']);
+		return $this->compareValues($this->getorderBy()->getSubTotal(false), $this->params['subTotal']);
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 2;
 	}

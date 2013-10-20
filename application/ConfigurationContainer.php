@@ -279,7 +279,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 			$conf = $this->config;
 			foreach (array('enabledModules', 'installedModules') as $var)
 			{
-				$confModules = $conf->isValueSet($var) ? $conf->get($var) : array();
+				$confModules = $conf->has($var) ? $conf->get($var) : array();
 				$modules = array_intersect_key($modules, $confModules);
 			}
 
@@ -427,7 +427,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 	{
 		$config = $this->getApplication()->getConfig();
 
-		$modules = $config->isValueSet($var) ? $config->get($var) : array();
+		$modules = $config->has($var) ? $config->get($var) : array();
 
 		if (!empty($modules[$this->mountPath]))
 		{
@@ -442,7 +442,7 @@ class ConfigurationContainer extends \Phalcon\DI\Injectable implements Serializa
 	private function setConfig($var, $status)
 	{
 		$config = $this->config;
-		$activeModules = $config->isValueSet($var) ? $config->get($var) : array();
+		$activeModules = $config->has($var) ? $config->get($var) : array();
 
 		if ($status)
 		{

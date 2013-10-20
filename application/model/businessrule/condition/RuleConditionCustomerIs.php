@@ -32,7 +32,7 @@ class RuleConditionCustomerIs extends RuleCondition implements RuleOrderConditio
 		}
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 5;
 	}

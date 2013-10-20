@@ -10,12 +10,12 @@ class RuleConditionCurrencyIs extends RuleCondition
 {
 	public function isApplicable()
 	{
-		if (!($this->getOrder() instanceof CustomerOrder))
+		if (!($this->getorderBy() instanceof CustomerOrder))
 		{
 			return false;
 		}
 
-		$currencyID = $this->getOrder()->getCurrency()->getID();
+		$currencyID = $this->getorderBy()->getCurrency()->getID();
 		$values = $this->getParam('serializedCondition', array('values' => array()));
 		return !empty($values['values'][$currencyID]);
 	}

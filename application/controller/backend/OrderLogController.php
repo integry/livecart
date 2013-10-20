@@ -16,7 +16,7 @@ class OrderLogController extends StoreManagementController
 		$customerOrder = CustomerOrder::getInstanceById($this->request->get('id'), true, array('User', 'Currency'));
 
 		$logs = array();
-		foreach(OrderLog::getRecordSetByOrder($customerOrder, null, array('User'))->toArray() as $entry)
+		foreach(OrderLog::getRecordSetByorderBy($customerOrder, null, array('User'))->toArray() as $entry)
 		{
 			if (!$entry['oldValue'])
 			{

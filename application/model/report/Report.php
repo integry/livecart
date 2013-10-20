@@ -276,7 +276,7 @@ abstract class Report
 			$f->setGrouping(new ARExpressionHandle($alias));
 		}
 
-		$f->order(new ARExpressionHandle($alias));
+		$f->orderBy(new ARExpressionHandle($alias));
 	}
 
 	protected function getPieChartData($array)

@@ -470,7 +470,7 @@ class LanguageController extends StoreManagementController
 	private function getLanguages($active = 0)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$filter->order(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
+	  	$filter->orderBy(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
 
 		if ($active > 0)
 		{

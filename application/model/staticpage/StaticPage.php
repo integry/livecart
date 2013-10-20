@@ -145,7 +145,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 	public function getSubPageArray()
 	{
 		$f = select();
-		$f->order(f('StaticPage.position'));
+		$f->orderBy(f('StaticPage.position'));
 		return $this->getRelatedRecordSetArray('StaticPage', $f);
 	}
 
@@ -173,7 +173,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 	{
 	  	// get max position
 	  	$f = new ARSelectFilter();
-	  	$f->order(new ARFieldHandle('StaticPage', 'position'), 'DESC');
+	  	$f->orderBy(new ARFieldHandle('StaticPage', 'position'), 'DESC');
 	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('StaticPage', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;

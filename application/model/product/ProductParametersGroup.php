@@ -36,7 +36,7 @@ abstract class ProductParametersGroup extends MultilingualObject
 		{
 			$filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle($className, 'productID'), $this->product->getID()));
-			$filter->order(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
+			$filter->orderBy(new ARFieldHandle($className, 'position'), ARSelectFilter::ORDER_DESC);
 			$filter->limit(1);
 
 			self::$nextPosition = 0;

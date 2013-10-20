@@ -95,7 +95,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 
 	protected function getOrders()
 	{
-		$order = $this->getContext()->getOrder();
+		$order = $this->getContext()->getorderBy();
 		return $order ? array($order) : array();
 	}
 
@@ -168,7 +168,7 @@ class RuleConditionContainsProduct extends RuleCondition implements RuleOrderCon
 		return $match;
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 1;
 	}

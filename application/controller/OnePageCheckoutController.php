@@ -697,10 +697,10 @@ class OnePageCheckoutController extends CheckoutController
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', 'SHIPPING_METHOD_STEP');
 
 		$res = array('login' => false,
-					 'billingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
-					 'shippingAddress' => !$this->validateOrder($order, self::STEP_ADDRESS + $isStepEditable),
-					 'shippingMethod' => !$this->validateOrder($order, self::STEP_SHIPPING + $isStepEditable),
-					 'payment' => !$this->validateOrder($order, self::STEP_PAYMENT));
+					 'billingAddress' => !$this->validateorderBy($order, self::STEP_ADDRESS + $isStepEditable),
+					 'shippingAddress' => !$this->validateorderBy($order, self::STEP_ADDRESS + $isStepEditable),
+					 'shippingMethod' => !$this->validateorderBy($order, self::STEP_SHIPPING + $isStepEditable),
+					 'payment' => !$this->validateorderBy($order, self::STEP_PAYMENT));
 
 		$this->config->setRuntime('CHECKOUT_CUSTOM_FIELDS', self::CUSTOM_FIELDS_STEP);
 
@@ -760,7 +760,7 @@ class OnePageCheckoutController extends CheckoutController
 		return true;
 	}
 
-	protected function validateOrder(CustomerOrder $order, $step = 0)
+	protected function validateorderBy(CustomerOrder $order, $step = 0)
 	{
 		if ($this->config->get('REQUIRE_SAME_ADDRESS') && !$order->billingAddress)
 		{
@@ -768,7 +768,7 @@ class OnePageCheckoutController extends CheckoutController
 			$tempBilling = true;
 		}
 
-		$res = !$this->ignoreValidation ? parent::validateOrder($order, $step) : false;
+		$res = !$this->ignoreValidation ? parent::validateorderBy($order, $step) : false;
 
 		if (!empty($tempBilling))
 		{

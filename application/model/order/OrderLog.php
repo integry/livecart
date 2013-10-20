@@ -85,7 +85,7 @@ class OrderLog extends ActiveRecordModel
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	public static function getRecordSetByOrder(CustomerOrder $order, ARSelectFilter $filter = null, $loadReferencedRecords = false)
+	public static function getRecordSetByorderBy(CustomerOrder $order, ARSelectFilter $filter = null, $loadReferencedRecords = false)
 	{
 		if(!$filter)
 		{
@@ -93,7 +93,7 @@ class OrderLog extends ActiveRecordModel
 		}
 
 		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
-		$filter->order(new ARFieldHandle(__CLASS__, 'time'), ARSelectFilter::ORDER_DESC);
+		$filter->orderBy(new ARFieldHandle(__CLASS__, 'time'), ARSelectFilter::ORDER_DESC);
 
 
 		return self::getRecordSet($filter, $loadReferencedRecords);

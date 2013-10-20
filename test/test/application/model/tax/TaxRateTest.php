@@ -151,7 +151,7 @@ class TaxRateTest extends LiveCartTest
 		$this->assertEqual($order->getTotal(), 100);
 		$order->finalize();
 
-		$this->assertDefaultZoneOrder($order, $this->currency);
+		$this->assertDefaultZoneorderBy($order, $this->currency);
 
 		ActiveRecord::clearPool();
 		ActiveRecord::clearArrayData();
@@ -163,10 +163,10 @@ class TaxRateTest extends LiveCartTest
 			if(!is_array($v))
 				echo $k.' : '.$v."\n";
 		*/
-		$this->assertDefaultZoneOrder($reloaded, $this->currency);
+		$this->assertDefaultZoneorderBy($reloaded, $this->currency);
 	}
 
-	private function assertDefaultZoneOrder(CustomerOrder $order, Currency $currency)
+	private function assertDefaultZoneorderBy(CustomerOrder $order, Currency $currency)
 	{
 		$this->assertEquals(100, $order->getTotal());
 		$shipment = $order->getShipments()->get(0);
@@ -202,12 +202,12 @@ class TaxRateTest extends LiveCartTest
 		$this->assertEqual($order->getTotal($this->currency), 100);
 		$order->finalize();
 
-		$this->assertDefaultZoneOrder($order, $this->currency);
+		$this->assertDefaultZoneorderBy($order, $this->currency);
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
 
-		$this->assertDefaultZoneOrder($reloaded, $this->currency);
+		$this->assertDefaultZoneorderBy($reloaded, $this->currency);
 	}
 
 	public function testTaxClasses()

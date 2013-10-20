@@ -9,7 +9,7 @@ class RuleConditionTotalOrderWeightIs extends RuleCondition implements RuleOrder
 {
 	public function isApplicable()
 	{
-		$order = $this->getContext()->getOrder();
+		$order = $this->getContext()->getorderBy();
 		if(false == $order instanceof CustomerOrder)
 		{
 			return false;

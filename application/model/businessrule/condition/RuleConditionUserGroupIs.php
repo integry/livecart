@@ -39,7 +39,7 @@ class RuleConditionUserGroupIs extends RuleCondition
 		}
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 4;
 	}

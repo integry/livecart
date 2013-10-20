@@ -86,7 +86,7 @@ class ProductFile extends ObjectFile
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
 		//$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
-		$f->order(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
 
 		$downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
 		$fileArray = array();
@@ -129,9 +129,9 @@ class ProductFile extends ObjectFile
 		$filter = new ARSelectFilter();
 		$filter->joinTable('ProductFileGroup', 'ProductFile', 'ID', 'productFileGroupID');
 
-		$filter->order(new ARFieldHandle("ProductFileGroup", "position"), ARSelectFilter::ORDER_ASC);
+		$filter->orderBy(new ARFieldHandle("ProductFileGroup", "position"), ARSelectFilter::ORDER_ASC);
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-		$filter->order(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
+		$filter->orderBy(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 
 		return $filter;
 	}

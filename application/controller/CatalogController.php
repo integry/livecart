@@ -52,7 +52,7 @@ abstract class CatalogController extends FrontendController
 			$order = $defOrder;
 		}
 
-		$this->applySortOrder($selectFilter, $order);
+		$this->applySortorderBy($selectFilter, $order);
 
 		// setup ProductFilter
 		$productFilter = new ProductFilter($this->getCategory(), $selectFilter);
@@ -214,44 +214,44 @@ abstract class CatalogController extends FrontendController
 	/**
 	 *  Apply selected product sort order to ARSelectFilter instance
 	 */
-	protected function applySortOrder(ARSelectFilter $selectFilter, $order)
+	protected function applySortorderBy(ARSelectFilter $selectFilter, $order)
 	{
 		$dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';
 
 		if (substr($order, 0, 12) == 'product_name')
 		{
-			$selectFilter->order(Product::getLangOrderHandle(new ARFieldHandle('Product', 'name')), $dir);
+			$selectFilter->orderBy(Product::getLangOrderHandle(new ARFieldHandle('Product', 'name')), $dir);
 		}
 		else if (substr($order, 0, 5) == 'price')
 		{
-			$selectFilter->order(new ARFieldHandle('ProductPrice', 'price'), $dir);
+			$selectFilter->orderBy(new ARFieldHandle('ProductPrice', 'price'), $dir);
 			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		}
 		else if (substr($order, 0, 3) == 'sku')
 		{
-			$selectFilter->order(new ARFieldHandle('ProductPrice', 'price'), $dir);
+			$selectFilter->orderBy(new ARFieldHandle('ProductPrice', 'price'), $dir);
 			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		}
 		else if ('newest_arrivals' == $order)
 		{
-			$selectFilter->order(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+			$selectFilter->orderBy(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
 		}
 		else if (in_array($order, array('rating', 'sku')))
 		{
-			$selectFilter->order(new ARFieldHandle('Product', $order), $dir);
+			$selectFilter->orderBy(new ARFieldHandle('Product', $order), $dir);
 		}
 		else if ('sales_rank' == $order)
 		{
 			Product::updateSalesRank();
-			$selectFilter->order(new ARFieldHandle('Product', 'salesRank'), 'DESC');
+			$selectFilter->orderBy(new ARFieldHandle('Product', 'salesRank'), 'DESC');
 		}
 		else if (is_numeric($fieldID = array_shift(explode('-', $order))) && !SpecField::getInstanceByID($fieldID, true)->isMultiValue)
 		{
 			$field = SpecField::getInstanceByID($fieldID);
 			$field->defineJoin($selectFilter);
 			$f = $field->getJoinAlias() . ($field->isSelector() ? '_value' : '') . '.value';
-			$selectFilter->order(new ARExpressionHandle($f . ' IS NOT NULL'), 'DESC');
-			$selectFilter->order(new ARExpressionHandle($f . ' != ""'), 'DESC');
+			$selectFilter->orderBy(new ARExpressionHandle($f . ' IS NOT NULL'), 'DESC');
+			$selectFilter->orderBy(new ARExpressionHandle($f . ' != ""'), 'DESC');
 
 			$f = new ARExpressionHandle($f);
 			if ($field->isSelector())
@@ -259,13 +259,13 @@ abstract class CatalogController extends FrontendController
 				$f = MultiLingualObject::getLangOrderHandle($f);
 			}
 
-			$selectFilter->order($f, array_pop(explode('_', $order)) == 'desc' ? 'DESC' : 'ASC');
+			$selectFilter->orderBy($f, array_pop(explode('_', $order)) == 'desc' ? 'DESC' : 'ASC');
 		}
 		else
 		{
-			$selectFilter->order(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
-			$selectFilter->order(new ARFieldHandle('Product', 'salesRank'), 'DESC');
-			$selectFilter->order(new ARFieldHandle('Product', 'position'), 'DESC');
+			$selectFilter->orderBy(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
+			$selectFilter->orderBy(new ARFieldHandle('Product', 'salesRank'), 'DESC');
+			$selectFilter->orderBy(new ARFieldHandle('Product', 'position'), 'DESC');
 		}
 	}
 

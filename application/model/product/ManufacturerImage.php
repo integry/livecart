@@ -46,7 +46,7 @@ class ManufacturerImage extends ObjectImage
 
 			$sizes = array();
 			$k = 0;
-			while ($config->isValueSet('IMG_M_W_' . ++$k))
+			while ($config->has('IMG_M_W_' . ++$k))
 			{
 				$sizes[$k] = array($config->get('IMG_M_W_' . $k), $config->get('IMG_M_H_' . $k));
 			}

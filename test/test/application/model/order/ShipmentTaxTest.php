@@ -442,7 +442,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		foreach (array(2 => true, 1 => false) as $shipments => $isSeparate)
 		{
-			$this->initOrder();
+			$this->initorderBy();
 			foreach (array(635.99, 228.69, 61.59) as $key => $price)
 			{
 				$this->products[$key]->setPrice('USD', $price);

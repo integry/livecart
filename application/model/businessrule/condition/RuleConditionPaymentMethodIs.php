@@ -10,12 +10,12 @@ class RuleConditionPaymentMethodIs extends RuleCondition
 {
 	public function isApplicable()
 	{
-		if (!$this->getOrder())
+		if (!$this->getorderBy())
 		{
 			return;
 		}
 
-		$method = $this->getOrder()->getPaymentMethod();
+		$method = $this->getorderBy()->getPaymentMethod();
 		$values = $this->getParam('serializedCondition', array('values' => array()));
 		return !empty($values['values'][$method]);
 	}

@@ -16,7 +16,7 @@ class CurrencyController extends StoreManagementController
 	public function indexAction()
 	{
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle('Currency', 'position'), 'ASC');
+		$filter->orderBy(new ARFieldHandle('Currency', 'position'), 'ASC');
 
 		$curr = ActiveRecord::getRecordSet("Currency", $filter, true)->toArray();
 
@@ -351,8 +351,8 @@ class CurrencyController extends StoreManagementController
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ARFieldHandle("Currency", "isDefault"), 1));
-		$filter->order(new ARFieldHandle("Currency", "isEnabled"), 'DESC');
-		$filter->order(new ARFieldHandle("Currency", "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle("Currency", "isEnabled"), 'DESC');
+		$filter->orderBy(new ARFieldHandle("Currency", "position"), 'ASC');
 		return ActiveRecord::getRecordSet('Currency', $filter);
 	}
 

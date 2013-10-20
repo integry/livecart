@@ -44,7 +44,7 @@ class Config
 		$this->di = $di;
 	}
 
-	public function isValueSet($key, $updateIfNotFound = false)
+	public function has($key, $updateIfNotFound = false)
 	{
 		if (!isset($this->values[$key]) && !$this->isUpdated && $updateIfNotFound)
 		{
@@ -109,7 +109,7 @@ class Config
 		// @todo - this can obviously be optimized
 		foreach ($this->values as $key => $value)
 		{
-			if ($this->isValueSet($key))
+			if ($this->has($key))
 			{
 				$array[$key] = $this->get($key);
 			}

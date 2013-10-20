@@ -94,7 +94,7 @@ class IndexController extends ControllerBackend
 		$f = select();
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
-		$f->order(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
+		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
 		$f->limit(10);
 
 		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);

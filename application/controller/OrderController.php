@@ -220,7 +220,7 @@ class OrderController extends FrontendController
 
 		$this->order->getSpecification()->setFormResponse($response, $form);
 
-		SessionOrder::getOrder()->getShoppingCartItems();
+		SessionOrder::getorderBy()->getShoppingCartItems();
 
 	}
 
@@ -410,7 +410,7 @@ class OrderController extends FrontendController
 
 		foreach ($this->order->getOrderedItems() as $item)
 		{
-			if ($this->request->isValueSet('item_' . $item->getID()))
+			if ($this->request->has('item_' . $item->getID()))
 			{
 				foreach ($item->getProduct()->getOptions(true) as $option)
 				{
@@ -838,7 +838,7 @@ class OrderController extends FrontendController
 
 	public function modifyItemOptionAction(OrderedItem $item, ProductOption $option, Request $request, $varName)
 	{
-		if ($option->isBool() && $request->isValueSet('checkbox_' . $varName))
+		if ($option->isBool() && $request->has('checkbox_' . $varName))
 		{
 			if ($request->get($varName))
 			{
@@ -1165,7 +1165,7 @@ class OrderController extends FrontendController
 				if ($option['isRequired'])
 				{
 					$field = $this->getFormFieldName($item, $option);
-					if ($this->request->isValueSet($field) || $this->request->isValueSet('checkbox_' . $field))
+					if ($this->request->has($field) || $this->request->has('checkbox_' . $field))
 					{
 						$this->addOptionValidation($validator, $option, $field);
 						/*

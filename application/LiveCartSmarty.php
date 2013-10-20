@@ -86,7 +86,7 @@ class LiveCartSmarty extends Smarty
 	public function config($key)
 	{
 		$config = self::getApplication()->getConfig();
-		if ($config->isValueSet($key))
+		if ($config->has($key))
 		{
 			return $config->get($key);
 		}

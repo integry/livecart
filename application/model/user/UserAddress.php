@@ -119,7 +119,7 @@ class UserAddress extends ActiveRecordModel implements EavAble
 			$this->state = State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
 			$this->stateName = null);
 		}
-		else if ($request->isValueSet($prefix . 'stateName'))
+		else if ($request->has($prefix . 'stateName'))
 		{
 			$this->stateName = $request->get($prefix . 'stateName'));
 			$this->state = null);

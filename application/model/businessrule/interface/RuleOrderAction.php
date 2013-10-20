@@ -7,7 +7,7 @@
  */
 interface RuleOrderAction
 {
-	public function applyToOrder(CustomerOrder $order);
+	public function applyToorderBy(CustomerOrder $order);
 }
 
 ?>

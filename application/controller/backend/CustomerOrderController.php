@@ -48,7 +48,7 @@ class CustomerOrderController extends ActiveGridController
 					array('ID' => self::TYPE_PROCESSING, 'name' => $this->translate('_processing_orders'), 'rootID' => self::TYPE_CURRENT),
 					array('ID' => self::TYPE_AWAITING, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => self::TYPE_CURRENT));
 
-		if (CustomerOrder::hasRecurringOrder())
+		if (CustomerOrder::hasRecurringorderBy())
 		{
 			$orderGroups = array_merge($orderGroups, array(
 				array('ID' => self::TYPE_RECURRING, 'rootID' => self::TYPE_ALL, 'name' => $this->translate('_recurring')),
@@ -226,7 +226,7 @@ class CustomerOrderController extends ActiveGridController
 				break;
 			}
 		}
-		BackendToolbarItem::registerLastViewedOrder($order);
+		BackendToolbarItem::registerLastViewedorderBy($order);
 //		$this->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$this->set('hideShipped', false);
 		$this->set('type', $this->getOrderType($order));
@@ -457,7 +457,7 @@ class CustomerOrderController extends ActiveGridController
 
 	public function ordersAction()
 	{
-		if (!$this->request->isValueSet('id'))
+		if (!$this->request->has('id'))
 		{
 			$this->request->set('id', 1);
 		}
@@ -871,8 +871,8 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$this->request->remove('sort_col');
 			$direction = ($this->request->get('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
-			$filter->order(new ARFieldHandle("User", "lastName"), $direction);
-			$filter->order(new ARFieldHandle("User", "firstName"), $direction);
+			$filter->orderBy(new ARFieldHandle("User", "lastName"), $direction);
+			$filter->orderBy(new ARFieldHandle("User", "firstName"), $direction);
 		}
 
 		if ($this->request->get('userID'))
@@ -885,10 +885,10 @@ class CustomerOrderController extends ActiveGridController
 		return $filter;
 	}
 
-	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	protected function setDefaultSortorderBy(ARSelectFilter $filter)
 	{
-		$filter->order(new ARFieldHandle($this->getClassName(), 'dateCompleted'), 'DESC');
-		$filter->order(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+		$filter->orderBy(new ARFieldHandle($this->getClassName(), 'dateCompleted'), 'DESC');
+		$filter->orderBy(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
 	}
 
 	public function processDataArrayAction($orders, $displayedColumns)
@@ -1323,7 +1323,7 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$existingRecord = $order->isExistingRecord();
 			$order->save(true);
-			BackendToolbarItem::registerLastViewedOrder($order);
+			BackendToolbarItem::registerLastViewedorderBy($order);
 
 			return new JSONResponse(
 			   array('order' => array( 'ID' => $order->getID())),

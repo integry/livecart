@@ -197,9 +197,9 @@ class ProductOption extends MultilingualObject
 		$f->setCondition($categoryCond);
 
 		// ordering
-		$f->order(new ARFieldHandle('ProductOption', 'productID'), 'DESC');
-		$f->order(new ARFieldHandle('Category', 'lft'), 'DESC');
-		$f->order(new ARFieldHandle('ProductOption', 'position'), 'DESC');
+		$f->orderBy(new ARFieldHandle('ProductOption', 'productID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->orderBy(new ARFieldHandle('ProductOption', 'position'), 'DESC');
 
 
 		$options = ProductOption::getRecordSet($f, array('DefaultChoice' => 'ProductOptionChoice', 'Category'));
@@ -251,7 +251,7 @@ class ProductOption extends MultilingualObject
 		if ($ids)
 		{
 			$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductOptionChoice', 'optionID'), $ids));
-			$f->order(new ARFieldHandle('ProductOptionChoice', 'position'));
+			$f->orderBy(new ARFieldHandle('ProductOptionChoice', 'position'));
 
 			foreach (ActiveRecordModel::getRecordSet('ProductOptionChoice', $f) as $choice)
 			{
@@ -332,7 +332,7 @@ class ProductOption extends MultilingualObject
 	public function getChoiceSet()
 	{
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('ProductOptionChoice', 'position'));
+		$f->orderBy(new ARFieldHandle('ProductOptionChoice', 'position'));
 
 		return $this->getRelatedRecordSet('ProductOptionChoice', $f);
 	}

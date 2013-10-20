@@ -39,7 +39,7 @@ class ProductFileController extends StoreManagementController
 		}
 
 		$uploadFile = $this->request->get('uploadFile');
-		if($this->request->isValueSet('uploadFile'))
+		if($this->request->has('uploadFile'))
 		{
 			$productFile->storeFile($uploadFile['tmp_name'], $uploadFile['name']);
 		}
@@ -79,16 +79,16 @@ class ProductFileController extends StoreManagementController
 		{
 			foreach ($this->application->getLanguageArray(true) as $lang)
 	   		{
-	   			if ($this->request->isValueSet('title_' . $lang))
+	   			if ($this->request->has('title_' . $lang))
 					$productFile->setValueByLang('title', $lang, $this->request->get('title_' . $lang));
 
-	   			if ($this->request->isValueSet('description_' . $lang))
+	   			if ($this->request->has('description_' . $lang))
 					$productFile->setValueByLang('description', $lang, $this->request->get('description_' . $lang));
 	   		}
 
 	   		// Use title as description if no description was provided
 	   		$defaultLang = $this->application->getDefaultLanguageCode();
-	   		if(!$this->request->isValueSet('description_' . $defaultLang) || $this->request->get('description_' . $defaultLang) == '')
+	   		if(!$this->request->has('description_' . $defaultLang) || $this->request->get('description_' . $defaultLang) == '')
 	   		{
 				$productFile->setValueByLang('description', $defaultLang, $this->request->get('title_' . $defaultLang));
 	   		}

@@ -160,8 +160,8 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 		}
 
 		$f = new ARSelectFilter(new INCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $ids));
-		$f->order(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
-		$f->order(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
+		$f->orderBy(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
 		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, $referencedRecords) as $record)
 		{
 			$record->condition->registerRecord($record);

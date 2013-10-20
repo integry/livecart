@@ -10,14 +10,14 @@ class RuleConditionShippingMethodIs extends RuleCondition
 {
 	public function isApplicable()
 	{
-		if (!($this->getOrder() instanceof CustomerOrder))
+		if (!($this->getorderBy() instanceof CustomerOrder))
 		{
 			return false;
 		}
 
 		$values = $this->getParam('serializedCondition', array('values' => array()));
 
-		foreach ($this->getOrder()->getShipments() as $shipment)
+		foreach ($this->getorderBy()->getShipments() as $shipment)
 		{
 			if (!$rate = $shipment->getSelectedRate())
 			{

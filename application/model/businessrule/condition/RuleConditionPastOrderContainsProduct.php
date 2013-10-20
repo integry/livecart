@@ -50,7 +50,7 @@ class RuleConditionPastOrderContainsProduct extends RuleConditionContainsProduct
 		return $pastOrders;
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 20;
 	}

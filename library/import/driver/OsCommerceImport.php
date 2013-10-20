@@ -74,7 +74,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		return true;
 	}
 
-	public function isCustomerOrder()
+	public function isCustomerorderBy()
 	{
 		return true;
 	}
@@ -385,7 +385,7 @@ class OsCommerceImport extends LiveCartImportDriver
 					);
 	}
 
-	public function getNextCustomerOrder()
+	public function getNextCustomerorderBy()
 	{
 		if (!$data = $this->loadRecord('SELECT *, ' . $this->getTablePrefix() . 'orders.orders_id AS id, ' . $this->getTablePrefix() . 'orders_total.value FROM ' . $this->getTablePrefix() . 'orders
 												LEFT JOIN ' . $this->getTablePrefix() . 'orders_total ON (' . $this->getTablePrefix() . 'orders.orders_id=' . $this->getTablePrefix() . 'orders_total.orders_id AND class="ot_shipping")
@@ -495,7 +495,7 @@ class OsCommerceImport extends LiveCartImportDriver
 		return $address->save();
 	}
 
-	public function saveCustomerOrder(CustomerOrder $order)
+	public function saveCustomerorderBy(CustomerOrder $order)
 	{
 		$order->shippingAddress->save();
 		$order->billingAddress->save();
@@ -522,7 +522,7 @@ class OsCommerceImport extends LiveCartImportDriver
 			}
 		}
 
-		return parent::saveCustomerOrder($order);
+		return parent::saveCustomerorderBy($order);
 	}
 
 	private function sortCategories($a, $b)

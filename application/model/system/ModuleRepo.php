@@ -78,7 +78,7 @@ class ModuleRepo
 		$k = 0;
 		$repos = array();
 		$config = $application->getConfig();
-		while ($config->isValueSet('UPDATE_REPO_' . ++$k))
+		while ($config->has('UPDATE_REPO_' . ++$k))
 		{
 			$repo = $config->get('UPDATE_REPO_' . $k);
 			if ($repo)

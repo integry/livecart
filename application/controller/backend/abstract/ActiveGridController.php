@@ -1,7 +1,8 @@
 <?php
 
+use \Phalcon\Mvc\Model\Query\Builder;
 
-abstract class ActiveGridController extends StoreManagementController
+abstract class ActiveGridController extends ControllerBackend
 {
 	const EXPORT_BUFFER_ROW_COUNT = 200;
 
@@ -37,44 +38,53 @@ abstract class ActiveGridController extends StoreManagementController
 		exit;
 	}
 
-	public function listsAction($dataOnly = false, $displayedColumns = null, $exportBufferIndex = 0)
+	public function listsAction()
 	{
 		$filter = $this->getListFilter();
-		$this->setDefaultSortOrder($filter);
+		$this->setDefaultSortorderBy($filter);
 		$recordCount = true;
 
+		$exportBufferIndex = 0;
+		
+		/*
 		if ($exportBufferIndex)
 		{
 			$exportFrom = ($exportBufferIndex - 1) * self::EXPORT_BUFFER_ROW_COUNT;
 			$filter->limit(self::EXPORT_BUFFER_ROW_COUNT, $exportFrom);
 		}
+		*/
 
-		$productArray = ActiveRecordModel::getRecordSetArray($this->getClassName(), $filter, $this->getReferencedData(), $recordCount);
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = $this->getRequestColumns();
-		}
+		// todo: $this->getReferencedData()
+		// todo: $recordCount
+		
+		$productArray = $filter->getQuery()->execute();
+		
+		$displayedColumns = $this->getRequestColumns();
+		
 		$data = $this->recordSetArrayToListData($productArray, $displayedColumns, $exportBufferIndex);
-		if ($dataOnly)
-		{
-			return $data;
-		}
+
+		// get total count
+		$filter->limit(10000000000000);
+		$filter->columns('COUNT(*) AS cnt');
+		
+		$countRow = $filter->getQuery()->execute()->getFirst();
 
 		$return = array();
 		$return['columns'] = array_keys($displayedColumns);
-		$return['totalCount'] = $recordCount;
+		$return['totalCount'] = $countRow->cnt;
 		$return['data'] = $data;
+		$return['options'] = $this->getGridOptions();
 
-		return new JSONResponse($return);
+		echo json_encode($return);
 	}
 
 	protected function recordSetArrayToListData($productArray, $displayedColumns, $exportBufferIndex=true)
 	{
 		$data = array();
-		$productArray = $this->processDataArray($productArray, $displayedColumns);
-		foreach ($productArray as &$row)
+
+		foreach ($this->processDataArray($productArray, $displayedColumns) as $row)
 		{
+			$row = $row->toArray();
 			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
 
 			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
@@ -94,6 +104,7 @@ abstract class ActiveGridController extends StoreManagementController
 				}
 			}
 		}
+
 		return $data;
 	}
 
@@ -107,8 +118,8 @@ abstract class ActiveGridController extends StoreManagementController
 			$field = array_shift($fieldData);
 
 			$value = $this->getColumnValue($row, $class, $field);
-
-			$record[str_replace('.', '_', $column)] = $this->formatValue($value, $type);
+			
+			$record[$this->getJsColumn($column)] = $this->formatValue($value, $type);
 		}
 
 		return array($record);
@@ -117,7 +128,7 @@ abstract class ActiveGridController extends StoreManagementController
 	protected function getListFilter()
 	{
 		$filter = $this->getSelectFilter();
-		new ActiveGrid($this->application, $filter, $this->getClassName(), $this->getHavingClauseColumnTypes() );
+		new ActiveGrid($this->getDI(), $filter, $this->getClassName(), $this->getHavingClauseColumnTypes() );
 		return $filter;
 	}
 
@@ -146,14 +157,27 @@ abstract class ActiveGridController extends StoreManagementController
 		return $dataArray;
 	}
 
-	public function processMassAction($params = array())
+	public function massAction()
 	{
-		$processorClass = $this->getMassActionProcessor();
-		$grid = new ActiveGrid($this->application, $this->getSelectFilter(), $this->getClassName(), $this->getHavingClauseColumnTypes());
-		$mass = new $processorClass($grid, $params);
-		$mass->setCompletionMessage($this->getMassCompletionMessage());
-
-		return $mass->process($this->getReferencedData());
+		$filter = $this->getListFilter();
+		if ($ids = $this->request->getJson('ids'))
+		{
+			$func = $this->request->getJson('allSelected') ? 'notInWhere' : 'inWhere';
+			$filter->$func('ID', $ids);
+		}
+		
+		$records = $filter->getQuery()->execute();
+		
+		$action = $this->request->getJson('action');
+		foreach ($records as $record)
+		{
+			switch ($action)
+			{
+				case 'delete':
+					$record->delete();
+				break;
+			}
+		}
 	}
 
 	protected function getMassCompletionMessage()
@@ -182,7 +206,8 @@ abstract class ActiveGridController extends StoreManagementController
 	protected function getDisplayedColumns($params = null, $customColumns = array())
 	{
 		// get displayed columns
-		$displayedColumns = $this->getSessionData('columns');
+//		$displayedColumns = $this->getSessionData('columns');
+		$displayedColumns = null;
 
 		if (!$displayedColumns)
 		{
@@ -216,30 +241,40 @@ abstract class ActiveGridController extends StoreManagementController
 		return $displayedColumns;
 	}
 
-	public static function getSchemaColumns($schemaName, LiveCart $application, $customColumns = array())
+	protected function getSchemaColumns($schemaName, $customColumns = array())
 	{
-		$productSchema = ActiveRecordModel::getSchemaInstance($schemaName);
+		$model = new $schemaName();
+		$metaData = new Phalcon\Mvc\Model\MetaData\Memory();
+		$attributes = $metaData->getDataTypes($model);
 
 		$availableColumns = array();
-		foreach ($productSchema->getFieldList() as $field)
+		foreach ($attributes as $field => $dataType)
 		{
-			$type = ActiveGrid::getFieldType($field);
-
-			if (!$type && ('ID' != $field->getName()))
+			switch ($dataType)
 			{
-				continue;
+				case 0: 
+					$type = 'numeric';
+				break;
+				
+				case 2: 
+				case 5: 
+				case 6: 
+				default:
+					$type = 'text';
+				break;
 			}
 
-			$availableColumns[$schemaName . '.' . $field->getName()] = $type;
+			$availableColumns[$schemaName . '.' . $field] = $type;
 		}
 
 		$availableColumns = array_merge($availableColumns, $customColumns);
 
 		foreach ($availableColumns as $column => $type)
 		{
-			$availableColumns[$column] = array('name' => $application->translate($column), 'type' => $type);
+			$availableColumns[$column] = array('name' => $this->application->translate($column), 'type' => $type);
 		}
 
+		/*
 		// specField columns
 		if (self::isEav($schemaName))
 		{
@@ -264,18 +299,21 @@ abstract class ActiveGridController extends StoreManagementController
 					);
 			}
 		}
+		*/
+		
 		return $availableColumns;
 	}
 
-	public function getHavingClauseColumnTypesAction()
+	public function getHavingClauseColumnTypes()
 	{
 		return array();
 	}
 
-	public function getAvailableColumnsAction($schemaName = null)
+	public function getAvailableColumns($schemaName = null)
 	{
 		$schemaName = $schemaName ? $schemaName : $this->getClassName();
-		$availableColumns = self::getSchemaColumns($schemaName, $this->application, $this->getCustomColumns());
+		
+		$availableColumns = $this->getSchemaColumns($schemaName, $this->getCustomColumns());
 
 		// sort available columns by placing the default columns first
 		$default = array();
@@ -315,6 +353,17 @@ abstract class ActiveGridController extends StoreManagementController
 
 		return $columns;
 	}
+	
+	protected function getJsColumn($fieldName)
+	{
+		$jsColumn = str_replace('.', '_', $fieldName);
+		if ($p = strpos($jsColumn, '\\'))
+		{	
+			$jsColumn = substr($jsColumn, $p + 1);
+		}
+		
+		return $jsColumn;
+	}
 
 	protected function getGridOptions()
 	{
@@ -330,11 +379,11 @@ abstract class ActiveGridController extends StoreManagementController
 
 			if (substr($field, -3) == '.ID')
 			{
-				$options['primaryKey'] = str_replace('.', '_', $field);
+				$options['primaryKey'] = $this->getJsColumn($field);
 			}
 
 			$options['columnDefs'][] = array(
-				'field' => str_replace('.', '_', $field),
+				'field' => $this->getJsColumn($field),
 				'displayName' => $column['name'],
 				'visible' => !empty($displayedColumns[$field]) && (substr($field, -3) != '.ID')
 				);
@@ -465,8 +514,9 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getSelectFilter()
 	{
-		$f = new ARSelectFilter();
+		$f = $this->modelsManager->createBuilder()->from($this->getClassName());
 
+		/*
 		// specField columns
 		if ($this->isEav())
 		{
@@ -487,6 +537,7 @@ abstract class ActiveGridController extends StoreManagementController
 				}
 			}
 		}
+		*/
 
 		return $f;
 	}
@@ -506,9 +557,9 @@ abstract class ActiveGridController extends StoreManagementController
 		return 'exported.csv';
 	}
 
-	protected function setDefaultSortOrder(ARSelectFilter $filter)
+	protected function setDefaultSortorderBy(Builder $filter)
 	{
-		$filter->order(new ARFieldHandle($this->getClassName(), 'ID'), 'DESC');
+		$filter->orderBy($this->getClassName() . '.ID DESC');
 	}
 
 	protected function getMassValidator()
@@ -523,7 +574,7 @@ abstract class ActiveGridController extends StoreManagementController
 
 	protected function getMassActionProcessor()
 	{
-				return 'MassActionProcessor';
+		return 'MassActionProcessor';
 	}
 
 	public function isMassCancelledAction()

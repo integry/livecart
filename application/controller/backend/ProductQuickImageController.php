@@ -29,7 +29,7 @@ class ProductQuickImageController extends ObjectImageController
 			$data = json_decode($result->get('result'));
 			$imageID = $data->ID;
 			$filter = select(eq(f('ProductImage.productID'), $request->get('ownerId')));
-			$filter->order(f('ProductImage.position'));
+			$filter->orderBy(f('ProductImage.position'));
 			$r = ActiveRecordModel::getRecordSetArray('ProductImage', $filter, true);
 			$order = array($imageID);
 			foreach($r as $item)
@@ -39,7 +39,7 @@ class ProductQuickImageController extends ObjectImageController
 					$order[] = $item['ID'];
 				}
 			}
-			parent::saveOrder($order);
+			parent::saveorderBy($order);
 		}
 		return $result;
 	}
@@ -77,7 +77,7 @@ class ProductQuickImageController extends ObjectImageController
 	 */
 	public function saveOrderAction()
 	{
-		return parent::saveOrder();
+		return parent::saveorderBy();
 	}
 
 	protected function getModelClass()

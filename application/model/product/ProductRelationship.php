@@ -151,8 +151,8 @@ class ProductRelationship extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 
 		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');
-		$filter->order(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
-		$filter->order(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
+		$filter->orderBy(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
 		$filter->mergeCOndition(new EqualsCond(new ARFieldHandle(__CLASS__, "type"), $type));
 

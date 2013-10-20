@@ -29,7 +29,7 @@ class GoogleCheckoutController extends CheckoutController
 	private function completeCallback($array)
 	{
 		ActiveRecordModel::beginTransaction();
-		$order = $this->createOrder($array);
+		$order = $this->createorderBy($array);
 		$email = null;
 		$address = null;
 
@@ -121,7 +121,7 @@ class GoogleCheckoutController extends CheckoutController
 
 	private function calculationCallback($array)
 	{
-		$order = $this->createOrder($array);
+		$order = $this->createorderBy($array);
 		$allRates = $this->getShippingRates($order, $this->getAddresses($array));
 
 		$results = new SimpleXMLElement('<results></results>');
@@ -184,7 +184,7 @@ class GoogleCheckoutController extends CheckoutController
 		return new SimpleXMLResponse($response);
 	}
 
-	private function createOrder($array)
+	private function createorderBy($array)
 	{
 		$cart = $array['SHOPPING-CART'][0]['ITEMS'][0]['ITEM'];
 		$orderID = $cart[0]['MERCHANT-PRIVATE-ITEM-DATA'][0]['ORDER-ID'][0]['VALUE'];

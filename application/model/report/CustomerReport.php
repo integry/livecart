@@ -55,9 +55,9 @@ class CustomerReport extends Report
 		$q = $this->getQuery('ROUND(SUM(CustomerOrder.totalAmount * ' . $this->getCurrencyMultiplier() . '), 2)');
 
 		$f = $q->getFilter();
-		$f->reorder();
+		$f->reorderBy();
 		$f->resetGrouping();
-		$f->order(new ARExpressionHandle('cnt'), 'DESC');
+		$f->orderBy(new ARExpressionHandle('cnt'), 'DESC');
 		$q->addField('userID');
 		$f->setGrouping(new ARExpressionHandle('userID'));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));

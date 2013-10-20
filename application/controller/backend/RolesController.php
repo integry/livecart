@@ -26,7 +26,7 @@ class RolesController extends StoreManagementController
 		$filter = new ARSelectFilter();
 		foreach (array('product', 'category', 'option', 'filter', 'order', 'user') as $roleName)
 		{
-			$filter->order(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
+			$filter->orderBy(new ARExpressionHandle('(Role.name LIKE "' . $roleName . '%")'), 'DESC');
 		}
 
 		// disabled roles
@@ -53,7 +53,7 @@ class RolesController extends StoreManagementController
 				{
 					if (isset($item['role']))
 					{
-						$filter->order(new ARExpressionHandle('(Role.name LIKE "' . $item['role'] . '%")'), 'DESC');
+						$filter->orderBy(new ARExpressionHandle('(Role.name LIKE "' . $item['role'] . '%")'), 'DESC');
 					}
 				}
 			}

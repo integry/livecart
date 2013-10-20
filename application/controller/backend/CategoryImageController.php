@@ -57,7 +57,7 @@ class CategoryImageController extends ObjectImageController
 	 */
 	public function saveOrderAction()
 	{
-		parent::saveOrder();
+		parent::saveorderBy();
 
 		return new JSONResponse(true);
 	}

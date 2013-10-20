@@ -34,7 +34,7 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * !Running tests not involving initOrder() method will not recreate Currency,
+	 * !Running tests not involving initorderBy() method will not recreate Currency,
 	 * but setUp() method is wiping all Currecy records,
 	 *
 	 * Store frontend is not working without Currency object
@@ -58,7 +58,7 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 		}
 	}
 
-	protected function initOrder()
+	protected function initorderBy()
 	{
 		// set up currency
 		$this->setUpCurrency();

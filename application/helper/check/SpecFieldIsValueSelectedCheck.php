@@ -43,14 +43,14 @@ class SpecFieldIsValueSelectedCheck extends Check
 
 			foreach($this->specField->getValuesSet() as $value)
 			{
-				if($this->request->isValueSet("specItem_" . $value->getID()))
+				if($this->request->has("specItem_" . $value->getID()))
 				{
 					return true;
 				}
 			}
 		}
 
-		else if ($this->request->isValueSet($this->specField->getFormFieldName()))
+		else if ($this->request->has($this->specField->getFormFieldName()))
 		{
 			return true;
 		}

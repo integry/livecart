@@ -10,7 +10,7 @@ ClassLoader::import('application/model/tax/TaxClass');
  */
 class RuleActionChangeShippingTaxClass extends RuleAction implements RuleOrderAction
 {
-	public function applyToOrder(CustomerOrder $order)
+	public function applyToorderBy(CustomerOrder $order)
 	{
 		$taxClassID = $this->getFieldValue('taxClassID', -1);
 		if($taxClassID > 0)

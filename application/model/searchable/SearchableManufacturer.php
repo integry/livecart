@@ -22,7 +22,7 @@ class SearchableManufacturer extends SearchableModel
 	{
 		$c = new ARExpressionHandle($this->getWeighedSearchCondition(array('name' => 1), $searchTerm));
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
-		$f->order($c, 'DESC');
+		$f->orderBy($c, 'DESC');
 		return $f;
 	}
 }

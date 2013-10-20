@@ -40,9 +40,9 @@ abstract class RuleCondition
 		return $this->controller->getContext();
 	}
 
-	protected function getOrder()
+	protected function getorderBy()
 	{
-		return $this->getContext()->getOrder();
+		return $this->getContext()->getorderBy();
 	}
 
 	public function getConditions()
@@ -76,7 +76,7 @@ abstract class RuleCondition
 	 */
 	public function isValid($instance = null)
 	{
-		if (($this instanceof RuleOrderCondition) && !$this->getOrder())
+		if (($this instanceof RuleOrderCondition) && !$this->getorderBy())
 		{
 			return false;
 		}
@@ -255,7 +255,7 @@ abstract class RuleCondition
 		return count($this->conditions) > 0;
 	}
 
-	public static function getSortOrder()
+	public static function getSortorderBy()
 	{
 		return 999;
 	}

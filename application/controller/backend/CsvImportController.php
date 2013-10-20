@@ -35,7 +35,7 @@ class CsvImportController extends StoreManagementController
 		}
 
 		$form = $this->getForm();
-		$root = Category::getInstanceByID($this->request->isValueSet('category') ? $this->request->get('category') : Category::ROOT_ID, Category::LOAD_DATA);
+		$root = Category::getInstanceByID($this->request->has('category') ? $this->request->get('category') : Category::ROOT_ID, Category::LOAD_DATA);
 		$form->set('category', $root->getID());
 		$form->set('atServer', $this->request->get('file'));
 

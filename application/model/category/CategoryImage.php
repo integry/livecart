@@ -42,7 +42,7 @@ class CategoryImage extends ObjectImage
 
 		$sizes = array();
 		$k = 0;
-		while ($config->isValueSet('IMG_C_W_' . ++$k))
+		while ($config->has('IMG_C_W_' . ++$k))
 		{
 			$sizes[$k] = array($config->get('IMG_C_W_' . $k), $config->get('IMG_C_H_' . $k));
 		}

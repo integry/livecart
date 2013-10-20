@@ -25,7 +25,7 @@ class PriceFilter implements FilterInterface
 
 		for($definedFilterCount=1; $definedFilterCount<=self::MAX_FILTER_COUNT; $definedFilterCount++)
 		{
-			if(!$c->get('PRICE_FILTER_FROM_' . $definedFilterCount) && !$c->get('PRICE_FILTER_TO_' . $definedFilterCount)) // isValueSet() returns true if values are ''
+			if(!$c->get('PRICE_FILTER_FROM_' . $definedFilterCount) && !$c->get('PRICE_FILTER_TO_' . $definedFilterCount)) //has() returns true if values are ''
 			{
 				break;
 			}

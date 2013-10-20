@@ -195,7 +195,7 @@ class FilterGroup extends MultilingualObject
 	public function getFiltersList()
 	{
 		$filter = new ARSelectFilter();
-		$filter->order(new ARFieldHandle("Filter", "position"));
+		$filter->orderBy(new ARFieldHandle("Filter", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
 		return Filter::getRecordSet($filter);

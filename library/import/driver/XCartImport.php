@@ -73,7 +73,7 @@ class XCartImport extends LiveCartImportDriver
 		return true;
 	}
 
-	public function isCustomerOrder()
+	public function isCustomerorderBy()
 	{
 		return true;
 	}
@@ -437,7 +437,7 @@ class XCartImport extends LiveCartImportDriver
 					);
 	}
 
-	public function getNextCustomerOrder()
+	public function getNextCustomerorderBy()
 	{
 		if (!$data = $this->loadRecord('SELECT ' . $this->getTablePrefix() . 'orders.*, ' . $this->getTablePrefix() . 'customers.email AS userEmail FROM ' . $this->getTablePrefix() . 'orders LEFT JOIN ' . $this->getTablePrefix() . 'customers ON ' . $this->getTablePrefix() . 'orders.login=' . $this->getTablePrefix() . 'customers.login'))
 		{
@@ -446,7 +446,7 @@ class XCartImport extends LiveCartImportDriver
 
 		if (!$user = User::getInstanceByEmail($data['userEmail']))
 		{
-			return $this->getNextCustomerOrder();
+			return $this->getNextCustomerorderBy();
 		}
 
 		$order = CustomerOrder::getNewInstance($user);
@@ -519,7 +519,7 @@ class XCartImport extends LiveCartImportDriver
 		return $address;
 	}
 
-	public function saveCustomerOrder(CustomerOrder $order)
+	public function saveCustomerorderBy(CustomerOrder $order)
 	{
 		$order->shippingAddress->save();
 		$order->billingAddress->save();
@@ -542,7 +542,7 @@ class XCartImport extends LiveCartImportDriver
 			$shipment->save();
 		}
 
-		return parent::saveCustomerOrder($order);
+		return parent::saveCustomerorderBy($order);
 	}
 
 	private function sortCategories($a, $b)

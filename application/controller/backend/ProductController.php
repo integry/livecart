@@ -386,7 +386,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				{
 					$item = substr($key, 9);
 
-					if (!$request->isValueSet($item))
+					if (!$request->has($item))
 					{
 						$request->remove($key);
 						$request->remove($item);
@@ -594,7 +594,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->get($field) . '%');
 		  	$f->setCondition($c);
 
-			$f->order(new ARFieldHandle('Product', $field), 'ASC');
+			$f->orderBy(new ARFieldHandle('Product', $field), 'ASC');
 
 		  	$query = new ARSelectQueryBuilder();
 		  	$query->setFilter($f);
@@ -618,7 +618,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->get($field) . '%');
 			$c->addAND($langCond);
 
-		  	$f->order(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
+		  	$f->orderBy(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 
@@ -642,7 +642,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
 			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
-		  	$f->order($searchHandle, 'ASC');
+		  	$f->orderBy($searchHandle, 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('SpecificationStringValue', $f);
 
@@ -728,7 +728,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// pricing
 		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
-		$f->order(new ARFieldHandle('Currency', 'position'));
+		$f->orderBy(new ARFieldHandle('Currency', 'position'));
 		$otherCurrencies = array();
 		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
 		{
@@ -994,7 +994,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 		// get user groups
 		$f = new ARSelectFilter();
-		$f->order(new ARFieldHandle('UserGroup', 'name'));
+		$f->orderBy(new ARFieldHandle('UserGroup', 'name'));
 		$groups[0] = $this->translate('_all_customers');
 		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
 		{
@@ -1041,7 +1041,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		// check if entered SKU is unique
-		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
+		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->has('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
 		{
 						//$validator->add('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
 		}
