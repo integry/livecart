@@ -17,39 +17,39 @@ class IndexController extends ControllerBackend
 		// order stats
 		$conditions = array(
 
-			'last' => new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), time() - 86400),
-			'new' => new IsNullCond(new ARFieldHandle('CustomerOrder', 'status')),
-			'processing' => new EqualsCond(new ARFieldHandle('CustomerOrder', 'status'), CustomerOrder::STATUS_PROCESSING),
-			'total' => new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true),
+			'last' => new EqualsOrMoreCond('CustomerOrder.dateCompleted', time() - 86400),
+			'new' => new IsNullCond('CustomerOrder.status'),
+			'processing' => 'CustomerOrder.status = :CustomerOrder.status:', array('CustomerOrder.status' => CustomerOrder::STATUS_PROCESSING),
+			'total' => 'CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true),
 		);
 
 		foreach ($conditions as $key => $cond)
 		{
 			$f = new ARSelectFilter($cond);
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
+			$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+			$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => false));
 			$orderCount[$key] = ActiveRecordModel::getRecordCount('CustomerOrder', $f);
 		}
 
 		// messages
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 0));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
+		$f = query::query()->where('OrderNote.isAdmin = :OrderNote.isAdmin:', array('OrderNote.isAdmin' => 0));
+		$f->andWhere('OrderNote.isRead = :OrderNote.isRead:', array('OrderNote.isRead' => 0));
 		$orderCount['messages'] = ActiveRecordModel::getRecordCount('OrderNote', $f);
 
 		// inventory stats
-		$lowStock = new EqualsOrLessCond(new ARFieldHandle('Product', 'stockCount'), $this->config->get('LOW_STOCK'));
-		$lowStock->addAnd(new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0));
+		$lowStock = new EqualsOrLessCond('Product.stockCount', $this->config->get('LOW_STOCK'));
+		$lowStock->addAnd(new MoreThanCond('Product.stockCount', 0));
 
 		$conditions = array(
 
 			'lowStock' => $lowStock,
-			'outOfStock' => new EqualsOrLessCond(new ARFieldHandle('Product', 'stockCount'), 0),
+			'outOfStock' => new EqualsOrLessCond('Product.stockCount', 0),
 
 		);
 
 		foreach ($conditions as $key => $cond)
 		{
-			$cond->addAnd(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
+			$cond->addAnd('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true));
 			$inventoryCount[$key] = ActiveRecordModel::getRecordCount('Product', new ARSelectFilter($cond));
 		}
 
@@ -92,9 +92,9 @@ class IndexController extends ControllerBackend
 	protected function getLastOrders()
 	{
 		$f = select();
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
-		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'desc');
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => false));
+		$f->orderBy('CustomerOrder.dateCompleted', 'desc');
 		$f->limit(10);
 
 		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
@@ -116,16 +116,16 @@ class IndexController extends ControllerBackend
 
 	protected function getOrderCount($from, $to)
 	{
-		$cond = new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from));
+		$cond = new EqualsOrMoreCond('CustomerOrder.dateCompleted', getDateFromString($from));
 
 		if ('now' != $to)
 		{
-			$cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
+			$cond->addAnd(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
 		}
 
 		$f = new ARSelectFilter($cond);
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), false));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => false));
 
 		return ActiveRecordModel::getRecordCount('CustomerOrder', $f);
 	}

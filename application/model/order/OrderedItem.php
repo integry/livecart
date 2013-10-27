@@ -848,8 +848,8 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	 */
 	public function getFileByID($id)
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductFile', 'ID'), $id));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('ProductFile', 'productID'), $this->product->getID()));
+		$f = query::query()->where('ProductFile.ID = :ProductFile.ID:', array('ProductFile.ID' => $id));
+		$f->andWhere('ProductFile.productID = :ProductFile.productID:', array('ProductFile.productID' => $this->product->getID()));
 		$s = ActiveRecordModel::getRecordSet('ProductFile', $f);
 		if (!$s->size())
 		{

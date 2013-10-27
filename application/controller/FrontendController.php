@@ -183,7 +183,7 @@ abstract class FrontendController extends ControllerBase
 	protected function boxInformationMenuBlock()
 	{
 				$f = new ARSelectFilter(StaticPage::getIsInformationMenuCondition());
-		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
+		$f->orderBy('StaticPage.position');
 		$response = new BlockResponse();
 		$this->set('pages', StaticPage::createTree(ActiveRecordModel::getRecordSetArray('StaticPage', $f)));
 		unset($f);
@@ -484,7 +484,7 @@ abstract class FrontendController extends ControllerBase
 
 	protected function dynamicCategoryMenuBlock()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
+		$f = query::query()->where('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => true));
 		$categories = ActiveRecordModel::getRecordSetArray('Category', Category::getRootNode()->getBranchFilter($f));
 
 		$tree = array(1 => array('subCategories' => array()));
@@ -532,9 +532,9 @@ abstract class FrontendController extends ControllerBase
 					$ids[] = $cat['ID'];
 				}
 			}
-			$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-			$f->orderBy(new ARFieldHandle('Category', 'parentNodeID'));
-			$f->orderBy(new ARFieldHandle('Category', 'lft'));
+			$f = new ARSelectFilter(new INCond('Category.parentNodeID', $ids));
+			$f->orderBy('Category.parentNodeID');
+			$f->orderBy('Category.lft');
 			$subCategories = array();
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $f) as $cat)
 			{
@@ -545,9 +545,9 @@ abstract class FrontendController extends ControllerBase
 			}
 		}
 
-		$f = new ARSelectFilter(new IsNullCond(new ARFieldHandle('StaticPage', 'parentID')));
-		$f->mergeCondition(StaticPage::getIsRootCategoriesMenuCondition());
-		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
+		$f = new ARSelectFilter(new IsNullCond('StaticPage.parentID'));
+		$f->andWhere(StaticPage::getIsRootCategoriesMenuCondition());
+		$f->orderBy('StaticPage.position');
 		$pages = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 		$ids = array();
 		$subPages = array();
@@ -555,8 +555,8 @@ abstract class FrontendController extends ControllerBase
 		{
 			$ids[] = $page['ID'];
 		}
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('StaticPage', 'parentID'), $ids));
-		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
+		$f = new ARSelectFilter(new INCond('StaticPage.parentID', $ids));
+		$f->orderBy('StaticPage.position');
 		foreach (ActiveRecordModel::getRecordSetArray('StaticPage', $f) as $page)
 		{
 			$subPages[$page['parentID']][] = $page;
@@ -579,7 +579,7 @@ abstract class FrontendController extends ControllerBase
 	{
 
 		$category = $useRoot ? Category::getRootNode() : $this->getCategory();
-		$filter = new ProductFilter($category, new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true)));
+		$filter = new ProductFilter($category, query::query()->where('Product.isFeatured = :Product.isFeatured:', array('Product.isFeatured' => true)));
 		$filter->includeSubcategories();
 		$filter->setEnabledOnly();
 
@@ -611,7 +611,7 @@ abstract class FrontendController extends ControllerBase
 
 		$selectFilter = $filter->getSelectFilter();
 		$selectFilter->limit($this->config->get('NEWEST_ITEMS_COUNT'));
-		$selectFilter->orderBy(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+		$selectFilter->orderBy('Product.dateCreated', 'DESC');
 
 		$products = ActiveRecord::getRecordSetArray('Product', $selectFilter, array('Category', 'DefaultImage' => 'ProductImage'));
 
@@ -707,8 +707,8 @@ abstract class FrontendController extends ControllerBase
 	public function latestNewsBlockAction()
 	{
 		$this->application->logStat('Starting latestNewsBlock');
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+				$f = query::query()->where('NewsPost.isEnabled = :NewsPost.isEnabled:', array('NewsPost.isEnabled' => true));
+		$f->orderBy('NewsPost.position', 'DESC');
 		$f->limit($this->config->get('NUM_NEWS_INDEX') + 1);
 
 		$this->application->logStat('Before fetching news from DB');

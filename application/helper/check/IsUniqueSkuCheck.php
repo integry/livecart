@@ -20,10 +20,10 @@ class IsUniqueSkuCheck extends Check
 	public function isValid($value)
 	{
 		$filter = new ARSelectFilter();
-		$cond = new EqualsCond(new ARFieldHandle('Product', 'sku'), $value);
+		$cond = 'Product.sku = :Product.sku:', array('Product.sku' => $value);
 		if ($this->product->getID())
 		{
-		  	$cond->addAND(new NotEqualsCond(new ARFieldHandle('Product', 'ID'), $this->product->getID()));
+		  	$cond->addAND(new NotEqualsCond('Product.ID', $this->product->getID()));
 		}
 		$filter->setCondition($cond);	
 		

@@ -38,8 +38,8 @@ class ProductRelationship extends ActiveRecordModel
 	public static function getInstance(Product $product, Product $relatedProduct, $type, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'relatedProductID'), $relatedProduct->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'type'), $type));
+		$f->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'relatedProductID'), $relatedProduct->getID()));
+		$f->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'type'), $type));
 
 		$set = parent::getRecordSet(__CLASS__, $f, $loadReferencedRecords);
 		return $set->size() ? $set->get(0) : null;
@@ -154,7 +154,7 @@ class ProductRelationship extends ActiveRecordModel
 		$filter->orderBy(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
 		$filter->orderBy(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
-		$filter->mergeCOndition(new EqualsCond(new ARFieldHandle(__CLASS__, "type"), $type));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, "type"), $type));
 
 		return $filter;
 	}

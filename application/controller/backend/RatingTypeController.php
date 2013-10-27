@@ -86,7 +86,7 @@ class RatingTypeController extends StoreManagementController
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('ProductRatingType', 'ID'), $value));
+			$update->setCondition('ProductRatingType.ID = :ProductRatingType.ID:', array('ProductRatingType.ID' => $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet('ProductRatingType', $update);
 		}

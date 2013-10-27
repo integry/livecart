@@ -16,7 +16,7 @@ class CustomerReport extends Report
 
 	protected function getDateHandle()
 	{
-		return new ARFieldHandle('User', 'dateCreated');
+		return 'User.dateCreated';
 	}
 
 	public function getCustomerCounts()
@@ -34,10 +34,10 @@ class CustomerReport extends Report
 		$f = $q->getFilter();
 		$q->addField('countryID', null, 'entry');
 
-		$handle = new ARFieldHandle('UserAddress', 'countryID');
+		$handle = 'UserAddress.countryID';
 		$f->setGrouping($handle);
-		$f->mergeCondition(new NotEqualsCond($handle, ''));
-		$f->mergeCondition(new IsNotNullCond($handle, ''));
+		$f->andWhere(new NotEqualsCond($handle, ''));
+		$f->andWhere(new IsNotNullCond($handle, ''));
 
 		$this->getReportData($q);
 
@@ -50,7 +50,7 @@ class CustomerReport extends Report
 
 	public function getTopCustomers()
 	{
-		$this->setDateHandle(new ARFieldHandle('CustomerOrder', 'dateCompleted'));
+		$this->setDateHandle('CustomerOrder.dateCompleted');
 		$this->setChartType(self::TABLE);
 		$q = $this->getQuery('ROUND(SUM(CustomerOrder.totalAmount * ' . $this->getCurrencyMultiplier() . '), 2)');
 
@@ -60,9 +60,9 @@ class CustomerReport extends Report
 		$f->orderBy(new ARExpressionHandle('cnt'), 'DESC');
 		$q->addField('userID');
 		$f->setGrouping(new ARExpressionHandle('userID'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 1));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
+		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
+		$f->andWhere('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => 1));
 		$f->limit(self::TABLE_LIMIT);
 		$q->joinTable('CustomerOrder', 'User', 'userID', 'ID');
 
@@ -76,7 +76,7 @@ class CustomerReport extends Report
 
 		// fetch user details
 		$fields = array_flip(array('fullName', 'cnt'));
-		foreach (ActiveRecordModel::getRecordSetArray('User', new ARSelectFilter(new INCond(new ARFieldHandle('User', 'ID'), array_keys($ids)))) as $user)
+		foreach (ActiveRecordModel::getRecordSetArray('User', new ARSelectFilter(new INCond('User.ID', array_keys($ids)))) as $user)
 		{
 			$user['cnt'] = $ids[$user['ID']];
 			$ids[$user['ID']] = array_merge($fields, array_intersect_key($user, $fields));

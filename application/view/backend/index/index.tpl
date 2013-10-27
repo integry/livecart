@@ -2,8 +2,3 @@
 
 {% title %}{t _backend}{% endblock %}
 
-{% block content %}
-
-backend
-
-{% endblock %}

@@ -18,7 +18,7 @@ class SearchReport extends Report
 
 	protected function getDateHandle()
 	{
-		return new ARFieldHandle('SearchLog', 'time');
+		return 'SearchLog.time';
 	}
 
 	public function getTopSearches()

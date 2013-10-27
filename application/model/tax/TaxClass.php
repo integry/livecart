@@ -80,7 +80,7 @@ class TaxClass extends MultilingualObject
 		$f = select(
 				new EqualsCond(
 					MultiLingualObject::getLangSearchHandle(
-						new ARFieldHandle('TaxClass', 'name'),
+						'TaxClass.name',
 						self::getApplication()->getDefaultLanguageCode()
 					),
 					$name

@@ -70,7 +70,7 @@ class Shipment extends \ActiveRecordModel
 		if (empty($this->items) && $this->getID())
 		{
 			$filter = new ARSelectFilter();
-			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
+			$filter->setCondition('OrderedItem.shipmentID = :OrderedItem.shipmentID:', array('OrderedItem.shipmentID' => $this->getID()));
 
 			foreach(OrderedItem::getRecordSet('OrderedItem', $filter, array('Product', 'Category', 'DefaultImage' => 'ProductImage')) as $item)
 			{

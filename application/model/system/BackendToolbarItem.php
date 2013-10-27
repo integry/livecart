@@ -82,7 +82,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->mergeCondition(eq(f(__CLASS__.'.ownerID'), $this->sessionUser->getUser()->getID()));
+		$filter->andWhere(eq(f(__CLASS__.'.ownerID'), $this->sessionUser->getUser()->getID()));
 		$filter->orderBy(f(__CLASS__.'.position'), $order);
 
 		$m = array(
@@ -119,7 +119,7 @@ class BackendToolbarItem extends ActiveRecordModel
 
 		if (count($conditions))
 		{
-			$filter->mergeCondition(new OrChainCondition($conditions) );
+			$filter->andWhere(new OrChainCondition($conditions) );
 		}
 
 		return self::getRecordSetArray(__CLASS__, $filter, true);
@@ -156,7 +156,7 @@ class BackendToolbarItem extends ActiveRecordModel
 		$filter = select(eq(f(__CLASS__.'.menuID'), $menuID));
 		if ($position !== null)
 		{
-			$filter->mergeCondition(eq(f(__CLASS__.'.position'), $position));
+			$filter->andWhere(eq(f(__CLASS__.'.position'), $position));
 		}
 		$items = self::getUserToolbarItems(BackendToolbarItem::TYPE_MENU, $filter);
 		if (count($items) == 1)

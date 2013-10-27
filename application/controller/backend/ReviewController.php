@@ -140,12 +140,12 @@ class ReviewController extends ActiveGridController
 		{
 			$owner = Category::getInstanceByID($id, Category::LOAD_DATA);
 
-			$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $owner->lft);
-			$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $owner->rgt));
+			$cond = new EqualsOrMoreCond('Category.lft', $owner->lft);
+			$cond->addAND(new EqualsOrLessCond('Category.rgt', $owner->rgt));
 		}
 		else
 		{
-			$cond = new EqualsCond(new ARFieldHandle('ProductReview', 'productID'), $id);
+			$cond = 'ProductReview.productID = :ProductReview.productID:', array('ProductReview.productID' => $id);
 		}
 
 		return new ARSelectFilter($cond);

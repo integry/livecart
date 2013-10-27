@@ -51,9 +51,9 @@ class SessionOrder
 			// get the last unfinalized order by this user
 			if ($userId > 0)
 			{
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userId));
-				$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-				$f->orderBy(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+				$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $userId));
+				$f->andWhere(new NotEqualsCond('CustomerOrder.isFinalized', true));
+				$f->orderBy('CustomerOrder.ID', 'DESC');
 				$f->limit(1);
 				$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 				if ($orders->size())

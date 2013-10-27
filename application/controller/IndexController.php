@@ -26,8 +26,8 @@ class IndexController extends ControllerBase
 		$response = parent::index();
 
 		// load site news
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f = query::query()->where('NewsPost.isEnabled = :NewsPost.isEnabled:', array('NewsPost.isEnabled' => true));
+		$f->orderBy('NewsPost.position', 'DESC');
 		$f->limit($this->config->get('NUM_NEWS_INDEX') + 1);
 		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
 		$response = 'news', $news);

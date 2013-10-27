@@ -139,7 +139,7 @@ class DiscountController extends ActiveGridController
 
 		// actions
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('DiscountAction', 'position'));
+		$f->orderBy('DiscountAction.position');
 		$actions = $condition->getRelatedRecordSet('DiscountAction', $f, array('DiscountCondition', 'DiscountCondition_ActionCondition'));
 		foreach ($actions as $action)
 		{
@@ -275,7 +275,7 @@ class DiscountController extends ActiveGridController
 
 		// delete existing record
 		$record = ActiveRecordModel::getInstanceByID($this->request->get('class'), $this->request->get('recordID'));
-		foreach ($record->getRelatedRecordSet('DiscountConditionRecord', new ARSelectFilter(new EqualsCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $condition->getID()))) as $existing)
+		foreach ($record->getRelatedRecordSet('DiscountConditionRecord', query::query()->where('DiscountConditionRecord.conditionID = :DiscountConditionRecord.conditionID:', array('DiscountConditionRecord.conditionID' => $condition->getID()))) as $existing)
 		{
 			$existing->delete();
 		}
@@ -444,7 +444,7 @@ class DiscountController extends ActiveGridController
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('DiscountAction', 'ID'), $value));
+			$update->setCondition('DiscountAction.ID = :DiscountAction.ID:', array('DiscountAction.ID' => $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet('DiscountAction', $update);
 		}
@@ -493,7 +493,7 @@ class DiscountController extends ActiveGridController
 	{
 		// we don't need the root node or action conditions
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle($this->getClassName(), 'parentNodeID'), 1));
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle($this->getClassName(), 'isActionCondition'), 1));
+		$f->andWhere(new NotEqualsCond(new ARFieldHandle($this->getClassName(), 'isActionCondition'), 1));
 		return $f;
 	}
 

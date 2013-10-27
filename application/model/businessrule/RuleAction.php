@@ -22,7 +22,7 @@ abstract class RuleAction
 		return isset($this->params[$key]) ? $this->params[$key] : $defaultValue;
 	}
 
-	public function getFieldValue($key)
+	public function readAttribute($key)
 	{
 		if (isset($this->params['serializedData'][$key]))
 		{

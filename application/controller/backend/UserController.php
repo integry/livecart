@@ -169,11 +169,11 @@ class UserController extends StoreManagementController
 		$id = (int)$this->request->get('id');
 		if($id > 0)
 		{
-			$filter->setCondition(new EqualsCond(new ARFieldHandle('User', 'userGroupID'), $id));
+			$filter->setCondition('User.userGroupID = :User.userGroupID:', array('User.userGroupID' => $id));
 		}
 		else if($id == -1)
 		{
-			$filter->setCondition(new IsNullCond(new ARFieldHandle('User', 'userGroupID')));
+			$filter->setCondition(new IsNullCond('User.userGroupID'));
 		}
 		else if($id != -2)
 		{
@@ -289,7 +289,7 @@ class UserController extends StoreManagementController
 			$modified = false;
 			foreach (ActiveRecordModel::getSchemaInstance('UserAddress')->getFieldList() as $f)
 			{
-				if ($address->getFieldValue($f->getName()))
+				if ($address->readAttribute($f->getName()))
 				{
 					$modified = true;
 				}

@@ -11,7 +11,7 @@ class RuleActionShowMessage extends RuleAction implements RuleItemAction
 	public function applyToItem(BusinessRuleProductInterface $item)
 	{
 		$session = new Session();
-		$session->set('controllerMessage', $this->getFieldValue('message'));
+		$session->set('controllerMessage', $this->readAttribute('message'));
 	}
 
 	public function getFields()

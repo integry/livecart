@@ -42,7 +42,7 @@ class SequentialInvoiceNumber extends InvoiceNumberGenerator
 		}
 
 		// avoid selecting the same order if the invoice number is already taken
-		$this->getSelectFilter()->mergeCondition(neq('CustomerOrder.ID', $last['ID']));
+		$this->getSelectFilter()->andWhere(neq('CustomerOrder.ID', $last['ID']));
 
 		$lastNumber += max($config->get('SequentialInvoiceNumber_STEP'), 1);
 		$lastNumber = str_pad($lastNumber, $config->get('SequentialInvoiceNumber_MIN_LENGTH'), '0', STR_PAD_LEFT);

@@ -46,13 +46,13 @@ class ProductPrice extends ActiveRecordModel
 	public static function getInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
 	{
 		$filter = new ARSelectFilter();
-		$cond = new EqualsCond(new ARFieldHandle('ProductPrice', 'productID'), $product->getID());
+		$cond = 'ProductPrice.productID = :ProductPrice.productID:', array('ProductPrice.productID' => $product->getID());
 
-		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'currencyID'), $currency->getID()));
-		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), $type));
+		$cond->addAND('ProductPrice.currencyID = :ProductPrice.currencyID:', array('ProductPrice.currencyID' => $currency->getID()));
+		$cond->addAND('ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => $type));
 		if ($recurring)
 		{
-			$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'recurringID'), $recurring->getID()));
+			$cond->addAND('ProductPrice.recurringID = :ProductPrice.recurringID:', array('ProductPrice.recurringID' => $recurring->getID()));
 		}
 		$filter->setCondition($cond);
 
@@ -557,7 +557,7 @@ class ProductPrice extends ActiveRecordModel
 
 		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
 
-		$filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
+		$filter = new ARSelectFilter(new INCond('ProductPrice.productID', $productIDs));
 		$filter->orderBy(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
 		return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);
 	}
@@ -675,7 +675,7 @@ class ProductPrice extends ActiveRecordModel
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'recurringID'), $rpp->getID()));
 		if ($currencyID != null && strlen($currencyID))
 		{
-			$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'currencyID'), $currencyID ));
+			$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'currencyID'), $currencyID ));
 		}
 		return parent::getRecordSet(__CLASS__, $filter);
 	}

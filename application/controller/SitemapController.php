@@ -222,7 +222,7 @@ class SitemapController extends FrontendController
 		{
 			$cat = Category::getRootNode();
 			$f = $cat->getProductFilter(new ARSelectFilter());
-			$f->mergeCondition($cat->getProductCondition(true));
+			$f->andWhere($cat->getProductCondition(true));
 			$f->joinTable('Category', 'Product', 'ID', 'categoryID');
 
 			return $f;
@@ -238,7 +238,7 @@ class SitemapController extends FrontendController
 
 		if ('Category' == $class)
 		{
-			$f->mergeCondition(new NotEqualsCond(new ARFieldHandle($class, 'ID'), Category::ROOT_ID));
+			$f->andWhere(new NotEqualsCond(new ARFieldHandle($class, 'ID'), Category::ROOT_ID));
 		}
 
 		return $f;

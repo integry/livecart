@@ -1,5 +1,6 @@
 <?php
 
+namespace system;
 
 /**
  * A node of a hierarchial database record structure (preorder tree traversal implementation)
@@ -51,7 +52,7 @@
  * @package application/model/system
  *
  */
-class ActiveTreeNode extends ActiveRecordModel
+class ActiveTreeNode extends \ActiveRecordModel
 {
 	/**
 	 * Table field name for left value container of tree traversal order
@@ -108,7 +109,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 *
 	 * @var ARTreeNode[]
 	 */
-	private $childList = null;
+	private $childList = array();
 
 	/**
 	 * Path node container
@@ -117,37 +118,10 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	private $pathNodes = null;
 
-	/**
-	 * Partial schema definition for a hierarchial data storage in a database
-	 *
-	 * @param string $className
-	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$tableName = $schema->getName();
-		public $ID;
-		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
-		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
-		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
-	}
-
-	/**
-	 * Gets a persisted record object
-	 *
-	 * @param string $className
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param bool $loadChildRecords
-	 * @return ActiveTreeNode
-	 */
-	public static function getInstanceByID($className, $recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		$instance = parent::getInstanceByID($className, $recordID, $loadRecordData, $loadReferencedRecords);
-		return $instance;
-	}
-
+	public $ID;
+	public $lft;
+	public $rgt;
+	
 	/**
 	 * Create new Active Tree instance
 	 *
@@ -157,7 +131,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public static function getNewInstance($className, ActiveTreeNode $parentNode)
 	{
-		$instance = parent::getNewInstance($className);
+		$instance = new $className;
 		$instance->setParentNode($parentNode);
 		return $instance;
 	}
@@ -171,12 +145,10 @@ class ActiveTreeNode extends ActiveRecordModel
 	 *
 	 * @see self::getDirectChildNodes()
 	 */
-	public function getChildNodes($loadReferencedRecords = false, $loadOnlyDirectChildren = false)
+	public function getChildNodes($loadOnlyDirectChildren = false)
 	{
-		$className = get_class($this);
-
 		$filter = $this->getChildNodeFilter($loadOnlyDirectChildren);
-		return ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
+		return $filter->execute();
 	}
 
 	/**
@@ -198,30 +170,24 @@ class ActiveTreeNode extends ActiveRecordModel
 
 	public function getChildNodeFilter($loadOnlyDirectChildren = false)
 	{
-		$this->load();
-		$className = get_class($this);
-
-		$nodeFilter = new ARSelectFilter();
-
-		$cond = $this->getChildNodeCondition();
+		$query = $this->getChildNodeQuery();
 		if ($loadOnlyDirectChildren)
 		{
-			$cond->addAND(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getID()));
+			$query->andWhere(self::PARENT_NODE_FIELD_NAME . ' = :ID:', array('ID' => $this->getID()));
 		}
 
-		$nodeFilter->setCondition($cond);
-		$nodeFilter->orderBy(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+		$query->orderBy(self::LEFT_NODE_FIELD_NAME);
 
-		return $nodeFilter;
+		return $query;
 	}
 
-	public function getChildNodeCondition()
+	public function getChildNodeQuery()
 	{
 		$className = get_class($this);
-		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME), ">");
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME), "<"));
+		$query = $className::query()->where('lft > :val:', array('val' => $this->readAttribute(self::LEFT_NODE_FIELD_NAME)));
+		$query->andWhere('rgt < :rgtval:', array('rgtval' => $this->readAttribute(self::RIGHT_NODE_FIELD_NAME)));
 
-		return $cond;
+		return $query;
 	}
 
 	/**
@@ -230,14 +196,14 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @param bool $loadReferencedRecords
 	 * @return ARSet
 	 */
-	public function getDirectChildNodes($loadReferencedRecords = false)
+	public function getDirectChildNodes()
 	{
-		return $this->getChildNodes($loadReferencedRecords, true);
+		return $this->getChildNodes(true);
 	}
 
 	public function isAncestorOf(ActiveTreeNode $node)
 	{
-		return ($this->getFieldValue(self::LEFT_NODE_FIELD_NAME) <= $node->getFieldValue(self::LEFT_NODE_FIELD_NAME)) && ($this->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME));
+		return ($this->readAttribute(self::LEFT_NODE_FIELD_NAME) <= $node->readAttribute(self::LEFT_NODE_FIELD_NAME)) && ($this->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $node->readAttribute(self::RIGHT_NODE_FIELD_NAME));
 	}
 
 	/**
@@ -248,18 +214,23 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function loadSubTree($loadReferencedRecords = false)
 	{
-		$childList = $this->getChildNodes($loadReferencedRecords);
+		$childList = array();
+		foreach ($this->getChildNodes() as $child)
+		{
+			$childList[] = $child;
+		}
+
 		$indexedNodeList = array();
 		$indexedNodeList[$this->getID()] = $this;
 
 		foreach ($childList as $child)
 		{
-			$nodeId = $child->getID();
-			$indexedNodeList[$nodeId] = $child;
+			$indexedNodeList[$child->getID()] = $child;
 		}
+		
 		foreach ($childList as $child)
 		{
-			$parentId = $child->getParentNode()->getID();
+			$parentId = $child->readAttribute(self::PARENT_NODE_FIELD_NAME);
 			$indexedNodeList[$parentId]->registerChildNode($child);
 		}
 	}
@@ -274,6 +245,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$root = self::getRootNode(get_called_class());
 		$root->loadSubTree($loadReferencedRecords);
+		return $root;
 	}
 
 	/**
@@ -283,11 +255,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function registerChildNode(ActiveTreeNode $childNode)
 	{
-		if ($this->childList == null)
-		{
-			$this->childList = new ARSet(null);
-		}
-		$this->childList->add($childNode);
+		$this->childList[] =& $childNode;
 	}
 
 	/**
@@ -297,7 +265,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function setParentNode(ActiveTreeNode $parentNode)
 	{
-		$this->getField(self::PARENT_NODE_FIELD_NAME) = $parentNode;
+		$this->writeAttribute(self::PARENT_NODE_FIELD_NAME, $parentNode->getID());
 	}
 
 	/**
@@ -307,7 +275,8 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function getParentNode()
 	{
-		return $this->getField(self::PARENT_NODE_FIELD_NAME);
+		$className = get_class($this);
+		return $className::getInstanceByID($this->readAttribute(self::PARENT_NODE_FIELD_NAME));
 	}
 
 	/**
@@ -317,11 +286,11 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @param bool $loadChildRecords
 	 * @return ARTreeNode
 	 */
-	public static function getRootNode($className)
+	public static function getRootNode()
 	{
-		return self::getInstanceByID($className, self::ROOT_ID, false, false);
+		$className = get_called_class();
+		return $className::getInstanceByID(self::ROOT_ID);
 	}
-
 
 	/**
 	 * Gets a hierarchial path to a given tree node
@@ -411,8 +380,8 @@ class ActiveTreeNode extends ActiveRecordModel
 	public function getPathNodeCondition()
 	{
 		$className = get_class($this);
-		$leftValue = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-		$rightValue = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$leftValue = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
+		$rightValue = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
 		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
 		return $cond;
@@ -425,8 +394,8 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		if($this->isLoaded()) $this->load();
 
-		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+		$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
+		$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
 		return abs($t_r - $t_l) + 1;
 	}
 
@@ -446,10 +415,10 @@ class ActiveTreeNode extends ActiveRecordModel
 		try
 		{
 			if(!$parentNode->isLoaded()) $parentNode->load();
-			$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-			$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-			$p_r = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-			$p_l = $parentNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+			$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
+			$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
+			$p_r = $parentNode->readAttribute(self::RIGHT_NODE_FIELD_NAME);
+			$p_l = $parentNode->readAttribute(self::LEFT_NODE_FIELD_NAME);
 
 			$width = $this->getWidth();
 			$s = 0;
@@ -458,13 +427,13 @@ class ActiveTreeNode extends ActiveRecordModel
 			if($beforeNode)
 			{
 				if(!$beforeNode->isLoaded) $beforeNode->load();
-				$offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-				$b_r = $beforeNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-				$b_l = $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+				$offset = $p_r - $beforeNode->readAttribute(self::LEFT_NODE_FIELD_NAME);
+				$b_r = $beforeNode->readAttribute(self::RIGHT_NODE_FIELD_NAME);
+				$b_l = $beforeNode->readAttribute(self::LEFT_NODE_FIELD_NAME);
 
 				$s = $t_l > $b_r ? 0 : -1;
 			}
-			else if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID())
+			else if($this->readAttribute(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID())
 			{
 				$s = -1;
 			}
@@ -518,24 +487,24 @@ class ActiveTreeNode extends ActiveRecordModel
 			$activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($this));
    			foreach($activeTreeNodes as $instance)
 			{
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_l && $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) <= $t_r)
+				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_l && $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) <= $t_r)
 				{
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME));
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME));
+					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME));
+					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME));
 				}
-				if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $width);
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
-				if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $leftPosition)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + $width);
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $leftPosition)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + $width);
+				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
+					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
+				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_r)
+					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
+				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $leftPosition)
+					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) + $width);
+				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $leftPosition)
+					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) + $width);
 
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) < 0)
+				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) < 0)
 				{
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $moveDistance);
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $moveDistance);
+					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $moveDistance);
+					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $moveDistance);
 				}
 			}
 		}
@@ -557,57 +526,38 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function beforeCreate()
 	{
-		ActiveRecordModel::beginTransaction();
+		parent::beforeCreate();
+		
+//		ActiveRecordModel::beginTransaction();
 		try
 		{
 			$className = get_class($this);
+			$tableName = explode("\\", $className);
+			$tableName = array_pop($tableName);
 
 			// Inserting new node
-			$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME);
-			if ($parentNode)
-			{
-				if (!$parentNode->isLoaded())
-				{
-					$parentNode->load();
-				}
-			}
-			else
-			{
-				$parentNode = $this;
-			}
+			$parentNode = $className::getInstanceByID($this->readAttribute(self::PARENT_NODE_FIELD_NAME));
 
-			$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+			$parentRightValue = $parentNode->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 			$nodeLeftValue = $parentRightValue;
 			$nodeRightValue = $nodeLeftValue + 1;
 
-			$tableName = self::getSchemaInstance(get_class($this))->getName();
-			$db = self::getDBConnection();
-
-			$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
-			$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + 2 WHERE ".self::LEFT_NODE_FIELD_NAME." >= $parentRightValue";
+			$updates[] = "UPDATE $tableName SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
+			$updates[] = "UPDATE $tableName SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + 2 WHERE ".self::LEFT_NODE_FIELD_NAME." >= $parentRightValue";
 
 			foreach($updates as $update)
 			{
-				self::getLogger()->logQuery($update);
-				self::executeUpdate($update);
+				$this->getReadConnection()->query($update, array());
 			}
 
-			$this->getField(self::RIGHT_NODE_FIELD_NAME) = $nodeRightValue;
-			$this->getField(self::LEFT_NODE_FIELD_NAME) = $nodeLeftValue;
+			$this->writeAttribute(self::RIGHT_NODE_FIELD_NAME, $nodeRightValue);
+			$this->writeAttribute(self::LEFT_NODE_FIELD_NAME, $nodeLeftValue);
 
-			ActiveRecordModel::commit();
-
-			foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
-			{
-				if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $parentRightValue)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + 2);
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $parentRightValue)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + 2);
-			}
+			//ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
 		{
-			ActiveRecordModel::rollback();
+			//ActiveRecordModel::rollback();
 			throw $e;
 		}
 
@@ -623,11 +573,14 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function delete()
 	{
+		parent::delete();
+		return;
+		
 		$className = get_class($this);
 		$this->load();
 
-		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+		$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
+		$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
 
 		$width = $this->getWidth();
 
@@ -650,10 +603,10 @@ class ActiveTreeNode extends ActiveRecordModel
 
 			foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
 			{
-				if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $width);
-				if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_l)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
+				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
+					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
+				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_l)
+					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
 			}
 		}
 		catch (Exception $e)
@@ -712,6 +665,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$data = parent::toArray();
 
+/*
 		foreach ($this->data as $name => $field)
 		{
 			if ($name == self::PARENT_NODE_FIELD_NAME && $field != null)
@@ -719,19 +673,20 @@ class ActiveTreeNode extends ActiveRecordModel
 				$data['parent'] = $field->getID();
 			}
 		}
-
+*/
 		$data["childrenCount"] = ($data[self::RIGHT_NODE_FIELD_NAME] - $data[self::LEFT_NODE_FIELD_NAME] - 1) / 2;
 
-		$childArray = array();
-
-		if ($this->childList != null)
+		$data['children'] = array();
+		if (!empty($this->childList))
 		{
 			foreach ($this->childList as $child)
 			{
-				$childArray[] = $child->toArray();
+				$data['children'][] = $child->toArray();
 			}
-			$data['children'] = $childArray;
 		}
+		
+		// @todo: remove
+		$data['name_lang'] = $data['name'];
 
 		return $data;
 	}
@@ -803,11 +758,11 @@ class ActiveTreeNode extends ActiveRecordModel
 	private function toStringRecursive(ActiveTreeNode $node, $level, $output)
 	{
 		$node->load();
-		$parentID = $node->getFieldValue(self::PARENT_NODE_FIELD_NAME) ? $node->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() : 'root';
-		$lft = $node->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-		$rgt = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$parentID = $node->readAttribute(self::PARENT_NODE_FIELD_NAME) ? $node->readAttribute(self::PARENT_NODE_FIELD_NAME)->getID() : 'root';
+		$lft = $node->readAttribute(self::LEFT_NODE_FIELD_NAME);
+		$rgt = $node->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 
-		$name = $node->getFieldValue('name');
+		$name = $node->readAttribute('name');
 		$name = isset($name['en']) ? $name['en'] : '';
 		$output .= str_repeat(" ", $level * 4) .  "$name																				   [ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt] \n";
 		$childNodes = $node->getChildNodes(true, true);
@@ -824,7 +779,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		$leftSibling = $this->getLeftSibling();
 		if($leftSibling || $moveCircle)
 		{
-			$this->moveTo($this->getFieldValue(self::PARENT_NODE_FIELD_NAME), $leftSibling);
+			$this->moveTo($this->readAttribute(self::PARENT_NODE_FIELD_NAME), $leftSibling);
 		}
 	}
 
@@ -836,7 +791,7 @@ class ActiveTreeNode extends ActiveRecordModel
 			$rightSibling = $this->getFirstChild();
 		}
 
-		$this->moveTo($this->getFieldValue(self::PARENT_NODE_FIELD_NAME), $rightSibling);
+		$this->moveTo($this->readAttribute(self::PARENT_NODE_FIELD_NAME), $rightSibling);
 	}
 
 	public function getFirstChild($loadReferencedRecords = false)
@@ -853,14 +808,6 @@ class ActiveTreeNode extends ActiveRecordModel
 
 		foreach($recordSet as $record) return $record;
 		return null;
-	}
-
-	public function __destruct()
-	{
-		$this->childList = null;
-		$this->pathNodes = null;
-
-		return parent::__destruct();
 	}
 }
 

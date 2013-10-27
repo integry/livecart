@@ -317,7 +317,7 @@ class LanguageController extends StoreManagementController
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('Language', 'ID'), $value));
+			$update->setCondition('Language.ID = :Language.ID:', array('Language.ID' => $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet('Language', $update);
 		}

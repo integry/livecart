@@ -16,7 +16,7 @@ class ConversionReport extends Report
 
 	protected function getDateHandle()
 	{
-		return new ARFieldHandle('CustomerOrder', 'dateCreated');
+		return 'CustomerOrder.dateCreated';
 	}
 
 	public function getConversionRatio()
@@ -32,7 +32,7 @@ class ConversionReport extends Report
 		$f = $q->getFilter();
 		$q->addField('checkoutStep', null, 'entry');
 		$f->setGrouping(new ARExpressionHandle('entry'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 0));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 0));
 
 		$this->getReportData($q);
 

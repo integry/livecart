@@ -348,7 +348,7 @@ abstract class LiveCartImportDriver
 	{
 		if (!$this->defaultCurrencyCode)
 		{
-			$currency = array_shift(ActiveRecordModel::getRecordSetArray('Currency', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), true))));
+			$currency = array_shift(ActiveRecordModel::getRecordSetArray('Currency', query::query()->where('Currency.isDefault = :Currency.isDefault:', array('Currency.isDefault' => true))));
 			$this->defaultCurrencyCode = $currency['ID'];
 		}
 
@@ -427,8 +427,8 @@ abstract class LiveCartImportDriver
 	public function saveState(State $state)
 	{
 		// make sure that such state doesn't exist already
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('State', 'countryID'), $state->countryID));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'code'), $state->code));
+		$f = query::query()->where('State.countryID = :State.countryID:', array('State.countryID' => $state->countryID));
+		$f->andWhere('State.code = :State.code:', array('State.code' => $state->code));
 		if (!ActiveRecordModel::getRecordCount('State', $f))
 		{
 			return $state->save();

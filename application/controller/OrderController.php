@@ -919,7 +919,7 @@ class OrderController extends FrontendController
 
 	public function setSingleAddressAction()
 	{
-		$f = new ARUpdateFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'customerOrderID'), $this->order->getID()));
+		$f = new ARUpdateFilter('OrderedItem.customerOrderID = :OrderedItem.customerOrderID:', array('OrderedItem.customerOrderID' => $this->order->getID()));
 		$f->addModifier('OrderedItem.shipmentID', new ARExpressionHandle('NULL'));
 		ActiveRecordModel::updateRecordSet('OrderedItem', $f);
 

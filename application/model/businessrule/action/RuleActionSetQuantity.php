@@ -12,7 +12,7 @@ class RuleActionSetQuantity extends RuleAction implements RuleItemAction
 	{
 		if ($item instanceof OrderedItem)
 		{
-			$item->count->set($this->getFieldValue('count'));
+			$item->count->set($this->readAttribute('count'));
 			$item->save();
 		}
 	}

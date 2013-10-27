@@ -98,18 +98,40 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		}
 		$bag->destroy();
 	}
+	
+	public function getActionValidator()
+	{
+		return $this->view->validator;
+	}
 
 	public function setErrors($errors, $action)
 	{
 		$bag = new \Phalcon\Session\Bag('errors/' . $action);
 		$bag->errors = $errors;
-		$bag->request = $_REQUEST;
+		$json = $this->request->getJsonRawBody();
+		$bag->request = $json ? $json : $_REQUEST;
 	}
 
 	public function returnErrors($action, LiveCartValidator $validator)
 	{
 		$this->setErrors($validator->getMessages(), $action);
 		return $this->response->redirect($action);
+	}
+	
+	public function getErrorList($action)
+	{
+		$list = array();
+		$bag = new \Phalcon\Session\Bag('errors/' . $action);
+		
+		if (!empty($bag->errors))
+		{
+			foreach ($bag->errors as $message)
+			{
+				$list[$message->getField()][] = $message->getMessage();
+			}
+		}
+		
+		return $list;
 	}
 
 	protected function getModelErrors($modelMessages)
@@ -192,7 +214,7 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	 */
 	public function translate($key)
 	{
-		return $this->locale->translator()->translate($key);
+		return $this->application->translate($key);
 	}
 
 	/**

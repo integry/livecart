@@ -51,7 +51,7 @@ class ExpressCheckout extends ActiveRecordModel
 	{
 		// remove other ExpressCheckout instances for this order
 		$f = new ARDeleteFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $order->getID()));
+		$f->setCondition('ExpressCheckout.orderID = :ExpressCheckout.orderID:', array('ExpressCheckout.orderID' => $order->getID()));
 		ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
 	}
 

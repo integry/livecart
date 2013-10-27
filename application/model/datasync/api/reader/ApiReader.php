@@ -134,7 +134,7 @@ abstract class ApiReader implements Iterator
 				while(count($data) > 0)
 				{
 					$value = (string)array_shift($data);
-					$arsf->mergeCondition(
+					$arsf->andWhere(
 						new $list[$key][self::AR_CONDITION](
 							$list[$key][self::AR_FIELD_HANDLE],
 							$this->sanitizeFilterField($key, $value)

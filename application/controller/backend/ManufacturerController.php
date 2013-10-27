@@ -107,7 +107,7 @@ class ManufacturerController extends ActiveGridController
 	public function autoCompleteAction()
 	{
 	  	$f = new ARSelectFilter();
-	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->get('manufacturer') . '%');
+	  	$c = new LikeCond('Manufacturer.name', $this->request->get('manufacturer') . '%');
 	  	$f->setCondition($c);
 
 	  	$results = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);

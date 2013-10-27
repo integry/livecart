@@ -14,8 +14,8 @@ class NewsController extends FrontendController
 		$this->set('news', \sitenews\NewsPost::getInstanceByID($this->dispatcher->getParam('id')));
 		return;
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+		$f = query::query()->where('NewsPost.ID = :NewsPost.ID:', array('NewsPost.ID' => $this->request->get('id')));
+		$f->andWhere('NewsPost.isEnabled = :NewsPost.isEnabled:', array('NewsPost.isEnabled' => true));
 
 		$s = ActiveRecordModel::getRecordSet('NewsPost', $f);
 		if (!$s->size())
@@ -35,8 +35,8 @@ class NewsController extends FrontendController
 	{
 		$this->addIndexBreadCrumb();
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f = query::query()->where('NewsPost.isEnabled = :NewsPost.isEnabled:', array('NewsPost.isEnabled' => true));
+		$f->orderBy('NewsPost.position', 'DESC');
 
 		return new ActionResponse('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 	}

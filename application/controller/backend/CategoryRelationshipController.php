@@ -55,7 +55,7 @@ class CategoryRelationshipController extends StoreManagementController
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('CategoryRelationship', 'ID'), $value));
+			$update->setCondition('CategoryRelationship.ID = :CategoryRelationship.ID:', array('CategoryRelationship.ID' => $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet('CategoryRelationship', $update);
 		}

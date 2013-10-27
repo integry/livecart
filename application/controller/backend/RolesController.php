@@ -36,7 +36,7 @@ class RolesController extends StoreManagementController
 			$disabledRoles = include $disable;
 			foreach ($disabledRoles as $disabled)
 			{
-				$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Role', 'name'), $disabled));
+				$filter->andWhere(new NotEqualsCond('Role.name', $disabled));
 			}
 		}
 
@@ -136,7 +136,7 @@ class RolesController extends StoreManagementController
 			$disabledRoles = include $disable;
 			foreach ($disabledRoles as $disabled)
 			{
-				$c = new EqualsCond(new ARFieldHandle('Role', 'name'), $disabled);
+				$c = 'Role.name = :Role.name:', array('Role.name' => $disabled);
 
 				if (!isset($cond))
 				{

@@ -48,7 +48,7 @@ class OrderedItemOption extends ActiveRecordModel
 			$ids[] = $item->getID();
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderedItemOption', 'orderedItemID'), $ids));
+		$f = new ARSelectFilter(new INCond('OrderedItemOption.orderedItemID', $ids));
 		foreach (ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('DefaultChoice' => 'ProductOptionChoice', 'Option' => 'ProductOption', 'Choice' => 'ProductOptionChoice')) as $itemOption)
 		{
 			$itemOption->orderedItem->loadOption($itemOption);

@@ -5,7 +5,7 @@
 {% block content %}
 
 	<div id="logoContainer">
-		<img src="[[ config('BACKEND_LOGIN_LOGO') ]]" />
+		{# <img src="[[ config('BACKEND_LOGIN_LOGO') ]]" /> #}
 	</div>
 
 	<div id="loginContainer">
@@ -14,7 +14,7 @@
 		<div class="loginFailed">{t _login_failed}</div>
 	{% endif %}
 
-	<form action="[[ url("backend.session/doLogin") ]]" method="post" />
+	<form action="[[ url("backend/session/doLogin") ]]" method="post" />
 
 		[[ textfld('email', '_email', ['type': 'email']) ]]
 

@@ -1,23 +1,5 @@
 <?php
 
-ClassLoader::import('application/controller/CatalogController');
-ClassLoader::import('application/model/category/Category');
-ClassLoader::import('application/model/category/SpecField');
-ClassLoader::import('application/model/category/ProductList');
-ClassLoader::import('application/model/category/ProductListItem');
-ClassLoader::import('application/model/filter.*');
-ClassLoader::import('application/model/product/Product');
-ClassLoader::import('application/model/product/Manufacturer');
-ClassLoader::import('application/model/product/ProductFilter');
-ClassLoader::import('application/model/product/ProductCount');
-ClassLoader::import('application/model/product/ProductPrice');
-ClassLoader::import('application/model/product/ProductCompare');
-ClassLoader::import('application/model/category/SpecFieldValue');
-ClassLoader::import('application/model/category/SearchLog');
-ClassLoader::import('application/model/product/ProductSpecification');
-ClassLoader::import('application/model/category/CategoryRelationship');
-ClassLoader::importNow('application/helper/CreateHandleString');
-
 /**
  * Index controller for frontend
  *
@@ -36,6 +18,7 @@ class CategoryController extends CatalogController
 
 	protected $hasProducts = false;
 
+	/*
 	public function initialize()
   	{
 	  	parent::initialize();
@@ -45,8 +28,14 @@ class CategoryController extends CatalogController
 	  	$this->addBlock('RELATED_CATEGORIES', 'relatedCategories', 'category/block/relatedCategories');
 	  	$this->addBlock('QUICK-SHOP', 'quickShopMenu', 'category/block/quickShopMenu');
 	}
+	*/
 
 	public function indexAction()
+	{
+		$category = $this->getCategory();
+	}
+
+	public function xindexAction()
 	{
 		ClassLoader::import('application/model/presentation/CategoryPresentation');
 
@@ -62,9 +51,9 @@ class CategoryController extends CatalogController
 
 			if ($layout = $theme->listStyle)
 			{
-				$this->request = 'layout', strtolower($layout));
-				$this->config = 'LIST_LAYOUT', $layout);
-				$this->config = 'ALLOW_SWITCH_LAYOUT', false);
+				//$this->request = 'layout', strtolower($layout));
+				//$this->config = 'LIST_LAYOUT', $layout);
+				//$this->config = 'ALLOW_SWITCH_LAYOUT', false);
 			}
 		}
 
@@ -87,8 +76,8 @@ class CategoryController extends CatalogController
 			$f = new ARSelectFilter();
 			foreach (array($this->locale->getLocaleCode(), $this->application->getDefaultLanguageCode()) as $handle)
 			{
-				$langHandle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Category', 'name'), $handle);
-				$f->mergeCondition(new LikeCond($langHandle, '%' . $query . '%'));
+				$langHandle = MultiLingualObject::getLangSearchHandle('Category.name', $handle);
+				$f->andWhere(new LikeCond($langHandle, '%' . $query . '%'));
 			}
 
 			$foundCategories = ActiveRecordModel::getRecordSet('Category', $f, Category::LOAD_REFERENCES);
@@ -218,7 +207,7 @@ class CategoryController extends CatalogController
 		// if there were no products found, include subcategories in filter counts... except home page
 		if (!$products || $this->getCategory()->isRoot())
 		{
-			$productFilter->getBaseFilter()->removeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getCategory()->getID()));
+			$productFilter->getBaseFilter()->removeCondition('Product.categoryID = :Product.categoryID:', array('Product.categoryID' => $this->getCategory()->getID()));
 			$productFilter->includeSubcategories();
 		}
 
@@ -243,6 +232,7 @@ class CategoryController extends CatalogController
 		}
 
 
+		/*
 		$response = 'id', $this->getCategoryId());
 
 		$response = 'context', $this->getContext());
@@ -271,6 +261,7 @@ class CategoryController extends CatalogController
 		$response = 'url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
 		$response = 'layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
 		$response = 'filterChainHandle', $filterChainHandle);
+		*/
 
 		if (isset($searchQuery))
 		{
@@ -306,8 +297,8 @@ class CategoryController extends CatalogController
 	{
 		$root = Category::getRootNode();
 		$f = new ARSelectFilter(new MoreThanCond(new ARFieldHandle('Category', $root->getProductCountField()), 0));
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $root->getID()));
-		$f->orderBy(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+		$f->andWhere(new NotEqualsCond('Category.ID', $root->getID()));
+		$f->orderBy(MultiLingualObject::getLangOrderHandle('Category.name'));
 
 		$allCategories = ActiveRecordModel::getRecordSetArray('Category', $f, array('CategoryImage'));
 
@@ -411,8 +402,8 @@ class CategoryController extends CatalogController
 					continue;
 				}
 
-				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $cat['lft']);
-				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $cat['rgt']));
+				$cond = new EqualsOrMoreCond('Category.lft', $cat['lft']);
+				$cond->addAND(new EqualsOrLessCond('Category.rgt', $cat['rgt']));
 				$case->addCondition($cond, new ARExpressionHandle($cat['ID']));
 				$index[$cat['ID']] = $key;
 			}
@@ -469,10 +460,10 @@ class CategoryController extends CatalogController
 			$index[$cat['ID']] = $key;
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
-		$f->orderBy(new ARFieldHandle('Category', 'parentNodeID'));
-		$f->orderBy(new ARFieldHandle('Category', 'lft'));
+		$f = new ARSelectFilter(new INCond('Category.parentNodeID', $ids));
+		$f->andWhere('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => true));
+		$f->orderBy('Category.parentNodeID');
+		$f->orderBy('Category.lft');
 
 		$a = ActiveRecordModel::getRecordSetArray('Category', $f, Category::LOAD_REFERENCES);
 		foreach ($a as $cat)
@@ -503,7 +494,7 @@ class CategoryController extends CatalogController
 		$selFilter = new ARSelectFilter();
 		if (!$this->config->get('FEATURED_RANDOM'))
 		{
-			$selFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+			$selFilter->andWhere('Product.isFeatured = :Product.isFeatured:', array('Product.isFeatured' => true));
 		}
 		else
 		{
@@ -572,10 +563,10 @@ class CategoryController extends CatalogController
 	protected function productListBlock()
 	{
 		// get list items
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductList', 'categoryID'), $this->getCategory()->getID()));
-		$f->orderBy(new ARFieldHandle('ProductList', 'position'));
-		$f->orderBy(new ARFieldHandle('ProductListItem', 'productListID'));
-		$f->orderBy(new ARFieldHandle('ProductListItem', 'position'));
+		$f = query::query()->where('ProductList.categoryID = :ProductList.categoryID:', array('ProductList.categoryID' => $this->getCategory()->getID()));
+		$f->orderBy('ProductList.position');
+		$f->orderBy('ProductListItem.productListID');
+		$f->orderBy('ProductListItem.position');
 
 		$items = array();
 		foreach (ActiveRecordModel::getRecordSetArray('ProductListItem', $f, array('ProductList', 'Product', 'ProductImage')) as $item)
@@ -1067,7 +1058,7 @@ class CategoryController extends CatalogController
 			$pf = new ProductFilter($cat, new ARSelectFilter());
 			$pf->includeSubcategories();
 			$f = $cat->getProductsFilter($pf);
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+			$f->andWhere('Product.isFeatured = :Product.isFeatured:', array('Product.isFeatured' => true));
 			$f->limit(1);
 			$f->orderBy(new ARExpressionHandle('RAND()'));
 

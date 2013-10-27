@@ -119,7 +119,7 @@ class ShippingRateImport extends DataImport
 		// get shipping service
 		$f = select(new EqualsCond(
 							MultiLingualObject::getLangSearchHandle(
-								new ARFieldHandle('ShippingService', 'name'),
+								'ShippingService.name',
 								$this->application->getDefaultLanguageCode()
 							),
 							$record[$fields['ShippingService']['name']]
@@ -127,11 +127,11 @@ class ShippingRateImport extends DataImport
 
 		if ($zone->isDefault())
 		{
-			$f->mergeCondition(new IsNullCond(f('ShippingService.deliveryZoneID')));
+			$f->andWhere(new IsNullCond(f('ShippingService.deliveryZoneID')));
 		}
 		else
 		{
-			$f->mergeCondition(eq(f('ShippingService.deliveryZoneID'), $zone->getID()));
+			$f->andWhere(eq(f('ShippingService.deliveryZoneID'), $zone->getID()));
 		}
 
 		$services = ActiveRecordModel::getRecordSet('ShippingService', $f);

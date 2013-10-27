@@ -48,10 +48,10 @@ class OrderCoupon extends ActiveRecordModel
 	{
 		$cond = $this->discountCondition;
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f = query::query()->where('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
 		if (($cond->couponLimitType == DiscountCondition::COUPON_LIMIT_USER) && $this->order->user)
 		{
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->order->user->getID()));
+			$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->order->user->getID()));
 		}
 
 		return $cond->getRelatedRecordCount(__CLASS__, $f, array('CustomerOrder'));

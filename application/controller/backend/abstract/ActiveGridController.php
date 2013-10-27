@@ -84,12 +84,12 @@ abstract class ActiveGridController extends ControllerBackend
 
 		foreach ($this->processDataArray($productArray, $displayedColumns) as $row)
 		{
-			$row = $row->toArray();
 			$data = array_merge($data, $this->getPreparedRecord($row, $displayedColumns));
 
 			// avoid possible memory leaks due to circular references (http://bugs.php.net/bug.php?id=33595)
 			// only do this for CSV export
 			// @todo: if necessary, move to ActiveRecordModel::unsetArray($row);
+			/*
 			if ($exportBufferIndex)
 			{
 				foreach ($row as $key => $subArray)
@@ -103,6 +103,7 @@ abstract class ActiveGridController extends ControllerBackend
 					}
 				}
 			}
+			*/
 		}
 
 		return $data;
@@ -462,25 +463,14 @@ abstract class ActiveGridController extends ControllerBackend
 
 	protected function getColumnValue($record, $class, $field)
 	{
-		if (!isset($record[$class][$field]) && isset($record[$field]) && ($this->getClassName() == $class))
+		if ($record instanceof Phalcon\Mvc\Model\Row)
 		{
-			return $record[$field];
+			$record = $record[$class];
 		}
-		else if (isset($record[$class][$field]) && $field)
+
+		if (isset($record->$field))
 		{
-			return $record[$class][$field];
-		}
-		else if (isset($record[$class]) && !is_array($record[$class]))
-		{
-			return $record[$class];
-		}
-		else if (strpos($field, '.'))
-		{
-			list ($field, $sub) = explode('.', $field, 2);
-			if (isset($record[$class][$field][$sub]))
-			{
-				return $record[$class][$field][$sub];
-			}
+			return $record->$field;
 		}
 		else if ('eavField' == $class)
 		{

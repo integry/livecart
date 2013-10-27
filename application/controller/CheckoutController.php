@@ -389,8 +389,8 @@ class CheckoutController extends FrontendController
 				if (!$this->user->isAnonymous())
 				{
 					$f = new ARSelectFilter();
-					$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->user->getID()));
-					$f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->get('billingAddress')));
+					$f->setCondition('BillingAddress.userID = :BillingAddress.userID:', array('BillingAddress.userID' => $this->user->getID()));
+					$f->andWhere('BillingAddress.userAddressID = :BillingAddress.userAddressID:', array('BillingAddress.userAddressID' => $this->request->get('billingAddress')));
 					$r = ActiveRecordModel::getRecordSet('BillingAddress', $f, array('UserAddress'));
 
 					if ($r->size())
@@ -429,8 +429,8 @@ class CheckoutController extends FrontendController
 				else
 				{
 					$f = new ARSelectFilter();
-					$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
-					$f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->get('shippingAddress')));
+					$f->setCondition('ShippingAddress.userID = :ShippingAddress.userID:', array('ShippingAddress.userID' => $this->user->getID()));
+					$f->andWhere('ShippingAddress.userAddressID = :ShippingAddress.userAddressID:', array('ShippingAddress.userAddressID' => $this->request->get('shippingAddress')));
 					$r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
 
 					if (!$r->size())
@@ -1259,11 +1259,11 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->request->get('order'))
 			{
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('order')));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-				//$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), false));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+				$f = query::query()->where('CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $this->request->get('order')));
+				$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+				//$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+				$f->andWhere('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => false));
+				$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
 
 				$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 				if ($s->size())

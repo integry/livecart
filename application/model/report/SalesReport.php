@@ -16,7 +16,7 @@ class SalesReport extends Report
 
 	protected function getDateHandle()
 	{
-		return new ARFieldHandle('CustomerOrder', 'dateCompleted');
+		return 'CustomerOrder.dateCompleted';
 	}
 
 	public function getOrderCounts()
@@ -54,9 +54,9 @@ class SalesReport extends Report
 
 		$f = $q->getFilter();
 		$q->addField('method', null, 'entry');
-		$f->setGrouping(new ARFieldHandle('Transaction', 'method'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
-		$f->mergeCondition(new INCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_SALE, Transaction::TYPE_CAPTURE)));
+		$f->setGrouping('Transaction.method');
+		$f->andWhere('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => true));
+		$f->andWhere(new INCond('Transaction.type', array(Transaction::TYPE_SALE, Transaction::TYPE_CAPTURE)));
 
 		$this->getReportData($q);
 
@@ -78,8 +78,8 @@ class SalesReport extends Report
 
 		$f = $q->getFilter();
 		$q->addField('currencyID', null, 'entry');
-		$f->setGrouping(new ARFieldHandle('CustomerOrder', 'currencyID'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
+		$f->setGrouping('CustomerOrder.currencyID');
+		$f->andWhere('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => true));
 
 		$this->getReportData($q);
 	}
@@ -114,7 +114,7 @@ class SalesReport extends Report
 	protected function getQuery($countSql = null)
 	{
 		$q = parent::getQuery($countSql);
-		$q->getFilter()->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$q->getFilter()->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
 
 		return $q;
 	}

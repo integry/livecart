@@ -16,8 +16,8 @@ class StaticPageController extends StoreManagementController
 	public function indexAction()
 	{
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('StaticPage', 'position'));
-		$f->orderBy(new ARFieldHandle('StaticPage', 'parentID'));
+		$f->orderBy('StaticPage.position');
+		$f->orderBy('StaticPage.parentID');
 		$s = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 
 		$pages = array();
@@ -104,7 +104,7 @@ class StaticPageController extends StoreManagementController
 		{
 			$previous = StaticPage::getInstanceById((int)$this->request->get('previous'), StaticPage::LOAD_DATA);
 			$position = $previous->position;
-			$f->mergeCondition(gt(f('StaticPage.position'), $position));
+			$f->andWhere(gt(f('StaticPage.position'), $position));
 			$page->position->set($position + 1);
 		}
 		else

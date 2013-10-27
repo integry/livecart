@@ -47,8 +47,8 @@ class State extends ActiveRecordModel
 	public static function getStatesByCountry($countryCode)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $countryCode));
-		$f->orderBy(new ARFieldHandle('State', 'name'));
+		$f->setCondition('State.countryID = :State.countryID:', array('State.countryID' => $countryCode));
+		$f->orderBy('State.name');
 		$stateArray = ActiveRecordModel::getRecordSetArray('State', $f);
 
 		$states = array();
@@ -73,13 +73,13 @@ class State extends ActiveRecordModel
 	public static function getStateIDByName($countryCode, $name)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $countryCode));
+		$f->setCondition('State.countryID = :State.countryID:', array('State.countryID' => $countryCode));
 
-		$nameCond = new EqualsCond(new ARFieldHandle('State', 'name'), $name);
-		$nameCond->addOr(new EqualsCond(new ARFieldHandle('State', 'code'), $name));
-		$f->mergeCondition($nameCond);
+		$nameCond = 'State.name = :State.name:', array('State.name' => $name);
+		$nameCond->addOr('State.code = :State.code:', array('State.code' => $name));
+		$f->andWhere($nameCond);
 
-		$f->orderBy(new ARFieldHandle('State', 'name'));
+		$f->orderBy('State.name');
 		$f->limit(1);
 		$stateArray = ActiveRecordModel::getRecordSetArray('State', $f);
 
@@ -101,8 +101,8 @@ class State extends ActiveRecordModel
 	public static function getStateByIDAndCountry($stateID, $countryID)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'ID'), $stateID));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $countryID));
+		$f->setCondition('State.ID = :State.ID:', array('State.ID' => $stateID));
+		$f->andWhere('State.countryID = :State.countryID:', array('State.countryID' => $countryID));
 
 		$f->limit(1);
 		$states = ActiveRecordModel::getRecordSet('State', $f);

@@ -12,7 +12,7 @@ class RuleActionChangeShippingTaxClass extends RuleAction implements RuleOrderAc
 {
 	public function applyToorderBy(CustomerOrder $order)
 	{
-		$taxClassID = $this->getFieldValue('taxClassID', -1);
+		$taxClassID = $this->readAttribute('taxClassID', -1);
 		if($taxClassID > 0)
 		{
 			ActiveRecordModel::getApplication()->getConfig()->setRuntime('DELIVERY_TAX_CLASS', $taxClassID);

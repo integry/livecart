@@ -233,7 +233,7 @@ abstract class Report
 		$cond = $this->getDateCondition($handle);
 		if ($cond)
 		{
-			$filter->mergeCondition($cond);
+			$filter->andWhere($cond);
 		}
 	}
 

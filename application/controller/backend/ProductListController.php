@@ -17,7 +17,7 @@ class ProductListController extends ProductListControllerCommon
 
 		// get lists
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('ProductList', 'position'));
+		$f->orderBy('ProductList.position');
 		$lists = $category->getRelatedRecordSetArray('ProductList', $f);
 
 		$ids = array();
@@ -27,10 +27,10 @@ class ProductListController extends ProductListControllerCommon
 		}
 
 		// get list items
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductListItem', 'productListID'), $ids));
-		$f->orderBy(new ARFieldHandle('ProductList', 'position'));
-		$f->orderBy(new ARFieldHandle('ProductListItem', 'productListID'));
-		$f->orderBy(new ARFieldHandle('ProductListItem', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductListItem.productListID', $ids));
+		$f->orderBy('ProductList.position');
+		$f->orderBy('ProductListItem.productListID');
+		$f->orderBy('ProductListItem.position');
 		$items = ActiveRecordModel::getRecordSetArray('ProductListItem', $f, array('ProductList', 'Product', 'ProductImage'));
 
 		$items = ActiveRecordGroup::mergeGroupsWithFields('ProductList', $lists, $items);

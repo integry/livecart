@@ -10,7 +10,7 @@ class ProductSet extends ARSet
 {
 	public function getChildProductIDs()
 	{
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'parentID'), $this->getRecordIDs()));
+		$f = new ARSelectFilter(new INCond('Product.parentID', $this->getRecordIDs()));
 		$q = new ARSelectQueryBuilder($f);
 		$q->includeTable('Product');
 		$q->setFilter($f);
@@ -38,7 +38,7 @@ class ProductSet extends ARSet
 			$parents[$id] = $record->getParent()->toArray();
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'parentID'), $ids));
+		$f = new ARSelectFilter(new INCond('Product.parentID', $ids));
 		$children = ActiveRecordModel::getRecordSetArray('Product', $f, array('ProductImage'));
 		if (!$children)
 		{
@@ -81,9 +81,9 @@ class ProductSet extends ARSet
 			}
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $ids));
-		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->orderBy(new ARFieldHandle('ProductVariation', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductVariationValue.productID', $ids));
+		$f->orderBy('ProductVariationType.position');
+		$f->orderBy('ProductVariation.position');
 
 		$productValues = array();
 		$variations = array();
@@ -177,9 +177,9 @@ class ProductSet extends ARSet
 
 	public function loadVariations()
 	{
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), $this->getRecordIDs()));
-		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
-		$f->orderBy(new ARFieldHandle('ProductVariation', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductVariationValue.productID', $this->getRecordIDs()));
+		$f->orderBy('ProductVariationType.position');
+		$f->orderBy('ProductVariation.position');
 
 		foreach (ActiveRecordModel::getRecordSet('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType')) as $value)
 		{
@@ -190,8 +190,8 @@ class ProductSet extends ARSet
 	public static function loadVariationTypesForProductArray(&$array)
 	{
 		$index = self::getProductIndex($array);
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationType', 'productID'), array_keys($index)));
-		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductVariationType.productID', array_keys($index)));
+		$f->orderBy('ProductVariationType.position');
 
 		foreach (ActiveRecordModel::getRecordSetArray('ProductVariationType', $f) as $value)
 		{
@@ -203,8 +203,8 @@ class ProductSet extends ARSet
 	public static function loadVariationsForProductArray(&$array)
 	{
 		$index = self::getProductIndex($array);
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductVariationValue', 'productID'), array_keys($index)));
-		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductVariationValue.productID', array_keys($index)));
+		$f->orderBy('ProductVariationType.position');
 
 		foreach (ActiveRecordModel::getRecordSetArray('ProductVariationValue', $f, array('ProductVariation', 'ProductVariationType')) as $value)
 		{
@@ -229,7 +229,7 @@ class ProductSet extends ARSet
 	{
 		$index = self::getProductIndex($array);
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'parentID'), array_keys($index)));
+		$f = new ARSelectFilter(new INCond('Product.parentID', array_keys($index)));
 		$products = ActiveRecordModel::getRecordSetArray('Product', $f, array('ProductImage'));
 
 		self::loadVariationsForProductArray($products);

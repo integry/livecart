@@ -160,7 +160,7 @@ abstract class CatalogController extends FrontendController
 			if ($valueFilterIds)
 			{
 				$f = new ARSelectFilter();
-				$c = new INCond(new ARFieldHandle('Filter', 'ID'), $valueFilterIds);
+				$c = new INCond('Filter.ID', $valueFilterIds);
 				$f->setCondition($c);
 				$filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
 				foreach ($filters as $filter)
@@ -172,7 +172,7 @@ abstract class CatalogController extends FrontendController
 			if ($selectorFilterIds)
 			{
 				$f = new ARSelectFilter();
-				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
+				$c = new INCond('SpecFieldValue.ID', $selectorFilterIds);
 				$f->setCondition($c);
 				$filterValues = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
 				foreach ($filterValues as $value)
@@ -184,7 +184,7 @@ abstract class CatalogController extends FrontendController
 			if ($manufacturerFilterIds)
 			{
 				$f = new ARSelectFilter();
-				$c = new INCond(new ARFieldHandle('Manufacturer', 'ID'), $manufacturerFilterIds);
+				$c = new INCond('Manufacturer.ID', $manufacturerFilterIds);
 				$f->setCondition($c);
 				$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 				foreach ($manufacturers as $manufacturer)
@@ -220,21 +220,21 @@ abstract class CatalogController extends FrontendController
 
 		if (substr($order, 0, 12) == 'product_name')
 		{
-			$selectFilter->orderBy(Product::getLangOrderHandle(new ARFieldHandle('Product', 'name')), $dir);
+			$selectFilter->orderBy(Product::getLangOrderHandle('Product.name'), $dir);
 		}
 		else if (substr($order, 0, 5) == 'price')
 		{
-			$selectFilter->orderBy(new ARFieldHandle('ProductPrice', 'price'), $dir);
+			$selectFilter->orderBy('ProductPrice.price', $dir);
 			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		}
 		else if (substr($order, 0, 3) == 'sku')
 		{
-			$selectFilter->orderBy(new ARFieldHandle('ProductPrice', 'price'), $dir);
+			$selectFilter->orderBy('ProductPrice.price', $dir);
 			$selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		}
 		else if ('newest_arrivals' == $order)
 		{
-			$selectFilter->orderBy(new ARFieldHandle('Product', 'dateCreated'), 'DESC');
+			$selectFilter->orderBy('Product.dateCreated', 'DESC');
 		}
 		else if (in_array($order, array('rating', 'sku')))
 		{
@@ -243,7 +243,7 @@ abstract class CatalogController extends FrontendController
 		else if ('sales_rank' == $order)
 		{
 			Product::updateSalesRank();
-			$selectFilter->orderBy(new ARFieldHandle('Product', 'salesRank'), 'DESC');
+			$selectFilter->orderBy('Product.salesRank', 'DESC');
 		}
 		else if (is_numeric($fieldID = array_shift(explode('-', $order))) && !SpecField::getInstanceByID($fieldID, true)->isMultiValue)
 		{
@@ -263,9 +263,9 @@ abstract class CatalogController extends FrontendController
 		}
 		else
 		{
-			$selectFilter->orderBy(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
-			$selectFilter->orderBy(new ARFieldHandle('Product', 'salesRank'), 'DESC');
-			$selectFilter->orderBy(new ARFieldHandle('Product', 'position'), 'DESC');
+			$selectFilter->orderBy('Product.isFeatured', 'DESC');
+			$selectFilter->orderBy('Product.salesRank', 'DESC');
+			$selectFilter->orderBy('Product.position', 'DESC');
 		}
 	}
 

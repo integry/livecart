@@ -214,7 +214,7 @@ class SearchableConfigurationIndexing
 			{
 				$z[] = new EqualsCond(new ARFieldHandle("Language", "ID"), $localeCode);
 			}
-			$filter->mergeCondition(new OrChainCondition($z)); // new INCond()
+			$filter->andWhere(new OrChainCondition($z)); // new INCond()
 		}
 
 		$languages=ActiveRecord::getRecordSetArray("Language", $filter);

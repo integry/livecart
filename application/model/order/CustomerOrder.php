@@ -152,7 +152,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		$parentIDs = $products->extractReferencedItemSet('parent')->getRecordIDs();
 		if ($parentIDs)
 		{
-			ActiveRecordModel::getRecordSet('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $parentIDs)), array('Category', 'ProductImage'));
+			ActiveRecordModel::getRecordSet('Product', new ARSelectFilter(new INCond('Product.ID', $parentIDs)), array('Category', 'ProductImage'));
 		}
 
 		if ($this->orderedItems)
@@ -1066,11 +1066,11 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 	public function updateShipmentStatuses()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
+		$filter->setCondition('Shipment.orderID = :Shipment.orderID:', array('Shipment.orderID' => $this->getID()));
 
 		if(!$this->isReturned())
 		{
-			$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Shipment', 'status'), self::STATUS_SHIPPED));
+			$filter->andWhere(new NotEqualsCond('Shipment.status', self::STATUS_SHIPPED));
 		}
 
 		// get shipments for which the status will be changed
@@ -1635,8 +1635,8 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 
 	private function getPaidTransactionFilter()
 	{
-		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
-		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
+		$filter = new ARSelectFilter(new InCond('Transaction.type', array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+		$filter->andWhere(new NotEqualsCond('Transaction.isVoided', true));
 		return $filter;
 	}
 
@@ -2057,8 +2057,8 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			{
 				$this->loadItems();
 
-				$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
-				$filter->orderBy(new ARFieldHandle('Shipment', 'status'));
+				$filter = query::query()->where('Shipment.orderID = :Shipment.orderID:', array('Shipment.orderID' => $this->getID()));
+				$filter->orderBy('Shipment.status');
 
 				$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
 				foreach($this->shipments as $shipment)
@@ -2237,7 +2237,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			$set[$item->getProduct()->getID()][$item->getID()] = $item;
 		}
 
-		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), array_keys($set))), array('Category')) as $additional)
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond('ProductCategory.productID', array_keys($set))), array('Category')) as $additional)
 		{
 			foreach ($set[$additional->product->getID()] as $item)
 			{
@@ -2302,14 +2302,14 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		{
 			$filter = new ARSelectFilter();
 		}
-		$filter->orderBy(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+		$filter->orderBy('Transaction.ID', 'ASC');
 		return $this->getRelatedRecordSet('Transaction', $filter);
 	}
 
 	public function getNotes()
 	{
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+		$f->orderBy('OrderNote.ID', 'DESC');
 		return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
 	}
 
@@ -2750,7 +2750,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			$customerOrderIDs[] = $orderID;
 		}
 		$filter = new ARSelectFilter();
-		$filter->mergeCondition(new InCond(new ARFieldHandle(__CLASS__, 'ID'), $customerOrderIDs));
+		$filter->andWhere(new InCond(new ARFieldHandle(__CLASS__, 'ID'), $customerOrderIDs));
 		return ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
 	}
 
@@ -2953,7 +2953,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			return $this->invoiceNumber;
 		}
 		$filter = new ARSelectFilter();
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__,'parentID'), $parent->getID()));
 		$filter->orderBy(new ARFieldHandle(__CLASS__, 'dateCreated'), 'ASC');
 		$filter->orderBy(new ARFieldHandle(__CLASS__, 'ID'), 'ASC');
 
@@ -3028,12 +3028,12 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		$update->setCondition(
 			new OrChainCondition(array(
 				new AndChainCondition(array(
-					new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id),
-					new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userID)
+					'CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $id),
+					'CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $userID)
 				)),
 				new AndChainCondition(array(
-					new EqualsCond(new ARFieldHandle('CustomerOrder', 'parentID'), $id),
-					new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userID)
+					'CustomerOrder.parentID = :CustomerOrder.parentID:', array('CustomerOrder.parentID' => $id),
+					'CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $userID)
 				))
 			))
 		);

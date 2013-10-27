@@ -108,7 +108,7 @@ class ProductImport extends DataImport
 			ActiveRecordModel::getRecordSet('SpecField',
 											new ARSelectFilter(
 												new INCond(
-													new ARFieldHandle('SpecField', 'ID'),
+													'SpecField.ID',
 													array_keys($fields['specField'])
 												)
 											)
@@ -421,7 +421,7 @@ class ProductImport extends DataImport
 	public function getMissingRecordFilter(CsvImportProfile $profile)
 	{
 		$filter = parent::getMissingRecordFilter($profile);
-		$filter->mergeCondition($this->getRoot($profile)->getProductCondition(true));
+		$filter->andWhere($this->getRoot($profile)->getProductCondition(true));
 		return $filter;
 	}
 
@@ -505,10 +505,10 @@ class ProductImport extends DataImport
 			if (!isset($this->categories[$hash]))
 			{
 				$f = Category::getInstanceByID($hashRoot)->getSubcategoryFilter();
-				$f->mergeCondition(
+				$f->andWhere(
 						new EqualsCond(
 							MultiLingualObject::getLangSearchHandle(
-								new ARFieldHandle('Category', 'name'),
+								'Category.name',
 								$this->application->getDefaultLanguageCode()
 							),
 							$name
@@ -588,7 +588,7 @@ class ProductImport extends DataImport
 	private function getVariationTypeByIndex(Product $product, $index)
 	{
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('ProductVariationType', 'position'));
+		$f->orderBy('ProductVariationType.position');
 		$f->limit(1, $index - 1);
 
 		if ($product->getID())
@@ -618,10 +618,10 @@ class ProductImport extends DataImport
 		}
 
 		$f = new ARSelectFilter();
-		$f->mergeCondition(
+		$f->andWhere(
 			new EqualsCond(
 				MultiLingualObject::getLangSearchHandle(
-					new ARFieldHandle('ProductVariation', 'name'),
+					'ProductVariation.name',
 					$this->application->getDefaultLanguageCode()
 				),
 				$name
@@ -645,7 +645,7 @@ class ProductImport extends DataImport
 			$product->save();
 		}
 
-		$f = new ARDeleteFilter(new EqualsCond(new ARFieldHandle('ProductVariation', 'typeID'), $type->getID()));
+		$f = new ARDeleteFilter('ProductVariation.typeID = :ProductVariation.typeID:', array('ProductVariation.typeID' => $type->getID()));
 		$product->deleteRelatedRecordSet('ProductVariationValue', $f, array('ProductVariation'));
 
 		ProductVariationValue::getNewInstance($product, $variation)->save();

@@ -56,7 +56,7 @@ class ProductVariationController extends StoreManagementController
 			}
 		}
 
-		$parent->deleteRelatedRecordSet('ProductVariationType', new ARDeleteFilter(new NotINCond(new ARFieldHandle('ProductVariationType', 'ID'), $existingTypes)));
+		$parent->deleteRelatedRecordSet('ProductVariationType', new ARDeleteFilter(new NotINCond('ProductVariationType.ID', $existingTypes)));
 
 		// deleted variations
 		foreach ($variations as $type => $typeVars)
@@ -70,8 +70,8 @@ class ProductVariationController extends StoreManagementController
 			}
 		}
 
-		$f = new ARDeleteFilter(new INCond(new ARFieldHandle('ProductVariation', 'typeID'), $existingTypes));
-		$f->mergeCondition(new NotINCond(new ARFieldHandle('ProductVariation', 'ID'), $existingVariations));
+		$f = new ARDeleteFilter(new INCond('ProductVariation.typeID', $existingTypes));
+		$f->andWhere(new NotINCond('ProductVariation.ID', $existingVariations));
 		ActiveRecordModel::deleteRecordSet('ProductVariation', $f);
 
 		// deleted items
@@ -83,7 +83,7 @@ class ProductVariationController extends StoreManagementController
 			}
 		}
 
-		$parent->deleteRelatedRecordSet('Product', new ARDeleteFilter(new NotINCond(new ARFieldHandle('Product', 'ID'), $existingItems)));
+		$parent->deleteRelatedRecordSet('Product', new ARDeleteFilter(new NotINCond('Product.ID', $existingItems)));
 
 		// load existing records
 		foreach (array('Types' => 'ProductVariationType', 'Variations' => 'ProductVariation', 'Items'  => 'Product') as $arr => $class)
@@ -264,7 +264,7 @@ class ProductVariationController extends StoreManagementController
 		$this->set('ids', $ids);
 		$this->set('parent', $parent->getID());
 		$this->set('images', $images);
-		$this->set('variationCount', $parent->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true))));
+		$this->set('variationCount', $parent->getRelatedRecordCount('Product', query::query()->where('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true))));
 	}
 
 	/**

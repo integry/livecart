@@ -192,12 +192,12 @@ class UserGroupController extends ActiveGridController
 
 		if($id > 0)
 		{
-			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('User', 'userGroupID'), $id));
+			$filter->andWhere('User.userGroupID = :User.userGroupID:', array('User.userGroupID' => $id));
 		}
 		else if($id == -1)
 		{
 			// without group
-			$filter->mergeCondition(new IsNullCond(new ARFieldHandle('User', 'userGroupID')));
+			$filter->andWhere(new IsNullCond('User.userGroupID'));
 		}
 		else if($id == -3)
 		{

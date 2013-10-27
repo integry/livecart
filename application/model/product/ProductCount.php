@@ -111,11 +111,11 @@ class ProductCount
 		$selectFilter->removeFieldList();
 		$selectFilter->limit(0);
 		$selectFilter->orderBy(new ARExpressionHandle('cnt'), 'DESC');
-		$selectFilter->setGrouping(new ARFieldHandle('Product', 'manufacturerID'));
+		$selectFilter->setGrouping('Product.manufacturerID');
 		$selectFilter->mergeHavingCondition(new MoreThanCond(new ARExpressionHandle('cnt'), 0));
-		$selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
+		$selectFilter->mergeHavingCondition(new NotEqualsCond('Manufacturer.name', ''));
 		$selectFilter->reorderBy();
-		$selectFilter->orderBy(new ARFieldHandle('Manufacturer', 'name'));
+		$selectFilter->orderBy('Manufacturer.name');
 
 		$query = new ARSelectQueryBuilder();
 		$query->includeTable('Product');

@@ -22,7 +22,7 @@ class ManufacturerFilter implements FilterInterface
 
 	public function getCondition()
 	{
-		return new EqualsCond(new ARFieldHandle('Product', 'manufacturerID'), $this->manufacturerID);
+		return 'Product.manufacturerID = :Product.manufacturerID:', array('Product.manufacturerID' => $this->manufacturerID);
 	}
 
 	public function defineJoin(ARSelectFilter $filter)

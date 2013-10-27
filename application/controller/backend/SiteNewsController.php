@@ -11,7 +11,7 @@ class SiteNewsController extends StoreManagementController
 	public function indexAction()
 	{
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->orderBy('NewsPost.position', 'DESC');
 		$response = new ActionResponse('newsList', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 		$this->set('form', $this->buildForm());
 	}
@@ -84,7 +84,7 @@ class SiteNewsController extends StoreManagementController
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $value));
+			$update->setCondition('NewsPost.ID = :NewsPost.ID:', array('NewsPost.ID' => $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet('NewsPost', $update);
 		}

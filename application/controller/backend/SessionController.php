@@ -22,7 +22,7 @@ class SessionController extends ControllerBackend
 	 */
 	public function doLoginAction()
 	{
-		$user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
+		$user = \user\User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
 		if (!$user)
 		{
 			return new ActionRedirectResponse('backend.session', 'index', array('query' => array('failed' => 'true', 'email' => $this->request->get('email'))));
@@ -33,6 +33,7 @@ class SessionController extends ControllerBackend
 
 		if ($this->request->get('return'))
 		{
+			return $this->response->redirect('backend/index/index');
 			return new RedirectResponse($this->request->get('return'));
 		}
 		else

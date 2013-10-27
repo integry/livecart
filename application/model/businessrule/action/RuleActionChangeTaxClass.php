@@ -10,7 +10,7 @@ class RuleActionChangeTaxClass extends RuleAction implements RuleItemAction
 {
 	public function applyToItem(BusinessRuleProductInterface $item)
 	{
-		$taxClassID = $this->getFieldValue('taxClassID', -1);
+		$taxClassID = $this->readAttribute('taxClassID', -1);
 		if($taxClassID > 0)
 		{
 			$product = $item->getProduct();

@@ -2003,8 +2003,8 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEquals(1, count($ids), 'Should generate one invoice order');
 		$filter = new ARSelectFilter();
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $orderID));
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder','ID'), $ids[0]));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $orderID));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder','ID'), $ids[0]));
 		$rs = ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
 		$this->assertEquals(1, $rs->size(), 'Should generate one invoice order');
 		$invoice = $rs->shift();

@@ -33,7 +33,7 @@ class SearchableConfiguration extends SearchableModel
 		$app = ActiveRecordModel::getApplication();
 		$f = new ARSelectFilter(new MoreThanCond($c, 0));
 
-		$f->mergeCondition(
+		$f->andWhere(
 			new OrChainCondition(
 				array
 				(

@@ -8,7 +8,7 @@ class NewsletterController extends FrontendController
 		$email = $this->request->get('email');
 
 		// delete from subscriber table
-		$f = new ARDeleteFilter(new EqualsCond(new ARFieldHandle('NewsletterSubscriber', 'email'), $email));
+		$f = new ARDeleteFilter('NewsletterSubscriber.email = :NewsletterSubscriber.email:', array('NewsletterSubscriber.email' => $email));
 		ActiveRecordModel::deleteRecordSet('NewsletterSubscriber', $f);
 
 		// add user to subscriber table

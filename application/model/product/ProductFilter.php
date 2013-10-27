@@ -111,7 +111,7 @@ class ProductFilter
 
 	public function setEnabledOnly()
 	{
-		$this->productFilter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true));
+		$this->productFilter->andWhere('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true));
 	}
 
 	public function isSubcategories()

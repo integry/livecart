@@ -28,7 +28,7 @@ class SearchableItem extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 		if ($locale)
 		{
-			$filter->mergeCondition(eq(f(__CLASS__.'.locale'), $locale));
+			$filter->andWhere(eq(f(__CLASS__.'.locale'), $locale));
 		}
 		return ActiveRecordModel::getRecordCount(__CLASS__, $filter);
 	}

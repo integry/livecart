@@ -332,7 +332,7 @@ class FilterGroupController extends StoreManagementController
 				// If emty last new filter, ignore it
 				if($filtersCount == $i && $v['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
 
-				switch($specField->getFieldValue('type'))
+				switch($specField->readAttribute('type'))
 				{
 					case SpecField::TYPE_NUMBERS_SIMPLE:
 						if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))

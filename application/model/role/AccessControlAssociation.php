@@ -75,7 +75,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getRecordSetByRole(Role $role, ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "roleID"), $role->getID()));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, "roleID"), $role->getID()));
 
 		return self::getRecordSet($filter, $loadReferencedRecords = false);
 	}
@@ -91,7 +91,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getRecordSetByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
 
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
@@ -108,7 +108,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	 */
 	public static function getRecordSetArrayByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+		$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
 
 		return self::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}

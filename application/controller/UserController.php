@@ -43,13 +43,14 @@ class UserController extends FrontendController
 	 */
 	public function indexAction()
 	{
-		return $this->response->redirect('seller/index');
+		return;
+		//return $this->response->redirect('seller/index');
 		$this->addAccountBreadcrumb();
 
 		// get recent orders
 		$f = new ARSelectFilter();
 		$f->limit($this->config->get('USER_COUNT_RECENT_ORDERS'));
-		$f->setCondition(new IsNullCond(new ARFieldHandle('CustomerOrder', 'parentID')));
+		$f->setCondition(new IsNullCond('CustomerOrder.parentID'));
 		$orders = $this->loadOrders($f);
 		$orderArray = $this->getOrderArray($orders);
 
@@ -62,25 +63,25 @@ class UserController extends FrontendController
 			$f = new ARSelectFilter();
 			$f->limit(1);
 			$f->setCondition(new AndChainCondition(array(
-				new IsNotNullCond(new ARFieldHandle('CustomerOrder', 'parentID')))
+				new IsNotNullCond('CustomerOrder.parentID'))
 			));
 			$lastInvoiceArray = $this->getOrderArray($this->loadOrders($f));
 		}
 
 		// get downloadable items
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 		$f->limit(self::COUNT_RECENT_FILES);
 
 
 
 		$this->set('orders', $orderArray);
-		$this->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
+		$this->set('files', $this->loadDownloadableItems(query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()))));
 
 		// get unread messages
-				$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
-		$f->orderBy(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+				$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+		$f->andWhere('OrderNote.isAdmin = :OrderNote.isAdmin:', array('OrderNote.isAdmin' => 1));
+		$f->andWhere('OrderNote.isRead = :OrderNote.isRead:', array('OrderNote.isRead' => 0));
+		$f->orderBy('OrderNote.ID', 'DESC');
 		$this->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
 		// feedback/confirmation message that was stored in session by some other action
@@ -113,7 +114,7 @@ class UserController extends FrontendController
 		$page = $this->request->get('id', 1);
 		$perPage = $this->getOrdersPerPage();
 		$f = $this->getOrderListPaginateFilter($page, $perPage);
-		$f->mergeCondition(
+		$f->andWhere(
 			new AndChainCondition(array(
 				new IsNotNullCond(new ARFieldHandle('CustomerOrder','parentID')),
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
@@ -131,7 +132,7 @@ class UserController extends FrontendController
 		$page = $this->request->get('id', 1);
 		$perPage = $this->getOrdersPerPage();
 		$f = $this->getOrderListPaginateFilter($page, $perPage);
-		$f->mergeCondition(
+		$f->andWhere(
 			new AndChainCondition(array(
 				new IsNotNullCond(new ARFieldHandle('CustomerOrder','parentID')),
 				new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1),
@@ -187,9 +188,9 @@ class UserController extends FrontendController
 
 	private function loadOrders(ARSelectFilter $f)
 	{
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCompleted'), 'DESC');
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
+		$f->orderBy('CustomerOrder.dateCompleted', 'DESC');
 
 		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 
@@ -212,10 +213,10 @@ class UserController extends FrontendController
 		}
 
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), empty($ids) ? array(-1) : array_keys($ids)));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
-		$f->setGrouping(new ARFieldHandle('OrderNote', 'orderID'));
+		$f = new ARSelectFilter(new INCond('OrderNote.orderID', empty($ids) ? array(-1) : array_keys($ids)));
+		$f->andWhere('OrderNote.isAdmin = :OrderNote.isAdmin:', array('OrderNote.isAdmin' => 1));
+		$f->andWhere('OrderNote.isRead = :OrderNote.isRead:', array('OrderNote.isRead' => 0));
+		$f->setGrouping('OrderNote.orderID');
 
 	  	$query = new ARSelectQueryBuilder();
 	  	$query->setFilter($f);
@@ -242,7 +243,7 @@ class UserController extends FrontendController
 
 
 		$this->set('user', $this->user->toArray());
-		$this->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
+		$this->set('files', $this->loadDownloadableItems(query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()))));
 	}
 
 	/**
@@ -260,8 +261,8 @@ class UserController extends FrontendController
 		$this->addFilesBreadcrumb();
 		$this->addBreadCrumb(isset($item['Product']['name_lang']) ? $item['Product']['name_lang'] : $item['Product']['Parent']['name_lang'], '');
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $item['ID']));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f = query::query()->where('OrderedItem.ID = :OrderedItem.ID:', array('OrderedItem.ID' => $item['ID']));
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 
 		$fileArray = $this->loadDownloadableItems($f);
 		if (!$fileArray && !$subItems)
@@ -427,7 +428,7 @@ class UserController extends FrontendController
 				$page = $this->request->get('page', 1);
 				$perPage = $this->getOrdersPerPage();
 				$f = $this->getOrderListPaginateFilter($page, $perPage);
-				$f->mergeCondition(
+				$f->andWhere(
 					new AndChainCondition(array(
 						new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $order->getID()),
 						new EqualsCond(new ARFieldHandle('CustomerOrder','isRecurring'), 1)
@@ -494,8 +495,8 @@ class UserController extends FrontendController
 	public function addNoteAction()
 	{
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f = query::query()->where('CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $this->request->get('id')));
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 		$set = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 		if (!$set->size() || !$this->buildNoteValidator()->isValid())
 		{
@@ -570,10 +571,14 @@ class UserController extends FrontendController
 		$validator = $this->buildRegValidator();
 		$validator->validate($_REQUEST);
 
-		if ($validator->getErrors() ||
-			!$this->createUser($this->request->get('password')))
+		if ($validator->getErrors())
 		{
 			return $this->returnErrors('user/register', $validator);
+		}
+
+		if (!$this->createUser($this->request->get('password')))
+		{
+			return $this->response->redirect('user/register');
 		}
 
 //		$this->mergeorderBy();
@@ -677,9 +682,9 @@ class UserController extends FrontendController
 	{
 		return;
 		// load the last un-finalized order by this user
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->orderBy(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
+		$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+		$f->andWhere(new NotEqualsCond('CustomerOrder.isFinalized', true));
+		$f->orderBy('CustomerOrder.dateCreated', 'DESC');
 		$f->limit(1);
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
@@ -718,7 +723,8 @@ class UserController extends FrontendController
 
 	public function doRemindPasswordAction()
 	{
-		$user = \user\User::getInstanceByEmail($this->request->get('email'));
+		$email = $this->request->get('email') ? $this->request->get('email') : $this->request->getJson('email');
+		$user = \user\User::getInstanceByEmail($email);
 		if ($user)
 		{
 			$user->setPassword($user->getAutoGeneratedPassword());
@@ -730,7 +736,7 @@ class UserController extends FrontendController
 			$email->send();
 		}
 
-		return $this->response->redirect('user/remindComplete?email=' . $this->request->get('email'));
+		return $this->response->redirect('user/remindComplete?email=' . $email);
 	}
 
 	public function remindCompleteAction()
@@ -1091,8 +1097,8 @@ class UserController extends FrontendController
 	public function downloadAction()
 	{
 		// get and validate OrderedItem instance first
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->get('id')));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f = query::query()->where('OrderedItem.ID = :OrderedItem.ID:', array('OrderedItem.ID' => $this->request->get('id')));
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 
 		$s = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('CustomerOrder', 'Product'));
 
@@ -1490,10 +1496,10 @@ class UserController extends FrontendController
 
 	private function getorderBy($id)
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+		$f = query::query()->where('CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $id));
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
 
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, array('User'));
 		if ($s->size())

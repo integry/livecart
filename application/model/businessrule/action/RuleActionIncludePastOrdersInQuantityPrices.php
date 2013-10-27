@@ -12,7 +12,7 @@ class RuleActionIncludePastOrdersInQuantityPrices extends RuleAction implements 
 	{
 		if ($item instanceof OrderedItem)
 		{
-			$item->setPastOrdersInQuantityPrices($this->getFieldValue('days'));
+			$item->setPastOrdersInQuantityPrices($this->readAttribute('days'));
 		}
 	}
 

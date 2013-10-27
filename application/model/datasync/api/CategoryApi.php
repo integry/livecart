@@ -105,9 +105,9 @@ class CategoryApi extends ModelApi
 		$id = $request->get('ID');
 		if(intval($id) > 0) // get action
 		{
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'ID'), $id));
+			$f->andWhere('Category.ID = :Category.ID:', array('Category.ID' => $id));
 		}
-		$f->orderBy(MultiLingualObject::getLangOrderHandle(new ARFieldHandle('Category', 'name')));
+		$f->orderBy(MultiLingualObject::getLangOrderHandle('Category.name'));
 		$categories = ActiveRecordModel::getRecordSetArray('Category', $f);
 		$response = new LiveCartSimpleXMLElement('<response datetime="'.date('c').'"></response>');
 		if($emptyListIsException && count($categories) == 0)

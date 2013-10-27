@@ -23,8 +23,8 @@ class SearchLog extends ActiveRecordModel
 
 	public function beforeCreate()
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('SearchLog', 'keywords'), $this->keywords));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('SearchLog', 'ip'), $this->ip));
+		$f = query::query()->where('SearchLog.keywords = :SearchLog.keywords:', array('SearchLog.keywords' => $this->keywords));
+		$f->andWhere('SearchLog.ip = :SearchLog.ip:', array('SearchLog.ip' => $this->ip));
 		if (!ActiveRecordModel::getRecordCount(__class__, $f))
 		{
 			parent::insert();

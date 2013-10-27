@@ -159,9 +159,9 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 			return null;
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('DiscountConditionRecord', 'conditionID'), $ids));
-		$f->orderBy(new ARFieldHandle('DiscountConditionRecord', 'categoryID'), 'DESC');
-		$f->orderBy(new ARFieldHandle('DiscountConditionRecord', 'manufacturerID'), 'DESC');
+		$f = new ARSelectFilter(new INCond('DiscountConditionRecord.conditionID', $ids));
+		$f->orderBy('DiscountConditionRecord.categoryID', 'DESC');
+		$f->orderBy('DiscountConditionRecord.manufacturerID', 'DESC');
 		foreach (ActiveRecordModel::getRecordSet('DiscountConditionRecord', $f, $referencedRecords) as $record)
 		{
 			$record->condition->registerRecord($record);
@@ -223,7 +223,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 	private function getSerializedCond()
 	{
-		return unserialize($this->getFieldValue('serializedCondition'));
+		return unserialize($this->readAttribute('serializedCondition'));
 	}
 
 	private function setSerializedCond($cond)

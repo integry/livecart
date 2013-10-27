@@ -8,7 +8,7 @@ namespace user;
  * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
-class User extends \ActiveRecordModel //implements EavAble
+class User extends \ActiveRecordModel implements \eav\EavAble
 {
 	/**
 	 * ID of anonymous user that is not authorized
@@ -48,13 +48,15 @@ class User extends \ActiveRecordModel //implements EavAble
 			)
 		));
 
-/*
-		$this->hasMany('ID', 'mrfeedback\application\model\MwsUser', 'userID', array(
+        $this->hasMany('ID', 'heysuccess\application\model\UserProduct', 'userID', array(
             'foreignKey' => array(
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            )
+            ),
+            'alias' => 'UserProduct'
         ));
-*/
+
+		$this->belongsTo('userGroupID', 'user\UserGroup', 'ID', array('alias' => 'UserGroup'));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => true, 'alias' => 'EavObject'));
 	}
 
     public function validation()
@@ -133,11 +135,11 @@ class User extends \ActiveRecordModel //implements EavAble
 
 		if(!$userGroup)
 		{
-			$filter->mergeCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "userGroupID")));
+			$filter->andWhere(new IsNullCond(new ARFieldHandle(__CLASS__, "userGroupID")));
 		}
 		else
 		{
-			$filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+			$filter->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
 		}
 
 		return self::getRecordSet($filter, $loadReferencedRecords);
@@ -267,14 +269,17 @@ class User extends \ActiveRecordModel //implements EavAble
 		}
 		else
 		{
-			$this->load(array('UserGroup'));
+			// @todo: add group check
+			return true;
+			
+			$group = $this->getUserGroup();
 
-			if (!$this->userGroup)
+			if (!$group)
 			{
 				return false;
 			}
 
-			return $this->userGroup->hasAccess($roleName);
+			return $group->hasAccess($roleName);
 		}
 	}
 
@@ -383,8 +388,9 @@ class User extends \ActiveRecordModel //implements EavAble
 	/*####################  Saving ####################*/
 	public function beforeCreate()
 	{
-		$res = parent::insert();
-
+		parent::beforeCreate();
+		
+		/*
 		if ($subscriber = NewsletterSubscriber::getInstanceByEmail($this->email))
 		{
 			$subscriber->user = $this;
@@ -398,8 +404,7 @@ class User extends \ActiveRecordModel //implements EavAble
 
 		$subscriber->confirmationCode = '';
 		$subscriber->save();
-
-		return $res;
+		*/
 	}
 
 	/**
@@ -463,9 +468,9 @@ class User extends \ActiveRecordModel //implements EavAble
 
 	public function getorderBy($id)
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $id));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f = query::query()->where('CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $id));
+		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->getID()));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
 
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 		if ($s->size())
@@ -513,11 +518,11 @@ class User extends \ActiveRecordModel //implements EavAble
 	public function countInvoices($filter = null)
 	{
 		$filter = $filter ? $filter : new ARSelectFilter();
-		$filter->mergeCondition(
+		$filter->andWhere(
 			new AndChainCondition(array(
-				new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->getID()),
-				new EqualsCond(new ARFieldHandle('CustomerOrder', 'isRecurring'), 1),
-				new IsNotNullCond(new ARFieldHandle('CustomerOrder', 'parentID'))
+				'CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->getID()),
+				'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1),
+				new IsNotNullCond('CustomerOrder.parentID')
 				)
 			)
 		);
@@ -527,7 +532,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	public function countPendingInvoices()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 0));
+		$filter->setCondition('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => 0));
 
 		return $this->countInvoices($filter);
 	}
@@ -544,7 +549,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	public function hasPendingInvoices()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), 0));
+		$filter->setCondition('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => 0));
 		$filter->limit(1);
 
 		return (bool)$this->countInvoices($filter);
@@ -553,7 +558,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	private function getShippingAddressFilter($defaultFirst = true)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->getID()));
+		$f->setCondition('ShippingAddress.userID = :ShippingAddress.userID:', array('ShippingAddress.userID' => $this->getID()));
 		if (!$defaultFirst)
 		{
 			$f->orderBy(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->getID()));
@@ -565,7 +570,7 @@ class User extends \ActiveRecordModel //implements EavAble
 	private function getBillingAddressFilter($defaultFirst = true)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
+		$f->setCondition('BillingAddress.userID = :BillingAddress.userID:', array('BillingAddress.userID' => $this->getID()));
 		if (!$defaultFirst)
 		{
 			$f->orderBy(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->getID()));

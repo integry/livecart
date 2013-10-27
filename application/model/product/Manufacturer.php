@@ -42,7 +42,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	public static function getInstanceByName($name)
 	{
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('Manufacturer', 'name'), $name));
+		$filter->setCondition('Manufacturer.name = :Manufacturer.name:', array('Manufacturer.name' => $name));
 		$filter->limit(1);
 		$set = ActiveRecordModel::getRecordSet('Manufacturer', $filter);
 		if ($set->size() > 0)
@@ -79,15 +79,15 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 			$counts[$row['manufacturerID']] = $row['cnt'];
 		}
 
-		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
+		$f = new ARSelectFilter(new InCond('Manufacturer.ID', $ids));
 		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
+		$f->andWhere(new NotEqualsCond('Manufacturer.name', ''));
 
 		if ($startingWith)
 		{
-			$f->mergeCondition(new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $startingWith.'%'));
+			$f->andWhere(new LikeCond('Manufacturer.name', $startingWith.'%'));
 		}
-		$f->orderBy(new ARFieldHandle('Manufacturer', 'name'));
+		$f->orderBy('Manufacturer.name');
 
 		if ($perPage > 0)
 		{
@@ -113,10 +113,10 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 			$ids[] = $row['manufacturerID'];
 		}
 
-		$f = new ARSelectFilter(new InCond(new ARFieldHandle('Manufacturer', 'ID'), $ids));
+		$f = new ARSelectFilter(new InCond('Manufacturer.ID', $ids));
 		$f->addField('UPPER(LEFT(TRIM(Manufacturer.name),1))', '', 'FirstLetter');
-		$f->mergeCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));
-		$f->orderBy(new ARFieldHandle('Manufacturer', 'name'));
+		$f->andWhere(new NotEqualsCond('Manufacturer.name', ''));
+		$f->orderBy('Manufacturer.name');
 
 		$manufacturers = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);
 		foreach($manufacturers as $item)

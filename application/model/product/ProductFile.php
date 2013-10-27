@@ -82,11 +82,11 @@ class ProductFile extends ObjectFile
 
 	public static function getOrderFiles(ARSelectFilter $f)
 	{
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
-		//$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
-		$f->orderBy(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
+		$f->andWhere('CustomerOrder.isPaid = :CustomerOrder.isPaid:', array('CustomerOrder.isPaid' => true));
+		//$f->andWhere('Product.type = :Product.type:', array('Product.type' => Product::TYPE_DOWNLOADABLE));
+		$f->orderBy('CustomerOrder.ID', 'DESC');
 
 		$downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
 		$fileArray = array();

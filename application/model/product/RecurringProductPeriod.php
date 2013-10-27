@@ -73,7 +73,7 @@ class RecurringProductPeriod extends MultilingualObject
 		{
 			throw new Exception('getAsignedToFilter() excpects argument to be instance of Product');
 		}
-		$filter->mergeCondition(new InCond(new ARFieldHandle(__CLASS__, 'productID'), $productIDs));
+		$filter->andWhere(new InCond(new ARFieldHandle(__CLASS__, 'productID'), $productIDs));
 		return $filter;
 	}
 

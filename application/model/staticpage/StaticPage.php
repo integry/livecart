@@ -70,12 +70,12 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 
 	public static function getIsInformationMenuCondition()
 	{
-		return new LikeCond(new ARFieldHandle('StaticPage', 'menu'), '%"INFORMATION";b:1%');
+		return new LikeCond('StaticPage.menu', '%"INFORMATION";b:1%');
 	}
 
 	public static function getIsRootCategoriesMenuCondition()
 	{
-		return new LikeCond(new ARFieldHandle('StaticPage', 'menu'), '%"ROOT_CATEGORIES";b:1%');
+		return new LikeCond('StaticPage.menu', '%"ROOT_CATEGORIES";b:1%');
 	}
 
 
@@ -173,7 +173,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 	{
 	  	// get max position
 	  	$f = new ARSelectFilter();
-	  	$f->orderBy(new ARFieldHandle('StaticPage', 'position'), 'DESC');
+	  	$f->orderBy('StaticPage.position', 'DESC');
 	  	$f->limit(1);
 	  	$rec = ActiveRecord::getRecordSetArray('StaticPage', $f);
 		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;

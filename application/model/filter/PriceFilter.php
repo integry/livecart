@@ -73,8 +73,8 @@ class PriceFilter implements FilterInterface
 
 	public function getCondition()
 	{
-		$from = new EqualsOrMoreCond(new ARFieldHandle('ProductPrice', 'price'), $this->priceFrom);
-		$to =   new EqualsOrLessCond(new ARFieldHandle('ProductPrice', 'price'), $this->priceTo);
+		$from = new EqualsOrMoreCond('ProductPrice.price', $this->priceFrom);
+		$to =   new EqualsOrLessCond('ProductPrice.price', $this->priceTo);
 		$from->addAND($to);
 
 		return $from;

@@ -110,8 +110,8 @@ class CategoryPresentation extends ActiveRecordModel
 	private static function getCategoryCondition(Category $category)
 	{
 		$own = new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $category->getID());
-		$parent = new EqualsOrLessCond(new ARFieldHandle('Category', 'lft'), $category->lft);
-		$parent->addAND(new EqualsOrMoreCond(new ARFieldHandle('Category', 'rgt'), $category->rgt));
+		$parent = new EqualsOrLessCond('Category.lft', $category->lft);
+		$parent->addAND(new EqualsOrMoreCond('Category.rgt', $category->rgt));
 		$parent->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isSubcategories'), true));
 		$own->addOR($parent);
 
@@ -121,7 +121,7 @@ class CategoryPresentation extends ActiveRecordModel
 	private static function setCategoryorderBy(Category $category, ARSelectFilter $f)
 	{
 		$f->orderBy(new ARExpressionHandle('CategoryPresentation.categoryID=' . $category->getID()), 'DESC');
-		$f->orderBy(new ARFieldHandle('Category', 'lft'), 'DESC');
+		$f->orderBy('Category.lft', 'DESC');
 	}
 }
 

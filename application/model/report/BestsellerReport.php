@@ -16,7 +16,7 @@ class BestsellerReport extends Report
 
 	protected function getDateHandle()
 	{
-		return new ARFieldHandle('CustomerOrder', 'dateCompleted');
+		return 'CustomerOrder.dateCompleted';
 	}
 
 	public function getBestsellersByCount()
@@ -40,7 +40,7 @@ class BestsellerReport extends Report
 		$f->orderBy(new ARExpressionHandle('cnt'), $order);
 		$q->addField('OrderedItem.productID');
 		$f->setGrouping(new ARExpressionHandle('OrderedItem.productID'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
 		$f->limit(self::TABLE_LIMIT);
 		$q->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
 
@@ -54,7 +54,7 @@ class BestsellerReport extends Report
 
 		// fetch product details
 		$fields = array_flip(array('sku', 'name', 'cnt'));
-		$products = ActiveRecordModel::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), array_keys($ids))), array('Parent'));
+		$products = ActiveRecordModel::getRecordSetArray('Product', new ARSelectFilter(new INCond('Product.ID', array_keys($ids))), array('Parent'));
 		ProductSet::loadVariationsForProductArray($products);
 
 		foreach ($products as $product)

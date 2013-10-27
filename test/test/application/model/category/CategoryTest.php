@@ -52,8 +52,8 @@ class CategoryTest extends LiveCartTest
 		$this->root->reload();
 
 		// Get root node info, before it is modified
-		$rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLft = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgt = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 		$rootID = $this->root->getID();
 
 		// Create new category
@@ -64,24 +64,24 @@ class CategoryTest extends LiveCartTest
 
 		// Check if rgt and lft fields are calculated properly
 		$this->root->reload();
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
 
 		// Check parrent id
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
 
 		// Reload and check again
 		$this->root->reload();
 		$newCategory->reload();
 
 		// Check
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
 	}
 
 	public function testDeleteCategory()
@@ -96,9 +96,9 @@ class CategoryTest extends LiveCartTest
 		foreach($nodes as $category)
 		{
 			$startingPositions[$category->getID()] = array(
-				'lft'	 => $category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
-				'rgt'	 => $category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
-				'parent'  => $category == $this->root ? '0' : $category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
+				'lft'	 => $category->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
+				'rgt'	 => $category->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
+				'parent'  => $category == $this->root ? '0' : $category->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
 			);
 		}
 
@@ -142,11 +142,11 @@ class CategoryTest extends LiveCartTest
 				continue;
 			}
 
-			$this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
-			$this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
+			$this->assertEqual($category->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
+			$this->assertEqual($category->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
 			if (!$category->isRoot())
 			{
-				$this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+				$this->assertEqual($category->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
 			}
 		}
 	}
@@ -161,17 +161,17 @@ class CategoryTest extends LiveCartTest
 		$newCategory->reload();
 
 		// reload root and check to see if rgt and lft didn't change
-		$rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgt = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLft = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		$this->root->reload();
 
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
 
 		// New category rgt should be equal to it's parent's (rgt + 1)
 		$this->assertTrue($newCategory->isLoaded());
-		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME) + 1, $newCategory->getField(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($newCategory->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME) + 1, $newCategory->getField(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 	}
 
 	public function testMoveCategoryBetweenSiblings()
@@ -188,8 +188,8 @@ class CategoryTest extends LiveCartTest
 		}
 
 		$this->root->reload();
-		$rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgt = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLft = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		foreach($newCategories as $key => $category)
 		{
@@ -198,8 +198,8 @@ class CategoryTest extends LiveCartTest
 			$this->root->reload();
 
 			// Make sure one category is last child, root lft and rgt shouldn't change
-			$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt, "Root rgt should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME))."] and [$rootRgt])");
-			$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft, "Root lft should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME))."] and [$rootLft])");
+			$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt, "Root rgt should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME))."] and [$rootRgt])");
+			$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft, "Root lft should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME))."] and [$rootLft])");
 		}
 	}
 
@@ -247,73 +247,73 @@ class CategoryTest extends LiveCartTest
 		{
 			if(!$category) continue;
 			$startingPositions[$category->getID()] = array(
-				'lft'	 => $category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
-				'rgt'	 => $category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
-				'parent'  => $category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
+				'lft'	 => $category->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
+				'rgt'	 => $category->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
+				'parent'  => $category->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
 			);
 		}
 
-		$rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgt = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLft = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// reload root
 		$this->root->reload();
 
 		// Make sure everything is created and left and right values are valid
-//		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
-//		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
-		$parentCatRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgt = $newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLft = $newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+//		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
+//		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
+		$parentCatRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgt = $newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLft = $newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// Move one branch inside another
 		$newCategories[4]->moveTo($newCategories[1]);
 
-		$parentCatRgtAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLftAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgtAfter = $newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLftAfter = $newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rootRgtAfter = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$rootLftAfter = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$parentCatRgtAfter = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLftAfter = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgtAfter = $newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLftAfter = $newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgtAfter = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLftAfter = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// reload target, parent and root
 		$newCategories[1]->reload();
 		$newCategories[4]->reload();
 
 		// Check if all rgt and lft in database are the same as in objects
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLftAfter);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
-		$this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
-		$this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLftAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
+		$this->assertEqual($newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
+		$this->assertEqual($newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
 
 		$this->root->reload();
 
 		// Check if all lft and rgt are valid
-//		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
-//		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
+//		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
+//		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
 
-//		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6);
-//		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
-//		$this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6 - 1);
-//		$this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatRgt);
+//		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6);
+//		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
+//		$this->assertEqual($newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6 - 1);
+//		$this->assertEqual($newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatRgt);
 
-		$parentCatRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgt = $newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLft = $newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$parentCatRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgt = $newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLft = $newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// move another branch inside
 		$newCategories[7]->moveTo($newCategories[1]);
 
-		$parentCatRgtAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLftAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgtAfter = $newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLftAfter = $newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rootRgtAfter = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$rootLftAfter = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$parentCatRgtAfter = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLftAfter = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgtAfter = $newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLftAfter = $newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rootRgtAfter = $this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$rootLftAfter = $this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// reload target, parent and root
 		$newCategories[1]->reload();
@@ -321,39 +321,39 @@ class CategoryTest extends LiveCartTest
 		$this->root->reload();
 
 		// Check if all rgt and lft in database are the same as in objects
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLftAfter);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLftAfter);
 
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
 
 		// Check if all lft and rgt are valid
 /*
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
-		$this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6 - 1);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatRgt);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($this->root->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 6 - 1);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatRgt);
 */
 		// Move category to another branch before node
-		$parentCatRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgt = $newCategories[11]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLft = $newCategories[11]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$beforeCatRgt = $newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$beforeCatLft = $newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$parentCatRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgt = $newCategories[11]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLft = $newCategories[11]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$beforeCatRgt = $newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$beforeCatLft = $newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		$newCategories[11]->moveTo($newCategories[1], $newCategories[7]);
 
-		$parentCatRgtAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$parentCatLftAfter = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$targetCatRgtAfter = $newCategories[11]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$targetCatLftAfter = $newCategories[11]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$beforeCatRgtAfter = $newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$beforeCatLftAfter = $newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$parentCatRgtAfter = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$parentCatLftAfter = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$targetCatRgtAfter = $newCategories[11]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$targetCatLftAfter = $newCategories[11]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$beforeCatRgtAfter = $newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$beforeCatLftAfter = $newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 
 		// reload target, parent and before
 		$newCategories[1]->reload();
@@ -361,21 +361,21 @@ class CategoryTest extends LiveCartTest
 		$newCategories[11]->reload();
 
 		// Check if all rgt and lft in database are the same as in objects
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
-		$this->assertEqual($newCategories[11]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
-		$this->assertEqual($newCategories[11]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatRgtAfter);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLftAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLftAfter);
+		$this->assertEqual($newCategories[11]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
+		$this->assertEqual($newCategories[11]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatRgtAfter);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLftAfter);
 
 		// Check if all lft and rgt are valid
 /*
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 4);
-		$this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
-		$this->assertEqual($newCategories[11]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatLft + 4 - 1);
-		$this->assertEqual($newCategories[11]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatRgt + 4);
-		$this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft + 4);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgt + 4);
+		$this->assertEqual($newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $parentCatLft );
+		$this->assertEqual($newCategories[11]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatLft + 4 - 1);
+		$this->assertEqual($newCategories[11]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatRgt + 4);
+		$this->assertEqual($newCategories[7]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft + 4);
 */
 		//  Put all categories back to their starting positions
 		$newCategories[11]->moveTo($newCategories[10]);
@@ -386,9 +386,9 @@ class CategoryTest extends LiveCartTest
 		{
 			if(!$category) continue;
 
-			//$this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
-			//$this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
-			$this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+			//$this->assertEqual($category->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
+			//$this->assertEqual($category->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
+			$this->assertEqual($category->readAttribute(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
 		}
 	}
 
@@ -409,75 +409,75 @@ class CategoryTest extends LiveCartTest
 
 
 		// Move right
-		$lft = $newCategories[3]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[3]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$nextLft = $newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$nextRgt = $newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[3]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[3]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$nextLft = $newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$nextRgt = $newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[3]->moveRight();
 
-		$this->assertEqual($lft + 2, $newCategories[3]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt + 2, $newCategories[3]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
-		$this->assertEqual($nextLft - 2, $newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($nextRgt - 2, $newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft + 2, $newCategories[3]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt + 2, $newCategories[3]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($nextLft - 2, $newCategories[4]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($nextRgt - 2, $newCategories[4]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 
 		// Move right when the node is already a last child
-		$lft = $newCategories[3]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[3]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[3]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[3]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[3]->moveRight();
 
-		$this->assertEqual($lft, $newCategories[3]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt, $newCategories[3]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft, $newCategories[3]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt, $newCategories[3]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 
 		// Move left
-		$lft = $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$prevLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$prevRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$prevLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$prevRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[2]->moveLeft();
 
-		$this->assertEqual($lft - 2, $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt - 2, $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
-		$this->assertEqual($prevLft + 2, $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($prevRgt + 2, $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft - 2, $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt - 2, $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($prevLft + 2, $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($prevRgt + 2, $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 
 		// Move left when the node is already a first child
-		$lft = $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[2]->moveLeft();
 
-		$this->assertEqual($lft, $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt, $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft, $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt, $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 
 		// Circle when moving left
-		$lft = $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$nextLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$nextRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$nextLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$nextRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[2]->moveLeft(ActiveTreeNode::MOVE_CIRCLE);
 
-		$this->assertEqual($lft + 6, $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt + 6, $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
-		$this->assertEqual($nextLft - 2, $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($nextRgt - 2, $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft + 6, $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt + 6, $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($nextLft - 2, $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($nextRgt - 2, $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 
 
 		// Circle when moving right
-		$lft = $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$rgt = $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
-		$nextLft = $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-		$nextRgt = $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$lft = $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$rgt = $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+		$nextLft = $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+		$nextRgt = $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 
 		$newCategories[2]->moveRight(ActiveTreeNode::MOVE_CIRCLE);
 
-		$this->assertEqual($lft - 6, $newCategories[2]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($rgt - 6, $newCategories[2]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
-		$this->assertEqual($nextLft + 2, $newCategories[1]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
-		$this->assertEqual($nextRgt + 2, $newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($lft - 6, $newCategories[2]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($rgt - 6, $newCategories[2]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
+		$this->assertEqual($nextLft + 2, $newCategories[1]->readAttribute(ActiveTreeNode::LEFT_NODE_FIELD_NAME));
+		$this->assertEqual($nextRgt + 2, $newCategories[1]->readAttribute(ActiveTreeNode::RIGHT_NODE_FIELD_NAME));
 	}
 
 	public function testActiveProductCountWhenChangingCategoryAvailability()

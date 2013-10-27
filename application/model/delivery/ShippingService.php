@@ -154,18 +154,18 @@ class ShippingService extends MultilingualObject implements EavAble
 		if (self::WEIGHT_BASED == $this->rangeType)
 		{
 			$weight = $shipment->getChargeableWeight($this->deliveryZone);
-			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight * 1.000001);
-			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight * 0.99999));
+			$cond = new EqualsOrLessCond('ShippingRate.weightRangeStart', $weight * 1.000001);
+			$cond->addAND(new EqualsOrMoreCond('ShippingRate.weightRangeEnd', $weight * 0.99999));
 		}
 		else
 		{
 			$total = $shipment->getSubTotal(Shipment::WITHOUT_TAXES);
-			$cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total * 1.000001);
-			$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total * 0.99999));
+			$cond = new EqualsOrLessCond('ShippingRate.subtotalRangeStart', $total * 1.000001);
+			$cond->addAND(new EqualsOrMoreCond('ShippingRate.subtotalRangeEnd', $total * 0.99999));
 		}
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShippingRate', 'shippingServiceID'), $this->getID()));
-		$f->mergeCondition($cond);
+		$f = query::query()->where('ShippingRate.shippingServiceID = :ShippingRate.shippingServiceID:', array('ShippingRate.shippingServiceID' => $this->getID()));
+		$f->andWhere($cond);
 
 		$rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
 

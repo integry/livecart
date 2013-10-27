@@ -77,7 +77,7 @@ class ShippingClass extends MultilingualObject
 		$f = select(
 				new EqualsCond(
 					MultiLingualObject::getLangSearchHandle(
-						new ARFieldHandle('ShippingClass', 'name'),
+						'ShippingClass.name',
 						self::getApplication()->getDefaultLanguageCode()
 					),
 					$name

@@ -171,7 +171,7 @@ class ProductController extends CatalogController
 		// reviews
 		if ($this->config->get('ENABLE_REVIEWS') && $product->reviewCount && ($numReviews = $this->config->get('NUM_REVIEWS_IN_PRODUCT_PAGE')))
 		{
-			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
+			$f = query::query()->where('ProductReview.isEnabled = :ProductReview.isEnabled:', array('ProductReview.isEnabled' => true));
 			$f->limit($numReviews);
 			$reviews = $product->getRelatedRecordSetArray('ProductReview', $f);
 			$this->pullRatingDetailsForReviewArray($reviews);
@@ -240,8 +240,8 @@ class ProductController extends CatalogController
 
 		// additional categories
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('Category', 'lft'));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled') , true));
+		$f->orderBy('Category.lft');
+		$f->andWhere(new EqualsCond('Category.isEnabled' , true));
 
 		$pathC = new OrChainCondition();
 		$pathF = new ARSelectFilter($pathC);
@@ -250,15 +250,15 @@ class ProductController extends CatalogController
 		{
 			$categories[] = array($cat['Category']);
 
-			$cond = new OperatorCond(new ARFieldHandle('Category', 'lft'), $cat['Category']['lft'], "<");
-			$cond->addAND(new OperatorCond(new ARFieldHandle('Category', 'rgt'), $cat['Category']['rgt'], ">"));
+			$cond = new OperatorCond('Category.lft', $cat['Category']['lft'], "<");
+			$cond->addAND(new OperatorCond('Category.rgt', $cat['Category']['rgt'], ">"));
 			$pathC->addAnd($cond);
 		}
 
 		if ($categories)
 		{
-			$pathF->orderBy(new ARFieldHandle('Category', 'lft') , 'DESC');
-			$pathF->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
+			$pathF->orderBy('Category.lft' , 'DESC');
+			$pathF->andWhere('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => true));
 			foreach (ActiveRecordModel::getRecordSetArray('Category', $pathF, array('Category')) as $parent)
 			{
 				foreach ($categories as &$cat)
@@ -591,9 +591,9 @@ class ProductController extends CatalogController
 		$perPage = $this->config->get('REVIEWS_PER_PAGE');
 		$offsetStart = ($this->request->get('page', 1) - 1) * $perPage;
 
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductReview', 'isEnabled'), true));
+		$f = query::query()->where('ProductReview.isEnabled = :ProductReview.isEnabled:', array('ProductReview.isEnabled' => true));
 		$f->limit($perPage, $offsetStart);
-		$f->orderBy(new ARFieldHandle('ProductReview', 'dateCreated'), 'DESC');
+		$f->orderBy('ProductReview.dateCreated', 'DESC');
 		$reviews = $this->product->getRelatedRecordSetArray('ProductReview', $f);
 		$this->pullRatingDetailsForReviewArray($reviews);
 
@@ -756,8 +756,8 @@ class ProductController extends CatalogController
 			$indexes[$review['ID']] = $index;
 		}
 
-		$f = new ARSelectFilter(new INCond(new ARFieldHandle('ProductRating', 'reviewID'), $ids));
-		$f->orderBy(new ARFieldHandle('ProductRatingType', 'position'));
+		$f = new ARSelectFilter(new INCond('ProductRating.reviewID', $ids));
+		$f->orderBy('ProductRatingType.position');
 		$ratings = ActiveRecordModel::getRecordSetArray('ProductRating', $f, array('ProductRatingType'));
 
 		foreach ($ratings as $rating)
@@ -867,23 +867,23 @@ class ProductController extends CatalogController
 		{
 			ClassLoader::importNow("application/helper/getDateFromString");
 
-			$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductRating', 'productID'), $product->getID()));
+			$f = query::query()->where('ProductRating.productID = :ProductRating.productID:', array('ProductRating.productID' => $product->getID()));
 			if (!$this->user->isAnonymous())
 			{
-				$cond = new EqualsCond(new ARFieldHandle('ProductRating', 'userID'), $this->user->getID());
+				$cond = 'ProductRating.userID = :ProductRating.userID:', array('ProductRating.userID' => $this->user->getID());
 			}
 			else
 			{
 				if ($hours = $this->config->get('RATING_SAME_IP_TIME'))
 				{
-					$cond = new EqualsCond(new ARFieldHandle('ProductRating', 'ip'), $this->request->getIPLong());
-					$cond->addAnd(new MoreThanCond(new ARFieldHandle('ProductRating', 'dateCreated'), getDateFromString('-' . $hours . ' hours')));
+					$cond = 'ProductRating.ip = :ProductRating.ip:', array('ProductRating.ip' => $this->request->getIPLong());
+					$cond->addAnd(new MoreThanCond('ProductRating.dateCreated', getDateFromString('-' . $hours . ' hours')));
 				}
 			}
 
 			if (isset($cond))
 			{
-				$f->mergeCondition($cond);
+				$f->andWhere($cond);
 				return ActiveRecordModel::getRecordCount('ProductRating', $f) > 0;
 			}
 		}
@@ -905,9 +905,9 @@ class ProductController extends CatalogController
 
 			if (is_null($this->isPurchaseRequiredToRate))
 			{
-								$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID()));
-				$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+								$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+				$f->andWhere('OrderedItem.productID = :OrderedItem.productID:', array('OrderedItem.productID' => $product->getID()));
+				$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
 				$f->limit(1);
 
 				$this->isPurchaseRequiredToRate = ActiveRecordModel::getRecordCount('OrderedItem', $f, array('CustomerOrder')) < 1;

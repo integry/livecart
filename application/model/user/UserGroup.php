@@ -1,5 +1,6 @@
 <?php
 
+namespace user;
 
 /**
  * All users can be assigned to a group. Assigning users to a group is necessary to provide admin
@@ -8,38 +9,16 @@
  * @package application/model/role
  * @author Integry Systems <http://integry.com>
  */
-class UserGroup extends ActiveRecordModel implements EavAble
+class UserGroup extends \ActiveRecordModel// implements EavAble
 {
 	private $appliedRoles = array();
 	private $canceledRoles = array();
 	private $rolesLoaded = false;
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-
-		$schema->setName("UserGroup");
-		public $ID;
-		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		public $name;
-		public $description;
-	}
-
-	/*####################  Static method implementations ####################*/
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return TaxRate
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
+	public $ID;
+//	public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+	public $name;
+	public $description;
 
 	/**
 	 * Create new user group
@@ -57,19 +36,6 @@ class UserGroup extends ActiveRecordModel implements EavAble
 	  	$instance->description = $description;
 
 	  	return $instance;
-	}
-
-	/**
-	 * Load service rates record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -156,10 +122,9 @@ class UserGroup extends ActiveRecordModel implements EavAble
 		}
 	}
 
-	public function save($forceOperation = 0)
+	public function beforeSave()
 	{
-		parent::save($forceOperation);
-
+		parent::beforeSave();
 		$this->updateRoles();
 	}
 

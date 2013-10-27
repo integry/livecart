@@ -1,4 +1,4 @@
-[[ form("user/doLogin", ["method": "POST"]) ]] />
+[[ form("user/doLogin", ["method": "POST"]) ]] >
 
 	[[ textfld('email', '_your_email', ['type': 'email']) ]]
 

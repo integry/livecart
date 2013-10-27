@@ -28,7 +28,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 			$langCode = self::$defaultLanguageCode;
 		}
 
-		$valueArray = $this->getFieldValue($fieldName);
+		$valueArray = $this->readAttribute($fieldName);
 		if (!is_array($valueArray))
 		{
 			$valueArray = array();
