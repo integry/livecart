@@ -5,8 +5,8 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2011-05-31 20:52                                #
-# Model version:         Version 2011-05-31                              #
+# Created on:            2013-10-17 15:30                                #
+# Model version:         Version 2013-10-17                              #
 # ---------------------------------------------------------------------- #
 
 
@@ -26,6 +26,7 @@ CREATE TABLE Product (
     parentID INTEGER UNSIGNED,
     shippingClassID INTEGER UNSIGNED,
     taxClassID INTEGER UNSIGNED,
+    eavObjectID INTEGER UNSIGNED,
     isEnabled BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the Product is enabled (visible and available in the store frontend) 0- not available 1- available 2- disabled (not visble)',
     isRecurring BOOL,
     isFeatured BOOL NOT NULL DEFAULT 0 COMMENT 'Determines if the product has been marked as featured product',
@@ -59,6 +60,7 @@ CREATE TABLE Product (
     childSettings TEXT COMMENT 'Determines price and shipping weight calculation for child products - whether to add/substract from parent or override completely',
     fractionalStep FLOAT,
     categoryIntervalCache TEXT,
+    metaCache TEXT,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1021,7 +1023,6 @@ CREATE TABLE ProductOptionChoice (
     hasImage BOOL,
     position INTEGER UNSIGNED DEFAULT 0,
     name MEDIUMTEXT,
-    config TEXT,
     CONSTRAINT PK_ProductOptionChoice PRIMARY KEY (ID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -1195,20 +1196,23 @@ ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE INDEX IDX_EavStringValue_1 ON EavStringValue (fieldID,objectID);
 
 # ---------------------------------------------------------------------- #
-# Add table "EavNumericValue"                                            #
+# Add table "EavObjectValue"                                             #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE EavNumericValue (
+CREATE TABLE EavObjectValue (
     objectID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the product the value is linked to',
     fieldID INTEGER UNSIGNED NOT NULL COMMENT 'ID of the attribute (SpecField)',
-    value FLOAT COMMENT 'The actual attribute value (numeric) assigned to a particular product',
-    CONSTRAINT PK_EavNumericValue PRIMARY KEY (objectID, fieldID)
+    numValue FLOAT COMMENT 'The actual attribute value (numeric) assigned to a particular product',
+    stringValue VARCHAR(255),
+    textValue TEXT,
+    dateValue DATE,
+    CONSTRAINT PK_EavObjectValue PRIMARY KEY (objectID, fieldID)
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE INDEX IDX_EavNumericValue_1 ON EavNumericValue (value ASC,fieldID ASC);
+CREATE INDEX IDX_EavObjectValue_1 ON EavObjectValue (numValue ASC,fieldID ASC);
 
-CREATE INDEX IDX_EavNumericValue_2 ON EavNumericValue (objectID,fieldID);
+CREATE INDEX IDX_EavObjectValue_2 ON EavObjectValue (objectID,fieldID);
 
 # ---------------------------------------------------------------------- #
 # Add table "EavItem"                                                    #
@@ -1290,6 +1294,7 @@ CREATE INDEX IDX_EavFieldGroup_1 ON EavFieldGroup (classID);
 
 CREATE TABLE EavObject (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    productID INTEGER UNSIGNED,
     categoryID INTEGER UNSIGNED,
     customerOrderID INTEGER UNSIGNED,
     manufacturerID INTEGER UNSIGNED,
@@ -1376,7 +1381,6 @@ CREATE TABLE DiscountCondition (
     isAllSubconditions BOOL NOT NULL,
     isActionCondition BOOL NOT NULL,
     isFinal BOOL NOT NULL,
-    isReverse BOOL NOT NULL,
     recordCount INTEGER NOT NULL,
     validFrom TIMESTAMP DEFAULT '0000-00-00',
     validTo TIMESTAMP DEFAULT '0000-00-00',
@@ -1682,6 +1686,9 @@ ALTER TABLE Product ADD CONSTRAINT ShippingClass_Product
 
 ALTER TABLE Product ADD CONSTRAINT TaxClass_Product 
     FOREIGN KEY (taxClassID) REFERENCES TaxClass (ID) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Product ADD CONSTRAINT EavObject_Product 
+    FOREIGN KEY (eavObjectID) REFERENCES EavObject (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -2019,10 +2026,10 @@ ALTER TABLE EavStringValue ADD CONSTRAINT EavField_EavStringValue
 ALTER TABLE EavStringValue ADD CONSTRAINT EavObject_EavStringValue 
     FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE EavNumericValue ADD CONSTRAINT EavObject_EavNumericValue 
+ALTER TABLE EavObjectValue ADD CONSTRAINT EavObject_EavObjectValue 
     FOREIGN KEY (objectID) REFERENCES EavObject (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE EavNumericValue ADD CONSTRAINT EavField_EavNumericValue 
+ALTER TABLE EavObjectValue ADD CONSTRAINT EavField_EavObjectValue 
     FOREIGN KEY (fieldID) REFERENCES EavField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE EavItem ADD CONSTRAINT EavValue_EavItem 
@@ -2063,6 +2070,9 @@ ALTER TABLE EavObject ADD CONSTRAINT ShippingService_EavObject
 
 ALTER TABLE EavObject ADD CONSTRAINT StaticPage_EavObject 
     FOREIGN KEY (staticPageID) REFERENCES StaticPage (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE EavObject ADD CONSTRAINT Product_EavObject 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ManufacturerImage ADD CONSTRAINT Manufacturer_ManufacturerImage 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE CASCADE ON UPDATE CASCADE;
