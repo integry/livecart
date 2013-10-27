@@ -1,5 +1,10 @@
 <?php
 
+require_once(dirname(__FILE__) . '/abstract/ActiveGridController.php');
+
+use Phalcon\Validation\Validator;
+use category\Category;
+use product\Product;
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -8,7 +13,7 @@
  * @author Integry Systems
  * @role product
  */
-class ProductController extends ActiveGridController implements MassActionInterface
+class ProductController extends ActiveGridController// implements MassActionInterface
 {
     public function indexAction()
 	{
@@ -38,7 +43,48 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function editAction()
 	{
-		$response = $this->productForm(true);
+		//$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
+
+		$isExisting = true;
+		$this->setValidator($this->buildValidator($isExisting));
+
+		// status values
+		$status = array(0 => $this->translate('_disabled'),
+						1 => $this->translate('_enabled'),
+					  );
+
+		/*
+		// product types
+		$types = array(
+			Product::TYPE_TANGIBLE => $this->translate('_tangible'),
+			Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
+			Product::TYPE_BUNDLE => $this->translate('_bundle'),
+			Product::TYPE_RECURRING => $this->translate('_recurring')
+		);
+		*/
+
+		//$product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
+
+//		$this->set("productTypes", $types);
+		$this->set("productStatuses", $status);
+
+/*
+		$this->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
+		$this->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+		$this->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
+		$this->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
+
+		// get user groups
+		$f = new ARSelectFilter();
+		$f->orderBy('UserGroup.name');
+		$groups[0] = $this->translate('_all_customers');
+		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
+		{
+			$groups[$group['ID']] = $group['name'];
+		}
+		$groups[''] = '';
+		$this->set('userGroups', $groups);
+*/
 
 	}
 
@@ -46,16 +92,18 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	{
 		if ((int)$this->request->get('id'))
 		{
-			$product = Product::getInstanceByID($this->request->get('id'), true, array('Manufacturer'));
+			$product = Product::getInstanceByID($this->request->get('id'));
 			$product->loadSpecification();
-			$product->loadPricing();
+			//$product->loadPricing();
 
 			$arr = $product->toArray();
 
+			/*
 			foreach ($product->getRelatedRecordSetArray('ProductPrice', new ARSelectFilter()) as $price)
 			{
 				$arr['quantityPrice'][$price['currencyID']] = $price;
 			}
+			*/
 		}
 		else
 		{
@@ -64,7 +112,16 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			$arr = $product->toArray();
 		}
 
-		return new JSONResponse($arr);
+		echo json_encode($arr);
+	}
+	
+	public function eavAction()
+	{
+		$product = Product::getInstanceByID($this->request->get('id'));
+		$manager = new \eav\EavFieldManager(\eav\EavField::getClassID($product));
+		$manager->loadFields();
+		
+		echo json_encode($manager->toArray());
 	}
 
 	public function getPresentationAction()
@@ -76,6 +133,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	protected function getPreparedRecord($row, $displayedColumns)
 	{
 		$records = parent::getPreparedRecord($row, $displayedColumns);
+		
+		return $records;
 
 		$currencies = $this->application->getCurrencyArray();
 
@@ -143,7 +202,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getClassName()
 	{
-		return 'Product';
+		return 'product\Product';
 	}
 
 	protected function getCSVFileName()
@@ -153,12 +212,12 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getRequestColumns()
 	{
-		return $this->getDisplayedColumns(Category::getInstanceByID($this->getRequestCategory(), Category::LOAD_DATA));
+		return $this->getDisplayedColumns(Category::getInstanceByID($this->getRequestCategory()));
 	}
 
 	protected function getAvailableRequestColumns()
 	{
-		return $this->getAvailableColumns(Category::getInstanceByID($this->getRequestCategory(), Category::LOAD_DATA));
+		return $this->getAvailableColumns(Category::getInstanceByID($this->getRequestCategory()));
 	}
 
 	protected function getReferencedData()
@@ -236,14 +295,31 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getSelectFilter()
 	{
+		$f = parent::getSelectFilter();
+		$f->columns('product\Product.*, user\User.*');
+		$f->join('heysuccess\application\model\UserProduct');
+		$f->join('category\Category');
+		$f->join('user\User');
+		
+		$f->andWhere('(heysuccess\application\model\UserProduct.isDraft IS NULL) OR (heysuccess\application\model\UserProduct.isDraft = 0)');
+		
 		$id = $this->getRequestCategory();
+		$category = Category::getInstanceByID($id);
+		$category->setProductCondition($f, true);
+
+		return $f;
+	}
+
+	protected function xxgetSelectFilter()
+	{
+
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 		$filter = new ARSelectFilter($category->getProductCondition(true));
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 
-		$filter->mergeCondition(
-			new EqualsCond(new ARFieldHandle('ProductPrice', 'type'), ProductPrice::TYPE_GENERAL_PRICE));
+		$filter->andWhere(
+			'ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => ProductPrice::TYPE_GENERAL_PRICE));
 
 		foreach ($this->getDisplayedColumns($category) as $column => $type)
 		{
@@ -267,7 +343,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 						{
 							$f = new SelectorFilter($field);
 							$f->defineJoin($filter);
-							$filter->mergeCondition($f->getCondition());
+							$filter->andWhere($f->getCondition());
 						}
 					}
 				}
@@ -290,6 +366,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			}
 		}
 
+		/*
 		// load price data
 		ProductPrice::loadPricesForRecordSetArray($productArray, false);
 
@@ -311,6 +388,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 				}
 			}
 		}
+		*/
 
 		return $productArray;
 	}
@@ -451,9 +529,17 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		return $validator;
 	}
 
-	public function getAvailableColumnsAction(Category $category, $specField = true)
+	public function getAvailableColumns(Category $category, $specField = true)
 	{
 		$availableColumns = parent::getAvailableColumns();
+		
+		$availableColumns['user\User.firstName'] = array
+			(
+				'name' => $this->translate('user\User.firstName'),
+				'type' => 'text'
+			);
+		
+		return $availableColumns;
 
 		// specField columns
 		if ($specField)
@@ -577,7 +663,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getDefaultColumns()
 	{
-		return array('Product.ID','Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
+		//return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
+		return array('product\Product.ID', 'product\Product.name', 'product\Product.isEnabled', 'user\User.firstName');
 	}
 
 	public function autoCompleteAction()
@@ -615,10 +702,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		  	$f->setCondition($c);
 
 			$locale = $this->locale->getLocaleCode();
-			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->get($field) . '%');
+			$langCond = new LikeCond(Product::getLangSearchHandle('Product.name', $locale), $this->request->get($field) . '%');
 			$c->addAND($langCond);
 
-		  	$f->orderBy(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
+		  	$f->orderBy(Product::getLangSearchHandle('Product.name', $locale), 'ASC');
 
 		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 
@@ -634,13 +721,13 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			list($foo, $id) = explode('_', $field);
 
-			$handle = new ARFieldHandle('SpecificationStringValue', 'value');
+			$handle = 'SpecificationStringValue.value';
 			$locale = $this->locale->getLocaleCode();
 			$searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
 
-		  	$f->setCondition(new EqualsCond(new ARFieldHandle('SpecificationStringValue', 'specFieldID'), $id));
-			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
-			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
+		  	$f->setCondition('SpecificationStringValue.specFieldID = :SpecificationStringValue.specFieldID:', array('SpecificationStringValue.specFieldID' => $id));
+			$f->andWhere(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
+			$f->andWhere(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
 		  	$f->orderBy($searchHandle, 'ASC');
 
@@ -703,13 +790,10 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 	}
 
-	/**
-	 * @role update
-	 */
 	public function updateAction()
 	{
 	  	$product = Product::getRequestInstance($this->request);
-	  	$product->loadPricing();
+	  	//$product->loadPricing();
 	  	$product->loadSpecification();
 
 	  	return $this->save($product);
@@ -727,8 +811,8 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		// pricing
-		$f = new ARSelectFilter(new NotEqualsCond(new ARFieldHandle('Currency', 'isDefault'), true));
-		$f->orderBy(new ARFieldHandle('Currency', 'position'));
+		$f = new ARSelectFilter(new NotEqualsCond('Currency.isDefault', true));
+		$f->orderBy('Currency.position');
 		$otherCurrencies = array();
 		foreach (ActiveRecordModel::getRecordSetArray('Currency', $f) as $row)
 		{
@@ -786,10 +870,11 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			'tabProductOptions' => $product->getOptions()->getTotalRecordCount(),
 			'tabProductReviews' => $product->getRelatedRecordCount('ProductReview'),
 			'tabProductCategories' => $product->getRelatedRecordCount('ProductCategory') + 1,
-			'tabProductVariations' => $product->getRelatedRecordCount('Product', new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), true)))
+			'tabProductVariations' => $product->getRelatedRecordCount('Product', query::query()->where('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true)))
 		));
 	}
 
+	/*
 	public function infoAction()
 	{
 		ClassLoader::importNow("application/helper/getDateFromString");
@@ -823,20 +908,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		{
 			list($from, $to) = explode(' | ', $period);
 
-			$cond = new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID());
+			$cond = 'OrderedItem.productID = :OrderedItem.productID:', array('OrderedItem.productID' => $product->getID());
 
 			if ('now' != $from)
 			{
-				$cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from)));
+				$cond->addAND(new EqualsOrMoreCond('CustomerOrder.dateCompleted', getDateFromString($from)));
 			}
 
 			if ('now' != $to)
 			{
-				$cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
+				$cond->addAnd(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
 			}
 
 			$f = new ARSelectFilter($cond);
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+			$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
 			$f->removeFieldList();
 			$f->addField('SUM(OrderedItem.count)');
 
@@ -861,30 +946,34 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		$this->set('product', $product->toArray());
 		$this->set('purchaseStats', $purchaseStats);
 	}
+	*/
 
 	private function save(Product $product)
 	{
-				$validator = $this->buildValidator(true);
-		if ($validator->isModelValid())
+		$validator = $this->buildValidator(true);
+		if (1 || $validator->isModelValid())
 		{
-			$product->loadRequestModel($this->request);
+			$product->loadRequestData($this->request);
 
+			/*
 			foreach (array('ShippingClass' => 'shippingClassID', 'TaxClass' => 'taxClassID') as $class => $field)
 			{
 				$value = $this->request->get($field, null, null);
 				$instance = $value ? ActiveRecordModel::getInstanceByID($class, $value) : null;
 				$product->setFieldValue($field, $instance);
 			}
+			*/
 
 			$product->save();
+			$product->getSpecification()->save();
 
+			/*
 			// presentation
 			$instance = CategoryPresentation::getInstance($product);
 			$instance->loadRequestData($this->request);
 			$instance->save();
 
 			// save pricing
-			$product->loadSpecification();
 			$product->loadPricing();
 			if ($quantities = $this->request->get('quantityPricing'))
 			{
@@ -944,13 +1033,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 					}
 				}
 			}
+			*/
 
-			$response = $this->productForm(true);
-
-			$response->setHeader('Cache-Control', 'no-cache, must-revalidate');
-			$response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-			$response->setHeader('Content-type', 'text/javascript');
-
+			echo json_encode($product->toArray());exit;
 		}
 		else
 		{
@@ -959,50 +1044,6 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 			return new JSONResponse(array('errors' => $validator->getErrorList(), 'failure', $this->translate('_could_not_save_product_information')));
 		}
-	}
-
-	private function productForm($isExisting)
-	{
-
-		$response = new BlockResponse();
-		$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
-
-		$form = $this->buildForm($isExisting);
-
-		// status values
-		$status = array(0 => $this->translate('_disabled'),
-						1 => $this->translate('_enabled'),
-					  );
-
-		// product types
-		$types = array(
-			Product::TYPE_TANGIBLE => $this->translate('_tangible'),
-			Product::TYPE_DOWNLOADABLE => $this->translate('_intangible'),
-			Product::TYPE_BUNDLE => $this->translate('_bundle'),
-			Product::TYPE_RECURRING => $this->translate('_recurring')
-		);
-
-		//$product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
-
-		$this->set("productForm", $form);
-		$this->set("productTypes", $types);
-		$this->set("productStatuses", $status);
-		$this->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
-		$this->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
-		$this->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
-		$this->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
-
-		// get user groups
-		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('UserGroup', 'name'));
-		$groups[0] = $this->translate('_all_customers');
-		foreach (ActiveRecordModel::getRecordSetArray('UserGroup', $f) as $group)
-		{
-			$groups[$group['ID']] = $group['name'];
-		}
-		$groups[''] = '';
-		$this->set('userGroups', $groups);
-
 	}
 
 	private function getSelectOptionsFromSet(ARSet $set)
@@ -1027,7 +1068,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 	 *
 	 * @return \Phalcon\Validation
 	 */
-	public function buildValidatorAction($isExisting)
+	public function buildValidator($isExisting)
 	{
 		$validator = $this->getValidator("productFormValidator", $this->request);
 		//Product::setValidation($validator);
@@ -1037,20 +1078,20 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$isExisting && !$this->request->get('autosku'))
 		{
-			$validator->add('sku', new Validator\PresenceOf(array('message' => $this->translate('_err_sku_empty'))));
+			//$validator->add('sku', new Validator\PresenceOf(array('message' => $this->translate('_err_sku_empty'))));
 		}
 
 		// check if entered SKU is unique
-		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->has('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
+		if ($this->request->get('sku') && $this->request->get('save') && (!$isExisting || ($this->request->has('sku') && $product->readAttribute('sku') != $this->request->get('sku'))))
 		{
 						//$validator->add('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
 		}
 
 		//$product->getSpecification()->setValidation($validator);
 
-		self::addPricesValidator($validator);
-		self::addShippingValidator($validator);
-		self::addInventoryValidator($validator);
+		//self::addPricesValidator($validator);
+		//self::addShippingValidator($validator);
+		//self::addInventoryValidator($validator);
 
 		return $validator;
 	}
@@ -1186,6 +1227,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	public function addInventoryValidatorAction(\Phalcon\Validation $validator)
 	{
+		/*
 		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
 			$validator->add('stockCount',
@@ -1203,6 +1245,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 		}
 
 		$validator->addFilter('stockCount', new NumericFilter());
+		*/
 
 		return $validator;
 	}
@@ -1267,7 +1310,7 @@ class ProductController extends ActiveGridController implements MassActionInterf
 
 	protected function getRequestCategory()
 	{
-		return $this->request->get("id");
+		return $this->dispatcher->getParam(0);
 	}
 }
 

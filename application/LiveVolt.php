@@ -294,6 +294,8 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 		$source = str_replace('}}' . "\n", '}}<' . '?php echo "\n"; ?' . '>', $source);
 
 		$variable = '<' . '?php $volt = $GLOBALS[\'volt\']; ?' . '>';
+		$variable .= '<' . '?php $error_reporting_level = error_reporting(); error_reporting($error_reporting_level ^ E_NOTICE); ?' . '>';
+		// . '<' . '?php error_reporting($error_reporting_level); ?' . '>';
 		
 		$compiled = parent::_compileSource($source, $something);
 
@@ -323,7 +325,7 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 			return $source;
 		}
 
-		$source = '<' . '?php $error_reporting_level = error_reporting(); error_reporting($error_reporting_level ^ E_NOTICE); ?' . '>' . $source . '<' . '?php error_reporting($error_reporting_level); ?' . '>';
+		//$source = '<' . '?php $error_reporting_level = error_reporting(); error_reporting($error_reporting_level ^ E_NOTICE); ?' . '>' . $source . '<' . '?php error_reporting($error_reporting_level); ?' . '>';
 		
 		$source = str_replace('$this', '$volt', $source);
 		$source = str_replace('$__this', '$this', $source);
@@ -331,7 +333,7 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 
 		$source = preg_replace('/throw new \\\Phalcon\\\Mvc\\\View\\\Exception\("Macro [\_a-zA-Z0-9]+ was called without parameter: ([\_a-zA-Z0-9]+)"\)\;/', '\$$1 = \'\';', $source);
 		
-		$source = preg_replace('/\-\>partial\(([^;]+)\);/', '->partial($1, get_defined_vars())', $source);
+		$source = preg_replace('/\-\>partial\(([^,]+)\);/', '->partial($1, get_defined_vars())', $source);
 
 		return $source;
 	}

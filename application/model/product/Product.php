@@ -9,7 +9,7 @@ namespace product;
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class Product extends \ActiveRecordModel
+class Product extends \ActiveRecordModel implements \eav\EavAble
 {
 	/*
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
@@ -50,11 +50,12 @@ class Product extends \ActiveRecordModel
 	//private $additionalCategories = null;
 
 	//private $variations = array();
-/*
+
 	public $ID;
-	//public $categoryID", "Category", "ID", null, ARInteger::instance()));
+	public $categoryID;
+	public $eavObjectID;
 	//public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
-	//public $defaultImageID", "ProductImage", "ID", null, ARInteger::instance()));
+	public $defaultImageID;
 	public $parentID;//", "Product", "ID", null, ARInteger::instance()));
 	//public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
 	//public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
@@ -98,7 +99,29 @@ class Product extends \ActiveRecordModel
 	public $categoryIntervalCache;
 
 	public $isRecurring;
-	*/
+
+	public function initialize()
+	{
+		$this->belongsTo('categoryID', 'category\Category', 'ID', array('foreignKey' => true, 'alias' => 'Category'));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => true, 'alias' => 'EavObject'));
+		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('foreignKey' => true, 'alias' => 'DefaultImage'));
+		$this->hasOne('ID', 'heysuccess\application\model\UserProduct', 'productID', array('foreignKey' => true, 'alias' => 'UserProduct'));
+		
+        $this->hasMany('ID', 'category\ProductCategory', 'productID', array(
+            'alias' => 'ProductCategory',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+
+        $this->hasMany('ID', 'product\ProductImage', 'productID', array(
+            'alias' => 'ProductImages',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+
+	}
 
 	/**
 	 * Creates a new product instance
@@ -107,27 +130,11 @@ class Product extends \ActiveRecordModel
 	 *
 	 * @return Product
 	 */
-	public static function getNewInstance(Category $category, $name = '')
+	public static function getNewInstance(Category $category)
 	{
 		$product = new self();
-		$product->category = $category;
-		$product->setValueByLang('name', null, $name);
-
+		$product->categoryID = $category;
 		return $product;
-	}
-
-	/**
-	 * Get product active record instance
-	 *
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return Product
-	 */
-	public static function zgetInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
 	/**
@@ -141,7 +148,7 @@ class Product extends \ActiveRecordModel
 	public static function getInstanceBySKU($sku, $loadReferencedRecords = false)
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $sku));
+		$f->setCondition('Product.sku = :Product.sku:', array('Product.sku' => $sku));
 		$f->limit(1);
 
 		$set = self::getRecordSet($f, $loadReferencedRecords);
@@ -153,19 +160,6 @@ class Product extends \ActiveRecordModel
 		{
 			return $set->get(0);
 		}
-	}
-
-	/**
-	 * Get products record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -193,7 +187,7 @@ class Product extends \ActiveRecordModel
 		$this->childSettings = serialize($settings);
 	}
 
-	public function belongsTo(Category $category)
+	public function isBelongsTo(Category $category)
 	{
 		$belongsTo = $category->isAncestorOf($this->getCategory());
 
@@ -368,7 +362,7 @@ class Product extends \ActiveRecordModel
 		}
 	}
 
-	public function loadRequestData(\Phalcon\Http\Request $request, $removeMissingPrices = true)
+	public function zloadRequestData(\Phalcon\Http\Request $request, $removeMissingPrices = true)
 	{
 		// basic data
 		parent::loadRequestData($request);
@@ -463,7 +457,7 @@ class Product extends \ActiveRecordModel
 	 *
 	 * @return ProductSpecification
 	 */
-	public function getSpecification()
+	public function xgetSpecification()
 	{
 		if (!$this->specificationInstance)
 		{
@@ -649,7 +643,7 @@ class Product extends \ActiveRecordModel
 	 * Inserts new product record to a database
 	 *
 	 */
-	public function beforeCreate()
+	public function xbeforeCreate()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -678,7 +672,7 @@ class Product extends \ActiveRecordModel
 	 * Updates product record
 	 *
 	 */
-	public function beforeUpdate()
+	public function xbeforeUpdate()
 	{
 		ActiveRecordModel::beginTransaction();
 
@@ -757,7 +751,7 @@ class Product extends \ActiveRecordModel
 	/**
 	 *  @todo move the SKU checking to insert() - otherwise seems to break some tests for now
 	 */
-	public function beforeSave($forceOperation = null)
+	public function xbeforeSave($forceOperation = null)
 	{
 		self::beginTransaction();
 
@@ -882,7 +876,7 @@ class Product extends \ActiveRecordModel
 			}
 			$catIDs[] = $category->getID();
 
-			$catUpdate->setCondition(new INCond(new ARFieldHandle('Category', 'ID'), $catIDs));
+			$catUpdate->setCondition(new INCond('Category.ID', $catIDs));
 
 			ActiveRecordModel::updateRecordSet('Category', $catUpdate);
 		}
@@ -1006,18 +1000,6 @@ class Product extends \ActiveRecordModel
 		return $this->parent ? $this->parent : $this;
 	}
 
-	public function getCategory()
-	{
-		$parent = $this->getParent();
-
-		if (!$parent->isLoaded())
-		{
-			$parent->load(array('Category', 'ProductImage'));
-		}
-
-		return $parent->category;
-	}
-
 	public function getTaxClass()
 	{
 		// ff('getTaxClass() => '.($this->temporaryTaxClass ? 'temporaryTaxClass' : 'taxClass'));
@@ -1083,7 +1065,7 @@ class Product extends \ActiveRecordModel
 		}
 	}
 
-	public function loadSpecification($specificationData = null)
+	public function xloadSpecification($specificationData = null)
 	{
 	  	if ($this->specificationInstance)
 	  	{
@@ -1131,8 +1113,8 @@ class Product extends \ActiveRecordModel
 	private function getImageFilter()
 	{
 		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
-		$f->orderBy(new ARFieldHandle('ProductImage', 'position'));
+		$f->setCondition('ProductImage.productID = :ProductImage.productID:', array('ProductImage.productID' => $this->getID()));
+		$f->orderBy('ProductImage.position');
 
 		return $f;
 	}
@@ -1193,7 +1175,7 @@ class Product extends \ActiveRecordModel
 
 			$categories = new ARSet();
 			$filter = new ARSelectFilter();
-			$filter->orderBy(new ARFieldHandle('Category', 'lft'));
+			$filter->orderBy('Category.lft');
 
 			foreach ($this->getParent()->getRelatedRecordSet('ProductCategory', $filter, array('Category')) as $productCat)
 			{
@@ -1207,7 +1189,7 @@ class Product extends \ActiveRecordModel
 	public function loadAdditionalCategoriesForSet(ARSet $set)
 	{
 		$map = $set->getIDMap();
-		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond(new ARFieldHandle('ProductCategory', 'productID'), $set->getRecordIDs())), array('Category')) as $additional)
+		foreach (ActiveRecordModel::getRecordSet('ProductCategory', new ARSelectFilter(new INCond('ProductCategory.productID', $set->getRecordIDs())), array('Category')) as $additional)
 		{
 			$map[$additional->product->getID()]->registerAdditionalCategory($additional->category);
 		}
@@ -1345,7 +1327,7 @@ class Product extends \ActiveRecordModel
 		$parent = $this->getParent();
 		ClassLoader::import('application/model/product/ProductOption');
 		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->orderBy('ProductOption.position', 'ASC');
 		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));
 
 		if ($includeInheritedOptions)
@@ -1446,7 +1428,7 @@ class Product extends \ActiveRecordModel
 		$products = array();
 		if ($ids)
 		{
-			$products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage'));
+			$products = ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond('Product.ID', $ids)), array('DefaultImage' => 'ProductImage'));
 			foreach ($products as &$prod)
 			{
 				$prod['count'] = $cnt[$prod['ID']];
@@ -1532,7 +1514,7 @@ class Product extends \ActiveRecordModel
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(
-			new EqualsCond(new ARFieldHandle('RecurringProductPeriod', 'ID'), $recurringID));
+			'RecurringProductPeriod.ID = :RecurringProductPeriod.ID:', array('RecurringProductPeriod.ID' => $recurringID));
 		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
 		if ($rs->size() == 0)
 		{

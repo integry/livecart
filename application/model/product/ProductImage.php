@@ -1,5 +1,6 @@
 <?php
 
+namespace product;
 
 /**
  * Product image (icon). One product can have multiple images.
@@ -7,42 +8,33 @@
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class ProductImage extends ObjectImage
+class ProductImage extends \ObjectImage
 {
+	public $productID;
 	public static $imageSizes;
-
-	public static function defineSchema($className = __CLASS__)
+	
+	public function getOwnerField()
 	{
-		$schema = parent::defineSchema($className);
-		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
+		return 'productID';
 	}
 
-	/*####################  Static method implementations ####################*/
+	public function getOwnerClass()
+	{
+		return 'product\Product';
+	}
 
 	public static function getNewInstance(Product $product)
 	{
 	  	$image = new self();
-	  	$image->product->set($product);
+	  	$image->set_Product($product);
 	  	return $image;
 	}
 
-	/*####################  Value retrieval and manipulation ####################*/
-
-	public function getPath($size = 0)
-	{
-		if (!$this->isLoaded)
-		{
-			$this->load(array('Product'));
-		}
-
-		return self::getImagePath($this->getID(), $this->product->getID(), $size);
-	}
-
-	public static function getImageSizes()
+	public function getImageSizes()
 	{
 		if (!self::$imageSizes)
 		{
-			$config = self::getApplication()->getConfig();
+			$config = $this->getDI()->get('config');
 
 			$sizes = array();
 			$k = 0;
@@ -57,16 +49,16 @@ class ProductImage extends ObjectImage
 		return self::$imageSizes;
 	}
 
-	protected static function getImagePath($imageID, $productID, $size)
+	protected function getImagePath($imageID, $productID, $size)
 	{
-		return self::getImageRoot(__CLASS__) . $productID. '-' . $imageID . '-' . $size . '.jpg';
+		return $this->getImageRoot(__CLASS__) . $productID. '-' . $imageID . '-' . $size . '.jpg';
 	}
 
-	public function resizeImage(ImageManipulator $resizer)
+	public function resizeImage(\ImageManipulator $resizer)
 	{
 		$res = parent::resizeImage($resizer);
 
-		$config = self::getApplication()->getConfig();
+		$config = $this->getDI()->get('config');
 		if ($config->get('ENABLE_WATERMARKS') && $res[3])
 		{
 			$isLeft = in_array($config->get('WATERMARK_POSITION'), array('BOTTOM_LEFT', 'TOP_LEFT'));
@@ -86,34 +78,16 @@ class ProductImage extends ObjectImage
 		return $res;
 	}
 
-	/*####################  Saving ####################*/
-
-	public static function deleteByID($id)
-	{
-		parent::deleteByID(__CLASS__, $id, 'productID');
-	}
-
-	public function beforeCreate()
-	{
-		return parent::insert('productID');
-	}
-
-	/*####################  Data array transformation ####################*/
-	public static function transformArray($array, ARSchema $schema)
-	{
-		return parent::transformArray($array, $schema, 'Product', 'productID');
-	}
-
 	/*####################  Get related objects ####################*/
 
 	public function setOwner(Product $product)
 	{
-		$this->product->set($product);
+		$this->set_Product($product);
 	}
 
 	public function getOwner()
 	{
-		return $this->product;
+		return $this->get_Product();
 	}
 }
 

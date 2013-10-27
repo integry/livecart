@@ -1,5 +1,6 @@
 <?php
 
+include_once __ROOT__ . '/library/image/ImageManipulator.php';
 
 /**
  * Generic associated image handler. Images can be associated to products, categories and possibly
@@ -8,21 +9,35 @@
  * @package application/model
  * @author Integry Systems <http://integry.com>
  */
-abstract class ObjectImage extends MultilingualObject
+abstract class ObjectImage extends \system\MultilingualObject
 {
-	abstract public static function getImageSizes();
+	public $ID;
+	public $title;
+	public $position;
+
+	abstract public function getImageSizes();
 	abstract public function getOwner();
-
-	public static function defineSchema($className = __CLASS__)
+	abstract public function getOwnerField();
+	abstract public function getOwnerClass();
+	
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-
-		public $ID;
-		public $title;
-		public $position;
-
-		return $schema;
+		$this->belongsTo($this->getOwnerField(), $this->getOwnerClass(), 'ID', array('alias' => $this->getOwnerAlias()));
+	}
+	
+	protected function _postSaveRelatedRecords()
+	{
+		return true;
+	}
+		
+	protected function _preSaveRelatedRecords()
+	{
+		return true;
+	}
+		
+	public function getOwnerAlias()
+	{
+		return get_real_class($this->getOwnerClass());
 	}
 
 	public function deleteImageFiles()
@@ -36,6 +51,7 @@ abstract class ObjectImage extends MultilingualObject
 		}
 	}
 
+	/*
 	public static function deleteByID($className, $id, $foreignKeyName)
 	{
 		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA);
@@ -64,6 +80,7 @@ abstract class ObjectImage extends MultilingualObject
 
 		return parent::deleteByID($className, $id);
 	}
+	*/
 
 	public function setFile($file)
 	{
@@ -110,41 +127,30 @@ abstract class ObjectImage extends MultilingualObject
 		return $ret;
 	}
 
-	protected function insert($foreignKeyName)
+	protected function beforeInsert()
 	{
-	  	$className = get_class($this);
-
-		// get current max image position
-	  	$filter = new ARSelectFilter();
-	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
-	  	$filter->orderBy(new ARFieldHandle($className, 'position'), 'DESC');
-	  	$filter->limit(1);
-	  	$maxPosSet = ActiveRecord::getRecordSet($className, $filter);
-		if ($maxPosSet->size() > 0)
-		{
-			$maxPos = $maxPosSet->get(0)->position + 1;
-		}
-		else
-		{
-		  	$maxPos = 0;
-		}
-
-		$this->position = $maxPos;
-
-
+		parent::beforeInsert();
+		$this->setLastPosition();
 	}
 
-	protected static function getImageRoot($className)
+	protected function getImageRoot($className)
 	{
-		return $this->config->getPath('public/upload/' . strtolower($className) . '.');
+		return $this->getDI()->get('config')->getPath('public/upload/' . strtolower(get_real_class($className)) . '/');
 	}
 
-	protected static function getRelativePath($path, &$urlPrefix = null)
+	public function getPath($size = 0)
+	{
+		$ownerID = $this->getOwnerField();
+		return $this->getRelativePath($this->getImagePath($this->getID(), $this->$ownerID, $size));
+	}
+	
+	protected function getRelativePath($path, &$urlPrefix = null)
 	{
 		$origPath = $path;
 
 		// path located within the /public directory - as default
-		$path = str_replace($this->config->getPath('public/'), '', $path);
+		$config = $this->getDI()->get('config');
+		$path = str_replace($config->getPath('public/'), '', $path);
 		if ($path != $origPath)
 		{
 			$urlPrefix = '/public/';
@@ -152,7 +158,7 @@ abstract class ObjectImage extends MultilingualObject
 		}
 
 		// path within application web root directory
-		$path = str_replace($this->config->getPath('.'), '', $path);
+		$path = str_replace($config->getPath('.'), '', $path);
 		$path = self::fixSlashes($path);
 		if ($path != $origPath)
 		{
@@ -182,23 +188,23 @@ abstract class ObjectImage extends MultilingualObject
 		return str_replace('\\', '/', $path);
 	}
 
-	public function save()
+	public function afterSave()
 	{
-		parent::save();
+		parent::afterSave();
 
 		// set as main image if it's the first image being uploaded
 		if ($this->position == 0)
 		{
 			$owner = $this->getOwner();
-			$owner->defaultImage = $this;
+			$owner->defaultImageID = $this->getID();
 			$owner->save();
 		}
 	}
 
 	/*####################  Data array transformation ####################*/
-	public static function transformArray($array, ARSchema $schema, $ownerClass, $ownerField)
+	public function toArray()
 	{
-		$array = parent::transformArray($array, $schema);
+		$array = parent::toArray();
 
 		if (!$array['ID'])
 		{
@@ -206,28 +212,28 @@ abstract class ObjectImage extends MultilingualObject
 		}
 
 		$array['paths'] = $array['urls'] = array();
-		$app = self::getApplication();
-		$router = $app->getRouter();
 
-		foreach (call_user_func(array($schema->getName(), 'getImageSizes')) as $key => $value)
+		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-			$productID = isset($array[$ownerClass]['ID']) ? $array[$ownerClass]['ID'] : (isset($array[$ownerField]) ? $array[$ownerField] : false);
+			$ownerField = $this->getOwnerField();
+			$ownerID = $this->$ownerField;
 
-			if (!$productID)
+			if (!$ownerID)
 			{
 				break;
 			}
 
-			$urlPrefix = null;
-			$array['paths'][$key] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, $key)), $urlPrefix);
+			$array['paths'][$key] = $this->getRelativePath($this->getImagePath($array['ID'], $ownerID, $key));
 
+/*
 			$url = $app->getFullUploadUrl($urlPrefix . $array['paths'][$key]);
 			$url = str_replace('/public//public/', '/public/', $url);
 			$url = str_replace('/public/public/', '/public/', $url);
 			$array['urls'][$key] = $url;
+*/
 		}
 
-		$array['paths']['original'] = self::getRelativePath(call_user_func_array(array($schema->getName(), 'getImagePath'), array($array['ID'], $productID, 'original')), $urlPrefix);
+		$array['paths']['original'] = $this->getRelativePath($this->getImagePath($array['ID'], $ownerID, 'original'));
 
 		return $array;
 	}
@@ -251,7 +257,7 @@ abstract class ObjectImage extends MultilingualObject
 
 	public function __destruct()
 	{
-		if ($this->cacheFile)
+		if (!empty($this->cacheFile))
 		{
 			@unlink($this->cacheFile);
 		}
