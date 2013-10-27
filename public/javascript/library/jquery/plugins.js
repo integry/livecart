@@ -1,3 +1,657 @@
+/**
+* bootstrap-multiselect.js
+* https://github.com/davidstutz/bootstrap-multiselect
+*
+* Copyright 2012, 2013 David Stutz
+*
+* Dual licensed under the BSD-3-Clause and the Apache License, Version 2.0.
+*/
+!function($) {
+    
+    "use strict";// jshint ;_;
+
+    if (typeof ko != 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
+        ko.bindingHandlers.multiselect = {
+            init : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {},
+            update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                var ms = $(element).data('multiselect');
+                if (!ms) {
+                    $(element).multiselect(ko.utils.unwrapObservable(valueAccessor()));
+                }
+                else if (allBindingsAccessor().options && allBindingsAccessor().options().length !== ms.originalOptions.length) {
+                    ms.updateOriginalOptions();
+                    $(element).multiselect('rebuild');
+                }
+            }
+        };
+    }
+
+    function Multiselect(select, options) {
+
+        this.options = this.mergeOptions(options);
+        this.$select = $(select);
+        
+        // Initialization.
+        // We have to clone to create a new reference.
+        this.originalOptions = this.$select.clone()[0].options;
+        this.query = '';
+        this.searchTimeout = null;
+        
+        this.options.multiple = this.$select.attr('multiple') == "multiple";
+        this.options.onChange = $.proxy(this.options.onChange, this);
+        
+        // Build select all if enabled.
+        this.buildContainer();
+        this.buildButton();
+        this.buildSelectAll();
+        this.buildDropdown();
+        this.buildDropdownOptions();
+        this.buildFilter();
+        this.updateButtonText();
+
+        this.$select.hide().after(this.$container);
+    };
+
+    Multiselect.prototype = {
+        
+        // Default options.
+        defaults: {
+            // Default text function will either print 'None selected' in case no
+            // option is selected, or a list of the selected options up to a length of 3 selected options.
+            // If more than 3 options are selected, the number of selected options is printed.
+            buttonText: function(options, select) {
+                if (options.length == 0) {
+                    return this.nonSelectedText + ' <b class="caret"></b>';
+                }
+                else {
+                    if (options.length > 3) {
+                        return options.length + ' ' + this.nSelectedText + ' <b class="caret"></b>';
+                    }
+                    else {
+                        var selected = '';
+                        options.each(function() {
+                            var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+
+                            selected += label + ', ';
+                        });
+                        return selected.substr(0, selected.length - 2) + ' <b class="caret"></b>';
+                    }
+                }
+            },
+            // Like the buttonText option to update the title of the button.
+            buttonTitle: function(options, select) {
+                if (options.length == 0) {
+                    return this.nonSelectedText;
+                }
+                else {
+                    var selected = '';
+                    options.each(function () {
+                        selected += $(this).text() + ', ';
+                    });
+                    return selected.substr(0, selected.length - 2);
+                }
+            },
+            // Is triggered on change of the selected options.
+            onChange : function(option, checked) {
+
+            },
+            buttonClass: 'btn',
+            dropRight: false,
+            selectedClass: 'active',
+            buttonWidth: 'auto',
+            buttonContainer: '<div class="btn-group" />',
+            // Maximum height of the dropdown menu.
+            // If maximum height is exceeded a scrollbar will be displayed.
+            maxHeight: false,
+            includeSelectAllOption: false,
+            selectAllText: ' Select all',
+            selectAllValue: 'multiselect-all',
+            enableFiltering: false,
+            enableCaseInsensitiveFiltering: false,
+            filterPlaceholder: 'Search',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            preventInputChangeEvent: false,
+            nonSelectedText: 'None selected',
+            nSelectedText: 'selected'
+        },
+        
+        // Templates.
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
+            ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+            filter: '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input class="form-control multiselect-search" type="text"></div>',
+            li: '<li><a href="javascript:void(0);"><label></label></a></li>',
+            liGroup: '<li><label class="multiselect-group"></label></li>'
+        },
+        
+        constructor: Multiselect,
+        
+        buildContainer: function() {
+            this.$container = $(this.options.buttonContainer);
+        },
+        
+        buildButton: function() {
+            // Build button.
+            this.$button = $(this.templates.button).addClass(this.options.buttonClass);
+            
+            // Adopt active state.
+            if (this.$select.prop('disabled')) {
+                this.disable();
+            }
+            else {
+                this.enable();
+            }
+           
+            // Manually add button width if set.
+            if (this.options.buttonWidth) {
+                this.$button.css({
+                    'width' : this.options.buttonWidth
+                });
+            }
+
+            // Keep the tab index from the select.
+            var tabindex = this.$select.attr('tabindex');
+            if (tabindex) {
+                this.$button.attr('tabindex', tabindex);
+            }
+           
+            this.$container.prepend(this.$button)
+        },
+        
+        // Build dropdown container ul.
+        buildDropdown: function() {
+            
+            // Build ul.
+            this.$ul = $(this.templates.ul);
+            
+            if (this.options.dropRight) {
+                this.$ul.addClass('pull-right');
+            }
+            
+            // Set max height of dropdown menu to activate auto scrollbar.
+            if (this.options.maxHeight) {
+                // TODO: Add a class for this option to move the css declarations.
+                this.$ul.css({
+                    'max-height': this.options.maxHeight + 'px',
+                    'overflow-y': 'auto',
+                    'overflow-x': 'hidden'
+                });
+            }
+            
+            this.$container.append(this.$ul)
+        },
+        
+        // Build the dropdown and bind event handling.
+        buildDropdownOptions: function() {
+            
+            this.$select.children().each($.proxy(function(index, element) {
+                // Support optgroups and options without a group simultaneously.
+                var tag = $(element).prop('tagName').toLowerCase();
+                if (tag == 'optgroup') {
+                    this.createOptgroup(element);
+                }
+                else if (tag == 'option') {
+                    this.createOptionValue(element);
+                }
+                // Other illegal tags will be ignored.
+            }, this));
+
+            // Bind the change event on the dropdown elements.
+            $('li input', this.$ul).on('change', $.proxy(function(event) {
+                var checked = $(event.target).prop('checked') || false;
+                var isSelectAllOption = $(event.target).val() == this.options.selectAllValue;
+
+                // Apply or unapply the configured selected class.
+                if (this.options.selectedClass) {
+                    if (checked) {
+                        $(event.target).parents('li').addClass(this.options.selectedClass);
+                    }
+                    else {
+                        $(event.target).parents('li').removeClass(this.options.selectedClass);
+                    }
+                }
+                
+                // Get the corresponding option.
+                var value = $(event.target).val();
+                var $option = this.getOptionByValue(value);
+
+                var $optionsNotThis = $('option', this.$select).not($option);
+                var $checkboxesNotThis = $('input', this.$container).not($(event.target));
+
+                // Toggle all options if the select all option was changed.
+                if (isSelectAllOption) {
+                    $checkboxesNotThis.filter(function() {
+                        return $(this).is(':checked') != checked;
+                    }).trigger('click');
+                }
+
+                if (checked) {
+                    $option.prop('selected', true);
+
+                    if (this.options.multiple) {
+                        // Simply select additional option.
+                        $option.prop('selected', true);
+                    }
+                    else {
+                        // Unselect all other options and corresponding checkboxes.
+                        if (this.options.selectedClass) {
+                            $($checkboxesNotThis).parents('li').removeClass(this.options.selectedClass);
+                        }
+
+                        $($checkboxesNotThis).prop('checked', false);
+                        $optionsNotThis.prop('selected', false);
+
+                        // It's a single selection, so close.
+                        this.$button.click();
+                    }
+
+                    if (this.options.selectedClass == "active") {
+                        $optionsNotThis.parents("a").css("outline", "");
+                    }
+                }
+                else {
+                    // Unselect option.
+                    $option.prop('selected', false);
+                }
+
+                this.updateButtonText();
+                this.$select.change();
+                this.options.onChange($option, checked);
+                
+                if(this.options.preventInputChangeEvent) {
+                    return false;
+                }
+            }, this));
+
+            $('li a', this.$ul).on('touchstart click', function(event) {
+                event.stopPropagation();
+                $(event.target).blur();
+            });
+
+            // Keyboard support.
+            this.$container.on('keydown', $.proxy(function(event) {
+                if ($('input[type="text"]', this.$container).is(':focus')) {
+                    return;
+                }
+                if ((event.keyCode == 9 || event.keyCode == 27) && this.$container.hasClass('open')) {
+                    // Close on tab or escape.
+                    this.$button.click();
+                }
+                else {
+                    var $items = $(this.$container).find("li:not(.divider):visible a");
+
+                    if (!$items.length) {
+                        return;
+                    }
+
+                    var index = $items.index($items.filter(':focus'));
+
+                    // Navigation up.
+                    if (event.keyCode == 38 && index > 0) {
+                        index--;
+                    }
+                    // Navigate down.
+                    else if (event.keyCode == 40 && index < $items.length - 1) {
+                        index++;
+                    }
+                    else if (!~index) {
+                        index = 0;
+                    }
+
+                    var $current = $items.eq(index);
+                    $current.focus();
+
+                    if (event.keyCode == 32 || event.keyCode == 13) {
+                        var $checkbox = $current.find('input');
+
+                        $checkbox.prop("checked", !$checkbox.prop("checked"));
+                        $checkbox.change();
+                    }
+
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            }, this));
+        },
+        
+        // Will build an dropdown element for the given option.
+        createOptionValue: function(element) {
+            if ($(element).is(':selected')) {
+                $(element).prop('selected', true);
+            }
+
+            // Support the label attribute on options.
+            var label = $(element).attr('label') || $(element).html();
+            var value = $(element).val();
+            var inputType = this.options.multiple ? "checkbox" : "radio";
+
+            var $li = $(this.templates.li);
+            $('label', $li).addClass(inputType);
+            $('label', $li).append('<input type="' + inputType + '" />');
+
+            var selected = $(element).prop('selected') || false;
+            var $checkbox = $('input', $li);
+            $checkbox.val(value);
+
+            if (value == this.options.selectAllValue) {
+                $checkbox.parent().parent().addClass('multiselect-all');
+            }
+
+            $('label', $li).append(" " + label);
+
+            this.$ul.append($li);
+
+            if ($(element).is(':disabled')) {
+                $checkbox.attr('disabled', 'disabled').prop('disabled', true).parents('li').addClass('disabled');
+            }
+
+            $checkbox.prop('checked', selected);
+
+            if (selected && this.options.selectedClass) {
+                $checkbox.parents('li').addClass(this.options.selectedClass);
+            }
+        },
+
+        // Create optgroup.
+        createOptgroup: function(group) {
+            var groupName = $(group).prop('label');
+
+            // Add a header for the group.
+            var $li = $(this.templates.liGroup);
+            $('label', $li).text(groupName);
+            
+            this.$ul.append($li);
+
+            // Add the options of the group.
+            $('option', group).each($.proxy(function(index, element) {
+                this.createOptionValue(element);
+            }, this));
+        },
+        
+        // Add the select all option to the select.
+        buildSelectAll: function() {
+            var alreadyHasSelectAll = this.$select[0][0] ? this.$select[0][0].value == this.options.selectAllValue : false;
+            // If options.includeSelectAllOption === true, add the include all checkbox.
+            if (this.options.includeSelectAllOption && this.options.multiple && !alreadyHasSelectAll) {
+                this.$select.prepend('<option value="' + this.options.selectAllValue + '">' + this.options.selectAllText + '</option>');
+            }
+        },
+        
+        // Build and bind filter.
+        buildFilter: function() {
+            
+            // Build filter if filtering OR case insensitive filtering is enabled and the number of options exceeds (or equals) enableFilterLength.
+            if (this.options.enableFiltering || this.options.enableCaseInsensitiveFiltering) {
+                var enableFilterLength = Math.max(this.options.enableFiltering, this.options.enableCaseInsensitiveFiltering);
+                if (this.$select.find('option').length >= enableFilterLength) {
+                    
+                    this.$filter = $(this.templates.filter);
+                    $('input', this.$filter).attr('placeholder', this.options.filterPlaceholder);
+                    this.$ul.prepend(this.$filter);
+
+                    this.$filter.val(this.query).on('click', function(event) {
+                        event.stopPropagation();
+                    }).on('keydown', $.proxy(function(event) {
+                        // This is useful to catch "keydown" events after the browser has updated the control.
+                        clearTimeout(this.searchTimeout);
+
+                        this.searchTimeout = this.asyncFunction($.proxy(function() {
+
+                            if (this.query != event.target.value) {
+                                this.query = event.target.value;
+
+                                $.each($('li', this.$ul), $.proxy(function(index, element) {
+                                    var value = $('input', element).val();
+                                    if (value != this.options.selectAllValue) {
+                                        var text = $('label', element).text();
+                                        var value = $('input', element).val();
+                                        if (value && text && value != this.options.selectAllValue) {
+                                            // by default lets assume that element is not
+                                            // interesting for this search
+                                            var showElement = false;
+
+                                            var filterCandidate = '';
+                                            if ((this.options.filterBehavior == 'text' || this.options.filterBehavior == 'both')) {
+                                                filterCandidate = text;
+                                            }
+                                            if ((this.options.filterBehavior == 'value' || this.options.filterBehavior == 'both')) {
+                                                filterCandidate = value;
+                                            }
+
+                                            if (this.options.enableCaseInsensitiveFiltering && filterCandidate.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
+                                                showElement = true;
+                                            }
+                                            else if (filterCandidate.indexOf(this.query) > -1) {
+                                                showElement = true;
+                                            }
+
+                                            if (showElement) {
+                                                $(element).show();
+                                            }
+                                            else {
+                                                $(element).hide();
+                                            }
+                                        }
+                                    }
+                                }, this));
+                            }
+                        }, this), 300, this);
+                    }, this));
+                }
+            }
+        },
+
+        // Destroy - unbind - the plugin.
+        destroy: function() {
+            this.$container.remove();
+            this.$select.show();
+        },
+
+        // Refreshs the checked options based on the current state of the select.
+        refresh: function() {
+            $('option', this.$select).each($.proxy(function(index, element) {
+                var $input = $('li input', this.$ul).filter(function() {
+                    return $(this).val() == $(element).val();
+                });
+
+                if ($(element).is(':selected')) {
+                    $input.prop('checked', true);
+
+                    if (this.options.selectedClass) {
+                        $input.parents('li').addClass(this.options.selectedClass);
+                    }
+                }
+                else {
+                    $input.prop('checked', false);
+
+                    if (this.options.selectedClass) {
+                        $input.parents('li').removeClass(this.options.selectedClass);
+                    }
+                }
+
+                if ($(element).is(":disabled")) {
+                    $input.attr('disabled', 'disabled').prop('disabled', true).parents('li').addClass('disabled');
+                }
+                else {
+                    $input.prop('disabled', false).parents('li').removeClass('disabled');
+                }
+            }, this));
+
+            this.updateButtonText();
+        },
+
+        // Select an option by its value or multiple options using an array of values.
+        select: function(selectValues) {
+            if(selectValues && !$.isArray(selectValues)) {
+                selectValues = [selectValues];
+            }
+            
+            for (var i = 0; i < selectValues.length; i++) {
+                
+                var value = selectValues[i];
+                
+                var $option = this.getOptionByValue(value);
+                var $checkbox = this.getInputByValue(value);
+
+                if (this.options.selectedClass) {
+                    $checkbox.parents('li').addClass(this.options.selectedClass);
+                }
+
+                $checkbox.prop('checked', true);
+                $option.prop('selected', true);
+                this.options.onChange($option, true);
+            }
+
+            this.updateButtonText();
+        },
+
+        // Deselect an option by its value or using an array of values.
+        deselect: function(deselectValues) {
+            if(deselectValues && !$.isArray(deselectValues)) {
+                deselectValues = [deselectValues];
+            }
+
+            for (var i = 0; i < deselectValues.length; i++) {
+                
+                var value = deselectValues[i];
+                
+                var $option = this.getOptionByValue(value);
+                var $checkbox = this.getInputByValue(value);
+
+                if (this.options.selectedClass) {
+                    $checkbox.parents('li').removeClass(this.options.selectedClass);
+                }
+
+                $checkbox.prop('checked', false);
+                $option.prop('selected', false);
+                this.options.onChange($option, false);
+            }
+
+            this.updateButtonText();
+        },
+
+        // Rebuild the whole dropdown menu.
+        rebuild: function() {
+            this.$ul.html('');
+            
+            // Remove select all option in select.
+            $('option[value="' + this.options.selectAllValue + '"]', this.$select).remove();
+            
+            // Important to distinguish between radios and checkboxes.
+            this.options.multiple = this.$select.attr('multiple') == "multiple";
+            
+            this.buildSelectAll();
+            this.buildDropdownOptions();
+            this.updateButtonText();
+            this.buildFilter();
+        },
+        
+        // Build select using the given data as options.
+        dataprovider: function(dataprovider) {
+            var optionDOM = "";
+            dataprovider.forEach(function (option) {
+                optionDOM += '<option value="' + option.value + '">' + option.label + '</option>';
+            });
+
+            this.$select.html(optionDOM);
+            this.rebuild();
+        },
+
+        // Enable button.
+        enable: function() {
+            this.$select.prop('disabled', false);
+            this.$button.prop('disabled', false)
+                .removeClass('disabled');
+        },
+
+        // Disable button.
+        disable: function() {
+            this.$select.prop('disabled', true);
+            this.$button.prop('disabled', true)
+                .addClass('disabled');
+        },
+
+        // Set options.
+        setOptions: function(options) {
+            this.options = this.mergeOptions(options);
+        },
+
+        // Get options by merging defaults and given options.
+        mergeOptions: function(options) {
+            return $.extend({}, this.defaults, options);
+        },
+        
+        // Update button text and button title.
+        updateButtonText: function() {
+            var options = this.getSelected();
+            
+            // First update the displayed button text.
+            $('button', this.$container).html(this.options.buttonText(options, this.$select));
+            
+            // Now update the title attribute of the button.
+            $('button', this.$container).attr('title', this.options.buttonTitle(options, this.$select));
+            
+        },
+
+        // Get all selected options.
+        getSelected: function() {
+            return $('option[value!="' + this.options.selectAllValue + '"]:selected', this.$select).filter(function() {
+                return $(this).prop('selected');
+            });
+        },
+        
+        // Get the corresponding option by ts value.
+        getOptionByValue: function(value) {
+            return $('option', this.$select).filter(function() {
+                return $(this).val() == value;
+            });
+        },
+        
+        // Get an input in the dropdown by its value.
+        getInputByValue: function(value) {
+            return $('li input', this.$ul).filter(function() {
+                return $(this).val() == value;
+            });
+        },
+        
+        updateOriginalOptions: function() {
+            this.originalOptions = this.$select.clone()[0].options;
+        },
+
+        asyncFunction: function(callback, timeout, self) {
+            var args = Array.prototype.slice.call(arguments, 3);
+            return setTimeout(function() {
+                callback.apply(self || window, args);
+            }, timeout);
+        }
+    };
+
+    $.fn.multiselect = function(option, parameter) {
+        return this.each(function() {
+            var data = $(this).data('multiselect'), options = typeof option == 'object' && option;
+
+            // Initialize the multiselect.
+            if (!data) {
+                $(this).data('multiselect', ( data = new Multiselect(this, options)));
+            }
+
+            // Call multiselect method.
+            if ( typeof option == 'string') {
+                data[option](parameter);
+            }
+        });
+    };
+
+    $.fn.multiselect.Constructor = Multiselect;
+    
+    // Automatically init selects by their data-role.
+    $(function() {
+        $("select[data-role=multiselect]").multiselect();
+    });
+
+}(window.jQuery);
+
 /* Scrollable tbody */
 ;(function($){
 
@@ -171,87 +825,6 @@
 }
 )(jQuery);
 
-/* AJAX post form via iframe (file upload) */
-;(function ($)
-{
-	$.fn.iframePostForm = function (options)
-	{
-		var response,
-			returnResponse,
-			element,
-			status = true,
-			iframe;
-
-		options = $.extend({}, $.fn.iframePostForm.defaults, options);
-
-		// Add the iframe.
-		if (!$('#' + options.iframeID).length)
-		{
-			$('body').append('<iframe src="#" id="' + options.iframeID + '" name="' + options.iframeID + '" style="display:none" />');
-		}
-
-		return $(this).each(function ()
-		{
-			element = $(this);
-
-			element.attr('action', Router.setUrlQueryParam(element.attr('action'), 'ajax', 'true'));
-
-			// Target the iframe.
-			element.attr('target', options.iframeID);
-
-			// Submit listener.
-			element.submit(function (e)
-			{
-				// If status is false then abort.
-				status = options.post.apply(this);
-				var form = this;
-
-				if (status === false)
-				{
-					return status;
-				}
-
-				iframe = $('#' + options.iframeID).load(function ()
-				{
-					response = iframe.contents().find('body');
-					jQuery(form).data('contentType', jQuery(this).contents()[0].contentType);
-
-					if (options.json)
-					{
-						returnResponse = $.parseJSON(response.text());
-					}
-
-					else
-					{
-						returnResponse = response.text();
-						if (returnResponse.substr(0, 5) == '<pre>')
-						{
-							returnResponse = returnResponse.substr(5, returnResponse.length - 11);
-						}
-					}
-
-					options.complete.apply(this, [returnResponse]);
-
-					iframe.unbind('load');
-
-					setTimeout(function ()
-					{
-						response.html('');
-					}, 1);
-				});
-			});
-		});
-	};
-
-	$.fn.iframePostForm.defaults =
-	{
-		iframeID : 'iframe-post-form',       // Iframe ID.
-		json : false,                        // Parse server response as a json object.
-		post : function () {},               // Form onsubmit.
-		complete : function (response) {}    // After response from the server has been received.
-	};
-})(jQuery);
-
 // Sticky Plugin
 // =============
 // Author: Anthony Garand
@@ -364,979 +937,6 @@
         setTimeout(scroller, 0);
     });
 })(jQuery);
-
-/* =========================================================
- * bootstrap-datepicker.js
- * http://www.eyecon.ro/bootstrap-datepicker
- * =========================================================
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================= */
-
-!function( $ ) {
-
-	function UTCDate(){
-		return new Date(Date.UTC.apply(Date, arguments));
-	}
-	function UTCToday(){
-		var today = new Date();
-		return UTCDate(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-	}
-
-	// Picker object
-
-	var Datepicker = function(element, options) {
-		var that = this;
-
-		this.element = $(element);
-		this.language = options.language||this.element.data('date-language')||"en";
-		this.language = this.language in dates ? this.language : "en";
-		this.isRTL = dates[this.language].rtl||false;
-		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
-                this.isInline = false;
-		this.isInput = this.element.is('input');
-		this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
-		this.hasInput = this.component && this.element.find('input').length;
-		if(this.component && this.component.length === 0)
-			this.component = false;
-
-		this._attachEvents();
-
-		this.forceParse = true;
-		if ('forceParse' in options) {
-			this.forceParse = options.forceParse;
-		} else if ('dateForceParse' in this.element.data()) {
-			this.forceParse = this.element.data('date-force-parse');
-		}
-
-
-        this.picker = $(DPGlobal.template)
-                            .appendTo(this.isInline ? this.element : 'body')
-                            .on({
-                                click: $.proxy(this.click, this),
-                                mousedown: $.proxy(this.mousedown, this)
-                            });
-
-        if(this.isInline) {
-            this.picker.addClass('datepicker-inline');
-        } else {
-            this.picker.addClass('datepicker-dropdown dropdown-menu');
-        }
-		if (this.isRTL){
-			this.picker.addClass('datepicker-rtl');
-			this.picker.find('.prev i, .next i')
-						.toggleClass('icon-arrow-left icon-arrow-right');
-		}
-		$(document).on('mousedown', function (e) {
-			// Clicked outside the datepicker, hide it
-			if ($(e.target).closest('.datepicker').length === 0) {
-				that.hide();
-			}
-		});
-
-		this.autoclose = false;
-		if ('autoclose' in options) {
-			this.autoclose = options.autoclose;
-		} else if ('dateAutoclose' in this.element.data()) {
-			this.autoclose = this.element.data('date-autoclose');
-		}
-
-		this.keyboardNavigation = true;
-		if ('keyboardNavigation' in options) {
-			this.keyboardNavigation = options.keyboardNavigation;
-		} else if ('dateKeyboardNavigation' in this.element.data()) {
-			this.keyboardNavigation = this.element.data('date-keyboard-navigation');
-		}
-
-		this.viewMode = this.startViewMode = 0;
-		switch(options.startView || this.element.data('date-start-view')){
-			case 2:
-			case 'decade':
-				this.viewMode = this.startViewMode = 2;
-				break;
-			case 1:
-			case 'year':
-				this.viewMode = this.startViewMode = 1;
-				break;
-		}
-
-		this.todayBtn = (options.todayBtn||this.element.data('date-today-btn')||false);
-		this.todayHighlight = (options.todayHighlight||this.element.data('date-today-highlight')||false);
-
-		this.weekStart = ((options.weekStart||this.element.data('date-weekstart')||dates[this.language].weekStart||0) % 7);
-		this.weekEnd = ((this.weekStart + 6) % 7);
-		this.startDate = -Infinity;
-		this.endDate = Infinity;
-		this.daysOfWeekDisabled = [];
-		this.setStartDate(options.startDate||this.element.data('date-startdate'));
-		this.setEndDate(options.endDate||this.element.data('date-enddate'));
-		this.setDaysOfWeekDisabled(options.daysOfWeekDisabled||this.element.data('date-days-of-week-disabled'));
-		this.fillDow();
-		this.fillMonths();
-		this.update();
-		this.showMode();
-
-        if(this.isInline) {
-            this.show();
-        }
-	};
-
-	Datepicker.prototype = {
-		constructor: Datepicker,
-
-		_events: [],
-		_attachEvents: function(){
-			this._detachEvents();
-			if (this.isInput) { // single input
-				this._events = [
-					[this.element, {
-						focus: $.proxy(this.show, this),
-						keyup: $.proxy(this.update, this),
-						keydown: $.proxy(this.keydown, this)
-					}]
-				];
-			}
-			else if (this.component && this.hasInput){ // component: input + button
-				this._events = [
-					// For components that are not readonly, allow keyboard nav
-					[this.element.find('input'), {
-						focus: $.proxy(this.show, this),
-						keyup: $.proxy(this.update, this),
-						keydown: $.proxy(this.keydown, this)
-					}],
-					[this.component, {
-						click: $.proxy(this.show, this)
-					}]
-				];
-			}
-                        else if (this.element.is('div')) {  // inline datepicker
-                            this.isInline = true;
-                        }
-			else {
-				this._events = [
-					[this.element, {
-						click: $.proxy(this.show, this)
-					}]
-				];
-			}
-			for (var i=0, el, ev; i<this._events.length; i++){
-				el = this._events[i][0];
-				ev = this._events[i][1];
-				el.on(ev);
-			}
-		},
-		_detachEvents: function(){
-			for (var i=0, el, ev; i<this._events.length; i++){
-				el = this._events[i][0];
-				ev = this._events[i][1];
-				el.off(ev);
-			}
-			this._events = [];
-		},
-
-		show: function(e) {
-			this.picker.show();
-			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
-			this.update();
-			this.place();
-			$(window).on('resize', $.proxy(this.place, this));
-			if (e ) {
-				e.stopPropagation();
-				e.preventDefault();
-			}
-			this.element.trigger({
-				type: 'show',
-				date: this.date
-			});
-		},
-
-		hide: function(e){
-            if(this.isInline) return;
-			this.picker.hide();
-			$(window).off('resize', this.place);
-			this.viewMode = this.startViewMode;
-			this.showMode();
-			if (!this.isInput) {
-				$(document).off('mousedown', this.hide);
-			}
-
-			if (
-				this.forceParse &&
-				(
-					this.isInput && this.element.val() ||
-					this.hasInput && this.element.find('input').val()
-				)
-			)
-				this.setValue();
-
-				return;
-			this.element.trigger({
-				type: 'hide',
-				date: this.date
-			});
-		},
-
-		remove: function() {
-			this._detachEvents();
-			this.picker.remove();
-			delete this.element.data().datepicker;
-		},
-
-		getDate: function() {
-			var d = this.getUTCDate();
-			return new Date(d.getTime() + (d.getTimezoneOffset()*60000));
-		},
-
-		getUTCDate: function() {
-			return this.date;
-		},
-
-		setDate: function(d) {
-			this.setUTCDate(new Date(d.getTime() - (d.getTimezoneOffset()*60000)));
-		},
-
-		setUTCDate: function(d) {
-			this.date = d;
-			this.setValue();
-		},
-
-		setValue: function() {
-			var formatted = this.getFormattedDate();
-			if (!this.isInput) {
-				if (this.component){
-					this.element.find('input').prop('value', formatted);
-				}
-				this.element.data('date', formatted);
-			} else {
-				this.element.prop('value', formatted);
-			}
-		},
-
-        getFormattedDate: function(format) {
-            if(format == undefined) format = this.format;
-            return DPGlobal.formatDate(this.date, format, this.language);
-        },
-
-		setStartDate: function(startDate){
-			this.startDate = startDate||-Infinity;
-			if (this.startDate !== -Infinity) {
-				this.startDate = DPGlobal.parseDate(this.startDate, this.format, this.language);
-			}
-			this.update();
-			this.updateNavArrows();
-		},
-
-		setEndDate: function(endDate){
-			this.endDate = endDate||Infinity;
-			if (this.endDate !== Infinity) {
-				this.endDate = DPGlobal.parseDate(this.endDate, this.format, this.language);
-			}
-			this.update();
-			this.updateNavArrows();
-		},
-
-		setDaysOfWeekDisabled: function(daysOfWeekDisabled){
-			this.daysOfWeekDisabled = daysOfWeekDisabled||[];
-			if (!$.isArray(this.daysOfWeekDisabled)) {
-				this.daysOfWeekDisabled = this.daysOfWeekDisabled.split(/,\s*/);
-			}
-			this.daysOfWeekDisabled = $.map(this.daysOfWeekDisabled, function (d) {
-				return parseInt(d, 10);
-			});
-			this.update();
-			this.updateNavArrows();
-		},
-
-		place: function(){
-                        if(this.isInline) return;
-			var zIndex = parseInt(this.element.parents().filter(function() {
-							return $(this).css('z-index') != 'auto';
-						}).first().css('z-index'))+10;
-			var offset = this.component ? this.component.offset() : this.element.offset();
-			this.picker.css({
-				top: offset.top + this.height,
-				left: offset.left,
-				zIndex: zIndex
-			});
-		},
-
-		update: function(){
-            var date, fromArgs = false;
-            if(arguments && arguments.length && (typeof arguments[0] === 'string' || arguments[0] instanceof Date)) {
-                date = arguments[0];
-                fromArgs = true;
-            } else {
-                date = this.isInput ? this.element.prop('value') : this.element.data('date') || this.element.find('input').prop('value');
-            }
-
-			this.date = DPGlobal.parseDate(date, this.format, this.language);
-
-            if(fromArgs) this.setValue();
-
-			if (this.date < this.startDate) {
-				this.viewDate = new Date(this.startDate);
-			} else if (this.date > this.endDate) {
-				this.viewDate = new Date(this.endDate);
-			} else {
-				this.viewDate = new Date(this.date);
-			}
-			this.fill();
-		},
-
-		fillDow: function(){
-			var dowCnt = this.weekStart,
-			html = '<tr>';
-			while (dowCnt < this.weekStart + 7) {
-				html += '<th class="dow">'+dates[this.language].daysMin[(dowCnt++)%7]+'</th>';
-			}
-			html += '</tr>';
-			this.picker.find('.datepicker-days thead').append(html);
-		},
-
-		fillMonths: function(){
-			var html = '',
-			i = 0;
-			while (i < 12) {
-				html += '<span class="month">'+dates[this.language].monthsShort[i++]+'</span>';
-			}
-			this.picker.find('.datepicker-months td').html(html);
-		},
-
-		fill: function() {
-			var d = new Date(this.viewDate),
-				year = d.getUTCFullYear(),
-				month = d.getUTCMonth(),
-				startYear = this.startDate !== -Infinity ? this.startDate.getUTCFullYear() : -Infinity,
-				startMonth = this.startDate !== -Infinity ? this.startDate.getUTCMonth() : -Infinity,
-				endYear = this.endDate !== Infinity ? this.endDate.getUTCFullYear() : Infinity,
-				endMonth = this.endDate !== Infinity ? this.endDate.getUTCMonth() : Infinity,
-				currentDate = this.date.valueOf(),
-				today = new Date();
-			this.picker.find('.datepicker-days thead th:eq(1)')
-						.text(dates[this.language].months[month]+' '+year);
-			this.picker.find('tfoot th.today')
-						.text(dates[this.language].today)
-						.toggle(this.todayBtn !== false);
-			this.updateNavArrows();
-			this.fillMonths();
-			var prevMonth = UTCDate(year, month-1, 28,0,0,0,0),
-				day = DPGlobal.getDaysInMonth(prevMonth.getUTCFullYear(), prevMonth.getUTCMonth());
-			prevMonth.setUTCDate(day);
-			prevMonth.setUTCDate(day - (prevMonth.getUTCDay() - this.weekStart + 7)%7);
-			var nextMonth = new Date(prevMonth);
-			nextMonth.setUTCDate(nextMonth.getUTCDate() + 42);
-			nextMonth = nextMonth.valueOf();
-			var html = [];
-			var clsName;
-			while(prevMonth.valueOf() < nextMonth) {
-				if (prevMonth.getUTCDay() == this.weekStart) {
-					html.push('<tr>');
-				}
-				clsName = '';
-				if (prevMonth.getUTCFullYear() < year || (prevMonth.getUTCFullYear() == year && prevMonth.getUTCMonth() < month)) {
-					clsName += ' old';
-				} else if (prevMonth.getUTCFullYear() > year || (prevMonth.getUTCFullYear() == year && prevMonth.getUTCMonth() > month)) {
-					clsName += ' new';
-				}
-				// Compare internal UTC date with local today, not UTC today
-				if (this.todayHighlight &&
-					prevMonth.getUTCFullYear() == today.getFullYear() &&
-					prevMonth.getUTCMonth() == today.getMonth() &&
-					prevMonth.getUTCDate() == today.getDate()) {
-					clsName += ' today';
-				}
-				if (prevMonth.valueOf() == currentDate) {
-					clsName += ' active';
-				}
-				if (prevMonth.valueOf() < this.startDate || prevMonth.valueOf() > this.endDate ||
-					$.inArray(prevMonth.getUTCDay(), this.daysOfWeekDisabled) !== -1) {
-					clsName += ' disabled';
-				}
-				html.push('<td class="day'+clsName+'">'+prevMonth.getUTCDate() + '</td>');
-				if (prevMonth.getUTCDay() == this.weekEnd) {
-					html.push('</tr>');
-				}
-				prevMonth.setUTCDate(prevMonth.getUTCDate()+1);
-			}
-			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
-			var currentYear = this.date.getUTCFullYear();
-
-			var months = this.picker.find('.datepicker-months')
-						.find('th:eq(1)')
-							.text(year)
-							.end()
-						.find('span').removeClass('active');
-			if (currentYear == year) {
-				months.eq(this.date.getUTCMonth()).addClass('active');
-			}
-			if (year < startYear || year > endYear) {
-				months.addClass('disabled');
-			}
-			if (year == startYear) {
-				months.slice(0, startMonth).addClass('disabled');
-			}
-			if (year == endYear) {
-				months.slice(endMonth+1).addClass('disabled');
-			}
-
-			html = '';
-			year = parseInt(year/10, 10) * 10;
-			var yearCont = this.picker.find('.datepicker-years')
-								.find('th:eq(1)')
-									.text(year + '-' + (year + 9))
-									.end()
-								.find('td');
-			year -= 1;
-			for (var i = -1; i < 11; i++) {
-				html += '<span class="year'+(i == -1 || i == 10 ? ' old' : '')+(currentYear == year ? ' active' : '')+(year < startYear || year > endYear ? ' disabled' : '')+'">'+year+'</span>';
-				year += 1;
-			}
-			yearCont.html(html);
-		},
-
-		updateNavArrows: function() {
-			var d = new Date(this.viewDate),
-				year = d.getUTCFullYear(),
-				month = d.getUTCMonth();
-			switch (this.viewMode) {
-				case 0:
-					if (this.startDate !== -Infinity && year <= this.startDate.getUTCFullYear() && month <= this.startDate.getUTCMonth()) {
-						this.picker.find('.prev').css({visibility: 'hidden'});
-					} else {
-						this.picker.find('.prev').css({visibility: 'visible'});
-					}
-					if (this.endDate !== Infinity && year >= this.endDate.getUTCFullYear() && month >= this.endDate.getUTCMonth()) {
-						this.picker.find('.next').css({visibility: 'hidden'});
-					} else {
-						this.picker.find('.next').css({visibility: 'visible'});
-					}
-					break;
-				case 1:
-				case 2:
-					if (this.startDate !== -Infinity && year <= this.startDate.getUTCFullYear()) {
-						this.picker.find('.prev').css({visibility: 'hidden'});
-					} else {
-						this.picker.find('.prev').css({visibility: 'visible'});
-					}
-					if (this.endDate !== Infinity && year >= this.endDate.getUTCFullYear()) {
-						this.picker.find('.next').css({visibility: 'hidden'});
-					} else {
-						this.picker.find('.next').css({visibility: 'visible'});
-					}
-					break;
-			}
-		},
-
-		click: function(e) {
-			e.stopPropagation();
-			e.preventDefault();
-			var target = $(e.target).closest('span, td, th');
-			if (target.length == 1) {
-				switch(target[0].nodeName.toLowerCase()) {
-					case 'th':
-						switch(target[0].className) {
-							case 'switch':
-								this.showMode(1);
-								break;
-							case 'prev':
-							case 'next':
-								var dir = DPGlobal.modes[this.viewMode].navStep * (target[0].className == 'prev' ? -1 : 1);
-								switch(this.viewMode){
-									case 0:
-										this.viewDate = this.moveMonth(this.viewDate, dir);
-										break;
-									case 1:
-									case 2:
-										this.viewDate = this.moveYear(this.viewDate, dir);
-										break;
-								}
-								this.fill();
-								break;
-							case 'today':
-								var date = new Date();
-								date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-
-								this.showMode(-2);
-								var which = this.todayBtn == 'linked' ? null : 'view';
-								this._setDate(date, which);
-								break;
-						}
-						break;
-					case 'span':
-						if (!target.is('.disabled')) {
-							this.viewDate.setUTCDate(1);
-							if (target.is('.month')) {
-								var month = target.parent().find('span').index(target);
-								this.viewDate.setUTCMonth(month);
-								this.element.trigger({
-									type: 'changeMonth',
-									date: this.viewDate
-								});
-							} else {
-								var year = parseInt(target.text(), 10)||0;
-								this.viewDate.setUTCFullYear(year);
-								this.element.trigger({
-									type: 'changeYear',
-									date: this.viewDate
-								});
-							}
-							this.showMode(-1);
-							this.fill();
-						}
-						break;
-					case 'td':
-						if (target.is('.day') && !target.is('.disabled')){
-							var day = parseInt(target.text(), 10)||1;
-							var year = this.viewDate.getUTCFullYear(),
-								month = this.viewDate.getUTCMonth();
-							if (target.is('.old')) {
-								if (month === 0) {
-									month = 11;
-									year -= 1;
-								} else {
-									month -= 1;
-								}
-							} else if (target.is('.new')) {
-								if (month == 11) {
-									month = 0;
-									year += 1;
-								} else {
-									month += 1;
-								}
-							}
-							this._setDate(UTCDate(year, month, day,0,0,0,0));
-						}
-						break;
-				}
-			}
-		},
-
-		_setDate: function(date, which){
-			if (!which || which == 'date')
-				this.date = date;
-			if (!which || which  == 'view')
-				this.viewDate = date;
-			this.fill();
-			this.setValue();
-			this.element.trigger({
-				type: 'changeDate',
-				date: this.date
-			});
-			var element;
-			if (this.isInput) {
-				element = this.element;
-			} else if (this.component){
-				element = this.element.find('input');
-			}
-			if (element) {
-				element.change();
-				if (this.autoclose && (!which || which == 'date')) {
-					this.hide();
-				}
-			}
-		},
-
-		moveMonth: function(date, dir){
-			if (!dir) return date;
-			var new_date = new Date(date.valueOf()),
-				day = new_date.getUTCDate(),
-				month = new_date.getUTCMonth(),
-				mag = Math.abs(dir),
-				new_month, test;
-			dir = dir > 0 ? 1 : -1;
-			if (mag == 1){
-				test = dir == -1
-					// If going back one month, make sure month is not current month
-					// (eg, Mar 31 -> Feb 31 == Feb 28, not Mar 02)
-					? function(){ return new_date.getUTCMonth() == month; }
-					// If going forward one month, make sure month is as expected
-					// (eg, Jan 31 -> Feb 31 == Feb 28, not Mar 02)
-					: function(){ return new_date.getUTCMonth() != new_month; };
-				new_month = month + dir;
-				new_date.setUTCMonth(new_month);
-				// Dec -> Jan (12) or Jan -> Dec (-1) -- limit expected date to 0-11
-				if (new_month < 0 || new_month > 11)
-					new_month = (new_month + 12) % 12;
-			} else {
-				// For magnitudes >1, move one month at a time...
-				for (var i=0; i<mag; i++)
-					// ...which might decrease the day (eg, Jan 31 to Feb 28, etc)...
-					new_date = this.moveMonth(new_date, dir);
-				// ...then reset the day, keeping it in the new month
-				new_month = new_date.getUTCMonth();
-				new_date.setUTCDate(day);
-				test = function(){ return new_month != new_date.getUTCMonth(); };
-			}
-			// Common date-resetting loop -- if date is beyond end of month, make it
-			// end of month
-			while (test()){
-				new_date.setUTCDate(--day);
-				new_date.setUTCMonth(new_month);
-			}
-			return new_date;
-		},
-
-		moveYear: function(date, dir){
-			return this.moveMonth(date, dir*12);
-		},
-
-		dateWithinRange: function(date){
-			return date >= this.startDate && date <= this.endDate;
-		},
-
-		keydown: function(e){
-			if (this.picker.is(':not(:visible)')){
-				if (e.keyCode == 27) // allow escape to hide and re-show picker
-					this.show();
-				return;
-			}
-			var dateChanged = false,
-				dir, day, month,
-				newDate, newViewDate;
-			switch(e.keyCode){
-				case 27: // escape
-					this.hide();
-					e.preventDefault();
-					break;
-				case 37: // left
-				case 39: // right
-					if (!this.keyboardNavigation) break;
-					dir = e.keyCode == 37 ? -1 : 1;
-					if (e.ctrlKey){
-						newDate = this.moveYear(this.date, dir);
-						newViewDate = this.moveYear(this.viewDate, dir);
-					} else if (e.shiftKey){
-						newDate = this.moveMonth(this.date, dir);
-						newViewDate = this.moveMonth(this.viewDate, dir);
-					} else {
-						newDate = new Date(this.date);
-						newDate.setUTCDate(this.date.getUTCDate() + dir);
-						newViewDate = new Date(this.viewDate);
-						newViewDate.setUTCDate(this.viewDate.getUTCDate() + dir);
-					}
-					if (this.dateWithinRange(newDate)){
-						this.date = newDate;
-						this.viewDate = newViewDate;
-						this.setValue();
-						this.update();
-						e.preventDefault();
-						dateChanged = true;
-					}
-					break;
-				case 38: // up
-				case 40: // down
-					if (!this.keyboardNavigation) break;
-					dir = e.keyCode == 38 ? -1 : 1;
-					if (e.ctrlKey){
-						newDate = this.moveYear(this.date, dir);
-						newViewDate = this.moveYear(this.viewDate, dir);
-					} else if (e.shiftKey){
-						newDate = this.moveMonth(this.date, dir);
-						newViewDate = this.moveMonth(this.viewDate, dir);
-					} else {
-						newDate = new Date(this.date);
-						newDate.setUTCDate(this.date.getUTCDate() + dir * 7);
-						newViewDate = new Date(this.viewDate);
-						newViewDate.setUTCDate(this.viewDate.getUTCDate() + dir * 7);
-					}
-					if (this.dateWithinRange(newDate)){
-						this.date = newDate;
-						this.viewDate = newViewDate;
-						this.setValue();
-						this.update();
-						e.preventDefault();
-						dateChanged = true;
-					}
-					break;
-				case 13: // enter
-					this.hide();
-					e.preventDefault();
-					break;
-				case 9: // tab
-					this.hide();
-					break;
-			}
-			if (dateChanged){
-				this.element.trigger({
-					type: 'changeDate',
-					date: this.date
-				});
-				var element;
-				if (this.isInput) {
-					element = this.element;
-				} else if (this.component){
-					element = this.element.find('input');
-				}
-				if (element) {
-					element.change();
-				}
-			}
-		},
-
-		showMode: function(dir) {
-			if (dir) {
-				this.viewMode = Math.max(0, Math.min(2, this.viewMode + dir));
-			}
-            /*
-              vitalets: fixing bug of very special conditions:
-              jquery 1.7.1 + webkit + show inline datepicker in bootstrap popover.
-              Method show() does not set display css correctly and datepicker is not shown.
-              Changed to .css('display', 'block') solve the problem.
-              See https://github.com/vitalets/x-editable/issues/37
-
-              In jquery 1.7.2+ everything works fine.
-            */
-            //this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
-			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).css('display', 'block');
-			this.updateNavArrows();
-		}
-	};
-
-	$.fn.datepicker = function ( option ) {
-		var args = Array.apply(null, arguments);
-		args.shift();
-		return this.each(function () {
-			var $this = $(this),
-				data = $this.data('datepicker'),
-				options = typeof option == 'object' && option;
-			if (!data) {
-				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
-			}
-			if (typeof option == 'string' && typeof data[option] == 'function') {
-				data[option].apply(data, args);
-			}
-		});
-	};
-
-	$.fn.datepicker.defaults = {
-	};
-	$.fn.datepicker.Constructor = Datepicker;
-	var dates = $.fn.datepicker.dates = {
-		en: {
-			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-			months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-			monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-			today: "Today"
-		}
-	};
-
-	var DPGlobal = {
-		modes: [
-			{
-				clsName: 'days',
-				navFnc: 'Month',
-				navStep: 1
-			},
-			{
-				clsName: 'months',
-				navFnc: 'FullYear',
-				navStep: 1
-			},
-			{
-				clsName: 'years',
-				navFnc: 'FullYear',
-				navStep: 10
-		}],
-		isLeapYear: function (year) {
-			return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
-		},
-		getDaysInMonth: function (year, month) {
-			return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
-		},
-		validParts: /dd?|mm?|MM?|yy(?:yy)?/g,
-		nonpunctuation: /[^ -\/:-@\[-`{-~\t\n\r]+/g,
-		parseFormat: function(format){
-			// IE treats \0 as a string end in inputs (truncating the value),
-			// so it's a bad format delimiter, anyway
-			var separators = format.replace(this.validParts, '\0').split('\0'),
-				parts = format.match(this.validParts);
-			if (!separators || !separators.length || !parts || parts.length == 0){
-				throw new Error("Invalid date format.");
-			}
-			return {separators: separators, parts: parts};
-		},
-		parseDate: function(date, format, language) {
-			if (date instanceof Date) return date;
-			if (/^[-+]\d+[dmwy]([\s,]+[-+]\d+[dmwy])*$/.test(date)) {
-				var part_re = /([-+]\d+)([dmwy])/,
-					parts = date.match(/([-+]\d+)([dmwy])/g),
-					part, dir;
-				date = new Date();
-				for (var i=0; i<parts.length; i++) {
-					part = part_re.exec(parts[i]);
-					dir = parseInt(part[1]);
-					switch(part[2]){
-						case 'd':
-							date.setUTCDate(date.getUTCDate() + dir);
-							break;
-						case 'm':
-							date = Datepicker.prototype.moveMonth.call(Datepicker.prototype, date, dir);
-							break;
-						case 'w':
-							date.setUTCDate(date.getUTCDate() + dir * 7);
-							break;
-						case 'y':
-							date = Datepicker.prototype.moveYear.call(Datepicker.prototype, date, dir);
-							break;
-					}
-				}
-				return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0);
-			}
-			var parts = date && date.match(this.nonpunctuation) || [],
-				date = new Date(),
-				parsed = {},
-				setters_order = ['yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'd', 'dd'],
-				setters_map = {
-					yyyy: function(d,v){ return d.setUTCFullYear(v); },
-					yy: function(d,v){ return d.setUTCFullYear(2000+v); },
-					m: function(d,v){
-						v -= 1;
-						while (v<0) v += 12;
-						v %= 12;
-						d.setUTCMonth(v);
-						while (d.getUTCMonth() != v)
-							d.setUTCDate(d.getUTCDate()-1);
-						return d;
-					},
-					d: function(d,v){ return d.setUTCDate(v); }
-				},
-				val, filtered, part;
-			setters_map['M'] = setters_map['MM'] = setters_map['mm'] = setters_map['m'];
-			setters_map['dd'] = setters_map['d'];
-			date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-			if (parts.length == format.parts.length) {
-				for (var i=0, cnt = format.parts.length; i < cnt; i++) {
-					val = parseInt(parts[i], 10);
-					part = format.parts[i];
-					if (isNaN(val)) {
-						switch(part) {
-							case 'MM':
-								filtered = $(dates[language].months).filter(function(){
-									var m = this.slice(0, parts[i].length),
-										p = parts[i].slice(0, m.length);
-									return m == p;
-								});
-								val = $.inArray(filtered[0], dates[language].months) + 1;
-								break;
-							case 'M':
-								filtered = $(dates[language].monthsShort).filter(function(){
-									var m = this.slice(0, parts[i].length),
-										p = parts[i].slice(0, m.length);
-									return m == p;
-								});
-								val = $.inArray(filtered[0], dates[language].monthsShort) + 1;
-								break;
-						}
-					}
-					parsed[part] = val;
-				}
-				for (var i=0, s; i<setters_order.length; i++){
-					s = setters_order[i];
-					if (s in parsed && !isNaN(parsed[s]))
-						setters_map[s](date, parsed[s])
-				}
-			}
-			return date;
-		},
-		formatDate: function(date, format, language){
-			var val = {
-				d: date.getUTCDate(),
-				m: date.getUTCMonth() + 1,
-				M: dates[language].monthsShort[date.getUTCMonth()],
-				MM: dates[language].months[date.getUTCMonth()],
-				yy: date.getUTCFullYear().toString().substring(2),
-				yyyy: date.getUTCFullYear()
-			};
-			val.dd = (val.d < 10 ? '0' : '') + val.d;
-			val.mm = (val.m < 10 ? '0' : '') + val.m;
-			var date = [],
-				seps = $.extend([], format.separators);
-			for (var i=0, cnt = format.parts.length; i < cnt; i++) {
-				if (seps.length)
-					date.push(seps.shift())
-				date.push(val[format.parts[i]]);
-			}
-			return date.join('');
-		},
-		headTemplate: '<thead>'+
-							'<tr>'+
-								'<th class="prev"><i class="icon-arrow-left"/></th>'+
-								'<th colspan="5" class="switch"></th>'+
-								'<th class="next"><i class="icon-arrow-right"/></th>'+
-							'</tr>'+
-						'</thead>',
-		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
-		footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr></tfoot>'
-	};
-	DPGlobal.template = '<div class="datepicker">'+
-							'<div class="datepicker-days">'+
-								'<table class=" table-condensed">'+
-									DPGlobal.headTemplate+
-									'<tbody></tbody>'+
-									DPGlobal.footTemplate+
-								'</table>'+
-							'</div>'+
-							'<div class="datepicker-months">'+
-								'<table class="table-condensed">'+
-									DPGlobal.headTemplate+
-									DPGlobal.contTemplate+
-									DPGlobal.footTemplate+
-								'</table>'+
-							'</div>'+
-							'<div class="datepicker-years">'+
-								'<table class="table-condensed">'+
-									DPGlobal.headTemplate+
-									DPGlobal.contTemplate+
-									DPGlobal.footTemplate+
-								'</table>'+
-							'</div>'+
-						'</div>';
-
-    $.fn.datepicker.DPGlobal = DPGlobal;
-    $.fn.bootstrap_datepicker = $.fn.datepicker;
-
-}( jQuery );
-
-
-/*
- * jQuery MultiSelect UI Widget 1.12
- * Copyright (c) 2011 Eric Hynds
- *
- * http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
- *
- * Depends:
- *   - jQuery 1.4.2+
- *   - jQuery UI 1.8 widget factory
- *
- * Optional:
- *   - jQuery UI effects
- *   - jQuery UI position utility
- *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
- *
- */
-;
-try
-{
-;(function(d){var j=0;d.widget("ech.multiselect",{options:{header:!0,height:175,minWidth:225,classes:"",checkAllText:"Check all",uncheckAllText:"Uncheck all",noneSelectedText:"Select options",selectedText:"# selected",selectedList:0,show:"",hide:"",autoOpen:!1,multiple:!0,position:{}},_create:function(){var a=this.element.hide(),b=this.options;this.speed=d.fx.speeds._default;this._isOpen=!1;a=(this.button=d('<button type="button"><span class="ui-icon ui-icon-triangle-2-n-s"></span></button>')).addClass("ui-multiselect ui-widget ui-state-default ui-corner-all").addClass(b.classes).attr({title:a.attr("title"), "aria-haspopup":!0,tabIndex:a.attr("tabIndex")}).insertAfter(a);(this.buttonlabel=d("<span />")).html(b.noneSelectedText).appendTo(a);var a=(this.menu=d("<div />")).addClass("ui-multiselect-menu ui-widget ui-widget-content ui-corner-all").addClass(b.classes).appendTo(document.body),c=(this.header=d("<div />")).addClass("ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix").appendTo(a);(this.headerLinkContainer=d("<ul />")).addClass("ui-helper-reset").html(function(){return!0=== b.header?'<li><a class="ui-multiselect-all" href="#"><span class="ui-icon ui-icon-check"></span><span>'+b.checkAllText+'</span></a></li><li><a class="ui-multiselect-none" href="#"><span class="ui-icon ui-icon-closethick"></span><span>'+b.uncheckAllText+"</span></a></li>":"string"===typeof b.header?"<li>"+b.header+"</li>":""}).append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><span class="ui-icon ui-icon-circle-close"></span></a></li>').appendTo(c);(this.checkboxContainer= d("<ul />")).addClass("ui-multiselect-checkboxes ui-helper-reset").appendTo(a);this._bindEvents();this.refresh(!0);b.multiple||a.addClass("ui-multiselect-single")},_init:function(){!1===this.options.header&&this.header.hide();this.options.multiple||this.headerLinkContainer.find(".ui-multiselect-all, .ui-multiselect-none").hide();this.options.autoOpen&&this.open();this.element.is(":disabled")&&this.disable()},refresh:function(a){var b=this.element,c=this.options,e=this.menu,h=this.checkboxContainer, g=[],f=[],i=b.attr("id")||j++;b.find("option").each(function(b){d(this);var a=this.parentNode,e=this.innerHTML,h=this.title,j=this.value,b=this.id||"ui-multiselect-"+i+"-option-"+b,k=this.disabled,m=this.selected,l=["ui-corner-all"];"optgroup"===a.tagName.toLowerCase()&&(a=a.getAttribute("label"),-1===d.inArray(a,g)&&(f.push('<li class="ui-multiselect-optgroup-label"><a href="#">'+a+"</a></li>"),g.push(a)));k&&l.push("ui-state-disabled");m&&!c.multiple&&l.push("ui-state-active");f.push('<li class="'+ (k?"ui-multiselect-disabled":"")+'">');f.push('<label for="'+b+'" title="'+h+'" class="'+l.join(" ")+'">');f.push('<input id="'+b+'" name="multiselect_'+i+'" type="'+(c.multiple?"checkbox":"radio")+'" value="'+j+'" title="'+e+'"');m&&(f.push(' checked="checked"'),f.push(' aria-selected="true"'));k&&(f.push(' disabled="disabled"'),f.push(' aria-disabled="true"'));f.push(" /><span>"+e+"</span></label></li>")});h.html(f.join(""));this.labels=e.find("label");this._setButtonWidth();this._setMenuWidth(); this.button[0].defaultValue=this.update();a||this._trigger("refresh")},update:function(){var a=this.options,b=this.labels.find("input"),c=b.filter("[checked]"),e=c.length,a=0===e?a.noneSelectedText:d.isFunction(a.selectedText)?a.selectedText.call(this,e,b.length,c.get()):/\d/.test(a.selectedList)&&0<a.selectedList&&e<=a.selectedList?c.map(function(){return d(this).next().text()}).get().join(", "):a.selectedText.replace("#",e).replace("#",b.length);this.buttonlabel.html(a);return a},_bindEvents:function(){function a(){b[b._isOpen?  "close":"open"]();return!1}var b=this,c=this.button;c.find("span").bind("click.multiselect",a);c.bind({click:a,keypress:function(a){switch(a.which){case 27:case 38:case 37:b.close();break;case 39:case 40:b.open()}},mouseenter:function(){c.hasClass("ui-state-disabled")||d(this).addClass("ui-state-hover")},mouseleave:function(){d(this).removeClass("ui-state-hover")},focus:function(){c.hasClass("ui-state-disabled")||d(this).addClass("ui-state-focus")},blur:function(){d(this).removeClass("ui-state-focus")}}); this.header.delegate("a","click.multiselect",function(a){if(d(this).hasClass("ui-multiselect-close"))b.close();else b[d(this).hasClass("ui-multiselect-all")?"checkAll":"uncheckAll"]();a.preventDefault()});this.menu.delegate("li.ui-multiselect-optgroup-label a","click.multiselect",function(a){a.preventDefault();var c=d(this),g=c.parent().nextUntil("li.ui-multiselect-optgroup-label").find("input:visible:not(:disabled)"),f=g.get(),c=c.parent().text();!1!==b._trigger("beforeoptgrouptoggle",a,{inputs:f, label:c})&&(b._toggleChecked(g.filter("[checked]").length!==g.length,g),b._trigger("optgrouptoggle",a,{inputs:f,label:c,checked:f[0].checked}))}).delegate("label","mouseenter.multiselect",function(){d(this).hasClass("ui-state-disabled")||(b.labels.removeClass("ui-state-hover"),d(this).addClass("ui-state-hover").find("input").focus())}).delegate("label","keydown.multiselect",function(a){a.preventDefault();switch(a.which){case 9:case 27:b.close();break;case 38:case 40:case 37:case 39:b._traverse(a.which, this);break;case 13:d(this).find("input")[0].click()}}).delegate('input[type="checkbox"], input[type="radio"]',"click.multiselect",function(a){var c=d(this),g=this.value,f=this.checked,i=b.element.find("option");this.disabled||!1===b._trigger("click",a,{value:g,text:this.title,checked:f})?a.preventDefault():(c.focus(),c.attr("aria-selected",f),i.each(function(){if(this.value===g)this.selected=f;else if(!b.options.multiple)this.selected=!1}),b.options.multiple||(b.labels.removeClass("ui-state-active"), c.closest("label").toggleClass("ui-state-active",f),b.close()),b.element.trigger("change"),setTimeout(d.proxy(b.update,b),10))});d(document).bind("mousedown.multiselect",function(a){b._isOpen&&!d.contains(b.menu[0],a.target)&&!d.contains(b.button[0],a.target)&&a.target!==b.button[0]&&b.close()});d(this.element[0].form).bind("reset.multiselect",function(){setTimeout(d.proxy(b.refresh,b),10)})},_setButtonWidth:function(){var a=this.element.outerWidth(),b=this.options;if(/\d/.test(b.minWidth)&&a<b.minWidth)a= b.minWidth;this.button.width(a)},_setMenuWidth:function(){var a=this.menu,b=this.button.outerWidth()-parseInt(a.css("padding-left"),10)-parseInt(a.css("padding-right"),10)-parseInt(a.css("border-right-width"),10)-parseInt(a.css("border-left-width"),10);a.width(b||this.button.outerWidth())},_traverse:function(a,b){var c=d(b),e=38===a||37===a,c=c.parent()[e?"prevAll":"nextAll"]("li:not(.ui-multiselect-disabled, .ui-multiselect-optgroup-label)")[e?"last":"first"]();c.length?c.find("label").trigger("mouseover"): (c=this.menu.find("ul").last(),this.menu.find("label")[e?"last":"first"]().trigger("mouseover"),c.scrollTop(e?c.height():0))},_toggleState:function(a,b){return function(){this.disabled||(this[a]=b);b?this.setAttribute("aria-selected",!0):this.removeAttribute("aria-selected")}},_toggleChecked:function(a,b){var c=b&&b.length?b:this.labels.find("input"),e=this;c.each(this._toggleState("checked",a));c.eq(0).focus();this.update();var h=c.map(function(){return this.value}).get();this.element.find("option").each(function(){!this.disabled&& -1<d.inArray(this.value,h)&&e._toggleState("selected",a).call(this)});c.length&&this.element.trigger("change")},_toggleDisabled:function(a){this.button.attr({disabled:a,"aria-disabled":a})[a?"addClass":"removeClass"]("ui-state-disabled");this.menu.find("input").attr({disabled:a,"aria-disabled":a}).parent()[a?"addClass":"removeClass"]("ui-state-disabled");this.element.attr({disabled:a,"aria-disabled":a})},open:function(){var a=this.button,b=this.menu,c=this.speed,e=this.options;if(!(!1===this._trigger("beforeopen")|| a.hasClass("ui-state-disabled")||this._isOpen)){var h=b.find("ul").last(),g=e.show,f=a.offset();d.isArray(e.show)&&(g=e.show[0],c=e.show[1]||this.speed);h.scrollTop(0).height(e.height);d.ui.position&&!d.isEmptyObject(e.position)?(e.position.of=e.position.of||a,b.show().position(e.position).hide().show(g,c)):b.css({top:f.top+a.outerHeight(),left:f.left}).show(g,c);this.labels.eq(0).trigger("mouseover").trigger("mouseenter").find("input").trigger("focus");a.addClass("ui-state-active");this._isOpen= !0;this._trigger("open")}},close:function(){if(!1!==this._trigger("beforeclose")){var a=this.options,b=a.hide,c=this.speed;d.isArray(a.hide)&&(b=a.hide[0],c=a.hide[1]||this.speed);this.menu.hide(b,c);this.button.removeClass("ui-state-active").trigger("blur").trigger("mouseleave");this._isOpen=!1;this._trigger("close")}},enable:function(){this._toggleDisabled(!1)},disable:function(){this._toggleDisabled(!0)},checkAll:function(){this._toggleChecked(!0);this._trigger("checkAll")},uncheckAll:function(){this._toggleChecked(!1); this._trigger("uncheckAll")},getChecked:function(){return this.menu.find("input").filter("[checked]")},destroy:function(){d.Widget.prototype.destroy.call(this);this.button.remove();this.menu.remove();this.element.show();return this},isOpen:function(){return this._isOpen},widget:function(){return this.menu},_setOption:function(a,b){var c=this.menu;switch(a){case "header":c.find("div.ui-multiselect-header")[b?"show":"hide"]();break;case "checkAllText":c.find("a.ui-multiselect-all span").eq(-1).text(b); break;case "uncheckAllText":c.find("a.ui-multiselect-none span").eq(-1).text(b);break;case "height":c.find("ul").last().height(parseInt(b,10));break;case "minWidth":this.options[a]=parseInt(b,10);this._setButtonWidth();this._setMenuWidth();break;case "selectedText":case "selectedList":case "noneSelectedText":this.options[a]=b;this.update();break;case "classes":c.add(this.button).removeClass(this.options.classes).addClass(b)}d.Widget.prototype._setOption.apply(this,arguments)}})})(jQuery);
-}
-catch (e) { }
 
 ;
 
