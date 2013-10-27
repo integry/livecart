@@ -1,15 +1,16 @@
-<div ng-controller="CategoryFormController" ng-show="category.ID">
-{form model="category" ng_submit="save()" handle=$catalogForm role="category.update"}
+<div ng-controller="CategoryFormController">
+[[ form('', ['ng-submit': "save()", 'ng-init': ';'] ) ]] >
 	[[ checkbox('isEnabled', tip('_active')) ]]
 
 	[[ textfld('name', '_category_name') ]]
 
-	[[ textarea('description', tip('_descr'), class: 'tinyMCE') ]]
+	[[ textareafld('description', tip('_descr'), ['class': 'tinyMCE']) ]]
 
-	[[ textarea('keywords', tip('_keywords'), class: 'categoryKeywords') ]]
+	[[ textareafld('keywords', tip('_keywords')) ]]
 
-	[[ textfld('pageTitle', tip('_pageTitle _hint_pageTitle'), class: 'wide') ]]
+	[[ textfld('pageTitle', tip('_pageTitle _hint_pageTitle')) ]]
 
+	{#
 	[[ partial('backend/eav/fields.tpl', ['angular': "category", 'item': category]) ]]
 
 	<fieldset>
@@ -57,14 +58,8 @@
 		<a href="#" class="cancel" onClick="$('categoryForm_[[categoryId]]').reset(); return false;">{t _cancel}</a>
 		<div class="clear"></div>
 	</fieldset>
+	#}
+	
+	<submit>{t _save}</submit>
 
-{/form}
-
-
-<script type="text/javascript">
-
-	//new Backend.ThemePreview($('categoryThemePreview_[[categoryId]]'), $('theme_[[categoryId]]'));
-	//ActiveForm.prototype.initTinyMceFields("categoryForm_[[categoryId]]");
-</script>
-
-</div>
+</form>

@@ -1,5 +1,5 @@
 <div class="tree ui-widget-content">
-	<ul
+	<ul class="list-unstyled"
 		{% if !empty(sortable) %}
 		ui-nested-sortable="{
 		listType: 'ul',
@@ -19,7 +19,7 @@
 					<strong>{{child.title}}</strong>
 				</span>
 			</div>
-			<ul><branch></ul>
+			<ul class="list-unstyled"><branch></ul>
 		</li>
 	</ul>
 </div>
