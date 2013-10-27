@@ -1,15 +1,8 @@
 <?php
 
-ClassLoader::import('application/model/category/SpecField');
-ClassLoader::import('application/model/category/SpecFieldGroup');
-ClassLoader::import('application/model/category/ProductCategory');
-ClassLoader::import('application/model/eavcommon/iEavFieldManager');
-ClassLoader::import('application/model/eav/EavAble');
-ClassLoader::import('application/model/eav/EavObject');
-ClassLoader::import('application/model/system/ActiveTreeNode');
-ClassLoader::import('application/model/system/MultilingualObject');
-ClassLoader::import('application/model/category/CategoryImage');
-ClassLoader::import('application/model/filter.*');
+namespace category;
+
+use system\ActiveTreeNode;
 
 /**
  * Hierarchial product category structure.
@@ -21,7 +14,7 @@ ClassLoader::import('application/model/filter.*');
  * @author Integry Systems
  * @todo Update product counts when category is moved
  */
-class Category extends ActiveTreeNode implements MultilingualObjectInterface, iEavFieldManager, EavAble
+class Category extends ActiveTreeNode //implements MultilingualObjectInterface, iEavFieldManager, EavAble
 {
 	const INCLUDE_PARENT = true;
 
@@ -30,56 +23,44 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	private $filterSetCache;
 	private $subCategorySetCache;
 
-	/**
-	 * Define database schema for Category model
-	 *
-	 * @param string $className Schema name
-	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Category");
-
-		parent::defineSchema($className);
-
-		public $defaultImageID", "categoryImage", "ID", 'CategoryImage;
-		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		public $name;
-		public $description;
-		public $keywords;
-		public $pageTitle;
-		public $isEnabled;
-		public $availableProductCount;
-		public $activeProductCount;
-		public $totalProductCount;
-	}
+//	public $defaultImageID", "categoryImage", "ID", 'CategoryImage;
+//	public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
+	public $name;
+	public $description;
+	public $keywords;
+	public $pageTitle;
+	public $isEnabled;
+	public $availableProductCount;
+	public $activeProductCount;
+	public $totalProductCount;
 
 	/*####################  Static method implementations ####################*/
 
-	/**
-	 * Get catalog item instance
-	 *
-	 * @param int|array $recordID Record id
-	 * @param bool $loadRecordData If true loads record's structure and data
-	 * @param bool $loadReferencedRecords If true loads all referenced records
-	 * @return Category
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
+	public function initialize()
 	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
+		$this->belongsTo('parentNodeID', 'category\Category', 'ID', array('alias' => 'Category'));
+		
+        $this->hasMany('parentNodeID', 'category\Category', 'ID', array(
+            'alias' => 'Category',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+		
+        $this->hasMany('ID', 'product\Product', 'productID', array(
+            'alias' => 'Product',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+        
+        $this->hasMany('ID', 'category\ProductCategory', 'categoryID', array(
+            'alias' => 'ProductCategory',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
 
-	/**
-	 * Loads a set of Category active records
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/**
@@ -92,9 +73,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	{
 		$category = parent::getNewInstance(__CLASS__, $parent);
 
-		$category->activeProductCount = 0);
-		$category->availableProductCount = 0);
-		$category->totalProductCount = 0);
+		$category->activeProductCount = 0;
+		$category->availableProductCount = 0;
+		$category->totalProductCount = 0;
 
 		return $category;
 	}
@@ -181,12 +162,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 * @todo fix potential bug: when using $this->load() in method, it might
 	 * overwrite the data that was set during runtime
 	 */
-	protected function update()
+	public function afterUpdate()
 	{
+		return;
+		parent::afterUpdate();
 		ActiveRecordModel::beginTransaction();
 		try
 		{
-			parent::update();
 			$activeProductCount = $this->activeProductCount;
 			if ($this->isEnabled->isModified())
 			{
@@ -227,6 +209,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function delete()
 	{
+		parent::delete();
+		return;
 		ActiveRecordModel::beginTransaction();
 
 		try
@@ -306,11 +290,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		return $this->subCategoryArray;
 	}
 
+/*
 	public function getSubcategoryFilter($returnEmpty = false)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
-	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+	  	$cond = 'Category.parentNodeID = :Category.parentNodeID:', array('Category.parentNodeID' => $this->getID());
+	  	$cond->addAND('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
 
 		// Hide empty categories
 		if (!$returnEmpty)
@@ -323,10 +308,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->orderBy(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->orderBy('Category.lft', 'ASC');
 
 	  	return $filter;
 	}
+*/
 
 	/**
 	 * Returns a set of siblings (categories with the same parent)
@@ -358,31 +344,22 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 * @param bool $loadSelf
 	 * @return ARSelectFilter
 	 */
+	/*
 	private function getSiblingFilter($loadSelf)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->getID());
-	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+	  	$cond = 'Category.parentNodeID = :Category.parentNodeID:', array('Category.parentNodeID' => $this->parentNode->getID());
+	  	$cond->addAND('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
 
 		if (!$loadSelf)
 		{
-			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));
+			$cond->addAND(new NotEqualsCond('Category.ID', $this->getID()));
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->orderBy(new ARFieldHandle('Category', 'lft'), 'ASC');
+	  	$filter->orderBy('Category.lft', 'ASC');
 
 	  	return $filter;
-	}
-
-	/**
-	 * @return ActiveTreeNode
-	 */
-	public static function getRootNode()
-	{
-		$node = parent::getRootNode(__CLASS__);
-		$node->load();
-		return $node;
 	}
 
 	public function getBranchFilter(ARSelectFilter $filter = null)
@@ -393,8 +370,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		}
 
 		$filter->orderBy(new ARFieldHandle("Category", "lft"), 'ASC');
-		$filter->mergeCondition(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft));
-		$filter->mergeCondition(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt));
+		$filter->andWhere(new MoreThanCond(new ARFieldHandle("Category", "lft"), $this->lft));
+		$filter->andWhere(new LessThanCond(new ARFieldHandle("Category", "rgt"), $this->rgt));
 
 		return $filter;
 	}
@@ -414,6 +391,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 		return $array;
 	}
+	*/
 
 	/**
 	 * Gets a list of products assigned to this node
@@ -443,46 +421,56 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	public function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = new ARSelectFilter($this->getProductCondition($productFilter->isSubcategories()));
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
+		$filter->andWhere('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => 1));
 		$this->applyInventoryFilter($filter);
 
 		return $filter;
 	}
 
-	public function getProductCondition($includeSubcategories = false)
+	public function setProductCondition(\Phalcon\Mvc\Model\Query\Builder $query, $includeSubcategories = false)
 	{
 		if ($includeSubcategories)
 		{
 			if (!$this->isRoot())
 			{
-				$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $this->lft);
-				$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $this->rgt));
-
+				//$query->andWhere('(category\Category.lft >= :lft: AND category\Category.rgt <= :rgt:) OR ((SELECT COUNT(*) FROM ProductCategory) > 0)', array('lft' => $this->lft, 'rgt' => $this->rgt));
+				$query->andWhere('(category\Category.lft >= :lft: AND category\Category.rgt <= :rgt:) OR (:subq: > 0)', array('lft' => $this->lft, 'rgt' => $this->rgt, 'subq' => '(SELECT COUNT(*) FROM ProductCategory)'));
+				
+				/*
+				$q = $query->getQuery();
+				$q->parse();
+				$i = $q->getIntermediate();
+				
+				$i['where']['right']['left']['right']['left']['right']['type'] = 'qualified';
+				print_r($i['where']);exit;
+				print_r($i['where']['right']['left']['right']['left']['right']);exit;
+				$q->setIntermediate($i);
+				*/
+				
 				if ($this->hasProductsAsSecondaryCategory())
 				{
-					$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft . ' AND Category.rgt<=' . $this->rgt));
+					$cond->addOr(new INCond('Product.ID', 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft . ' AND Category.rgt<=' . $this->rgt));
 				}
 			}
 			else
 			{
-				$cond = new IsNotNullCond(new ARFieldHandle('Product', 'categoryID'));
+				$query->andWhere('categoryID IS NOT NULL');
 			}
 		}
 		else
 		{
-			$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
+			//$cond = 'Product.categoryID = :Product.categoryID:', array('Product.categoryID' => $this->getID());
 
 			if ($this->hasProductsAsSecondaryCategory())
 			{
-				$cond->addOr(new INCond(new ARFieldHandle('Product', 'ID'), 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
+				$cond->addOr(new INCond('Product.ID', 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
 			}
 		}
-
-		return $cond;
 	}
 
 	private function hasProductsAsSecondaryCategory()
 	{
+		return false;
 		if (!isset($this->hasAsSecondary))
 		{
 			$this->hasAsSecondary = $this->getRelatedRecordCount('ProductCategory');
@@ -493,7 +481,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 	public function getProductFilter(ARSelectFilter $filter)
 	{
-		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
+		$filter->andWhere('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => 1));
 
 		$this->applyInventoryFilter($filter);
 
@@ -505,9 +493,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		$c = self::getApplication()->getConfig();
 		if ($c->get('INVENTORY_TRACKING') == 'ENABLE_AND_HIDE')
 		{
-			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
-			$cond->addOr(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
-			$filter->mergeCondition($cond);
+			$cond = new MoreThanCond('Product.stockCount', 0);
+			$cond->addOr('Product.isBackOrderable = :Product.isBackOrderable:', array('Product.isBackOrderable' => 1));
+			$filter->andWhere($cond);
 		}
 	}
 
@@ -547,11 +535,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		if ($ids)
 		{
 			// get specification simple value filters
-			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
+			$filterCond = new INCond('Filter.filterGroupID', $ids);
 			$filterFilter = new ARSelectFilter();
 			$filterFilter->setCondition($filterCond);
-			$filterFilter->orderBy(new ARFieldHandle('Filter', 'filterGroupID'));
-			$filterFilter->orderBy(new ARFieldHandle('Filter', 'position'));
+			$filterFilter->orderBy('Filter.filterGroupID');
+			$filterFilter->orderBy('Filter.position');
 
 			$valueFilters = ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));
 			foreach ($valueFilters as $filter)
@@ -564,9 +552,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 		if ($specFields)
 		{
 			$selectFilter = new ARSelectFilter();
-			$selectFilter->setCondition(new INCond(new ARFieldHandle('SpecFieldValue', 'specFieldID'), $specFields));
-			$selectFilter->orderBy(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
-			$selectFilter->orderBy(new ARFieldHandle('SpecFieldValue', 'position'));
+			$selectFilter->setCondition(new INCond('SpecFieldValue.specFieldID', $specFields));
+			$selectFilter->orderBy('SpecFieldValue.specFieldID');
+			$selectFilter->orderBy('SpecFieldValue.position');
 
 			$specFieldValues = ActiveRecord::getRecordSet('SpecFieldValue', $selectFilter);
 			foreach ($specFieldValues as $value)
@@ -669,8 +657,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	private function getCategoryImagesFilter()
 	{
 		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
-		$filter->orderBy(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
+		$filter->setCondition('CategoryImage.categoryID = :CategoryImage.categoryID:', array('CategoryImage.categoryID' => $this->getID()));
+		$filter->orderBy('CategoryImage.position', 'ASC');
 
 		return $filter;
 	}
@@ -714,13 +702,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 	 */
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
 	{
-		ClassLoader::import("application/model/category/SpecField");
 		return ActiveRecordModel::getRecordSet('SpecField', $this->getSpecificationFilter($includeParentFields), true);
 	}
 
 	public function getSpecificationFieldArray($includeParentFields = true, $loadReferencedRecords = false)
 	{
-		ClassLoader::import("application/model/category/SpecField");
 		return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 	}
 
@@ -743,14 +729,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 				$f->orderBy(new ARExpressionHandle('ProductOption.categoryID=' . $cat['ID']), 'DESC');
 			}
 
-			$f->setCondition(new INCond(new ARFieldHandle('ProductOption', 'categoryID'), $ids));
+			$f->setCondition(new INCond('ProductOption.categoryID', $ids));
 		}
 		else
 		{
-			$f->setCondition(new EqualsCond(new ARFieldHandle('ProductOption', 'categoryID'), $this->getID()));
+			$f->setCondition('ProductOption.categoryID = :ProductOption.categoryID:', array('ProductOption.categoryID' => $this->getID()));
 		}
 
-		$f->orderBy(new ARFieldHandle('ProductOption', 'position'), 'ASC');
+		$f->orderBy('ProductOption.position', 'ASC');
 
 		return ProductOption::getRecordSet($f, array('ProductOptionChoice'));
 	}
@@ -814,6 +800,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 
 	public static function recalculateProductsCount()
 	{
+return;
 		ClassLoader::import("application/model/product/Product");
 
 		//self::beginTransaction();
@@ -1021,15 +1008,10 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface, iE
 			$countActive += $sub->activeProductCount;
 		}
 
-		$category->totalProductCount = $category->totalProductCount + $countTotal);
-		$category->activeProductCount = $category->activeProductCount + $countActive);
-		$category->availableProductCount = $category->availableProductCount + $countAvailable);
+		$category->totalProductCount = $category->totalProductCount + $countTotal;
+		$category->activeProductCount = $category->activeProductCount + $countActive;
+		$category->availableProductCount = $category->availableProductCount + $countAvailable;
 		$category->save();
-	}
-
-	public function __clone()
-	{
-		//foreach
 	}
 }
 

@@ -70,7 +70,7 @@ class SpecField extends EavFieldCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond('categoryID', $this->category->getID());
+		return 'categoryID = :categoryID:', array('categoryID' => $this->category->getID());
 	}
 
 	/*####################  Static method implementations ####################*/

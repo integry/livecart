@@ -1,4 +1,4 @@
-app.controller('CategoryController', function ($scope, treeService, $http, $element, $dialog)
+app.controller('CategoryController', function ($scope, $state, treeService, $http, $element, $modal)
 {
 	$scope.tree = treeService;
 	$scope.tree.initController($scope);
@@ -8,12 +8,7 @@ app.controller('CategoryController', function ($scope, treeService, $http, $elem
 
 	$scope.activate = function(child)
 	{
-		if (!$scope.ids[child.id])
-		{
-			$scope.categories.push(child);
-			$scope.ids[child.id] = true;
-		}
-
+		$state.go('category.view.products', {id: child.id});
 		$scope.activeID = child.id;
 	};
 
@@ -25,20 +20,24 @@ app.controller('CategoryController', function ($scope, treeService, $http, $elem
 
 	$scope.update = function(item, params)
 	{
-		$http.post(Router.createUrl('backend.category', 'move', params), this.instance);
+		$http.post(Router.createUrl('backend/category', 'move', params), this.instance);
 	};
 
 	$scope.add = function(parent)
 	{
-		var d = $dialog.dialog({dialogFade: false, resolve: {tree: function(){ return $scope.tree; }, parent: function(){ return parent; } }});
-		d.open(Router.createUrl('backend.category', 'add'), 'AddCategoryController');
+		$modal.open({templateUrl: Router.createUrl('backend/category', 'add'), 
+					controller: 'AddCategoryController',
+					resolve: {
+							tree: function() { return $scope.tree },
+							parent: function() { return parent } }
+							});
 	};
 
 	$scope.remove = function()
 	{
-		if (confirm(Backend.getTranslation('_confirm_remove_category')))
+		if (confirm($scope.getTranslation('_confirm_remove_category')))
 		{
-			$http.post(Router.createUrl('backend.category', 'remove', {id: $scope.activeID}));
+			$http.post(Router.createUrl('backend/category', 'remove', {id: $scope.activeID}));
 
 			var tree = $scope.tree;
 			var active = tree.findByID($scope.activeID);
@@ -50,31 +49,32 @@ app.controller('CategoryController', function ($scope, treeService, $http, $elem
 
 app.controller('CategoryFormController', function ($scope, $http)
 {
-	$http.get(Router.createUrl('backend.category', 'category', {id: $scope.category.id})).
+	$http.get(Router.createUrl('backend/category', 'get', {id: $scope.id})).
 		success(function(data, status, headers, config)
 		{
-			$scope.category = data;
+			$scope.vals = data;
 		});
 
 	$scope.save = function(form)
 	{
-		$http.post(Router.createUrl('backend.category', 'update'), $scope.category);
+		$http.post(Router.createUrl('backend/category', 'update'), $scope.vals);
 	}
 });
 
-app.controller('AddCategoryController', ['$scope', '$http', 'dialog', 'parent', 'tree', function($scope, $http, dialog, parent, tree)
+app.controller('AddCategoryController', function($scope, $http, $modal, parent, tree)
 {
-    $scope.category = {parent: parent},
-    $scope.tree = tree,
+    $scope.category = {parent: parent};
+    $scope.tree = tree;
+    $scope.vals = {parent: parent};
 
     $scope.submit = function(form)
     {
     	if (form.$valid)
     	{
-        	$http.post(Router.createUrl('backend.category', 'create'), $scope.category).
+        	$http.post(Router.createUrl('backend/category', 'create'), $scope.vals).
         	success(function(data)
         	{
-        		dialog.close();
+        		$scope.$close(0);
         		$scope.tree.append(data, $scope.category.parent);
         		$scope.tree.expandID($scope.category.parent);
         		$scope.tree.select($scope.tree.findByID(data.id));
@@ -86,7 +86,7 @@ app.controller('AddCategoryController', ['$scope', '$http', 'dialog', 'parent', 
     {
         dialog.close();
     };
-}]);
+});
 
 /*
 Backend.Category.PopupSelector = Class.create();
@@ -102,7 +102,7 @@ Backend.Category.PopupSelector.prototype =
 
 		if (!Backend.Category.links.popup)
 		{
-			Backend.Category.links.popup = Backend.Router.createUrl('backend.category', 'popup');
+			Backend.Category.links.popup = Backend.Router.createUrl('backend/category', 'popup');
 		}
 
 		var w = window.open(Backend.Category.links.popup + (categoryID ? '#cat_' + categoryID : ''), 'selectCategory', 'width=260, height=450');

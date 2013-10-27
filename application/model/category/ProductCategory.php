@@ -1,5 +1,6 @@
 <?php
 
+namespace category;
 
 /**
  * Assigns a product to additional category
@@ -7,18 +8,16 @@
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class ProductCategory extends ActiveRecordModel
+class ProductCategory extends \ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
+	public $categoryID;
+	public $productID;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-
-		$schema->registerField(new ARPrimaryForeignKeyField('categoryID', 'Category', 'ID', 'Category;
-		$schema->registerField(new ARPrimaryForeignKeyField('productID', 'Product', 'ID', 'Product;
+		$this->belongsTo('categoryID', 'category\Category', 'ID', array('foreignKey' => true, 'alias' => 'Category'));
+		$this->belongsTo('productID', 'product\Product', 'ID', array('foreignKey' => true, 'alias' => 'Product'));
 	}
-
-	/*####################  Static method implementations ####################*/
 
 	/**
 	 * Creates a new related product
@@ -28,17 +27,16 @@ class ProductCategory extends ActiveRecordModel
 	 *
 	 * @return ProductCategory
 	 */
-	public static function getNewInstance(Product $product, Category $category)
+	public static function getNewInstance(\product\Product $product, Category $category)
 	{
 		$instance = new self();
-		$instance->product = $product;
-		$instance->category = $category;
+		$instance->productID = $product->getID();
+		$instance->categoryID = $category->getID();
 
 		return $instance;
 	}
 
-	/*####################  Saving ####################*/
-
+/*
 	public function delete()
 	{
 		$this->product->updateCategoryCounters($this->product->getCountUpdateFilter(true), $this->category);
@@ -53,7 +51,7 @@ class ProductCategory extends ActiveRecordModel
 		Category::updateCategoryIntervals($this->product);
 		return $insertResult;
 	}
-
+*/
 }
 
 ?>

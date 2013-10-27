@@ -56,7 +56,7 @@ class ProductList extends MultilingualObject
 
 	public function contains(Product $product)
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductListItem', 'productID'), $product->getID()));
+		$f = query::query()->where('ProductListItem.productID = :ProductListItem.productID:', array('ProductListItem.productID' => $product->getID()));
 		return $this->getRelatedRecordCount('ProductListItem', $f) > 0;
 	}
 }

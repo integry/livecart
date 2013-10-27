@@ -53,7 +53,7 @@ class SpecFieldGroup extends EavFieldGroupCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond('categoryID', $this->getCategory()->getID());
+		return 'categoryID = :categoryID:', array('categoryID' => $this->getCategory()->getID());
 	}
 }
 

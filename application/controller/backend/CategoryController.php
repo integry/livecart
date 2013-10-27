@@ -1,5 +1,7 @@
 <?php
 
+use category\Category;
+use Phalcon\Validation\Validator;
 
 /**
  * Product Category controller
@@ -9,21 +11,25 @@
  *
  * @role category
  */
-class CategoryController extends StoreManagementController
+class CategoryController extends ControllerBackend
 {
 	public function indexAction()
 	{
-		Category::loadTree();
+		$root = Category::loadTree();
 
-
-		$categories = array('children' => array($this->getRecursiveJson(Category::getRootNode()->toArray())));
-
-		$this->set('categoryList', json_encode($categories));
-		$this->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
-		$this->set('maxUploadSize', ini_get('upload_max_filesize'));
-		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
+		$categories = array('children' => array($this->getRecursiveJsonAction($root->toArray())));
+		
+		$this->set('categoryList', $categories);
+//		$this->set('allTabsCount', array(Category::ROOT_ID => $this->getTabCounts(Category::ROOT_ID)));
+//		$this->set('maxUploadSize', ini_get('upload_max_filesize'));
+//		$this->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
 	}
 
+	public function viewAction()
+	{
+		
+	}
+	
 	/**
 	 * Displays category form (for creating a new category or modifying an existing one)
 	 *
@@ -32,13 +38,12 @@ class CategoryController extends StoreManagementController
 	 */
 	public function formAction()
 	{
-
 		$this->loadLanguageFile('backend/Settings');
 
 		$category = Category::getRootNode();
-		$form = $this->buildForm($category);
-		$this->set("catalogForm", $form);
+		$this->setValidator($this->buildValidator($category));
 
+		/*
 		$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		$listStyles = array();
@@ -47,24 +52,29 @@ class CategoryController extends StoreManagementController
 			$listStyles[$style] = $this->translate($style);
 		}
 		$this->set('listStyles', array_merge(array(''), $listStyles));
+		*/
 
-		$category->getSpecification()->setFormResponse($response, $form);
+		//$category->getSpecification()->setFormResponse($response, $form);
 
 	}
 
-	public function categoryAction()
+	public function getAction()
 	{
-		$category = Category::getInstanceByID($this->request->get('id'), true);
-		$category->loadSpecification();
+		$category = Category::getInstanceByID($this->request->get('id'));
+		//$category->loadSpecification();
 		$arr = $category->toArray();
 
+		/*
 		$set = $category->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
 		if ($set->size())
 		{
 			$arr['presentation'] = $set->get(0)->toFlatArray();
 		}
+		*/
+		
+		echo json_encode($arr);
 
-		return new JSONResponse($arr);
+		//return new JSONResponse($arr);
 	}
 
 	/**
@@ -76,8 +86,7 @@ class CategoryController extends StoreManagementController
 	 */
 	public function addAction()
 	{
-		$response = new BlockResponse();
-		$this->set('form', $this->buildAddForm());
+		$this->setValidator($this->buildAddValidator());
 	}
 
 	/**
@@ -90,12 +99,17 @@ class CategoryController extends StoreManagementController
 	public function createAction()
 	{
 		$parent = Category::getRequestInstance($this->request, 'parent');
+		
+		if (!$parent)
+		{
+			$parent = Category::getRootNode();
+		}
 
 		$categoryNode = Category::getNewInstance($parent);
-		$categoryNode->loadRequestModel($this->request);
+		$categoryNode->loadRequestData($this->request);
 		$categoryNode->save();
 
-		return new JSONResponse($this->getCategoryJson($categoryNode->toArray()), 'success', $this->translate('_new_category_was_successfully_created'));
+		echo json_encode($this->getCategoryJson($categoryNode->toArray()));
 	}
 
 	/**
@@ -107,8 +121,13 @@ class CategoryController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-
 		$categoryNode = Category::getRequestInstance($this->request);
+		$categoryNode->loadRequestData($this->request);
+		$categoryNode->save();
+		
+		echo json_encode($categoryNode->toArray());
+
+/*
 		$validator = $this->buildValidator($categoryNode);
 		if($validator->isModelValid())
 		{
@@ -122,6 +141,7 @@ class CategoryController extends StoreManagementController
 
 			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
 		}
+*/
 	}
 
 	/**
@@ -133,10 +153,9 @@ class CategoryController extends StoreManagementController
 	{
 		try
 		{
-			$categoryID = $this->request->get("id");
-			$confirmed = $this->request->get("confirmed");
-			$category = Category::getInstanceByID($categoryID, true);
+			$category = Category::getInstanceByID($this->request->get("id"));
 
+			/*
 			if($category->getActiveProductCount())
 			{
 				if(!$confirmed)
@@ -192,16 +211,20 @@ class CategoryController extends StoreManagementController
 					}
 				}
 			}
+			*/
+			
 			// and delete category.
 			$category->delete();
 
 			Category::recalculateProductsCount();
 
-			return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
+			echo json_encode(array());
+			//return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
 		}
 		catch (Exception $e)
 		{
-			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
+			echo json_encode(array('error' => $e->getMessage()));
+			//return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
 		}
 
 	}
@@ -238,11 +261,11 @@ class CategoryController extends StoreManagementController
 
 	private function getTabCounts($categoryId)
 	{
-
+		return array();
 		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
 
-		$reviewCond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft);
-		$reviewCond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt));
+		$reviewCond = new EqualsOrMoreCond('Category.lft', $category->lft);
+		$reviewCond->addAND(new EqualsOrLessCond('Category.rgt', $category->rgt));
 
 		return array(
 			'tabProducts' => $category->totalProductCount,
@@ -315,7 +338,7 @@ class CategoryController extends StoreManagementController
 		{
 			foreach ($root['children'] as $cat)
 			{
-				$jscat['children'][] = $this->getRecursiveJson($cat);
+				$jscat['children'][] = $this->getRecursiveJsonAction($cat);
 			}
 		}
 
@@ -365,16 +388,6 @@ class CategoryController extends StoreManagementController
 	}
 
 	/**
-	 * Builds a category form instance
-	 *
-	 * @return Form
-	 */
-	private function buildAddForm()
-	{
-		return new Form($this->buildAddValidator());
-	}
-
-	/**
 	 * Builds a category form validator
 	 *
 	 * @return \Phalcon\Validation
@@ -384,7 +397,7 @@ class CategoryController extends StoreManagementController
 		$validator = $this->getValidator("category", $this->request);
 		$validator->add("name", new Validator\PresenceOf(array('message' => $this->translate("Category name should not be empty"))));
 
-		$category->getSpecification()->setValidation($validator);
+		//$category->getSpecification()->setValidation($validator);
 
 		return $validator;
 	}
