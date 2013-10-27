@@ -77,11 +77,36 @@ angular
 
 */
 
-var app = angular.module('LiveCart', ['ui.bootstrap', 'ui', 'ui.router', 'ui.tinymce', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
+var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.myTinymce', 'ui', 'ui.router', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
 
 app.config(function($stateProvider)
 {
-	$stateProvider.state('eavField', {
+	$stateProvider.state('category', {
+	  templateUrl: '../backend/category',
+	  url: '/category'
+	})
+	.state('category.view', {
+        url: '/category/view/:id',
+        templateUrl: '../backend/category/view',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
+	.state('category.view.form', {
+        url: '/category/form',
+        templateUrl: '../backend/category/form',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
+	.state('category.view.products', {
+        url: '/products',
+        templateUrl: '../backend/product/index',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
+	.state('eavField', {
 	  templateUrl: '../backend/eavField',
 	  url: '/eavField'
 	})
@@ -109,27 +134,9 @@ app.run(function($rootScope)
 		return Router.createUrl(controller, action, params);
 	};
 	
-    $rootScope.getChildScopeForm = function(scope)
-    {
-    	var child = scope.$$childHead;
-    	while (child)
-    	{
-    		if (child.$$childHead)
-    		{
-    			var form = this.getChildScopeForm(child);
-    			if (form)
-    			{
-    				return form;
-				}
-    		}
-    		
-    		if (child.form)
-    		{
-    			return child.form;
-			}
-			
-			child = child.$$nextSibling;
-		}
+	$rootScope.getTranslation = function(key, params)
+	{
+		return key;
 	};
 });
 
@@ -225,7 +232,7 @@ app.controller('EavFieldEditController', function ($scope, $resource, $modal, ty
 	{
 		if (!$scope.vals.values)
 		{
-			return;
+			$scope.vals.values = [];
 		}
 		
 		var filtered = _.filter($scope.vals.values, function(value) { return value.value != ''; });

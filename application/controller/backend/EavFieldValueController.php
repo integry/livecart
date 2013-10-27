@@ -58,13 +58,13 @@ class EavFieldValueController extends EavFieldValueControllerCommon
 		{
 			list($foo, $id) = explode('_', $field);
 
-			$handle = new ARFieldHandle('EavStringValue', 'value');
+			$handle = 'EavStringValue.value';
 			$locale = $this->locale->getLocaleCode();
 			$searchHandle = MultilingualObject::getLangSearchHandle($handle, $locale);
 
-		  	$f->setCondition(new EqualsCond(new ARFieldHandle('EavStringValue', 'fieldID'), $id));
-			$f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
-			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
+		  	$f->setCondition('EavStringValue.fieldID = :EavStringValue.fieldID:', array('EavStringValue.fieldID' => $id));
+			$f->andWhere(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));
+			$f->andWhere(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 
 		  	$f->orderBy($searchHandle, 'ASC');
 

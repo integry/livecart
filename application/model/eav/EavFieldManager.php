@@ -1,6 +1,6 @@
 <?php
 
-namespace Eav;
+namespace eav;
 
 /**
  * Custom field container for a particular EAV type (users, manufacturers, orders, etc)
@@ -12,6 +12,7 @@ class EavFieldManager
 {
 	private $classID;
 	private $stringIdentifier;
+	private $fields;
 
 	public function __construct($classID)
 	{
@@ -28,7 +29,7 @@ class EavFieldManager
 
 		$this->classID = $classID;
 	}
-
+	
 	public function getClassID()
 	{
 		return $this->classID;
@@ -38,27 +39,79 @@ class EavFieldManager
 	{
 		return EavField::getClassNameById($this->classID);
 	}
-
-	public function getSpecFieldsWithGroupsArray()
+	
+	public function loadFields()
 	{
-		$groups = ActiveRecordModel::getRecordSetArray('EavFieldGroup', $this->getGroupFilter());
-		$fields = ActiveRecordModel::getRecordSetArray('EavField', $this->getFieldFilter(), array('EavFieldGroup'));
-		return ActiveRecordGroup::mergeGroupsWithFields('EavFieldGroup', $groups, $fields);
+		if (is_null($this->fields))
+		{
+			$this->fields = array();
+			$ids = array();
+			
+			foreach ($this->getFieldQuery()->execute() as $field)
+			{
+				$this->fields[$field->getID()] = $field;
+				$ids[] = $field->getID();
+			}
+			
+			if ($ids)
+			{
+				foreach (EavValue::query()->inWhere('fieldID', $ids)->orderBy('position')->execute() as $value)
+				{
+					$this->fields[$value->fieldID]->registerValue($value);
+				}
+			}
+		}
 	}
-
-	public function setValidation(\Phalcon\Validation $validator)
+	
+	public function handle($handle)
 	{
-		EavSpecificationManagerCommon::setValidation($validator);
+		foreach ($this->fields as $field)
+		{
+			if ($handle == $field->handle)
+			{
+				return $field;
+			}
+		}
 	}
-
-	public function getSpecificationFieldSet()
+	
+	public function getFields()
 	{
-		return ActiveRecordModel::getRecordSet('EavField', $this->getFieldFilter(), array('EavFieldGroup'));
+		$this->loadFields();
+		return $this->fields;
 	}
-
-	public static function getClassFieldSet($class)
+	
+	public function getField($id)
 	{
-		return ActiveRecordModel::getRecordSet('EavField', self::getFieldFilter($class), array('EavFieldGroup'));
+		$this->loadFields();
+		return !empty($this->fields[$id]) ? $this->fields[$id] : null;
+	}
+	
+	public function setResponse(\ControllerBase $controller)
+	{
+		$this->loadFields();
+		
+		$response = array('eavFieldsHandle' => new \StdClass);
+		foreach ($this->fields as $field)
+		{
+			$handle = $field->handle;
+			$response['eavFieldsHandle']->$handle = $field;
+		}
+		
+		foreach ($response as $key => $value)
+		{
+			$controller->set($key, $value);
+		}
+	}
+	
+	public function toArray()
+	{
+		$arr = array();
+		foreach ($this->fields as $field)
+		{
+			$arr[$field->handle] = $field->toJson(false);
+		}
+		
+		return $arr;
 	}
 
 	/**
@@ -67,18 +120,18 @@ class EavFieldManager
 	 * @param bool $includeParentFields
 	 * @return ARSelectFilter
 	 */
-	private function getFieldFilter($class = null)
+	private function getFieldQuery($class = null)
 	{
 		$classID = $class ? EavField::getClassID($class) : $this->classID;
 
-		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), $classID));
+		$filter = EavField::query()->where('classID = :classID:', array('classID' => $classID));
 		if (is_null($class) && $this->stringIdentifier)
 		{
-			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->stringIdentifier));
+			$filter->andWhere('stringIdentifier = :stringIdentifier:', array('stringIdentifier' => $this->stringIdentifier));
 		}
 
-		$filter->orderBy(new ARFieldHandle('EavFieldGroup', 'position'));
-		$filter->orderBy(new ARFieldHandle('EavField', 'position'));
+//		$filter->orderBy('EavFieldGroup.position');
+		$filter->orderBy('position');
 
 		return $filter;
 	}
@@ -89,13 +142,13 @@ class EavFieldManager
 	 */
 	private function getGroupFilter()
 	{
-		$filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'classID'), $this->classID));
+		$filter = query::query()->where('EavFieldGroup.classID = :EavFieldGroup.classID:', array('EavFieldGroup.classID' => $this->classID));
 		if ($this->stringIdentifier)
 		{
-			$filter->mergeCondition(new EqualsCond(new ARFieldHandle('EavFieldGroup', 'stringIdentifier'), $this->stringIdentifier));
+			$filter->andWhere('EavFieldGroup.stringIdentifier = :EavFieldGroup.stringIdentifier:', array('EavFieldGroup.stringIdentifier' => $this->stringIdentifier));
 		}
 
-		$filter->orderBy(new ARFieldHandle('EavFieldGroup', 'position'));
+		$filter->orderBy('EavFieldGroup.position');
 
 		return $filter;
 	}

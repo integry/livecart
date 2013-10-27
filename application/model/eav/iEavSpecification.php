@@ -1,5 +1,7 @@
 <?php
 
+namespace eav;
+
 /**
  * Generic interface implemented by all attribute (specification) value classes
  *

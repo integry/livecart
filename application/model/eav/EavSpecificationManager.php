@@ -23,35 +23,19 @@ class EavSpecificationManager
 	protected $attributes = array();
 
 	protected $removedAttributes = array();
+	
+	protected $fieldManager;
 
-	public function getFieldClass()
+	public function __construct(\ActiveRecordModel $owner, $specificationDataArray = array())
 	{
-		return 'EavField';
-	}
-
-	public function getSpecificationFieldSet($loadReferencedRecords = false)
-	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), EavField::getClassID($this->owner)));
-		if ($this->owner->getStringIdentifier())
-		{
-			$f->mergeCondition(new EqualsCond(new ARFieldHandle('EavField', 'stringIdentifier'), $this->owner->getStringIdentifier()));
-		}
-
-		$f->orderBy(new ARFieldHandle('EavField', 'position'));
-		return ActiveRecordModel::getRecordSet('EavField', $f, $loadReferencedRecords);
-	}
-
-	public function __construct(EavObject $owner, $specificationDataArray = array())
-	{
+		$this->fieldManager = new EavFieldManager(EavField::getClassID($owner));
 		$this->owner = $owner;
-
+		
 		if (is_null($specificationDataArray) && $owner->getID())
 		{
-			$specificationDataArray = self::fetchRawSpecificationData(get_class($this), array($owner->getID()), true);
+			$specificationDataArray = self::fetchRawSpecificationData(get_class($this), array($owner->eavObjectID), true);
 
-			$groupClass = 'EavField' . 'Group';
-			$groupIDColumn = strtolower(substr($groupClass, 0, 1)) . substr($groupClass, 1) . 'ID';
-
+/*
 			// preload attribute groups
 			$groups = array();
 			foreach ($specificationDataArray as $spec)
@@ -64,24 +48,35 @@ class EavSpecificationManager
 			$groups = array_keys($groups);
 
 			ActiveRecordModel::getInstanceArray($groupClass, $groups);
+*/
 		}
 
 		$this->loadSpecificationData($specificationDataArray);
 	}
 
-	public function setOwner(ActiveRecordModel $owner)
+	public function getSpecificationFieldSet()
+	{
+		return $this->fieldManager->getFields();
+	}
+
+	public function setOwner(\ActiveRecordModel $owner)
 	{
 		$this->owner = $owner;
+		$eavObject = $owner->get_EavObject();
+		if (!$eavObject)
+		{
+			return;
+		}
 
 		foreach ($this->attributes as $attribute)
 		{
-			$attribute->setOwner($owner);
+			$attribute->setOwner($eavObject);
 		}
 	}
 
 	public function getGroupClass()
 	{
-		return 'EavField' . 'Group';
+		return 'EavFieldGroup';
 	}
 
 	/**
@@ -93,20 +88,11 @@ class EavSpecificationManager
 	public function setAttribute(iEavSpecification $newSpecification)
 	{
 		$specField = $newSpecification->getFieldInstance();
-		$itemClass = $specField->getSelectValueClass();
 
-		if(
-			$this->owner->isExistingRecord()
-			&& isset($this->attributes[$newSpecification->getFieldInstance()->getID()])
-			&& ($itemClass == $specField->getSpecificationFieldClass()
-			&& $newSpecification->getValue()->isModified())
-		)
+		if ($this->owner->getID()
+			&& isset($this->attributes[$newSpecification->getFieldInstance()->getID()]))
 		{
-			// Delete old value
-			ActiveRecord::deleteByID($itemClass, $this->attributes[$specField->getID()]->getID());
-
-			// And create new
-			$this->attributes[$specField->getID()] = call_user_func_array(array($itemClass, 'getNewInstance'), array($this->owner, $specField, $newSpecification->getValue()));
+			$this->attributes[$newSpecification->getFieldInstance()->getID()]->replaceValue($newSpecification);
 		}
 		else
 		{
@@ -121,7 +107,7 @@ class EavSpecificationManager
 		return $this->attributes;
 	}
 
-	public function getAttributesByGroup(EavFieldGroupCommon $group)
+	public function getAttributesByGroup(EavFieldGroup $group)
 	{
 		$res = array();
 		foreach ($this->attributes as $attribute)
@@ -140,7 +126,7 @@ class EavSpecificationManager
 	 *
 	 *	@param SpecField $field SpecField instance
 	 */
-	public function removeAttribute(EavFieldCommon $field)
+	public function removeAttribute(EavField $field)
 	{
 		if (isset($this->attributes[$field->getID()]))
 		{
@@ -150,7 +136,7 @@ class EavSpecificationManager
 		unset($this->attributes[$field->getID()]);
 	}
 
-	public function removeAttributeValue(EavFieldCommon $field, EavValueCommon $value)
+	public function removeAttributeValue(EavField $field, EavValue $value)
 	{
 		if (!$field->isSelector())
 	  	{
@@ -173,7 +159,7 @@ class EavSpecificationManager
 		}
 	}
 
-	public function isAttributeSet(EavFieldCommon $field)
+	public function isAttributeSet(EavField $field)
 	{
 		return isset($this->attributes[$field->getID()]);
 	}
@@ -188,12 +174,25 @@ class EavSpecificationManager
 	 *
 	 * @return Specification
 	 */
-	public function getAttribute(EavFieldCommon $field, $defaultValue = null)
+	public function getAttribute(EavField $field, $defaultValue = null)
 	{
 		if (!$this->isAttributeSet($field))
 		{
-		  	$params = array($this->owner, $field, $defaultValue);
-			$this->attributes[$field->getID()] = call_user_func_array(array($field->getSpecificationFieldClass(), 'getNewInstance'), $params);
+			if (!$field->isSelector())
+			{
+				$this->attributes[$field->getID()] = EavObjectValue::getNewInstance($this->owner, $field, $defaultValue);
+			}
+			else
+			{
+				if ($field->isMultiValue)
+				{
+					$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this->owner, $field, $defaultValue);
+				}
+				else
+				{
+					$this->attributes[$field->getID()] = EavItem::getNewInstance($this->owner, $field, $defaultValue);
+				}
+			}
 		}
 
 		return $this->attributes[$field->getID()];
@@ -216,12 +215,12 @@ class EavSpecificationManager
 	 * @param SpecField $field Specification field instance
 	 * @param mixed $value Attribute value
 	 */
-	public function setAttributeValue(EavFieldCommon $field, $value)
+	public function setAttributeValue(EavField $field, $value)
 	{
 		if (!is_null($value))
 		{
 			$specification = $this->getAttribute($field, $value);
-			$specification->set($value);
+			$specification->setValue($value);
 
 			$this->setAttribute($specification);
 		}
@@ -237,17 +236,18 @@ class EavSpecificationManager
 	 * @param SpecField $field Specification field instance
 	 * @param unknown $value Attribute value
 	 */
-	public function setAttributeValueByLang(EavFieldCommon $field, $langCode, $value)
+/*
+	public function setAttributeValueByLang(EavField $field, $langCode, $value)
 	{
 		$specification = $this->getAttribute($field);
 		$specification->setValueByLang($langCode, $value);
 		$this->setAttribute($specification);
 	}
+*/
 
 	public function save()
 	{
-		$this->owner->save();
-		
+		$obj = $this->owner->get_EavObject();
 		foreach ($this->removedAttributes as $attribute)
 		{
 			$attribute->delete();
@@ -256,6 +256,7 @@ class EavSpecificationManager
 
 		foreach ($this->attributes as $attribute)
 		{
+			$attribute->setOwner($obj);
 			$attribute->save();
 		}
 	}
@@ -270,14 +271,16 @@ class EavSpecificationManager
 		$arr = array();
 		foreach ($this->attributes as $id => $attribute)
 		{
-			$arr[$id] = $attribute->toArray();
+			$arr['attr'][$id] = $attribute->toArray();
+			$arr[$id] = $attribute->getRawValue();
 		}
 
-		uasort($arr, array($this, 'sortAttributeArray'));
+		//uasort($arr, array($this, 'sortAttributeArray'));
 
 		return $arr;
 	}
 
+	/*
 	private function sortAttributeArray($a, $b)
 	{
 		$field = 'EavField';
@@ -310,12 +313,14 @@ class EavSpecificationManager
 
 		return ($a[$field][$fieldGroup]['position'] < $b[$field][$fieldGroup]['position']) ? -1 : 1;
 	}
+	*/
 
 	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
 	{
 		$fields = $this->getSpecificationFieldSet();
-		$application = ActiveRecordModel::getApplication();
 
+		$eav = $request->getJson('eav');
+		
 		// create new select values
 		if ($request->has($prefix . 'other'))
 		{
@@ -353,22 +358,20 @@ class EavSpecificationManager
 			}
 		}
 
-		$languages = ActiveRecordModel::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
-
 		foreach ($fields as $field)
 		{
-			$fieldName = $prefix . $field->getFormFieldName();
+			$isset = isset($eav[$field->getID()]);
+			$value = $isset ? $eav[$field->getID()] : null;
 
 			if ($field->isSelector())
 			{
 				if (!$field->isMultiValue)
 				{
-					if ($request->has($fieldName) && !in_array($request->get($fieldName), array('other')))
+					if ($isset /* && !in_array($request->get($fieldName), array('other'))*/)
 				  	{
-				  		if ($request->get($fieldName))
+				  		if ($value)
 				  		{
-				  			$this->setAttributeValue($field, $field->getValueInstanceByID($request->get($fieldName), ActiveRecordModel::LOAD_DATA));
-				  			$field->resetModifiedStatus(true);
+				  			$this->setAttributeValue($field, $field->getValueInstanceByID($value));
 				  		}
 				  		else
 				  		{
@@ -378,58 +381,59 @@ class EavSpecificationManager
 				}
 				else
 				{
-					$values = $field->getValuesSet();
-
-					foreach ($values as $value)
+					if (!$value)
 					{
-						if ($request->has($prefix . $value->getFormFieldName()) || $request->has($prefix . 'removeEmpty_' . $field->getID()))
+						$value = array();
+					}
+					
+					foreach ($field->getValues() as $val)
+					{
+						if (in_array($val->getID(), $value))
 						{
-						  	if ($request->get($prefix . $value->getFormFieldName()))
-						  	{
-								$this->setAttributeValue($field, $value);
-							}
-							else
-							{
-								$this->removeAttributeValue($field, $value);
-							}
+							$this->setAttributeValue($field, $val);
+						}
+						else
+						{
+							$this->removeAttributeValue($field, $val);
 						}
 					}
 				}
 			}
 			else
 			{
-				if ($request->has($fieldName))
-			  	{
-			  		if ($field->isTextField())
+				if ($field->isTextField())
+				{
+					/*
+					foreach ($languages as $language)
 					{
-						foreach ($languages as $language)
+						if ($request->has($prefix . $field->getFormFieldName($language)))
 						{
-							if ($request->has($prefix . $field->getFormFieldName($language)))
-							{
-								$this->setAttributeValueByLang($field, $language, $request->get($prefix . $field->getFormFieldName($language)));
-							}
+							$this->setAttributeValueByLang($field, $language, $request->get($prefix . $field->getFormFieldName($language)));
 						}
+					}
+					*/
+					$this->setAttributeValue($field, $value);
+				}
+				else
+				{
+					if (strlen($value))
+					{
+						$this->setAttributeValue($field, $value);
 					}
 					else
 					{
-						if (strlen($request->get($fieldName)))
-						{
-							$this->setAttributeValue($field, $request->get($fieldName));
-						}
-						else
-						{
-							$this->removeAttribute($field);
-						}
+						$this->removeAttribute($field);
 					}
 				}
 			}
 		}
 	}
 
+	/*
 	public function getFormData($prefix = '')
 	{
-		$selectorTypes = EavFieldCommon::getSelectorValueTypes();
-		$multiLingualTypes = EavFieldCommon::getMultilanguageTypes();
+		$selectorTypes = EavField::getSelectorValueTypes();
+		$multiLingualTypes = EavField::getMultilanguageTypes();
 		$languageArray = ActiveRecordModel::getApplication()->getLanguageArray();
 		$fieldClass = 'EavField';
 
@@ -472,7 +476,9 @@ class EavSpecificationManager
 
 		return $formData;
 	}
+	*/
 
+	/*
 	public function isValid($validatorName = 'eavValidator')
 	{
 		$request = new Request();
@@ -482,14 +488,16 @@ class EavSpecificationManager
 
 		return $validator->isValid();
 	}
+	*/
 
+	/*
 	public function setFormResponse(ActionResponse $response, Form $form, $prefix = '')
 	{
 		$specFields = $this->owner->getSpecification()->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 		$specFieldArray = $specFields->toArray();
 
 		// set select values
-		$selectors = EavFieldCommon::getSelectorValueTypes();
+		$selectors = EavField::getSelectorValueTypes();
 		foreach ($specFields as $key => $field)
 		{
 			if (in_array($field->type, $selectors))
@@ -554,7 +562,9 @@ class EavSpecificationManager
 
 		$form->setData($this->getFormData($prefix));
 	}
+	*/
 
+	/*
 	public function setValidation(\Phalcon\Validation $validator, $filtersOnly = false, $fieldPrefix = '')
 	{
 		$specFields = $this->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
@@ -566,7 +576,7 @@ class EavSpecificationManager
 			$fieldname = $fieldPrefix . $field->getFormFieldName();
 
 		  	// validate numeric values
-			if (EavFieldCommon::TYPE_NUMBERS_SIMPLE == $field->type)
+			if (EavField::TYPE_NUMBERS_SIMPLE == $field->type)
 		  	{
 				if (!$filtersOnly)
 				{
@@ -590,7 +600,9 @@ class EavSpecificationManager
 			}
 		}
 	}
+	*/
 
+	/*
 	public static function loadSpecificationForRecordArray($class, &$productArray)
 	{
 		$array = array(&$productArray);
@@ -622,10 +634,12 @@ class EavSpecificationManager
 			}
 		}
 	}
+	*/
 
 	/**
 	 * Load product specification data for a whole array of products at once
 	 */
+	/*
 	public static function loadSpecificationForRecordSetArray($class, &$productArray, $fullSpecification = false)
 	{
 		$ids = array();
@@ -709,7 +723,9 @@ class EavSpecificationManager
 			}
 		}
 	}
+	*/
 
+	/*
 	public static function sortAttributesByHandle($class, &$array)
 	{
 		$fieldClass = call_user_func(array($class, 'getFieldClass'));
@@ -743,6 +759,7 @@ class EavSpecificationManager
 			}
 		}
 	}
+	*/
 
 	private static function fetchRawSpecificationData($class, $objectIDs, $fullSpecification = false)
 	{
@@ -750,7 +767,13 @@ class EavSpecificationManager
 		{
 			return array();
 		}
+		
+		$values = EavObjectValue::query()->inWhere('objectID', $objectIDs)->execute();
+		$items = EavItem::query()->join('EavValue')->inWhere('objectID', $objectIDs)->execute();
+		
+		return array($values, $items);
 
+		/*
 		$fieldClass = call_user_func(array($class, 'getFieldClass'));
 		$groupClass = $fieldClass . 'Group';
 		$fieldColumn = call_user_func(array($fieldClass, 'getFieldIDColumnName'));
@@ -774,11 +797,11 @@ class EavSpecificationManager
 		$group = $groupClass . '.position AS SpecFieldGroupPosition, ' . $groupClass . '.name AS SpecFieldGroupName, ';
 
 		$query = '
-		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $dateClass . ' ' . $cond . '
+		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID  FROM ' . $dateClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $stringClass . ' ' . $cond . '
+		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID  FROM ' . $stringClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID */ FROM ' . $numericClass . ' ' . $cond . '
+		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* /* as valueID FROM ' . $numericClass . ' ' . $cond . '
 		UNION
 		SELECT ' . $valueItemClass . '.' . $objectColumn . ', ' . $valueItemClass . '.' . $fieldColumn . ', ' . $valueClass . '.value, ' . $valueClass . '.ID, ' . $valueClass . '.position, ' . $group . $fieldClass . '.*
 				 FROM ' . $valueItemClass . '
@@ -787,8 +810,10 @@ class EavSpecificationManager
 				 ' ORDER BY ' . $objectColumn . ', SpecFieldGroupPosition, position, specFieldValuePosition';
 
 		return ActiveRecordModel::getDataBySQL($query);
+		*/
 	}
 
+	/*
 	protected static function fetchSpecificationData($class, $objectIDs, $fullSpecification)
 	{
 		if (!$objectIDs)
@@ -807,8 +832,8 @@ class EavSpecificationManager
 				$spec[$value] = unserialize($spec[$value]);
 			}
 
-			if ((EavFieldCommon::DATATYPE_TEXT == $spec['dataType'] && EavFieldCommon::TYPE_TEXT_DATE != $spec['type'])
-				|| (EavFieldCommon::TYPE_NUMBERS_SELECTOR == $spec['type']))
+			if ((EavField::DATATYPE_TEXT == $spec['dataType'] && EavField::TYPE_TEXT_DATE != $spec['type'])
+				|| (EavField::TYPE_NUMBERS_SELECTOR == $spec['type']))
 			{
 				$spec['value'] = unserialize($spec['value']);
 			}
@@ -817,8 +842,44 @@ class EavSpecificationManager
 		return $specificationArray;
 	}
 
+*/
 	protected function loadSpecificationData($specificationDataArray)
 	{
+		// @todo: remove
+		if (!is_array($specificationDataArray))
+		{
+			return;
+		}
+		
+		foreach ($specificationDataArray as $type)
+		{
+			foreach ($type as $attr)
+			{
+				if ($attr instanceof EavObjectValue)
+				{
+					$this->attributes[$attr->fieldID] = $attr;
+				}
+				else if ($attr instanceof EavItem)
+				{
+					$field = $this->fieldManager->getField($attr->fieldID);
+					if ($field->isMultiValue)
+					{
+						if (empty($this->attributes[$attr->fieldID]))
+						{
+							$this->attributes[$attr->fieldID] = EavMultiValueItem::getNewInstance($this->owner, $field);
+						}
+						
+						$this->attributes[$attr->fieldID]->setItem($attr);
+					}
+					else
+					{
+						$this->attributes[$attr->fieldID] = $attr;
+					}
+				}
+			}
+		}
+		return;
+		
 		if (!is_array($specificationDataArray))
 		{
 			$specificationDataArray = array();
@@ -891,6 +952,11 @@ class EavSpecificationManager
 		  	$this->attributes[$specField->getID()] = $specification;
 		}
 	}
+	
+	public function getFieldManager()
+	{
+		return $this->fieldManager;
+	}
 
 	public function __clone()
 	{
@@ -900,6 +966,7 @@ class EavSpecificationManager
 		}
 	}
 
+/*
 	public function __destruct()
 	{
 		foreach ($this->attributes as $k => $attr)
@@ -916,6 +983,7 @@ class EavSpecificationManager
 
 		unset($this->owner);
 	}
+*/
 }
 
 ?>

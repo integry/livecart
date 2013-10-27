@@ -1,5 +1,6 @@
 <?php
 
+namespace eav;
 
 /**
  * Links a pre-defined attribute value to a product
@@ -7,78 +8,112 @@
  * @package application/model/specification
  * @author Integry Systems <http://integry.com>
  */
-class EavItem extends EavItemCommon
+class EavItem extends \ActiveRecordModel implements iEavSpecification
 {
-	public static function getFieldClass()
+	public $valueID;
+	public $objectID;
+	public $fieldID;
+	
+	public function initialize()
 	{
-		return 'EavField';
+		$this->belongsTo('valueID', 'eav\EavValue', 'ID', array('alias' => 'Value'));
+		$this->belongsTo('objectID', 'eav\EavObject', 'ID', array('alias' => 'Object'));
+		$this->belongsTo('fieldID', 'eav\EavField', 'ID', array('alias' => 'Field'));
 	}
 
-	public static function getOwnerClass()
+	public static function getNewInstance(\ActiveRecordModel $owner, EavField $field, EavValue $value)
 	{
-		return 'EavObject';
+		$specItem = new self();
+		$specItem->set_Value($value);
+		$specItem->set_Field($field);
+		
+		if ($obj = $owner->get_EavObject())
+		{
+			$specItem->set_Object($obj);
+		}
+
+		return $specItem;
 	}
 
-	public static function getValueClass()
+	public function setOwner(EavObject $object)
 	{
-		return 'EavValue';
+		$this->objectID = $object->getID();
 	}
-
-	public static function getFieldIDColumnName()
+	
+	public function setValue(EavValue $value)
 	{
-		return 'fieldID';
-	}
+		if (!$value->getID())
+		{
+			return;
+		}
 
-	public static function getOwnerIDColumnName()
-	{
-		return 'objectID';
-	}
+		// test whether the value belongs to the same field
+		if ($value->get_Field()->getID() != $this->get_Field()->getID())
+		{
+			$class = get_class($value->get_Field());
+			throw new Exception('Cannot assign EavValue: ' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->get_Field()->getID());
+		}
 
-	public static function getValueIDColumnName()
-	{
-		return 'valueID';
+		$this->set_Value($value);
 	}
-
-	public function getOwnerVarName()
-	{
-		return 'object';
-	}
-
+	
 	public function getField()
 	{
-		return $this->field;
+		return $this->get_Field();
 	}
 
-	public function getValue()
+	public function getFieldInstance()
 	{
-		return $this->value;
+		return $this->getField();
+	}
+	
+	protected function _preSaveRelatedRecords()
+	{
+		return true;
 	}
 
-	public static function defineSchema($className = __CLASS__)
+	protected function _postSaveRelatedRecords()
 	{
-		return parent::defineSchema($className);
+		return true;
 	}
 
-	public static function getNewInstance(EavObject $product, EavField $field, EavValue $value)
+	/*
+	public function beforeSave()
 	{
-		return parent::getNewInstance(__CLASS__, $product, $field, $value);
-	}
+		if ($this->value && !$this->value)
+		{
+			return;
+		}
 
-	public static function restoreInstance(EavObject $product, EavField $field, EavValue $value)
-	{
-		return parent::restoreInstance(__CLASS__, $product, $field, $value);
+		return parent::save($params);
 	}
-
-	public function set(EavValue $value)
+	*/
+	
+	public function getFormattedValue()
 	{
-	  	return parent::set($value);
+		return $this->get_Value()->value;
 	}
 
 	public function toArray()
 	{
-		$arr = parent::toArray();
-		$arr['EavField'] = $arr['Field'];
-		return $arr;
+		if ($value = $this->get_Value())
+		{
+			return $this->get_Value()->toArray();
+		}
+	}
+	
+	public function getRawValue()
+	{
+		return $this->valueID;
+	}
+	
+	public function replaceValue(EavItem $newValue)
+	{
+		if ($this->valueID != $newValue->valueID)
+		{
+			die($newValue->valueID);
+		}
+		$this->valueID = $newValue->valueID;
 	}
 }
 

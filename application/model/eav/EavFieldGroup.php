@@ -45,7 +45,7 @@ class EavFieldGroup extends EavFieldGroupCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond('classID', $this->classID);
+		return 'classID = :classID:', array('classID' => $this->classID);
 	}
 }
 

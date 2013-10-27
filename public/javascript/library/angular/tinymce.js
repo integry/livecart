@@ -1,9 +1,9 @@
 /**
  * Binds a TinyMCE widget to <textarea> elements.
  */
-angular.module('ui.tinymce', [])
+angular.module('ui.myTinymce', [])
   .value('uiTinymceConfig', {})
-  .directive('uiTinymce', ['uiTinymceConfig', function (uiTinymceConfig) {
+  .directive('uiMyTinymce', ['uiTinymceConfig', function (uiTinymceConfig) {
     uiTinymceConfig = uiTinymceConfig || {};
     var generatedIds = 0;
     return {
@@ -61,11 +61,22 @@ angular.module('ui.tinymce', [])
         // extend options with initial uiTinymceConfig and options from directive attribute value
         angular.extend(options, uiTinymceConfig, expression);
         setTimeout(function () {
-        	console.log(options);
+//        	console.log(options);
           tinymce.init(options);
         });
 
-
+        /* todo: possibly remove after Angular 1.2.0-rc3 */
+        var stopWatch = scope.$watch(attrs.ngModel, function(newValue, oldValue)
+        {
+          if (!tinyInstance) {
+            tinyInstance = tinymce.get(attrs.id);
+          }
+        if (tinyInstance) {
+        	tinyInstance.setContent(newValue);
+        	stopWatch();
+        }
+		});
+        
         ngModel.$render = function() {
           if (!tinyInstance) {
             tinyInstance = tinymce.get(attrs.id);

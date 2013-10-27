@@ -17,6 +17,7 @@ use eavcommon\EavFieldCommon;
 class EavField extends EavFieldCommon
 {
 	private static $eavClasses = null;
+	private $values = array();
 
 	public $ID;
 	public $classID;
@@ -39,14 +40,26 @@ class EavField extends EavFieldCommon
 
 	public function initialize()
 	{
-        $this->hasMany('fieldID', 'eav\EavValue', 'ID', array(
+        $this->hasMany('ID', 'eav\EavValue', 'fieldID', array(
             'alias' => 'EavValue',
             'foreignKey' => array(
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
             )
         ));
-        
-		$this->belongsTo('userID', 'user\User', 'ID', array('alias' => 'User'));
+
+        $this->hasMany('ID', 'eav\EavObjectValue', 'fieldID', array(
+            'alias' => 'EavObjectValue',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
+
+        $this->hasMany('ID', 'eav\EavItem', 'fieldID', array(
+            'alias' => 'EavItem',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
 	}
 
 	const DATATYPE_TEXT = 1;
@@ -76,6 +89,9 @@ class EavField extends EavFieldCommon
 		{
 			$className = get_class($className);
 		}
+		
+		$className = explode('\\', $className);
+		$className = array_pop($className);
 
 		$classes = self::getEavClasses();
 		if (isset($classes[$className]))
@@ -168,7 +184,33 @@ class EavField extends EavFieldCommon
 
 	protected function getParentCondition()
 	{
-		return new EqualsCond('classID', $this->classID);
+		//return 'classID = :classID:', array('classID' => $this->classID);
+	}
+	
+	public function registerValue(EavValue $value)
+	{
+		$this->values[] = $value;
+	}
+	
+	public function toJson($encode = true)
+	{
+		$array = $this->toArray();
+		if ($this->values)
+		{
+			foreach ($this->values as $value)
+			{
+				$array['values'][] = $value->toArray();
+			}
+		}
+		
+		if ($encode)
+		{
+			return htmlspecialchars(json_encode($array));
+		}
+		else
+		{
+			return $array;
+		}
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -206,8 +248,8 @@ class EavField extends EavFieldCommon
 
 	public static function getFieldsByClass($className)
 	{
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('EavField', 'classID'), EavField::getClassID($className)));
-		$f->orderBy(new ARFieldHandle('EavField', 'position'));
+		$f = query::query()->where('EavField.classID = :EavField.classID:', array('EavField.classID' => EavField::getClassID($className)));
+		$f->orderBy('EavField.position');
 
 		return self::getRecordSet('EavField', $f);
 	}
@@ -235,10 +277,15 @@ class EavField extends EavFieldCommon
 		return call_user_func_array(array($class, 'getNewInstance'), array($this));
 	}
 
-	public function getValueInstanceByID($id, $loadData = false)
+	public function getValueInstanceByID($id)
 	{
-		$class = call_user_func(array($this->getSelectValueClass(), 'getValueClass'));
-		return call_user_func_array(array($class, 'getInstanceByID'), array($id, $loadData));
+		foreach ($this->values as $value)
+		{
+			if ($value->getID() == $id)
+			{
+				return $value;
+			}
+		}
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/

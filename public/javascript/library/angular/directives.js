@@ -1,9 +1,10 @@
 var backendComponents = angular.module('backendComponents', []);
+
 backendComponents.copyAttrs = function(element, attrs)
 {
 	angular.forEach(attrs.$attr, function(key)
 	{
-		element.attr(key, attrs[key]);
+		element.attr(key, attrs[attrs.$normalize(key)]);
 	});
 }
 
@@ -115,6 +116,7 @@ backendComponents.directive('money', function() {
   };
 });
 
+/*
 backendComponents.directive('tabRoute', function($compile, $http, $location)
 {
     return {
@@ -149,6 +151,41 @@ backendComponents.directive('tabRoute', function($compile, $http, $location)
         }
     };
 });
+*/
+
+backendComponents.directive('tabsetRoute', function($compile, $http, $state, $location)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        transclude: true,
+        template: '<ul class="nav nav-tabs" ng-transclude></ul>'
+    };
+});
+
+backendComponents.directive('tabRoute', function($compile, $http, $state, $location)
+{
+    return {
+        restrict: "E",
+        scope: true,
+		link: function(scope, element, attrs)
+        {
+			var newElem = angular.element('<li ng-click="go(\'' + element.attr('route') + '\')"><a>' + element.html() + '</a></li>');
+			backendComponents.copyAttrs(newElem, attrs);
+
+			newElem = $compile(newElem)(scope);
+
+			element.replaceWith(newElem);
+
+			scope.go = function(where)
+			{
+				$state.go(where);
+			};
+        }
+    };
+});
+
 
 backendComponents.directive('submit', function($compile)
 {
@@ -159,16 +196,23 @@ backendComponents.directive('submit', function($compile)
         link: function(scope, element, attrs)
         {
 			var form = attrs.tabform ?  element.closest('.modal').find('.' + attrs.tabform) : element.closest('form');
+			if (!form.length)
+			{
+				form = element.closest('form');
+			}
 			var formScope = angular.element(form).scope();
 			formScope.customErrors = {};
-
+			
 			formScope.checkErrors = function(event, form)
 			{
 				var errors = _.without(_.values(form.$error), false);
-				if (errors.length)
+				if (errors.length || ($(event.target).find('ng-form.ng-invalid').length > 0))
 				{
 					event.preventDefault();
+					return false;
 				}
+				
+				return true;
 			};
 
 			formScope.setCustomErrors = function(errors)
@@ -298,14 +342,7 @@ backendComponents.directive('dialogCancel', function($compile)
         replace: true,
         transclude: true,
         require: '^dialog',
-        template: '<button type="button" class="btn btn-default" ng-click="close()" ng-transclude></button>',
-		link: function(scope, element, attrs, dialogCtrl)
-		{
-			scope.close = function()
-			{
-				dialogCtrl.close();
-			};
-    	}
+        template: '<button type="button" class="btn btn-default" ng-click="$close(0)" ng-transclude></button>'
 	};
 });
 
@@ -316,14 +353,7 @@ backendComponents.directive('dialogHeader', function($compile)
         replace: true,
         transclude: true,
         require: '^dialog',
-        template: '<div class="modal-header"><button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button><h4 class="modal-title" ng-transclude></h4></div>',
-        link: function(scope, element, attrs, dialogCtrl)
-		{
-			scope.close = function()
-			{
-				dialogCtrl.close();
-			};
-    	}
+        template: '<div class="modal-header"><button type="button" class="close" ng-click="$close(0)" aria-hidden="true">&times;</button><h4 class="modal-title" ng-transclude></h4></div>'
     };
 });
 
@@ -359,8 +389,8 @@ backendComponents.directive('grid', function($compile)
 			scope.columnDefs = [];
 			
 			scope.pagingOptions = {
-										pageSizes: [10],
-										pageSize: 10,
+										pageSizes: [20],
+										pageSize: 20,
 										currentPage: 1
 									};
 
@@ -606,6 +636,196 @@ backendComponents.directive('weightInput', function($compile, $timeout)
     };
 });
 
+backendComponents.directive('eavFormatted', function($compile)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        transclude: true,
+        template: '<div class="form-group field_eav field_eav_{{ config.ID }} field_eav_{{ config.handle }}"><label class="control-label">{{ config.name }}</label><div ng-transclude></div></div>',
+        link: function(scope, element, attrs)
+		{
+			var config = JSON.parse(attrs.config);
+			scope.config = config;
+			delete attrs.config;
+			element.removeAttr('ng-transclude');
+		}
+	}
+});
+
+backendComponents.directive('dateField', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        transclude: true,
+        template: '<input type="text" datepicker-popup="dd-MMMM-yyyy" is-open="opened" datepicker-options="dateOptions" readonly="readonly" ng-transclude />',
+        link: function(scope, element, attrs)
+		{
+			scope.today = function() 
+			{
+				if (!scope.todayInst)
+				{
+					scope.todayInst = new Date();
+				}
+				
+				return scope.todayInst;
+			};
+
+			scope.showWeeks = true;
+			
+			scope.toggleWeeks = function () 
+			{
+				scope.showWeeks = ! scope.showWeeks;
+			};
+		}
+	}
+});
+
+backendComponents.directive('eavFields', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        template: '<div ng-repeat="field in eavConfig"><eav-formatted config="{{field}}"><eav-field config="{{field}}"></eav-field></eav-formatted></div>',
+        link: function(scope, element, attrs)
+		{
+			var filterFunc = function(field)
+			{
+				if (!attrs.filter)
+				{
+					return true;
+				}
+				else
+				{
+					return field[attrs.filter];
+				}
+			}
+			
+			var filter = function(fields)
+			{
+				return _.filter(fields, filterFunc);
+			};
+			
+			scope.eavConfig = filter(scope[attrs.config]);
+			
+			console.log(scope.eavConfig);
+			scope.$watch(attrs.config, function(newVal)
+			{
+				scope.eavConfig = filter(newVal);
+			});
+		}
+	}
+});
+
+backendComponents.directive('eavField', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        link: function(scope, element, attrs)
+		{
+			if (attrs.config)
+			{
+				var config = attrs.config;
+			}
+			else
+			{
+				var config = element.closest('.field_eav').attr('config');
+			}
+			
+			config = JSON.parse(config);
+			
+			if ("5" == config.type)
+			{
+				scope.options = config.values;
+				var html = '<select ng-options="o.ID as o.value for o in options" ng-click="opts()"></select>';
+				var input = 'select';
+			}
+			else if ("3" == config.type)
+			{
+				var html = '<textarea' + (attrs.plain ? '' :' ui-my-tinymce') + '></textarea>';
+				var input = 'textarea';
+			}
+			else if ("6" == config.type)
+			{
+				//var html = '<input type="text" datepicker-popup="dd-MMMM-yyyy" is-open="opened" min="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" />';
+				var html = '<div><date-field></date-field></div>';
+				//<span class="glyphicon glyphicon-calendar"></span></button>
+
+				scope.toggleMin = function() {
+				scope.minDate = ( scope.minDate ) ? null : new Date();
+				};
+				scope.toggleMin();
+
+				scope.open = function() {
+				$timeout(function() {
+				  scope.opened = true;
+				});
+				};
+
+				scope.dateOptions = {
+				'year-format': "'yy'",
+				'starting-day': 1
+				};
+				
+				var input = 'date-field';
+			}
+			
+			if (html)
+			{
+				var fieldName = 'eav_' + config.ID;
+				if (config.isRequired)
+				{
+					html = html + '<div class="text-danger" ng-show="isSubmitted && eavform.' + fieldName + '.$error.required">This field cannot be left blank</div>';
+				}
+				
+				html = '<div><ng-form name="eavform">' + html + element.html() + '</ng-form></div>';
+				
+				var newElem = angular.element(html);
+				
+				var attrElem = input ? newElem.find(input) : newElem;
+				
+				attrElem.attr('ng-model', 'vals.eav.' + config.ID);
+				attrElem.addClass('form-control');
+				attrElem.attr('placeholder', config.description);
+				attrElem.attr('name', fieldName);
+				
+				if (config.isRequired)
+				{
+					attrElem.attr('ng-required', true);
+				}
+				
+				if ("5" == config.type)
+				{
+					if (config.isMultiValue)
+					{
+						attrElem.addClass('multiselect');
+						attrElem.attr('multiple', 'multiple');
+						attrElem.attr('multiselect', 'true');
+					}
+				}
+				
+				delete attrs.$attr.config;
+				if (input == 'date-field')
+				{
+					backendComponents.copyAttrs(attrElem, attrs);
+				}
+
+				newElem = $compile(newElem)(scope);
+				element.replaceWith(newElem);
+				
+				//var form = angular.element(newElem.closest('form'));
+				//$compile(form)(form.scope());
+			}
+    	}
+    };
+});
+
 backendComponents.directive('eavSelect', function($compile)
 {
     return {
@@ -624,6 +844,47 @@ backendComponents.directive('eavSelect', function($compile)
 			});
     	}
     };
+});
+
+backendComponents.directive('multiselect', function() 
+{
+    return function(scope, element, attributes) 
+    {
+		scope.html = '';
+		
+		window.setInterval(function()
+		{
+			scope.html = element.html();
+		}, 200);
+		
+		$(element).multiselect({
+			buttonText: function(options, select)
+			{
+				if (options.length == 0) 
+				{
+					return select.attr('placeholder') + ' <b class="caret"></b>';
+				}
+				else if (options.length > 3) 
+				{
+					return options.length + ' selected <b class="caret"></b>';
+				}
+				else 
+				{
+					var selected = '';
+					options.each(function() {
+					selected += $(this).text() + ', ';
+					});
+					return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+				}
+			}, 
+			buttonContainer: '<div class="form-control multisel" />', 
+			maxHeight: 200});
+			
+		scope.$watch('html', function()
+		{
+			$(element).multiselect('rebuild');
+		});
+    }
 });
 
 backendComponents.directive('eavMultiselect', function($parse)
@@ -718,7 +979,11 @@ backendComponents.directive('defaultValues', function () {
         {
 			if (window[attrs.defaultValues])
 			{
-				scope.vals = window[attrs.defaultValues];
+				var parent = scope;
+				var lastParent = scope;
+
+				while (parent.vals) { lastParent = parent; parent = parent.$parent; }
+				lastParent.vals = window[attrs.defaultValues];
 			}
         }
     };
@@ -770,3 +1035,4 @@ backendComponents.directive('filterNumber', function(){
      }
    };
 });
+

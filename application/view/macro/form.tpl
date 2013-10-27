@@ -122,3 +122,12 @@
         </label>
     [[ endinput(field) ]]
 {%- endmacro %}
+
+{%- macro eav(instance, handle, options, default) %}
+    {% set attr = instance.handle(handle) %}
+    {% if attr %}
+    	[[ attr.getFormattedValue(options) ]]
+    {% else %}
+    	[[ default ]]
+    {% endif %}
+{%- endmacro %}

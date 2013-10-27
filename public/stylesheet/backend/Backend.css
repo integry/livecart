@@ -1,3 +1,11 @@
+.fade.in { display: inline-block; }
+
+.ui-icon { display: inline-block; }
+
+.modal-body { overflow: auto; }
+
+a { cursor: pointer; }
+
 .btn-toolbar
 {
 	margin-bottom: 1em;
@@ -41,14 +49,8 @@
 	overflow: auto;
 }
 
-.tree li
-{
-	list-style-type: none;
-}
-
 .tree ul
 {
-	list-style-type: none;
 	margin-left: 20px;
 }
 

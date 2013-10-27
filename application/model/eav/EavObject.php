@@ -1,27 +1,43 @@
 <?php
 
+namespace eav;
 
-class EavObject extends ActiveRecordModel
+class EavObject extends \ActiveRecordModel
 {
 	private $stringIdentifier;
 	private $parent;
 
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $categoryID;//", "Category", "ID", null, ARInteger::instance()), false);
+	public $customerOrderID;//", "CustomerOrder", "ID", null, ARInteger::instance()), false);
+	public $manufacturerID;//", "Manufacturer", "ID", null, ARInteger::instance()), false);
+	public $userID;
+	public $userAddressID;//", "UserAddress", "ID", null, ARInteger::instance()), false);
+	public $userGroupID;//", "UserGroup", "ID", null, ARInteger::instance()), false);
+	public $transactionID;//", "Transaction", "ID", null, ARInteger::instance()), false);
+	public $shippingServiceID;//", "ShippingService", "ID", null, ARInteger::instance()), false);
+	public $staticPageID;//", "StaticPage", "ID", null, ARInteger::instance()), false);
+
+	public $classID;
+	
+	public function initialize()
 	{
+		$this->belongsTo('productID', 'product\Product', 'ID', array('alias' => 'Product'));
+		$this->belongsTo('userID', 'user\User', 'ID', array('alias' => 'User'));
+		
+        $this->hasMany('ID', 'eav\EavObjectValue', 'objectID', array(
+            'alias' => 'EavObjectValue',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
 
-
-		public $ID;
-		public $categoryID", "Category", "ID", null, ARInteger::instance()), false);
-		public $customerOrderID", "CustomerOrder", "ID", null, ARInteger::instance()), false);
-		public $manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()), false);
-		public $userID", "User", "ID", null, ARInteger::instance()), false);
-		public $userAddressID", "UserAddress", "ID", null, ARInteger::instance()), false);
-		public $userGroupID", "UserGroup", "ID", null, ARInteger::instance()), false);
-		public $transactionID", "Transaction", "ID", null, ARInteger::instance()), false);
-		public $shippingServiceID", "ShippingService", "ID", null, ARInteger::instance()), false);
-		public $staticPageID", "StaticPage", "ID", null, ARInteger::instance()), false);
-
-		public $classID;
+        $this->hasMany('ID', 'eav\EavItem', 'objectID', array(
+            'alias' => 'EavItem',
+            'foreignKey' => array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            )
+        ));
 	}
 
 	public static function getInstance(EavAble $parent)
@@ -34,26 +50,37 @@ class EavObject extends ActiveRecordModel
 			}
 		}
 
-		if ($parent->eavObject)
+		if ($parent->eavObjectID)
 		{
-			$parent->eavObject->classID = EavField::getClassID(get_class($parent)));
-			return $parent->eavObject;
+			$eavObject = EavObject::getInstanceByID($parent->eavObjectID);
+			$eavObject->classID = EavField::getClassID(get_class($parent));
+			return $eavObject;
 		}
 		else
 		{
 			return self::getNewInstance($parent);
 		}
 	}
+	
+	public function get_Object()
+	{
+		return $this;
+	}
 
 	public static function getNewInstance(EavAble $parent)
 	{
+		if (!$parent->getID())
+		{
+			return null;
+		}
+		
 		$field = self::getInstanceField($parent);
-		$instance = new self();
-		$instance->$field = $parent;
-		$instance->classID = EavField::getClassID($parent));
 
+		$instance = new self();
+		$instance->$field = $parent->getID();
+		$instance->classID = EavField::getClassID($parent);
 		$instance->parent = $parent;
-		$parent->eavObject = $instance;
+		$parent->set_EavObject($instance);
 
 		return $instance;
 	}
@@ -61,14 +88,16 @@ class EavObject extends ActiveRecordModel
 	public static function getInstanceByIdentifier($stringIdentifier)
 	{
 		$instance = new self();
-		$instance->classID = 0);
+		$instance->classID = 0;
 		$instance->setStringIdentifier($stringIdentifier);
 		return $instance;
 	}
 
 	public function getClassField($className)
 	{
-		return strtolower(substr($className, 0, 1)) . substr($className, 1) . 'ID';
+		$parts = explode('\\', $className);
+		$className = array_pop($parts);
+		return lcfirst($className) . 'ID';
 	}
 
 	public function setStringIdentifier($stringIdentifier)
@@ -102,13 +131,7 @@ class EavObject extends ActiveRecordModel
 		return parent::serialize($skippedRelations, $properties);
 	}
 
-	public function beforeCreate()
-	{
-		parent::insert();
-		$this->parent->save();
-	}
-
-	private function getInstanceField(ActiveRecordModel $instance)
+	private function getInstanceField(\ActiveRecordModel $instance)
 	{
 		return self::getClassField(get_class($instance));
 	}

@@ -233,6 +233,11 @@ class EavfieldController extends ActiveGridController
 			
 			foreach ($values as &$value)
 			{
+				if (empty($value['value']))
+				{
+					continue;
+				}
+
 				if (empty($value['ID']))
 				{
 					$val = EavValue::getNewInstance($specField);
@@ -240,10 +245,6 @@ class EavfieldController extends ActiveGridController
 				else
 				{
 					$val = isset($existingValues[$value['ID']]) ? $existingValues[$value['ID']] : EavValue::getNewInstance($specField);
-					if (empty($value['value']))
-					{
-						continue;
-					}
 					unset($existingValues[$value['ID']]);
 				}
 				

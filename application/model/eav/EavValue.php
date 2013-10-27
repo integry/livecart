@@ -14,7 +14,7 @@ use Phalcon\Mvc\Model\Validator;
  * @package application/model/eav
  * @author Integry Systems <http://integry.com>
  */
-class EavValue extends EavValueCommon
+class EavValue extends \ActiveRecordModel
 {
 	public $ID;
 	public $fieldID;
@@ -23,7 +23,7 @@ class EavValue extends EavValueCommon
 
 	public function initialize()
 	{
-		$this->belongsTo('fieldID', 'eav\EavField', 'ID', array('alias' => 'EavField'));
+		$this->belongsTo('fieldID', 'eav\EavField', 'ID', array('alias' => 'Field'));
 	}
 
     public function validation()
@@ -36,10 +36,10 @@ class EavValue extends EavValueCommon
 
         return $this->validationHasFailed() != true;
     }
-
-	protected function getFieldClass()
-	{
-		return 'EavField';
+    
+    public function getEavField()
+    {
+    	return $this->getField();
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -70,6 +70,21 @@ class EavValue extends EavValueCommon
 		$instance->value = unserialize($value);
 
 		return $instance;
+	}
+	
+	/*
+	public function beforeSave()
+	{
+		$this->mergeFields();
+	}
+	*/
+
+	public function beforeCreate()
+	{
+		if (!$this->position)
+		{
+			$this->setLastPosition('fieldID');
+		}
 	}
 }
 ?>

@@ -105,19 +105,6 @@ abstract class EavValueCommon extends \system\MultilingualObject
 		return $isFullPath ? $this->config->getPath('public/') . $path : $path;
 	}
 
-	public function beforeSave()
-	{
-		$this->mergeFields();
-	}
-
-	public function beforeCreate()
-	{
-		if (!$this->position)
-		{
-			$this->setLastPosition('fieldID');
-		}
-	}
-
 	/**
 	 *	@todo Rewrite this to use ARUpdateFilter or simply an SQL query to update all values
 
@@ -213,7 +200,6 @@ abstract class EavValueCommon extends \system\MultilingualObject
 			$array['imagePath'] = $imagePath;
 		}
 	  	
-	  	$this->setArrayData($array);
 	  	return $array;
 	}
 }

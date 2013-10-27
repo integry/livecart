@@ -1,5 +1,11 @@
 <?php
 
+use eav\EavAble;
+use eav\EavObject;
+use eav\EavSpecificationManager;
+
+Phalcon\Mvc\Model::setup(['exceptionOnFailedSave' => true]);
+
 /**
  * Base class for all ActiveRecord based models of application (single entry point in
  * application specific model class hierarchy)
@@ -15,6 +21,11 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
  	protected $specificationInstance;
 
+	public function initialize()
+	{
+		$this->useDynamicUpdate(true);
+	}
+   
 	public function getSource()
 	{
 		$parts = explode('\\', get_class($this));
@@ -37,70 +48,10 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return $class::query()->where('ID = :id:', array('id' => $id))->execute()->getFirst();
 	}
 
-	public function loadRequestModel(\Phalcon\Http\Request $request, $key = '')
-	{
-		$json = $request-> getJsonRawBody();
-		if ($key)
-		{
-			$json = $json[$key];
-		}
-
-		$modelReq = new Request();
-		$modelReq->setValueArray($json);
-
-		if (!empty($json['attributes']) && is_array($json['attributes']))
-		{
-			foreach ($json['attributes'] as $key => $value)
-			{
-				if (!empty($value['valueIDs']))
-				{
-					foreach (json_decode($value['valueIDs']) as $valueID)
-					{
-						$modelReq->set('specItem_' . $valueID, 'on');
-					}
-
-					if (!empty($value['newValues']))
-					{
-						foreach (json_decode($value['newValues']) as $newVal)
-						{
-							$others = $modelReq->get('other', array());
-							$others[$key][] = $newVal;
-							$modelReq->set('other', $others);
-						}
-					}
-
-					$modelReq->set('removeEmpty_' . $key, 'on');
-				}
-				else if (isset($value['ID']))
-				{
-					$modelReq->set('specField_' . $key, $value['ID']);
-					if (!empty($value['newValue']))
-					{
-						$others = $modelReq->get('other', array());
-						$others[$key] = $value['newValue'];
-						$modelReq->set('other', $others);
-					}
-				}
-				else
-				{
-					$modelReq->set('specField_' . $key, $value['value']);
-					foreach ($this->getDI()->get('application')->getLanguageArray() as $lang)
-					{
-						if (!empty($value['value_' . $lang]))
-						{
-							$modelReq->set('specField_' . $key . '_' . $lang, $value['value_' . $lang]);
-						}
-					}
-				}
-			}
-		}
-
-		$this->loadRequestData($modelReq);
-	}
-
 	public static function getRequestInstance(\Phalcon\Http\Request $request, $field = 'ID')
 	{
-		return ActiveRecordModel::getInstanceByID(get_called_class(), $request->getJson($field), true);
+		$class = get_called_class();
+		return $class::getInstanceByID($request->getJson($field));
 	}
 
 	public static function updateFromRequest(\Phalcon\Http\Request $request)
@@ -125,6 +76,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		else
 		{
 			$this->assign($request);
+		}
+		
+		if ($this instanceof EavAble)
+		{
+			$spec = $this->getSpecification();
+			$spec->loadRequestData($request);
 		}
 
 		return;
@@ -235,9 +192,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			throw new ApplicationException(get_class($this) . ' does not support EAV');
 		}
 
-		$obj = $this instanceof EavObject ? $this : EavObject::getInstance($this);
-
-		$this->specificationInstance = new EavSpecificationManager($obj, $specificationData);
+		$this->specificationInstance = new EavSpecificationManager($this, $specificationData);
+	}
+	
+	public function handle($handle)
+	{
+		return $this->getSpecification()->getAttributeByHandle($handle);
 	}
 
 	protected function setLastPosition($parentField = null, $parent = null)
@@ -284,35 +244,42 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	public function beforeSave()
 	{
 		$this->executePlugins($this, 'before-save');
+	}
 
-		if (($this instanceof EavAble) && $this->eavObject && !$this->eavObject->getID() && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
+	public function afterSave()
+	{
+		if (($this instanceof EavAble) && $this->isSpecificationLoaded() && $this->getSpecification()->hasValues())
 		{
-			$eavObject = $this->eavObject;
-			$this->eavObject = null;
+			$eavObject = $this->get_EavObject();
+			if (!$eavObject)
+			{
+				$eavObject = EavObject::getNewInstance($this);
+				$eavObject->save();
+
+				$this->getSpecification()->setOwner($this);
+
+				$this->eavObjectID = $eavObject->getID();
+				$this->save();
+			}
 		}
 
 		if (isset($eavObject))
 		{
 			$eavObject->save();
-			$this->eavObject = $eavObject;
-			$this->save();
 		}
 
-		if ($this instanceof EavAble && $this->specificationInstance && $this->eavObject)
+		if ($this instanceof EavAble && $this->specificationInstance && isset($eavObject))
 		{
 			if ($this->specificationInstance->hasValues())
 			{
-				$this->specificationInstance->save();
+				//$this->specificationInstance->save();
 			}
 			else
 			{
-				$this->eavObject->delete();
+				$eavObject->delete();
 			}
 		}
-	}
 
-	public function afterSave()
-	{
 		$this->executePlugins($this, 'after-save');
 	}
 
@@ -365,11 +332,16 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		return self::$isEav[$className];
 	}
 
-	/*
-	public function toArray($force = false)
+	public function toArray()
 	{
-		$array = parent::toArray($force);
+		$array = parent::toArray();
 
+		if ($this->specificationInstance)
+		{
+			$array['eav'] = $this->specificationInstance->toArray();
+		}
+
+		/*
 		self::executePlugins($array, 'array', get_class($this));
 		if ($this->specificationInstance && ($this->specificationInstance instanceof EavSpecificationManager) && (empty($array['attributes']) || $force))
 		{
@@ -377,10 +349,10 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			$array['attributes']['markAsJSONObject'] = true;
 			EavSpecificationManager::sortAttributesByHandle('EavSpecificationManager', $array);
 		}
+		*/
 
 		return $array;
 	}
-	*/
 
 	public function processBusinessRules(BusinessRuleManager $manager)
 	{
@@ -500,6 +472,12 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		}
 	}
 	*/
+	
+	public function getField()
+	{
+		throw new \Exception('erer');
+		return 'sdfsdfsdf';
+	}
 
 	public function getFormattedTime($field, $type)
 	{
@@ -509,6 +487,24 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function __call($method, $arguments = NULL)
 	{
+		if (substr($method, 0, 4) == 'set_')
+		{
+			$property = $this->getRelatedProperty($method);
+			if (property_exists($this, $property))
+			{
+				return $this->setRelatedInstance($property, $arguments[0]);
+			}
+		}
+		
+		if (substr($method, 0, 4) == 'get_')
+		{
+			$property = $this->getRelatedProperty($method);
+			if (property_exists($this, $property))
+			{
+				return $this->getRelatedInstance($property);
+			}
+		}
+		
 		if (isset($this->$method) && (!empty($arguments) && (in_array(substr($arguments[0], 0, 2), array('d_', 't_')))))
 		{
 			return $this->getFormattedTime($method, $arguments[0]);
@@ -516,6 +512,32 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		else
 		{
 			return parent::__call($method, $arguments);
+		}
+	}
+	
+	protected function getRelatedProperty($method)
+	{
+		$property = substr($method, 4);
+		return lcfirst($property) . 'ID';
+	}
+	
+	protected function setRelatedInstance($key, ActiveRecordModel $value)
+	{
+		$this->$key = $value->getID();
+		$instanceKey = substr($key, 0, -2);
+		$this->$instanceKey = $value;
+	}
+
+	protected function getRelatedInstance($key)
+	{
+		$instanceKey = substr($key, 0, -2);
+		if (!empty($this->$instanceKey))
+		{
+			return $this->$instanceKey;
+		}
+		else if (!empty($this->$key))
+		{
+			return parent::__call('get' . ucfirst($instanceKey));
 		}
 	}
 
