@@ -51,13 +51,30 @@ class EavFieldManager
 			{
 				$this->fields[$field->getID()] = $field;
 				$ids[] = $field->getID();
+				
+				if ($field->valueFieldID)
+				{
+					$ids[] = $field->valueFieldID;
+					$aliases[$field->getID()] = $field->valueFieldID;
+				}
 			}
 			
 			if ($ids)
 			{
 				foreach (EavValue::query()->inWhere('fieldID', $ids)->orderBy('position')->execute() as $value)
 				{
-					$this->fields[$value->fieldID]->registerValue($value);
+					if (isset($this->fields[$value->fieldID]))
+					{
+						$this->fields[$value->fieldID]->registerValue($value);
+					}
+
+					foreach ($aliases as $field => $alias)
+					{
+						if ($alias == $value->fieldID)
+						{
+							$this->fields[$field]->registerValue($value);
+						}
+					}
 				}
 			}
 		}
@@ -85,7 +102,7 @@ class EavFieldManager
 		$this->loadFields();
 		return !empty($this->fields[$id]) ? $this->fields[$id] : null;
 	}
-	
+
 	public function setResponse(\ControllerBase $controller)
 	{
 		$this->loadFields();

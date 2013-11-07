@@ -33,7 +33,7 @@ class EavSpecificationManager
 		
 		if (is_null($specificationDataArray) && $owner->getID())
 		{
-			$specificationDataArray = self::fetchRawSpecificationData(get_class($this), array($owner->eavObjectID), true);
+			$specificationDataArray = self::fetchRawSpecificationData(array($owner->eavObjectID), true);
 
 /*
 			// preload attribute groups
@@ -52,6 +52,29 @@ class EavSpecificationManager
 		}
 
 		$this->loadSpecificationData($specificationDataArray);
+	}
+	
+	public static function loadSpecificationForRecordSet($set)
+	{
+		$ids = array();
+		foreach ($set as $item)
+		{
+			if ($item->eavObjectID)
+			{
+				$ids[] = $item->eavObjectID;
+			}
+		}
+		
+		$sorted = array();
+		foreach (self::fetchRawSpecificationData($ids, true) as $part)
+		{
+			foreach ($part as $value)
+			{
+				$sorted[$value->eavObjectID][] = $value;
+			}
+		}
+		
+		var_dump($sorted);exit;
 	}
 
 	public function getSpecificationFieldSet()
@@ -386,7 +409,7 @@ class EavSpecificationManager
 						$value = array();
 					}
 					
-					foreach ($field->getValues() as $val)
+					foreach ($field->getRegisteredValues() as $val)
 					{
 						if (in_array($val->getID(), $value))
 						{
@@ -761,7 +784,7 @@ class EavSpecificationManager
 	}
 	*/
 
-	private static function fetchRawSpecificationData($class, $objectIDs, $fullSpecification = false)
+	private static function fetchRawSpecificationData($objectIDs, $fullSpecification = false)
 	{
 		if (!$objectIDs)
 		{
@@ -864,16 +887,16 @@ class EavSpecificationManager
 					$field = $this->fieldManager->getField($attr->fieldID);
 					if ($field->isMultiValue)
 					{
-						if (empty($this->attributes[$attr->fieldID]))
+						if (empty($this->attributes[$field->getID()]))
 						{
-							$this->attributes[$attr->fieldID] = EavMultiValueItem::getNewInstance($this->owner, $field);
+							$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this->owner, $field);
 						}
 						
-						$this->attributes[$attr->fieldID]->setItem($attr);
+						$this->attributes[$field->getID()]->setItem($attr);
 					}
 					else
 					{
-						$this->attributes[$attr->fieldID] = $attr;
+						$this->attributes[$field->getID()] = $attr;
 					}
 				}
 			}

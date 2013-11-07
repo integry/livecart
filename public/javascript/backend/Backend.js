@@ -117,6 +117,18 @@ app.config(function($stateProvider)
           $scope.type = $stateParams.type;
         }
     })
+	.state('staticPage', {
+	  templateUrl: '../backend/staticPage',
+	  url: '/staticPage'
+	})
+	.state('successstory', {
+	  templateUrl: '../successstory',
+	  url: '/successstory'
+	})
+	.state('simplesettings', {
+	  templateUrl: '../simplesettings',
+	  url: '/simplesettings'
+	})
 	;
 });
 
@@ -138,16 +150,31 @@ app.run(function($rootScope)
 	{
 		return key;
 	};
+
+    $rootScope.tinymceOptions = {
+    theme: "modern",width: 680,height: 300,
+    plugins: [
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+         "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking",
+         "table contextmenu directionality emoticons paste textcolor filemanager"
+   ],
+   toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+   toolbar2: "| responsivefilemanager | link unlink anchor | image media | forecolor backcolor  | print preview code ",
+   image_advtab: true ,
+   external_filemanager_path:"http://rinalds.mooo.com/hey2/public/filemanager/",
+   filemanager_title:"Responsive Filemanager" ,
+   external_plugins: { "filemanager" : "http://rinalds.mooo.com/hey2/public/filemanager/plugin.min.js"}
+ };
+    
+    $rootScope.getTinyMceOpts = function()
+    {
+    	console.log($scope.tinymceOptions);
+    	return $scope.tinymceOptions;
+	};
 });
 
 app.controller('BackendController', function($scope, $state)
 {
-    $scope.tinymceOptions = window.tinyMCEOptions;
-    $scope.getTinyMceOpts = function()
-    {
-    	return $scope.tinymceOptions;
-	};
-	
 	$scope.setPage = function(page) 
 	{
         $state.transitionTo(page);

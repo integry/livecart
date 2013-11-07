@@ -55,8 +55,8 @@ class EavMultiValueItem implements iEavSpecification
 	  	// test whether the value belongs to the same field
 		if ($value->get_Field()->getID() != $this->fieldInstance->getID())
 	  	{
-			$class = get_class($value->get_Field());
-			throw new Exception('Cannot assign ' . $class . ':' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->fieldInstance->getID());
+			//$class = get_class($value->get_Field());
+			//throw new Exception('Cannot assign ' . $class . ':' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->fieldInstance->getID());
 		}
 
 		if (!isset($this->items[$value->getID()]))

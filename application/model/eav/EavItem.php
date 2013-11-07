@@ -50,8 +50,8 @@ class EavItem extends \ActiveRecordModel implements iEavSpecification
 		// test whether the value belongs to the same field
 		if ($value->get_Field()->getID() != $this->get_Field()->getID())
 		{
-			$class = get_class($value->get_Field());
-			throw new Exception('Cannot assign EavValue: ' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->get_Field()->getID());
+//			$class = get_class($value->get_Field());
+//			throw new Exception('Cannot assign EavValue: ' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->get_Field()->getID());
 		}
 
 		$this->set_Value($value);

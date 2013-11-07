@@ -146,9 +146,16 @@ class EavObjectValue extends \ActiveRecordModel implements iEavSpecification
 		return $this->getValue();
 	}
 	
-	public function getFormattedValue()
+	public function getFormattedValue($options = array())
 	{
-		return $this->getRawValue();
+		$value = $this->getRawValue();
+		
+		if (!empty($options['format']))
+		{
+			$value = date($options['format'], strtotime($value));
+		}
+		
+		return $value;
 	}
 	
 	public function replaceValue(EavObjectValue $newValue)

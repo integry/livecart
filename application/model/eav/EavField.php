@@ -287,6 +287,11 @@ class EavField extends EavFieldCommon
 			}
 		}
 	}
+	
+	public function getRegisteredValues()
+	{
+		return $this->values;
+	}
 
 	/*####################  Value retrieval and manipulation ####################*/
 
