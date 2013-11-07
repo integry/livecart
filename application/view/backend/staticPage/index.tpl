@@ -1,27 +1,20 @@
-{includeJs file="backend/StaticPage.js"}
-
-{includeCss file="backend/StaticPage.css"}
-
-{pageTitle help="content.pages"}{t _static_pages}{/pageTitle}
-
-[[ partial("backend/eav/includes.tpl") ]]
-[[ partial("layout/backend/header.tpl") ]]
-
-<div id="staticPageContainer" ng-controller="TreeController" ng-init="setTree({$pages|escape})">
-	<div class="treeContainer">
+<div id="staticPageContainer" ng-controller="StaticPageController" ng-init="setTree([[ json(pages) ]])">
+	<div class="row">
+	<div class="treeContainer col-lg-3">
 		[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 
 		<ul class="verticalMenu">
-			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a ng-click="add()">{t _add_new}</a></li>
-			<li id="removeMenu" ng-show="activeID" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a ng-click="remove()">{t _remove}</a></li>
+			<li id="addMenu" class="addTreeNode"><a ng-click="add()">{t _add_new}</a></li>
+			<li id="removeMenu" ng-show="activeID" class="removeTreeNode"><a ng-click="remove()">{t _remove}</a></li>
 		</ul>
 	</div>
 
-	<div class="treeManagerContainer">
+	<div class="treeManagerContainer col-lg-9">
 
 		<tabset>
-			<tab ng-repeat="instance in pages" ng-click="selectID(instance.ID)" heading="{{getTabTitle(instance)}}">
-				<div ng-show="instance.ID">
+			<tab ng-repeat="vals in pages" ng-click="selectID(vals.ID)" heading="{{getTabTitle(vals)}}">
+				{#
+				<div ng-show="vals.ID">
 					<ul class="menu" id="staticPageMenu">
 						<li id="codeMenu">
 							<a class="menu" ng-click="showcode = !showcode">{t _show_template_code}</a>
@@ -32,14 +25,18 @@
 						<legend>{t _template_code}</legend>
 						{t _code_explain}:
 						<br /><br />
-						&lt;a href="<strong>{ldelim}pageUrl id={{instance.ID}}{rdelim}</strong>"&gt;<strong>{ldelim}pageName id={{instance.ID}}{rdelim}</strong>&lt;/a&gt;
+						&lt;a href="<strong>{ldelim}pageUrl id={{vals.ID}}{rdelim}</strong>"&gt;<strong>{ldelim}pageName id={{vals.ID}}{rdelim}</strong>&lt;/a&gt;
 					</fieldset>
 				</div>
+				#}
 
-				{form model="instance" name="form" rel="controller=backend.staticPage action=save" ng_submit="save(this)" handle=$form method="post" role="page.update(edit),page.create(add)"}
+				[[ form('', ['ng-init': ';', 'ng-submit' : "save(this)"]) ]] >
 
 				<div id="editContainer">
+				
+					[[ textfld('title', '_title') ]]
 
+{#
 					{input name="title"}
 						{label}{t _title}:{/label}
 						{% if $page.ID %}
@@ -50,32 +47,21 @@
 					{/input}
 
 					<p>{t _add_page_to_menu}</p>
-
 					[[ checkbox('menuInformation', '_information_menu') ]]
-
 					[[ checkbox('menuRootCategories', '_main_header_menu') ]]
+#}
 
-					{input name="handle"}
-						{label}{t _handle}:{/label}
-						{textfield id="handle"}
-					{/input}
+					[[ textfld('handle', '_handle') ]]
+					
+					[[ textareafld('text', '_text', ['ui-my-tinymce': 'tinymceOptions']) ]]
 
-					{input name="text"}
-						{label}{t _text}:{/label}
-						<div class="textarea" id="textContainer">
-							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
-						</div>
-					{/input}
+					[[ textareafld('metaDescription', '_meta_description') ]]
 
-					{input name="metaDescription"}
-						{label}{t _meta_description}:{/label}
-						{textarea style="width: 100%; height: 4em;"}
-					{/input}
+					{# [[ partial('backend/eav/fields.tpl', ['item': page, 'angular': "vals"]) ]] #}
 
-					[[ partial('backend/eav/fields.tpl', ['item': page, 'angular': "instance"]) ]]
-
+					{#
 					{language}
-						[[ textfld('title_`$lang.ID`', '_title', class: 'wider') ]]
+						[[ textfld('title_`$lang.ID`', '_title') ]]
 
 						{input name="text_`$lang.ID`"}
 							{label}{t _text}:{/label}
@@ -87,22 +73,22 @@
 							{textarea style="width: 100%; height: 4em;"}
 						{/input}
 
-						[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': page, 'language': lang.ID]) ]]
+						[[ partial('backend/eav/fields.tpl', ['angular': "vals", 'item': page, 'language': lang.ID]) ]]
 					{/language}
+					#}
 
 				</div>
 
-				<fieldset class="controls">
-					<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-					<input ng-disabled="form.$invalid" type="submit" value="{t _save}" class="submit" />
-					{t _or}
-					<a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
-				</fieldset>
+				<div class="row">
+					<div class="col-lg-12">
+						<submit>{t _save}</submit>
+						{t _or}
+						<a class="cancel" id="cancel" ng-click="cancel(vals)">{t _cancel}</a>
+					</div>
+				</div>
 
-				{/form}
+				</form>
 			</tab>
 		</tabset>
 	</div>
 </div>
-
-[[ partial("layout/backend/footer.tpl") ]]

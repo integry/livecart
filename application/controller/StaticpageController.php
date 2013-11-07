@@ -13,7 +13,7 @@ class StaticpageController extends ControllerBase
 		$page = \staticpage\StaticPage::query()->where('handle = :handle:')->bind(array('handle' => $handle))->execute()->getFirst();
 		$this->set('page', $page);
 		$this->view->pick('staticpage/view');
-
+		
 		/*
 		$this->loadLanguageFile('Frontend');
 
@@ -38,7 +38,7 @@ class StaticpageController extends ControllerBase
 		$this->addBreadCrumb($pageArray['title_lang'], '');
 
 		$this->set('page', $pageArray);
-		$response = 'subPages', $page->getSubPageArray());
+		$this->set('subPages', $page->getSubPageArray());
 		*/
 	}
 }

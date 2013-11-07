@@ -1,4 +1,4 @@
-app.controller('TreeController', function ($scope, treeService, $http, $element)
+app.controller('StaticPageController', function ($scope, treeService, $http, $element)
 {
 	$scope.tree = treeService;
 	$scope.tree.initController($scope);
@@ -10,7 +10,7 @@ app.controller('TreeController', function ($scope, treeService, $http, $element)
 	{
 		if (!$scope.ids[child.id])
 		{
-			$http.get(Router.createUrl('backend.staticPage', 'edit', {id : child.id})).success(function(data)
+			$http.get(Router.createUrl('backend/staticpage', 'edit', {id : child.id})).success(function(data)
 			{
 				$scope.pages.push(data);
 				$scope.ids[data.ID] = true;
@@ -35,12 +35,12 @@ app.controller('TreeController', function ($scope, treeService, $http, $element)
 
 	$scope.update = function(item, params)
 	{
-		$http.post(Router.createUrl('backend.staticPage', 'move', params), this.instance);
+		$http.post(Router.createUrl('backend/staticpage', 'move', params), this.instance);
 	};
 
 	$scope.add = function()
 	{
-		if (!$scope.pages || $scope.pages[0].ID)
+		if (!$scope.pages.length || $scope.pages[0].ID)
 		{
 			$scope.pages.splice({id: null, children: []}, 0, 0);
 		}
@@ -50,9 +50,9 @@ app.controller('TreeController', function ($scope, treeService, $http, $element)
 
 	$scope.remove = function()
 	{
-		if (confirm(Backend.getTranslation('_del_conf')))
+		if (confirm($scope.getTranslation('_del_conf')))
 		{
-			$http.post(Router.createUrl('backend.staticPage', 'delete', {id: $scope.activeID}));
+			$http.post(Router.createUrl('backend/staticpage', 'delete', {id: $scope.activeID}));
 			$scope.tree.remove($scope.activeID);
 			$scope.activeID = null;
 		}
@@ -60,11 +60,11 @@ app.controller('TreeController', function ($scope, treeService, $http, $element)
 
 	$scope.getTabTitle = function(page)
 	{
-		return page.ID ? page.title : Backend.getTranslation('_add_new_title');
+		return page && page.ID ? page.title : $scope.getTranslation('_add_new_title');
 	};
 
-	$scope.save = function(form)
+	$scope.save = function()
 	{
-		$http.post(Router.createUrl('backend.staticPage', 'save'), this.instance);
+		$http.post(Router.createUrl('backend/staticpage', 'save'), this.vals);
 	}
 });
