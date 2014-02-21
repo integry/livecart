@@ -1,5 +1,8 @@
 <?php
 
+use Phalcon\Validation\Validator;
+use user\User;
+use user\UserGroup;
 
 /**
  *
@@ -7,28 +10,59 @@
  * @author Integry Systems
  * @role user
  */
-class UserController extends StoreManagementController
+class UserController extends ControllerBackend
 {
-	public function infoAction()
+	public function editAction()
 	{
-		$user = User::getInstanceById((int)$this->request->get('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
-
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
-		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+		foreach(UserGroup::query()->execute() as $group)
 		{
 			$availableUserGroups[$group->getID()] = $group->name;
 		}
 
-
+		$this->set('availableUserGroups', $availableUserGroups);
+		
+		$this->setValidator($this->buildValidator());
+/*
 		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		$form = self::createUserForm($this, $user, $response);
 		$this->set('form', $form);
 		$this->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
 		$this->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
-		$user->loadAddresses();
-		$this->set('someUser', $user->toArray());
-		$this->set('availableUserGroups', $availableUserGroups);
-		BackendToolbarItem::registerLastViewedUser($user);
+*/
+	}
+
+	public function getAction()
+	{
+		if ((int)$this->request->get('id'))
+		{
+			$user = User::getInstanceByID($this->request->get('id'));
+			$user->loadSpecification();
+			//$product->loadPricing();
+
+			$arr = $user->toArray();
+			$arr['password'] = '';
+			$arr['UserGroup'] = $arr['userGroupID'];
+		}
+		else
+		{
+/*
+			$cat = Category::getInstanceByID($this->request->get('categoryID'), true);
+			$product = Product::getNewInstance($cat);
+			$arr = $product->toArray();
+*/
+		}
+
+		echo json_encode($arr);
+	}
+	
+	public function eavAction()
+	{
+		$user = User::getInstanceByID($this->request->get('id'));
+		$manager = new \eav\EavFieldManager(\eav\EavField::getClassID($user));
+		$manager->loadFields();
+		
+		echo json_encode($manager->toArray());
 	}
 
 	/**
@@ -44,9 +78,9 @@ class UserController extends StoreManagementController
 	 */
 	public function updateAction()
 	{
-		$user = User::getInstanceByID((int)$this->request->get('id'), true);
+		$user = User::getInstanceByID((int)$this->request->getJson('ID'));
 
-		$user->loadAddresses();
+		//$user->loadAddresses();
 
 		return $this->save($user);
 	}
@@ -54,32 +88,28 @@ class UserController extends StoreManagementController
 	/**
 	 * @return \Phalcon\Validation
 	 */
-	public static function createUserFormValidator(StoreManagementController $controller, $user = false)
+	protected function buildValidator()
 	{
-		$inst = new UserController(ActiveRecordModel::getApplication());
-		$validator = $inst->getValidator("UserForm", $controller->getRequest());
+		$validator = $this->getValidator("UserForm");
 
-		$validator->add('email', new Validator\PresenceOf(array('message' => $controller->translate('_err_email_empty')));
-		$validator->add('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));
-		$validator->add('firstName', new Validator\PresenceOf(array('message' => $controller->translate('_err_first_name_empty')));
-		$validator->add('lastName', new Validator\PresenceOf(array('message' => $controller->translate('_err_last_name_empty')));
+		$validator->add('email', new Validator\PresenceOf(array('message' => $this->translate('_err_email_empty'))));
+		$validator->add('email', new Validator\Email(array('message' => $this->translate('_err_invalid_email'))));
+		$validator->setFilters('email', 'email');
+		
+		$validator->add('firstName', new Validator\PresenceOf(array('message' => $this->translate('_err_first_name_empty'))));
+//		$validator->add('lastName', new Validator\PresenceOf(array('message' => $this->translate('_err_last_name_empty')));
 
 		$passwordLengthStart = 6;
 		$passwordLengthEnd = 30;
-		$allowEmpty = $user;
 
-		$validator->add('password',
-			new IsLengthBetweenCheck(
-				sprintf($controller->translate('_err_password_lenght_should_be_in_interval'), $passwordLengthStart, $passwordLengthEnd),
-				$passwordLengthStart, $passwordLengthEnd, $allowEmpty
-			));
-
-		$validator->add('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
-
-		if (!$user)
-		{
-			$user = new User;
-		}
+/*
+		$validator->add('password', new Validator\StringLength(array(
+			'min' => $passwordLengthStart,
+			'messageMinimum' => sprintf($this->translate('_err_short_password'), $passwordLengthEnd)
+			)));
+		$validator->add('password', new Validator\PresenceOf(array('message' => $this->translate('_err_enter_password'))));
+*/
+		//$validator->add('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
 
 		return $validator;
 	}
@@ -217,11 +247,11 @@ class UserController extends StoreManagementController
 
 	private function save(User $user = null)
 	{
-   		$validator = self::createUserFormValidator($this, $user);
-		if ($validator->isValid())
+   		$validator = $this->buildValidator();
+		if ($validator->validate($this->request))
 		{
-			$email = $this->request->get('email');
-			$password = $this->request->get('password');
+			$email = $this->request->getJson('email');
+			$password = $this->request->getJson('password');
 
 			if(($user && $email != $user->email && User::getInstanceByEmail($email)) ||
 			   (!$user && User::getInstanceByEmail($email)))
@@ -229,7 +259,7 @@ class UserController extends StoreManagementController
 				return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
 			}
 
-			if($groupID = (int)$this->request->get('UserGroup'))
+			if($groupID = (int)$this->request->getJson('UserGroup'))
 			{
 				$group = UserGroup::getInstanceByID((int)$groupID);
 			}
@@ -243,9 +273,11 @@ class UserController extends StoreManagementController
 				$user = User::getNewInstance($email, $password, $group);
 			}
 
+			$pass = $user->password;
 			$user->loadRequestData($this->request);
+			$user->password = $pass;
 
-			$user->userGroup->set($group);
+			$user->userGroupID = $group ? $group->getID() : null;
 
 			if(!empty($password))
 			{
@@ -253,11 +285,13 @@ class UserController extends StoreManagementController
 			}
 
 			$user->save();
+			$user->getSpecification()->save();
 
-			$this->saveAddresses($user);
+			var_dump($user->password);
 
-			BackendToolbarItem::registerLastViewedUser($user);
-			return new JSONResponse(array('user' => $user->toFlatArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
+			//$this->saveAddresses($user);
+
+			echo json_encode($user->toArray());
 		}
 		else
 		{

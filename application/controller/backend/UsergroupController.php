@@ -1,5 +1,10 @@
 <?php
 
+require_once(dirname(__FILE__) . '/abstract/ActiveGridController.php');
+
+use Phalcon\Validation\Validator;
+use user\User;
+use user\UserGroup;
 
 /**
  * @package application/controller/backend
@@ -14,15 +19,26 @@ class UserGroupController extends ActiveGridController
 	public function indexAction()
 	{
 		$userGroups = array();
-		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
-		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
-		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group)
+		$userGroups[] = array('id' => -2, 'title' => $this->translate('_all_users'));
+		$userGroups[] = array('id' => -1, 'title' => $this->translate('_default_user_group'));
+		foreach(UserGroup::query()->execute() as $group)
 		{
-			$userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
+			$arr = $group->toArray();
+			$arr['title'] = $arr['name'];
+			$arr['id'] = $arr['ID'];
+			$userGroups[] = $arr;
 		}
-		$userGroups[] = array('ID' => -3, 'name' => $this->translate('_online_users'), 'rootID' => 0);
 
-		$this->set('userGroups', $userGroups);
+		$this->set('userGroups', array('children' => $userGroups));
+		//$this->view->pick('userGroup/index.tpl');
+	}
+	
+	public function viewAction()
+	{
+	}
+	
+	public function listAction()
+	{
 	}
 
 	public function editAction()
@@ -38,18 +54,9 @@ class UserGroupController extends ActiveGridController
 
 	}
 
-	public function changeColumnsAction()
-	{
-		parent::changeColumns();
-
-		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->get('id')));
-	}
-
 	public function usersAction()
 	{
 		$id = (int)$this->request->get("id");
-
-
 
 		$availableUserGroups = array('' => $this->translate('_default_user_group'));
 		foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
@@ -145,14 +152,14 @@ class UserGroupController extends ActiveGridController
 		return $validator;
 	}
 
-	public function getAvailableColumnsAction()
+	public function getAvailableColumns()
 	{
 		$availableColumns = parent::getAvailableColumns();
 		$availableColumns['UserGroup.name'] = array('type' => 'text', 'name' => $this->translate('UserGroup.name'));
-		$availableColumns['isOnline'] = array('type' => 'bool', 'name' => $this->translate('User.isOnline'));
+		//$availableColumns['isOnline'] = array('type' => 'bool', 'name' => $this->translate('User.isOnline'));
 
-		$addressFields = parent::getAvailableColumns('UserAddress');
-		$availableColumns = array_merge($availableColumns, $addressFields);
+		//$addressFields = parent::getAvailableColumns('UserAddress');
+		//$availableColumns = array_merge($availableColumns, $addressFields);
 /*
 		foreach (array('BillingAddress', 'ShippingAddress') as $type)
 		{
@@ -164,14 +171,16 @@ class UserGroupController extends ActiveGridController
 			}
 		}
 */
-		unset($availableColumns['User.password']);
-		unset($availableColumns['User.preferences']);
+		unset($availableColumns['user\User.password']);
+		unset($availableColumns['user\User.preferences']);
+		unset($availableColumns['user\User.isAdmin']);
+		unset($availableColumns['user\User.image']);
 		return $availableColumns;
 	}
 
 	protected function getClassName()
 	{
-		return 'User';
+		return 'user\User';
 	}
 
 	protected function getCSVFileName()
@@ -183,48 +192,43 @@ class UserGroupController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 
-		$id = $this->request->get('id');
-
-		if (!is_numeric($id))
-		{
-			$id = (int)substr($id, 6);
-		}
+		$id = $this->dispatcher->getParam(0);
 
 		if($id > 0)
 		{
-			$filter->andWhere('User.userGroupID = :User.userGroupID:', array('User.userGroupID' => $id));
+			$filter->andWhere('userGroupID = :userGroupID:', array('userGroupID' => $id));
 		}
 		else if($id == -1)
 		{
 			// without group
-			$filter->andWhere(new IsNullCond('User.userGroupID'));
+			$filter->andWhere('userGroupID IS NULL');
 		}
 		else if($id == -3)
 		{
 			// online
-			$filter->mergeHavingCondition(new EqualsOrMoreCond(f('isOnline'), 1));
+			//$filter->mergeHavingCondition(new EqualsOrMoreCond(f('isOnline'), 1));
 		}
 
-		$filter->addField('(SELECT COUNT(*) > 0 From SessionData WHERE userID=User.ID)', '', 'isOnline');
+		//$filter->addField('(SELECT COUNT(*) > 0 From SessionData WHERE userID=User.ID)', '', 'isOnline');
 
 		return $filter;
 	}
 
 	protected function getReferencedData()
 	{
-		return array('UserGroup', 'BillingAddress', 'UserAddress');
+		//return array('UserGroup', 'BillingAddress', 'UserAddress');
 	}
 
 	protected function getDefaultColumns()
 	{
 		return array(
-			 	'User.email',
-				'UserGroup.name',
-				'User.firstName',
-				'User.lastName',
-				'User.companyName',
-				'User.dateCreated',
-				'User.isEnabled'
+			 	'user\User.email',
+				'user\UserGroup.name',
+				'user\User.firstName',
+				//'user\User.lastName',
+				//'user\User.companyName',
+				'user\User.dateCreated',
+				'user\User.isEnabled'
 			);
 	}
 }

@@ -1,3 +1,17 @@
+function success(message)
+{
+	return function()
+	{
+		var alert = $('<div class="alert alert-success" style="display: none;" >' + message + '</div>');
+		$('#messages').append(alert);
+		alert.show('fast');
+		window.setTimeout(function()
+		{
+			alert.hide('fast', function() { alert.remove(); });
+		}, 3000);
+	};
+};
+
 /**
  *	@author Integry Systems
  */
@@ -106,6 +120,24 @@ app.config(function($stateProvider)
           $scope.id = $stateParams.id;
         }
     })
+	.state('user', {
+	  templateUrl: '../backend/usergroup',
+	  url: '/user'
+	})
+	.state('user.view', {
+        url: '/user/view/:id',
+        templateUrl: '../backend/usergroup/view',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
+	.state('user.view.users', {
+        url: '/users',
+        templateUrl: '../backend/usergroup/list',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
 	.state('eavField', {
 	  templateUrl: '../backend/eavField',
 	  url: '/eavField'
@@ -126,9 +158,18 @@ app.config(function($stateProvider)
 	  url: '/successstory'
 	})
 	.state('simplesettings', {
-	  templateUrl: '../simplesettings',
+	  templateUrl: '../simplesettings/index?' + Math.random(),
 	  url: '/simplesettings'
 	})
+	.state('managePartner', {
+	  templateUrl: '../managePartner',
+	  url: '/managePartner'
+	})
+	.state('export', {
+	  templateUrl: '../export',
+	  url: '/export'
+	})
+
 	;
 });
 
@@ -159,11 +200,10 @@ app.run(function($rootScope)
          "table contextmenu directionality emoticons paste textcolor filemanager"
    ],
    toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
-   toolbar2: "| responsivefilemanager | link unlink anchor | image media | forecolor backcolor  | print preview code ",
+   toolbar2: "| responsivefilemanager | link unlink anchor | image media | fontsizeselect forecolor backcolor  | print preview code ",
    image_advtab: true ,
-   external_filemanager_path:"http://rinalds.mooo.com/hey2/public/filemanager/",
-   filemanager_title:"Responsive Filemanager" ,
-   external_plugins: { "filemanager" : "http://rinalds.mooo.com/hey2/public/filemanager/plugin.min.js"}
+	external_filemanager_path:"filemanager/",
+	filemanager_title:"Responsive Filemanager"
  };
     
     $rootScope.getTinyMceOpts = function()
@@ -171,6 +211,29 @@ app.run(function($rootScope)
     	console.log($scope.tinymceOptions);
     	return $scope.tinymceOptions;
 	};
+});
+
+app.factory('checkSessionLogin', function ($q) {
+    return {
+        response: function (response) {
+            if (200 != response.status)
+            {
+            	window.location.href = '../backend/session';
+            	return $q.reject(response);
+			}
+			
+            return response;
+        },
+        responseError: function (response) 
+        {
+            // do something on error
+            return $q.reject(response);
+        }
+    };
+});
+app.config(function ($httpProvider) 
+{
+    $httpProvider.interceptors.push('checkSessionLogin');
 });
 
 app.controller('BackendController', function($scope, $state)
@@ -282,7 +345,12 @@ app.controller('EavFieldEditController', function ($scope, $resource, $modal, ty
 	{
 		if (!$scope.getChildScopeForm($scope).$invalid)
 		{
-			resource.save($scope.vals);
+			resource.save($scope.vals, success('The field has been saved'));
 		}
+	};
+	
+	$scope.sortAZ = function()
+	{
+		$scope.vals.values = _.sortBy($scope.vals.values, 'value');
 	};
 });

@@ -24,10 +24,12 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	public $defaultShippingAddressID;
 	public $defaultBillingAddressID;
 	public $userGroupID;
+	
 	public $eavObjectID;
+	
 	public $locale;
 	public $email;
-	protected $password;
+	public $password;
 	public $firstName;
 	public $lastName;
 	public $companyName;
@@ -49,14 +51,12 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 		));
 
         $this->hasMany('ID', 'heysuccess\application\model\UserProduct', 'userID', array(
-            'foreignKey' => array(
-                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            ),
+            'foreignKey' => array('action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE),
             'alias' => 'UserProduct'
         ));
 
 		$this->belongsTo('userGroupID', 'user\UserGroup', 'ID', array('alias' => 'UserGroup'));
-		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => true, 'alias' => 'EavObject'));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => array('action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE), 'alias' => 'EavObject'));
 	}
 
     public function validation()
@@ -89,6 +89,7 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	{
 		$instance = new self();
 		$instance->email = $email;
+		$instance->photoReviewed = 1;
 
 		if ($userGroup)
 		{
@@ -154,7 +155,7 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	 */
 	public static function getInstanceByLogin($email, $password)
 	{
-		$user = User::query()->where('email = :email:')->andWhere('isEnabled = 1')->bind(array('email' => $email))->execute()->getFirst();
+		$user = User::query()->where('email = :email: AND isEnabled = 1')->bind(array('email' => $email))->execute()->getFirst();
 
 		if ($user && $user->isPasswordValid($password))
 		{
@@ -347,14 +348,14 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 
 	public function setPreference($key, $value)
 	{
-		$preferences = $this->preferences;
+		$preferences = $this->preferences ? unserialize($this->preferences) : array();
 		$preferences[$key] = $value;
-		$this->preferences = $preferences;
+		$this->preferences = serialize($preferences);
 	}
 
 	public function getPreference($key)
 	{
-		$preferences =& $this->preferences;
+		$preferences = $this->preferences ? unserialize($this->preferences) : array();
 		if (isset($preferences[$key]))
 		{
 			return $preferences[$key];
@@ -388,6 +389,8 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	/*####################  Saving ####################*/
 	public function beforeCreate()
 	{
+		$this->photoReviewed = 1;
+		
 		parent::beforeCreate();
 		
 		/*
