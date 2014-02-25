@@ -11,6 +11,12 @@ class StaticpageController extends ControllerBase
 	public function viewAction($handle)
 	{
 		$page = \staticpage\StaticPage::query()->where('handle = :handle:')->bind(array('handle' => $handle))->execute()->getFirst();
+		
+		if (!$page)
+		{
+			return $this->notFound();
+		}
+		
 		$this->set('page', $page);
 		$this->view->pick('staticpage/view');
 		

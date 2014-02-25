@@ -12,7 +12,7 @@
 	<div class="treeManagerContainer col-lg-9">
 
 		<tabset>
-			<tab ng-repeat="vals in pages" ng-click="selectID(vals.ID)" heading="{{getTabTitle(vals)}}">
+			<tab ng-repeat="(index,vals) in pages" ng-click="selectID(vals.ID)" heading="{{getTabTitle(vals)}}">
 				{#
 				<div ng-show="vals.ID">
 					<ul class="menu" id="staticPageMenu">
@@ -30,7 +30,7 @@
 				</div>
 				#}
 
-				[[ form('', ['ng-init': ';', 'ng-submit' : "save(this)"]) ]] >
+				[[ form('', ['ng-init': ';', 'ng-submit' : "save(index)"]) ]] >
 
 				<div id="editContainer">
 				
@@ -53,7 +53,7 @@
 
 					[[ textfld('handle', '_handle') ]]
 					
-					[[ textareafld('text', '_text', ['ui-my-tinymce': 'tinymceOptions']) ]]
+					[[ textareafld('text', '_text', ['ui-my-tinymce': '']) ]]
 
 					[[ textareafld('metaDescription', '_meta_description') ]]
 

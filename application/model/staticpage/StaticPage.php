@@ -8,7 +8,7 @@ namespace staticpage;
  * @package application/model/staticpage
  * @author Integry Systems <http://integry.com>
  */
-class StaticPage extends \system\MultilingualObject // implements EavAble
+class StaticPage extends \system\MultilingualObject implements \eav\EavAble
 {
 	private $isFileLoaded = false;
 
@@ -24,31 +24,13 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 
 	public function initialize()
 	{
-        $this->hasMany('ID', 'StaticPage', 'parentID', array(
-            'foreignKey' => array(
-                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            )
-        ));
+        $this->hasMany('ID', '\staticpage\StaticPage', 'parentID');
 
-		$this->belongsTo('parentID', 'StaticPage', 'ID', array('foreignKey' => true));
-		$this->hasOne('eavObjectID', 'EavObject', 'ID', array('foreignKey' => true));
+		$this->belongsTo('parentID', '\staticpage\StaticPage', 'ID');
+		$this->hasOne('eavObjectID', '\eav\EavObject', 'ID', array('foreignKey' => true));
 	}
 
 	/*####################  Static method implementations ####################*/
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return StaticPage
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
 
 	public static function getNewInstance()
 	{
@@ -102,7 +84,7 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 
 	public function delete()
 	{
-		@unlink($this->getFileName());
+		//@unlink($this->getFileName());
 		return parent::delete();
 	}
 
@@ -171,16 +153,8 @@ class StaticPage extends \system\MultilingualObject // implements EavAble
 
 	public function beforeCreate()
 	{
-	  	// get max position
-	  	$f = new ARSelectFilter();
-	  	$f->orderBy('StaticPage.position', 'DESC');
-	  	$f->limit(1);
-	  	$rec = ActiveRecord::getRecordSetArray('StaticPage', $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
-
-		$this->position = $position;
-
-
+		parent::beforeCreate();
+		$this->setLastPosition();
 	}
 
 	private function saveFile()

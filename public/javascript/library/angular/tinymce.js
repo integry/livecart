@@ -4,7 +4,20 @@
 angular.module('ui.myTinymce', [])
   .value('uiTinymceConfig', {})
   .directive('uiMyTinymce', ['uiTinymceConfig', function (uiTinymceConfig) {
-    uiTinymceConfig = uiTinymceConfig || {};
+    
+    var defaults = {
+    	plugins: "textcolor autolink link image anchor filemanager code table",
+    	toolbar: "undo link image | styleselect fontsizeselect forecolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+  		external_filemanager_path:"filemanager/",
+   		filemanager_title:"Responsive Filemanager"
+    };
+    
+    if (!uiTinymceConfig || !(_.keys(uiTinymceConfig).length))
+    {
+    	uiTinymceConfig = defaults;
+	}
+    
+    uiTinymceConfig = uiTinymceConfig || defaults;
     var generatedIds = 0;
     return {
       require: 'ngModel',
@@ -21,8 +34,8 @@ angular.module('ui.myTinymce', [])
           attrs.$set('id', 'uiTinymce' + generatedIds++);
         }
 
-        if (attrs.uiTinymce) {
-          expression = scope.$eval(attrs.uiTinymce);
+        if (attrs.uiMyTinymce) {
+          expression = scope.$eval(attrs.uiMyTinymce);
         } else {
           expression = {};
         }
@@ -61,7 +74,6 @@ angular.module('ui.myTinymce', [])
         // extend options with initial uiTinymceConfig and options from directive attribute value
         angular.extend(options, uiTinymceConfig, expression);
         setTimeout(function () {
-//        	console.log(options);
           tinymce.init(options);
         });
 

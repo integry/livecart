@@ -35,14 +35,14 @@ app.controller('StaticPageController', function ($scope, treeService, $http, $el
 
 	$scope.update = function(item, params)
 	{
-		$http.post(Router.createUrl('backend/staticpage', 'move', params), this.instance);
+		$http.post(Router.createUrl('backend/staticpage', 'move', params), this.instance).success(success('The page has been moved'));
 	};
 
 	$scope.add = function()
 	{
 		if (!$scope.pages.length || $scope.pages[0].ID)
 		{
-			$scope.pages.splice({id: null, children: []}, 0, 0);
+			$scope.pages.splice(0, 0, {id: null, children: []});
 		}
 
 		$scope.activeID = null;
@@ -52,7 +52,7 @@ app.controller('StaticPageController', function ($scope, treeService, $http, $el
 	{
 		if (confirm($scope.getTranslation('_del_conf')))
 		{
-			$http.post(Router.createUrl('backend/staticpage', 'delete', {id: $scope.activeID}));
+			$http.post(Router.createUrl('backend/staticpage', 'delete', {id: $scope.activeID})).success(success('The page has been removed'));
 			$scope.tree.remove($scope.activeID);
 			$scope.activeID = null;
 		}
@@ -63,8 +63,13 @@ app.controller('StaticPageController', function ($scope, treeService, $http, $el
 		return page && page.ID ? page.title : $scope.getTranslation('_add_new_title');
 	};
 
-	$scope.save = function()
+	$scope.save = function(index)
 	{
-		$http.post(Router.createUrl('backend/staticpage', 'save'), this.vals);
+		console.log($scope.pages);
+		$http.post(Router.createUrl('backend/staticpage', 'save'), $scope.pages[index]).success(function(page)
+		{
+			$scope.pages[index] = page;
+			success('The page has been saved')();
+		});
 	}
 });
