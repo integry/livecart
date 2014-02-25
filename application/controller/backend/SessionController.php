@@ -23,9 +23,11 @@ class SessionController extends ControllerBackend
 	public function doLoginAction()
 	{
 		$user = \user\User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
-		if (!$user)
+
+		if (!$user || !$user->userGroupID)
 		{
-			return new ActionRedirectResponse('backend.session', 'index', array('query' => array('failed' => 'true', 'email' => $this->request->get('email'))));
+			return $this->response->redirect('backend/session?failed=true');
+			//return new ActionRedirectResponse('backend.session', 'index', array('query' => array('failed' => 'true', 'email' => $this->request->get('email'))));
 		}
 
 		// login

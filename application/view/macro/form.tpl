@@ -4,7 +4,7 @@
 	{% if validator and validator.getAngularValues() %}
 		<script type="text/javascript">window.vals = [[ validator.getAngularValues() ]];</script>
 	{% endif %}
-	<form name="form" ng-submit="checkErrors($event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; {% if empty(params['ng-init']) %}vals={};{% else %} [[ params['ng-init'] ]]{% endif %}" {% if validator %}default-values="vals"{% endif %}
+	<my-form name="form" ng-submit="checkErrors($event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; {% if empty(params['ng-init']) %}vals={};{% else %} [[ params['ng-init'] ]]{% endif %}" {% if validator %}default-values="vals"{% endif %}
 
 	{% if action %}
 		action="[[ url(action) ]]"
@@ -56,14 +56,14 @@
 {%- macro inputattributes(field, params) %}
 	name="[[field]]" class="{% if empty(params['noformcontrol']) %}form-control{% endif %}
 	{% if !empty(params['class']) %}[[ params['class'] ]]{% endif %}"
-	ng-model="{% if !empty(params['ng-model']) %}[[ params['ng-model'] ]]{% else %}vals.[[field]]{% endif %}"
-	[[ ngvalidation(field) ]]
 	{% if params %}
 		<?php unset($params['class']); ?>
 		{% for key, value in params %}
 			[[key]]="[[value]]"
 		{% endfor %}
 	{% endif %}
+	ng-model="{% if !empty(params['ng-model']) %}[[ params['ng-model'] ]]{% else %}vals.[[field]]{% endif %}"
+	[[ ngvalidation(field) ]]
 {%- endmacro %}
 
 {%- macro textfld(field, title, params) %}
@@ -104,17 +104,17 @@
 {%- endmacro %}
 
 {%- macro checkbox(field, title, params) %}
-    [[ startinput(field, 'pwdfld') ]]
+    [[ startinput(field, 'checkbox') ]]
         [[ open_label() ]]
         	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
-        	<input type="checkbox" ng-true-value="1" ng-false-value="0" value="1" [[ inputattributes(field, params) ]] />
+        	<input type="checkbox" [[ inputattributes(field, params) ]] {% if empty(params['skip-ng-defaults']) %}value="1" ng-true-value="1" ng-false-value="0"{% endif %} />
         	[[ t(title) ]]
         </label>
     [[ endinput(field) ]]
 {%- endmacro %}
 
 {%- macro radio(field, title, params) %}
-    [[ startinput(field, 'pwdfld') ]]
+    [[ startinput(field, 'radio') ]]
         [[ open_label() ]]
         	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
         	<input type="radio" [[ inputattributes(field, params) ]] />
@@ -130,4 +130,39 @@
     {% else %}
     	[[ default ]]
     {% endif %}
+{%- endmacro %}
+
+{%- macro pageUrl(url, page) %}[[str_replace('___', page, url)]]{%- endmacro %}
+
+{%- macro pageButton(url, page, caption, params) %}
+	<a href="[[pageUrl(url, page)]]"{% if !empty(params['ng-click']) %}ng-click="[[ pageUrl(params['ng-click'], page) ]]"{% endif %}>[[ caption ]]</a>
+{%- endmacro %}
+
+{%- macro paginator(paginator, url, params = '') %}
+	{% if paginator.getNumPages() > 1 %}
+		<ul class="pagination">
+			
+			{% if paginator.getPrev() %}
+				<li class="prev">[[ pageButton(url, paginator.getPrev(), '&laquo;', params) ]]</li>
+			{% else %}
+				<li class="prev disabled"><a>&laquo;</a></li>
+			{% endif %}
+			
+			{% for page in paginator.getCompactNumbers() %}
+				<li class="{% if paginator.getCurrentPage() == page %}active{% endif %}">
+					{% if page %}
+						[[ pageButton(url, page, page, params) ]]
+					{% else %}
+						<a>...</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+
+			{% if paginator.getNext() %}
+				<li class="next">[[ pageButton(url, paginator.getNext(), '&raquo;', params) ]]</li>
+			{% else %}
+				<li class="next disabled"><a>&raquo;</a></li>
+			{% endif %}
+		</ul>
+	{% endif %}
 {%- endmacro %}

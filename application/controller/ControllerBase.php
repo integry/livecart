@@ -53,6 +53,8 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 		$this->application->setRequestLanguage($this->request->get('requestLanguage'));
 		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
+		
+		$this->loadLanguageFile('Base');
 
 		/*
 		$localeCode = $this->application->getLocaleCode();
@@ -423,14 +425,14 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 			\role\Role::addNewRolesNames($this->roles->getRolesNames());
 		}
 
-		$role = $this->roles->getRole($this->router->getActionName());
+		$role = $this->roles->getRole($this->dispatcher->getActionName());
 		if ($role)
 		{
 			if (!$this->user->hasAccess($role))
 			{
 				if ($this->user->isAnonymous())
 				{
-					throw new UnauthorizedException();
+					throw new UnauthorizedException($this instanceof ControllerBackend);
 				}
 				else
 				{
@@ -449,6 +451,11 @@ abstract class ControllerBase extends \Phalcon\Mvc\Controller // implements LCiT
 	{
 		$a = $this->di;
 		return $a($set);
+	}
+	
+	public function notFound()
+	{
+		return $this->dispatcher->forward(array('controller' => 'error', 'action' => 'index'));
 	}
 }
 

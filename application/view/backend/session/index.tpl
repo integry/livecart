@@ -14,7 +14,7 @@
 		<div class="loginFailed">{t _login_failed}</div>
 	{% endif %}
 
-	<form action="[[ url("backend/session/doLogin") ]]" method="post" />
+	<my-form action="[[ url("backend/session/doLogin") ]]" method="post" />
 
 		[[ textfld('email', '_email', ['type': 'email']) ]]
 
@@ -24,8 +24,6 @@
 		</a>
 		
 		[[ partial('block/submit.tpl', ['caption': "_login"]) ]]
-		
-		<input type="hidden" name="return" value="[[ret]]" />
 
 	</form>
 	</div>
