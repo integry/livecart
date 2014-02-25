@@ -7,22 +7,6 @@ _confirm_move=Are your sure you want to move the selected products to this categ
 _move_products=Move products
 _proceed=Proceed
 
-# Product tabs
-_done_editing_product=Done editing product
-_product_page=Product page
-_basic_data=Basic data
-_stock_pricing=Stock & Pricing
-_images=Images
-_variations=Variations
-_related=Cross-sell
-_upsell=Up-sell
-_files=Files
-_info=Info
-_options=Options
-_bundled_products=Bundled Products
-_recurring_plan=Recurring plan
-_product_categories=Categories
-
 # Confirmations
 _new_category_was_successfully_created=New category was successfully created
 _could_not_create_a_category=Could not create a category

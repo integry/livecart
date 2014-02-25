@@ -1,6 +1,24 @@
 _add_product=Add new product
 _cancel_add_product=Cancel adding new product
 
+# Product tabs
+_product_page=Product page
+_basic_data=Basic data
+_product_details=Product Details
+_stock_pricing=Stock & Pricing
+_images=Images
+_variations=Variations
+_related=Cross-sell
+_upsell=Up-sell
+_files=Files
+_info=Info
+_options=Options
+_bundled_products=Bundled Products
+_recurring_plan=Recurring plan
+_product_categories=Categories
+
+_save_product_details=Save product details
+
 # Confirmation
 _could_not_save_product_information=Could not save product information
 _new_product_was_successfully_created=New product was successfully created
@@ -261,6 +279,11 @@ _image=Image
 _product_image_file=Image file
 _tip_product_image_file=Select product image file
 _error_uploading_image=Error while uploading image
+_delete=Delete
 
 _set_attributes=Set attribute
 _remove_attributes=Remove attribute value
+
+# categories
+_primary_category=Primary Category
+_additional_categories=Additional Categories

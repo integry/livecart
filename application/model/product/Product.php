@@ -60,6 +60,8 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 	//public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
 	//public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
+	public $expires;
+	public $promotions;
 	public $isEnabled;
 	public $sku;
 	public $name;
@@ -102,23 +104,23 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 
 	public function initialize()
 	{
+		$cascade = array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            );
+            
 		$this->belongsTo('categoryID', 'category\Category', 'ID', array('foreignKey' => true, 'alias' => 'Category'));
-		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => true, 'alias' => 'EavObject'));
-		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('foreignKey' => true, 'alias' => 'DefaultImage'));
-		$this->hasOne('ID', 'heysuccess\application\model\UserProduct', 'productID', array('foreignKey' => true, 'alias' => 'UserProduct'));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => $cascade, 'alias' => 'EavObject'));
+		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('foreignKey' => $cascade, 'alias' => 'DefaultImage'));
+		$this->hasOne('ID', 'heysuccess\application\model\UserProduct', 'productID', array('foreignKey' => $cascade, 'alias' => 'UserProduct'));
 		
         $this->hasMany('ID', 'category\ProductCategory', 'productID', array(
             'alias' => 'ProductCategory',
-            'foreignKey' => array(
-                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            )
+            'foreignKey' => $cascade
         ));
 
         $this->hasMany('ID', 'product\ProductImage', 'productID', array(
             'alias' => 'ProductImages',
-            'foreignKey' => array(
-                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            )
+            'foreignKey' => $cascade
         ));
 
 	}
@@ -861,7 +863,22 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 
 	public function delete()
 	{
-		return self::deleteByID($this->getID());
+		if (37 == $this->categoryID)
+		{
+			$res = parent::delete();
+			var_dump($res);
+			var_dump($this->getMessages());
+			return $res;
+		}
+		
+		// @todo: remove
+		$this->isEnabled = false;
+		$this->categoryID = 37;
+		$this->save();
+		
+		$this->getRelated('ProductCategory')->delete();
+		
+		//return self::deleteByID($this->getID());
 	}
 
 	public function updateCategoryCounters(ARUpdateFilter $catUpdate, Category $category)

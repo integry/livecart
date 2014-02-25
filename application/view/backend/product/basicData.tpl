@@ -1,6 +1,6 @@
-[[ partial('backend/product/form/main.tpl') ]]
-
-{# <ng-include src="getSpecFieldTemplate(product)" /> #}
+[[ form('', ['ng-submit': 'save()', 'ng-init': ';']) ]] >
+	[[ partial('backend/product/form/main.tpl') ]]
+</form>
 
 {#
 <div class="productForm ng-class="{ldelim}'intangible': product.type == 1{rdelim}">

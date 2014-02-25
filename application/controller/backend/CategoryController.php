@@ -15,8 +15,9 @@ class CategoryController extends ControllerBackend
 {
 	public function indexAction()
 	{
+		Category::reindex();
 		$root = Category::loadTree();
-
+		
 		$categories = array('children' => array($this->getRecursiveJsonAction($root->toArray())));
 		
 		$this->set('categoryList', $categories);

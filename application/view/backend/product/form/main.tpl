@@ -59,7 +59,11 @@
 	{/input}
 	#}
 
-	[[ checkbox('isFeatured', tip('_mark_as_featured_product _hint_featured')) ]]
+	[[ checkbox('isFeatured', tip('_mark_as_featured_product')) ]]
+	
+	[[ checkbox('isTop', 'Always on top') ]]
+	
+	[[ selectfld('priority', 'Priority', ['3': '3', '2': '2', '1': '1']) ]]
 	
 	<eav-fields config="eav"></eav-fields>
 

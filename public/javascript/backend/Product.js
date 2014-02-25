@@ -3,7 +3,7 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
     $scope.resource = $resource('../backend/product/:verb/:id', 
     	{id: $scope.id, verb: '@verb'}, 
     	{
-    		query:  {method:'GET', isArray: false, params: { verb: 'lists' }},
+    		query:  {method:'POST', isArray: false, params: { verb: 'lists' }},
     		mass:  {method:'POST', params: { verb: 'mass' }}
     	}
     );
@@ -16,6 +16,19 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
 							id: function() { return id } }
 							});
 	};
+	
+	$scope.enable = function()
+	{
+		$scope.massAction('setValue', {isEnabled: 1});
+	};
+
+	$scope.set = function(key, value)
+	{
+		var params = {};
+		params[key] = value;
+		$scope.massAction('setValue', params);
+	};
+
 /*
 	$scope.add = function()
 	{
@@ -47,6 +60,8 @@ app.controller('ProductPresentationController', function ($scope, $http)
 
 app.controller('EditProductController', function ($scope, $http, $modal, id)
 {
+	$scope.id = id;
+	
 	// if id != 0 --> edit product
 	// if categoryID != 0 --> add new product
 	$http.get(Router.createUrl('backend/product', 'get', {id: id})).
@@ -61,20 +76,110 @@ app.controller('EditProductController', function ($scope, $http, $modal, id)
 			$scope.eav = data;
 		});
 
-	$scope.getSpecFieldTemplate = function(product)
-	{
-		if (!product)
-		{
-			return;
-		}
-
-		return Router.createUrl('backend/product', 'specFields', {id: product.ID, categoryID: categoryID});
-	};
-
 	$scope.save = function(form)
 	{
-		$http.post(Router.createUrl('backend/product', 'update'), $scope.vals);
+		$http.post(Router.createUrl('backend/product', 'update'), $scope.vals).success(success('The product has been saved'));
 	}
+});
+
+app.controller('ProductMainCategoryController', function ($scope, $rootScope, $http, treeService)
+{
+	$scope.tree = treeService;
+	$scope.tree.initController($scope);
+	
+	$scope.catService = $rootScope.categoryTree;
+	$scope.setTree(angular.copy($scope.catService.getTree()));
+	$scope.tree.expandID(1);
+	
+	$scope.$watch('categories', function(cats)
+	{
+		if (cats && cats.main)
+		{
+			$scope.tree.selectID(cats.main);
+		}
+	}, true);
+	
+	$scope.activate = function(cat)
+	{
+		$scope.setMain(cat.id);
+	};
+});
+
+app.controller('ProductCategoriesController', function ($scope, $rootScope, $http, treeService)
+{
+	$scope.tree = treeService;
+	$scope.tree.initController($scope);
+	$scope.categories = {};
+	
+	$scope.catService = $rootScope.categoryTree;
+	$scope.setTree(angular.copy($scope.catService.getTree()));
+	$scope.tree.expandID(1);
+	
+	$http.get(Router.createUrl('backend/product', 'categories', {id: $scope.id})).
+		success(function(data)
+		{
+			$scope.categories = data;
+			$scope.categories.id = $scope.id;
+		});
+		
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend/product', 'categories'), $scope.categories).success(success('The product categories have been saved'));
+	};
+	
+	$scope.setMain = function(id)
+	{
+		$scope.categories.main = id;
+	};
+	
+	$scope.$watch('categories', function() { console.log(JSON.stringify($scope.categories)); }, true);
+});
+
+app.controller('ProductImagesController', function ($scope, $http)
+{
+	$scope.newimage = {};
+	
+	$http.get(Router.createUrl('backend/product', 'images', {id: $scope.id})).
+		success(function(data)
+		{
+			$scope.images = data;
+		});
+		
+	$scope.save = function(form)
+	{
+		$http.post(Router.createUrl('backend/product', 'images'), {id: $scope.id, images: $scope.images}).success(function(images)
+		{
+			$scope.images = images;
+			success('The product images have been saved')();
+		});
+	};
+	
+	$scope.remove = function(image)
+	{
+		$scope.images.splice($scope.images.indexOf(image), 1);
+	};
+	
+	$scope.getPath = function(image)
+	{
+		if (image.paths && image.paths[3])
+		{
+			return image.paths[3];
+		}
+		else
+		{
+			return image.uploadedPath;
+		}
+	};
+	
+	$scope.$watch('newimage', function(newImage)
+	{
+		if (newImage.path)
+		{
+			$scope.image = '';
+			$scope.images.push({uploadedPath: newImage.path});
+			$scope.newimage = {};
+		}
+	}, true);
 });
 
 app.directive('quantityPrice', function($compile)

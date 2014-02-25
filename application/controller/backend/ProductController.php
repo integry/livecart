@@ -43,6 +43,11 @@ class ProductController extends ActiveGridController// implements MassActionInte
 
 	public function editAction()
 	{
+
+	}
+	
+	public function basicDataAction()
+	{
 		//$this->set('themes', array_merge(array(''), LiveCartRenderer::getThemeList()));
 
 		$isExisting = true;
@@ -123,7 +128,123 @@ class ProductController extends ActiveGridController// implements MassActionInte
 		
 		echo json_encode($manager->toArray());
 	}
+	
+	public function editCategoriesAction()
+	{
+	}
 
+	public function editImagesAction()
+	{
+	}
+	
+	public function imagesAction()
+	{
+		if ($this->request->isPost())
+		{
+			$product = Product::getInstanceByID($this->request->getJson('id'));
+			
+			$images = array();
+			foreach (\product\ProductImage::query()->where('productID = :id:', array('id' => $product->getID()))->orderBy('position')->execute() as $img)
+			{
+				$images[$img->getID()] = $img;
+			}
+			
+			foreach ($this->request->getJson('images') as $index => $image)
+			{
+				if (!empty($image['ID']))
+				{
+					$img = $images[$image['ID']];
+					unset($images[$image['ID']]);
+				}
+				else
+				{
+					$img = \product\ProductImage::getNewInstance($product);
+				}
+				
+				$img->position = $index;
+				$img->save();
+				
+				if (!empty($image['uploadedPath']))
+				{
+					$tmp = explode('/', $image['uploadedPath']);
+					$path = __ROOT__ . '/public/upload/tmp/' . array_pop($tmp);
+					$img->setFile($path);
+				}
+				
+				if (0 == $index)
+				{
+					$product->defaultImageID = $img->getID();
+				}
+			}
+			
+			foreach ($images as $img)
+			{
+				$img->delete();
+			}
+		}
+
+		if (empty($product))
+		{
+			$product = Product::getInstanceByID($this->request->get('id'));
+		}
+	
+		$images = array();
+		foreach (\product\ProductImage::query()->where('productID = :id:', array('id' => $product->getID()))->orderBy('position')->execute() as $img)
+		{
+			$images[] = $img->toArray();
+		}
+		
+		echo json_encode($images);
+	}
+
+	public function categoriesAction()
+	{
+		if ($this->request->isPost())
+		{
+			$product = Product::getInstanceByID($this->request->getJson('id'));
+					
+			$product->categoryID = $this->request->getJson('main');
+			
+			$subs = $product->getRelated('ProductCategory');
+			$newSubs = array_flip($this->request->getJson('extra'));
+			
+			foreach ($subs as $key => $sub)
+			{
+				if (!isset($newSubs[$sub->categoryID]))
+				{
+					$sub->delete();
+				}
+				else
+				{
+					unset($newSubs[$sub->categoryID]);
+				}
+			}
+			
+			foreach ($newSubs as $subId => $foo)
+			{
+				$sub = \category\ProductCategory::getNewInstance($product, Category::getInstanceByID($subId));
+				$sub->save();
+			}
+			
+			$product->save();
+		}
+		else
+		{
+			$product = Product::getInstanceByID($this->request->get('id'));
+		
+			$ret = array();
+			$ret['main'] = $product->categoryID;
+			
+			$ret['extra'] = array();
+			foreach ($product->getRelated('ProductCategory') as $pc)
+			{
+				$ret['extra'][] = $pc->categoryID;
+			}
+			
+			echo json_encode($ret);
+		}
+	}
+	
 	public function getPresentationAction()
 	{
 		$product = Product::getInstanceByID($this->request->get('id'), true);
@@ -297,15 +418,23 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	{
 		$f = parent::getSelectFilter();
 		$f->columns('product\Product.*, user\User.*');
-		$f->join('heysuccess\application\model\UserProduct');
+		$f->join('heysuccess\application\model\UserProduct', 'heysuccess\application\model\UserProduct.productID=product\Product.ID', '', 'LEFT');
 		$f->join('category\Category');
-		$f->join('user\User');
+		$f->join('user\User', 'heysuccess\application\model\UserProduct.userID=user\User.ID', '', 'LEFT');
 		
 		$f->andWhere('(heysuccess\application\model\UserProduct.isDraft IS NULL) OR (heysuccess\application\model\UserProduct.isDraft = 0)');
 		
 		$id = $this->getRequestCategory();
 		$category = Category::getInstanceByID($id);
 		$category->setProductCondition($f, true);
+		
+		// @todo: remove
+		if (!in_array($id, array(37, 38, 39)))
+		{
+			$f->andWhere('SUBQUERY("(SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.categoryID IN(37,38,39) AND ProductCategory.productID=Product.ID)") = 0');
+			$f->andWhere('product\Product.categoryID != 37');
+			$f->andWhere('product\Product.isEnabled = 1');
+		}
 
 		return $f;
 	}
@@ -539,9 +668,8 @@ class ProductController extends ActiveGridController// implements MassActionInte
 				'type' => 'text'
 			);
 		
-		return $availableColumns;
-
 		// specField columns
+/*
 		if ($specField)
 		{
 			$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
@@ -555,7 +683,9 @@ class ProductController extends ActiveGridController// implements MassActionInte
 					);
 			}
 		}
+*/
 
+/*
 		$availableColumns['ProductImage.url'] = array
 			(
 				'name' => $this->translate('ProductImage.url'),
@@ -579,22 +709,35 @@ class ProductController extends ActiveGridController// implements MassActionInte
 				'name' => $this->translate('Product.categoryID'),
 				'type' => 'text'
 			);
+*/
 
-		unset($availableColumns['Product.categoryIntervalCache']);
-		unset($availableColumns['Product.childSettings']);
-		unset($availableColumns['Product.ratingSum']);
-		unset($availableColumns['Product.salesRank']);
-
+		unset($availableColumns['product\Product.categoryIntervalCache']);
+		unset($availableColumns['product\Product.childSettings']);
+		unset($availableColumns['product\Product.ratingSum']);
+		unset($availableColumns['product\Product.salesRank']);
+		unset($availableColumns['product\Product.childSettings']);
+		unset($availableColumns['product\Product.metaCache']);
+		unset($availableColumns['product\Product.promotions']);
+		unset($availableColumns['product\Product.isRecurring']);
+		unset($availableColumns['product\Product.hits']);
+		
+		foreach (array('type', 	'ratingSum', 	'ratingCount', 	'rating', 	'reviewCount', 	'minimumQuantity', 	'shippingSurchargeAmount', 	'isSeparateShipment', 	'isFreeShipping', 	'isBackOrderable', 	'isFractionalUnit', 	'isUnlimitedStock', 	'shippingWeight', 	'stockCount', 	'reservedCount', 	'salesRank', 	'childSettings', 	'fractionalStep', 	'position', 	'categoryIntervalCache', 	'isRecurring') as $key)
+		{
+			unset($availableColumns['product\Product.' . $key]);
+		}
+		
 		return $availableColumns;
 	}
 
+/*
 	protected function getCustomColumns()
 	{
-		$availableColumns['Manufacturer.name'] = 'text';
-		$availableColumns['ProductPrice.price'] = 'numeric';
+		//$availableColumns['Manufacturer.name'] = 'text';
+		//$availableColumns['ProductPrice.price'] = 'numeric';
 
-		return $availableColumns;
+		//return $availableColumns;
 	}
+*/
 
 	public function exportAction()
 	{
@@ -664,7 +807,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	protected function getDefaultColumns()
 	{
 		//return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
-		return array('product\Product.ID', 'product\Product.name', 'product\Product.isEnabled', 'user\User.firstName');
+		return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'product\Product.isEnabled', 'product\Product.priority', 'product\Product.expires', 'user\User.firstName');
 	}
 
 	public function autoCompleteAction()
@@ -799,7 +942,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	  	return $this->save($product);
 	}
 
-	public function basicDataAction()
+	public function __basicDataAction()
 	{
 		$product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$product->loadSpecification();

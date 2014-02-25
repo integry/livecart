@@ -1,5 +1,5 @@
 var treeModule = angular.module('tree', []);
-treeModule.directive('yaTree', function () {
+treeModule.directive('yaTree', function ($timeout) {
 
   return {
     restrict: 'A',
@@ -30,11 +30,45 @@ treeModule.directive('yaTree', function () {
             }
           }
         }
+        
+        if (attrs.checkboxes)
+        {
+        	scope.$watch(attrs.checkboxes, function(checked)
+        	{
+        		scope.checked = {};
+        		_.each(checked, function(id)
+        		{
+        			scope.checked[id] = true;
+        		});
+			});
+			
+        	scope.$watch('checked', function(checked)
+        	{
+        		var ids = [];
+        		_.each(checked, function(v, k)
+        		{
+        			if (v)
+        			{
+        				ids.push(k);
+					}
+				});
+				
+				$timeout(function()
+				{
+					scope.$apply(attrs.checkboxes + ' = ' + angular.toJson(ids));
+				});
+			}, true);
+		}
 
         scope.$watch(rootExpr, function (root) {
 
           var currentCache = [];
 
+          if (!root)
+          {
+          	return
+		  }
+          
           // Recurse the data structure
           (function walk (children, parentNode, parentScope, depth) {
 
@@ -377,8 +411,11 @@ treeModule.factory('treeService', function($timeout)
 
 		select: function(item)
 		{
-			this.selectedID = item.id;
-			this.controller.activate(item);
+			if (this.controller.activate)
+			{
+				this.selectedID = item.id;
+				this.controller.activate(item);
+			}
 		},
 
 		selectID: function(ID)

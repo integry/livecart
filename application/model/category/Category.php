@@ -433,38 +433,18 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 		{
 			if (!$this->isRoot())
 			{
-				//$query->andWhere('(category\Category.lft >= :lft: AND category\Category.rgt <= :rgt:) OR ((SELECT COUNT(*) FROM ProductCategory) > 0)', array('lft' => $this->lft, 'rgt' => $this->rgt));
-				$query->andWhere('(category\Category.lft >= :lft: AND category\Category.rgt <= :rgt:) OR (:subq: > 0)', array('lft' => $this->lft, 'rgt' => $this->rgt, 'subq' => '(SELECT COUNT(*) FROM ProductCategory)'));
-				
-				/*
-				$q = $query->getQuery();
-				$q->parse();
-				$i = $q->getIntermediate();
-				
-				$i['where']['right']['left']['right']['left']['right']['type'] = 'qualified';
-				print_r($i['where']);exit;
-				print_r($i['where']['right']['left']['right']['left']['right']);exit;
-				$q->setIntermediate($i);
-				*/
-				
-				if ($this->hasProductsAsSecondaryCategory())
-				{
-					$cond->addOr(new INCond('Product.ID', 'SELECT ProductCategory.productID FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE Category.lft>=' . $this->lft . ' AND Category.rgt<=' . $this->rgt));
-				}
+				$subQuery = 'SUBQUERY("SELECT COUNT(*) FROM ProductCategory LEFT JOIN Category ON ProductCategory.categoryID=Category.ID WHERE ProductCategory.productID=Product.ID AND Category.lft>=' . $this->lft . ' AND Category.rgt<=' . $this->rgt . '") > 0';
+				$query->andWhere('(category\Category.lft >= :lft: AND category\Category.rgt <= :rgt:) OR ' . $subQuery, array('lft' => $this->lft, 'rgt' => $this->rgt));
 			}
 			else
 			{
-				$query->andWhere('categoryID IS NOT NULL');
+				$query->andWhere('product\Product.categoryID IS NOT NULL');
 			}
 		}
 		else
 		{
-			//$cond = 'Product.categoryID = :Product.categoryID:', array('Product.categoryID' => $this->getID());
-
-			if ($this->hasProductsAsSecondaryCategory())
-			{
-				$cond->addOr(new INCond('Product.ID', 'SELECT ProductCategory.productID FROM ProductCategory WHERE ProductCategory.categoryID=' . $this->getID()));
-			}
+			$subQuery = '(SUBQUERY("SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.productID=Product.ID AND ProductCategory.categoryID=' . $this->getID() . '") > 0)';
+			$query->andWhere('(Product.categoryID = :id:) OR ' . $subQuery, array('id' => $this->getID()));
 		}
 	}
 

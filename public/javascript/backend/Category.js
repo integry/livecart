@@ -1,10 +1,9 @@
-app.controller('CategoryController', function ($scope, $state, treeService, $http, $element, $modal)
+app.controller('CategoryController', function ($scope, $state, $rootScope, treeService, $http, $element, $modal)
 {
 	$scope.tree = treeService;
 	$scope.tree.initController($scope);
-
-	$scope.categories = [];
-	$scope.ids = {};
+	
+	$rootScope.categoryTree = $scope.tree;
 
 	$scope.activate = function(child)
 	{

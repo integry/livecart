@@ -1,11 +1,11 @@
 /**
-* bootstrap-multiselect.js
-* https://github.com/davidstutz/bootstrap-multiselect
-*
-* Copyright 2012, 2013 David Stutz
-*
-* Dual licensed under the BSD-3-Clause and the Apache License, Version 2.0.
-*/
+ * bootstrap-multiselect.js
+ * https://github.com/davidstutz/bootstrap-multiselect
+ *
+ * Copyright 2012, 2013 David Stutz
+ * 
+ * Dual licensed under the BSD-3-Clause and the Apache License, Version 2.0.
+ */
 !function($) {
     
     "use strict";// jshint ;_;
@@ -30,6 +30,7 @@
 
         this.options = this.mergeOptions(options);
         this.$select = $(select);
+        this.$select.data('instance', this);
         
         // Initialization.
         // We have to clone to create a new reference.
@@ -185,6 +186,7 @@
         // Build the dropdown and bind event handling.
         buildDropdownOptions: function() {
             
+            var self = this;
             this.$select.children().each($.proxy(function(index, element) {
                 // Support optgroups and options without a group simultaneously.
                 var tag = $(element).prop('tagName').toLowerCase();
@@ -221,9 +223,26 @@
 
                 // Toggle all options if the select all option was changed.
                 if (isSelectAllOption) {
+                    /*
                     $checkboxesNotThis.filter(function() {
                         return $(this).is(':checked') != checked;
                     }).trigger('click');
+                    */
+
+                    var values = [];
+                    var lastCb = null;
+                    _.each($checkboxesNotThis.filter(function() {
+                        return $(this).is(':checked') != checked;
+                    }), function(cb)
+                    {
+                    	//self.select($(cb).val());
+                    	//$(cb).change();
+                    	values.push($(cb).val());
+                    	lastCb = cb;
+					});
+                    
+					self[checked ? 'select' : 'deselect'](values);
+					$(lastCb).change();
                 }
 
                 if (checked) {
@@ -455,7 +474,8 @@
                     return $(this).val() == $(element).val();
                 });
 
-                if ($(element).is(':selected')) {
+                if ($(element).is(':selected') || $(element).attr('selected')) {
+                    $(element).prop('selected', true);
                     $input.prop('checked', true);
 
                     if (this.options.selectedClass) {
@@ -463,6 +483,7 @@
                     }
                 }
                 else {
+                    $(element).prop('selected', false);
                     $input.prop('checked', false);
 
                     if (this.options.selectedClass) {
@@ -479,6 +500,7 @@
             }, this));
 
             this.updateButtonText();
+            this.$select.change();
         },
 
         // Select an option by its value or multiple options using an array of values.
@@ -499,7 +521,7 @@
                 }
 
                 $checkbox.prop('checked', true);
-                $option.prop('selected', true);
+                $option.prop('selected', true);                
                 this.options.onChange($option, true);
             }
 
@@ -524,7 +546,7 @@
                 }
 
                 $checkbox.prop('checked', false);
-                $option.prop('selected', false);
+                $option.prop('selected', false);               
                 this.options.onChange($option, false);
             }
 
@@ -585,6 +607,9 @@
         // Update button text and button title.
         updateButtonText: function() {
             var options = this.getSelected();
+
+            this.inputCache = null;
+            this.optionCache = null;
             
             // First update the displayed button text.
             $('button', this.$container).html(this.options.buttonText(options, this.$select));
@@ -606,10 +631,45 @@
             return $('option', this.$select).filter(function() {
                 return $(this).val() == value;
             });
+
+            if (!this.optionCache)
+            {
+            	var optionCache = {};
+            	$('option', this.$select).each(function(i, option)
+            	{
+            		optionCache[$(option).val()] = $(option);
+				});
+				this.optionCache = optionCache;
+			}
+			
+			return this.optionCache[value];
+
+/*
+            return $('option', this.$select).filter(function() {
+                return $(this).val() == value;
+            });
+*/
         },
         
         // Get an input in the dropdown by its value.
         getInputByValue: function(value) {
+            return $('li input', this.$ul).filter(function() {
+                return $(this).val() == value;
+            });
+
+            if (!this.inputCache)
+            {
+            	var inputCache = {};
+            	$('li input', this.$ul).each(function(i, input)
+            	{
+            		inputCache[$(input).val()] = $(input);
+				});
+				
+				this.inputCache = inputCache;
+			}
+			
+			return this.inputCache[value];
+
             return $('li input', this.$ul).filter(function() {
                 return $(this).val() == value;
             });

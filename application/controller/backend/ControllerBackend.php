@@ -10,15 +10,32 @@ require_once(dirname(dirname(__FILE__)) . '/ControllerBase.php');
  */
 abstract class ControllerBackend extends ControllerBase
 {
-/*
 	public function initialize()
 	{
+		parent::initialize();
+		
+		$this->loadLanguageFile('backend/abstract/Backend');
+		
+		$details = include dirname(dirname(dirname(dirname(__FILE__)))) . '/adminpass.php';
+		if (!isset($_SERVER['PHP_AUTH_USER']) || !(($_SERVER['PHP_AUTH_USER'] == $details[0]) && ($_SERVER['PHP_AUTH_PW'] == $details[1]))) {
+				header('WWW-Authenticate: Basic realm="HeySuccess Admin"');
+				header('HTTP/1.0 401 Unauthorized');
+				echo 'Unauthorized';
+				exit;
+		}
+
+		$user = $this->sessionUser->getUser();
+		if ((!$user || !$user->getID() || !$user->userGroupID)  && !($this instanceof SessionController))
+		{
+			header('Location: ' . $this->url->get('user/logout'));
+			die('');
+		}
+		
+/*
 		if ($application->getConfig()->get('SSL_BACKEND'))
 		{
 			$application->getRouter()->setSslAction('');
 		}
-
-		parent::__construct($application);
 
 		if (!isset($_SERVER['HTTP_USER_AGENT']))
 		{
@@ -48,8 +65,8 @@ abstract class ControllerBackend extends ControllerBase
 
 			exit;
 		}
-	}
 	*/
+	}
 	
 /*
 	public function initialize()

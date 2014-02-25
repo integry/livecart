@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  *
  * @author Integry Systems
@@ -602,7 +601,7 @@ class ProductController extends CatalogController
 		$this->set('offsetEnd', min($offsetStart + $perPage, $this->product->reviewCount));
 		$this->set('page', $page);
 		$this->set('perPage', $perPage);
-		$this->set('url', $this->url->get('product/reviews', 'id' => $this->product->getID(), 'page' => '_000_')));
+		//$this->set('url', $this->url->get('product/reviews', 'id' => $this->product->getID(), 'page' => '_000_'));
 
 		$this->addBreadCrumb($this->translate('_reviews'), '');
 
@@ -870,13 +869,13 @@ class ProductController extends CatalogController
 			$f = query::query()->where('ProductRating.productID = :ProductRating.productID:', array('ProductRating.productID' => $product->getID()));
 			if (!$this->user->isAnonymous())
 			{
-				$cond = 'ProductRating.userID = :ProductRating.userID:', array('ProductRating.userID' => $this->user->getID());
+//				$cond = 'ProductRating.userID = :ProductRating.userID:', array('ProductRating.userID' => $this->user->getID());
 			}
 			else
 			{
 				if ($hours = $this->config->get('RATING_SAME_IP_TIME'))
 				{
-					$cond = 'ProductRating.ip = :ProductRating.ip:', array('ProductRating.ip' => $this->request->getIPLong());
+					//$cond = 'ProductRating.ip = :ProductRating.ip:', array('ProductRating.ip' => $this->request->getIPLong());
 					$cond->addAnd(new MoreThanCond('ProductRating.dateCreated', getDateFromString('-' . $hours . ' hours')));
 				}
 			}

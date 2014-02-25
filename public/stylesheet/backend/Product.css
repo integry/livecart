@@ -1,3 +1,9 @@
+span.thumbnail img
+{
+	display: none;
+}
+
+
 #productManagerContainer span.tabCounter
 {
     margin-left: 6px;

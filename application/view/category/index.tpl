@@ -1,13 +1,16 @@
+{% extends "layout/frontend.tpl" %}
+
+{#
 {% block title %}{$category.pageTitle_lang|default:$category.name_lang}{% endblock %}
-{assign var="metaDescription" value=$category.description_lang|@strip_tags}
 {% set metaKeywords = $category.keywords_lang %}
+#}
 
+{% block content %}
 <div class="categoryIndex category_[[category.ID]]">
-
-
 
 [[ partial('block/content-start.tpl', ['hideTitle': true]) ]]
 
+	{#
 	[[ partial("category/head.tpl") ]]
 
 	{% if $allFilters.filters %}
@@ -53,12 +56,6 @@
 	{block FILTER_TOP}
 
 	[[ partial("category/categoryProductList.tpl") ]]
-
-	<script type="text/javascript">
-		jQuery(document).ready(Frontend.initCategory);
-	</script>
+	#}
 
 {% endblock %}
-
-
-</div>

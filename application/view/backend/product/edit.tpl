@@ -1,15 +1,18 @@
 <dialog fullHeight=true class="" cancel="cancel()">
-	[[ form('', ['ng-submit': 'save()', 'ng-init': ';']) ]] >
 	<dialog-header>{{vals.name}}</dialog-header>
 	<dialog-body>
-		<tabset>
-			<tab heading="{t _product_details}">[[ partial("backend/product/basicData.tpl") ]]</tab>
+		<tabset-lazy>
+			<tab-lazy class="main" title="{t _product_details}" template-url="[[ url('backend/product/basicData') ]]"></tab-lazy>
+
+			<tab-lazy class="categories" title="{t _product_categories}" template-url="[[ url('backend/product/editCategories') ]]"></tab-lazy>
+
+			<tab-lazy class="images" title="{t _images}" template-url="[[ url('backend/product/editImages') ]]"></tab-lazy>
+
 			{# <tab heading="{t _presentation}">[[ partial("backend/product/presentation.tpl") ]]</tab> #}
-		</tabset>
+		</tabset-lazy>
 	</dialog-body>
 	<dialog-footer>
 		<dialog-cancel>{t _cancel}</dialog-cancel>
-		<submit>{t _save_product}</submit>
+		<submit tabform="main">{t _save_product_details}</submit>
 	</dialog-footer>
-	</form>
 </dialog>

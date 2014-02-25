@@ -9,6 +9,8 @@ abstract class ActiveGridController extends ControllerBackend
 	abstract protected function getClassName();
 
 	abstract protected function getDefaultColumns();
+	
+	protected $eavInstance = null;
 
 	public function exportAction()
 	{
@@ -69,8 +71,14 @@ abstract class ActiveGridController extends ControllerBackend
 		
 		$countRow = $filter->getQuery()->execute()->getFirst();
 
+		$columns = array();
+		foreach (array_keys($displayedColumns) as $column)
+		{
+			$columns[] = $this->getJsColumn($column);
+		}
+		
 		$return = array();
-		$return['columns'] = array_keys($displayedColumns);
+		$return['columns'] = $columns;
 		$return['totalCount'] = $countRow->cnt;
 		$return['data'] = $data;
 		$return['options'] = $this->getGridOptions();
@@ -164,18 +172,35 @@ abstract class ActiveGridController extends ControllerBackend
 		if ($ids = $this->request->getJson('ids'))
 		{
 			$func = $this->request->getJson('allSelected') ? 'notInWhere' : 'inWhere';
-			$filter->$func('ID', $ids);
+			$filter->$func($this->getClassName() . '.ID', $ids);
 		}
 		
 		$records = $filter->getQuery()->execute();
 		
 		$action = $this->request->getJson('action');
+		
+		if ('setValue' == $action)
+		{
+			$assignValues = $this->request->getJsonRawBody();
+			unset($assignValues['ids'], $assignValues['action']);
+		}
+		
 		foreach ($records as $record)
 		{
+			if ($record instanceof Phalcon\Mvc\Model\Row)
+			{
+				$record = $record[$this->getClassName()];
+			}
+			
 			switch ($action)
 			{
 				case 'delete':
 					$record->delete();
+				break;
+				
+				case 'setValue':
+					$record->assign($assignValues);
+					$record->save();
 				break;
 			}
 		}
@@ -246,33 +271,43 @@ abstract class ActiveGridController extends ControllerBackend
 	{
 		$model = new $schemaName();
 		$metaData = new Phalcon\Mvc\Model\MetaData\Memory();
-		$attributes = $metaData->getDataTypes($model);
-
+		//$attributes = $metaData->getDataTypes($model);
+	
 		$availableColumns = array();
-		foreach ($attributes as $field => $dataType)
+		foreach ($this->db->describeColumns(get_real_class($schemaName)) as $column)
 		{
-			switch ($dataType)
+			if ($column->isNumeric())
 			{
-				case 0: 
-					$type = 'numeric';
-				break;
-				
-				case 2: 
-				case 5: 
-				case 6: 
-				default:
+				if (1 == $column->getSize())
+				{
+					$type = 'bool';
+				}
+				else
+				{
+					$type = 'number';
+				}
+			}
+			else
+			{
+				if (($column->getType() == 1) && ($column->getSize() == 0))
+				{
+					$type = 'date';
+				}
+				else
+				{
 					$type = 'text';
-				break;
+				}
 			}
 
-			$availableColumns[$schemaName . '.' . $field] = $type;
+			$availableColumns[$schemaName . '.' . $column->getName()] = $type;
 		}
 
 		$availableColumns = array_merge($availableColumns, $customColumns);
 
 		foreach ($availableColumns as $column => $type)
 		{
-			$availableColumns[$column] = array('name' => $this->application->translate($column), 'type' => $type);
+			$name = substr($column, strrpos($column, '\\') + 1);
+			$availableColumns[$column] = array('name' => $this->application->translate($name), 'type' => $type);
 		}
 
 		/*
@@ -327,6 +362,27 @@ abstract class ActiveGridController extends ControllerBackend
 			}
 		}
 		$availableColumns = array_merge($default, $availableColumns);
+		
+		foreach ($availableColumns as $column => $meta)
+		{
+			if ((substr($column, -2) == 'ID') && (substr($column, -3) != '.ID'))
+			{
+				unset($availableColumns[$column]);
+			}
+		}
+		
+		if ($this->isEav())
+		{
+			$eav = new \eav\EavFieldManager($this->getClassName());
+			$eav->loadFields();
+			
+			//var_dump($availableColumns);exit;
+			foreach ($eav->getFields() as $field)
+			{
+				$availableColumns['eav.' . $field->getID()] = array('name' => $field->name, 'type' => 'text');
+			}
+		}
+		
 		return $availableColumns;
 	}
 
@@ -357,13 +413,18 @@ abstract class ActiveGridController extends ControllerBackend
 	
 	protected function getJsColumn($fieldName)
 	{
-		$jsColumn = str_replace('.', '_', $fieldName);
-		if ($p = strpos($jsColumn, '\\'))
-		{	
-			$jsColumn = substr($jsColumn, $p + 1);
-		}
+		$fieldName = str_replace('\\', '_', $fieldName);
+		return str_replace('.', '_', $fieldName);
+	}
+
+	protected function getColumnFromJs($jsColumnName)
+	{
+		$parts = explode('_', $jsColumnName);
 		
-		return $jsColumn;
+		$field = array_pop($parts);
+		$class = implode('\\', $parts);
+
+		return $class . '.' . $field;
 	}
 
 	protected function getGridOptions()
@@ -383,11 +444,28 @@ abstract class ActiveGridController extends ControllerBackend
 				$options['primaryKey'] = $this->getJsColumn($field);
 			}
 
-			$options['columnDefs'][] = array(
+			$def = array(
 				'field' => $this->getJsColumn($field),
+				'type' => $column['type'],
 				'displayName' => $column['name'],
-				'visible' => !empty($displayedColumns[$field]) && (substr($field, -3) != '.ID')
+				'visible' => !empty($displayedColumns[$field]) && (substr($field, -3) != '.ID'),
+				'cellClass' => 'celltype_' . $column['type'] . ' col_' . $this->getJsColumn($field)
 				);
+				
+			if ('bool' == $column['type'])
+			{
+				$def['width'] = 60;
+			}
+			else if ('number' == $column['type'])
+			{
+				$def['width'] = 70;
+			}
+			else if ('date' == $column['type'])
+			{
+				$def['width'] = 100;
+			}
+			
+			$options['columnDefs'][] = $def;
 		}
 
 		return $options;
@@ -501,6 +579,17 @@ abstract class ActiveGridController extends ControllerBackend
 
 		return '';
 	}
+	
+	protected function getEav()
+	{
+		if ($this->isEav() && !$this->eavInstance)
+		{
+			$this->eavInstance = new \eav\EavFieldManager($this->getClassName());
+			$this->eavInstance->loadFields();
+		}
+		
+		return $this->eavInstance;
+	}
 
 	protected function getSelectFilter()
 	{
@@ -528,6 +617,80 @@ abstract class ActiveGridController extends ControllerBackend
 			}
 		}
 		*/
+		
+		if ($conditions = $this->request->getJson('searchConditions'))
+		{
+			if ($this->isEav())
+			{
+				$eav = $this->getEav();
+			}
+
+			foreach ($conditions as $cond)
+			{
+				if ((!empty($cond['value']) || strlen($cond['value'])) && (!empty($cond['type'])))
+				{
+					$col = $this->getColumnFromJs($cond['field']);
+					
+					$fld = $cond['field'];
+					$val = $cond['value'];
+
+					if (substr($col, 0, 4) == 'eav.')
+					{
+						$fieldID = substr($col, 4);
+						$field = $eav->getField($fieldID);
+						
+						if (!$field->isSelector())
+						{
+							$field->defineJoin($f, $this->getClassName());
+							$col = 'eav_' . $fieldID . '.' . $field->getObjectValueField();
+						}
+						else
+						{
+							$table = get_real_class($this->getClassName());
+							$f->andWhere('SUBQUERY("SELECT COUNT(*) FROM EavItem LEFT JOIN EavValue ON EavItem.valueID=EavValue.ID WHERE EavItem.objectID=' . $table . '.eavObjectID AND EavItem.fieldID=' . $fieldID . '  AND EavValue.value LIKE :' . $fld . '") > 0', array($fld => '%' . $val . '%'));
+							$cond['type'] = null;
+						}
+					}
+					
+					switch ($cond['type'])
+					{
+						case 'text':
+							$f->andWhere($col . ' LIKE :' . $fld . ':', array($fld => '%' . $val . '%'));
+							break;
+						
+						case 'number':
+							$f->andWhere($col . ' = :' . $fld . ':', array($fld => $val));
+							break;
+
+						case 'bool':
+							if (!$val)
+							{
+								$f->andWhere('COALESCE(' . $col . ', 0) = :' . $fld . ':', array($fld => $val));
+							}
+							else
+							{
+								$f->andWhere($col . ' = :' . $fld . ':', array($fld => $val));
+							}
+							break;
+							
+						case 'date':
+							
+							if (!empty($val['from']))
+							{
+								$f->andWhere($col . ' >= :' . $fld . ':', array($fld => $val['from']));
+							}
+							
+							if (!empty($val['to']))
+							{
+								$f->andWhere($col . ' <= :' . $fld . ':', array($fld => $val['to']));
+							}
+
+							break;
+					}
+					
+				}
+			}
+		}
 
 		return $f;
 	}
