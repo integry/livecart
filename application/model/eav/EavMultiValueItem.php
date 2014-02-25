@@ -17,10 +17,17 @@ class EavMultiValueItem implements iEavSpecification
 	protected $ownerInstance = null;
 
 	protected $fieldInstance = null;
-
-	public static function getNewInstance(\ActiveRecordModel $owner, EavField $field, $value = false)
+	
+	protected $manager = null;
+	
+	public function setManager(EavSpecificationManager $manager)
 	{
-		$specItem = new EavMultiValueItem($owner, $field);
+		$this->manager = $manager;
+	}
+
+	public static function getNewInstance(EavSpecificationManager $manager, EavField $field, $value = false)
+	{
+		$specItem = new EavMultiValueItem($manager, $field);
 
 		if ($value)
 		{
@@ -35,9 +42,10 @@ class EavMultiValueItem implements iEavSpecification
 		return $this->fieldInstance;
 	}
 
-	protected function __construct(\ActiveRecordModel $owner, EavField $field)
+	protected function __construct(EavSpecificationManager $manager, EavField $field)
 	{
-		$this->ownerInstance = $owner;
+		$this->setManager($manager);
+		$this->ownerInstance = $manager->getOwner();
 		$this->fieldInstance = $field;
 	}
 
@@ -62,6 +70,7 @@ class EavMultiValueItem implements iEavSpecification
 		if (!isset($this->items[$value->getID()]))
 		{
 			$item = EavItem::getNewInstance($this->ownerInstance, $this->fieldInstance, $value);
+			$item->setManager($this->manager);
 			$this->items[$value->getID()] = $item;
 		  	unset($this->removedItems[$value->getID()]);
 		}
@@ -85,7 +94,7 @@ class EavMultiValueItem implements iEavSpecification
 
 	public function setItem(EavItem $item)
 	{
-		$this->items[$item->get_Value()->getID()] = $item;
+		$this->items[$item->valueID] = $item;
 	}
 
 	protected function deleteRemovedValues()

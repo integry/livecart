@@ -13,12 +13,19 @@ class EavItem extends \ActiveRecordModel implements iEavSpecification
 	public $valueID;
 	public $objectID;
 	public $fieldID;
+	protected $owner;
+	protected $manager = null;
 	
 	public function initialize()
 	{
 		$this->belongsTo('valueID', 'eav\EavValue', 'ID', array('alias' => 'Value'));
 		$this->belongsTo('objectID', 'eav\EavObject', 'ID', array('alias' => 'Object'));
 		$this->belongsTo('fieldID', 'eav\EavField', 'ID', array('alias' => 'Field'));
+	}
+
+	public function setManager(EavSpecificationManager $manager)
+	{
+		$this->manager = $manager;
 	}
 
 	public static function getNewInstance(\ActiveRecordModel $owner, EavField $field, EavValue $value)
@@ -32,12 +39,15 @@ class EavItem extends \ActiveRecordModel implements iEavSpecification
 			$specItem->set_Object($obj);
 		}
 
+		$specItem->owner = $owner;
+
 		return $specItem;
 	}
 
 	public function setOwner(EavObject $object)
 	{
 		$this->objectID = $object->getID();
+		$this->owner = $object;
 	}
 	
 	public function setValue(EavValue $value)
@@ -47,12 +57,14 @@ class EavItem extends \ActiveRecordModel implements iEavSpecification
 			return;
 		}
 
+/*
 		// test whether the value belongs to the same field
 		if ($value->get_Field()->getID() != $this->get_Field()->getID())
 		{
 //			$class = get_class($value->get_Field());
 //			throw new Exception('Cannot assign EavValue: ' . $value->get_Field()->getID() . ' value to ' . $class . ':' . $this->get_Field()->getID());
 		}
+*/
 
 		$this->set_Value($value);
 	}
@@ -89,16 +101,21 @@ class EavItem extends \ActiveRecordModel implements iEavSpecification
 	}
 	*/
 	
+	public function getValue()
+	{
+		return $this->manager->getFieldManager()->getField($this->fieldID)->getValue($this->valueID);
+	}
+	
 	public function getFormattedValue()
 	{
-		return $this->get_Value()->value;
+		return $this->getValue()->value;
 	}
 
 	public function toArray()
 	{
-		if ($value = $this->get_Value())
+		if ($value = $this->getValue())
 		{
-			return $this->get_Value()->toArray();
+			return $value->toArray();
 		}
 	}
 	

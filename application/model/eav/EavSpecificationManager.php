@@ -28,7 +28,7 @@ class EavSpecificationManager
 
 	public function __construct(\ActiveRecordModel $owner, $specificationDataArray = array())
 	{
-		$this->fieldManager = new EavFieldManager(EavField::getClassID($owner));
+		$this->fieldManager = EavFieldManager::getInstance(EavField::getClassID($owner));
 		$this->owner = $owner;
 		
 		if (is_null($specificationDataArray) && $owner->getID())
@@ -52,6 +52,11 @@ class EavSpecificationManager
 		}
 
 		$this->loadSpecificationData($specificationDataArray);
+	}
+	
+	public function getOwner()
+	{
+		return $this->owner;
 	}
 	
 	public static function loadSpecificationForRecordSet($set)
@@ -209,13 +214,15 @@ class EavSpecificationManager
 			{
 				if ($field->isMultiValue)
 				{
-					$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this->owner, $field, $defaultValue);
+					$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this, $field, $defaultValue);
 				}
 				else
 				{
 					$this->attributes[$field->getID()] = EavItem::getNewInstance($this->owner, $field, $defaultValue);
 				}
 			}
+			
+			$this->attributes[$field->getID()]->setManager($this);
 		}
 
 		return $this->attributes[$field->getID()];
@@ -225,7 +232,8 @@ class EavSpecificationManager
 	{
 		foreach ($this->attributes as $attribute)
 		{
-			if ($attribute->getField() && ($attribute->getField()->handle == $handle))
+			$field = $attribute instanceof EavMultiValueItem ? $attribute->getFieldInstance() : $this->fieldManager->getField($attribute->fieldID);
+			if ($field && ($field->handle == $handle))
 			{
 				return $attribute;
 			}
@@ -298,8 +306,6 @@ class EavSpecificationManager
 			$arr[$id] = $attribute->getRawValue();
 		}
 
-		//uasort($arr, array($this, 'sortAttributeArray'));
-
 		return $arr;
 	}
 
@@ -338,14 +344,14 @@ class EavSpecificationManager
 	}
 	*/
 
-	public function loadRequestData(\Phalcon\Http\Request $request, $prefix = '')
+	public function loadRequestData(\Phalcon\Http\Request $request, $sanitize = false)
 	{
 		$fields = $this->getSpecificationFieldSet();
 
 		$eav = $request->getJson('eav');
 		
 		// create new select values
-		if ($request->has($prefix . 'other'))
+		if ($request->has('other'))
 		{
 			foreach ($request->get($prefix . 'other') as $fieldID => $values)
 			{
@@ -424,6 +430,11 @@ class EavSpecificationManager
 			}
 			else
 			{
+				if ($sanitize)
+				{
+					$value = strip_tags($value);
+				}
+				
 				if ($field->isTextField())
 				{
 					/*
@@ -792,7 +803,7 @@ class EavSpecificationManager
 		}
 		
 		$values = EavObjectValue::query()->inWhere('objectID', $objectIDs)->execute();
-		$items = EavItem::query()->join('EavValue')->inWhere('objectID', $objectIDs)->execute();
+		$items = EavItem::query()->join('eav\EavValue')->inWhere('objectID', $objectIDs)->execute();
 		
 		return array($values, $items);
 
@@ -878,6 +889,8 @@ class EavSpecificationManager
 		{
 			foreach ($type as $attr)
 			{
+				$attr->setManager($this);
+				
 				if ($attr instanceof EavObjectValue)
 				{
 					$this->attributes[$attr->fieldID] = $attr;
@@ -885,13 +898,16 @@ class EavSpecificationManager
 				else if ($attr instanceof EavItem)
 				{
 					$field = $this->fieldManager->getField($attr->fieldID);
+					$attr->set_Field($field);
+					
 					if ($field->isMultiValue)
 					{
 						if (empty($this->attributes[$field->getID()]))
 						{
-							$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this->owner, $field);
+							$this->attributes[$field->getID()] = EavMultiValueItem::getNewInstance($this, $field);
 						}
 						
+						$this->attributes[$field->getID()]->setManager($this);
 						$this->attributes[$field->getID()]->setItem($attr);
 					}
 					else

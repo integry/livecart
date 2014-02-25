@@ -231,7 +231,7 @@ class EavfieldController extends ActiveGridController
 				$existingValues[$value->getID()] = $value;
 			}
 			
-			foreach ($values as &$value)
+			foreach ($values as $key => &$value)
 			{
 				if (empty($value['value']))
 				{
@@ -249,6 +249,7 @@ class EavfieldController extends ActiveGridController
 				}
 				
 				$val->assign($value);
+				$val->position = $key;
 				$val->save();
 			}
 			

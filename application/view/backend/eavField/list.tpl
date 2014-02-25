@@ -1,6 +1,6 @@
 <div ng-controller="EavFieldController">
 
-	<grid controller="backend/eavField" primaryKey="EavField_ID">
+	<grid controller="backend/eavField" primaryKey="eav_EavField_ID">
 		<menu>
 			<div class="btn-toolbar">
 				<div class="btn-group">

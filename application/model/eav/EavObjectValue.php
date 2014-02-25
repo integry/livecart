@@ -17,6 +17,12 @@ class EavObjectValue extends \ActiveRecordModel implements iEavSpecification
 	public $stringValue;
 	public $textValue;
 	public $dateValue;
+	protected $manager = null;
+
+	public function setManager(EavSpecificationManager $manager)
+	{
+		$this->manager = $manager;
+	}
 
 	public function initialize()
 	{
@@ -76,31 +82,23 @@ class EavObjectValue extends \ActiveRecordModel implements iEavSpecification
 	
 	public function getValueField()
 	{
-		switch ($this->getField()->type)
-		{
-			case EavField::TYPE_NUMBERS_SIMPLE:
-				$valueField = 'numValue';
-			break;
-
-			case EavField::TYPE_TEXT_SIMPLE:
-				$valueField = 'stringValue';
-			break;
-
-			case EavField::TYPE_TEXT_ADVANCED:
-				$valueField = 'textValue';
-			break;
-
-			case EavField::TYPE_TEXT_DATE:
-				$valueField = 'dateValue';
-			break;
-		}
-		
-		return $valueField;
+		return $this->getField()->getObjectValueField();
 	}
 	
 	public function setValue($value)
 	{
 		$valueField = $this->getValueField();
+		
+		if ($valueField == 'dateValue')
+		{
+			if (preg_match('/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}T/', $value))
+			{
+				$value = substr($value, 0, 10);
+			}
+			
+			$value = date('Y-m-d', strtotime($value));
+		}
+		
 		$this->$valueField = $value;
 	}
 

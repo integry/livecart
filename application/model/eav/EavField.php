@@ -139,32 +139,32 @@ class EavField extends EavFieldCommon
 
 	public function getOwnerClass()
 	{
-		return 'EavObject';
+		return 'eav\EavObject';
 	}
 
 	public function getStringValueClass()
 	{
-		return 'EavStringValue';
+		return 'eav\EavObjectValue';
 	}
 
 	public function getNumericValueClass()
 	{
-		return 'EavNumericValue';
+		return 'eav\EavObjectValue';
 	}
 
 	public function getDateValueClass()
 	{
-		return 'EavDateValue';
+		return 'eav\EavObjectValue';
 	}
 
 	public function getSelectValueClass()
 	{
-		return 'EavItem';
+		return 'eav\EavItem';
 	}
 
 	public function getMultiSelectValueClass()
 	{
-		return 'EavMultiValueItem';
+		return 'eav\EavMultiValueItem';
 	}
 
 	public function getFieldIDColumnName()
@@ -189,9 +189,14 @@ class EavField extends EavFieldCommon
 	
 	public function registerValue(EavValue $value)
 	{
-		$this->values[] = $value;
+		$this->values[$value->getID()] = $value;
 	}
 	
+	public function getValue($id)
+	{
+		return $this->values[$id];
+	}
+
 	public function toJson($encode = true)
 	{
 		$array = $this->toArray();
@@ -302,11 +307,6 @@ class EavField extends EavFieldCommon
 	 */
 	public function getValueTableName()
 	{
-		if (!$this->isLoaded())
-		{
-			$this->load();
-		}
-
 		switch ($this->type)
 		{
 		  	case self::TYPE_NUMBERS_SELECTOR:
@@ -331,6 +331,30 @@ class EavField extends EavFieldCommon
 			print_r($this->toArray());exit;
 				throw new Exception('Invalid field type: ' . $this->type);
 		}
+	}
+
+	public function getObjectValueField()
+	{
+		switch ($this->type)
+		{
+			case EavField::TYPE_NUMBERS_SIMPLE:
+				$valueField = 'numValue';
+			break;
+
+			case EavField::TYPE_TEXT_SIMPLE:
+				$valueField = 'stringValue';
+			break;
+
+			case EavField::TYPE_TEXT_ADVANCED:
+				$valueField = 'textValue';
+			break;
+
+			case EavField::TYPE_TEXT_DATE:
+				$valueField = 'dateValue';
+			break;
+		}
+		
+		return $valueField;
 	}
 
 	public function getSpecificationFieldClass()
@@ -432,7 +456,7 @@ class EavField extends EavFieldCommon
 
 	public function getJoinAlias()
 	{
-		return 'specField_' . $this->getID();
+		return 'eav_' . $this->getID();
 	}
 
 	public function getFieldHandle($field)
@@ -450,17 +474,25 @@ class EavField extends EavFieldCommon
 	 *
 	 *	@param	ARSelectFilter	$filter	Filter instance
 	 */
-	public function defineJoin(ARSelectFilter $filter)
+	public function defineJoin($query, $ownerTable = null)
 	{
+		$ownerTable = $ownerTable ? $ownerTable . '.' : '';
+		
 		$table = $this->getJoinAlias();
-		$filter->joinTable($this->getValueTableName(), $this->getOwnerClass(), $this->getObjectIDColumnName() . ' AND ' . $table . '.' . $this->getFieldIDColumnName() . ' = ' . $this->getID(), 'ID', $table);
+		$query->join($this->getValueTableName(), $table . '.fieldID=' . $this->getID()  . ' AND ' . $ownerTable . 'eavObjectID=' . $table . '.objectID', $table, 'LEFT');
+		//$query->columns($table . '.*');
 
 		if ($this->isSelector() && !$this->isMultiValue)
 		{
+			$query->join('eav\EavValue', $table . '_value.ID = ' . $table . '.valueID', $table . '_value', 'LEFT');
+			//$query->columns($table . '_value.*');
+			
+			/*
 			$itemClass = $this->getSelectValueClass();
 			$valueClass = call_user_func(array($itemClass, 'getValueClass'));
 			$valueField = call_user_func(array($itemClass, 'getValueIDColumnName'));
 			$filter->joinTable($valueClass, $table, 'ID', $valueField, $table . '_value');
+			*/
 		}
 	}
 

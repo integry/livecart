@@ -1,196 +1,110 @@
-/**
- *	@author Integry Systems
- */
-
-if (!window.Backend)
+app.controller('EavController', function ($scope, treeService, $http, $element, $state)
 {
-	Backend = {}
-}
-/*
-Backend.Eav.specFieldEntryMultiValue = Class.create();
-Backend.Eav.specFieldEntryMultiValue.prototype =
+	$scope.tree = treeService;
+	$scope.tree.initController($scope);
+
+	$scope.categories = [];
+	$scope.ids = {};
+
+	$scope.activate = function(child)
+	{
+		$state.go('eavField.type', {type: child.id});
+		
+		$scope.activeID = child.id;
+	};
+});
+
+app.controller('EavFieldController', function ($scope, $resource, $modal)
 {
-	container: null,
+    $scope.resource = $resource('../backend/eavField/:verb/:id', 
+    	{id: $scope.type, verb: '@verb'}, 
+    	{
+    		query:  {method:'GET', isArray: false, params: { verb: 'lists' }},
+    		mass:  {method:'POST', params: { verb: 'mass' }}
+    	}
+    );
 
-	mainContainer: null,
-
-	isNumeric: false,
-
-	initialize: function(container)
+	$scope.edit = function(id)
 	{
-		Event.observe(container.getElementsByClassName('deselect')[0], 'click', this.reset.bindAsEventListener(this));
-		Event.observe(container.getElementsByClassName('eavSelectAll')[0], 'click', this.selectAll.bindAsEventListener(this));
-		Event.observe(container.getElementsByClassName('eavSort')[0], 'click', this.sort.bindAsEventListener(this));
-		Event.observe(container.getElementsByClassName('filter')[0], 'keyup', this.filter.bindAsEventListener(this));
+		$modal.open({templateUrl: Router.createUrl('backend/eavField', 'edit', {type: $scope.type}), 
+					controller: 'EavFieldEditController',
+					resolve: {
+							type: function() { return $scope.type },
+							id: function() { return id } }
+							});
+	};
 
-		this.isNumeric = Element.hasClassName(container, 'multiValueNumeric');
-
-		this.checkBoxContainer = document.getElementsByClassName("eavCheckboxes", container.parentNode)[0];
-		this.fieldStatus = document.getElementsByClassName("fieldStatus", container.parentNode)[0];
-		this.mainContainer = container;
-		this.container = document.getElementsByClassName('other', container)[0];
-
-		if (this.container)
-		{
-			var inp = this.container.getElementsByTagName('input');
-			this.bindField(inp);
-		}
-	},
-
-	selectAll: function(e)
+	$scope.add = function()
 	{
-		e.preventDefault();
+		$modal.open({templateUrl: Router.createUrl('backend/eavField', 'add', {type: $scope.type}), 
+					controller: 'EavFieldEditController',
+					resolve: {
+							type: function() { return $scope.type },
+							id: function() { return null } }
+							});
+	};
+});
 
-		this.toggleAll(true);
-	},
-
-	toggleAll: function(state)
-	{
-		var checkboxes = this.mainContainer.getElementsByTagName('input');
-
-		for (k = 0; k < checkboxes.length; k++)
-		{
-		  	checkboxes[k].checked = state;
-		}
-	},
-
-	sort: function(e)
-	{
-		e.preventDefault();
-
-		var labels = $A(this.checkBoxContainer.getElementsByTagName('label')).sort(
-			function(a, b)
-			{
-				a = a.innerHTML.toLowerCase();
-				b = b.innerHTML.toLowerCase();
-				return a > b ? 1 : (a == b ? 0 : -1);
-			});
-
-		labels.each(function(label)
-		{
-			this.checkBoxContainer.appendChild(label.parentNode);
-		}.bind(this));
-	},
-
-	filter: function(e)
-	{
-		var str = Event.element(e).value.toLowerCase();
-		$A(this.checkBoxContainer.getElementsByTagName('label')).each(
-			function(l)
-			{
-				if (!str.length || (l.innerHTML.toLowerCase().indexOf(str) > -1))
-				{
-					Element.show(l.parentNode);
-				}
-				else
-				{
-					Element.hide(l.parentNode);
-				}
-			});
-	},
-
-	bindField: function(field)
-	{
-		var self = this;
-		Event.observe(field, "input", function(e) { self.handleChange(e); });
-		Event.observe(field, "keyup", function(e) { self.handleChange(e); });
-		Event.observe(field, "blur", function(e) { self.handleBlur(e); });
-
-		if (this.isNumeric)
-		{
-			Event.observe(field, 'keyup', this.filterNumeric.bindAsEventListener(this));
-		}
-
-		field.value = '';
-	},
-
-	handleChange: function(e)
-	{
-		var fields = this.container.getElementsByTagName('input');
-		var foundEmpty = false;
-		for (k = 0; k < fields.length; k++)
-		{
-		  	if ('' == fields[k].value)
-		  	{
-				foundEmpty = true;
-			}
-		}
-
-		if (!foundEmpty)
-		{
-		  	this.createNewField();
-		}
-	},
-
-	handleBlur: function(e)
-	{
-		var element = Event.element(e);
-		if (element.parentNode && element.parentNode.parentNode &&!element.value && this.getFieldCount() > 1)
-		{
-			Element.remove(element.parentNode);
-		}
-	},
-
-	getFieldCount: function()
-	{
-		return this.container.getElementsByTagName('input').length;
-	},
-
-	createNewField: function()
-	{
-		var tpl = this.container.getElementsByTagName('p')[0].cloneNode(true);
-		this.bindField(tpl.getElementsByTagName('input')[0]);
-		this.container.appendChild(tpl);
-	},
-
-	reset: function(e)
-	{
-		e.preventDefault();
-
-		if (this.container)
-		{
-			var nodes = this.container.getElementsByTagName('p');
-			var ln = nodes.length;
-			for (k = 1; k < ln; k++)
-			{
-				nodes[1].parentNode.removeChild(nodes[1]);
-			}
-			nodes[0].getElementsByTagName('input')[0].value = '';
-		}
-
-		this.toggleAll(false);
-	},
-
-	filterNumeric: function(e)
-	{
-	  	NumericFilter(Event.element(e));
-	}
-}
-
-* /
-
-/**
- *  Validate multiple-select option attribute values (at least one option must be selected)
- */
-function SpecFieldIsValueSelectedCheck(element, params)
+app.controller('EavFieldEditController', function ($scope, $resource, $modal, type, id)
 {
-	var inputs = element.parentNode.down('.multiValueSelect').getElementsByTagName('input');
-
-	for (k = 0; k < inputs.length; k++)
+	$scope.form = null;
+	$scope.eavType = type;
+    var resource = $resource('../backend/eavField/:verb/:id', 
+    	{id: id, verb: '@verb'}, 
+    	{ 
+    		get: { method: 'GET', params: { verb: 'get' }},
+    		save: { method: 'POST', params: { verb: 'save' }} 
+    	}
+    );
+    
+	$scope.vals = resource.get(function(vals)
 	{
-		if ('checkbox' == inputs[k].type)
+		vals.eavType = type;
+	});
+
+	$scope.isSelect = function()
+	{
+		return $scope.vals && (($scope.vals.type == 1) || ($scope.vals.type == 5));
+	};
+
+	$scope.isNumber = function()
+	{
+		return $scope.vals && (($scope.vals.type == 1) || ($scope.vals.type == 2));
+	};
+	
+	$scope.addRemoveValues = function()
+	{
+		if (!$scope.vals.values)
 		{
-			if (inputs[k].checked)
-			{
-				return true;
-			}
+			$scope.vals.values = [];
 		}
-		else if ('text' == inputs[k].type)
+		
+		var filtered = _.filter($scope.vals.values, function(value) { return value.value != ''; });
+		
+		if (filtered.length == $scope.vals.values.length - 1)
 		{
-			if (inputs[k].value)
-			{
-				return true;
-			}
+			return;
 		}
-	}
-}
+		
+		$scope.vals.values = filtered;
+		$scope.vals.values.push({value: ''});
+	};
+	
+	$scope.$watch('vals.values', function()
+	{
+		$scope.addRemoveValues();
+	});
+	
+	$scope.save = function()
+	{
+		if (!$scope.getChildScopeForm($scope).$invalid)
+		{
+			resource.save($scope.vals, success('The field has been saved'));
+		}
+	};
+	
+	$scope.sortAZ = function()
+	{
+		$scope.vals.values = _.sortBy($scope.vals.values, 'value');
+	};
+});

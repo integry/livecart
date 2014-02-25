@@ -33,7 +33,7 @@
 					</div>
 					
 					<div ng-show="vals.type == 3">
-						[[ checkbox('advancedTest', '_SpecField_formated_text') ]]
+						[[ checkbox('advancedText', '_SpecField_formated_text') ]]
 					</div>
 					
 					[[ textfld('name', '_SpecField_title') ]]
@@ -53,6 +53,13 @@
 					[[ checkbox('isSortable', tip('_SpecField_sortable')) ]]
 				</tab>
 				<tab heading="{t _SpecField_values}">
+					
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<a class="btn btn-primary" ng-click="sortAZ()">A-Z</a>
+						</div>
+					</div>
+					
 					<div ui-sortable ng-model="vals.values">
 					<div ng-repeat="value in vals.values">
 						<div class="form-group">

@@ -13,6 +13,18 @@ class EavFieldManager
 	private $classID;
 	private $stringIdentifier;
 	private $fields;
+	private static $instances = array();
+	
+	public static function getInstance($identifier)
+	{
+		if (empty(self::$instances[$identifier]))
+		{
+			self::$instances[$identifier] = new self($identifier);
+			self::$instances[$identifier]->loadFields();
+		}
+		
+		return self::$instances[$identifier];
+	}
 
 	public function __construct($classID)
 	{
