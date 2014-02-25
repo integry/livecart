@@ -67,14 +67,20 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return 'htmlspecialchars(json_encode(' . $resolvedArgs . '))';
 			});
 
+			$this->_compiler->addFunction('slug', function($resolvedArgs, $exprArgs) {
+				return 'CreateHandleString::create(' . $resolvedArgs . ')';
+			});
+
+			$this->_compiler->addFunction('render', function($resolvedArgs, $exprArgs) {
+				return '$volt->renderBlock(' . $resolvedArgs . ')';
+			});
+
 			$this->_compiler->addFunction('count', 'count');
 			$this->_compiler->addFunction('round', 'round');
 			$this->_compiler->addFunction('is_null', 'is_null');
-
-			if (!function_exists('vmacro_form'))
-			{
-				$this->partial("macro/form.tpl");
-			}
+			$this->_compiler->addFunction('strip_tags', 'strip_tags');
+			$this->_compiler->addFunction('str_replace', 'str_replace');
+			$this->_compiler->addFunction('meta', 'meta_description');
 		}
 
 		return $this->_compiler;
@@ -82,16 +88,44 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 	public function render($templatePath, $params, $mustClean = null)
 	{
+		if (!function_exists('vmacro_textfld'))
+		{
+			$this->partial("macro/form.tpl");
+		}
+
 		$this->getView()->setViewsDir(__ROOT__ . 'application/view/');
 		$this->paths = array();
 
 		$path = $this->getTemplatePath($this->getRelativeTemplatePath($templatePath));
+
 		if (!empty($params['validator']))
 		{
 			$this->setOrReturnGlobal('validator', $params['validator']);
 		}
 
 		return parent::render($path ? $path : $templatePath, $params, $mustClean);
+	}
+	
+	public function renderBlock($action, $params = array())
+	{
+		$di = $this->getDI();
+
+		$dispatcher = $di->get('dispatcher');
+
+		$dispatcherActions = explode('/', $action);
+		
+		$dispatcher->setControllerName(array_shift($dispatcherActions));
+		$dispatcher->setActionName(array_shift($dispatcherActions));
+		$dispatcher->setParams($params);
+		
+		$controller = $dispatcher->dispatch();
+		$object = new ReflectionObject($controller);
+		$filename = $object->getFilename();
+		$root = dirname(dirname($object->getFilename()));
+		
+		$output = $this->render($root . '/view/' . $action . '.tpl', $this->view->getParamsToView());
+	
+		echo $output;
 	}
 
 	public function partial($partialPath, $params = array(), $currentScope = array())
@@ -271,6 +305,19 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 {
 	protected function _compileSource($source, $something = null)
 	{
+		if (!$this->_macros)
+		{
+			$funcs = get_defined_functions();
+			foreach ($funcs['user'] as $func)
+			{
+				if (substr($func, 0, 7) == 'vmacro_')
+				{
+					$f = substr($func, 7);
+					$this->_macros[$f] = $f;
+				}
+			}
+		}
+		
 		$source = str_replace("\r", '', $source);
 		$source = str_replace('{{', '<' . '?php $ng = <<<NG' . "\n" . '\x7B\x7B', $source);
 		$source = str_replace('}}', '\x7D\x7D' . "\n" . 'NG;' . "\n" . ' echo $ng; ?' . '>', $source);
@@ -333,9 +380,37 @@ class LiveVoltCompiler extends \Phalcon\Mvc\View\Engine\Volt\Compiler
 
 		$source = preg_replace('/throw new \\\Phalcon\\\Mvc\\\View\\\Exception\("Macro [\_a-zA-Z0-9]+ was called without parameter: ([\_a-zA-Z0-9]+)"\)\;/', '\$$1 = \'\';', $source);
 		
-		$source = preg_replace('/\-\>partial\(([^,]+)\);/', '->partial($1, get_defined_vars())', $source);
+		$source = preg_replace('/\-\>partial\(\'([^\']+)\'\);/', '->partial(\'$1\', get_defined_vars())', $source);
 
 		return $source;
 	}
 
+}
+
+function meta_description($value, $default = '')
+{
+	if (!$value)
+	{
+		$value = $default;
+	}
+
+	$value = preg_replace('/\<script.*\<\/script\>/msU', 'XXX', $value);
+	$value = strip_tags($value);
+	$value = str_replace(array("\n"), ' ', $value);
+	$value = str_replace(" // ", ' ', $value);
+	$value = preg_replace('/[ ]+/', ' ', $value);
+	$value = trim($value);
+
+	$value = str_replace(array('&amp;', '&nbsp;', 'amp;', 'nbsp;'), ' ', $value);
+
+	$funcPrefix = function_exists('mb_strlen') ? 'mb_' : '';
+	$strlen = $funcPrefix . 'strlen';
+	$substr = $funcPrefix . 'substr';
+
+	if ($strlen($value, 'UTF-8') > 163)
+	{
+		$value = $substr($value, 0, 160, 'UTF-8') . '...';
+	}
+
+	return htmlspecialchars($value);
 }

@@ -44,7 +44,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 
 		if (is_string($valueArray))
 		{
-			$valueArray = unserialize($valueArray);
+			$valueArray = @unserialize($valueArray);
 		}
 
 		if ((!isset($valueArray[$langCode]) && $returnDefaultIfEmpty) || is_null($langCode))
@@ -64,7 +64,9 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 
 	public function getCurrentLangValue($fieldName)
 	{
-		return $this->getValueByLang($fieldName, $this->getDI()->get('application')->getLocaleCode(), true);
+		$val = $this->getValueByLang($fieldName, $this->getDI()->get('application')->getLocaleCode(), true);
+		$val = $val ? $val : $this->$fieldName;
+		return $val;
 	}
 
 	public function g($fieldName)

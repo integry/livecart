@@ -6,7 +6,7 @@
  * @package application/model
  * @author Integry Systems
  */
-abstract class ModelPlugin
+abstract class ModelPlugin extends \Phalcon\DI\Injectable
 {
 	protected $object;
 
@@ -14,10 +14,10 @@ abstract class ModelPlugin
 	
 	public abstract function process();
 	
-	public function __construct(&$object, LiveCart $application)
+	public function __construct(&$object, $di)
 	{
-		$this->object =& $object;	
-		$this->application = $application;
+		$this->object =& $object;
+		$this->setDI($di);
 		$this->process();
 	}
 }

@@ -1,5 +1,11 @@
 <?php
 
+use \Phalcon\Mvc\Dispatcher as PhDispatcher;
+
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
+session_set_cookie_params(86400 * 2);
+
 class MyRouter extends \Phalcon\Mvc\Router
 {
 	public function setModule($module)
@@ -48,8 +54,12 @@ try
 	$view->registerEngines(array(
 		".tpl" => function($view, $di)
 		{
+			$dir = __ROOT__ . 'cache/templates/';
+			mkdir($dir);
+			chmod($dir, 0777);
+
 			$volt = new LiveVolt($view, $di);
-			$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
+			$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => false));
 			return $volt;
 		}
 	));
@@ -60,9 +70,16 @@ try
  	// Specify routes for modules
 	$di->set('router', function () {
 
+		$handle = '[^\.\047]{0,}';
+
 		$router = new MyRouter();
 		$router->setDefaultModule("frontend");
 
+		$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2));
+		$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)/([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2, "page" => 3));
+		$router->add("#^/opportunity/" . $handle . "\-([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'view', "id" => 1));
+		$router->add("#^/profile/([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'profile', "id" => 1));
+		
 		$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"));
 		//$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
 		$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
@@ -125,6 +142,17 @@ try
 		return $di->get('cache');
 	});
 
+	$di->set('modelsMetadata', function() 
+	{
+		// Create a meta-data manager with APC
+		$metaData = new \Phalcon\Mvc\Model\MetaData\Apc(array(
+			"lifetime" => 86400,
+			"prefix"   => "my-prefix"
+		));
+
+		return $metaData;
+	});
+
 	$di->set('url', function(){
 		$url = new Phalcon\Mvc\Url();
 
@@ -150,7 +178,10 @@ try
 
 	$di->set('session', function() {
 		$session = new Phalcon\Session\Adapter\Files();
-		$session->start();
+		if (!session_id())
+		{
+			@$session->start();
+		}
 		return $session;
 	});
 
@@ -163,6 +194,35 @@ try
 		));
 		return $flash;
 	});
+
+	$di->set(
+		'dispatcher',
+		function() use ($di) 
+		{
+			$evManager = $di->getShared('eventsManager');
+			$evManager->attach(
+				"dispatch:beforeException",
+				function($event, $dispatcher, $exception)
+				{
+					switch ($exception->getCode()) {
+						case PhDispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+						case PhDispatcher::EXCEPTION_ACTION_NOT_FOUND:
+							$dispatcher->forward(
+								array(
+									'controller' => 'err',
+									'action'     => 'index',
+								)
+							);
+							return false;
+					}
+				}
+			);
+			$dispatcher = new PhDispatcher();
+			$dispatcher->setEventsManager($evManager);
+			return $dispatcher;
+		},
+		true
+	);
 
 	$di->set('di', function() use ($di) {
 		return function($set) use ($di) {
@@ -186,7 +246,8 @@ try
 			'frontend' => function($di) use ($view, $loader) 
 			{
 				$loader->registerDirs(array(__ROOT__ . 'application/controller'), true);
-				$loader->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
+				$loader->registerDirs(array(__ROOT__ . 'module/heysuccess/application/controller'), true);
+				$loader->registerDirs(array(__ROOT__ . 'module/hybridauth/application/controller'), true);
 				
 				$di->setShared('view', function() use ($view) {
 					$view->setViewsDir(__ROOT__ . 'application/view/');
@@ -201,14 +262,18 @@ try
 					return $view;
 				});
 			},
-			'mrfeedback' => function($di) use ($view, $loader) 
+			'heysuccess' => function($di) use ($view, $loader) 
 			{
-				$loader->registerDirs(array(__ROOT__ . 'module/mrfeedback/application/controller'), true);
+				$loader->registerDirs(array(__ROOT__ . 'module/heysuccess/application/controller'), true);
 				
 				$di->setShared('view', function() use ($view) {
-					$view->setViewsDir(__ROOT__ . 'module/mrfeedback/application/view/');
+					$view->setViewsDir(__ROOT__ . 'module/heysuccess/application/view/');
 					return $view;
 				});
+			},
+			'hybridauth' => function($di) use ($view, $loader) 
+			{
+				$loader->registerDirs(array(__ROOT__ . 'module/hybridauth/application/controller'), true);
 			}
 		)
 	);
@@ -217,11 +282,18 @@ try
 
 	echo $application->handle()->getContent();
 }
-catch(UnauthorizedException $e)
+catch (UnauthorizedException $e)
 {
-	$di->get('response')->redirect('user/login')->send();
+	if (!$e->isBackend())
+	{
+		$di->get('response')->redirect('user/login')->send();
+	}
+	else
+	{
+		$di->get('response')->setStatusCode(401, 'Unauthorized')->send();
+	}
 }
-catch(Exception $e)
+catch (Exception $e)
 {
      echo dump_livecart_trace($e);
 }
@@ -231,6 +303,7 @@ function dump_livecart_trace(Exception $e)
 	echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
 	echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
 	echo getFileTrace($e->getTrace());
+	//var_dump($e);
 	exit;
 }
 
@@ -313,6 +386,13 @@ function getFileTrace($trace)
 	}
 
 	return $traceString;
+}
+
+function get_real_class($inst)
+{
+	$class = is_string($inst) ? $inst : get_class($inst);
+	$parts = explode('\\', $class);
+	return array_pop($parts);
 }
 
 

@@ -123,12 +123,38 @@ class LiveCart extends \Phalcon\Mvc\Application
 					$dsn['password'] = $dsn['pass'];
 				}
 
-				return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+				$connection = new MyPdoAdapter(array(
 					"host" => $dsn['host'],
 					"username" => $dsn['user'],
 					"password" => !empty($dsn['password']) ? $dsn['password'] : '',
 					"dbname" => substr($dsn['path'], 1)
 				));
+				
+				//Listen all the database events
+				$eventsManager = new \Phalcon\Events\Manager();
+				$eventsManager->attach('db', function($event, $connection) {
+					if ($event->getType() == 'beforeQuery') {
+						$sql = $connection->getSQLStatement();
+						foreach ((array)$connection->getSQLVariables() as $key => $value)
+						{
+							$sql = str_replace($key, $value, $sql);
+						}
+						
+						if (!empty($GLOBALS['log'][$sql]))
+						{
+							//var_dump($connection->getSQLVariables());
+							throw new Exception($sql);
+						}
+						
+						$GLOBALS['log'][$sql] = true;
+						
+						//$logger->log($connection->getSQLStatement(), Logger::INFO);
+					}
+				});
+				
+				//$connection->setEventsManager($eventsManager);
+				
+				return $connection;
 			});
 
 			/*

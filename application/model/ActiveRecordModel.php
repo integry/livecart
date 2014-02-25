@@ -20,6 +20,8 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
  	private static $isEav = array();
 
  	protected $specificationInstance;
+ 	
+ 	protected $relatedInstances;
 
 	public function initialize()
 	{
@@ -67,10 +69,21 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	 *  make sure that the data for the particular field has actually been submitted to avoid
 	 *  setting empty values for fields that weren't included in the form
 	 */
-	public function loadRequestData(LiveCartRequest $request)
+	public function loadRequestData(LiveCartRequest $request, $sanitize = false)
 	{
 		if ($json = $request->getJsonRawBody())
 		{
+			if ($sanitize)
+			{
+				foreach ($json as $key => $value)
+				{
+					if (is_string($value))
+					{
+						$json[$key] = strip_tags($value);
+					}
+				}
+			}
+			
 			$this->assign($json);
 		}
 		else
@@ -326,7 +339,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	{
 		if (!isset(self::$isEav[$className]))
 		{
-			self::$isEav[$className] = (array_search('EavAble', class_implements($className)) !== false);
+			self::$isEav[$className] = (array_search('eav\EavAble', class_implements($className)) !== false);
 		}
 
 		return self::$isEav[$className];
@@ -441,13 +454,15 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		{
 			$className = get_class($object);
 		}
+		
+		$className = get_real_class($className);
 
 		// get plugins
 		$path = 'model/' . strtolower($className) . '/' . $action;
 		foreach ($this->getDI()->get('application')->getPlugins($path) as $plugin)
 		{
 			include_once $plugin['path'];
-			new $plugin['class']($object, $this->getDI()->get('application'));
+			new $plugin['class']($object, $this->getDI());
 		}
 	}
 
@@ -473,12 +488,6 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	}
 	*/
 	
-	public function getField()
-	{
-		throw new \Exception('erer');
-		return 'sdfsdfsdf';
-	}
-
 	public function getFormattedTime($field, $type)
 	{
 		$type = str_replace('t_', 'time_', str_replace('d_', 'date_', $type));
@@ -490,10 +499,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 		if (substr($method, 0, 4) == 'set_')
 		{
 			$property = $this->getRelatedProperty($method);
-			if (property_exists($this, $property))
-			{
-				return $this->setRelatedInstance($property, $arguments[0]);
-			}
+			return $this->setRelatedInstance($property, $arguments[0]);
 		}
 		
 		if (substr($method, 0, 4) == 'get_')
@@ -523,21 +529,27 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	
 	protected function setRelatedInstance($key, ActiveRecordModel $value)
 	{
-		$this->$key = $value->getID();
-		$instanceKey = substr($key, 0, -2);
-		$this->$instanceKey = $value;
+		if (!empty($value->ID))
+		{
+			$this->$key = $value->getID();
+		}
+		
+		$this->relatedInstances[$key] = $value;
 	}
 
 	protected function getRelatedInstance($key)
 	{
-		$instanceKey = substr($key, 0, -2);
-		if (!empty($this->$instanceKey))
+		$objectKey = substr($key, 0, -2);
+
+		if (!empty($this->relatedInstances[$key]))
 		{
-			return $this->$instanceKey;
+			return $this->relatedInstances[$key];
 		}
-		else if (!empty($this->$key))
+		else if (property_exists($this, $key))
 		{
-			return parent::__call('get' . ucfirst($instanceKey));
+			$method = 'get' . ucfirst($objectKey);
+			$this->relatedInstances[$key] = $this->$method();
+			return $this->relatedInstances[$key];
 		}
 	}
 

@@ -150,6 +150,11 @@ class ActiveTreeNode extends \ActiveRecordModel
 		$filter = $this->getChildNodeFilter($loadOnlyDirectChildren);
 		return $filter->execute();
 	}
+	
+	public function getRegisteredChildNodes()
+	{
+		return $this->childList;
+	}
 
 	/**
 	 * Loads a list of child records for this node
@@ -628,29 +633,27 @@ class ActiveTreeNode extends \ActiveRecordModel
 	 */
 	public static function reindex($className)
 	{
-	   $tableName = self::getSchemaInstance($className)->getName();
+	   //$tableName = self::getSchemaInstance($className)->getName();
 
-	   ActiveRecord::beginTransaction();
-		  self::reindexBratch($className, $tableName, self::ROOT_ID, 1);
-	   ActiveRecord::commit();
+	   //ActiveRecord::beginTransaction();
+		  self::reindexBratch($className, $className, self::ROOT_ID, 1);
+	   //ActiveRecord::commit();
 	}
 
 	protected static function reindexBratch($className, $tableName, $parentNodeID, $left)
 	{
 	   $right = $left+1;
 
-	   // Create a filter for selecting all child categories
-	   $filter = new ARSelectFilter();
-	   $filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $parentNodeID));
-	   $filter->orderBy(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+	   $q = $className::query()->where('parentNodeID = :parent:', array('parent' => $parentNodeID))->orderBy('lft');
 
-	   foreach(ActiveRecord::getRecordSet($className, $filter) as $record)
+	   foreach($q->execute() as $record)
 	   {
-		   $right = self::reindexBratch($tableName, $tableName, $record->getID(), $right);
+		   $right = self::reindexBratch($className, $className, $record->getID(), $right);
 	   }
 
-
-	   self::executeUpdate("UPDATE $tableName SET `" . self::LEFT_NODE_FIELD_NAME . "`=$left, `" . self::RIGHT_NODE_FIELD_NAME . "`=$right WHERE `ID`=$parentNodeID");
+	   $c = new $className;
+	   //$update = "UPDATE Category SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
+		$c->getReadConnection()->query("UPDATE Category SET `" . self::LEFT_NODE_FIELD_NAME . "`=$left, `" . self::RIGHT_NODE_FIELD_NAME . "`=$right WHERE `ID`=$parentNodeID", array());
 
 	   return $right+1;
 	}

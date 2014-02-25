@@ -43,12 +43,17 @@ class Config
 
 		$this->di = $di;
 	}
+	
+	public function setAll($values)
+	{
+		$this->values = $values;
+	}
 
 	public function has($key, $updateIfNotFound = false)
 	{
 		if (!isset($this->values[$key]) && !$this->isUpdated && $updateIfNotFound)
 		{
-		  	$this->updateSettings();
+		  	//$this->updateSettings();
 		}
 
 		return isset($this->values[$key]);
@@ -78,7 +83,7 @@ class Config
 				}
 				else if (isset($this->values[$key][$app->getDefaultLanguageCode()]))
 				{
-					return $this->values[$key][$this->application->getDefaultLanguageCode()];
+					return $this->values[$key][$app->getDefaultLanguageCode()];
 				}
 				else if ($this->isMultiLingual($key))
 				{
@@ -188,6 +193,7 @@ class Config
 	 */
 	public function updateSettings()
 	{
+		return;
 		$autoSave = $this->autoSave;
 		$this->setAutoSave(false);
 
@@ -226,6 +232,11 @@ class Config
 
 	public function save()
 	{
+		if (!$this->values)
+		{
+			return;
+		}
+		
 		$content = '<?php $config = ' . var_export($this->values, true) . '; ?>';
 		$fullPath = $this->getFilePath();
 
