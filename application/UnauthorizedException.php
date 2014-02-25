@@ -9,6 +9,17 @@
  */
 class UnauthorizedException extends Exception
 {
+	private $isBackend;
+	
+	public function __construct($isBackend)
+	{
+		$this->isBackend = $isBackend;
+	}
+	
+	public function isBackend()
+	{
+		return $this->isBackend;
+	}
 }
 
 ?>

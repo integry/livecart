@@ -2,7 +2,9 @@
 
 .ui-icon { display: inline-block; }
 
-.modal-body { overflow: auto; }
+.modal-body { /* overflow: auto; */ max-height: 20000px !important; }
+
+.nav-tabs { margin-bottom: 1em; }
 
 a { cursor: pointer; }
 
@@ -32,6 +34,24 @@ a { cursor: pointer; }
     cursor: pointer;
 }
 
+#backendContainer
+{
+	padding: 1em;
+}
+
+.tab-content
+{
+	padding-top: 1em;
+}
+
+#messages
+{
+	position: fixed;
+	top: 30px;
+	right: 30px;
+	z-index: 5000;
+}
+
 /* ng-grid */
 .ngCell .editColumn
 {
@@ -40,7 +60,12 @@ a { cursor: pointer; }
 
 .ngViewport
 {
-	height: 500px;
+	height: 500px !important;
+}
+
+.celltype_bool
+{
+
 }
 
 /* ya-tree */
@@ -61,7 +86,7 @@ a { cursor: pointer; }
 
 .tree ins.expand
 {
-	margin-left: -20px;
+	/* margin-left: -20px; */
 }
 
 .tree li div

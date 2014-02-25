@@ -1,3 +1,12 @@
+Date.prototype.toJSON = function() {
+  function addZ(n) {
+    return (n<10? '0' : '') + n;
+  }
+  return this.getFullYear() + '-' + 
+         addZ(this.getMonth() + 1) + '-' + 
+         addZ(this.getDate());
+};
+
 var backendComponents = angular.module('backendComponents', []);
 
 backendComponents.copyAttrs = function(element, attrs)
@@ -116,43 +125,6 @@ backendComponents.directive('money', function() {
   };
 });
 
-/*
-backendComponents.directive('tabRoute', function($compile, $http, $location)
-{
-    return {
-        restrict: "E",
-        scope: true,
-        replace: true,
-
-        link: function(scope, element, attrs)
-        {
-			var newElem = angular.element('<tab heading="{{heading}}"><ng-include src="\'' + element.attr('template') + '\'"></ng-include></tab>').attr(attrs.$attr);;
-			backendComponents.copyAttrs(newElem, attrs);
-
-			newElem.attr('select', 'activate()');
-
-			newElem = $compile(newElem)(scope);
-
-			element.replaceWith(newElem);
-
-			scope.activate = function()
-			{
-				$location.path(newElem.attr('route'));
-				var content = jQuery(jQuery(newElem).closest('.tabbable').find('.tab-content .tab-pane.active')[jQuery(newElem).index()]);
-				if (content.is(':empty'))
-				{
-					$http({method: 'GET', url: newElem.attr('template')}).
-					 success(function(data, status, headers, config) {
-						var html = content.html(data);
-						$compile(html)(scope);
-						});
-				}
-			};
-        }
-    };
-});
-*/
-
 backendComponents.directive('tabsetRoute', function($compile, $http, $state, $location)
 {
     return {
@@ -186,6 +158,80 @@ backendComponents.directive('tabRoute', function($compile, $http, $state, $locat
     };
 });
 
+backendComponents.directive('myForm', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        replace: true,
+        transclude: true,
+        link: function(scope, element, attrs)
+        {
+			var submit = element.attr('ng-submit');
+			if (!submit)
+			{
+				element.attr('direct-submit', 'true');
+				submit = '';
+			}
+			
+			element.attr('ng-submit', 'markSubmitted(); ' + submit);
+			element.removeAttr('ng-transclude');
+			
+            scope.$on('submit', function() 
+            {
+                setTimeout(function() 
+                {
+                	if (!element.attr('direct-submit') && element.attr('ng-submit'))
+                	{
+                    	scope.$apply(element.attr('ng-submit'));
+                    }
+                    else
+                    {
+                    	element.submit();
+					}
+                });
+            });
+			
+			scope.customErrors = {};
+				
+			scope.checkErrors = function(event, form)
+			{
+				var errors = _.without(_.values(form.$error), false);
+				if (errors.length || (element.find('ng-form.ng-invalid').length > 0))
+				{
+					if (event)
+					{
+						event.preventDefault();
+					}
+					
+					return false;
+				}
+				
+				return true;
+			};
+			
+			scope.markSubmitted = function()
+			{
+				scope.customErrors = {};
+				scope.isSubmitted = 1;
+				
+				$timeout(function()
+				{
+					var invalid = element.find('.ng-invalid').first();
+					if (invalid.length)
+					{
+						$('html, body').animate({scrollTop: (invalid.closest(':visible').offset().top)},500);
+					}
+				});
+			};
+
+			scope.setCustomErrors = function(errors)
+			{
+				scope.customErrors = errors;
+			};
+		},
+		template: '<form ng-transclude></form>'
+	}
+});
 
 backendComponents.directive('submit', function($compile)
 {
@@ -195,38 +241,23 @@ backendComponents.directive('submit', function($compile)
         transclude: true,
         link: function(scope, element, attrs)
         {
-			var form = attrs.tabform ?  element.closest('.modal').find('.' + attrs.tabform) : element.closest('form');
-			if (!form.length)
+			scope.element = element;
+
+			scope.submit = function(e)
 			{
-				form = element.closest('form');
-			}
-			var formScope = angular.element(form).scope();
-			formScope.customErrors = {};
-			
-			formScope.checkErrors = function(event, form)
-			{
-				var errors = _.without(_.values(form.$error), false);
-				if (errors.length || ($(event.target).find('ng-form.ng-invalid').length > 0))
+				var form = attrs.tabform ? element.closest('.modal').find('form') : element.closest('form');
+				if (!form.length)
 				{
-					event.preventDefault();
-					return false;
+					form = element.closest('form');
 				}
 				
-				return true;
-			};
-
-			formScope.setCustomErrors = function(errors)
-			{
-				formScope.customErrors = errors;
-			};
-
-			scope.markSubmitted = function()
-			{
-				formScope.customErrors = {};
-				formScope.isSubmitted = 1;
+				//form.submit();
+				e.preventDefault();
+				
+				angular.element(form).scope().$broadcast('submit');
 			};
 		},
-        template: '<button type="submit" class="btn btn-primary" ng-click=";markSubmitted();" ng-transclude></button>'
+        template: '<button type="submit" class="btn btn-primary" ng-click=";submit($event);" ng-transclude></button>'
    		//template: '<input type="submit" class="btn btn-primary" ng-click=";markSubmitted();" ng-transclude></input>'
     };
 });
@@ -379,7 +410,7 @@ backendComponents.directive('dialogFooter', function($compile)
     };
 });
 
-backendComponents.directive('grid', function($compile)
+backendComponents.directive('grid', function($compile, $modal)
 {
     return {
         restrict: "E",
@@ -389,8 +420,8 @@ backendComponents.directive('grid', function($compile)
 			scope.columnDefs = [];
 			
 			scope.pagingOptions = {
-										pageSizes: [20],
-										pageSize: 20,
+										pageSizes: [15],
+										pageSize: 15,
 										currentPage: 1
 									};
 
@@ -428,6 +459,11 @@ backendComponents.directive('grid', function($compile)
 				scope.totalServerItems = count;
 			};
 			
+			scope.setPrimaryKey = function(key)
+			{
+				scope.gridOptions.primaryKey = key;
+			};
+			
 			var getSelectedIDs = function()
 			{
 				if (scope.allSelected)
@@ -457,11 +493,71 @@ backendComponents.directive('grid', function($compile)
 					return;
 				}
 				
-				scope.resource.mass({action: action, ids: ids, allSelected: scope.allSelected}, function()
+				var queryParams = {action: action, ids: ids, allSelected: scope.allSelected};
+				if (params)
+				{
+					for (var key in params) { queryParams[key] = params[key]; }
+				}
+				
+				scope.resource.mass(queryParams, function()
 				{
 					scope.refresh();
 				});
 			};
+			
+			scope.search = function()
+			{
+				var tpl = '<dialog><dialog-header>Search</dialog-header><dialog-body>' + 
+				'<div class="row" ng-repeat="cond in searchConditions"><select ng-model="cond.field" ng-change="cond.type = getType(cond.field)" ng-options="o.field as o.displayName for o in gridScope.columnDefs" class="col-lg-6"></select>' +
+					'<span ng-switch="getType(cond.field)" class="col-lg-6">' + 
+						'<input ng-switch-when="text" type="text" ng-model="cond.value"  class="col-lg-12" />' +
+						'<select ng-switch-when="bool" ng-model="cond.value" class="col-lg-12"><option value="0">No</option><option value="1">Yes</option></select>' +
+						'<span ng-switch-when="date"><date-field ng-model="cond.value.from" placeholder="From" class="col-lg-6"></date-field><date-field ng-model="cond.value.to" placeholder="To" class="col-lg-6"></date-field></span>' +
+						'<input ng-switch-default type="text" ng-model="cond.value"  class="col-lg-12" />' +
+					'</span></div>' +
+				'</dialog-body><dialog-footer><a class="btn btn-warning" ng-click="$close(0)">Cancel</a><a class="btn btn-primary" ng-click="confirmConditions()">Search</a></dialog-footer></dialog>';
+				$modal.open({template: tpl, 
+					controller: function($scope, gridScope)
+					{
+						$scope.gridScope = gridScope;
+						$scope.searchConditions = gridScope.searchConditions;
+						
+						$scope.confirmConditions = function()
+						{
+							gridScope.searchConditions = $scope.searchConditions;
+							gridScope.refresh();
+							$scope.$close(0);
+						};
+						
+						$scope.getType = function(field)
+						{
+							if (!field)
+							{
+								return;
+							}
+							
+							var column = _.filter(gridScope.columnDefs, function(value) { return value.field == field; }).pop();
+							return column.type;
+						};
+						
+						$scope.$watch('searchConditions', function()
+						{
+							// rootScope.addEmptyRow(gridScope.searchConditions, 'field', {value: '', field: ''});
+							var filtered = _.filter($scope.searchConditions, function(value) { return value.field != '' });
+							if (filtered.length == $scope.searchConditions.length - 1)
+							{
+								return;
+							}
+							
+							$scope.searchConditions = filtered;
+							$scope.searchConditions.push({value: '', field: ''});
+						}, true);
+					},
+					resolve: {	gridScope: function() { return scope } }
+				});
+			};
+			
+			scope.searchConditions = [{value: '', field: ''}];
 			
 			scope.isMassAllowed = function()
 			{
@@ -654,6 +750,146 @@ backendComponents.directive('eavFormatted', function($compile)
 	}
 });
 
+backendComponents.directive('imageField', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        template: '	<div>' +
+
+		'<input type="file" ng-model-instant multiple onchange="angular.element(this).scope().setFiles(this)" />' +
+		'<div class="row" ng-show="getImage()">' +
+			'<div class="col-lg-12">' +
+				'<img ng-src="{{ getImage() }}" style="max-height: 300px;" />' +
+				'<a class="glyphicon glyphicon-remove-circle" style="color: red; margin-left: 10px;" ng-show="image" ng-click="removeImage()"></a>' +
+			'</div>' +
+		'</div><div ng-show="progressVisible" class="uploadProgress">Uploading...</div>' +
+
+		'<div ng-show="imageError">' +
+			'<div class="alert alert-danger">{{ imageError }}</div>' +
+		'</div>' +
+		'</div>',
+	
+        link: function(scope, element, attrs)
+		{
+			scope.model = attrs.ngModel;
+			scope.size = attrs.size;
+			
+			var unwatch = scope.$watch(attrs.ngModel, function(newVal)
+			{
+				if (!newVal) { return }
+				scope.image = newVal;
+				unwatch();
+			});
+			
+			scope.getImage = function()
+			{
+				return scope.image;
+			};
+			
+			scope.removeImage = function()
+			{
+				scope.image = null;
+				
+				$timeout(function()
+				{
+					scope.$apply(scope.model + ' = null');
+					scope.$apply();
+				});
+			};
+			
+			scope.setImage = function(response)
+			{
+				response = JSON.parse(response);
+				
+				if (response.image)
+				{
+					scope.image = response.image;
+					scope.imageError = '';
+				}
+				else
+				{
+					scope.image = '';
+					scope.imageError = response.error;
+				}
+				
+				scope.$apply(scope.model + ' = ' + JSON.stringify(scope.image));
+				
+				scope.$apply();
+			}
+		},
+		
+		controller: function($scope, $element, $attrs)
+		{
+			$scope.setSize = function(size)
+			{
+				$scope.size = size;
+			};
+			
+			$scope.setFiles = function(element) 
+			{
+				$scope.$apply(function($scope) {
+				  // Turn the FileList object into an Array
+					$scope.files = []
+					for (var i = 0; i < element.files.length; i++) {
+					  $scope.files.push(element.files[i])
+					}
+				  $scope.progressVisible = false
+				});
+				
+				$scope.uploadFile();
+			};
+
+			$scope.uploadFile = function() {
+				var fd = new FormData()
+				for (var i in $scope.files) {
+					fd.append("uploadedFile", $scope.files[i])
+				}
+				
+				fd.append('size', $attrs.size);
+				
+				var xhr = new XMLHttpRequest()
+				xhr.upload.addEventListener("progress", uploadProgress, false)
+				xhr.addEventListener("load", uploadComplete, false)
+				xhr.addEventListener("error", uploadFailed, false)
+				xhr.addEventListener("abort", uploadCanceled, false)
+				xhr.open("POST", "../heysuccess/upload")
+				$scope.progressVisible = true
+				xhr.send(fd)
+			}
+
+			function uploadProgress(evt) {
+				$scope.$apply(function(){
+					if (evt.lengthComputable) {
+						$scope.progress = Math.round(evt.loaded * 100 / evt.total)
+					} else {
+						$scope.progress = 'unable to compute'
+					}
+				})
+			}
+
+			function uploadComplete(evt) {
+				/* This event is raised when the server send back a response */
+				$scope.setImage(evt.target.responseText);
+				$scope.$apply(function(){
+					$scope.progressVisible = false
+				});
+			}
+
+			function uploadFailed(evt) {
+				alert("There was an error attempting to upload the file.")
+			}
+
+			function uploadCanceled(evt) {
+				$scope.$apply(function(){
+					$scope.progressVisible = false
+				})
+			}
+		}
+	}
+});
+
 backendComponents.directive('dateField', function($compile, $timeout)
 {
     return {
@@ -680,6 +916,8 @@ backendComponents.directive('dateField', function($compile, $timeout)
 			{
 				scope.showWeeks = ! scope.showWeeks;
 			};
+			
+			element.addClass('datepicker');
 		}
 	}
 });
@@ -690,7 +928,7 @@ backendComponents.directive('eavFields', function($compile, $timeout)
         restrict: "E",
         scope: true,
         replace: true,
-        template: '<div ng-repeat="field in eavConfig"><eav-formatted config="{{field}}"><eav-field config="{{field}}"></eav-field></eav-formatted></div>',
+        template: '<div ng-repeat="field in eavConfig"><eav-formatted config="{{field}}"><eav-field plain="{{plain}}" config="{{field}}"></eav-field></eav-formatted></div>',
         link: function(scope, element, attrs)
 		{
 			var filterFunc = function(field)
@@ -712,7 +950,8 @@ backendComponents.directive('eavFields', function($compile, $timeout)
 			
 			scope.eavConfig = filter(scope[attrs.config]);
 			
-			console.log(scope.eavConfig);
+			scope.plain = attrs.plain;
+			
 			scope.$watch(attrs.config, function(newVal)
 			{
 				scope.eavConfig = filter(newVal);
@@ -746,7 +985,7 @@ backendComponents.directive('eavField', function($compile, $timeout)
 				var html = '<select ng-options="o.ID as o.value for o in options" ng-click="opts()"></select>';
 				var input = 'select';
 			}
-			else if ("3" == config.type)
+			else if ("3" == config.type || "4" == config.type)
 			{
 				var html = '<textarea' + (attrs.plain ? '' :' ui-my-tinymce') + '></textarea>';
 				var input = 'textarea';
@@ -795,7 +1034,7 @@ backendComponents.directive('eavField', function($compile, $timeout)
 				attrElem.attr('placeholder', config.description);
 				attrElem.attr('name', fieldName);
 				
-				if (config.isRequired)
+				if (parseInt(config.isRequired))
 				{
 					attrElem.attr('ng-required', true);
 				}
@@ -807,6 +1046,10 @@ backendComponents.directive('eavField', function($compile, $timeout)
 						attrElem.addClass('multiselect');
 						attrElem.attr('multiple', 'multiple');
 						attrElem.attr('multiselect', 'true');
+					}
+					else if (config.description)
+					{
+						attrElem.prepend('<option class="default" default value="">' + config.description + '</option>');
 					}
 				}
 				
@@ -846,18 +1089,12 @@ backendComponents.directive('eavSelect', function($compile)
     };
 });
 
-backendComponents.directive('multiselect', function() 
+backendComponents.directive('multiselect', function($timeout) 
 {
     return function(scope, element, attributes) 
     {
-		scope.html = '';
-		
-		window.setInterval(function()
-		{
-			scope.html = element.html();
-		}, 200);
-		
 		$(element).multiselect({
+			includeSelectAllOption: true,
 			buttonText: function(options, select)
 			{
 				if (options.length == 0) 
@@ -877,14 +1114,41 @@ backendComponents.directive('multiselect', function()
 					return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
 				}
 			}, 
+			
+			 // Replicate the native functionality on the elements so
+			// that angular can handle the changes for us.
+			onChange: function (optionElement, checked) 
+			{
+				optionElement.removeAttr('selected');
+				 
+				if (checked) 
+				{
+					optionElement.attr('selected', 'selected');
+				}
+
+				element.change();
+			},
+			
 			buttonContainer: '<div class="form-control multisel" />', 
 			maxHeight: 200});
 			
-		scope.$watch('html', function()
-		{
-			$(element).multiselect('rebuild');
-		});
-    }
+			 // Watch for any changes to the length of our select element
+			scope.$watch(function () {	return element[0].length; }, 
+				function () 
+				{
+					element.multiselect('rebuild');
+				});
+			 
+			// Watch for any changes from outside the directive and refresh
+			scope.$watch(attributes.ngModel, 
+				function () 
+				{
+					$timeout(function()
+					{
+						element.multiselect('refresh');
+					});
+				}, true);
+     }
 });
 
 backendComponents.directive('eavMultiselect', function($parse)
@@ -1036,3 +1300,70 @@ backendComponents.directive('filterNumber', function(){
    };
 });
 
+backendComponents.directive('tabsetLazy', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    transclude: true,
+    controller: function($scope) {
+      $scope.templateUrl = '';
+      var tabs = $scope.tabs = [];
+      var controller = this;
+
+      this.selectTab = function (tab) {
+        angular.forEach(tabs, function (tab) {
+          tab.selected = false;
+        });
+        tab.selected = true;
+      };
+
+      this.setTabTemplate = function (templateUrl) {
+        $scope.templateUrl = templateUrl;
+      }
+
+      this.addTab = function (tab) {
+        if (tabs.length == 0) {
+          controller.selectTab(tab);
+        }
+        tabs.push(tab);
+      };
+    },
+    template:
+      '<div class="row"><div class="col-lg-12">' +
+        '<div class="row">' +
+          '<div class="nav nav-tabs" ng-transclude></div>' +
+        '</div>' +
+        '<div class="row tab-content">' +
+          '<ng-include src="templateUrl">' +
+        '</ng-include></div>' +
+      '</div></div>'
+  };
+})
+.directive('tabLazy', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    require: '^tabsetLazy',
+    scope: {
+      title: '@',
+      templateUrl: '@'
+    },
+    link: function(scope, element, attrs, tabsetLazyController) {
+      tabsetLazyController.addTab(scope);
+
+      scope.select = function () {
+        tabsetLazyController.selectTab(scope);
+      }
+
+      scope.$watch('selected', function () {
+        if (scope.selected) {
+          tabsetLazyController.setTabTemplate(scope.templateUrl);
+        }
+      });
+    },
+    template:
+      '<li ng-class="{active: selected}">' +
+        '<a href="" ng-click="select()">{{ title }}</a>' +
+      '</li>'
+  };
+});
