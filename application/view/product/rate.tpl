@@ -11,7 +11,7 @@
 {foreach from=$ratingTypes item=type name=types}
 	<tr>
 		<td class="param ratingCategoryName">
-			{$type.name_lang|@or:{t _default_rating_category}}
+			{$type.name()|@or:{t _default_rating_category}}
 		</td>
 		{section start=0 loop='RATING_SCALE'|config name=rate}
 			{assign var=index value=$smarty.section.rate.index+1}

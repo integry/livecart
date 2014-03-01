@@ -1,14 +1,12 @@
 {% extends "layout/frontend.tpl" %}
 
 {#
-{% block title %}{$category.pageTitle_lang|default:$category.name_lang}{% endblock %}
-{% set metaKeywords = $category.keywords_lang %}
+{% block title %}{$category.pageTitle()|default:$category.name()}{% endblock %}
+{% set metaKeywords = $category.keywords() %}
 #}
 
 {% block content %}
 <div class="categoryIndex category_[[category.ID]]">
-
-[[ partial('block/content-start.tpl', ['hideTitle': true]) ]]
 
 	{#
 	[[ partial("category/head.tpl") ]]
@@ -55,7 +53,10 @@
 
 	{block FILTER_TOP}
 
-	[[ partial("category/categoryProductList.tpl") ]]
 	#}
+	
+	[[ partial("category/categoryProductList.tpl") ]]
+	
+	[[ paginator(paginator, url(route(category)) ~ '/___', ['ng-click': 'setPage(___, $event)']) ]]
 
 {% endblock %}

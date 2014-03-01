@@ -55,11 +55,14 @@ try
 		".tpl" => function($view, $di)
 		{
 			$dir = __ROOT__ . 'cache/templates/';
-			mkdir($dir);
-			chmod($dir, 0777);
+			if (!file_exists($dir))
+			{
+				mkdir($dir);
+				chmod($dir, 0777);
+			}
 
 			$volt = new LiveVolt($view, $di);
-			$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => false));
+			$volt->setOptions(array('compiledPath' => __ROOT__ . 'cache/templates/', 'compileAlways' => true));
 			return $volt;
 		}
 	));
@@ -75,39 +78,7 @@ try
 		$router = new MyRouter();
 		$router->setDefaultModule("frontend");
 
-		$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2));
-		$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)/([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2, "page" => 3));
-		$router->add("#^/opportunity/" . $handle . "\-([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'view', "id" => 1));
-		$router->add("#^/profile/([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'profile', "id" => 1));
-		
-		$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"));
-		//$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
-		$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
-
-		$router->add('/backend/:controller/:action/:params', array(
-			'module' => 'backend',
-			'controller' => 1,
-			'action' => 2,
-			'params' => 3
-		));
-		
-
-		$router->add('/backend/:controller/:action', array(
-			'module' => 'backend',
-			'controller' => 1,
-			'action' => 2,
-		));
-
-		$router->add('/backend/:controller', array(
-			'module' => 'backend',
-			'controller' => 1
-		));
-
-		$router->add('/backend', array(
-			'module' => 'backend',
-			'controller' => 'index',
-			'action' => 'index'
-		));
+		include __ROOT__ . 'application/configuration/route/core.php';
 
 		return $router;
 	});
@@ -246,7 +217,7 @@ try
 			'frontend' => function($di) use ($view, $loader) 
 			{
 				$loader->registerDirs(array(__ROOT__ . 'application/controller'), true);
-				$loader->registerDirs(array(__ROOT__ . 'module/heysuccess/application/controller'), true);
+				//$loader->registerDirs(array(__ROOT__ . 'module/heysuccess/application/controller'), true);
 				$loader->registerDirs(array(__ROOT__ . 'module/hybridauth/application/controller'), true);
 				
 				$di->setShared('view', function() use ($view) {
@@ -262,6 +233,7 @@ try
 					return $view;
 				});
 			},
+			/*
 			'heysuccess' => function($di) use ($view, $loader) 
 			{
 				$loader->registerDirs(array(__ROOT__ . 'module/heysuccess/application/controller'), true);
@@ -271,6 +243,7 @@ try
 					return $view;
 				});
 			},
+			*/
 			'hybridauth' => function($di) use ($view, $loader) 
 			{
 				$loader->registerDirs(array(__ROOT__ . 'module/hybridauth/application/controller'), true);
@@ -393,6 +366,17 @@ function get_real_class($inst)
 	$class = is_string($inst) ? $inst : get_class($inst);
 	$parts = explode('\\', $class);
 	return array_pop($parts);
+}
+
+function persist(\Phalcon\Mvc\Model\Resultset\Simple $set)
+{
+	$array = array();
+	foreach ($set as $item)
+	{
+		$array[] = $item;
+	}
+	
+	return $array;
 }
 
 

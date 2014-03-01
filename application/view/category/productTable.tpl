@@ -27,7 +27,7 @@
 			{% endif %}
 
 			{foreach from=$listAttributes item=attribute}
-				<th class="attr_[[attribute.ID]]">{headLink title=$attribute.name_lang sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
+				<th class="attr_[[attribute.ID]]">{headLink title=$attribute.name() sortVar="`$attribute.ID`-`$attribute.handle`"}</th>
 			{/foreach}
 
 			{% if $columns.PRICE && 'DISPLAY_PRICES'|config %}
@@ -47,9 +47,9 @@
 					<td class="productImage">
 						<a href="{productUrl product=$product category=$category}">
 						{% if $product.DefaultImage.ID %}
-							{img src=$product.DefaultImage.urls.1 alt=$product.name_lang|escape}
+							{img src=$product.DefaultImage.urls.1 alt=$product.name()|escape}
 						{% else %}
-							{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
+							{img src='MISSING_IMG_THUMB'|config alt=$product.name()|escape}
 						{% endif %}
 						</a>
 					</td>
@@ -60,7 +60,7 @@
 				{% endif %}
 
 				{% if $columns.NAME %}
-					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">[[product.name_lang]]</a></td>
+					<td class="productName text"><a href="{productUrl product=$product filterChainHandle=$filterChainHandle category=$category}">[[product.name()]]</a></td>
 				{% endif %}
 
 				{foreach from=$listAttributes item=attribute}

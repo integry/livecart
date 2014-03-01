@@ -1,9 +1,9 @@
 {includeJs file="frontend/Product.js"}
 
-{assign var="metaDescription" value=$product.shortDescription_lang|@strip_tags}
+{assign var="metaDescription" value=$product.shortDescription()|@strip_tags}
 {% set metaKeywords = $product.keywords %}
 {canonical}{productUrl product=$product}{/canonical}
-{% block title %}{$product.pageTitle_lang|default:$product.name_lang}{% endblock %}
+{% block title %}{$product.pageTitle()|default:$product.name()}{% endblock %}
 
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
@@ -13,7 +13,7 @@
 [[ partial("product/head.tpl") ]]
 
 <div class="row" id="productNavigation">
-	<div class="col col-lg-12">
+	<div class="col-sm-12">
 		{block PRODUCT-NAVIGATION}  {* product/block/images.tpl *}
 	</div>
 </div>

@@ -13,7 +13,7 @@
 
 	{foreach from=$groups item="group"}
 		{% if $group.displayLocation == 1 %}
-			[[ partial('category/block/filterSelect.tpl', ['sectionFilters': group, 'title': group.name_lang, 'allLink': group.more, 'allTitle': _show_all]) ]]
+			[[ partial('category/block/filterSelect.tpl', ['sectionFilters': group, 'title': group.name(), 'allLink': group.more, 'allTitle': _show_all]) ]]
 		{% endif %}
 	{/foreach}
 

@@ -3,9 +3,9 @@
 {includeJs file="library/lightbox/lightbox.js"}
 {includeCss file="library/lightbox/lightbox.css"}
 
-{% set metaDescription = $product.shortDescription_lang %}
-{% set metaKeywords = $product.keywords_lang %}
-{% block title %}[[product.name_lang]]{% endblock %}
+{% set metaDescription = $product.shortDescription() %}
+{% set metaKeywords = $product.keywords() %}
+{% block title %}[[product.name()]]{% endblock %}
 
 <div class="reviewIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
@@ -14,10 +14,10 @@
 {% block content %}
 
 	<div class="returnToCategory">
-		<a href="{productUrl product=$product}" class="returnToCategory">[[product.name_lang]]</a>
+		<a href="{productUrl product=$product}" class="returnToCategory">[[product.name()]]</a>
 	</div>
 
-	<h1>{maketext text="_reviews_for" params=$product.name_lang}</h1>
+	<h1>{maketext text="_reviews_for" params=$product.name()}</h1>
 
 	<div class="resultStats">
 		[[ partial("product/ratingSummary.tpl") ]]

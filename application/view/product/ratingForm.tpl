@@ -1,6 +1,6 @@
 {% if 'ENABLE_RATINGS'|config && !$isRated %}
 <div id="ratingSection" class="productSection ratingSection">
-<h2>{maketext text="_rate_product_name" params=$product.name_lang}<small>{t _rate}</small></h2>
+<h2>{maketext text="_rate_product_name" params=$product.name()}<small>{t _rate}</small></h2>
 <div id="rateProduct">
 	{% if !empty(isLoginRequiredToRate) %}
 		<p>{maketext text=_msg_rating_login_required params=[[ url("user/login") ]]}</p>

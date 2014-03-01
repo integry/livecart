@@ -1,12 +1,14 @@
 <?php
 
+use category\Category;
+
 /**
  * Base class for all front-end related controllers
  *
  * @author Integry Systems
  * @package application/controller
  */
-abstract class FrontendController extends ControllerBase
+class FrontendController extends ControllerBase
 {
 	protected $breadCrumb = array();
 
@@ -418,22 +420,20 @@ abstract class FrontendController extends ControllerBase
 		return $this->currentCategoryPath;
 	}
 
-	protected function boxCategoryBlock()
+	public function boxCategoryBlockAction()
 	{
-		$this->invalidateCacheOnUpdate('Category');
-		$this->setRequestVar('id');
-		$this->allowCache();
-
+		//$this->invalidateCacheOnUpdate('Category');
+		//$this->setRequestVar('id');
+		//$this->allowCache();
 
 		// get top categories
-		$topCategories = $this->getTopCategories();
+		$topCategories = persist($this->getTopCategories());
 		$path = $this->getCurrentCategoryPath();
-
 		foreach ($topCategories as &$cat)
 		{
-		  	if ($this->topCategoryId == $cat['ID'])
+		  	if ($this->topCategoryId == $cat->getID())
 		  	{
-				$current =& $cat;
+				$current = &$cat;
 			}
 		}
 
@@ -476,7 +476,6 @@ abstract class FrontendController extends ControllerBase
 			}
 		}
 
-		$response = new BlockResponse();
 		$this->set('categories', $topCategories);
 		$this->set('currentId', $this->getCategory()->getID());
 		$this->set('lang', 'en');
@@ -787,7 +786,6 @@ abstract class FrontendController extends ControllerBase
 	protected function getCategory()
 	{
 		$cat = Category::getRootNode();
-		$cat->load();
 		return $cat;
 	}
 

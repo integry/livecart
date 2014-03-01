@@ -5,7 +5,7 @@
 		<li>
 			{foreach from=$path item=node}
 				{% if $node.parentNodeID > 1 %}&gt;{% endif %}
-				<a href="{categoryUrl data=$node}">[[node.name_lang]]</a>
+				<a href="{categoryUrl data=$node}">[[node.name()]]</a>
 			{/foreach}
 		</li>
 	{/foreach}

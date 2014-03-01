@@ -1,11 +1,11 @@
-{% if $product.longDescription_lang || $product.shortDescription_lang %}
+{% if $product.longDescription() || $product.shortDescription() %}
 <div id="descriptionSection" class="productSection description">
 	<h2>{t _description}</h2>
 	<div id="productDescription">
-		{% if $product.longDescription_lang %}
-			[[product.longDescription_lang]]
+		{% if $product.longDescription() %}
+			[[product.longDescription()]]
 		{% else %}
-			[[product.shortDescription_lang]]
+			[[product.shortDescription()]]
 		{% endif %}
 	</div>
 </div>
@@ -27,8 +27,8 @@
 <h2>{t _recommended}<small>{t _tab_recommended}</small></h2>
 <div id="relatedProducts">
 	{foreach from=$related item=group}
-	   {% if $group.0.ProductRelationshipGroup.name_lang %}
-		   <h3>[[group.0.ProductRelationshipGroup.name_lang]]</h3>
+	   {% if $group.0.ProductRelationshipGroup.name() %}
+		   <h3>[[group.0.ProductRelationshipGroup.name()]]</h3>
 	   {% endif %}
 	   [[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': group]) ]]
 	{/foreach}

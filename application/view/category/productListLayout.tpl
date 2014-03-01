@@ -1,10 +1,10 @@
 {% if empty(layout) %}
-	{assign var=layout value='LIST_LAYOUT'|config}
+	{% set layout=config('LIST_LAYOUT') %}
 {% endif %}
 
-{% if 'GRID' == $layout %}
+{% if 'GRID' == layout %}
 	[[ partial('category/productGrid.tpl', ['products': products]) ]]
-{% elseif $layout == 'TABLE' %}
+{% elseif layout == 'TABLE' %}
 	[[ partial('category/productTable.tpl', ['products': products]) ]]
 {% else %}
 	[[ partial('category/productList.tpl', ['products': products]) ]]

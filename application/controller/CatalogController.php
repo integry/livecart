@@ -1,12 +1,5 @@
 <?php
 
-ClassLoader::import('application/controller/FrontendController');
-ClassLoader::import('application/model/Currency');
-ClassLoader::import('application/model/category/Category');
-ClassLoader::import('application/model/product/ProductPrice');
-ClassLoader::importNow('application/helper/CreateHandleString');
-include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
-
 /**
  * Base class for all front-end related controllers
  *
@@ -108,7 +101,7 @@ abstract class CatalogController extends FrontendController
 					$filters[] = $key;
 				}
 			}
-			$request = 'filters', implode($delimiter, array_filter($filters)));
+			//$request = 'filters', implode($delimiter, array_filter($filters)));
 		}
 
 		if ($request->get('filters'))

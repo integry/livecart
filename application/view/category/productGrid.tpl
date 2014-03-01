@@ -1,9 +1,9 @@
-{assign var=col value=(12/'LAYOUT_GRID_COLUMNS'|@config)|@round}
+{% set col=(12/config('LAYOUT_GRID_COLUMNS')) %}
 
 <div class="row productGrid">
-{foreach from=$products item=product}
-	<div class="productGridItem col col-lg-[[col]]{% if $product.isFeatured %} featured{% endif %}">
+{% for product in products %}
+	<div class="productGridItem col-sm-[[col]]{% if product.isFeatured %} featured{% endif %}">
 		[[ partial("category/productGridItem.tpl") ]]
 	</div>
-{/foreach}
+{% endfor %}
 </div>

@@ -16,35 +16,35 @@
 	{% if 0 == $option.type %}
 		{input name=$fieldName}
 			{checkbox class="checkbox"}
-			{label}[[option.name_lang]] {optionPrice choice=$option.DefaultChoice}{/label}
+			{label}[[option.name()]] {optionPrice choice=$option.DefaultChoice}{/label}
 
-			{% if $option.description_lang %}
+			{% if $option.description() %}
 				<p class="description">
-					[[option.description_lang]]
+					[[option.description()]]
 				</p>
 			{% endif %}
 		{/input}
 	{% else %}
-		{label}[[option.name_lang]]{/label}
+		{label}[[option.name()]]{/label}
 			{input}
 			{% if 1 == $option.type %}
 				{% if 0 == $option.displayType %}
 					<fieldset class="error">
 					<select name="[[fieldName]]">
-						<option value="">[[option.selectMessage_lang]]</option>
+						<option value="">[[option.selectMessage()]]</option>
 						{foreach from=$option.choices item=choice}
 							<option value="[[choice.ID]]"{% if $selectedChoice.Choice.ID == $choice.ID %} selected="selected"{% endif %}>
-								[[choice.name_lang]]
+								[[choice.name()]]
 								{optionPrice choice=$choice}
 							</option>
 						{/foreach}
 					</select>
 				{% else %}
 					<div class="radioOptions {% if 2 == $option.displayType %}colorOptions{% endif %}">
-						{% if $option.selectMessage_lang %}
+						{% if $option.selectMessage() %}
 							<p>
 								<input name="[[fieldName]]" type="radio" class="radio" id="{uniqid}" value=""{% if !$selectedChoice.Choice.ID %} checked="checked"{% endif %} />
-								<label class="radio" for="{uniqid last=true}">[[option.selectMessage_lang]]</label>
+								<label class="radio" for="{uniqid last=true}">[[option.selectMessage()]]</label>
 							</p>
 						{% endif %}
 
@@ -52,7 +52,7 @@
 							<p>
 								<input name="[[fieldName]]" type="radio" class="radio" id="{uniqid}" value="[[choice.ID]]"{% if $selectedChoice.Choice.ID == $choice.ID %} checked="checked"{% endif %} />
 								<label class="radio" for="{uniqid last=true}">
-									<span class="optionName"  {% if 2 == $option.displayType %}style="background-color: [[choice.config.color]];"{% endif %}>[[choice.name_lang]]</span>
+									<span class="optionName"  {% if 2 == $option.displayType %}style="background-color: [[choice.config.color]];"{% endif %}>[[choice.name()]]</span>
 									{optionPrice choice=$choice}
 								</label>
 							</p>
@@ -79,9 +79,9 @@
 				</script>
 			{% endif %}
 
-			{% if $option.description_lang %}
+			{% if $option.description() %}
 				<p class="description">
-					[[option.description_lang]]
+					[[option.description()]]
 				</p>
 			{% endif %}
 

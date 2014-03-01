@@ -8,8 +8,8 @@
 
 				{% if !empty(SHOW_UPSELL_GROUPS) %}
 					<fieldset>
-						{% if $group.0.ProductRelationshipGroup.name_lang %}
-							<legend>[[group.0.ProductRelationshipGroup.name_lang]]</legend>
+						{% if $group.0.ProductRelationshipGroup.name() %}
+							<legend>[[group.0.ProductRelationshipGroup.name()]]</legend>
 						{% endif %}
 				{% endif %}
 

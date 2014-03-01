@@ -5,7 +5,7 @@
 	{% if 'brand' == $showAll %}
 		<legend>{t _by_brand}</legend>
 	{% else %}
-		<legend>[[allFilters.name_lang]]</legend>
+		<legend>[[allFilters.name()]]</legend>
 	{% endif %}
 
 	{foreach from=$allFilters.filters item=filter name="filters"}
@@ -16,7 +16,7 @@
 		{% endif %}
 
 		<li>
-			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">[[filter.name_lang]]</a>&nbsp;[[ partial('block/count.tpl', ['count': filter.count]) ]]
+			<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">[[filter.name()]]</a>&nbsp;[[ partial('block/count.tpl', ['count': filter.count]) ]]
 		</li>
 
 		{% if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last %}

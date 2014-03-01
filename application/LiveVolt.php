@@ -75,6 +75,7 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return '$volt->renderBlock(' . $resolvedArgs . ')';
 			});
 
+			$this->_compiler->addFunction('route', 'route');
 			$this->_compiler->addFunction('count', 'count');
 			$this->_compiler->addFunction('round', 'round');
 			$this->_compiler->addFunction('is_null', 'is_null');

@@ -27,7 +27,7 @@
 		</option>
 		{% if empty(disabled) %}
 			{foreach from=$sectionFilters.filters item="filter" name="filters"}
-				<option value="{categoryUrl action=$action data=$category filters=$appliedFilters addFilter=$filter removeFilters=$sectionFilters.filters}" {% if $filters[$filter.ID] %}selected="selected" {counter name="lastFilterSelected" assign="lastFilterSelected"}{% endif %}>[[filter.name_lang]]</option>
+				<option value="{categoryUrl action=$action data=$category filters=$appliedFilters addFilter=$filter removeFilters=$sectionFilters.filters}" {% if $filters[$filter.ID] %}selected="selected" {counter name="lastFilterSelected" assign="lastFilterSelected"}{% endif %}>[[filter.name()]]</option>
 			{/foreach}
 		{% endif %}
 	</select>

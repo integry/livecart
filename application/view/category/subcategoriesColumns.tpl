@@ -20,7 +20,7 @@
 		{assign var=cat value=$subCategories[$index]}
 
 		{% if !empty(cat) %}
-		<div class="col col-lg-[[width]] subCategoryItem">
+		<div class="col-sm-[[width]] subCategoryItem">
 			<div class="thumbnail">
 				[[ partial('category/block/categoryItem.tpl', ['sub': cat]) ]]
 			</div>

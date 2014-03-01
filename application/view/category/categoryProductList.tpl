@@ -1,10 +1,12 @@
 {% if !empty(products) %}
 	<div class="row resultStats">
-		<div class="col col-lg-6 pagingInfo text-muted">
+		<div class="col-sm-6 pagingInfo text-muted">
 			{maketext text=_showing_products params="`$offsetStart`,`$offsetEnd`,`$count`"}
 		</div>
 
-		<div class="col col-lg-6 listOptions">
+		<div class="col-sm-6 listOptions">
+			
+			{#
 			{% if $sortOptions && ($sortOptions|@count > 1) %}
 			<span class="sortOptions">
 					{t _sort_by}
@@ -13,20 +15,15 @@
 					{/form}
 			</span>
 			{% endif %}
+			#}
 
-			[[ partial("category/block/switchListLayout.tpl") ]]
+			{# [[ partial("category/block/switchListLayout.tpl") ]] #}
 		</div>
 	</div>
 
 	<hr />
 
 	{% if !empty(products) %}
-		<form action="{link controller=category action=listAction returnPath=true}" method="post" class="form-horizontal">
-			[[ partial('category/productListLayout.tpl', ['products': products]) ]]
-		</form>
-	{% endif %}
-
-	{% if $count > $perPage %}
-		{paginate current=$currentPage count=$count perPage=$perPage url=$url}
+		[[ partial('category/productListLayout.tpl', ['products': products]) ]]
 	{% endif %}
 {% endif %}

@@ -9,7 +9,7 @@
 						name="[[filter.handle]]-[[filter.ID]]"
 						{% if in_array($filter.ID, $filtersIDs) %}checked="checked"{% endif %}
 					/>
-					[[filter.name_lang]]
+					[[filter.name()]]
 					{% if 'DISPLAY_NUM_FILTER'|config %}
 						[[ partial('block/count.tpl', ['count': filter.count]) ]]
 					{% endif %}

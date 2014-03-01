@@ -7,7 +7,7 @@
 				{% if $filter.count && (!$allLink || ($allLink && $smarty.foreach.filters.index < $maxFilters)) %}
 					<li>
 						<div>
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">[[filter.name_lang]]</a>
+							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter removeFilters=$sectionFilters.filters}">[[filter.name()]]</a>
 							{% if 'DISPLAY_NUM_FILTER'|config %}
 								 [[ partial('block/count.tpl', ['count': filter.count]) ]]
 							{% endif %}

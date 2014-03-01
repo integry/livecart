@@ -3,12 +3,12 @@
 	<tr>
 		<td class="subCatImage">
 			<a href="{categoryUrl data=$sub}">
-				{img src=$sub.DefaultImage.urls.1  alt=$sub.name_lang|escape}
+				{img src=$sub.DefaultImage.urls.1  alt=$sub.name()|escape}
 			</a>
 		</td>
 		<td class="details">
 			<div class="subCatName">
-				<a href="{categoryUrl data=$sub}">[[sub.name_lang]]</a>
+				<a href="{categoryUrl data=$sub}">[[sub.name()]]</a>
 				[[ partial('block/count.tpl', ['count': sub.count]) ]]
 			</div>
 
@@ -16,7 +16,7 @@
 			<ul class="subSubCats">
 				{foreach from=$sub.subCategories item="subSub"}
 					<li>
-						<a href="{categoryUrl data=$subSub}">[[subSub.name_lang]]</a>
+						<a href="{categoryUrl data=$subSub}">[[subSub.name()]]</a>
 						[[ partial('block/count.tpl', ['count': subSub.count]) ]]
 					</li>
 				{/foreach}
@@ -24,7 +24,7 @@
 			{% endif %}
 
 			<div class="subCatDescr">
-				{* $sub.description_lang *}
+				{* $sub.description() *}
 			</div>
 		</td>
 	</tr>

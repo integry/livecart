@@ -1,5 +1,7 @@
 <?php
 
+use category\Category;
+
 /**
  * Index controller for frontend
  *
@@ -33,6 +35,114 @@ class CategoryController extends CatalogController
 	public function indexAction()
 	{
 		$category = $this->getCategory();
+		$query = new product\ProductFilter();
+		
+		if ($this->request->getJson('cats'))
+		{
+			$query->setCategory(Category::getRootNode(), true);
+		}
+		else
+		{
+			$query->setCategory($category, true);
+		}
+		
+		//$query->setCategory($category, true);
+		$query->setEnabledOnly();
+		$filters = $this->applyFilters($query);
+		
+		$query->columns('product\Product.*, product\ProductImage.*, category\Category.*')
+			//->join('category\Category', 'product\Product.categoryID=category\Category.ID', '', 'LEFT')
+			->join('product\ProductImage', 'product\Product.defaultImageID=product\ProductImage.ID', '', 'LEFT')
+			->join('eav\EavObject');
+
+		$query->orderBy('COALESCE(isTop, 0) DESC, product\Product.priority ASC, product\Product.ID DESC');
+
+		$set = $query->getQuery()->execute();
+		
+		$perPage = 10;
+		$page = $this->request->getParam('page', 1);
+		$paginator = new LivePaginator(
+			array(
+				"data" => $set,
+				"limit"=> $perPage,
+				"page" => $page
+			)
+		);
+		
+		//var_dump($paginator->getPaginate());exit;
+		
+		$products = array();
+		foreach ($paginator->getPaginate()->items as $record)
+		{
+			$product = $record['product\Product'];
+			$image = $record['product\ProductImage'];
+			$product->set_DefaultImage($image);
+			$product->set_Category($record['category\Category']);
+			$product->getSpecification();
+			$products[] = $product;
+		}
+		
+		//\eav\EavSpecificationManager::loadSpecificationForRecordSet($products);
+
+		$this->set('category', $category);
+		$this->set('products', $products);
+		$this->set('filters', $filters);
+		$this->set('count', $set->count());
+		$this->set('paginator', $paginator);
+		
+		if ($this->request->getJsonRawBody())
+		{
+			$this->view->pick('category/ajax');
+		}
+	}
+	
+	public function applyFilters($query)
+	{
+		$filters = $this->request->getJson('filters');
+		if (!$filters)
+		{
+			$filters = $this->request->get('filters');
+			if ($filters)
+			{
+				$filters = json_decode($filters, true);
+			}
+		}
+		
+		if ($filters)
+		{
+			$instances = filter\FilterGroup::query()->inWhere('ID', array_keys($filters))->execute();
+			
+			foreach ($instances as $filter)
+			{
+				$query->applyFilter($filter, $filters[$filter->getID()]);
+			}
+		}
+		
+		$cats = $this->request->getParam('cats');
+		
+		if ($cats)
+		{
+			$cats = array_filter($cats, 'is_numeric');
+			$query->andWhere('SUBQUERY("SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.productID=Product.ID AND ProductCategory.categoryID IN (' . implode(', ', $cats) . ')") > 0');
+		}
+		else if (is_array($cats))
+		{
+			$query->andWhere('0 = 1');
+		}
+		
+		if ($starts = $this->request->getParam('starts'))
+		{
+			$starts = substr($starts, 0, 10);
+			$query->andWhere('SUBQUERY("SELECT dateValue FROM EavObjectValue WHERE EavObjectValue.objectID=EavObject.ID AND EavObjectValue.fieldID=11 LIMIT 1") >= :startdate:', array('startdate' => $starts));
+		}
+		
+		if ($ends = $this->request->getParam('ends'))
+		{
+			$ends = substr($ends, 0, 10);
+			$query->andWhere('SUBQUERY("SELECT dateValue FROM EavObjectValue WHERE EavObjectValue.objectID=EavObject.ID AND EavObjectValue.fieldID=12 LIMIT 1") <= :enddate:', array('enddate' => $ends));
+		}
+		
+		return json_encode($filters);
 	}
 
 	public function xindexAction()
@@ -233,44 +343,44 @@ class CategoryController extends CatalogController
 
 
 		/*
-		$response = 'id', $this->getCategoryId());
+		$this->set('id', $this->getCategoryId());
 
-		$response = 'context', $this->getContext());
-		$response = 'products', $products);
-		$response = 'count', $totalCount);
-		$response = 'offsetStart', $offsetStart);
-		$response = 'offsetEnd', $offsetEnd);
-		$response = 'perPage', $perPage);
-		$response = 'currentPage', $currentPage);
-		$response = 'category', $categoryArray);
-		$response = 'subCategories', $subCategories);
+		$this->set('context', $this->getContext());
+		$this->set('products', $products);
+		$this->set('count', $totalCount);
+		$this->set('offsetStart', $offsetStart);
+		$this->set('offsetEnd', $offsetEnd);
+		$this->set('perPage', $perPage);
+		$this->set('currentPage', $currentPage);
+		$this->set('category', $categoryArray);
+		$this->set('subCategories', $subCategories);
 
-		$response = 'currency', $this->getRequestCurrency());
-		$response = 'sortOptions', $sort);
-		$response = 'sortForm', $this->buildSortForm($order));
-		$response = 'sortField', $order);
-		$response = 'categoryNarrow', $categoryNarrow);
-		$response = 'subCatFeatured', $subCatFeatured);
-		//$response = 'allFilters', $filters);
-		//$response = 'showAll', $showAll);
-		$response = 'appliedFilters', $filterArray);
-		$response = 'layout', $listLayout);
-		$response = 'listAttributes', $this->getListAttributes());
+		$this->set('currency', $this->getRequestCurrency());
+		$this->set('sortOptions', $sort);
+		$this->set('sortForm', $this->buildSortForm($order));
+		$this->set('sortField', $order);
+		$this->set('categoryNarrow', $categoryNarrow);
+		$this->set('subCatFeatured', $subCatFeatured);
+		//$this->set('allFilters', $filters);
+		//$this->set('showAll', $showAll);
+		$this->set('appliedFilters', $filterArray);
+		$this->set('layout', $listLayout);
+		$this->set('listAttributes', $this->getListAttributes());
 
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);
-		$response = 'url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
-		$response = 'layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
-		$response = 'filterChainHandle', $filterChainHandle);
+		$this->set('url', $this->getCategoryPageUrl(array('page' => '_000_', 'filters' => $filterChainHandle)));
+		$this->set('layoutUrl', $this->getCategoryPageUrl(array('filters' => $filterChainHandle, 'query' => array('layout' => ''))));
+		$this->set('filterChainHandle', $filterChainHandle);
 		*/
 
 		if (isset($searchQuery))
 		{
-			$response = 'searchQuery', $searchQuery);
+			$this->set('searchQuery', $searchQuery);
 		}
 
 		if (isset($foundCategories))
 		{
-			$response = 'foundCategories', $foundCategories->toArray());
+			$this->set('foundCategories', $foundCategories->toArray());
 		}
 
 		// look for manufacturer filter
@@ -278,14 +388,14 @@ class CategoryController extends CatalogController
 		{
 			if ($filter instanceof ManufacturerFilter)
 			{
-				$response = 'manufacturerFilter', $filter->toArray());
+				$this->set('manufacturerFilter', $filter->toArray());
 			}
 		}
 
 		if ((1 == $currentPage) && $query)
 		{
 			$searchCon = new SearchController($this->application);
-			$response = 'modelSearch', $searchCon->searchAll($cleanedQuery));
+			$this->set('modelSearch', $searchCon->searchAll($cleanedQuery));
 		}
 
 	}
@@ -311,8 +421,8 @@ class CategoryController extends CatalogController
 		}
 
 		$this->set('sorted', $sorted);
-		$response = 'totalCount', count($allCategories));
-		$response = 'categories', $allCategories);
+		$this->set('totalCount', count($allCategories));
+		$this->set('categories', $allCategories);
 	}
 
 	/**
@@ -320,20 +430,22 @@ class CategoryController extends CatalogController
 	 */
 	public function allProductsAction()
 	{
+		/*
 		$this->request = 'page', $this->request->get('id', 1));
 		$this->request = 'id', 1);
 		$this->request = 'includeSub', true);
+		*/
 		$this->removeBlock('PRODUCT_LISTS');
 
 		$response = $this->index();
 
-		$response = 'subCategories', array());
-		$response = 'categoryNarrow', array());
-		$response = 'url', $this->url->get('category/allProducts', 'id' => 0)));
+		$this->set('subCategories', array());
+		$this->set('categoryNarrow', array());
+		//$this->set('url', $this->url->get('category/allProducts', 'id' => 0)));
 
 		$category = $response->get('category');
 		$category['name_lang'] = $this->translate('_all_products');
-		$response = 'category', $category);
+		$this->set('category', $category);
 
 	}
 
@@ -403,7 +515,7 @@ class CategoryController extends CatalogController
 				}
 
 				$cond = new EqualsOrMoreCond('Category.lft', $cat['lft']);
-				$cond->addAND(new EqualsOrLessCond('Category.rgt', $cat['rgt']));
+				$cond->andWhere(new EqualsOrLessCond('Category.rgt', $cat['rgt']));
 				$case->addCondition($cond, new ARExpressionHandle($cat['ID']));
 				$index[$cat['ID']] = $key;
 			}
@@ -517,7 +629,7 @@ class CategoryController extends CatalogController
 		$featuredFilter = new ProductFilter(Category::getRootNode(), select(in('Product.ID', $rand)));
 		$featuredFilter->includeSubcategories();
 
-		$cache = $key, $this->getProductsArray($featuredFilter), time() + 1800);
+//		$cache = $key, $this->getProductsArray($featuredFilter), time() + 1800);
 
 		return $cache->get($key);
 	}
@@ -529,7 +641,7 @@ class CategoryController extends CatalogController
 	{
 		$form = new Form($this->getValidator("productSort", $this->request));
 		$form->enableClientSideValidation(false);
-		$form = 'sort', $order);
+		//$form = 'sort', $order);
 		return $form;
 	}
 
@@ -539,7 +651,7 @@ class CategoryController extends CatalogController
 		$context['category'] = $this->getCategoryId();
 
 		$response = new BlockResponse();
-		$response = 'context', $context);
+		$this->set('context', $context);
 	}
 
 	protected function relatedCategoriesBlock()
@@ -587,7 +699,7 @@ class CategoryController extends CatalogController
 		}
 
 		$response = new BlockResponse();
-		$response = 'lists', $lists);
+		$this->set('lists', $lists);
 	}
 
 	protected function boxFilterBlock($includeAppliedFilters = true)
@@ -635,7 +747,7 @@ class CategoryController extends CatalogController
 
 		if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
 		{
-			$response = 'allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
+			$this->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));
 		}
 
 		if (!$this->getCategory())
@@ -687,7 +799,7 @@ class CategoryController extends CatalogController
 
 		if ($this->config->get('ENABLE_MAN_FILTERS') && count($manFilters) > 1)
 		{
-		 	$response = 'manGroup', array('filters' => $manFilters));
+		 	$this->set('manGroup', array('filters' => $manFilters));
 		}
 
 		if ($this->config->get('ENABLE_PRICE_FILTERS') && (count($count['prices']) > 1))
@@ -700,11 +812,11 @@ class CategoryController extends CatalogController
 				}
 			}
 
-		 	$response = 'priceGroup', array('filters' => $priceFilters));
+		 	$this->set('priceGroup', array('filters' => $priceFilters));
 		}
 
 		$appliedFilterArray = $this->getAppliedFilterArray();
-		$response = 'filters', $appliedFilterArray);
+		$this->set('filters', $appliedFilterArray);
 		if('FILTER_STYLE_CHECKBOXES' == $filterStyle)
 		{
 			$IDs = array();
@@ -712,10 +824,10 @@ class CategoryController extends CatalogController
 			{
 				$IDs[] = $item['ID'];
 			}
-			$response = 'filtersIDs', $IDs);
+			$this->set('filtersIDs', $IDs);
 		}
-	 	$response = 'category', $this->getCategory()->toArray());
-	 	$response = 'groups', $filterGroups);
+	 	$this->set('category', $this->getCategory()->toArray());
+	 	$this->set('groups', $filterGroups);
 	}
 
 	private function getAppliedFilterArray()
@@ -832,17 +944,17 @@ class CategoryController extends CatalogController
 
 			if (isset($manFilters))
 			{
-				$response = 'manGroup', $manFilters);
+				$this->set('manGroup', $manFilters);
 			}
 
 			if (isset($priceFilters))
 			{
-				$response = 'priceGroup', $priceFilters);
+				$this->set('priceGroup', $priceFilters);
 			}
 
-			$response = 'filters', $this->getAppliedFilterArray());
-			$response = 'category', $this->getCategory()->toArray());
-			$response = 'groups', $groups);
+			$this->set('filters', $this->getAppliedFilterArray());
+			$this->set('category', $this->getCategory()->toArray());
+			$this->set('groups', $groups);
 
 		}
 		else
@@ -1031,11 +1143,11 @@ class CategoryController extends CatalogController
 		if (!isset($searchLog[$query]))
 		{
 			$log = SearchLog::getNewInstance($query);
-			$log->ip = $this->request->getIPLong());
+			$log->ip = $this->request->getIPLong();
 			$log->save();
 
 			$searchLog[$query] = true;
-			$this->session = 'searchLog', $searchLog);
+			//$this->session = 'searchLog', $searchLog);
 		}
 	}
 
@@ -1068,7 +1180,7 @@ class CategoryController extends CatalogController
 				$product = array('ID' => 0);
 			}
 
-			$cache = $key, $product, 1800);
+			//$cache = $key, $product, 1800);
 
 			$products[] = $product;
 		}
@@ -1099,7 +1211,7 @@ class CategoryController extends CatalogController
 	{
 		if (!$this->category)
 		{
-			$this->category = Category::getInstanceById($this->request->get('id', 1), Category::LOAD_DATA);
+			$this->category = Category::getInstanceById($this->request->getParam('id', 1));
 		}
 
 		return $this->category;

@@ -22,6 +22,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	private $filterGroupArrayCache = null;
 	private $filterSetCache;
 	private $subCategorySetCache;
+	private $subCategoryArray = null;
 
 //	public $defaultImageID", "categoryImage", "ID", 'CategoryImage;
 //	public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
@@ -84,7 +85,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 
 	public function getProductCountField()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 		return ($config->get('INVENTORY_TRACKING') != 'ENABLE_AND_HIDE') ? 'activeProductCount' :'availableProductCount';
 	}
 
@@ -93,19 +94,8 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
 	}
 
-	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true)
-	{
-		return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
-	}
-
-	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
-	{
-		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
-	}
-
 	public function isEnabled()
 	{
-		$this->load();
 		return $this->isEnabled;
 	}
 
@@ -135,7 +125,6 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	 */
 	public function getSubcategoryCount()
 	{
-		$this->load();
 		$productCount = ($this->rgt - $this->lft - 1) / 2;
 		return $productCount;
 	}
@@ -250,7 +239,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 		$array = MultiLingualObject::transformArray($array, $schema);
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
 		$array['inactiveProductCount'] = $array['totalProductCount'] - $array['activeProductCount'];
-		$c = self::getApplication()->getConfig();
+		$c = $this->getConfig();
 
 		$array['count'] = ('ENABLE_AND_HIDE' == $c->get('INVENTORY_TRACKING')) ? $array['availableProductCount'] : $array['activeProductCount'];
 		return $array;
@@ -284,35 +273,31 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	{
 	  	if (!$this->subCategoryArray || $loadReferencedRecords)
 	  	{
-	  		$this->subCategoryArray = ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	  		$this->subCategoryArray = $this->getSubcategoryFilter()->getQuery()->execute();
 		}
 
 		return $this->subCategoryArray;
 	}
 
-/*
 	public function getSubcategoryFilter($returnEmpty = false)
 	{
-	  	$filter = new ARSelectFilter();
-	  	$cond = 'Category.parentNodeID = :Category.parentNodeID:', array('Category.parentNodeID' => $this->getID());
-	  	$cond->addAND('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
+	  	$filter = $this->getDI()->get('modelsManager')->createBuilder()->from(__CLASS__);
+	  	$filter->andWhere('parentNodeID = :parentNodeID: AND isEnabled=1', array('parentNodeID' => $this->getID()));
 
 		// Hide empty categories
 		if (!$returnEmpty)
 		{
-			$config = self::getApplication()->getConfig();
+			$config = $this->getConfig();
 			if ('ENABLE_AND_HIDE' == $config->get('INVENTORY_TRACKING'))
 			{
-				$cond->addAND(new MoreThanCond(new ARFieldHandle('Category', $this->getProductCountField()), 0));
+				$cond->andWhere($this->getProductCountField() . ' > 0');
 			}
 		}
 
-		$filter->setCondition($cond);
-	  	$filter->orderBy('Category.lft', 'ASC');
+	  	$filter->orderBy('lft ASC');
 
 	  	return $filter;
 	}
-*/
 
 	/**
 	 * Returns a set of siblings (categories with the same parent)
@@ -349,11 +334,11 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	{
 	  	$filter = new ARSelectFilter();
 	  	$cond = 'Category.parentNodeID = :Category.parentNodeID:', array('Category.parentNodeID' => $this->parentNode->getID());
-	  	$cond->addAND('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
+	  	$cond->andWhere('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
 
 		if (!$loadSelf)
 		{
-			$cond->addAND(new NotEqualsCond('Category.ID', $this->getID()));
+			$cond->andWhere(new NotEqualsCond('Category.ID', $this->getID()));
 		}
 
 		$filter->setCondition($cond);
@@ -470,7 +455,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 
 	private function applyInventoryFilter(ARSelectFilter $filter)
 	{
-		$c = self::getApplication()->getConfig();
+		$c = $this->getConfig();
 		if ($c->get('INVENTORY_TRACKING') == 'ENABLE_AND_HIDE')
 		{
 			$cond = new MoreThanCond('Product.stockCount', 0);

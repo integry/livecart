@@ -2,11 +2,11 @@
 {% if $attr.values %}
 	<ul class="attributeList{% if $attr.values|@count == 1 %} singleValue{% endif %}">
 		{foreach from=$attr.values item="value"}
-			<li> [[value.value_lang]]</li>
+			<li> [[value.value()]]</li>
 		{/foreach}
 	</ul>
-{% elseif $attr.value_lang %}
-	[[attr.value_lang]]
+{% elseif $attr.value() %}
+	[[attr.value()]]
 {% elseif $attr.value %}
-	{$attr.$field.valuePrefix_lang}[[attr.value]]{$attr.$field.valueSuffix_lang}
+	{$attr.$field.valuePrefix()}[[attr.value]]{$attr.$field.valueSuffix()}
 {% endif %}
