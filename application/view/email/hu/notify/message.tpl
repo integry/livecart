@@ -6,6 +6,6 @@ Egy vásárló üzenete írt az egyik rendelésseé kapcsolatosan <b class="orde
 --------------------------------------------------
 
 Válaszolhat erre az üzenetre az adminisztrációs felületből:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/en/signature.tpl") ]]

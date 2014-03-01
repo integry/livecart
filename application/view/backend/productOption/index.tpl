@@ -25,13 +25,13 @@
 	}
 
 
-	{foreach from=$configuration item="configItem" key="configKey"}
-		{% if $configKey == 'types' %}
-			Backend.ProductOption.prototype.[[configKey]] = Backend.ProductOption.prototype.createTypesOptions({json array=$configItem});
+	{foreach from=configuration item="configItem" key="configKey"}
+		{% if configKey == 'types' %}
+			Backend.ProductOption.prototype.[[configKey]] = Backend.ProductOption.prototype.createTypesOptions({json array=configItem});
 		{% else %}
-			Backend.ProductOption.prototype.[[configKey]] = {json array=$configItem};
+			Backend.ProductOption.prototype.[[configKey]] = {json array=configItem};
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 
 // ]!]>
 </script>
@@ -49,7 +49,7 @@
 		<legend>[[ capitalize({t _add_new_field}) ]]</legend>
 
 		<script type="text/javascript">
-		   var newProductOptionForm = new Backend.ProductOption('{json array=$productOptionsList}');
+		   var newProductOptionForm = new Backend.ProductOption('{json array=productOptionsList}');
 		   newProductOptionForm.addField(null, "new" + Backend.ProductOption.prototype.countNewFilters, true);
 		   newProductOptionForm.bindDefaultFields();
 		   Backend.ProductOption.prototype.countNewFilters++;
@@ -61,20 +61,20 @@
 {* No group *}
 <ul id="productOption_items_list_[[parentID]]_" class="productOptionList activeList_add_sort activeList_add_delete activeList_add_edit activeList_accept_productOptionList">
 {assign var="lastProductOptionGroup" value="-1"}
-{foreach name="productOptionForeach" item="field" from=$options}
-	{% if $field.ID %}
+{foreach name="productOptionForeach" item="field" from=options}
+	{% if field.ID %}
 		<li id="productOption_items_list_[[parentID]]_[[field.ProductOptionGroup.ID]]_[[field.ID]]">
 			<span class="productOption_title">[[field.name()]]</span>
 			<span class="productOption_choiceCount"></span>
 		</li>
 	{% endif %}
-{/foreach}
+{% endfor %}
 </ul>
 
 <script type="text/javascript">
 	 var parentID = '[[parentID]]';
 
-	 Event.observe($("productOption_item_new_"+parentID+"_show"), "click", function(e)
+	 Event.observe(("productOption_item_new_"+parentID+"_show"), "click", function(e)
 	 {ldelim}
 		 e.preventDefault();
 		 Backend.ProductOption.prototype.createNewAction(parentID)

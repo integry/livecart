@@ -15,7 +15,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="group in groups">
-				<td class="groupColumn">{selectfield options=$userGroups ng_model="group.id" ng_change="addGroup(group)" noFormat=true}</td>
+				<td class="groupColumn">{selectfield options=userGroups ng_model="group.id" ng_change="addGroup(group)" noFormat=true}</td>
 				<td ng-repeat="quant in quantities">
 					{textfield money=true class="text qprice number" ng_model="quant[group.id]" noFormat=true}
 				</td>

@@ -3,14 +3,14 @@
 
 	<div class="row">
 	<div class="priceRow">
-		{input name="defined.$baseCurrency" class="basePrice"}
-			{label}{tip $baseCurrency _tip_main_currency_price}:{/label}
+		{input name="defined.baseCurrency" class="basePrice"}
+			{label}{tip baseCurrency _tip_main_currency_price}:{/label}
 			<div class="controls">
 				{textfield money=true class="money price" noFormat=true}
 			</div>
 		{/input}
 
-		{input name="definedlistPrice.$baseCurrency" class="listPrice"}
+		{input name="definedlistPrice.baseCurrency" class="listPrice"}
 			{label}{tip _list_price}:{/label}
 			<div class="controls">
 				{textfield money=true class="money price" noFormat=true}
@@ -21,18 +21,18 @@
 	</div>
 	</div>
 
-	{foreach from=$otherCurrencies item="currency"}
+	{foreach from=otherCurrencies item="currency"}
 
 		<div class="row">
 		<div class="priceRow">
-			{input name="defined.$currency" class="basePrice"}
-				{label}{tip $currency _tip_secondary_currency_price}:{/label}
+			{input name="defined.currency" class="basePrice"}
+				{label}{tip currency _tip_secondary_currency_price}:{/label}
 				<div class="controls">
 					{textfield money=true class="money price" noFormat=true}
 				</div>
 			{/input}
 
-			{input name="definedlistPrice.$currency" class="listPrice"}
+			{input name="definedlistPrice.currency" class="listPrice"}
 				{label}{tip _list_price}:{/label}
 				<div class="controls">
 					{textfield money=true class="money price" noFormat=true}
@@ -43,5 +43,5 @@
 		</div>
 		</div>
 
-	{/foreach}
+	{% endfor %}
 </fieldset>

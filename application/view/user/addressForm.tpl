@@ -1,4 +1,4 @@
-{assign var="fields" value='USER_FIELDS'|config}
+{assign var="fields" value=config('USER_FIELDS')}
 
 <div class="registerColumn">
 	<fieldset>

@@ -1,6 +1,6 @@
 {% extends "layout/frontend.tpl" %}
 
-{assign var="fields" value='USER_FIELDS'|config}
+{assign var="fields" value=config('USER_FIELDS')}
 
 {% if req('action') == 'checkout' %}
 	{% title %}{t _order_checkout}{% endblock %}
@@ -27,15 +27,15 @@
 	<div class="newCustomer">
 		<h2>{t _new_cust}</h2>
 
-		{form handle=$form action="user/processCheckoutRegistration" method="POST" class="form-horizontal"}
+		{form handle=form action="user/processCheckoutRegistration" method="POST" class="form-horizontal"}
 
-			{% if !'REQUIRE_SAME_ADDRESS'|config %}
+			{% if !config('REQUIRE_SAME_ADDRESS') %}
 				<h3>{t _contact_info}</h3>
 			{% endif %}
 
 			[[ partial('user/block/registerAddress.tpl', ['prefix': "billing_", 'showHeading': true]) ]]
 
-			{% if $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config %}
+			{% if order.isShippingRequired && !config('REQUIRE_SAME_ADDRESS') %}
 			<h3>{t _shipping_address}</h3>
 
 				{input name="sameAsBilling"}
@@ -63,7 +63,7 @@
 
 
 <script type="text/javascript">
-	new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
+	new User.ShippingFormToggler(('sameAsBilling'), ('shippingForm'));
 </script>
 
 

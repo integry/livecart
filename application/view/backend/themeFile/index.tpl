@@ -11,9 +11,9 @@
 </fieldset>
 
 <div id="themeFileForm_[[theme]]" class="slideForm addForm" style="display: none;">
-	{form handle=$form action="backend.themeFile/upload"
+	{form handle=form action="backend.themeFile/upload"
 		onsubmit=""
-		target="fileUpload_`$theme`" method="POST" enctype="multipart/form-data"
+		target="fileUpload_`theme`" method="POST" enctype="multipart/form-data"
 		autocomplete="off"
 		}
 
@@ -25,7 +25,7 @@
 			{label}{t _select_file}:{/label}
 			{filefield value=""}
 			<br />
-			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+			<span class="maxFileSize">{maketext text=_max_file_size params=maxSize}</span>
 		{/input}
 
 		[[ textfld('filename', '_change_file_name', class: 'changeFileName') ]]
@@ -84,5 +84,5 @@
 </ul>
 
 <script type="text/javascript">
-	new Backend.ThemeFile({json array=$filesList}, $('filesList_[[theme]]'), $('filesList_template_[[theme]]'));
+	new Backend.ThemeFile({json array=filesList}, ('filesList_[[theme]]'), ('filesList_template_[[theme]]'));
 </script>

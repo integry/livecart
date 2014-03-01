@@ -13,7 +13,7 @@
 
 			<!-- STEP 3 -->
 			{language}
-				{input name="name_`$lang.ID`"}
+				{input name="name_`lang.ID`"}
 					{label}{t _product_relationship_group_title}:{/label}
 					<input type="text" name="name_[[lang.ID]]" class="text" {denied role="product.update"}readonly="readonly"{/denied} />
 				{/input}

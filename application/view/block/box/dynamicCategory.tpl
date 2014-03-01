@@ -20,22 +20,22 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 {function name="dynamicCategoryTree" node=false filters=false}
 	{% if !empty(node) %}
 		<ul class="unstyled" id="dynamicNav">
-		{foreach from=$node item=category}
-				<li class="{% if $category.parentNodeID == 1 %}topCategory{% endif %} {% if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt %} dynCurrent{% endif %}{% if $category.subCategories %} hasSubs{% else %} noSubs{% endif %}">
-					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name()]]</a>
-					{% if 'DISPLAY_NUM_CAT'|config %}
+		{% for category in node %}
+				<li class="{% if category.parentNodeID == 1 %}topCategory{% endif %} {% if category.lft <= currentCategory.lft && category.rgt >= currentCategory.rgt %} dynCurrent{% endif %}{% if category.subCategories %} hasSubs{% else %} noSubs{% endif %}">
+					<a href="{categoryUrl data=category filters=category.filters}">[[category.name()]]</a>
+					{% if config('DISPLAY_NUM_CAT') %}
 						[[ partial('block/count.tpl', ['count': category.count]) ]]
 					{% endif %}
-					{% if $category.subCategories %}
-		   				{dynamicCategoryTree node=$category.subCategories}
+					{% if category.subCategories %}
+		   				{dynamicCategoryTree node=category.subCategories}
 					{% endif %}
 				</li>
-		{/foreach}
+		{% endfor %}
 		</ul>
 	{% endif %}
 {/function}
 
 <div class="panel categories dynamicMenu">
 	<div class="panel-heading">{t _categories}</div>
-	{dynamicCategoryTree node=$categories}
+	{dynamicCategoryTree node=categories}
 </div>

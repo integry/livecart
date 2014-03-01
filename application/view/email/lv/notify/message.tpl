@@ -6,6 +6,6 @@ Klients ir pievienojis jaunu paziņojumu pie pasūtījuma <b class="orderID">#[[
 --------------------------------------------------
 
 Jūs varat pievienot atbildi no administrācijas zonas:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/lv/signature.tpl") ]]

@@ -5,13 +5,13 @@
 			<p>
 				<label>{t _select_module}</label>
 				<select name="module">
-					{foreach from=$packages key=domain item=packages}
+					{% for domain, packages in packages %}
 						<optgroup label="[[domain]]">
-							{foreach from=$packages key=id item=package}
+							{% for id, package in packages %}
 								<option value="[[id]]">[[package.name]] ([[package.version]])</option>
-							{/foreach}
+							{% endfor %}
 						</optgroup>
-					{/foreach}
+					{% endfor %}
 				</select>
 				<input type="hidden" name="repos" value="[[repos]]" />
 				<input type="submit" class="submit" value="{t _install_module}" />

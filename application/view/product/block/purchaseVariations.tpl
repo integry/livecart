@@ -1,7 +1,7 @@
 {% if !empty(samePrice) %}
 	<p>
 		<label>{t _price}</label>
-		<span class="price">{$product.formattedPrice.$currency}</span>
+		<span class="price">{product.formattedPrice.currency}</span>
 	</p>
 
 	{% if !empty(quantityPricing) %}
@@ -9,15 +9,15 @@
 	{% endif %}
 {% endif %}
 
-{% set parentProduct = $product %}
-{form action="order/addToCart" handle=$cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
-	{foreach $variations.products as $product}
-		<h3>{$product.variationNames|@implode:' / '}</h3>
+{% set parentProduct = product %}
+{form action="order/addToCart" handle=cartForm method="POST" class="purchaseVariations" class="form-horizontal"}
+	{foreach variations.products as product}
+		<h3>{product.variationNames|@implode:' / '}</h3>
 
 		{% if empty(samePrice) %}
 			<p>
 				<label>{t _price}</label>
-				<span class="price">{$product.finalFormattedPrice.$currency}</span>
+				<span class="price">{product.finalFormattedPrice.currency}</span>
 			</p>
 
 			{% if !empty(quantityPricing) %}
@@ -27,20 +27,20 @@
 
 		<p>
 			<label>{t _quantity}</label>
-			[[ partial('product/block/quantity.tpl', ['field': "product_`$product.ID`_count", 'quantity': quantities[$product.ID]]) ]]
+			[[ partial('product/block/quantity.tpl', ['field': "product_`product.ID`_count", 'quantity': quantities[product.ID]]) ]]
 		</p>
 
-		{assign var="optionPrefix" value="product_`$product.ID`_"}
+		{assign var="optionPrefix" value="product_`product.ID`_"}
 		{block PRODUCT-OPTIONS}
 		<input type="hidden" name="productIDs[]" value="[[product.ID]]" />
-	{/foreach}
+	{% endfor %}
 
 	<div id="productToCart" class="cartLinks">
 		[[ partial('block/submit.tpl', ['caption': "_add_to_cart"]) ]]
-		{hidden name="return" value=$catRoute}
+		{hidden name="return" value=catRoute}
 	</div>
 
 {/form}
 
-{% set product = $parentProduct %}
+{% set product = parentProduct %}
 {block PRODUCT-OVERVIEW}

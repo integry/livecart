@@ -2,10 +2,10 @@
 Γειά σας,
 
 Για να επιβεβαιώσουμε την ηλεκτρονική σας διεύθυνση και αρχίσετε να λαμβάνετε το ενημερωτικό δελτίο μας,παρακαλούμε επισκεφθείτε αυτό το σύνδεσμο:
-[[ fullurl("newsletter/confirm", email=`$email`&code=`$subscriber.confirmationCode`) ]]
+[[ fullurl("newsletter/confirm", email=`email`&code=`subscriber.confirmationCode`) ]]
 
 [[ partial("email/en/signature.tpl") ]]
 
 -----------------------------------------------
 Εάν δεν επιθυμείτε να λαμβάνετε το ενημερωτικό δελτίο μας,παρακαλούμε επισκεφθείτε τον παρακάτω σύνδεσμο:
-[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]
+[[ fullurl("newsletter/unsubscribe", email=`email`) ]]

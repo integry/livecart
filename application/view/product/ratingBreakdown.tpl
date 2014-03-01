@@ -1,7 +1,7 @@
-{% if $ratings && $ratings.0.RatingType.ID %}
+{% if ratings && ratings.0.RatingType.ID %}
 	<ul class="ratingBreakdown">
-	{foreach $ratings as $rating}
-		<li>[[rating.RatingType.name()]]: <img src="image/rating/category_{ {$rating.rating*2|@round}/2}.gif" /></li>
-	{/foreach}
+	{foreach ratings as rating}
+		<li>[[rating.RatingType.name()]]: <img src="image/rating/category_{ {rating.rating*2|@round}/2}.gif" /></li>
+	{% endfor %}
 	</ul>
 {% endif %}

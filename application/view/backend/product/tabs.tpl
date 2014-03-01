@@ -32,7 +32,7 @@
 </div>
 
 <script type="text/javascript">
-	Event.observe($("cancel_product_edit"), "click", function(e) {
+	Event.observe(("cancel_product_edit"), "click", function(e) {
 		e.preventDefault();
 		var product = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId(), false);
 		product.removeTinyMce();

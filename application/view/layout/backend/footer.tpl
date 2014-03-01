@@ -7,7 +7,7 @@
 		<div style="float: left;">
 			[[ config('POWERED_BY_BACKEND') ]]
 		</div>
-		{% if 'BACKEND_SHOW_FOOTER_LINKS'|config %}
+		{% if config('BACKEND_SHOW_FOOTER_LINKS') %}
 			<div id="supportLinks" style="float: right; padding-left: 50px;">
 				<a href="http://support.livecart.com" target="_blank">Customer Support</a>
 				/
@@ -26,7 +26,7 @@
 	new Backend.LayoutManager();
 </script>
 
-{% if !'DISABLE_TOOLBAR'|config %}
+{% if !config('DISABLE_TOOLBAR') %}
 	{block FOOTER_TOOLBAR}
 {% endif %}
 

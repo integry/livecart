@@ -1,5 +1,5 @@
 <div ng-controller="ProductPresentationController">
-{form model="product" handle=$presentationForm role="product.update"}
+{form model="product" handle=presentationForm role="product.update"}
 	<fieldset>
 		<legend>{t _presentation}</legend>
 

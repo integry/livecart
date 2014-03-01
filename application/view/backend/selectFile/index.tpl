@@ -47,10 +47,10 @@
 	id=0
 	controller="backend.selectFile"
 	action="lists"
-	displayedColumns=$displayedColumns
-	availableColumns=$availableColumns
+	displayedColumns=displayedColumns
+	availableColumns=availableColumns
 	totalCount=0
-	filters=$filters
+	filters=filters
 	container="fileContainer"
 	count="backend/selectFile/count.tpl"
 }
@@ -69,13 +69,13 @@
 	inst.links.categoryAutoloading = '[[ url("backend.selectFile/xmlBranch") ]]';
 
 	inst.init();
-	inst.addCategories({json array=$root});
+	inst.addCategories({json array=root});
 	inst.treeBrowser.setXMLAutoLoading(inst.links.categoryAutoloading);
-	inst.addCategories({json array=$directoryList});
+	inst.addCategories({json array=directoryList});
 
 	inst.initPage();
 
-	inst.loadDirectory({json array=$current});
+	inst.loadDirectory({json array=current});
 </script>
 
 

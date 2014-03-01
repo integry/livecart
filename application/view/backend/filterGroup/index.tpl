@@ -15,19 +15,19 @@
 	Backend.Filter.prototype.msg.translateTo = '{t _translate_to}';
 	Backend.Filter.prototype.msg.removeQuestion = '[[ addslashes({t _FilterGroup_remove_question}) ]]';
 
-	{foreach from=$configuration item="configItem" key="configKey"}
-		{% if $configKey == 'types' %}
-			Backend.Filter.prototype.[[configKey]] = Backend.Filter.prototype.createTypesOptions({json array=$configItem});
+	{foreach from=configuration item="configItem" key="configKey"}
+		{% if configKey == 'types' %}
+			Backend.Filter.prototype.[[configKey]] = Backend.Filter.prototype.createTypesOptions({json array=configItem});
 		{% else %}
-			Backend.Filter.prototype.[[configKey]] = {json array=$configItem};
+			Backend.Filter.prototype.[[configKey]] = {json array=configItem};
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 
 // ]!]>
 </script>
 
 
-{% if $blankFilter.specFields|@count > 0 %}
+{% if blankFilter.specFields|@count > 0 %}
 	<div>
 		<fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 			<ul class="menu" id="filter_new_[[categoryID]]_menu">
@@ -39,7 +39,7 @@
 		<fieldset class="addForm" id="filter_item_new_[[categoryID]]_form" style="display: none;" class="filter_item_new">
 			<legend>[[ capitalize({t _add_new_filter}) ]]</legend>
 			<script type="text/javascript">
-				var newFilterForm = new Backend.Filter({json array=$blankFilter}, true);
+				var newFilterForm = new Backend.Filter({json array=blankFilter}, true);
 				newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
 				newFilterForm.bindDefaultFields();
 				Backend.Filter.prototype.countNewFilters++;
@@ -48,11 +48,11 @@
 	</div>
 
 	<ul id="filter_items_list_[[categoryID]]" class="filterList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit ">
-	{foreach item="filter" from=$filters}
-		<li id="filter_items_list_[[categoryID]]_[[filter.ID]]" {% if $filter.filtersCount == 0 %}class="filtergroup_has_no_filters"{% endif %}>
+	{foreach item="filter" from=filters}
+		<li id="filter_items_list_[[categoryID]]_[[filter.ID]]" {% if filter.filtersCount == 0 %}class="filtergroup_has_no_filters"{% endif %}>
 			<span class="filter_title">[[filter.name()]]</span> <span class="filter_count">([[filter.filtersCount]])</span>
 		</li>
-	{/foreach}
+	{% endfor %}
 	</ul>
 
 
@@ -63,7 +63,7 @@
 			 _activeList_delete:  '[[ addslashes({t _activeList_delete}) ]]'
 		 }
 
-		 Event.observe($("filter_item_new_[[categoryID]]_show"), "click", function(e)
+		 Event.observe(("filter_item_new_[[categoryID]]_show"), "click", function(e)
 		 {
 			 e.preventDefault();
 			 Backend.Filter.prototype.createNewAction('[[categoryID]]')

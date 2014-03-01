@@ -1,6 +1,6 @@
 <span {denied role="product.mass"}style="display: none;"{/denied} id="productMass_[[categoryID]]" class="activeGridMass">
 
-	{form action="controller=backend.product action=processMass id=$categoryID" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="controller=backend.product action=processMass id=categoryID" method="POST" handle=massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />
@@ -53,15 +53,15 @@
 
 		{% if !empty(attributes) %}
 			<optgroup label="{t _set_attributes}">
-				{foreach from=$attributes item=attr}
+				{% for attr in attributes %}
 					<option value="set_specField_[[attr.ID]]">[[attr.name()]]</option>
-				{/foreach}
+				{% endfor %}
 			</optgroup>
 
 			<optgroup label="{t _remove_attributes}">
-				{foreach from=$attributes item=attr}
+				{% for attr in attributes %}
 					<option value="remove_specField_[[attr.ID]]">[[attr.name()]]</option>
-				{/foreach}
+				{% endfor %}
 			</optgroup>
 		{% endif %}
 	</select>
@@ -70,51 +70,51 @@
 
 	<span class="bulkValues" style="display: none;">
 		<span class="addRelated">
-			{t _enter_sku}: {textfield noFormat=true class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
+			{t _enter_sku}: {textfield noFormat=true class="text number" id="massForm_related_`categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
 		</span>
 		<span class="move">
 			<input type="hidden" name="categoryID" />
 		</span>
 
 		<span class="inc_price">
-			{textfield noFormat=true id="inc_price_`$categoryID`" class="text number" name="inc_price_value"}%
-			{checkbox id="inc_quant_price_`$categoryID`" name="inc_quant_price"}
+			{textfield noFormat=true id="inc_price_`categoryID`" class="text number" name="inc_price_value"}%
+			{checkbox id="inc_quant_price_`categoryID`" name="inc_quant_price"}
 			<label for="inc_quant_price_[[categoryID]]" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
 		<span class="multi_price">
-			* {textfield noFormat=true id="multi_price_`$categoryID`" class="text number" name="multi_price_value"}
-			{checkbox id="multi_quant_price_`$categoryID`" name="multi_quant_price"}
+			* {textfield noFormat=true id="multi_price_`categoryID`" class="text number" name="multi_price_value"}
+			{checkbox id="multi_quant_price_`categoryID`" name="multi_quant_price"}
 			<label for="multi_quant_price_[[categoryID]]" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
 		<span class="div_price">
-			/ {textfield noFormat=true id="multi_price_`$categoryID`" class="text number" name="div_price_value"}
-			{checkbox id="multi_quant_price_`$categoryID`" name="div_quant_price"}
+			/ {textfield noFormat=true id="multi_price_`categoryID`" class="text number" name="div_price_value"}
+			{checkbox id="multi_quant_price_`categoryID`" name="div_quant_price"}
 			<label for="multi_quant_price_[[categoryID]]" style="float: none;">{t _inc_quant_prices}</label>
 		</span>
 
-		{foreach from=$attributes item=attr}
+		{% for attr in attributes %}
 			<span class="set_specField_[[attr.ID]]"></span>
-			{% if $attr.isMultiValue %}
+			{% if attr.isMultiValue %}
 				<span class="remove_specField_[[attr.ID]]"></span>
 			{% endif %}
-		{/foreach}
+		{% endfor %}
 
 		<span class="specFieldValueContainer"></span>
 
-		{textfield noFormat=true id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
-		{textfield noFormat=true id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
-		{textfield noFormat=true id="massForm_price_`$categoryID`" class="text number" name="price"}
-		{textfield noFormat=true id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
-		{textfield noFormat=true id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
-		{textfield noFormat=true id="massForm_shippingWeight_`$categoryID`" class="text number" name="set_shippingWeight"}
-		{textfield noFormat=true id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
-		{textfield noFormat=true id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
-		{textfield noFormat=true id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
-		{selectfield noFormat=true id="massForm_theme_`$categoryID`" name="theme" options=$themes}
-		{selectfield noFormat=true id="massForm_shippingClass_`$categoryID`" name="shippingClass" options=$shippingClasses}
-		{selectfield noFormat=true id="massForm_taxClass_`$categoryID`" name="taxClass" options=$taxClasses}
+		{textfield noFormat=true id="massForm_inc_stock_`categoryID`" class="text number" name="inc_stock"}
+		{textfield noFormat=true id="massForm_set_stockCount_`categoryID`" class="text number" name="set_stockCount"}
+		{textfield noFormat=true id="massForm_price_`categoryID`" class="text number" name="price"}
+		{textfield noFormat=true id="massForm_set_minimumQuantity_`categoryID`" class="text number" name="set_minimumQuantity"}
+		{textfield noFormat=true id="massForm_shippingSurchargeAmount_`categoryID`" class="text number" name="set_shippingSurchargeAmount"}
+		{textfield noFormat=true id="massForm_shippingWeight_`categoryID`" class="text number" name="set_shippingWeight"}
+		{textfield noFormat=true id="massForm_manufacturer_`categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`categoryID`"}
+		{textfield noFormat=true id="massForm_set_keywords_`categoryID`" name="set_keywords" class="text" id="set_keywords_`categoryID`" autocomplete="controller=backend.product field=keywords"}
+		{textfield noFormat=true id="massForm_set_URL_`categoryID`" name="set_URL" class="text" id="set_url_`categoryID`" autocomplete="controller=backend.product field=URL"}
+		{selectfield noFormat=true id="massForm_theme_`categoryID`" name="theme" options=themes}
+		{selectfield noFormat=true id="massForm_shippingClass_`categoryID`" name="shippingClass" options=shippingClasses}
+		{selectfield noFormat=true id="massForm_taxClass_`categoryID`" name="taxClass" options=taxClasses}
 	</span>
 
 	<input type="submit" value="{t _process}" class="submit" />

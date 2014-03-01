@@ -1,11 +1,11 @@
-{form handle=$form action="controller=backend.review action=update id=`$review.ID`" onsubmit="Backend.Review.Editor.prototype.getInstance(`$review.ID`, false).submitForm(); return false;" method="post" role="product.update"}
+{form handle=form action="controller=backend.review action=update id=`review.ID`" onsubmit="Backend.Review.Editor.prototype.getInstance(`review.ID`, false).submitForm(); return false;" method="post" role="product.update"}
 
-	{foreach $ratingTypes as $type}
-		{input name="rating_`$type.ID`"}
-			{label}{$type.name()|@or:_rating}:{/label}
-			{selectfield options=$ratingOptions}
+	{foreach ratingTypes as type}
+		{input name="rating_`type.ID`"}
+			{label}{type.name()|@or:_rating}:{/label}
+			{selectfield options=ratingOptions}
 		{/input}
-	{/foreach}
+	{% endfor %}
 
 	<p class="required">
 		[[ textfld('nickname', '_nickname') ]]

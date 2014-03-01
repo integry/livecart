@@ -17,12 +17,12 @@
 
 [[ partial('backend/csvImport/wizardProgress.tpl', ['class': "stepSelect"]) ]]
 
-{form action="backend.csvImport/setFile" method="POST" handle=$form}
+{form action="backend.csvImport/setFile" method="POST" handle=form}
 
 	<fieldset>
 		<legend>{t _data_type}</legend>
 		<label></label>
-		{selectfield name="type" options=$types}
+		{selectfield name="type" options=types}
 	</fieldset>
 
 	<fieldset>
@@ -50,12 +50,12 @@
 		<div class="input required">
 			<label>{t _target_category}</label>
 			<label id="targetCategory">
-				{foreach from=$catPath item=node name=catPath}
+				{foreach from=catPath item=node name=catPath}
 					<a href="#" onclick="Backend.CsvImport.showCategorySelector([[node.ID]]); return false;">[[node.name()]]</a>
-					{% if !$smarty.foreach.catPath.last %}
+					{% if !smarty.foreach.catPath.last %}
 						&gt;
 					{% endif %}
-				{/foreach}
+				{% endfor %}
 			</label>
 			{hidden id="categoryID" name="category"}
 		</div>
@@ -103,7 +103,7 @@
 	<script type="text/javascript">
 		Backend.SelectFile.url = '[[ url("backend.selectFile") ]]';
 		Backend.Category.links.popup = '[[ url("backend.category/popup") ]]';
-		Event.observe($('selectAtServer'), 'click', function() {new Backend.SelectFile($('atServer')); });
+		Event.observe(('selectAtServer'), 'click', function() {new Backend.SelectFile(('atServer')); });
 	</script>
 
 

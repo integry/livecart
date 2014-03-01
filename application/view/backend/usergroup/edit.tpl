@@ -1,5 +1,5 @@
 <div id="userGroup_[[userGroup.ID]]"></div>
-{form handle=$userGroupForm action="backend.userGroup/save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
+{form handle=userGroupForm action="backend.userGroup/save" id="userGroupForm_`userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
 
 	[[ textfld('name', '_name') ]]

@@ -6,6 +6,6 @@
 --------------------------------------------------
 
 תוכל להוסיף תגובה מפאנל הניהול של ההזמנה:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/en/signature.tpl") ]]

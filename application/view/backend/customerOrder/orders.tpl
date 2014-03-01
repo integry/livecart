@@ -6,19 +6,19 @@
 
 
 	<script type="text/javascript">
-		if ({json array=$userID} != null)
+		if ({json array=userID} != null)
 		{
 			Backend.CustomerOrder.Links.createOrder = '[[ url("backend.customerOrder/create") ]]';
-			Event.observe($("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
+			Event.observe(("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
 			{
-				Backend.CustomerOrder.prototype.createUserOrder('[[userID]]', $("createNewOrderLink_[[orderGroupID]]"), '[[ url("backend.customerOrder") ]]');
+				Backend.CustomerOrder.prototype.createUserOrder('[[userID]]', ("createNewOrderLink_[[orderGroupID]]"), '[[ url("backend.customerOrder") ]]');
 
 				e.preventDefault();
 			});
 		}
 		else
 		{
-			Event.observe($("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
+			Event.observe(("createNewOrderLink_[[orderGroupID]]"), "click", function(e)
 			{
 				e.preventDefault();
 
@@ -59,18 +59,18 @@
 
 {activeGrid
 	prefix="orders"
-	id=$orderGroupID
+	id=orderGroupID
 	role="order.mass"
 	controller="backend.customerOrder"
 	action="lists"
-	displayedColumns=$displayedColumns
-	availableColumns=$availableColumns
-	totalCount=$totalCount
+	displayedColumns=displayedColumns
+	availableColumns=availableColumns
+	totalCount=totalCount
 	rowCount=15
 	showID=true
 	container="tabPageContainer"
-	filters=$filters
-	dataFormatter=$dataFormatter
+	filters=filters
+	dataFormatter=dataFormatter
 	count="backend/customerOrder/count.tpl"
 	massAction="backend/customerOrder/massAction.tpl"
 	advancedSearch=true
@@ -84,12 +84,12 @@
 <script type="text/javascript">
 
 /*
-	var detailedExport = $('detailedExportContainer_[[orderGroupID]]');
+	var detailedExport = ('detailedExportContainer_[[orderGroupID]]');
 	var menu = detailedExport.up('.tabPageContainer').down('.activeGridColumns').down('.menu', 1);
 	menu.insertBefore(detailedExport, menu.firstChild);
 */
 
-	var massHandler = new ActiveGrid.MassActionHandler($('orderMass_[[orderGroupID]]'),
+	var massHandler = new ActiveGrid.MassActionHandler(('orderMass_[[orderGroupID]]'),
 													   window.activeGrids['orders_[[orderGroupID]]'],
 														{
 															onComplete:

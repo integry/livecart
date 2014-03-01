@@ -3,70 +3,70 @@
 {% endif %}
 
 <div
-	onclick="TabControl.prototype.getInstance('tabContainer').activateTab($('tabCss'));"
+	onclick="TabControl.prototype.getInstance('tabContainer').activateTab(('tabCss'));"
 	id="notice_changes_in_css_tab_[[theme]]" class="warning cssAndStyleTab" style="display:none;"
 >{t _notice_changes_in_css_tab}</div>
 
 
-{form action="backend.theme/saveColors" method="POST" enctype="multipart/form-data" handle=$form id="colors_`$theme`" target="iframe_`$theme`"}
-	{foreach from=$config item=section}
+{form action="backend.theme/saveColors" method="POST" enctype="multipart/form-data" handle=form id="colors_`theme`" target="iframe_`theme`"}
+	{% for section in config %}
 		<fieldset>
 			<legend>[[section.name]]</legend>
 
-			{foreach from=$section.properties item=property}
+			{foreach from=section.properties item=property}
 				<fieldset class="container entry" rel="[[property.selector]]/[[property.type]]">
 
-					{% if 'checkbox' != $property.type %}
+					{% if 'checkbox' != property.type %}
 						<label>[[property.name]]</label>
 					{% else %}
 						<label></label>
 					{% endif %}
 
-					{% if 'upload' == $property.type %}
-						{filefield name=$property.var class="file"}
+					{% if 'upload' == property.type %}
+						{filefield name=property.var class="file"}
 						- {t _or} -
 						{textfield class="text"}
 						<div class="imageOptions">
-							<div class="repeat">{t _repeat}: {selectfield class="repeat" options=$bgRepeat}</div>
-							<div class="position">{t _position}: {selectfield class="position" options=$bgPosition}</div>
+							<div class="repeat">{t _repeat}: {selectfield class="repeat" options=bgRepeat}</div>
+							<div class="position">{t _position}: {selectfield class="position" options=bgPosition}</div>
 						</div>
-					{% elseif 'color' == $property.type %}
-						{textfield id=$property.id class="text color"}
+					{% elseif 'color' == property.type %}
+						{textfield id=property.id class="text color"}
 						<script type="text/javascript">
-							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
+							('[[property.id]]').color = new jscolor.color(('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
 						</script>
-					{% elseif 'size' == $property.type %}
+					{% elseif 'size' == property.type %}
 						<div class="sizeEntry">
-							{textfield id=$property.id class="text number"}
-							{selectfield options=$measurements}
+							{textfield id=property.id class="text number"}
+							{selectfield options=measurements}
 						</div>
-					{% elseif 'border' == $property.type %}
+					{% elseif 'border' == property.type %}
 						{textfield class="text number"}
 						px
-						{selectfield options=$borderStyles}
-						{textfield id=$property.id class="text color"}
+						{selectfield options=borderStyles}
+						{textfield id=property.id class="text color"}
 						<script type="text/javascript">
-							$('[[property.id]]').color = new jscolor.color($('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
+							('[[property.id]]').color = new jscolor.color(('[[property.id]]'), {adjust: false, required: false, hash: true, caps: false});
 						</script>
-					{% elseif 'text-decoration' == $property.type %}
-						{selectfield options=$textStyles}
-					{% elseif 'font' == $property.type %}
+					{% elseif 'text-decoration' == property.type %}
+						{selectfield options=textStyles}
+					{% elseif 'font' == property.type %}
 						<div class="fontEntry">
-							{textfield name=$property.var id=$property.id class="text"}
+							{textfield name=property.var id=property.id class="text"}
 						</div>
-					{% elseif 'checkbox' == $property.type %}
-						{checkbox id="{uniqid}" name="option" class="option checkbox" value=$property.append}
-						{% if 'checkbox' == $property.type %}
+					{% elseif 'checkbox' == property.type %}
+						{checkbox id="{uniqid}" name="option" class="option checkbox" value=property.append}
+						{% if 'checkbox' == property.type %}
 							<label class="checkbox" for="{uniqid last=true}">[[property.name]]</label>
 						{% endif %}
 					{% endif %}
-					{% if $property.append %}
-						{hidden class="append" name="append" value=$property.append}
+					{% if property.append %}
+						{hidden class="append" name="append" value=property.append}
 					{% endif %}
 				</fieldset>
-			{/foreach}
+			{% endfor %}
 		</fieldset>
-	{/foreach}
+	{% endfor %}
 
 	<fieldset class="controls">
 		<input type="hidden" name="id" value="[[theme]]" />
@@ -78,5 +78,5 @@
 	</fieldset>
 {/form}
 
-<iframe src="[[ url("backend.theme/cssIframe", "theme=`$theme`") ]]" id="iframe_[[theme]]" name="iframe_[[theme]]" style="display: none;"></iframe>
+<iframe src="[[ url("backend.theme/cssIframe", "theme=`theme`") ]]" id="iframe_[[theme]]" name="iframe_[[theme]]" style="display: none;"></iframe>
 

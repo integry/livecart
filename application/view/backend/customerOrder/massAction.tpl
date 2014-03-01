@@ -1,6 +1,6 @@
 <span style="{denied role="order.mass"}visibility: hidden;{/denied}" id="orderMass_[[orderGroupID]]" class="activeGridMass">
 
-	{form action="controller=backend.customerOrder action=processMass id=$orderGroupID" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="controller=backend.customerOrder action=processMass id=orderGroupID" method="POST" handle=massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />
@@ -8,10 +8,10 @@
 
 	{t _with_selected}:
 	<select name="act" class="select">
-		{% if $orderGroupID == 8 %}
+		{% if orderGroupID == 8 %}
 			<option value="setFinalized">{t _mark_completed}</option>
 		{% endif %}
-		{% if $orderGroupID < 8 %}
+		{% if orderGroupID < 8 %}
 			<option value="printLabels" rel="blank">{t _print_shipping_labels}</option>
 			<optgroup label="{t _order_status}" class="massStatus">
 				<option value="setNew">{t _set_new}</option>

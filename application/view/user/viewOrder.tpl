@@ -14,17 +14,17 @@
 	<div class="clear"></div>
 
 	<label class="title">{t _order_total}:</label>
-	<label class="text">{$order.formattedTotal[$order.Currency.ID]}</label>
+	<label class="text">{order.formattedTotal[order.Currency.ID]}</label>
 	<div class="clear"></div>
 
 	<label class="title">{t _order_status}:</label>
 	<label class="text">[[ partial('user/orderStatus.tpl', ['order': order]) ]]</label>
 	<div class="clear"></div>
 
-	{% if $order.isRecurring %}
+	{% if order.isRecurring %}
 		<label class="title"></label>
 		<label class="text">
-			{% if $subscriptionStatus > 0 %}
+			{% if subscriptionStatus > 0 %}
 				{t _active_subscription}
 			{% else %}
 				{t _inactive_subscription}
@@ -33,18 +33,18 @@
 		<div class="clear"></div>
 
 		{* Rebills every x months *}
-		{foreach from=$recurringProductPeriodsByItemId item="period"}
+		{foreach from=recurringProductPeriodsByItemId item="period"}
 			<label class="title"></label>
-			{% if $period.periodLength == 1 %}
+			{% if period.periodLength == 1 %}
 				{assign var="length" value=''}
-				{capture name="a" assign="period"}{t `$periodTypesSingle[$period.periodType]`}{/capture}
+				{capture name="a" assign="period"}{t `periodTypesSingle[period.periodType]`}{/capture}
 			{% else %}
-				{% set length = $period.periodLength %}
-				{capture name="a" assign="period"}{t `$periodTypesPlural[$period.periodType]`}{/capture}
+				{% set length = period.periodLength %}
+				{capture name="a" assign="period"}{t `periodTypesPlural[period.periodType]`}{/capture}
 			{% endif %}
-			<label class="text">{maketext text=_rebills_every params="`$length`,`$period`"}</label>
+			<label class="text">{maketext text=_rebills_every params="`length`,`period`"}</label>
 			<div class="clear"></div>
-		{/foreach}
+		{% endfor %}
 
 		{% if !empty(nextRebillDate) %}
 			<label class="title">{t _next_rebill}:</label>
@@ -53,15 +53,15 @@
 		{% endif %}
 
 		<label class="title">{t _remaining_rebills}:</label>
-		<label class="text">{% if $order.rebillsLeft != -1 %}[[order.rebillsLeft]]{% else %}{t _remaining_rebills_till_canceled}{% endif %}
+		<label class="text">{% if order.rebillsLeft != -1 %}[[order.rebillsLeft]]{% else %}{t _remaining_rebills_till_canceled}{% endif %}
 			{% if !empty(canCancelRebills) %}
 				<span class="cancelFurtherRebills">
-					{% if $currentPage > 1 %}
-						{assign var='rebillQuery' value="page=`$currentPage`"}
+					{% if currentPage > 1 %}
+						{assign var='rebillQuery' value="page=`currentPage`"}
 					{% else %}
 						{assign var='rebillQuery' value=''}
 					{% endif %}
-					<a href="[[ url("user/cancelFurtherRebills/" ~ order.ID, "$rebillQuery") ]]" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
+					<a href="[[ url("user/cancelFurtherRebills/" ~ order.ID, "rebillQuery") ]]" onclick="return confirm('{t _are_you_sure_want_to_cancel_subscription}');" />{t _cancel_this_subscription}</a>
 				</span>
 			{% endif %}
 		</label>
@@ -69,18 +69,18 @@
 	{% endif %}
 
 	<p>
-		{% if !$order.isCancelled && !'DISABLE_INVOICES'|config %}
+		{% if !order.isCancelled && !config('DISABLE_INVOICES') %}
 			<a href="[[ url("user/orderInvoice/" ~ order.ID) ]]" target="_blank" class="invoice">{t _order_invoice}</a>
 		{% endif %}
 		<a href="[[ url("user/reorder/" ~ order.ID) ]]" class="reorder">{t _reorder}</a>
 	</p>
 
-	{foreach from=$order.shipments item="shipment" name="shipments"}
-		{% if $shipment.items %}
+	{foreach from=order.shipments item="shipment" name="shipments"}
+		{% if shipment.items %}
 
-			{% if !$shipment.isShippable %}
+			{% if !shipment.isShippable %}
 				<h2>{t _downloads}</h2>
-			{% elseif $smarty.foreach.shipments.total > 1 %}
+			{% elseif smarty.foreach.shipments.total > 1 %}
 				<h2>{t _shipment} #[[smarty.foreach.shipments.iteration]]</h2>
 				<p>
 					{t _status}: [[ partial('user/shipmentStatus.tpl', ['shipment': shipment]) ]]
@@ -91,7 +91,7 @@
 			[[ partial('user/shipmentEntry.tpl', ['downloadLinks': true]) ]]
 
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 
 	{function name="address"}
 		{% if !empty(address) %}
@@ -111,7 +111,7 @@
 				[[address.city]]
 			</p>
 			<p>
-				{% if $address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
+				{% if address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
 			</p>
 			<p>
 				[[address.countryName]]
@@ -124,34 +124,34 @@
 
 	[[ partial("order/fieldValues.tpl") ]]
 
-	<div id="overviewAddresses">$order.shipments
+	<div id="overviewAddresses">order.shipments
 
-		{% if $order.ShippingAddress && !$order.isMultiAddress %}
+		{% if order.ShippingAddress && !order.isMultiAddress %}
 		<div class="addressContainer">
 			<h3>{t _is_shipped_to}:</h3>
-			{% if $order.isLocalPickup %}
-				{foreach $order.shipments as $shipment}
+			{% if order.isLocalPickup %}
+				{foreach order.shipments as shipment}
 					<div class="ShippingServiceDescription">
-						{$shipment.ShippingService.description()|escape}
+						{shipment.ShippingService.description()|escape}
 					</div>
-				{/foreach}
+				{% endfor %}
 
 			{% else %}
-				{address address=$order.ShippingAddress}
+				{address address=order.ShippingAddress}
 			{% endif %}
 		</div>
 		{% endif %}
 
 		<div class="addressContainer">
 			<h3>{t _is_billed_to}:</h3>
-			{address address=$order.BillingAddress}
+			{address address=order.BillingAddress}
 		</div>
 
 	</div>
 
 	<div class="clear"></div>
 
-	{% if $order.isRecurring && $orders %}
+	{% if order.isRecurring && orders %}
 		<h2>{t _invoices}</h2>
 		[[ partial('user/invoicesTable.tpl', ['itemList': orders, 'paginateAction': "viewOrder", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': order.ID, 'query': 'page=_000_']) ]]
 	{% endif %}
@@ -161,12 +161,12 @@
 
 	{% if !empty(notes) %}
 	   <ul class="notes">
-		   {foreach from=$notes item=note}
+		   {% for note in notes %}
 			   [[ partial('user/orderNote.tpl', ['note': note]) ]]
-		   {/foreach}
+		   {% endfor %}
 	   </ul>
 	{% endif %}
-	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm class="form-horizontal"}
+	{form action="controller=user action=addNote id=`order.ID`" method=POST id="noteForm" handle=noteForm class="form-horizontal"}
 		[[ textareafld('text', '_enter_question') ]]
 
 		[[ partial('block/submit.tpl', ['caption': "_submit_response"]) ]]

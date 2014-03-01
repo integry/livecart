@@ -1,8 +1,8 @@
-{% if $product.longDescription() || $product.shortDescription() %}
+{% if product.longDescription() || product.shortDescription() %}
 <div id="descriptionSection" class="productSection description">
 	<h2>{t _description}</h2>
 	<div id="productDescription">
-		{% if $product.longDescription() %}
+		{% if product.longDescription() %}
 			[[product.longDescription()]]
 		{% else %}
 			[[product.shortDescription()]]
@@ -11,7 +11,7 @@
 </div>
 {% endif %}
 
-{% if $product.attributes %}
+{% if product.attributes %}
 <div id="specificationSection" class="productSection specification">
 <h2>{t _spec}<small>{t _tab_specification}</small></h2>
 <div id="productSpecification">
@@ -26,12 +26,12 @@
 <div id="relatedSection" class="productSection related">
 <h2>{t _recommended}<small>{t _tab_recommended}</small></h2>
 <div id="relatedProducts">
-	{foreach from=$related item=group}
-	   {% if $group.0.ProductRelationshipGroup.name() %}
+	{% for group in related %}
+	   {% if group.0.ProductRelationshipGroup.name() %}
 		   <h3>[[group.0.ProductRelationshipGroup.name()]]</h3>
 	   {% endif %}
-	   [[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': group]) ]]
-	{/foreach}
+	   [[ partial('category/productListLayout.tpl', ['layout': config('PRODUCT_PAGE_LIST_LAYOUT'), 'products': group]) ]]
+	{% endfor %}
 </div>
 </div>
 {% endif %}
@@ -44,7 +44,7 @@
 <div id="purchasedTogetherSection" class="productSection purchasedTogether">
 <h2>{t _purchased_together}<small>{t _tab_purchased}</small></h2>
 <div id="purchasedTogether">
-	[[ partial('category/productListLayout.tpl', ['layout': 'PRODUCT_PAGE_LIST_LAYOUT'|config, 'products': together]) ]]
+	[[ partial('category/productListLayout.tpl', ['layout': config('PRODUCT_PAGE_LIST_LAYOUT'), 'products': together]) ]]
 </div>
 </div>
 {% endif %}

@@ -6,7 +6,7 @@
 
 	<div id="payTotal">
 		<div>
-			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
+			Order total: <span class="subTotal">{order.formattedTotal.currency}</span>
 		</div>
 	</div>
 

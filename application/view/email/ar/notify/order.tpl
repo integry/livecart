@@ -4,7 +4,7 @@
 معرف الطلب: [[order.invoiceNumber]]
 
 إدارة الطلب:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 طلبت البنود التالية :
 [[ partial("email/blockOrder.tpl") ]]

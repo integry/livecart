@@ -1,20 +1,20 @@
 <div class="spec">
-	{foreach from=$product.attributes item="attr" name="attr"}
-		{% if $attr.values %}
-			{foreach from=$attr.values item="value" name="values"}
+	{foreach from=product.attributes item="attr" name="attr"}
+		{% if attr.values %}
+			{foreach from=attr.values item="value" name="values"}
 				[[value.value()]]
-				{% if !$smarty.foreach.values.last %}
+				{% if !smarty.foreach.values.last %}
 				/
 				{% endif %}
-			{/foreach}
-		{% elseif $attr.value %}
+			{% endfor %}
+		{% elseif attr.value %}
 			[[attr.SpecField.valuePrefix()]][[attr.value]][[attr.SpecField.valueSuffix()]]
-		{% elseif $attr.value() %}
+		{% elseif attr.value() %}
 			[[attr.value()]]
 		{% endif %}
 
-		{% if !$smarty.foreach.attr.last %}
+		{% if !smarty.foreach.attr.last %}
 		/
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 </div>

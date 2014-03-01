@@ -1,9 +1,9 @@
 <ul class="transactions">
 
-	{foreach from=$transactions item="transaction"}
+	{foreach from=transactions item="transaction"}
 		
 		[[ partial("backend/payment/transaction.tpl") ]]
 	
-	{/foreach}
+	{% endfor %}
 
 </ul>   

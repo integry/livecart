@@ -15,7 +15,7 @@
 
 {includeJs file="library/dhtmlCalendar/calendar.js"}
 {includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
-{*includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"*}
+{*includeJs file="library/dhtmlCalendar/lang/calendar-`curLanguageCode`.js"*}
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
@@ -49,10 +49,10 @@
 				prefix="newsletters"
 				id=0
 				controller="backend.newsletter" action="lists"
-				displayedColumns=$displayedColumns
-				availableColumns=$availableColumns
+				displayedColumns=displayedColumns
+				availableColumns=availableColumns
 				totalCount=0
-				filters=$filters
+				filters=filters
 				container="tabMessages"
 				dataFormatter="Backend.Newsletter.GridFormatter"
 				count="backend/newsletter/count.tpl"
@@ -94,7 +94,7 @@
 
 
 <script type="text/javascript">
-	Event.observe($("cancel_newsletter_edit"), "click", function(e) {
+	Event.observe(("cancel_newsletter_edit"), "click", function(e) {
 		e.preventDefault();
 		var message = Backend.Newsletter.Editor.prototype.getInstance(Backend.Newsletter.Editor.prototype.getCurrentId(), false);
 		message.removeTinyMce();
@@ -117,7 +117,7 @@
 	window.activeGrids['newsletters_0'].setDataFormatter(Backend.Newsletter.GridFormatter);
 
 	var massHandler = new ActiveGrid.MassActionHandler(
-						$('newslettersMass_0'),
+						('newslettersMass_0'),
 						window.activeGrids['newsletters_0'],
 
 						{

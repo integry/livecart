@@ -11,13 +11,13 @@
 </fieldset>
 
 <ul class="activeList activeList_add_delete activeList_add_sort activeList_add_edit class_classesList" id="class_classesList" >
-{foreach from=$classesForms key="key" item="classForm"}
-	<li id="class_classesList_{$classes[$key].ID}">
+{foreach from=classesForms key="key" item="classForm"}
+	<li id="class_classesList_{classes[key].ID}">
 
-	<span class="error class_viewMode">{$classes[$key].name}</span>
+	<span class="error class_viewMode">{classes[key].name}</span>
 
 	</li>
-{/foreach}
+{% endfor %}
 </ul>
 
 
@@ -25,10 +25,10 @@
 
 
 <script type="text/javascript">
-	Event.observe($("class_new_show"), "click", function(e)
+	Event.observe(("class_new_show"), "click", function(e)
 	{
 		e.preventDefault();
-		var newForm = Backend.TaxClass.prototype.getInstance( $("class_new_form").down('form') );
+		var newForm = Backend.TaxClass.prototype.getInstance( ("class_new_form").down('form') );
 		newForm.showNewForm();
 	});
 

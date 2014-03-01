@@ -5,7 +5,7 @@
 [[ partial('user/userMenu.tpl', ['current': "addressMenu"]) ]]
 {% block content %}
 
-	{form action="user/doAddShippingAddress" handle=$form class="form-horizontal"}
+	{form action="user/doAddShippingAddress" handle=form class="form-horizontal"}
 		[[ partial("user/addressForm.tpl") ]]
 		[[ partial('block/submit.tpl', ['caption': "_continue", 'cancelRoute': return]) ]]
 	{/form}

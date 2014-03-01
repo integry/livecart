@@ -6,12 +6,12 @@
 {% block content %}
 
 	{% if !empty(files) %}
-		{foreach from=$files item="item"}
+		{foreach from=files item="item"}
 			<h3>
-				<a href="{productUrl product=$item.Product}">[[item.Product.name()]]</a>
+				<a href="{productUrl product=item.Product}">[[item.Product.name()]]</a>
 			</h3>
 			[[ partial('user/fileList.tpl', ['item': item]) ]]
-		{/foreach}
+		{% endfor %}
 	{% endif %}
 
 {% endblock %}

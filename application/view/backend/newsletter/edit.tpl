@@ -1,7 +1,7 @@
-{form handle=$form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
+{form handle=form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
 <div class="newsletterform">
 
-	{hidden name="id" value=$newsletter.ID}
+	{hidden name="id" value=newsletter.ID}
 
 	<fieldset>
 		<legend>[[ capitalize({t _edit_message}) ]]</legend>
@@ -35,12 +35,12 @@
 		<p>
 			<label class="sendLabel">{t _send_to}:</label>
 			<div style="float: left;">
-				{foreach from=$groupsArray item=groupItem}
+				{% for groupItem in groupsArray %}
 					<p>
 						{checkbox class="checkbox userGroupCheckbox" name="group" name="group_[[groupItem.ID]]" onchange="Backend.Newsletter.updateRecipientCount(this)"}
-						<label class="checkbox" for="group_[[groupItem.ID]]">{$groupItem.name|escape}</label>
+						<label class="checkbox" for="group_[[groupItem.ID]]">{groupItem.name|escape}</label>
 					</p>
-				{/foreach}
+				{% endfor %}
 				<input type="hidden" value="" name="userGroupIDs" id="userGroupIDs" />
 				<p>
 					{checkbox class="checkbox" name="users" onchange="Backend.Newsletter.updateRecipientCount(this)"}
@@ -65,7 +65,7 @@
 		<legend>{t _status}</legend>
 		<p>
 			<label>{t _status}:</label>
-			<label class="statusString">{translate text="_status_`$newsletter.status`"}</label>
+			<label class="statusString">{translate text="_status_`newsletter.status`"}</label>
 		</p>
 		<p>
 			<label>{t _messages_sent}:</label>

@@ -6,6 +6,6 @@ En kunder har tilføet en ny ordre: <b class="orderID">#[[order.invoiceNumber]]<
 --------------------------------------------------
 
 Du kan behandle orden i fanepladet under 'Ordrer':
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/en/signature.tpl") ]]

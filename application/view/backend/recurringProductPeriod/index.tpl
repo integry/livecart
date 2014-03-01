@@ -11,11 +11,11 @@
 </fieldset>
 
 <ul class="activeList activeList_add_delete activeList_add_edit" id="recurringProductPeriods_[[product.ID]]">
-	{foreach from=$recurringProductPeriods item="recurringProductPeriod"}
+	{foreach from=recurringProductPeriods item="recurringProductPeriod"}
 		<li id="recurringProductPeriod_[[recurringProductPeriod.productID]]_[[recurringProductPeriod.ID]]">
-			<span class="error">{$recurringProductPeriod.name()|escape}</span>
+			<span class="error">{recurringProductPeriod.name()|escape}</span>
 		</li>
-	{/foreach}
+	{% endfor %}
 </ul>
 
 <script type="text/javascript">
@@ -31,10 +31,10 @@
 		message_confirm_remove: "{t _confirm_removing_rpp}"
 	};
 
-	Event.observe($("rpp_new_show_[[product.ID]]"), "click", function(e)
+	Event.observe(("rpp_new_show_[[product.ID]]"), "click", function(e)
 	{
 		e.preventDefault();
-		var newForm = Backend.RecurringProductPeriod.prototype.getInstance( $("rpp_new_form_[[product.ID]]").down('form') );
+		var newForm = Backend.RecurringProductPeriod.prototype.getInstance( ("rpp_new_form_[[product.ID]]").down('form') );
 		newForm.showNewForm();
 	});
 </script>

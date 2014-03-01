@@ -1,9 +1,9 @@
 {includeJs file="frontend/Product.js"}
 
-{assign var="metaDescription" value=$product.shortDescription()|@strip_tags}
-{% set metaKeywords = $product.keywords %}
-{canonical}{productUrl product=$product}{/canonical}
-{% block title %}{$product.pageTitle()|default:$product.name()}{% endblock %}
+{assign var="metaDescription" value=product.shortDescription()|@strip_tags}
+{% set metaKeywords = product.keywords %}
+{canonical}{productUrl product=product}{/canonical}
+{% block title %}{product.pageTitle()|default:product.name()}{% endblock %}
 
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
 
@@ -18,12 +18,12 @@
 	</div>
 </div>
 
-{% if 'PRODUCT_TABS'|config %}
+{% if config('PRODUCT_TABS') %}
 	<ul class="nav nav-tabs" id="productTabs"></ul>
 {% endif %}
 
 <div id="productContent" class="productContent">
-	{% if $product.type == 2 %}
+	{% if product.type == 2 %}
 		[[ partial("product/bundle.tpl") ]]
 	{% endif %}
 
@@ -31,7 +31,7 @@
 
 	[[ partial("product/details.tpl") ]]
 
-	{% if 'PRODUCT_INQUIRY_FORM'|config %}
+	{% if config('PRODUCT_INQUIRY_FORM') %}
 		[[ partial("product/contactForm.tpl") ]]
 	{% endif %}
 
@@ -43,8 +43,8 @@
 			<h2>{t _reviews}<small>{t _tab_reviews}</small></h2>
 			[[ partial("product/reviewList.tpl") ]]
 
-			{% if $product.reviewCount  > $reviews|@count %}
-				<a href="{link product/reviews id=$product.ID}" class="readAllReviews">{maketext text="_read_all_reviews" params=$product.reviewCount}</a>
+			{% if product.reviewCount  > reviews|@count %}
+				<a href="{link product/reviews id=product.ID}" class="readAllReviews">{maketext text="_read_all_reviews" params=product.reviewCount}</a>
 			{% endif %}
 		</div>
 	{% endif %}

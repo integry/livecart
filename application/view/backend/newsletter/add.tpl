@@ -5,7 +5,7 @@
 		</ul>
 	</fieldset>
 
-	{form handle=$form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
+	{form handle=form action="backend.newsletter/save" method="POST" onsubmit="Backend.Newsletter.saveForm(this); return false;" onreset="Backend.Newsletter.resetAddForm(this);"}
 
 		<fieldset>
 			<legend>[[ capitalize({t _create_message}) ]]</legend>
@@ -27,7 +27,7 @@
 
 	<script type="text/javascript">
 		Backend.Newsletter.initAddForm();
-		// Backend.Product.setPath([[product.Category.ID]], {json array=$path})
+		// Backend.Product.setPath([[product.Category.ID]], {json array=path})
 	</script>
 
 

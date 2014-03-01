@@ -2,7 +2,7 @@
 ใบสั่งซื้อเลขที่: [[order.invoiceNumber]]
 
 การจัดการออเดอร์:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 รายการสินค้าที่สั่งซื้อเข้ามา:
 [[ partial("email/blockOrder.tpl") ]]

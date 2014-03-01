@@ -1,8 +1,8 @@
-{% if $shipment.isReturned %}
+{% if shipment.isReturned %}
 	<span class="returned">{t _returned}</span>
-{% elseif $shipment.isShipped %}
+{% elseif shipment.isShipped %}
 	<span class="mailed">{t _shipped}</span>
-{% elseif $shipment.isAwaitingShipment %}
+{% elseif shipment.isAwaitingShipment %}
 	<span class="mailed">{t _awaiting}</span>
 {% else %}
 	<span class="processing">{t _processing}</span>

@@ -1,7 +1,7 @@
 <ul class="compactProductList">
-	{foreach from=$products item=product}
+	{% for product in products %}
 		<li>
 			[[ partial("block/box/menuProductListItem.tpl") ]]
 		</li>
-	{/foreach}
+	{% endfor %}
 </ul>

@@ -29,14 +29,14 @@
 			<ul class="verticalMenu">
 				<li class="addTreeNode"><a id="newZoneInputButton" href="#add" {denied role='delivery.create'}style="display: none"{/denied}>{t _add_new_delivery_zone}</a></li>
 				<li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" {denied role='delivery.remove'}style="display: none"{/denied}>{t _remove}</a></li>
-				<li class="testAdress"><a id="deliveryZone_testAddress" href="#testAddress" onclick="$('testAddressForm').show(); return false;">{t _test_address}</a></li>
+				<li class="testAdress"><a id="deliveryZone_testAddress" href="#testAddress" onclick="('testAddressForm').show(); return false;">{t _test_address}</a></li>
 			</ul>
 		</div>
 
 		<div id="testAddressForm" style="display: none;">
 			<fieldset>
 				<legend>{t _test_which_zone}</legend>
-				{form action="backend.deliveryZone/testAddress" method="post" handle=$testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
+				{form action="backend.deliveryZone/testAddress" method="post" handle=testAddress onsubmit="Backend.DeliveryZone.lookupAddress(this, event);"}
 
 					{input name="ccCVV"}
 						{label}{t _zone_type}:{/label}
@@ -52,7 +52,7 @@
 						<input type="submit" class="submit" value="{t _lookup_zone}" />
 						<span class="progressIndicator" style="display: none;"></span>
 						{t _or}
-						<a href="#cancel" class="cancel" onclick="$('testAddressForm').hide(); return false;">{t _cancel}</a>
+						<a href="#cancel" class="cancel" onclick="('testAddressForm').hide(); return false;">{t _cancel}</a>
 					</div>
 
 					<div id="zoneLookupResult" style="display: none;">

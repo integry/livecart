@@ -1,7 +1,7 @@
-{form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post" role="userGroup.permissions"}
+{form id="roles_form_`userGroup.ID`" handle=form action="controller=backend.roles action=update id=`userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`userGroup.ID`').save(event);" method="post" role="userGroup.permissions"}
 
 	{input name="setAllPermissions"}
-		{checkbox class="setAllPermissions" id="roles_setAllPermissions_`$userGroup.ID`"}
+		{checkbox class="setAllPermissions" id="roles_setAllPermissions_`userGroup.ID`"}
 		{label}{t _set_all_permissions}{/label}
 	{/input}
 
@@ -18,10 +18,10 @@
 
 <script type="text/javascript">
 	Backend.Roles.prototype.Links.xmlBranch  = '[[ url("backend.roles/xmlBranch") ]]';
-	var roles = Backend.Roles.prototype.getInstance('roles_form_[[userGroup.ID]]', {json array=$roles}, {json array=$activeRolesIDs}, {json array=$disabledRolesIDs});
+	var roles = Backend.Roles.prototype.getInstance('roles_form_[[userGroup.ID]]', {json array=roles}, {json array=activeRolesIDs}, {json array=disabledRolesIDs});
 	{denied role="userGroup.permissions"}
 
-			$A($("userGroupsRolesTree_[[userGroup.ID]]").getElementsByTagName('img')).each(function(img)
+			A(("userGroupsRolesTree_[[userGroup.ID]]").getElementsByTagName('img')).each(function(img)
 			{
 				img.onclick = function() { return false; };
 			});

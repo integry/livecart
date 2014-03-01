@@ -1,19 +1,19 @@
-{foreach $modelSearch as $results}
-	{% if $results.count %}
+{foreach modelSearch as results}
+	{% if results.count %}
 		<div class="modelSearchResults">
-			<div class="resultStats">{maketext text="_found_x" params=$results.meta.name} [[ partial('block/count.tpl', ['count': results.count]) ]]</div>
+			<div class="resultStats">{maketext text="_found_x" params=results.meta.name} [[ partial('block/count.tpl', ['count': results.count]) ]]</div>
 
 			<ol>
-				{foreach $results.records as $record}
+				{foreach results.records as record}
 					[[ partial(results.meta.template) ]]
-				{/foreach}
+				{% endfor %}
 			</ol>
 
-			{% if $results.count > 'SEARCH_MODEL_PREVIEW'|@config %}
+			{% if results.count > 'SEARCH_MODEL_PREVIEW'|@config %}
 				<div class="allResults">
-					<a href="[[ url("search/index", "type=`$results.meta.class`&q=`req('q')`") ]]">{maketext text=_all_results params=$results.count}</a>
+					<a href="[[ url("search/index", "type=`results.meta.class`&q=`req('q')`") ]]">{maketext text=_all_results params=results.count}</a>
 				</div>
 			{% endif %}
 		</div>
 	{% endif %}
-{/foreach}
+{% endfor %}

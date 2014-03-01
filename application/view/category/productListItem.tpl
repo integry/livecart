@@ -1,4 +1,4 @@
-<div class="media {% if $product.isFeatured %}featured{% endif %}">
+<div class="media {% if product.isFeatured %}featured{% endif %}">
 <div class="row">
 	<div class="col-sm-2">
 		[[ partial("product/block/smallImage.tpl") ]]
@@ -7,7 +7,7 @@
 	<div class="col-sm-8">
 		[[ partial("category/block/productTitle.tpl") ]]
 
-		{% if $product.attributes %}
+		{% if product.attributes %}
 			[[ partial("category/block/productListAttributes.tpl") ]]
 		{% endif %}
 

@@ -6,6 +6,6 @@
 --------------------------------------------------
 
 يمكنك إضافة أي رد من لوحةإدارة الطلب:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/en/signature.tpl") ]]

@@ -7,18 +7,18 @@
 
 		<div class="content">
 			<ul class="list-unstyled">
-			{foreach from=$products item=product}
+			{% for product in products %}
 				[[ partial("compare/block/item.tpl") ]]
-			{/foreach}
+			{% endfor %}
 			</ul>
 
 			<div class="compareBoxMenu">
-				<a class="btn btn-default btn-small" href="{link compare/index returnPath=true query="return=$return"}">{t _view_comparison}</a>
+				<a class="btn btn-default btn-small" href="{link compare/index returnPath=true query="return=return"}">{t _view_comparison}</a>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
-		new Compare.Menu($('compareMenu'));
+		new Compare.Menu(('compareMenu'));
 	</script>
 {% endif %}
 <div id="compareMenuContainer"></div>

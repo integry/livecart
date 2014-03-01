@@ -2,7 +2,7 @@
 מספר הזמנה: [[order.invoiceNumber]]
 
 ניהול הזמנה:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 הפריטים שמופיעים למטה הוזמנו:
 [[ partial("email/blockOrder.tpl") ]]

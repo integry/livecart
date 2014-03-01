@@ -9,7 +9,7 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/dhtmlCalendar/calendar.js"}
 {includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
-{*includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"*}
+{*includeJs file="library/dhtmlCalendar/lang/calendar-`curLanguageCode`.js"*}
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
@@ -30,7 +30,7 @@
 
 	<legend>[[ capitalize({t _add_news}) ]]</legend>
 
-	{form action="backend.siteNews/add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm" class="enabled"}
+	{form action="backend.siteNews/add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=form id="newsForm" class="enabled"}
 		<input type="hidden" name="id" />
 
 		{input name="time"}
@@ -53,17 +53,17 @@
 		{/input}
 
 		{language}
-			{input name="title_`$lang.ID`"}
+			{input name="title_`lang.ID`"}
 				{label}{t _title}:{/label}
 				{textfield}
 			{/input}
 
-			{input name="text_`$lang.ID`"}
+			{input name="text_`lang.ID`"}
 				{label}{t _text}:{/label}
 				{textarea class="tinyMCE"}
 			{/input}
 
-			{input name="moreText_`$lang.ID`"}
+			{input name="moreText_`lang.ID`"}
 				{label}{t _more_text}:{/label}
 				{textarea class="tinyMCE"}
 			{/input}
@@ -130,7 +130,7 @@ var demo = angular.module( "Demo", [] );
 // I am the main controller for the application.
 demo.controller(
 "SiteNewsController",
-function( $scope ) {
+function( scope ) {
 
 
 // -- Define Scope Methods. ----------------- //
@@ -138,14 +138,14 @@ function( $scope ) {
 
 // I remove the given friend from the list of
 // selected friends.
-$scope.deselectFriend = function( friend ) {
+scope.deselectFriend = function( friend ) {
 
 // NOTE: indexOf() works in IE 9+.
-var index = $scope.selectedFriends.indexOf( friend );
+var index = scope.selectedFriends.indexOf( friend );
 
 if ( index >= 0 ) {
 
-$scope.selectedFriends.splice( index, 1 );
+scope.selectedFriends.splice( index, 1 );
 
 }
 
@@ -154,9 +154,9 @@ $scope.selectedFriends.splice( index, 1 );
 
 // I add the given friend to the list of selected
 // friends.
-$scope.selectFriend = function( friend ) {
+scope.selectFriend = function( friend ) {
 
-$scope.selectedFriends.push( friend );
+scope.selectedFriends.push( friend );
 
 };
 
@@ -165,7 +165,7 @@ $scope.selectedFriends.push( friend );
 
 
 // I am the list of friends to show.
-$scope.friends = [
+scope.friends = [
 {
 id: 1,
 name: "Tricia",
@@ -186,7 +186,7 @@ nickname: "Sparky"
 
 // I am the list of friend that have been selected
 // by the current user.
-$scope.selectedFriends = [];
+scope.selectedFriends = [];
 
 
 }
@@ -202,57 +202,57 @@ $scope.selectedFriends = [];
 // instance of the ItemController.
 demo.controller(
 "ItemController",
-function( $scope ) {
+function( scope ) {
 
 
 // -- Define Scope Methods. ----------------- //
 
 
 // I deactivate the list item, if possible.
-$scope.deactivate = function() {
+scope.deactivate = function() {
 
 // If the list item is currently selected, then
 // ignore any request to deactivate.
-if ( $scope.isSelected ) {
+if ( scope.isSelected ) {
 
 return;
 
 }
 
-$scope.isShowingNickname = false;
+scope.isShowingNickname = false;
 
 };
 
 
 // I activate the list item.
-$scope.activate = function() {
+scope.activate = function() {
 
-$scope.isShowingNickname = true;
+scope.isShowingNickname = true;
 
 };
 
 
 // I toggle the selected-states of the current item.
-// Remember, since ngRepeat creates a new $scope for
+// Remember, since ngRepeat creates a new scope for
 // each list item, we have a reference to our
 // contextual "friend" instance.
-$scope.toggleSelection = function() {
+scope.toggleSelection = function() {
 
-$scope.isSelected = ! $scope.isSelected;
+scope.isSelected = ! scope.isSelected;
 
 // If the item has been selected, then we have to
 // tell the parent controller to selected the
 // relevant friend.
-if ( $scope.isSelected ) {
+if ( scope.isSelected ) {
 
-$scope.selectFriend( $scope.friend );
+scope.selectFriend( scope.friend );
 
 // If the item has been unselected, then we have
 // to tell the parent controller to DEselected the
 // relevant friend.
 } else {
 
-$scope.deselectFriend( $scope.friend );
+scope.deselectFriend( scope.friend );
 
 }
 
@@ -263,10 +263,10 @@ $scope.deselectFriend( $scope.friend );
 
 
 // I determine if the nichkame is showing.
-$scope.isShowingNickname = false;
+scope.isShowingNickname = false;
 
 // I determine if the list item has been selected.
-$scope.isSelected = false;
+scope.isSelected = false;
 
 
 }

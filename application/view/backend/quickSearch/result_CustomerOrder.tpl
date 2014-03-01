@@ -1,2 +1,2 @@
-<a href="{link controller="backend.customerOrder query="rt=`$randomToken`"}#order_[[record.ID]]#tabOrderInfo__" onclick="try { return footerToolbar.tryToOpenItemWithoutReload([[record.ID]],'order');}catch(e){}">{$record.invoiceNumber|escape|mark_substring:$query}</a>
+<a href="{link controller="backend.customerOrder query="rt=`randomToken`"}#order_[[record.ID]]#tabOrderInfo__" onclick="try { return footerToolbar.tryToOpenItemWithoutReload([[record.ID]],'order');}catch(e){}">{record.invoiceNumber|escape|mark_substring:query}</a>
 <span>([[record.formattedTotalAmount]])</span>

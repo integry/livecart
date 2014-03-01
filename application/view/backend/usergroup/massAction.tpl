@@ -1,6 +1,6 @@
 <span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_[[userGroupID]]" >
 
-	{form action="controller=backend.user action=processMass id=$userGroupID" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="controller=backend.user action=processMass id=userGroupID" method="POST" handle=massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />

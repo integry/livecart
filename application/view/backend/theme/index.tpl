@@ -32,7 +32,7 @@
 		<ul class="verticalMenu">
 			<li id="addMenu" class="addTreeNode"><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
 			<fieldset id="addform style="display: none;">
-				{form action="backend.theme/add" method="POST" handle=$addForm onsubmit="pageHandler.addTheme(); return false;"}
+				{form action="backend.theme/add" method="POST" handle=addForm onsubmit="pageHandler.addTheme(); return false;"}
 
 					[[ textfld('name', '_theme_name', class: 'text themeName') ]]
 
@@ -47,7 +47,7 @@
 
 			<li id="importMenu" class="importTreeNode"><a href="" onclick="pageHandler.importTheme(); return false;">{t _import_theme}</a></li>
 			<fieldset id="importform style="display: none;">
-				{form handle=$importForm action="backend.theme/import"
+				{form handle=importForm action="backend.theme/import"
 					target="themeImportTarget" method="POST" enctype="multipart/form-data"
 					autocomplete="off"
 				}
@@ -57,7 +57,7 @@
 						{label}{t _select_file}:{/label}
 						{filefield}
 						<br />
-						<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+						<span class="maxFileSize">{maketext text=_max_file_size params=maxSize}</span>
 					{/input}
 
 					<fieldset class="controls">
@@ -72,7 +72,7 @@
 
 			<li id="copyMenu" class="exportTreeNode"><a href="" onclick="pageHandler.showCopyForm(); return false;">{t _copy_theme}</a></li>
 			<fieldset id="copyform style="display: none;">
-				{form action="backend.theme/copyTheme" method="POST" handle=$copyForm onsubmit="pageHandler.copyTheme(); return false;"}
+				{form action="backend.theme/copyTheme" method="POST" handle=copyForm onsubmit="pageHandler.copyTheme(); return false;"}
 					<input type="hidden" name="id" value="" id="copyFromID" />
 					[[ textfld('name', '_theme_name', class: 'text themeName') ]]
 

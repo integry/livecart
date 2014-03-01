@@ -1,13 +1,13 @@
 {* assign range type as name *}
 {php}
-	$service = $smarty->getTemplateVars('service');
-	if($service['rangeType'] == ShippingService::WEIGHT_BASED)
+	service = smarty->getTemplateVars('service');
+	if(service['rangeType'] == ShippingService::WEIGHT_BASED)
 	{
-		$smarty->assign('rangeTypeName', 'weight');
+		smarty->assign('rangeTypeName', 'weight');
 	}
-	else if($service['rangeType'] == ShippingService::SUBTOTAL_BASED)
+	else if(service['rangeType'] == ShippingService::SUBTOTAL_BASED)
 	{
-		$smarty->assign('rangeTypeName', 'subtotal');
+		smarty->assign('rangeTypeName', 'subtotal');
 	}
 {/php}
 
@@ -51,44 +51,44 @@
 	<table id="ratesTableContainer_[[service.DeliveryZone.ID]]_[[service.ID]]">
 		<tbody>
 			<tr class="weight weightRow">
-				{foreach from=$shippingRates item=rate name=weightRowLoop key=key}
+				{foreach from=shippingRates item=rate name=weightRowLoop key=key}
 					<td>
 						<div class="rangeStart">
-							{% if $smarty.foreach.weightRowLoop.first %}
+							{% if smarty.foreach.weightRowLoop.first %}
 								{include
 									file="backend/shippingService/rangeStartField.tpl"
-									value=$rate.weightRangeStart
-									name="rate_`$rate.ID`_weightRangeStart"
+									value=rate.weightRangeStart
+									name="rate_`rate.ID`_weightRangeStart"
 								}
 							{% else %}
 								<span class="rangeStartValue">
-								{% if $key > 0 %}
-									{math equation="a-1" a=$key assign="prevKey"}
-									{$shippingRates[$prevKey].weightRangeEnd}
+								{% if key > 0 %}
+									{math equation="a-1" a=key assign="prevKey"}
+									{shippingRates[prevKey].weightRangeEnd}
 								{% endif %}
 								</span>
 							{% endif %}
 							-
 						</div>
 
-						{% if $rangeTypeName == 'weight' %}
+						{% if rangeTypeName == 'weight' %}
 							{textfield
-								value=$rate.weightRangeEnd
+								value=rate.weightRangeEnd
 								class="number UnitConventer_NormalizedWeight"
-								name="rate_`$rate.ID`_weightRangeEnd"
+								name="rate_`rate.ID`_weightRangeEnd"
 							}
 
 							{textfield class="number UnitConventer_HiValue"}<span class="UnitConventer_HiValueAbbr"></span>
 							{textfield class="number UnitConventer_LoValue"}<span class="UnitConventer_LoValueAbbr"></span>
 							{textfield class="number UnitConventer_MergedValue"}
 						{% else %}
-							{textfield class="number UnitConventer_NormalizedWeight" name="rate_`$rate.ID`_weightRangeEnd"}
+							{textfield class="number UnitConventer_NormalizedWeight" name="rate_`rate.ID`_weightRangeEnd"}
 						{% endif %}
 					</td>
-				{/foreach}
+				{% endfor %}
 				<td>
 					<div class="rangeStart">
-						{% if count($shippingRates) == 0 %}
+						{% if count(shippingRates) == 0 %}
 							{* there is no first range start field, threfore add here! *}
 							{include
 								file="backend/shippingService/rangeStartField.tpl"
@@ -96,7 +96,7 @@
 								name="rate_new0_weightRangeStart"
 							}
 						{% else %}
-							<span class="rangeStartValue">{$shippingRates[$key].weightRangeEnd}</span>
+							<span class="rangeStartValue">{shippingRates[key].weightRangeEnd}</span>
 						{% endif %} -
 					</div>
 					{textfield
@@ -111,40 +111,40 @@
 
 
 			<tr class="subtotal subtotalRow">
-				{foreach from=$shippingRates item=rate name=subtotalRowLoop key=key}
+				{foreach from=shippingRates item=rate name=subtotalRowLoop key=key}
 					<td>
 						<div class="rangeStart">
-							{% if $smarty.foreach.subtotalRowLoop.first %}
+							{% if smarty.foreach.subtotalRowLoop.first %}
 								{textfield class="number rangeStartValue"
-									value=$rate.subtotalRangeStart
-									name="rate_`$rate.ID`_subtotalRangeStart"}
+									value=rate.subtotalRangeStart
+									name="rate_`rate.ID`_subtotalRangeStart"}
 							{% else %}
 								<span class="rangeStartValue">
-								{% if $key > 0 %}
-									{math equation="a-1" a=$key assign="prevKey"}
-									{$shippingRates[$prevKey].subtotalRangeEnd}
+								{% if key > 0 %}
+									{math equation="a-1" a=key assign="prevKey"}
+									{shippingRates[prevKey].subtotalRangeEnd}
 								{% endif %}
 								</span>
 							{% endif %}
 							-
 						</div>
 
-						{% if $rangeTypeName == 'subtotal' %}
-							{textfield value=$rate.subtotalRangeEnd class="number" name="rate_`$rate.ID`_subtotalRangeEnd"}
+						{% if rangeTypeName == 'subtotal' %}
+							{textfield value=rate.subtotalRangeEnd class="number" name="rate_`rate.ID`_subtotalRangeEnd"}
 						{% else %}
-							{textfield class="number" name="rate_`$rate.ID`_subtotalRangeEnd"}
+							{textfield class="number" name="rate_`rate.ID`_subtotalRangeEnd"}
 						{% endif %}
 					</td>
-				{/foreach}
+				{% endfor %}
 				<td>
 					<div class="rangeStart">
-						{% if count($shippingRates) == 0 %}
+						{% if count(shippingRates) == 0 %}
 							{* there is no first range start field, threfore add here! *}
 							{textfield class="number rangeStartValue"
 								value="0"
 								name="rate_new0_subtotalRangeStart"}
 						{% else %}
-							<span class="rangeStartValue">{$shippingRates[$key].subtotalRangeEnd}</span>
+							<span class="rangeStartValue">{shippingRates[key].subtotalRangeEnd}</span>
 						{% endif %}
 						-
 					</div>
@@ -152,42 +152,42 @@
 			</tr>
 
 			<tr>
-				{foreach from=$shippingRates item=rate}
-					<td>{textfield value=$rate.flatCharge class="number" name="rate_`$rate.ID`_flatCharge"}</td>
-				{/foreach}
+				{% for rate in shippingRates %}
+					<td>{textfield value=rate.flatCharge class="number" name="rate_`rate.ID`_flatCharge"}</td>
+				{% endfor %}
 				<td>{textfield class="number" name="rate_new0_flatCharge"}</td>
 			</tr>
 
 			<tr>
-				{foreach from=$shippingRates item=rate}
-					<td>{textfield value=$rate.perItemCharge class="number" name="rate_`$rate.ID`_perItemCharge"}</td>
-				{/foreach}
+				{% for rate in shippingRates %}
+					<td>{textfield value=rate.perItemCharge class="number" name="rate_`rate.ID`_perItemCharge"}</td>
+				{% endfor %}
 				<td>{textfield class="number" name="rate_new0_perItemCharge"}</td>
 			</tr>
 
 			<tr class="weight">
-				{foreach from=$shippingRates item=rate}
+				{% for rate in shippingRates %}
 					<td>
-						{% if $rangeTypeName == 'weight' %}
-							{textfield value=$rate.perKgCharge class="number" name="rate_`$rate.ID`_perKgCharge"}
+						{% if rangeTypeName == 'weight' %}
+							{textfield value=rate.perKgCharge class="number" name="rate_`rate.ID`_perKgCharge"}
 						{% else %}
-							{textfield class="number" name="rate_`$rate.ID`_perKgCharge"}
+							{textfield class="number" name="rate_`rate.ID`_perKgCharge"}
 						{% endif %}
 					</td>
-				{/foreach}
+				{% endfor %}
 				<td>{textfield class="number" name="rate_new0_perKgCharge"}</td>
 			</tr>
 
 			<tr class="subtotal">
-				{foreach from=$shippingRates item=rate}
+				{% for rate in shippingRates %}
 					<td>
-						{% if $rangeTypeName == 'subtotal' %}
-							{textfield value=$rate.subtotalPercentCharge class="number" name="rate_`$rate.ID`_subtotalPercentCharge"}
+						{% if rangeTypeName == 'subtotal' %}
+							{textfield value=rate.subtotalPercentCharge class="number" name="rate_`rate.ID`_subtotalPercentCharge"}
 						{% else %}
-							{textfield class="number" name="rate_`$rate.ID`_subtotalPercentCharge"}
+							{textfield class="number" name="rate_`rate.ID`_subtotalPercentCharge"}
 						{% endif %}
 					</td>
-				{/foreach}
+				{% endfor %}
 				<td>{textfield class="number" name="rate_new0_subtotalPercentCharge"}</td>
 			</tr>
 		</tbody>
@@ -201,8 +201,8 @@
 
 <script type="text/javacript">
 	Backend.DeliveryZone.WeightTable.prototype.getInstance(
-		$("ratesTableContainer_[[service.DeliveryZone.ID]]_[[service.ID]]"),
+		("ratesTableContainer_[[service.DeliveryZone.ID]]_[[service.ID]]"),
 		"[[rangeTypeName]]",
-		{% if !$service.ID %}true{% else %}false{% endif %}
+		{% if !service.ID %}true{% else %}false{% endif %}
 	);
 </script>

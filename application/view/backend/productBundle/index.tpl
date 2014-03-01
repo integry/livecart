@@ -27,13 +27,13 @@
 
 {* No group *}
 <ul id="productBundle_[[ownerID]]" class="noGroup subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
-{foreach item="relationship" from=$items}
-	{% if $relationship.RelatedProduct.ID %}
+{foreach item="relationship" from=items}
+	{% if relationship.RelatedProduct.ID %}
 		<li id="[[relationship.RelatedProduct.ID]]">
 			[[ partial('backend/productRelationship/addRelated.tpl', ['product': relationship.RelatedProduct, 'template': "backend/productBundle/bundleCount.tpl"]) ]]
 		</li>
 	{% endif %}
-{/foreach}
+{% endfor %}
 </ul>
 
 <script type="text/javascript">

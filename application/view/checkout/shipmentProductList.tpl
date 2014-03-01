@@ -8,40 +8,40 @@
 		</tr>
 	</thead>
 	<tbody>
-		{foreach from=$shipment.items item="item" name="shipment"}
+		{foreach from=shipment.items item="item" name="shipment"}
 			<tr>
 				<td class="productName">
-					{% if $item.Product.ID %}
-						<a href="{productUrl product=$item.Product}">[[item.Product.name()]]</a>
+					{% if item.Product.ID %}
+						<a href="{productUrl product=item.Product}">[[item.Product.name()]]</a>
 					{% else %}
 						<span>[[item.Product.name()]]</span>
 					{% endif %}
 
-					{% if $item.recurringID && $recurringPlans[$item.recurringID] %}
-						{assign var="period" value=$recurringPlans[$item.recurringID]}
-						{$period.name()|escape}
+					{% if item.recurringID && recurringPlans[item.recurringID] %}
+						{assign var="period" value=recurringPlans[item.recurringID]}
+						{period.name()|escape}
 
 						<span class="recurringPlan">
-						({$period.ProductPrice_period.formated_price.$currency}
+						({period.ProductPrice_period.formated_price.currency}
 							{t _every}
-							{% if $period.periodLength == 1 %}
-								{t `$periodTypesSingle[$period.periodType]`}
+							{% if period.periodLength == 1 %}
+								{t `periodTypesSingle[period.periodType]`}
 							{% else %}
-								[[period.periodLength]] {t `$periodTypesPlural[$period.periodType]`}
+								[[period.periodLength]] {t `periodTypesPlural[period.periodType]`}
 							{% endif %}
-							{math equation="a * b" a=$period.periodLength|default:0 b=$period.rebillCount|default:0 assign="x"}
-							{% if $x > 0 %}
+							{math equation="a * b" a=period.periodLength|default:0 b=period.rebillCount|default:0 assign="x"}
+							{% if x > 0 %}
 								{t _for}
 								[[x]]
-								{t `$periodTypesPlural[$period.periodType]`}, [[period.rebillCount]] {t _rebill_times}{*
-									{% if $period.ProductPrice_setup %}
-										{t _setup_fee} {$period.ProductPrice_period.formated_price.$currency}
+								{t `periodTypesPlural[period.periodType]`}, [[period.rebillCount]] {t _rebill_times}{*
+									{% if period.ProductPrice_setup %}
+										{t _setup_fee} {period.ProductPrice_period.formated_price.currency}
 									{% endif %}
 								*}{% endif %})
 						</span>
 					{% endif %}
 
-					{% if $item.Product.variations %}
+					{% if item.Product.variations %}
 						<span class="variations">
 							([[ partial("order/itemVariationsList.tpl") ]])
 						</span>
@@ -51,29 +51,29 @@
 				<td class="shipmentQuantity">[[item.count]]</td>
 				<td class="shipmentSubtotal">[[item.formattedDisplaySubTotal]]</td>
 			</tr>
-		{/foreach}
+		{% endfor %}
 
-		{% if !'HIDE_TAXES'|config %}
-			{% if $shipment.taxes %}
+		{% if !config('HIDE_TAXES') %}
+			{% if shipment.taxes %}
 				<tr>
 					<td colspan="3" class="subTotalCaption beforeTax">{t _subtotal_before_tax}:</td>
-					<td>{$shipment.formattedSubTotalBeforeTax.$currency}</td>
+					<td>{shipment.formattedSubTotalBeforeTax.currency}</td>
 				</tr>
 			{% endif %}
 
-			{foreach from=$shipment.taxes item="tax"}
-				{% if $tax.amount %}
+			{foreach from=shipment.taxes item="tax"}
+				{% if tax.amount %}
 					<tr>
 						<td colspan="3" class="tax">[[tax.TaxRate.Tax.name()]] ([[tax.TaxRate.rate]]%):</td>
-						<td>{$tax.formattedAmount.$currency}</td>
+						<td>{tax.formattedAmount.currency}</td>
 					</tr>
 				{% endif %}
-			{/foreach}
+			{% endfor %}
 		{% endif %}
 
 		<tr>
 			<td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
-			<td class="subTotal">{$shipment.formattedSubTotal.$currency}</td>
+			<td class="subTotal">{shipment.formattedSubTotal.currency}</td>
 		</tr>
 	</tbody>
 </table>

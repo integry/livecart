@@ -66,7 +66,7 @@
 
 
 	<script type="text/javascript">
-		Event.observe($("cancel_user_edit"), "click", function(e) {
+		Event.observe(("cancel_user_edit"), "click", function(e) {
 			e.preventDefault();
 			var editor = Backend.Manufacturer.Editor.prototype.getInstance(Backend.Manufacturer.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();

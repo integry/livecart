@@ -2,14 +2,14 @@
 
 {activeGrid
 	prefix="reviews"
-	id=$id
+	id=id
 	role="product.mass"
 	controller="backend.review" action="lists"
-	displayedColumns=$displayedColumns
-	availableColumns=$availableColumns
-	totalCount=$totalCount
-	filters=$filters
-	container=$container
+	displayedColumns=displayedColumns
+	availableColumns=availableColumns
+	totalCount=totalCount
+	filters=filters
+	container=container
 	dataFormatter="Backend.Review.GridFormatter"
 	count="backend/review/count.tpl"
 	massAction="backend/review/massAction.tpl"
@@ -21,7 +21,7 @@
 <script type="text/javascript">
 
 	var massHandler = new ActiveGrid.MassActionHandler(
-						$('reviewMass_[[id]]'),
+						('reviewMass_[[id]]'),
 						window.activeGrids['reviews_[[id]]'],
 
 						{

@@ -2,7 +2,7 @@
 Κωδικός(ID) Παραγγeλλίας: [[order.invoiceNumber]]
 
 Διαχείριση Παραγγελλίας:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 Τα ακόλουθα είδη έχουν παραγγελθεί:
 [[ partial("email/blockOrder.tpl") ]]

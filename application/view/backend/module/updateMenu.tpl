@@ -1,5 +1,5 @@
 <div class="updateMenu">
-	{form handle=$form}
+	{form handle=form}
 		{*
 		{% if empty(repositories) %}
 			<div class="noRepositories errorText moduleError">

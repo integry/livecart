@@ -16,23 +16,23 @@
 
 {* Files with no group *}
 <ul id="productFile_list_[[productID]]_" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
-{foreach item="productFile" from=$productFilesWithGroups}
-	{% if $productFile.ProductFileGroup.ID %}{break}{% endif %}
-	{% if $productFile.ID %}
+{foreach item="productFile" from=productFilesWithGroups}
+	{% if productFile.ProductFileGroup.ID %}{break}{% endif %}
+	{% if productFile.ID %}
 		<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
 			<span class="productFile_item_title">[[productFile.title()]]</span>
 		</li>
 	{% endif %}
-{/foreach}
+{% endfor %}
 </ul>
 
 {* Files in groups *}
 <ul id="productFileGroup_list_[[productID]]" class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productFileGroup_list">
-{foreach item="productFile" from=$productFilesWithGroups}
-	{% if !$productFile.ProductFileGroup.ID %}{continue}{% endif %}
+{foreach item="productFile" from=productFilesWithGroups}
+	{% if !productFile.ProductFileGroup.ID %}{continue}{% endif %}
 
-	{% if $lastProductFileGroup != $productFile.ProductFileGroup.ID  %}
-		{% if $lastProductFileGroup > 0 %}</ul></li>{% endif %}
+	{% if lastProductFileGroup != productFile.ProductFileGroup.ID  %}
+		{% if lastProductFileGroup > 0 %}</ul></li>{% endif %}
 		<li id="productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFileGroup_item">
 			<span class="productFileGroup_title">[[productFile.ProductFileGroup.name()]]</span>
 			<div id="activeList_editContainer_productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="activeList_editContainer activeList_container" style="display: none">
@@ -41,20 +41,20 @@
 			<ul id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
 	{% endif %}
 
-	{% if $productFile.ID %} {* For empty groups *}
+	{% if productFile.ID %} {* For empty groups *}
 	<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
 		<span class="productFile_item_title">[[productFile.title()]]</span>
 	</li>
 	{% endif %}
 
-	{% set lastProductFileGroup = $productFile.ProductFileGroup.ID %}
-{/foreach}
+	{% set lastProductFileGroup = productFile.ProductFileGroup.ID %}
+{% endfor %}
 </ul>
 
 
 
 <script type="text/javascript">
-	Backend.availableLanguages = {json array=$languages};
+	Backend.availableLanguages = {json array=languages};
 
 	with(Backend.ProductFile)
 	{
@@ -79,34 +79,34 @@
 		}
 	}
 	// create empty form
-	$("productFileGroup_new_[[productID]]_form").update($("productFileGroup_item_blank").innerHTML);
-	$("productFile_new_[[productID]]_form").update($("productFile_item_blank").innerHTML);
+	("productFileGroup_new_[[productID]]_form").update(("productFileGroup_item_blank").innerHTML);
+	("productFile_new_[[productID]]_form").update(("productFile_item_blank").innerHTML);
 	var emptyModel = new Backend.ProductFile.Model({Product: {ID: [[productID]]}}, Backend.availableLanguages);
-	var emptyController = new Backend.ProductFile.Controller($("productFile_new_[[productID]]_form").down('.productFile_form'), emptyModel);
+	var emptyController = new Backend.ProductFile.Controller(("productFile_new_[[productID]]_form").down('.productFile_form'), emptyModel);
 	var emptyGroupModel = new Backend.ProductFile.Group.Model({Product: {ID: [[productID]]}}, Backend.availableLanguages);
-	new Backend.ProductFile.Group.Controller($("productFileGroup_new_[[productID]]_form").down('.productFileGroup_form'), emptyGroupModel);
+	new Backend.ProductFile.Group.Controller(("productFileGroup_new_[[productID]]_form").down('.productFileGroup_form'), emptyGroupModel);
 
-	Event.observe($("productFileGroup_new_[[productID]]_show"), "click", function(e)
+	Event.observe(("productFileGroup_new_[[productID]]_show"), "click", function(e)
 	{
-		var newForm = Backend.ProductFile.Group.Controller.prototype.getInstance($("productFileGroup_new_[[productID]]_form").down('.productFileGroup_form')).showNewForm();
+		var newForm = Backend.ProductFile.Group.Controller.prototype.getInstance(("productFileGroup_new_[[productID]]_form").down('.productFileGroup_form')).showNewForm();
 		e.preventDefault();
 	});
 
-	Event.observe($("productFile_new_[[productID]]_show"), 'click', function(e) {
+	Event.observe(("productFile_new_[[productID]]_show"), 'click', function(e) {
 		e.preventDefault();
-		var newForm = Backend.ProductFile.Controller.prototype.getInstance($("productFile_new_[[productID]]_form").down('.productFile_form')).showNewForm();
+		var newForm = Backend.ProductFile.Controller.prototype.getInstance(("productFile_new_[[productID]]_form").down('.productFile_form')).showNewForm();
 	});
 
 
 	var groupList = ActiveList.prototype.getInstance('productFileGroup_list_[[productID]]', Backend.ProductFile.Group.Callbacks);
 	ActiveList.prototype.getInstance("productFile_list_[[productID]]_", Backend.ProductFile.Callbacks);
 	{assign var="lastFileGroup" value="-1"}
-	{foreach item="file" from=$productFilesWithGroups}
-		{% if $file.ProductFileGroup && $lastFileGroup != $file.ProductFileGroup.ID %}
+	{foreach item="file" from=productFilesWithGroups}
+		{% if file.ProductFileGroup && lastFileGroup != file.ProductFileGroup.ID %}
 			 ActiveList.prototype.getInstance('productFile_list_[[productID]]_[[file.ProductFileGroup.ID]]', Backend.ProductFile.Callbacks);
 		{% endif %}
-		{% set lastFileGroup = $file.ProductFileGroup.ID %}
-	{/foreach}
+		{% set lastFileGroup = file.ProductFileGroup.ID %}
+	{% endfor %}
 
 
 	groupList.createSortable(true);

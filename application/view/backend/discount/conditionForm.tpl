@@ -19,5 +19,5 @@
 </script>
 
 {language}
-	[[ textfld('name_`$lang.ID`', tip('DiscountCondition.name')) ]]
+	[[ textfld('name_`lang.ID`', tip('DiscountCondition.name')) ]]
 {/language}

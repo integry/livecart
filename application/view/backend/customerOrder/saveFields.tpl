@@ -13,12 +13,12 @@
 
 	<div class="overview">
 		[[ partial('backend/eav/view.tpl', ['item': order]) ]]
-		{% if !$order.attributes %}
+		{% if !order.attributes %}
 			<p>{t _no_info_entered_yet}</p>
 		{% endif %}
 	</div>
 
-	{form handle=$fieldsForm action="backend.customerOrder/saveFields" method="POST"}
+	{form handle=fieldsForm action="backend.customerOrder/saveFields" method="POST"}
 		[[ partial('backend/eav/fields.tpl', ['item': order]) ]]
 		<input type="hidden" name="id" value="[[order.ID]]" />
 		<fieldset class="controls">

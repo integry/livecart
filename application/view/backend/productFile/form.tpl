@@ -13,7 +13,7 @@
 				<label class="productFile_uploadFile_label required">{t _upload_a_file}</label>
 				<fieldset class="error">
 					<input type="file" name="uploadFile" class="productFile_uploadFile" {denied role="product.update"}disabled="disabled"{/denied} />
-					<span class="maxFileSize">{maketext text=_product_file_max_size params=$maxUploadSize}</span>
+					<span class="maxFileSize">{maketext text=_product_file_max_size params=maxUploadSize}</span>
 					<span {denied role='product.download'}style="display: none"{/denied}>
 					<a class="productFile_download_link" href="" target="_blank" style="display: none"></a>
 					</span>

@@ -1,4 +1,4 @@
-{form action="controller=backend.currency action=save query=id=`$id`" onsubmit="Backend.Currency.prototype.saveFormat(this); return false;" handle=$form role="currency.update"}
+{form action="controller=backend.currency action=save query=id=`id`" onsubmit="Backend.Currency.prototype.saveFormat(this); return false;" handle=form role="currency.update"}
 
 <fieldset class="currencyPriceFormatting">
 
@@ -43,7 +43,7 @@
 </fieldset>
 
 <script type="text/javascript">
-	new Backend.CurrencyRounding($('rounding_[[id]]'), {json array=$currency.rounding});
+	new Backend.CurrencyRounding(('rounding_[[id]]'), {json array=currency.rounding});
 </script>
 
 <fieldset class="controls">

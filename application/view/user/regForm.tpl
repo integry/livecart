@@ -1,4 +1,4 @@
-<form action="user/doRegister" method="POST" handle=$regForm>
+<form action="user/doRegister" method="POST" handle=regForm>
 
 	[[ textfld('firstName', '_your_first_name') ]]
 

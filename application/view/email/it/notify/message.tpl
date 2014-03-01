@@ -6,6 +6,6 @@ Un utente ha aggiunto un nuovo messaggio in merito all'ordine <b class="orderID"
 --------------------------------------------------
 
 Puoi aggiungere una risposta direttamente dal pannello di amministrazione:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/it/signature.tpl") ]]

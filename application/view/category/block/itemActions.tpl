@@ -1,13 +1,13 @@
 <p class="productAction">
-	{% if $product.rating && 'ENABLE_RATINGS'|config %}
+	{% if product.rating && config('ENABLE_RATINGS') %}
 		<span class="actionItem ratingItem">[[ partial("category/productListRating.tpl") ]]</span>
 	{% endif %}
 
-	{% if 'ENABLE_WISHLISTS'|config %}
-		<span class="actionItem wishListItem"><span class="glyphicon glyphicon-heart-empty"></span> <a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a></span>
+	{% if config('ENABLE_WISHLISTS') %}
+		<span class="actionItem wishListItem"><span class="glyphicon glyphicon-heart-empty"></span> <a href="{link controller=order action=addToWishList id=product.ID returnPath=true}" rel="nofollow" class="addToWishList">{t _add_to_wishlist}</a></span>
 	{% endif %}
 
-	{% if 'ENABLE_PRODUCT_COMPARE'|config %}
+	{% if config('ENABLE_PRODUCT_COMPARE') %}
 		<span class="actionItem compareItem"><span class="glyphicon glyphicon-eye-close"></span> [[ partial("compare/block/compareLink.tpl") ]]</span>
 	{% endif %}
 </p>

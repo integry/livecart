@@ -1,3 +1,3 @@
-{foreach from=$options item=option}
+{% for option in options %}
 	[[ partial("product/optionItem.tpl") ]]
-{/foreach}
+{% endfor %}

@@ -1,16 +1,16 @@
 {language}
-	{input name="name_`$lang.ID`"}
+	{input name="name_`lang.ID`"}
 		{label}{t _product_name}:{/label}
 		{textfield class="wide" autocomplete="controller=backend.product field=name"}
 	{/input}
 
-	[[ textarea('shortDescription_`$lang.ID`', '_short_description', class: 'shortDescr tinyMCE') ]]
+	[[ textarea('shortDescription_`lang.ID`', '_short_description', class: 'shortDescr tinyMCE') ]]
 
-	[[ textarea('longDescription_`$lang.ID`', '_long_description', class: 'longDescr tinyMCE') ]]
+	[[ textarea('longDescription_`lang.ID`', '_long_description', class: 'longDescr tinyMCE') ]]
 
-	{input name="pageTitle_`$lang.ID`"}
+	{input name="pageTitle_`lang.ID`"}
 		{label}{t _pageTitle}:{/label}
-		{textfield name="pageTitle_`$lang.ID`" class="wide"}
+		{textfield name="pageTitle_`lang.ID`" class="wide"}
 	{/input}
 
 	{% if !empty(multiLingualSpecFieldss) %}

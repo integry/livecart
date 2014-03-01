@@ -11,14 +11,14 @@
 
 	<legend>[[ capitalize({t _add_rating_type}) ]]</legend>
 
-	{form action="backend.ratingType/add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=$form class="enabled ratingTypeform}
+	{form action="backend.ratingType/add" method="POST" onsubmit="new Backend.RatingType.Add(this); return false;" handle=form class="enabled ratingTypeform}
 		<input type="hidden" name="categoryId" value="[[id]]" />
 		<input type="hidden" name="id" />
 
 		[[ textfld('name', '_name') ]]
 
 		{language}
-			[[ textfld('name_`$lang.ID`', '_name') ]]
+			[[ textfld('name_`lang.ID`', '_name') ]]
 		{/language}
 
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>
@@ -51,5 +51,5 @@
 </ul>
 
 <script type="text/javascript">
-	new Backend.RatingType({json array=$typeList}, $('tabRatingCategoriesContent_[[id]]'), $('typeList_template'));
+	new Backend.RatingType({json array=typeList}, ('tabRatingCategoriesContent_[[id]]'), ('typeList_template'));
 </script>

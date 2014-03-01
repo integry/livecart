@@ -1,6 +1,6 @@
 <span {denied role="product.mass"}style="display: none;"{/denied} id="reviewMass_[[id]]" class="activeGridMass">
 
-	{form action="controller=backend.review action=processMass query=id=`$id`" method="POST" handle=$massForm onsubmit="return false;"}
+	{form action="controller=backend.review action=processMass query=id=`id`" method="POST" handle=massForm onsubmit="return false;"}
 
 	<input type="hidden" name="filters" value="" />
 	<input type="hidden" name="selectedIDs" value="" />

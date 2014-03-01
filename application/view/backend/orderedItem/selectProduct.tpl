@@ -75,13 +75,13 @@
 
 <form id="availableShipments">
 	<h2>{t _select_shippment}</h2>
-	{foreach name="shipments" item="shipment" from=$shipments}
+	{foreach name="shipments" item="shipment" from=shipments}
 		<fieldset class="error">
 			<input name="shipment" type="radio" value="[[shipment.ID]]" id="shipment[[shipment.ID]]" class="checkbox" {% if empty(checked) %}checked="checked"{% endif %}>
 			<label for="shipment[[shipment.ID]]" class="checkbox"><b>{t _shipment} #[[shipment.ID]]</b> ([[shipment.ShippingService.name()]] - [[shipment.formatted_totalAmount]])</label>
 		</fieldset>
 
-	{/foreach}
+	{% endfor %}
 </form>
 
 
@@ -89,13 +89,13 @@
 	if(window.opener)
 	{
 		var checked = false;
-		$("availableShipments").getElementsBySelector("fieldset").each(function(fieldset)
+		("availableShipments").getElementsBySelector("fieldset").each(function(fieldset)
 		{
 			var radio = fieldset.down("input[type=radio]");
-			var shipmentID = radio.id.replace(/shipment(\d+)/, "$1");
+			var shipmentID = radio.id.replace(/shipment(\d+)/, "1");
 			var orderID = window.opener.Backend.CustomerOrder.Editor.prototype.CurrentId;
 
-			if(!window.opener.$$("#tabOrderProducts_" + orderID + "Content .shippableShipments #orderShipmentsItems_list_" + orderID + "_" + shipmentID).size())
+			if(!window.opener.("#tabOrderProducts_" + orderID + "Content .shippableShipments #orderShipmentsItems_list_" + orderID + "_" + shipmentID).size())
 			{
 				Element.remove(fieldset);
 				return;
@@ -107,10 +107,10 @@
 			}
 		});
 
-		if($("availableShipments").getElementsBySelector("fieldset").size() <= 1)
+		if(("availableShipments").getElementsBySelector("fieldset").size() <= 1)
 		{
 			checked = true;
-			$("availableShipments").hide();
+			("availableShipments").hide();
 		}
 	}
 
@@ -122,7 +122,7 @@
 	Backend.Category.init();
 
 	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading);
-	Backend.Category.addCategories({json array=$categoryList});
+	Backend.Category.addCategories({json array=categoryList});
 
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();

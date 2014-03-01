@@ -11,21 +11,21 @@
 </fieldset>
 
 <ul class="activeList {allowed role="taxes.remove"}activeList_add_delete activeList_add_sort{/allowed} activeList_add_edit tax_taxesList" id="tax_taxesList" >
-{foreach from=$taxesForms key="key" item="taxForm"}
-	<li id="tax_taxesList_{$taxes[$key].ID}">
+{foreach from=taxesForms key="key" item="taxForm"}
+	<li id="tax_taxesList_{taxes[key].ID}">
 
-	<span class="error tax_viewMode">{$taxes[$key].name}</span>
+	<span class="error tax_viewMode">{taxes[key].name}</span>
 
 	</li>
-{/foreach}
+{% endfor %}
 </ul>
 
 
 <script type="text/javascript">
-	Event.observe($("tax_new_show"), "click", function(e)
+	Event.observe(("tax_new_show"), "click", function(e)
 	{
 		e.preventDefault();
-		var newForm = Backend.Tax.prototype.getInstance( $("tax_new_form").down('form') );
+		var newForm = Backend.Tax.prototype.getInstance( ("tax_new_form").down('form') );
 		newForm.showNewForm();
 	});
 

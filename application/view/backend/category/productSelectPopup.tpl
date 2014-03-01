@@ -55,7 +55,7 @@
 	Backend.Category.links = {};
 	Backend.Category.links.countTabsItems = '[[ url("backend.category/countTabsItems/_id_") ]]';
 
-	Backend.Category.init({json array=$categoryList});
+	Backend.Category.init({json array=categoryList});
 
 
 		{allowed role="product"}

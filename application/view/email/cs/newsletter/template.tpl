@@ -5,4 +5,4 @@
 
 -----------------------------------------------
 Pokud již nechcete naše novinky odebírat, klikněte na tento odkaz:
-[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]
+[[ fullurl("newsletter/unsubscribe", email=`email`) ]]

@@ -24,13 +24,13 @@
 
 		{input name="presentation.listStyle"}
 			{label}{tip _list_style}:{/label}
-			{selectfield id="listStyle_`$categoryId`" options=$listStyles}
+			{selectfield id="listStyle_`categoryId`" options=listStyles}
 		{/input}
 
 		<div style="float: left; width: 550px;">
 			{input name="presentation.theme"}
 				{label}{tip _theme}:{/label}
-				{selectfield id="theme_`$categoryId`" options=$themes}
+				{selectfield id="theme_`categoryId`" options=themes}
 			{/input}
 		</div>
 
@@ -41,13 +41,13 @@
 	{block FORM-CATEGORY-BOTTOM}
 
 	{language}
-		[[ textfld('name_`$lang.ID`', '_category_name') ]]
+		[[ textfld('name_`lang.ID`', '_category_name') ]]
 
-		[[ textarea('description_`$lang.ID`', '_descr', class: 'tinyMCE') ]]
+		[[ textarea('description_`lang.ID`', '_descr', class: 'tinyMCE') ]]
 
-		[[ textarea('keywords_`$lang.ID`', '_keywords', class: 'categoryKeywords') ]]
+		[[ textarea('keywords_`lang.ID`', '_keywords', class: 'categoryKeywords') ]]
 
-		[[ textfld('pageTitle_`$lang.ID`', '_pageTitle', class: 'wide') ]]
+		[[ textfld('pageTitle_`lang.ID`', '_pageTitle', class: 'wide') ]]
 
 		[[ partial('backend/eav/fields.tpl', ['angular': "instance", 'item': category, 'language': lang.ID]) ]]
 	{/language}
@@ -55,7 +55,7 @@
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" id="submit" value="{t _save}"/> or
-		<a href="#" class="cancel" onClick="$('categoryForm_[[categoryId]]').reset(); return false;">{t _cancel}</a>
+		<a href="#" class="cancel" onClick="('categoryForm_[[categoryId]]').reset(); return false;">{t _cancel}</a>
 		<div class="clear"></div>
 	</fieldset>
 	#}

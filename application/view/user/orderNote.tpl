@@ -2,7 +2,7 @@
 	
 	<div class="responseUser">
 		<span class="responderType">
-		{% if $note.isAdmin %}
+		{% if note.isAdmin %}
 			{t _respond_admin}:
 		{% else %}
 			{t _respond_customer}:
@@ -19,7 +19,7 @@
 	<div class="clear"></div>
 		
 	<div class="noteText">
-		{$note.text|nl2br}
+		{note.text|nl2br}
 	</div>
 	
 </li>		

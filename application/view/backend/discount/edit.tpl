@@ -1,11 +1,11 @@
-{form handle=$form action="controller=backend.discount action=save id=`$condition.ID`" id="userInfo_`$condition.ID`_form" onsubmit="Backend.Discount.Editor.prototype.getInstance(`$condition.ID`, false).submitForm(); return false;" method="post" role="product.update"}
+{form handle=form action="controller=backend.discount action=save id=`condition.ID`" id="userInfo_`condition.ID`_form" onsubmit="Backend.Discount.Editor.prototype.getInstance(`condition.ID`, false).submitForm(); return false;" method="post" role="product.update"}
 
 	<fieldset>
 		<legend>{t _main_info}</legend>
 
 		[[ checkbox('isEnabled', tip('_is_enabled _tip_is_enabled_condition')) ]]
 
-		[[ partial('backend/discount/conditionForm.tpl', ['id': "userInfo_`$condition.ID`_form"]) ]]
+		[[ partial('backend/discount/conditionForm.tpl', ['id': "userInfo_`condition.ID`_form"]) ]]
 
 		<fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>
@@ -47,11 +47,11 @@
 </fieldset>
 
 <script type="text/javascript">
-	var inst = new Backend.Discount.Condition({json array=$condition}, {json array=$records}, {json array=$serializedValues}, $('condition_[[condition.ID]]').down('.conditionContainer'));
-	Event.observe($('addRootCondition_[[condition.ID]]'), 'click', inst.createSubCondition.bind(inst));
+	var inst = new Backend.Discount.Condition({json array=condition}, {json array=records}, {json array=serializedValues}, ('condition_[[condition.ID]]').down('.conditionContainer'));
+	Event.observe(('addRootCondition_[[condition.ID]]'), 'click', inst.createSubCondition.bind(inst));
 
 	var action = null;
-	{json array=$actions}.each(function(act) {action = Backend.Discount.Action.prototype.createAction(act); });
+	{json array=actions}.each(function(act) {action = Backend.Discount.Action.prototype.createAction(act); });
 	if (action)
 	{
 		action.initializeList();

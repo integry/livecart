@@ -2,7 +2,7 @@
 <div class="col-sm-12" id="header">
 
 	<div class="col-sm-6" id="logoContainer">
-		<a href="[[ url("/") ]]">'LOGO'|config</a>
+		<a href="[[ url("/") ]]">config('LOGO')</a>
 	</div>
 
 	<div class="col-sm-6" id="topMenuContainer">

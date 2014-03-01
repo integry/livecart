@@ -8,7 +8,7 @@
 {pageTitle help="settings.configuration"}[[ branding({t _livecart_settings}) ]]{/pageTitle}
 [[ partial("layout/backend/header.tpl") ]]
 
-<div id="settingsContainer" ng-controller="SettingsController" ng-init="setTree({$categories|escape});">
+<div id="settingsContainer" ng-controller="SettingsController" ng-init="setTree({categories|escape});">
 	<div class="treeContainer">
 		[[ partial('backend/quickSearch/form.tpl', ['limit': 10, 'hint': _hint_settings_search, 'formid': "SettingsSearch", 'classNames': "SearchableItem,-SearchableTemplate"]) ]]
 

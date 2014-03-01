@@ -1,38 +1,38 @@
 <table class="subCategories">
-{foreach from=$subCategories item="sub" name="subcats"}
+{foreach from=subCategories item="sub" name="subcats"}
 	<tr>
 		<td class="subCatImage">
-			<a href="{categoryUrl data=$sub}">
-				{img src=$sub.DefaultImage.urls.1  alt=$sub.name()|escape}
+			<a href="{categoryUrl data=sub}">
+				{img src=sub.DefaultImage.urls.1  alt=sub.name()|escape}
 			</a>
 		</td>
 		<td class="details">
 			<div class="subCatName">
-				<a href="{categoryUrl data=$sub}">[[sub.name()]]</a>
+				<a href="{categoryUrl data=sub}">[[sub.name()]]</a>
 				[[ partial('block/count.tpl', ['count': sub.count]) ]]
 			</div>
 
-			{% if $sub.subCategories %}
+			{% if sub.subCategories %}
 			<ul class="subSubCats">
-				{foreach from=$sub.subCategories item="subSub"}
+				{foreach from=sub.subCategories item="subSub"}
 					<li>
-						<a href="{categoryUrl data=$subSub}">[[subSub.name()]]</a>
+						<a href="{categoryUrl data=subSub}">[[subSub.name()]]</a>
 						[[ partial('block/count.tpl', ['count': subSub.count]) ]]
 					</li>
-				{/foreach}
+				{% endfor %}
 			</ul>
 			{% endif %}
 
 			<div class="subCatDescr">
-				{* $sub.description() *}
+				{* sub.description() *}
 			</div>
 		</td>
 	</tr>
-	{% if !$smarty.foreach.subcats.last %}
+	{% if !smarty.foreach.subcats.last %}
 		<tr class="separator">
 			<td colspan="2"><div></div></td>
 		</tr>
 	{% endif %}
-{/foreach}
+{% endfor %}
 </table>
 <div class="clear"></div>

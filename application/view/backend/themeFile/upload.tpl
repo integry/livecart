@@ -1,16 +1,16 @@
 var
 	result = [[result]],
-	container = parent.$('filesList_[[theme]]'),
+	container = parent.('filesList_[[theme]]'),
 	tf;
 
 container.innerHTML = '';
 tf = new parent.Backend.ThemeFile(
-	parent.$A(result),
+	parent.A(result),
 	container,
-	parent.$('filesList_template_[[theme]]')
+	parent.('filesList_template_[[theme]]')
 );
 tf.cancelOpened(container, "[[theme]]");
 
 {% if !empty(highlightFileName) %}
-	parent.ActiveList.prototype.highlight(parent.$('filesList_[[theme]]_[[highlightFileName]]'), 'yellow');
+	parent.ActiveList.prototype.highlight(parent.('filesList_[[theme]]_[[highlightFileName]]'), 'yellow');
 {% endif %}

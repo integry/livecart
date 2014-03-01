@@ -5,10 +5,10 @@
 	<select class="hidden"
 		onchange="Backend.Payment.OfflinePaymentMethodEditor.changed(this);"
 		onblur="Backend.Payment.OfflinePaymentMethodEditor.toggleViewMode(this);">
-		{foreach from=$methods item="method"}
+		{foreach from=methods item="method"}
 			<option></option>
-			<option value="[[method.ID]]"{% if $handlerID == $method.ID %} selected="selected"{% endif %}>[[method.name]]</option>
-		{/foreach}
+			<option value="[[method.ID]]"{% if handlerID == method.ID %} selected="selected"{% endif %}>[[method.name]]</option>
+		{% endfor %}
 	</select>
 	<input type="hidden" name="url" value="[[ url("backend.payment/changeOfflinePaymentMethod/" ~ ID) ]]" />
 </span>

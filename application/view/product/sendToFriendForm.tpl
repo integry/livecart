@@ -1,6 +1,6 @@
-{% if 'ENABLE_PRODUCT_SHARING'|config
+{% if config('ENABLE_PRODUCT_SHARING')
 	&&
-	($user.ID || 'ENABLE_ANONYMOUS_PRODUCT_SHARING'|config)
+	(user.ID || config('ENABLE_ANONYMOUS_PRODUCT_SHARING'))
  %}
 
 	<div id="sharingSection" class="productSection sharingSection">
@@ -9,12 +9,12 @@
 		<div id="sendToFriendRepsonse"></div>
 
 		<div id="shareProduct">
-			{form action="controller=product action=sendToFriend id=`$product.ID`" handle=$sharingForm method="POST"
+			{form action="controller=product action=sendToFriend id=`product.ID`" handle=sharingForm method="POST"
 				onsubmit="new Product.Share(this); return false;" class="form-horizontal"}
 				<div class="producSharingForm">
 					[[ textfld('friendemail', '_friend_email') ]]
 
-					{% if !$user.ID %}
+					{% if !user.ID %}
 						[[ textfld('nickname', '_nickname') ]]
 					{% endif %}
 

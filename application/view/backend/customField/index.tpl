@@ -12,7 +12,7 @@
 {* Calendar *}
 {includeJs file="library/dhtmlCalendar/calendar.js"}
 {includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
-{*includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"*}
+{*includeJs file="library/dhtmlCalendar/lang/calendar-`curLanguageCode`.js"*}
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
@@ -59,7 +59,7 @@
 
 	Backend.CustomField.init();
 
-	Backend.CustomField.addCategories({json array=$nodes});
+	Backend.CustomField.addCategories({json array=nodes});
 
 	Backend.CustomField.activeCategoryId = Backend.CustomField.treeBrowser.getSelectedItemId();
 	Backend.CustomField.initPage();

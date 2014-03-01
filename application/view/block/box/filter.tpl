@@ -1,22 +1,22 @@
-{assign var=FILTER_STYLE value='FILTER_STYLE'|config}
+{assign var=FILTER_STYLE value=config('FILTER_STYLE')}
 
-{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
+{% if 'FILTER_STYLE_CHECKBOXES' == FILTER_STYLE %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterCheckboxes.tpl'}
 	<script type="text/javascript">var _checkboxFilterLoadHookObserved = false;</script>
 {% else %}
 	{assign var=FILTER_STYLE_TEMPLATE value='category/block/filterLinks.tpl'}
 {% endif %}
 
-{% if $filters && $FILTER_STYLE == 'FILTER_STYLE_LINKS' %}
+{% if filters && FILTER_STYLE == 'FILTER_STYLE_LINKS' %}
 	<div class="panel panel-danger expandResults">
 		<div class="panel-heading">{t _expand}</div>
 
 		<div class="content filterGroup">
 			<h4>{t _remove_filter}:</h4>
 			<ul>
-			{foreach from=$filters item=filter}
-				<li><a href="{categoryUrl data=$category filters=$filters removeFilter=$filter}">[[filter.filterGroup.name()]] [[filter.name()]]</a></li>
-			{/foreach}
+			{% for filter in filters %}
+				<li><a href="{categoryUrl data=category filters=filters removeFilter=filter}">[[filter.filterGroup.name()]] [[filter.name()]]</a></li>
+			{% endfor %}
 			</ul>
 		</div>
 	</div>
@@ -32,8 +32,8 @@
 	<div class="content">
 {/header}{content}
 
-	{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
-		<form id='multipleChoiceFilterForm' action="{categoryUrl data=$category}" method="post" class="form-horizontal">
+	{% if 'FILTER_STYLE_CHECKBOXES' == FILTER_STYLE %}
+		<form id='multipleChoiceFilterForm' action="{categoryUrl data=category}" method="post" class="form-horizontal">
 
 		<div id="multipleChoiceFilter_top" class="hidden">
 			<input type="submit" value="{t _filter}" />
@@ -41,16 +41,16 @@
 		</div>
 
 	{% endif %}
-		[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': manGroup, 'title': _by_brand, 'allLink': allManufacturers, 'allTitle': _show_all_brands]) ]]
-		[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': priceGroup, 'title': _by_price]) ]]
+		[[ partial(FILTER_STYLE_TEMPLATE, ['sectionFilters': manGroup, 'title': _by_brand, 'allLink': allManufacturers, 'allTitle': _show_all_brands]) ]]
+		[[ partial(FILTER_STYLE_TEMPLATE, ['sectionFilters': priceGroup, 'title': _by_price]) ]]
 
-		{foreach from=$groups item="group"}
-			{% if $group.displayLocation == 0 %}
-				[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': group, 'title': group.name(), 'allLink': group.more, 'allTitle': _show_all]) ]]
+		{foreach from=groups item="group"}
+			{% if group.displayLocation == 0 %}
+				[[ partial(FILTER_STYLE_TEMPLATE, ['sectionFilters': group, 'title': group.name(), 'allLink': group.more, 'allTitle': _show_all]) ]]
 			{% endif %}
-		{/foreach}
+		{% endfor %}
 
-	{% if 'FILTER_STYLE_CHECKBOXES' == $FILTER_STYLE %}
+	{% if 'FILTER_STYLE_CHECKBOXES' == FILTER_STYLE %}
 
 		<div id="multipleChoiceFilter_bottom" class="hidden">
 			<input type="hidden" name="q" value="[[request.q]]" />

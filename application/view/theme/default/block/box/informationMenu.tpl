@@ -1,11 +1,11 @@
 {% if !empty(pages) %}
 <div class="informationMenu">
-	{foreach from=$pages item=page name="pages"}
-		<span class="infoLink" id="static_[[page.ID]]"><a href="{pageUrl data=$page}">[[page.title()]]</a></span>
-		{% if !$smarty.foreach.pages.last %}
+	{foreach from=pages item=page name="pages"}
+		<span class="infoLink" id="static_[[page.ID]]"><a href="{pageUrl data=page}">[[page.title()]]</a></span>
+		{% if !smarty.foreach.pages.last %}
 		<span class="sep"> | </span>
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 
 	<div class="extraPages">
 		<span class="infoLink" id="contactFormLink"><a href="[[ url("contactForm") ]]">{t _contact}</a></span>

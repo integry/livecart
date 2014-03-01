@@ -1,5 +1,5 @@
 <div id="miniCart">
-	{% if $order.basketCount %}
+	{% if order.basketCount %}
 
 	{% if empty(hidePanel) %}
 	<div class="panel panel-primary miniCart">
@@ -11,13 +11,13 @@
 
 		<div class="content">
 			<ul class="list-unstyled" id="miniCartContents">
-			{foreach from=$order.cartItems item="item" name="cart"}
-				<li><span class="miniCartCount">[[item.count]]</span> x <a href="{productUrl product=$item.Product}">[[item.Product.name()]]</a></li>
-			{/foreach}
+			{foreach from=order.cartItems item="item" name="cart"}
+				<li><span class="miniCartCount">[[item.count]]</span> x <a href="{productUrl product=item.Product}">[[item.Product.name()]]</a></li>
+			{% endfor %}
 			</ul>
 
 			<div class="miniCartTotal">
-				<div>{t _total}: <span class="miniCartTotalAmount">{$order.formattedTotal[$order.Currency.ID]}</span></div>
+				<div>{t _total}: <span class="miniCartTotalAmount">{order.formattedTotal[order.Currency.ID]}</span></div>
 				<a href="[[ url("checkout") ]]" class="btn btn-danger checkout">
 					{t _checkout}
 				</a>

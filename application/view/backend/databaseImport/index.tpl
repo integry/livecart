@@ -15,7 +15,7 @@
 <p class="importWarning">[[ branding({t _import_warning}) ]]</p>
 
 <div id="import">
-{form action="backend.databaseImport/import" method="POST" handle=$form onsubmit="new Backend.DatabaseImport(this); return false;"}
+{form action="backend.databaseImport/import" method="POST" handle=form onsubmit="new Backend.DatabaseImport(this); return false;"}
 
 	<fieldset>
 		<legend>{t _begin_import}</legend>
@@ -61,7 +61,7 @@
 		</ul>
 
 		<ul id="progressBarContainer">
-			{foreach from=$recordTypes item=type}
+			{% for type in recordTypes %}
 				<li id="progress_[[type]]" style="display: none;">
 					<h2>[[ t(type) ]]</h2>
 					<div class="progressBarIndicator"></div>
@@ -71,7 +71,7 @@
 						<span class="progressTotal"></span>
 					</div>
 				</li>
-			{/foreach}
+			{% endfor %}
 		</ul>
 	</fieldset>
 </div>

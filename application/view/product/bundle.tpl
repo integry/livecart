@@ -3,11 +3,11 @@
 	<h2>{t _bundle_includes}:</h2>
 	<div class="bundleList">
 		<ul class="compactProductList">
-			{foreach from=$bundleData item=item}
+			{% for item in bundleData %}
 				<li>
 					[[ partial('block/box/menuProductListItem.tpl', ['product': item.RelatedProduct, 'productInfoTemplate': "product/block/bundleCount.tpl"]) ]]
 				</li>
-			{/foreach}
+			{% endfor %}
 		</ul>
 	</div>
 	<div class="highlight bundleInfo">
@@ -15,7 +15,7 @@
 			{t _regular_price}: <span class="price">[[bundleTotal]]</span>
 		</p>
 		<p>
-			{t _bundle_price}: <span class="price bundlePrice">{$product.formattedPrice.$currency}</span> ({t _bundle_save} <span class="price percent">[[bundleSavingPercent]]%</span>)
+			{t _bundle_price}: <span class="price bundlePrice">{product.formattedPrice.currency}</span> ({t _bundle_save} <span class="price percent">[[bundleSavingPercent]]%</span>)
 		</p>
 
 	</div>

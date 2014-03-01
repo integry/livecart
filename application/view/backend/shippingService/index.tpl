@@ -14,11 +14,11 @@
 
 
 <ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} activeList_add_sort activeList_add_edit shippingService_servicesList" id="shippingService_servicesList_[[deliveryZone.ID]]">
-{foreach from=$shippingServices item="service"}
+{foreach from=shippingServices item="service"}
 	<li id="shippingService_servicesList_[[deliveryZone.ID]]_[[service.ID]]">
 		<span class="shippingService_servicesList_title">[[service.name]] (<b class="ratesCount">[[service.ratesCount]]</b> [[service.rangeTypeString]])</span>
 	</li>
-{/foreach}
+{% endfor %}
 </ul>
 
 
@@ -27,13 +27,13 @@
 	Backend.DeliveryZone.prototype.Messages.weightBasedRates = '{t _weight_based_rates}';
 	Backend.DeliveryZone.prototype.Messages.subtotalBasedRates = '{t _subtotal_based_rates}';
 
-	Event.observe($("shippingService_new_[[deliveryZone.ID]]_show"), "click", function(e)
+	Event.observe(("shippingService_new_[[deliveryZone.ID]]_show"), "click", function(e)
 	{
 		e.preventDefault();
 
 		var newForm = Backend.DeliveryZone.ShippingService.prototype.getInstance(
-			$("shippingService_new_service_[[deliveryZone.ID]]_form").down('form'),
-			{json array=$newService}
+			("shippingService_new_service_[[deliveryZone.ID]]_form").down('form'),
+			{json array=newService}
 		);
 
 		newForm.showNewForm();

@@ -1,5 +1,5 @@
-{foreach from=$code key=class item=html}
+{% for class, html in code %}
 <!-- [[class]] tracking code -->
 [[html]]
 <!-- /[[class]] -->
-{/foreach}
+{% endfor %}

@@ -4,7 +4,7 @@
 
 <p><label class="addressCountryName">[[address.countryName]]</label></p>
 
-<p><label class="addressStateName">{$address.State.name|default:$address.stateName}</label></p>
+<p><label class="addressStateName">{address.State.name|default:address.stateName}</label></p>
 
 <p><label class="addressCity">[[address.city]]</label></p>
 

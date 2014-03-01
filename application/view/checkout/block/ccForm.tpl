@@ -1,11 +1,11 @@
-{% if 'CC_ENABLE'|config %}
+{% if config('CC_ENABLE') %}
 	<h2>{t _pay_securely}</h2>
 
 	[[ partial("checkout/testHandler.tpl") ]]
 
-	{% if !empty(id) %}{assign var=ccId value=" id=`$id`"}{% endif %}
-	{assign var=controller value=$controller|default:'checkout'}
-	{form action="controller=`$controller` action=payCreditCard`$ccId`" handle=$ccForm method="POST" class="form-horizontal"}
+	{% if !empty(id) %}{assign var=ccId value=" id=`id`"}{% endif %}
+	{assign var=controller value=controller|default:'checkout'}
+	{form action="controller=`controller` action=payCreditCard`ccId`" handle=ccForm method="POST" class="form-horizontal"}
 
 		<div id="ccForm">
 
@@ -28,16 +28,16 @@
 		{% if !empty(ccTypes) %}
 			{input name="ccType"}
 				{label}{t _cc_type}:{/label}
-				{selectfield id="ccType" options=$ccTypes}
+				{selectfield id="ccType" options=ccTypes}
 			{/input}
 		{% endif %}
 
 		{input name="ccExpiryYear"}
 			{label}{t _card_exp}:{/label}
 			<div class="controls">
-				{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months noFormat=true}
+				{selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=months noFormat=true}
 				/
-				{selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years noFormat=true}
+				{selectfield name="ccExpiryYear" id="ccExpiryYear" options=years noFormat=true}
 			</div>
 		{/input}
 
@@ -45,7 +45,7 @@
 			{label}{t _cvv_descr}:{/label}
 			<div class="controls">
 				{textfield maxlength="4" id="ccCVV" noFormat=true}
-				<a class="cvv" href="[[ url("checkout/cvv") ]]" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
+				<a class="cvv" href="[[ url("checkout/cvv") ]]" onclick="Element.show(('cvvHelp')); return false;">{t _what_is_cvv}</a>
 			</div>
 		{/input}
 
@@ -64,7 +64,7 @@
 
 	<div class="clear"></div>
 {% else %}
-	{form action="checkout/payCreditCard" handle=$ccForm method="POST" id="paymentError" class="form-horizontal"}
+	{form action="checkout/payCreditCard" handle=ccForm method="POST" id="paymentError" class="form-horizontal"}
 		{error for="creditCardError"}
 			<div class="clear"></div>
 			<div class="errorMsg ccPayment">

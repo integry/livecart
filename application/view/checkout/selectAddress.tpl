@@ -7,27 +7,27 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{% if 'shipping' == $step %}
+		{% if 'shipping' == step %}
 			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressShippingAddress"]) ]]
 		{% else %}
 			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressAddress"]) ]]
 		{% endif %}
 	</div>
 
-	{form action="checkout/doSelectAddress" method="POST" handle=$form  class="form-horizontal"}
+	{form action="checkout/doSelectAddress" method="POST" handle=form  class="form-horizontal"}
 
 	{error for="selectedAddress"}<div><span class="text-danger">[[msg]]</span></div><div class="clear"></div>{/error}
 
-	{% if !$step || ('billing' == $step) %}
+	{% if !step || ('billing' == step) %}
 		<div id="billingAddressColumn">
 
-			{% if !'REQUIRE_SAME_ADDRESS'|config %}
+			{% if !config('REQUIRE_SAME_ADDRESS') %}
 				<h2 id="billingAddress">{t _billing_address}</h2>
 			{% endif %}
 
 			[[ partial('checkout/block/selectAddress.tpl', ['addresses': billingAddresses, 'prefix': "billing", 'states': billing_states]) ]]
 
-			{% if !'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress && !$step %}
+			{% if !config('REQUIRE_SAME_ADDRESS') && order.isShippingRequired && !order.isMultiAddress && !step %}
 				<p>
 					{checkbox name="sameAsBilling" class="checkbox"}
 					<label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
@@ -37,9 +37,9 @@
 		</div>
 	{% endif %}
 
-	{% if (!'REQUIRE_SAME_ADDRESS'|config && $order.isShippingRequired && !$order.isMultiAddress) && (!$step || ('shipping' == $step)) %}
+	{% if (!config('REQUIRE_SAME_ADDRESS') && order.isShippingRequired && !order.isMultiAddress) && (!step || ('shipping' == step)) %}
 
-		{% if 'shipping' == $step %}
+		{% if 'shipping' == step %}
 			<div class="clear"></div>
 		{% endif %}
 
@@ -53,20 +53,20 @@
 
 
 		<script type="text/javascript">
-			new User.ShippingFormToggler($('sameAsBilling'), $('shippingSelector'));
+			new User.ShippingFormToggler(('sameAsBilling'), ('shippingSelector'));
 		</script>
 
 
 	{% endif %}
 
-	{% if (('BILLING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && !$step) || (('SHIPPING_ADDRESS_STEP' == 'CHECKOUT_CUSTOM_FIELDS'|config) && (('shipping' == $step) || !'ENABLE_CHECKOUTDELIVERYSTEP'|config || !$order.isShippingRequired)) || 'REQUIRE_SAME_ADDRESS'|config %}
+	{% if (('BILLING_ADDRESS_STEP' == config('CHECKOUT_CUSTOM_FIELDS')) && !step) || (('SHIPPING_ADDRESS_STEP' == config('CHECKOUT_CUSTOM_FIELDS')) && (('shipping' == step) || !config('ENABLE_CHECKOUTDELIVERYSTEP') || !order.isShippingRequired)) || config('REQUIRE_SAME_ADDRESS') %}
 		<div class="clear"></div>
 		[[ partial("checkout/orderFields.tpl") ]]
 	{% endif %}
 
 
 	<script type="text/javascript">
-		new Order.AddressSelector($('content'));
+		new Order.AddressSelector(('content'));
 	</script>
 
 

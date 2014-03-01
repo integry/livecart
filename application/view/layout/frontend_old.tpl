@@ -3,9 +3,9 @@
 
 <head>
 
-	<meta name="Keywords" content="{$metaKeywords|@meta}" />
-	{assign var="defaultMeta" value='DEFAULT_META_DESCR'|config}
-	<meta name="Description" content="{$metaDescription|@meta:$defaultMeta}" />
+	<meta name="Keywords" content="{metaKeywords|@meta}" />
+	{assign var="defaultMeta" value=config('DEFAULT_META_DESCR')}
+	<meta name="Description" content="{metaDescription|@meta:defaultMeta}" />
 
 
 	<title>
@@ -15,17 +15,17 @@
 			{/capture}
 		{% endif %}
 
-		{% if 'TITLE_FORMAT'|config == 'NAME_FIRST' %}
-			[[ config('STORE_NAME') ]] [[ config('TITLE_SEPARATOR') ]] {$PAGE_TITLE|@strip_tags}
+		{% if config('TITLE_FORMAT') == 'NAME_FIRST' %}
+			[[ config('STORE_NAME') ]] [[ config('TITLE_SEPARATOR') ]] {PAGE_TITLE|@strip_tags}
 		{% else %}
-			{$PAGE_TITLE|@strip_tags} [[ config('TITLE_SEPARATOR') ]] [[ config('STORE_NAME') ]]
+			{PAGE_TITLE|@strip_tags} [[ config('TITLE_SEPARATOR') ]] [[ config('STORE_NAME') ]]
 		{% endif %}
 	</title>
 
 
 	{liveCustomization}
 
-	{% if 'FAVICON'|config %}
+	{% if config('FAVICON') %}
 		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
 	{% endif %}
 
@@ -85,7 +85,7 @@
 	{block TRACKING}
 	{liveCustomization action="lang"}
 
-	{% if !'DISABLE_AJAX'|config %}
+	{% if !config('DISABLE_AJAX') %}
 		<script type="text/javascript">
 			new Frontend.AjaxInit(document.body);
 					</script>

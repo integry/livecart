@@ -12,14 +12,14 @@
 	</a>
 
 	<table class="addressSelector">
-	{foreach from=$billingAddresses item="item"}
+	{foreach from=billingAddresses item="item"}
 		[[ partial("user/address.tpl") ]]
 		<div class="addressControl">
-			<a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
+			<a href="{link controller=user action=editBillingAddress id=item.ID returnPath=true}">{t _edit_address}</a>
 			|
-			<a href="{link controller=user action=deleteBillingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
+			<a href="{link controller=user action=deleteBillingAddress id=item.ID returnPath=true}">{t _remove_address}</a>
 		</div>
-	{/foreach}
+	{% endfor %}
 	</table>
 
 	<div style="clear: both;"></div>
@@ -30,13 +30,13 @@
 		{t _add_shipping_address}
 	</a>
 
-	{foreach from=$shippingAddresses item="item"}
+	{foreach from=shippingAddresses item="item"}
 		[[ partial("user/address.tpl") ]]
 		<div class="addressControl">
-			<a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
+			<a href="{link controller=user action=editShippingAddress id=item.ID returnPath=true}">{t _edit_address}</a>
 			|
-			<a href="{link controller=user action=deleteShippingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
+			<a href="{link controller=user action=deleteShippingAddress id=item.ID returnPath=true}">{t _remove_address}</a>
 		</div>
-	{/foreach}
+	{% endfor %}
 
 {% endblock %}

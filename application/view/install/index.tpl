@@ -5,29 +5,29 @@
 </p>
 
 <dl class="requirements">
-	{foreach from=$requirements key=req item=result}
-		{% if 1 != $result %}
-			<div class="{% if 1 == $result %}pass{% else %}fail{% endif %}">
+	{% for req, result in requirements %}
+		{% if 1 != result %}
+			<div class="{% if 1 == result %}pass{% else %}fail{% endif %}">
 				<dt>[[ t(req) ]]</dt>
 				<dd>
-				{% if 1 == $result %}
+				{% if 1 == result %}
 					<img src="image/silk/gif/tick.gif" />
 				{% else %}
-					{% if 'checkWritePermissions' == $req %}
+					{% if 'checkWritePermissions' == req %}
 						The following directories are not writable:
 						<ul id="notWritable">
-						{foreach from=$result item=dir}
+						{% for dir in result %}
 							<li>[[dir]]</li>
-						{/foreach}
+						{% endfor %}
 						</ul>		
 						<p>
 							{t _writePermissionsFix}							
 						</p>				
 					{% else %}
 						<img src="image/silk/gif/delete.gif" />
-						{% if 0 == $result %}
+						{% if 0 == result %}
 							<div class="reqError">
-								{translate text="`$req`_error"}
+								{translate text="`req`_error"}
 							</div>
 						{% endif %}
 					{% endif %}
@@ -35,7 +35,7 @@
 				</dd>
 			</div>
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 </dl>
 
 <p>

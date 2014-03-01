@@ -10,7 +10,7 @@
 
 	<div id="payTotal">
 		<div>
-			{t _order_total}: <span class="subTotal">{$order.formattedTotal.$currency}</span>
+			{t _order_total}: <span class="subTotal">{order.formattedTotal.currency}</span>
 		</div>
 	</div>
 

@@ -11,13 +11,13 @@
 {#
 	{block HOME-PAGE-TOP}
 
-	{% if 'HOME_PAGE_SUBCATS'|config %}
+	{% if config('HOME_PAGE_SUBCATS') %}
 		[[ partial("category/subcategoriesColumns.tpl") ]]
 	{% endif %}
 
 	{% if !empty(subCatFeatured) %}
 		<h2>{t _featured_products}</h2>
-		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': subCatFeatured]) ]]
+		[[ partial('category/productListLayout.tpl', ['layout': config('FEATURED_LAYOUT')|default:layout, 'products': subCatFeatured]) ]]
 	{% endif %}
 
 	{% if !empty(news) %}

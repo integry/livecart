@@ -24,12 +24,12 @@
 	</div>
 
 	<script type="text/javascript">
-		$("fromUsersPage").appendChild($("newUserForm_[[userGroupID]]"))
+		("fromUsersPage").appendChild(("newUserForm_[[userGroupID]]"))
 	</script>
 
 
 	<script type="text/javascript">
-		Element.observe($("userGroup_[[userGroupID]]_addUser"), 'click', function(e)
+		Element.observe(("userGroup_[[userGroupID]]_addUser"), 'click', function(e)
 		{
 			e.preventDefault();
 			Backend.User.Add.prototype.getInstance([[userGroupID]]).showAddForm([[userGroupID]]);
@@ -46,12 +46,12 @@
 
 {activeGrid
 	prefix="users"
-	id=$userGroupID
+	id=userGroupID
 	role="user.mass"
 	controller="backend.userGroup" action="lists"
-	displayedColumns=$displayedColumns
-	availableColumns=$availableColumns
-	totalCount=$totalCount
+	displayedColumns=displayedColumns
+	availableColumns=availableColumns
+	totalCount=totalCount
 	container="tabPageContainer"
 	dataFormatter="Backend.UserGroup.GridFormatter"
 	count="backend/userGroup/count.tpl"
@@ -63,7 +63,7 @@
 
 
 <script type="text/javascript">
-	var massHandler = new Backend.UserGroup.massActionHandler($('userMass_[[userGroupID]]'), window.activeGrids['users_[[userGroupID]]']);
+	var massHandler = new Backend.UserGroup.massActionHandler(('userMass_[[userGroupID]]'), window.activeGrids['users_[[userGroupID]]']);
 	massHandler.deleteConfirmMessage = '[[ addslashes({t _are_you_sure_you_want_to_delete_this_user}) ]]' ;
 	massHandler.nothingSelectedMessage = '[[ addslashes({t _nothing_selected}) ]]' ;
 

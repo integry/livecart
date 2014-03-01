@@ -1,11 +1,11 @@
 <div style="padding: 1em; border: 1px grey dotted;">
-	{% if $address.companyName %}
+	{% if address.companyName %}
 		<div class="labelCompany" style="font-weight: bold;">
 			[[address.companyName]]
 		</div>
 	{% endif %}
 
-	{% if $address.fullName %}
+	{% if address.fullName %}
 		<div class="labelName" style="font-weight: bold;">
 			[[address.fullName]]
 		</div>
@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="labelState">
-		{$address.stateName|default:$address.State.name}{% if $address.postalCode %}, [[address.postalCode]]{% endif %}
+		{address.stateName|default:address.State.name}{% if address.postalCode %}, [[address.postalCode]]{% endif %}
 	</div>
 
 	<div class="labelCountry">

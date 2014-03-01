@@ -13,7 +13,7 @@
 
 			<legend>[[ capitalize({t _add_offline_payment}) ]]</legend>
 
-			{form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
+			{form action="controller=backend.payment action=addOffline id=`order.ID`" method="POST" handle=offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
 
 				{input name="amount"}
 					{label}{t _amount}:{/label}
@@ -49,7 +49,7 @@
 
 
 <script type="text/javascript">
-	Backend.Payment.init($('paymentMenu_[[order.ID]]'));
+	Backend.Payment.init(('paymentMenu_[[order.ID]]'));
 </script>
 
 

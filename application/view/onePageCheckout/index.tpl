@@ -21,7 +21,7 @@
 
 	<div class="col-sm-8" id="checkout-left">
 
-	{% if !$user.ID %}
+	{% if !user.ID %}
 	<div id="checkout-login" class="step">
 		[[login]]
 	</div>
@@ -69,10 +69,10 @@
 
 	<script type="text/javascript">
 		var checkout = new Frontend.OnePageCheckout({ldelim}OPC_SHOW_CART: [[ config('OPC_SHOW_CART') ]]{rdelim});
-		checkout.updateCompletedSteps({json array=$completedSteps});
-		checkout.updateEditableSteps({json array=$editableSteps});
-		Observer.process('order', {json array=$orderValues});
+		checkout.updateCompletedSteps({json array=completedSteps});
+		checkout.updateEditableSteps({json array=editableSteps});
+		Observer.process('order', {json array=orderValues});
 
-		new User.ShippingFormToggler($('sameAsShipping'), $('billingAddressForm'));
-		new User.ShippingFormToggler($('sameAsShipping'), $('checkout-billing').down('.addressSelector'));
+		new User.ShippingFormToggler(('sameAsShipping'), ('billingAddressForm'));
+		new User.ShippingFormToggler(('sameAsShipping'), ('checkout-billing').down('.addressSelector'));
 	</script>

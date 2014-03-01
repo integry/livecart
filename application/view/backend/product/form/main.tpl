@@ -42,14 +42,14 @@
 	{% if !empty(shippingClasses) %}
 		{input name="shippingClassID"}
 			{label}{tip _shippingClass}:{/label}
-			{selectfield options=$shippingClasses class="shippingClassID"}
+			{selectfield options=shippingClasses class="shippingClassID"}
 		{/input}
 	{% endif %}
 
 	{% if !empty(taxClasses) %}
 		{input name="taxClassID"}
 			{label}{tip _taxClass}:{/label}
-			{selectfield options=$taxClasses class="taxClassID"}
+			{selectfield options=taxClasses class="taxClassID"}
 		{/input}
 	{% endif %}
 

@@ -4,8 +4,8 @@
 
 {% block content %}
 
-{foreach from=$news item=entry}
+{% for entry in news %}
 	[[ partial('news/newsEntry.tpl', ['entry': entry]) ]]
-{/foreach}
+{% endfor %}
 
 {% endblock %}

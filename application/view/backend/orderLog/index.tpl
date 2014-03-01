@@ -19,51 +19,51 @@
 
 
 <ul class="logHistory">
-{foreach name="logs" item='log' from=$logs}
+{foreach name="logs" item='log' from=logs}
 	<li class="logEntry">
 		<table>
 			<tr>
 				<td class="logEntryAction">
-					{% if $log.type == $TYPE_ORDER %}
-						{% if $log.action == $ACTION_STATUSCHANGE %}
+					{% if log.type == TYPE_ORDER %}
+						{% if log.action == ACTION_STATUSCHANGE %}
 							{t _order_status_changed}
-						{% elseif $log.action == $ACTION_CANCELEDCHANGE %}
-							{% if $log.newValue.isCancelled %}
+						{% elseif log.action == ACTION_CANCELEDCHANGE %}
+							{% if log.newValue.isCancelled %}
 								{t _order_cancelled}
 							{% else %}
 								{t _order_activated}
 							{% endif %}
 						{% endif %}
-					{% elseif $log.type == $TYPE_SHIPMENT %}
-						{% if $log.action == $ACTION_ADD %}{t _new_shipment_added}
-						{% elseif $log.action == $ACTION_REMOVE %}{t _shipment_removed}
-						{% elseif $log.action == $ACTION_STATUSCHANGE %}{t _shipment_status_changed}
-						{% elseif $log.action == $ACTION_SHIPPINGSERVICECHANGE %}{t _shipping_service_changed}{% endif %}
-					{% elseif $log.type == $TYPE_ORDERITEM %}
-						{% if $log.action == $ACTION_ADD %}{t _new_item_added}
-						{% elseif $log.action == $ACTION_REMOVE %}{t _item_removed}
-						{% elseif $log.action == $ACTION_COUNTCHANGE %}{t _item_quantity_updated}
-						{% elseif $log.action == $ACTION_SHIPMENTCHANGE %}{t _item_moved_to_another_shipment}
-						{% elseif $log.action == $ACTION_NEW_DOWNLOADABLE_ITEM_ADDED %}{t _new_downloadable_item_added}
-						{% elseif $log.action == $ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED %}{t _downloadable_item_removed}{% endif %}
-					{% elseif $log.type == $TYPE_SHIPPINGADDRESS %}
+					{% elseif log.type == TYPE_SHIPMENT %}
+						{% if log.action == ACTION_ADD %}{t _new_shipment_added}
+						{% elseif log.action == ACTION_REMOVE %}{t _shipment_removed}
+						{% elseif log.action == ACTION_STATUSCHANGE %}{t _shipment_status_changed}
+						{% elseif log.action == ACTION_SHIPPINGSERVICECHANGE %}{t _shipping_service_changed}{% endif %}
+					{% elseif log.type == TYPE_ORDERITEM %}
+						{% if log.action == ACTION_ADD %}{t _new_item_added}
+						{% elseif log.action == ACTION_REMOVE %}{t _item_removed}
+						{% elseif log.action == ACTION_COUNTCHANGE %}{t _item_quantity_updated}
+						{% elseif log.action == ACTION_SHIPMENTCHANGE %}{t _item_moved_to_another_shipment}
+						{% elseif log.action == ACTION_NEW_DOWNLOADABLE_ITEM_ADDED %}{t _new_downloadable_item_added}
+						{% elseif log.action == ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED %}{t _downloadable_item_removed}{% endif %}
+					{% elseif log.type == TYPE_SHIPPINGADDRESS %}
 						{t _shipping_address_changed}
-					{% elseif $log.type == $TYPE_BILLINGADDRESS %}
+					{% elseif log.type == TYPE_BILLINGADDRESS %}
 						{t _billing_address_changed}
 					{% endif %}
 				</td>
 				<td class="logEntryAuthor">
 					<div class="logEntryDate">[[log.formatted_time.date_long]] [[log.formatted_time.time_long]]</div>
-					<div class="logEntryUser"><a href="{backendUserUrl user=$log.User}">[[log.User.fullName]]</a></div>
+					<div class="logEntryUser"><a href="{backendUserUrl user=log.User}">[[log.User.fullName]]</a></div>
 				</td>
 			</tr>
 			
-			{% if $log.action != $ACTION_CANCELEDCHANGE %}
+			{% if log.action != ACTION_CANCELEDCHANGE %}
 			<tr>
 				<td colspan="2">
 					<table class="logEntryDiff">
 						
-						{% if $log.oldValue && $log.newValue %}
+						{% if log.oldValue && log.newValue %}
 						<tr>
 							<td class="logEntryValueFrom">{t _from}:</td>
 							<td class="logEntryValueTo">{t _to}:</td>
@@ -71,29 +71,29 @@
 						{% endif %}
 						
 						<tr>
-							{% if $log.oldValue %}
+							{% if log.oldValue %}
 							<td>
-								{% if $log.type == $TYPE_ORDER %}
+								{% if log.type == TYPE_ORDER %}
 									[[ partial('backend/orderLog/order.tpl', ['order': log.oldValue, 'otherOrder': log.newValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_SHIPMENT %}
+								{% elseif log.type == TYPE_SHIPMENT %}
 									[[ partial('backend/orderLog/shipment.tpl', ['shipment': log.oldValue, 'otherShipment': log.newValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_ORDERITEM %}
+								{% elseif log.type == TYPE_ORDERITEM %}
 									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': log.oldValue, 'otherOrderedItem': log.newValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS %}
+								{% elseif log.type == TYPE_SHIPPINGADDRESS || log.type == TYPE_BILLINGADDRESS %}
 									[[ partial('backend/orderLog/address.tpl', ['address': log.oldValue, 'otherAddress': log.newValue, 'log': log]) ]]
 								{% endif %}
 							</td>
 							{% endif %}
 							
-							{% if $log.newValue %}
+							{% if log.newValue %}
 							<td>
-								{% if $log.type == $TYPE_ORDER %}
+								{% if log.type == TYPE_ORDER %}
 									[[ partial('backend/orderLog/order.tpl', ['order': log.newValue, 'otherOrder': log.oldValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_SHIPMENT %}
+								{% elseif log.type == TYPE_SHIPMENT %}
 									[[ partial('backend/orderLog/shipment.tpl', ['shipment': log.newValue, 'otherShipment': log.oldValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_ORDERITEM %}
+								{% elseif log.type == TYPE_ORDERITEM %}
 									[[ partial('backend/orderLog/orderedItem.tpl', ['orderedItem': log.newValue, 'otherOrderedItem': log.oldValue, 'log': log]) ]]
-								{% elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS %}
+								{% elseif log.type == TYPE_SHIPPINGADDRESS || log.type == TYPE_BILLINGADDRESS %}
 									[[ partial('backend/orderLog/address.tpl', ['address': log.newValue, 'otherAddress': log.oldValue, 'log': log]) ]]
 								{% endif %}
 							</td>
@@ -105,7 +105,7 @@
 			</tr>
 			{% endif %}
 			
-			{% if $log.oldTotal != $log.newTotal %}
+			{% if log.oldTotal != log.newTotal %}
 			<tr>
 				<td>&nbsp;</td>
 				<td class="logEntryTotalAmount">
@@ -121,5 +121,5 @@
 	</li>
 {foreachelse}
 	<div class="noRecords"><div>{t _no_changes}</div></div>
-{/foreach}
+{% endfor %}
 </ul>

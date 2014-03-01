@@ -1,12 +1,12 @@
 <h1>License Agreement</h1>
 
-<div id="license">{$license|nl2br}</div>
+<div id="license">{license|nl2br}</div>
 
 <div>
-	{form action="install/acceptLicense" method="POST" handle=$form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
+	{form action="install/acceptLicense" method="POST" handle=form style="padding: 0; background: 0; border: 0;" class="form-horizontal"}
 
 	<fieldset class="error">
-		<p id="agreeContainer" onclick="if (Event.element(event) != $('accept')) { $('accept').click(); }">
+		<p id="agreeContainer" onclick="if (Event.element(event) != ('accept')) { ('accept').click(); }">
 
 			{checkbox name=accept id=accept class="checbox" style="float: left; margin-right: 5px;"}
 			<label class="checkbox">I accept the license agreement</label>
@@ -30,7 +30,7 @@
 <![endif]-->
 
 <script type="text/javascript">
-	$('accept').focus();
+	('accept').focus();
 </script>
 
 

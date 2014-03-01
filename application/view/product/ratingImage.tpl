@@ -1,1 +1,1 @@
-<img src="image/rating/{ {$rating*2|@round}/2}.gif" />
+<img src="image/rating/{ {rating*2|@round}/2}.gif" />

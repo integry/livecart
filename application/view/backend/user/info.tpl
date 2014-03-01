@@ -1,4 +1,4 @@
-{form handle=$form action="backend.user/update" id="userInfo_`$someUser.UserGroup.ID`_`$someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
+{form handle=form action="backend.user/update" id="userInfo_`someUser.UserGroup.ID`_`someUser.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`someUser.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
 	[[ checkbox('isEnabled', '_is_enabled') ]]
 
 	[[ selectfld('UserGroup', '_user_group', availableUserGroups) ]]
@@ -16,7 +16,7 @@
 	{input name="password"}
 		{label}{t _password}:{/label}
 		<span class="progressIndicator generatePasswordProgressIndicator" style="display: none;"></span>
-		{password id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_password" class="user_password"}
+		{password id="user_`someUser.UserGroup.ID`_`someUser.ID`_password" class="user_password"}
 		<a href="#generate" class="user_password_generate">{t _generate_password}</a>
 		<fieldset class="error showPassword">
 			<input type="checkbox" id="user_[[someUser.UserGroup.ID]]_[[someUser.ID]]_password_show" class="checkbox user_password_show"/>
@@ -25,7 +25,7 @@
 	{/input}
 
 	{input name="sameAddress"}
-		{checkbox id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_sameAddresses"}
+		{checkbox id="user_`someUser.UserGroup.ID`_`someUser.ID`_sameAddresses"}
 		{label}{t _same_billing_and_shipping_addresses?}:{/label}
 	{/input}
 
@@ -33,12 +33,12 @@
 
 	<fieldset id="user_[[someUser.UserGroup.ID]]_[[someUser.ID]]_billingAddress" class="user_billingAddress">
 		<legend>{t _billing_address}</legend>
-		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "billingAddress_", 'eavPrefix': "billingAddress_", 'idPrefix': "user_`$someUser.UserGroup.ID`_`$someUser.ID`_billingAddress", 'address': someUser.defaultBillingAddress, 'states': billingAddressStates]) ]]
+		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "billingAddress_", 'eavPrefix': "billingAddress_", 'idPrefix': "user_`someUser.UserGroup.ID`_`someUser.ID`_billingAddress", 'address': someUser.defaultBillingAddress, 'states': billingAddressStates]) ]]
 	</fieldset>
 
 	<fieldset id="user_[[someUser.UserGroup.ID]]_[[someUser.ID]]_shippingAddress" class="user_shippingAddress">
 		<legend>{t _shipping_address}</legend>
-		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "shippingAddress_", 'eavPrefix': "shippingAddress_", 'idPrefix': "user_`$someUser.UserGroup.ID`_`$someUser.ID`_shippingAddress", 'address': someUser.defaultShippingAddress, 'states': shippingAddressStates]) ]]
+		[[ partial('backend/user/address_edit.tpl', ['namePrefix': "shippingAddress_", 'eavPrefix': "shippingAddress_", 'idPrefix': "user_`someUser.UserGroup.ID`_`someUser.ID`_shippingAddress", 'address': someUser.defaultShippingAddress, 'states': shippingAddressStates]) ]]
 	</fieldset>
 
 	<fieldset class="controls">
@@ -52,7 +52,7 @@
 
 		if([[someUser.ID]] > 0)
 		{
-			Backend.UserGroup.prototype.treeBrowser.selectItem({$someUser.UserGroup.ID|default:-1}, false);
+			Backend.UserGroup.prototype.treeBrowser.selectItem({someUser.UserGroup.ID|default:-1}, false);
 			Backend.User.Editor.prototype.getInstance([[someUser.ID]]);
 		}
 		else

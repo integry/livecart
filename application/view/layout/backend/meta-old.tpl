@@ -7,7 +7,7 @@
 	<title>[[ config('SOFT_NAME') ]] Admin - [[TITLE]]</title>
 	<base href="{baseUrl}" />
 
-	{% if 'FAVICON'|config %}
+	{% if config('FAVICON') %}
 		<link href="[[ config('FAVICON') ]]" rel="shortcut icon" />
 	{% endif %}
 
@@ -25,7 +25,7 @@
 	<link href="bootstrap/bootstrap/css/bootstrap.css" rel="stylesheet">
 	{compiledCss glue=true nameMethod=hash}
 
-	{% if !'DISABLE_WYSIWYG'|config %}
+	{% if !config('DISABLE_WYSIWYG') %}
 		{includeJs file="library/tinymce/tiny_mce.js" inline=true}
 	{% endif %}
 
@@ -98,7 +98,7 @@
 			entities: '',
 			file_browser_callback : "ajaxfilemanager"
 
-			{% if 'TINYMCE_PARAMS'|config %}
+			{% if config('TINYMCE_PARAMS') %}
 			, [[ config('TINYMCE_PARAMS') ]]
 			{% endif %}
 

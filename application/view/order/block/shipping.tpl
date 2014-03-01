@@ -1,6 +1,6 @@
-{% if $cart.shippingSubtotal|@strlen %}
+{% if cart.shippingSubtotal|@strlen %}
 	<tr>
-		<td colspan="{math equation="$extraColspanSize + 3"}" class="subTotalCaption">
+		<td colspan="{math equation="extraColspanSize + 3"}" class="subTotalCaption">
 			{% if !empty(isShippingEstimated) %}
 				{t _estimated_shipping}:
 			{% else %}

@@ -18,9 +18,9 @@
 				{t _currency}
 			</span>
 			<select name="currency">
-				{foreach from=$currencies item=currency}
+				{% for currency in currencies %}
 					<option>[[currency]]</option>
-				{/foreach}
+				{% endfor %}
 			</select>
 		</span>
 		<span class="block priceGroup">
@@ -29,9 +29,9 @@
 			</span>
 			<select name="group">
 				<option></option>
-				{foreach from=$groups item=group}
+				{% for group in groups %}
 					<option value="[[group.ID]]">[[group.name]]</option>
-				{/foreach}
+				{% endfor %}
 			</select>
 		</span>
 		<span class="block priceQuant">
@@ -54,9 +54,9 @@
 				{t _language}
 			</span>
 			<select name="language">
-				{foreach from=$languages item=language}
+				{% for language in languages %}
 					<option value="[[language.ID]]">[[language.originalName]] ([[language.name]])</option>
-				{/foreach}
+				{% endfor %}
 			</select>
 		</span>
 	</span>
@@ -66,7 +66,7 @@
 
 [[ partial('backend/csvImport/wizardProgress.tpl', ['class': "stepDelimiters"]) ]]
 
-{form action="backend.csvImport/preview" method="POST" id="delimitersform handle=$form onsubmit="Backend.CsvImport.cont(); return false;"}
+{form action="backend.csvImport/preview" method="POST" id="delimitersform handle=form onsubmit="Backend.CsvImport.cont(); return false;"}
 
 	<div id="import">
 
@@ -91,16 +91,16 @@
 				<label>[[file]]</label>
 			{/input}
 
-			{% if 'ProductImport' == $type %}
+			{% if 'ProductImport' == type %}
 			<p>
 				<label>{t _import_category}</label>
 				<label>
-					{foreach from=$catPath item=node name="catPath"}
+					{foreach from=catPath item=node name="catPath"}
 						<a href="[[ url("backend.csvImport/index") ]]?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name()]]</a>
-						{% if !$smarty.foreach.catPath.last %}
+						{% if !smarty.foreach.catPath.last %}
 							&gt;
 						{% endif %}
-					{/foreach}
+					{% endfor %}
 				</label>
 			</p>
 			{% endif %}
@@ -113,7 +113,7 @@
 
 		{input name="delimiter"}
 			{label}{t _delimiter}:{/label}
-			{selectfield options=$delimiters onchange="Backend.CsvImport.updatePreview()"}
+			{selectfield options=delimiters onchange="Backend.CsvImport.updatePreview()"}
 			<span id="previewIndicator" class="progressIndicator" style="display: none;"></span>
 		{/input}
 	</fieldset>
@@ -190,7 +190,7 @@
 	<div class="clear"></div>
 
 	<fieldset id="preview">
-		<legend>{maketext text=_preview_count params="`$previewCount`,`$total`"}</legend>
+		<legend>{maketext text=_preview_count params="`previewCount`,`total`"}</legend>
 			<div id="previewContainer">
 				[[ partial('backend/csvImport/preview.tpl', ['preview': preview]) ]]
 			</div>

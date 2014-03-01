@@ -1,5 +1,5 @@
 <fieldset class="shipmentContainer">
-{% if $shipment.isShippable %}
+{% if shipment.isShippable %}
 	<legend>{t _shipment} #[[shipment.ID]]</legend>
 {% endif %}
 
@@ -38,12 +38,12 @@
 			</tbody>
 		</table>
 
-		<ul id="orderShipmentsItems_list_[[orderID]]_[[shipment.ID]]" class="{% if $shipment.status != 3 && $shipableShipmentsCount > 1 && $shipment.isShippable %}activeList_add_sort{% endif %} activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem ohoho_[[shipment.ID]]">
-		{foreach item="item" from=$shipment.items}
+		<ul id="orderShipmentsItems_list_[[orderID]]_[[shipment.ID]]" class="{% if shipment.status != 3 && shipableShipmentsCount > 1 && shipment.isShippable %}activeList_add_sort{% endif %} activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem ohoho_[[shipment.ID]]">
+		{foreach item="item" from=shipment.items}
 			<li id="orderShipmentsItems_list_[[orderID]]_[[shipment.ID]]_[[item.ID]]" >
 				[[ partial('backend/shipment/itemAmount.tpl', ['shipped': false]) ]]
 			</li>
-		{/foreach}
+		{% endfor %}
 		</ul>
 
 		[[ partial("backend/shipment/shipmentTotal.tpl") ]]

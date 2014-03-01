@@ -5,22 +5,22 @@
 {% block content %}
 
 	<div class="checkoutHeader">
-		{% if $cart.cartItems %}
+		{% if cart.cartItems %}
 			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressCart", 'order': cart]) ]]
 		{% endif %}
 	</div>
 
-	{% if !$cart.cartItems && !$cart.wishListItems %}
+	{% if !cart.cartItems && !cart.wishListItems %}
 		<div style="clear: left;">
 			{t _empty_basket}. <a href="[[ url(return) ]]">{t _continue_shopping}</a>.
 		</div>
 	{% else %}
 
-	{% if $cart.cartItems %}
+	{% if cart.cartItems %}
 		[[ partial('order/cartItems.tpl', ['multi': true]) ]]
 	{% endif %}
 
-	{% if $cart.wishListItems && 'ENABLE_WISHLISTS'|config %}
+	{% if cart.wishListItems && config('ENABLE_WISHLISTS') %}
 		[[ partial("order/wishList.tpl") ]]
 	{% endif %}
 
@@ -32,5 +32,5 @@
 
 
 <script type="text/javascript">
-	new Order.OptionLoader($('cart'));
+	new Order.OptionLoader(('cart'));
 </script>

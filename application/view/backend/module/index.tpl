@@ -17,7 +17,7 @@
 <div id="download-modules-container" class="slideForm"></div>
 
 <script type="text/javascript">
-	new Backend.Module.downloadManager('{json array=$repos}');
+	new Backend.Module.downloadManager('{json array=repos}');
 </script>
 
 [[ partial("block/message.tpl") ]]
@@ -37,7 +37,7 @@
 
 
 	<script type="text/javascript">
-		window.moduleManager = new Backend.Module($('moduleList'));
+		window.moduleManager = new Backend.Module(('moduleList'));
 	</script>
 
 

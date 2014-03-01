@@ -1,4 +1,4 @@
-{form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form action="controller=backend.deliveryZone action=update id=`$service.DeliveryZone.ID`" method="post" role="delivery.update"}
+{form id="shippingService_`service.DeliveryZone.ID`_`service.ID`" handle=form action="controller=backend.deliveryZone action=update id=`service.DeliveryZone.ID`" method="post" role="delivery.update"}
 	<input type="hidden" name="deliveryZoneID" value="[[service.DeliveryZone.ID]]" />
 	<input type="hidden" name="serviceID" value="[[service.ID]]" />
 
@@ -26,7 +26,7 @@
 
 	{input name="rangeTypeStatic" class="rangeTypeStatic"}
 		<label>{tip _range_type}</label>
-		<label style="width: auto;">{% if $service.rangeType == 0 %}{tip _weight_based_calculations}{% else %}{tip _subtotal_based_calculations}{% endif %}</label>
+		<label style="width: auto;">{% if service.rangeType == 0 %}{tip _weight_based_calculations}{% else %}{tip _subtotal_based_calculations}{% endif %}</label>
 	{/input}
 
 	<div class="expectedDeliveryInterval">
@@ -59,13 +59,13 @@
 
 			<script type="text/jscript">
 
-				Backend.DeliveryZone.ShippingRate.prototype.newRate = {json array=$newRate}
+				Backend.DeliveryZone.ShippingRate.prototype.newRate = {json array=newRate}
 
-				Event.observe($("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_show"), "click", function(e)
+				Event.observe(("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_show"), "click", function(e)
 				{
 					e.preventDefault();
 					var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-						$("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
+						("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate
 					);
 
@@ -73,7 +73,7 @@
 				});
 
 				Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-						$("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
+						("shippingService_new_rate_[[service.DeliveryZone.ID]]_[[service.ID]]_form"),
 						Backend.DeliveryZone.ShippingRate.prototype.newRate
 					);
 				ActiveList.prototype.getInstance("shippingService_ratesList_[[service.DeliveryZone.ID]]_[[service.ID]]", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
@@ -85,9 +85,9 @@
 	[[ partial('backend/eav/fields.tpl', ['item': service]) ]]
 
 	{language}
-		[[ textfld('name_`$lang.ID`', '_name', class: 'observed') ]]
+		[[ textfld('name_`lang.ID`', '_name', class: 'observed') ]]
 
-		[[ textfld('description_`$lang.ID`', '_description', class: 'observed') ]]
+		[[ textfld('description_`lang.ID`', '_description', class: 'observed') ]]
 	{/language}
 
 	<fieldset class="shippingService_controls controls">

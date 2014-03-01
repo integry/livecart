@@ -1,8 +1,8 @@
-{% if 'CART_PAGE' == 'CHECKOUT_CUSTOM_FIELDS'|config %}
+{% if 'CART_PAGE' == config('CHECKOUT_CUSTOM_FIELDS') %}
 {sect}
 	{header}
 		<tr id="cartFields">
-			<td colspan="{math equation="$extraColspanSize + 5"}">
+			<td colspan="{math equation="extraColspanSize + 5"}">
 	{/header}
 	{content}
 			[[ partial('block/eav/fields.tpl', ['item': cart, 'filter': "isDisplayed"]) ]]

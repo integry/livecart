@@ -1,5 +1,5 @@
 <li>
-	{% if $order.basketCount %}
+	{% if order.basketCount %}
 		[[ partial('order/miniCartBlock.tpl', ['hidePanel': true]) ]]
 	{% else %}
 		<div id="miniCart" class="cartEmpty">

@@ -1,4 +1,4 @@
-<h1><a href="[[ url("api/doc") ]]">{t _livecart_api}</a> &gt; <a href="[[ url("api/docview", "class=`$className`") ]]">[[info.path]]</a>.[[name]]</h1>
+<h1><a href="[[ url("api/doc") ]]">{t _livecart_api}</a> &gt; <a href="[[ url("api/docview", "class=`className`") ]]">[[info.path]]</a>.[[name]]</h1>
 
 
 <style>
@@ -51,17 +51,17 @@
 {% if !empty(xmlSamples) %}
 	<h2>{t _api_xml_samples}</h2>
 
-	{foreach from=$xmlSamples item=sample}
+	{% for sample in xmlSamples %}
 		<div class="xmlSampleBlock">
-			{% if $sample.comments %}
+			{% if sample.comments %}
 				<div class="xmlSampleComment">[[sample.comments]]</div>
 			{% endif %}
 			<div class="xmlSample">
-				<pre>{$sample.formatted|htmlspecialchars}</pre>
+				<pre>{sample.formatted|htmlspecialchars}</pre>
 			</div>
-			<a class="sampleTest" href="[[ url("api/xml", "xml=") ]]{$sample.xml|urlencode}">test</a>
+			<a class="sampleTest" href="[[ url("api/xml", "xml=") ]]{sample.xml|urlencode}">test</a>
 		</div>
-	{/foreach}
+	{% endfor %}
 {% endif %}
 
 {% if !empty(searchFields) %}
@@ -75,12 +75,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			{foreach from=$searchFields item=field}
+			{% for field in searchFields %}
 				<tr>
 					<td>[[field.field]]</td>
 					<td>[[field.descr]]</td>
 				</tr>
-			{/foreach}
+			{% endfor %}
 		</tbody>
 	</table>
 {% endif %}
@@ -96,23 +96,23 @@
 			</tr>
 		</thead>
 		<tbody>
-			{foreach from=$createFields key=group item=fields}
+			{% for group, fields in createFields %}
 				<tr class="fieldGroup">
 					<td colspan="2">[[name]]</td>
 				</tr>
 
-				{foreach from=$fields key=field item=name}
+				{% for field, name in fields %}
 					<tr>
 						<td>[[name]]</td>
 						<td>[[name]]</td>
 					</tr>
-				{/foreach}
-			{/foreach}
+				{% endfor %}
+			{% endfor %}
 		</tbody>
 	</table>
 {% endif %}
 
-{% if 'list' == $action %}
+{% if 'list' == action %}
 <h2>{t _api_limiting_results}</h2>
 <pre>
 All List actions have atributes:

@@ -1,9 +1,9 @@
 <input type="hidden" name="options" value="[[options]]" />
 <p>
-	<input type="checkbox" name="firstHeader" id="firstHeader" value="ON" class="checkbox" onclick="Backend.CsvImport.toggleHeaderRow(this.checked, $('previewFirstRow'));"/>
+	<input type="checkbox" name="firstHeader" id="firstHeader" value="ON" class="checkbox" onclick="Backend.CsvImport.toggleHeaderRow(this.checked, ('previewFirstRow'));"/>
 	<label for="firstHeader" class="checkbox">{t _first_header}</label>
 </p>
-{foreach from=$columns key=index item=column}
+{% for index, column in columns %}
 
 	<div id="column_select_[[index]]">
 		{input name="options[transaction]"}
@@ -11,16 +11,16 @@
 
 			<select name="column[[[index]]]">
 				<option></option>
-				{foreach from=$fields item=group key=groupName}
-					<optgroup label="{translate text="$groupName"|escape}">
-						{foreach from=$group key=field item=fieldName}
+				{foreach from=fields item=group key=groupName}
+					<optgroup label="{translate text="groupName"|escape}">
+						{% for field, fieldName in group %}
 							<option value="[[field]]">[[fieldName]]</option>
-						{/foreach}
+						{% endfor %}
 					</optgroup>
-				{/foreach}
+				{% endfor %}
 			</select>
 			<span class="fieldConfigContainer"></span>
 		{/input}
 	</div>
 
-{/foreach}
+{% endfor %}

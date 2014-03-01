@@ -2,55 +2,55 @@
 	[[displayFileName]]
 </h1>
 
-{form handle=$form action="backend.template/saveEmail" method="POST" class="templateForm" id="templateForm_`$tabid`"}
+{form handle=form action="backend.template/saveEmail" method="POST" class="templateForm" id="templateForm_`tabid`"}
 
-	{% if !$template.isFragment %}
+	{% if !template.isFragment %}
 	<p>
 		<label>{t _subject}:</label>
-		{textfield name="subject" id="subject_`$tabid`" class="text wide"}
+		{textfield name="subject" id="subject_`tabid`" class="text wide"}
 	</p>
 	{% endif %}
 
 	<p>
-		{% if !$template.isFragment %}
+		{% if !template.isFragment %}
 			<label>{t _body}:</label>
 		{% endif %}
-		{textarea name="body" id="body_`$tabid`" class="body"}
+		{textarea name="body" id="body_`tabid`" class="body"}
 	</p>
 
-	{% if $template.hasPlainText %}
+	{% if template.hasPlainText %}
 	<p>
 		<label>{t _html_version}:</label>
-		{textarea name="html" id="html_`$tabid`" class="body"}
+		{textarea name="html" id="html_`tabid`" class="body"}
 	</p>
 	{% endif %}
 
-	{% if $fileName|@substr:0:11 != 'email/block' %}
+	{% if fileName|@substr:0:11 != 'email/block' %}
 		{language}
-			{% if !$template.isFragment %}
+			{% if !template.isFragment %}
 				<p>
 					<label>{t _subject}:</label>
-					{textfield name="subject_`$lang.ID`" class="text wide"}
+					{textfield name="subject_`lang.ID`" class="text wide"}
 				</p>
 			{% endif %}
 
 			<p>
-				{% if !$template.isFragment %}
+				{% if !template.isFragment %}
 					<label>{t _body}:</label>
 				{% endif %}
-				{textarea name="body_`$lang.ID`" id="body_`$tabid`_`$lang.ID`" class="body"}
+				{textarea name="body_`lang.ID`" id="body_`tabid`_`lang.ID`" class="body"}
 			</p>
 
-			{% if $template.hasPlainText %}
+			{% if template.hasPlainText %}
 			<p>
 				<label>{t _html_version}:</label>
-				{textarea name="html_`$lang.ID`" id="html_`$tabid`_`$lang.ID`" class="body"}
+				{textarea name="html_`lang.ID`" id="html_`tabid`_`lang.ID`" class="body"}
 			</p>
 			{% endif %}
 		{/language}
 	{% endif %}
 
-	{hidden name="file" id="file_`$tabid`"}
+	{hidden name="file" id="file_`tabid`"}
 
 	<fieldset class="controls" {denied role="template.save"}style="display: none;"{/denied}>
 		<span class="progressIndicator" style="display: none;"></span>
@@ -62,6 +62,6 @@
 
 
 <script type="text/javascript">
-	$('body_[[tabid]]').value = decode64("[[template.bodyEncoded]]");;
+	('body_[[tabid]]').value = decode64("[[template.bodyEncoded]]");;
 	editAreaLoader.baseURL = "{baseUrl}javascript/library/editarea/";
 </script>

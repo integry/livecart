@@ -1,10 +1,10 @@
 <div id="countriesAndStatesMsg_[[categoryId]]"></div>
 
-{form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
+{form id="countriesAndStates_zoneID" handle=form action="controller=backend.deliveryZone action=save id=zoneID" method="post" role="delivery.update"}
 
 	{input name="type"}
 		{label}{tip _zone_type}:{/label}
-		{selectfield options=$allTypes class="observed"}
+		{selectfield options=allTypes class="observed"}
 	{/input}
 
 	[[ textfld('name', '_name', class: 'observed countriesAndStates_name') ]]
@@ -27,18 +27,18 @@
 	{input}
 		{label}{tip _country}{/label}
 		<fieldset class="container multiSelect">
-			{selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
+			{selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=selectedCountries}
 			<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" {denied role='delivery.update'}style="display: none"{/denied} />
 			<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" {denied role='delivery.update'}style="display: none"{/denied} />
-			{selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
+			{selectfield name="inactiveCountries" size="15" options=countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
 
 			<span class="errorText hidden"> </span>
 
 			<div class="clear"></div>
 			<div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
-				{foreach key="groupName" item="group" from=$countryGroups}
+				{foreach key="groupName" item="group" from=countryGroups}
 					<div><a href="#[[groupName]]">[[ t(groupName) ]]</a>&nbsp;&nbsp;</div>
-				{/foreach}
+				{% endfor %}
 			</div>
 		</fieldset>
 	{/input}
@@ -47,16 +47,16 @@
 		{label}{tip _state}{/label}
 		<fieldset class="container multiSelect">
 			<div style="float: left;">
-				{selectfield name="activeStates" size="17" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
+				{selectfield name="activeStates" size="17" options=selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
 				<input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" {denied role='delivery.update'}style="display: none"{/denied} />
 				<input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" {denied role='delivery.update'}style="display: none"{/denied} />
 			</div>
 			<div style="float: left; padding-left: 5px;">
 				<p>
-					{selectfield name="stateListCountry" class="stateListCountry" options=$allCountries}
+					{selectfield name="stateListCountry" class="stateListCountry" options=allCountries}
 					<span class="progressIndicator" style="display: none;"></span>
 				</p>
-				{selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
+				{selectfield name="inactiveStates" size="15" options=states class="countriesAndStates_inactiveStates" multiple="multiple"}
 				<span class="errorText hidden"> </span>
 			</div>
 		</fieldset>
@@ -82,14 +82,14 @@
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_cityMasksList" id="countriesAndStates_[[zoneID]]_cityMasks">
-				{foreach from=$cityMasks item="mask"}
+				{foreach from=cityMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]">
 						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_cityMasks_[[mask.ID]]");
 					</script>
-				{/foreach}
+				{% endfor %}
 			</ul>
 		</fieldset>
 	</fieldset>
@@ -114,14 +114,14 @@
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_zipMasksList" id="countriesAndStates_[[zoneID]]_zipMasks">
-				{foreach from=$zipMasks item="mask"}
+				{foreach from=zipMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]">
 						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_zipMasks_[[mask.ID]]");
 					</script>
-				{/foreach}
+				{% endfor %}
 			</ul>
 		</fieldset>
 	</fieldset>
@@ -146,14 +146,14 @@
 				<a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
 			</fieldset>
 			<ul class="activeList {allowed role='delivery.update'}activeList_add_delete activeList_add_edit{/allowed} countriesAndStates_addressMasksList" id="countriesAndStates_[[zoneID]]_addressMasks">
-				{foreach from=$addressMasks item="mask"}
+				{foreach from=addressMasks item="mask"}
 					<li id="countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]">
 						[[ partial('backend/deliveryZone/mask.tpl', ['mask': mask]) ]]
 					</li>
 					<script type="text/javascript">
 						Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_[[zoneID]]_addressMasks_[[mask.ID]]");
 					</script>
-				{/foreach}
+				{% endfor %}
 			</ul>
 		</fieldset>
 	</fieldset>

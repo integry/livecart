@@ -5,7 +5,7 @@
 [[ partial('user/userMenu.tpl', ['current': "passwordMenu"]) ]]
 {% block content %}
 
-	{form action="user/doChangePassword" method="POST" handle=$form class="form-horizontal"}
+	{form action="user/doChangePassword" method="POST" handle=form class="form-horizontal"}
 
 		[[ pwdfld('currentpassword', '_current_pass') ]]
 

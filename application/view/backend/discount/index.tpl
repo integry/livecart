@@ -60,8 +60,8 @@
 
 	<script type="text/javascript">
 		Backend.Discount.Editor.prototype.Links.add = Backend.Router.createUrl('backend.discount', 'add');
-		Backend.Discount.Action.prototype.itemActions = {json array=$itemActions};
-		Event.observe($("cancel_user_edit"), "click", function(e) {
+		Backend.Discount.Action.prototype.itemActions = {json array=itemActions};
+		Event.observe(("cancel_user_edit"), "click", function(e) {
 			e.preventDefault();
 			var editor = Backend.Discount.Editor.prototype.getInstance(Backend.Discount.Editor.prototype.getCurrentId(), false);
 			editor.cancelForm();
@@ -72,7 +72,7 @@
 
 {* Template nodes *}
 <div id="conditionTemplate">
-	{form handle=$conditionForm}
+	{form handle=conditionForm}
 		<li>
 			<div class="conditionInfo">
 				<span class="conditionDeleteMenu">
@@ -80,9 +80,9 @@
 					<span class="progressIndicator" style="display: none;"></span>
 				</span>
 
-				<span>{selectfield name="conditionClass" class="conditionClass" options=$conditionTypes}</span>
-				<span>{selectfield name="productComparisonField" class="comparisonField" options=$comparisonFields}</span>
-				<span>{selectfield name="comparisonType" class="comparisonType" options=$comparisonTypes}</span>
+				<span>{selectfield name="conditionClass" class="conditionClass" options=conditionTypes}</span>
+				<span>{selectfield name="productComparisonField" class="comparisonField" options=comparisonFields}</span>
+				<span>{selectfield name="comparisonType" class="comparisonType" options=comparisonTypes}</span>
 				<span>{textfield name="comparisonValue" class="number comparisonValue"}</span>
 
 				{block BUSINESS-RULE-CONDITION-PARAMS}
@@ -154,27 +154,27 @@
 			</div>
 
 			<div class="ruleFields">
-				{foreach from=$ruleFields key=ruleClass item=fields}
+				{% for ruleClass, fields in ruleFields %}
 					{% if !empty(fields) %}
 					<div class="classContainer [[ruleClass]]">
-						{foreach from=$fields item=field}
+						{% for field in fields %}
 							<p>
-								<label>{translate text=$field.label}</label>
+								<label>{translate text=field.label}</label>
 								<span>
-									{% if $field.type == 'number' %}
-										{textfield class="text number ruleField `$field.name`" name=$field.name}
-									{% elseif $field.type == 'select' %}
-										{textfield class="text wide ruleField `$field.name`" name=$field.name}
-									{% elseif $field.type == 'select' %}
-										{selectfield class="ruleField `$field.name`" name=$field.name options=$field.options}
+									{% if field.type == 'number' %}
+										{textfield class="text number ruleField `field.name`" name=field.name}
+									{% elseif field.type == 'select' %}
+										{textfield class="text wide ruleField `field.name`" name=field.name}
+									{% elseif field.type == 'select' %}
+										{selectfield class="ruleField `field.name`" name=field.name options=field.options}
 									{% endif %}
 									<span class="progressIndicator" style="display: none;"></span>
 								</span>
 							</p>
-						{/foreach}
+						{% endfor %}
 					</div>
 					{% endif %}
-				{/foreach}
+				{% endfor %}
 			</div>
 
 			<ul class="conditionContainer" style="display: none;">
@@ -210,7 +210,7 @@
 </div>
 
 <div id="actionTemplate">
-	{form handle=$conditionForm}
+	{form handle=conditionForm}
 		<li>
 			<label style="width: 80px;"></label>
 			<span>
@@ -221,7 +221,7 @@
 
 			<p>
 				<label>{tip _action}</label>
-				<span>{selectfield name="actionClass" class="actionClass" options=$actionTypes}</span>
+				<span>{selectfield name="actionClass" class="actionClass" options=actionTypes}</span>
 			</p>
 
 			<div class="amountFields">
@@ -249,27 +249,27 @@
 			</div>
 
 			<div class="actionFields">
-				{foreach from=$actionFields key=actionClass item=fields}
+				{% for actionClass, fields in actionFields %}
 					{% if !empty(fields) %}
 						<div class="classContainer [[actionClass]]">
-							{foreach from=$fields item=field}
+							{% for field in fields %}
 								<p>
-									<label>{translate text=$field.label}</label>
+									<label>{translate text=field.label}</label>
 									<span>
-										{% if $field.type == 'number' %}
-											{textfield class="text number actionField `$field.name`" name=$field.name}
-										{% elseif $field.type == 'text' %}
-											{textfield class="text wide actionField `$field.name`" name=$field.name}
-										{% elseif $field.type == 'select' %}
-											{selectfield class="actionField `$field.name`" name=$field.name options=$field.options}
+										{% if field.type == 'number' %}
+											{textfield class="text number actionField `field.name`" name=field.name}
+										{% elseif field.type == 'text' %}
+											{textfield class="text wide actionField `field.name`" name=field.name}
+										{% elseif field.type == 'select' %}
+											{selectfield class="actionField `field.name`" name=field.name options=field.options}
 										{% endif %}
 										<span class="progressIndicator" style="display: none;"></span>
 									</span>
 								</p>
-							{/foreach}
+							{% endfor %}
 						</div>
 					{% endif %}
-				{/foreach}
+				{% endfor %}
 			</div>
 
 			<div class="clear"></div>
@@ -277,7 +277,7 @@
 			<div class="applyTo">
 				<p>
 					<label>{t _apply_to}</label>
-					<span>{selectfield name="type" class="applyTo" options=$applyToChoices}</span>
+					<span>{selectfield name="type" class="applyTo" options=applyToChoices}</span>
 				</p>
 
 				<div class="conditionContainer actionCondition">

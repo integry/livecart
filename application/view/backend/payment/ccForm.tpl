@@ -17,7 +17,7 @@
 
 <div id="ccForm">
 
-{form action="controller=backend.payment action=processCreditCard id=`$order.ID`" onsubmit="new window.opener.Backend.Payment.AddCreditCard(this, window); return false;" handle=$ccForm method="POST"}
+{form action="controller=backend.payment action=processCreditCard id=`order.ID`" onsubmit="new window.opener.Backend.Payment.AddCreditCard(this, window); return false;" handle=ccForm method="POST"}
 
 <input type="hidden" name="id" value="[[order.ID]]" />
 
@@ -42,9 +42,9 @@
 
 {input name="ccExpiryYear"}
 	{label}{t _cc_exp}:{/label}
-	{selectfield name="ccExpiryMonth" class="narrow" options=$months}
+	{selectfield name="ccExpiryMonth" class="narrow" options=months}
 	/
-	{selectfield name="ccExpiryYear" class="narrow" options=$years}
+	{selectfield name="ccExpiryYear" class="narrow" options=years}
 {/input}
 
 {input name="ccCVV"}

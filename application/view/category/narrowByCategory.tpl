@@ -1,4 +1,4 @@
-{math count=$categoryNarrow|@count equation="max(1, ceil(count / 2))" assign="perColumn"}
+{math count=categoryNarrow|@count equation="max(1, ceil(count / 2))" assign="perColumn"}
 
 <div class="narrowByCat">
 	<div class="resultStats">

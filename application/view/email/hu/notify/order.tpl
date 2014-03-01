@@ -2,7 +2,7 @@
 Rendelés ID: [[order.invoiceNumber]]
 
 Redenlés adminisztrlásáa:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 A következő termékek lettek megrendelve:
 [[ partial("email/blockOrder.tpl") ]]

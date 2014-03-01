@@ -34,12 +34,12 @@
 
 
 <script>
-	if (!$('reviewManagerContainer'))
+	if (!('reviewManagerContainer'))
 	{
-		var container = $('reviewManagerContainer_template');
+		var container = ('reviewManagerContainer_template');
 		container.id = 'reviewManagerContainer';
 		container.removeClassName('dom_template');
 
-		$('managerContainer').parentNode.insertBefore($('reviewManagerContainer'), $('managerContainer'));
+		('managerContainer').parentNode.insertBefore(('reviewManagerContainer'), ('managerContainer'));
 	}
 </script>

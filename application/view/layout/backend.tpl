@@ -62,7 +62,7 @@
 		<title>{% block title %}{% endblock %}</title>
 	</head>
 	
-	<body ng-controller="BackendController" ng-init="usergroup=<?php echo $volt->user->userGroupID; ?>" class="group_<?php echo $volt->user->userGroupID; ?>">
+	<body ng-controller="BackendController" ng-init="usergroup=<?php echo volt->user->userGroupID; ?>" class="group_<?php echo volt->user->userGroupID; ?>">
 		{% block content %}
 		<div id="messages"></div>
 		<div class="xrow">

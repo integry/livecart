@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
 	http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
-{foreach from=$maps item=map}
+{% for map in maps %}
 	<sitemap>
-{foreach from=$map key=nodename item=node}
+{% for nodename, node in map %}
 		<[[nodename]]>[[node]]</[[nodename]]>
-{/foreach}
+{% endfor %}
 	</sitemap>
-{/foreach}
+{% endfor %}
 </sitemapindex>

@@ -81,7 +81,7 @@
 </form>
 
 <script type="text/javascript">
-	new Backend.ProductVariation.Editor([[parent.ID]], {json array=$params});
+	new Backend.ProductVariation.Editor([[parent.ID]], {json array=params});
 </script>
 
 {block TRANSLATIONS}

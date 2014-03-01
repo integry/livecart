@@ -1,4 +1,4 @@
-{% if $product.isAvailable && 'ENABLE_CART'|config %}
+{% if product.isAvailable && config('ENABLE_CART') %}
 
 	<div class="well">
 		
@@ -16,7 +16,7 @@
 					<span class="buttonCaption">{t _add_to_cart}</span>
 			</button>
 
-			{hidden name="return" value=$catRoute}
+			{hidden name="return" value=catRoute}
 		</div>
 	
 	</div>

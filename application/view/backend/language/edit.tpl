@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	<a href="[[ url("backend.language") ]]">{t ()uages}</a> &gt; [[ t("()uage_definitons") ]] ({img src="image/localeflag/`$id`.png"} [[edit()uage]])
+	<a href="[[ url("backend.language") ]]">{t ()uages}</a> &gt; [[ t("()uage_definitons") ]] ({img src="image/localeflag/`id`.png"} [[edit()uage]])
 {/pageTitle}
 
 {includeJs file="library/json.js"}
@@ -47,7 +47,7 @@
 
 {tip}
 	{capture assign=tipUrl}[[ url("backend.customize/index") ]]{/capture}
-	{maketext text="_tip_live_trans" params="$tipUrl"}
+	{maketext text="_tip_live_trans" params="tipUrl"}
 {/tip}
 
 <div id="languagePageContainer">
@@ -68,7 +68,7 @@
 			</li>
 		</ul>
 
-		{form id="addPhraseForm" style="display: none;" handle=$addForm}
+		{form id="addPhraseForm" style="display: none;" handle=addForm}
 			<fieldset>
 				<legend>[[ @ucwords({t _add_new}) ]]</legend>
 
@@ -98,7 +98,7 @@
 
 						<label>{t _show_words}:</label>
 
-						<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
+						<input type="hidden" name="langFileSel" value='{langFileSel|escape:"quotes"}' />
 
 						<input type="radio" class="radio" name="show" value="all" id="show-all" />
 						<label class="radio" for="show-all">{t _all}</label>
@@ -138,7 +138,7 @@
 
 			<div id="translations"></div>
 
-			<form id="editLang" method="post" action="[[ url("backend.language/save/" ~ id) ]]" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
+			<form id="editLang" method="post" action="[[ url("backend.language/save/" ~ id) ]]" onSubmit="langPassDisplaySettings(this); ('saveProgress').style.display = 'inline';">
 
 				<fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
 					<input type="hidden" name="translations" />

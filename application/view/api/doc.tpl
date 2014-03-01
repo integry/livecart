@@ -7,17 +7,17 @@
 <h2>{t _api_sections}</h2>
 
 <ul>
-	{foreach from=$classes key=class item=params}
-		<li><a href="[[ url("api/docview", "class=`$class`") ]]">[[params.path]]</a></li>
-	{/foreach}
+	{% for class, params in classes %}
+		<li><a href="[[ url("api/docview", "class=`class`") ]]">[[params.path]]</a></li>
+	{% endfor %}
 </ul>
 
 <h2>{t _api_auth}</h2>
 {% if !empty(authMethods) %}
 	<ul>
-		{foreach from=$authMethods item=class}
-			<li><a href="[[ url("api/docauth", "class=`$class`") ]]">[[ t(class) ]]</a></li>
-		{/foreach}
+		{% for class in authMethods %}
+			<li><a href="[[ url("api/docauth", "class=`class`") ]]">[[ t(class) ]]</a></li>
+		{% endfor %}
 	</ul>
 {% else %}
 	<p>{t _no_auth_methods}</p>

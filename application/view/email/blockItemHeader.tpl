@@ -1,4 +1,4 @@
-{% if 'SHOW_SKU_EMAIL'|config %}{% set SHOW_SKU = true %}{% endif %}
+{% if config('SHOW_SKU_EMAIL') %}{% set SHOW_SKU = true %}{% endif %}
 {% if empty(html) %}
 {% if !empty(SHOW_SKU) %}----------{% endif %}------------------------------------------------------------
 {% if !empty(SHOW_SKU) %}[[ @str_pad_iconv:10({t _sku}) ]]{% endif %}[[ @str_pad_iconv:25({t _product}) ]][[ @str_pad_iconv:11({t _price}) ]][[ @str_pad_iconv:9({t _qty}) ]]{t _subtotal}

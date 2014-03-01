@@ -2,14 +2,14 @@
 	
 	<div class="responseUser">
 		<span class="responderType">
-		{% if $note.isAdmin %}
+		{% if note.isAdmin %}
 			{t _admin}:
 		{% else %}
 			{t _customer}:
 		{% endif %}
 		</span>
 		
-		<a href="{backendUserUrl user=$note.User}">[[note.User.fullName]]</a>
+		<a href="{backendUserUrl user=note.User}">[[note.User.fullName]]</a>
 	</div>
 		
 	<div class="noteDate">
@@ -19,7 +19,7 @@
 	<div class="clear"></div>
 		
 	<div class="noteText">
-		{$note.text|nl2br}
+		{note.text|nl2br}
 	</div>
 	
 </li>

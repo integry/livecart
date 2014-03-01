@@ -2,7 +2,7 @@
 	<div>{t _opts_save_conf}</div>
 </div>
 
-{form id="options" handle=$form action="backend.currency/saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
+{form id="options" handle=form action="backend.currency/saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
 
 	[[ checkbox('updateCb', '_update_auto') ]]
 
@@ -11,25 +11,25 @@
 		[[ selectfld('frequency', '_update_freq', frequency) ]]
 
 		<p>{t _to_update}: </p>
-		{foreach from=$currencies item=item}
-			{input name="curr_`$item.ID`"}
+		{% for item in currencies %}
+			{input name="curr_`item.ID`"}
 				{label}[[item.ID]]:{/label}
-				{t _using} {selectfield options=$feeds}
+				{t _using} {selectfield options=feeds}
 			{/input}
 		{foreachelse}
 			{t _no_currencies}
-		{/foreach}
+		{% endfor %}
 
 	</fieldset>
 
 	<p>
 		<span id="optsSaveIndicator" class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" value="{t _save}"> {t _or}
-		<a href="#" onclick="$('options').reset(); $('options').onchange(); return false;" class="cancel">{t _cancel}</a>
+		<a href="#" onclick="('options').reset(); ('options').onchange(); return false;" class="cancel">{t _cancel}</a>
 	</p>
 
 {/form}
 
 <script type="text/javascript">
-	curr.checkDisabledFields($('options'));
+	curr.checkDisabledFields(('options'));
 </script>

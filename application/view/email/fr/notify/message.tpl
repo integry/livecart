@@ -6,6 +6,6 @@ Un client a laissé un nouveau message a propos de la commande <b class="orderID
 --------------------------------------------------
 
 Vous pouvez répondre a partir du tableau de gestion des commandes:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/fr/signature.tpl") ]]

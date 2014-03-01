@@ -10,14 +10,14 @@
 </dialog>
 
 {*
-<div class="productForm {% if 1 == $product.type %}intangible{% endif %}">
+<div class="productForm {% if 1 == product.type %}intangible{% endif %}">
 	<fieldset class="container">
 		<ul class="menu">
 			<li class="done"><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct([[product.Category.ID]]); return false;">{t _cancel_add_product}</a></li>
 		</ul>
 	</fieldset>
 
-	{form handle=$productForm action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
+	{form handle=productForm action="controller=backend.product action=create id=`product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
 
 		<input type="hidden" name="categoryID" value="[[product.Category.ID]]" />
 
@@ -38,7 +38,7 @@
 			</div>
 
 			<div class="thumbTemplate" style="display: none; clear:both;">
-				<a href="#" class="deleteCross" onclick="try {$(this).up('div').remove();} catch(e){} return false;"></a>
+				<a href="#" class="deleteCross" onclick="try {(this).up('div').remove();} catch(e){} return false;"></a>
 				<div class="fileName" style="float:left;"></div>
 				<div class="fileImage">
 					<img src="" class="thumb" alt="" />
@@ -49,7 +49,7 @@
 			<p class="error">
 				<label>{tip _product_image_file}:</label>
 				<fieldset class="error uploadContainer">
-					{filefield name="upload_productImage" id="product_image_`$cat`_`$product.ID`"}
+					{filefield name="upload_productImage" id="product_image_`cat`_`product.ID`"}
 					<div class="errorText hidden"></div>
 				</fieldset>
 			</p>
@@ -58,8 +58,8 @@
 			<input type="hidden" id="fileUploadOptions_[[cat]]_[[product.ID]]" class="fileUploadOptions" value="[[ url("backend.product/uploadProductImage", "field=productImage") ]]" />
 
 			<script type="text/javascript">
-				var upload = $('product_image_[[cat]]_[[product.ID]]');
-				new LiveCart.FileUpload(upload, $("fileUploadOptions_[[cat]]_[[product.ID]]").value , Backend.Product.previewUploadedImage);
+				var upload = ('product_image_[[cat]]_[[product.ID]]');
+				new LiveCart.FileUpload(upload, ("fileUploadOptions_[[cat]]_[[product.ID]]").value , Backend.Product.previewUploadedImage);
 			</script>
 		</fieldset>
 
@@ -82,7 +82,7 @@
 
 	<script type="text/javascript">
 		Backend.Product.initAddForm([[product.Category.ID]]);
-		Backend.Product.setPath([[product.Category.ID]], {json array=$path})
+		Backend.Product.setPath([[product.Category.ID]], {json array=path})
 	</script>
 
 

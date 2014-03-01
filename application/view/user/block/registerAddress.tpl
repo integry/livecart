@@ -1,4 +1,4 @@
-{assign var="fields" value='USER_FIELDS'|config}
+{assign var="fields" value=config('USER_FIELDS')}
 
 {block FORM-NEW-CUSTOMER-TOP}
 
@@ -14,7 +14,7 @@
 
 	[[ partial("user/block/phoneField.tpl") ]]
 
-	{% if 'PASSWORD_GENERATION'|config != 'PASSWORD_AUTO' %}
+	{% if config('PASSWORD_GENERATION') != 'PASSWORD_AUTO' %}
 		[[ partial("user/block/passwordFields.tpl") ]]
 	{% endif %}
 
@@ -25,7 +25,7 @@
 
 <div class="registerColumn">
 
-	{% if $showHeading && $order.isShippingRequired && !'REQUIRE_SAME_ADDRESS'|config %}
+	{% if showHeading && order.isShippingRequired && !config('REQUIRE_SAME_ADDRESS') %}
 		<h3>{t _billing_address}</h3>
 	{% else %}
 		<h3>{t _your_address}</h3>

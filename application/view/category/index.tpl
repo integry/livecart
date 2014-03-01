@@ -1,8 +1,8 @@
 {% extends "layout/frontend.tpl" %}
 
 {#
-{% block title %}{$category.pageTitle()|default:$category.name()}{% endblock %}
-{% set metaKeywords = $category.keywords() %}
+{% block title %}{category.pageTitle()|default:category.name()}{% endblock %}
+{% set metaKeywords = category.keywords() %}
 #}
 
 {% block content %}
@@ -11,7 +11,7 @@
 	{#
 	[[ partial("category/head.tpl") ]]
 
-	{% if $allFilters.filters %}
+	{% if allFilters.filters %}
 		[[ partial("category/allFilters.tpl") ]]
 	{% endif %}
 
@@ -25,30 +25,30 @@
 
 	{% if !empty(categoryNarrow) %}
 		[[ partial("category/narrowByCategory.tpl") ]]
-	{% elseif !$searchQuery && $subCategories && !'HIDE_SUBCATS'|config %}
+	{% elseif !searchQuery && subCategories && !config('HIDE_SUBCATS') %}
 		[[ partial("category/subcategoriesColumns.tpl") ]]
 	{% endif %}
 
-	{% if $searchQuery && !$products %}
+	{% if searchQuery && !products %}
 		<p class="notFound">
 			{t _not_found}
 		</p>
 	{% endif %}
 
-	{% if $appliedFilters && !$products %}
+	{% if appliedFilters && !products %}
 		<p class="notFound">
 			<span class='notFoundMain'>{t _no_products}</span>
 		</p>
 	{% endif %}
 
-	{% if !$searchQuery && 1 == $currentPage %}
+	{% if !searchQuery && 1 == currentPage %}
 		{block PRODUCT_LISTS}
 	{% endif %}
 
 	{% if !empty(subCatFeatured) %}
 		<h2>{t _featured_products}</h2>
 
-		[[ partial('category/productListLayout.tpl', ['layout': 'FEATURED_LAYOUT'|config|default:$layout, 'products': subCatFeatured]) ]]
+		[[ partial('category/productListLayout.tpl', ['layout': config('FEATURED_LAYOUT')|default:layout, 'products': subCatFeatured]) ]]
 	{% endif %}
 
 	{block FILTER_TOP}
@@ -57,6 +57,6 @@
 	
 	[[ partial("category/categoryProductList.tpl") ]]
 	
-	[[ paginator(paginator, url(route(category)) ~ '/___', ['ng-click': 'setPage(___, $event)']) ]]
+	[[ paginator(paginator, url(route(category)) ~ '/___', ['ng-click': 'setPage(___, event)']) ]]
 
 {% endblock %}

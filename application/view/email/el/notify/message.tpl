@@ -6,6 +6,6 @@
 --------------------------------------------------
 
 Μπορείτε να προσθέσετε μια απάντηση από το panel διαχείρισης παραγγελλιών:
-{backendOrderUrl order=$order url=true}#tabOrderCommunication__
+{backendOrderUrl order=order url=true}#tabOrderCommunication__
 
 [[ partial("email/en/signature.tpl") ]]

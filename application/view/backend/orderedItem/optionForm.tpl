@@ -1,13 +1,13 @@
-{form action="backend.orderedItem/saveOptions" method="post" handle=$form onsubmit="Backend.OrderedItem.saveOptions(event)"}
+{form action="backend.orderedItem/saveOptions" method="post" handle=form onsubmit="Backend.OrderedItem.saveOptions(event)"}
 
 <div class="optionFormContainer">
 	<fieldset>
 
 		<legend>{t _edit_options}</legend>
 
-		{foreach from=$options[$item.ID] item=option}
-			[[ partial('backend/orderedItem/optionItem.tpl', ['selectedChoice': item.options[$option.ID]]) ]]
-		{/foreach}
+		{foreach from=options[item.ID] item=option}
+			[[ partial('backend/orderedItem/optionItem.tpl', ['selectedChoice': item.options[option.ID]]) ]]
+		{% endfor %}
 
 		<input type="hidden" name="id" value="[[item.ID]]" />
 		<input type="hidden" name="orderID" value="[[item.CustomerOrder.ID]]" />

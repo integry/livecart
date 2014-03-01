@@ -1,9 +1,9 @@
-{% if 'DISPLAY_PRICES'|config %}
+{% if config('DISPLAY_PRICES') %}
 <span class="price">
-	{$product.formattedPrice.$currency}
-	{% if $product.formattedListPrice.$currency %}
+	{product.formattedPrice.currency}
+	{% if product.formattedListPrice.currency %}
 		<span class="listPrice">
-			{$product.formattedListPrice.$currency}
+			{product.formattedListPrice.currency}
 		</span>
 	{% endif %}
 </span>

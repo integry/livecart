@@ -2,7 +2,7 @@
 
 <div>
 
-	{form action="install/setAdmin" method="POST" handle=$form class="form-horizontal"}
+	{form action="install/setAdmin" method="POST" handle=form class="form-horizontal"}
 
 		[[ textfld('firstName', '_first_name') ]]
 
@@ -21,6 +21,6 @@
 
 
 <script type="text/javascript">
-	$('firstName').focus();
+	('firstName').focus();
 </script>
 

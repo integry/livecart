@@ -8,7 +8,7 @@
 
 		{block BACKEND-TOOLBAR-BEFORE-BUTTONS}
 
-		{foreach from=$dropButtons item=item}
+		{% for item in dropButtons %}
 			<li class="uninitializedDropButton" style="" id="button[[item.menuID]]">
 				<a href="">
 					<small></small>
@@ -16,7 +16,7 @@
 			</li>
 		{foreachelse}
 			<li id="noToolbarButtons">{t _tip_toolbar_drag}</li>
-		{/foreach}
+		{% endfor %}
 
 		{block BACKEND-TOOLBAR-AFTER-BUTTONS}
 

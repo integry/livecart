@@ -1,4 +1,4 @@
-{% if 'translate' == $mode %}
+{% if 'translate' == mode %}
 	<div id="transDialogBox" style="position: absolute;z-index: 10000; display: none;">
 		<div class="menuLoadIndicator" id="transDialogIndicator"></div>
 		<div id="transDialogContent">

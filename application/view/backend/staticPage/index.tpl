@@ -39,10 +39,10 @@
 {#
 					{input name="title"}
 						{label}{t _title}:{/label}
-						{% if $page.ID %}
-							{textfield class="wider" id="title_`$page.ID`"}
+						{% if page.ID %}
+							{textfield class="wider" id="title_`page.ID`"}
 						{% else %}
-							{textfield class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
+							{textfield class="wider" id="title_`page.ID`" onkeyup="('handle').value = ActiveForm.prototype.generateHandle(this.value);"}
 						{% endif %}
 					{/input}
 
@@ -61,9 +61,9 @@
 
 					{#
 					{language}
-						[[ textfld('title_`$lang.ID`', '_title') ]]
+						[[ textfld('title_`lang.ID`', '_title') ]]
 
-						{input name="text_`$lang.ID`"}
+						{input name="text_`lang.ID`"}
 							{label}{t _text}:{/label}
 							{textarea tinymce=true class="tinyMCE longDescr" style="width: 100%;"}
 						{/input}

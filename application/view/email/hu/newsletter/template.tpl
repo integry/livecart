@@ -5,4 +5,4 @@
 
 -----------------------------------------------
 Ha nem akarod tovább kapni levelünket, kattints az alábbi linkre:
-[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]
+[[ fullurl("newsletter/unsubscribe", email=`email`) ]]

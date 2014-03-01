@@ -5,7 +5,7 @@
 	<div class="modal-content">
 		[[ form("", ["method": "POST", "ng-submit": "save()", "ng-init": "setEmptyValue()"]) ]]>
 		<div class="modal-header">
-			<button type="button" class="close" aria-hidden="true" ng-click="$close(0)">&times;</button>
+			<button type="button" class="close" aria-hidden="true" ng-click="close(0)">&times;</button>
 			<h3 ng-show="!vals.ID">{t _add_new_field}</h3>
 			<h3 ng-show="vals.ID">{t _edit_field}</h3>
 		</div>
@@ -72,7 +72,7 @@
 			</tabset>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-warning cancel" ng-click="$close(0)">{t _cancel}</button>
+			<button class="btn btn-warning cancel" ng-click="close(0)">{t _cancel}</button>
 			<submit>{t _save}</submit>
 		</div>
 		</form>

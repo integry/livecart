@@ -1,25 +1,25 @@
-{% if !$language || !is_string($language) %}
-	{% set fieldName = $field.fieldName %}
+{% if !language || !is_string(language) %}
+	{% set fieldName = field.fieldName %}
 {% else %}
-	{assign var="fieldName" value="`$field.fieldName`_`$language`"}
+	{assign var="fieldName" value="`field.fieldName`_`language`"}
 {% endif %}
 
 {% if !empty(angular) %}
-	{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.value"}
+	{assign var="ngmodel" value="`angular`.attributes.`field.ID`.value"}
 	{% if !empty(language) %}
-		{assign var="ngmodel" value="`$ngmodel`_`$language`"}
+		{assign var="ngmodel" value="`ngmodel`_`language`"}
 	{% endif %}
 {% endif %}
 
-{% if $field.type == 1 || $field.type == 5 %}
-	{% if $field.isMultiValue %}
+{% if field.type == 1 || field.type == 5 %}
+	{% if field.isMultiValue %}
 		{% if !empty(angular) %}
-			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`"}
+			{assign var="ngmodel" value="`angular`.attributes.`field.ID`"}
 		{% endif %}
 
 		{control}
-		<eav-multiselect values='{json array=$field.values}' ng-model="[[ngmodel]]">
-		<div class="multiValueSelect{% if $field.type == 1 %} multiValueNumeric{% endif %}">
+		<eav-multiselect values='{json array=field.values}' ng-model="[[ngmodel]]">
+		<div class="multiValueSelect{% if field.type == 1 %} multiValueNumeric{% endif %}">
 
 			<div class="eavCheckboxes">
 				<div class="input" ng-repeat="value in values | orderBy:sortOrder() | filter:filter">
@@ -48,38 +48,38 @@
 		{/control}
 	{% else %}
 		{% if !empty(angular) %}
-			{assign var="ngmodel" value="`$angular`.attributes.`$field.ID`.ID"}
-			{assign var="ngmodelnew" value="`$angular`.attributes.`$field.ID`.newValue"}
+			{assign var="ngmodel" value="`angular`.attributes.`field.ID`.ID"}
+			{assign var="ngmodelnew" value="`angular`.attributes.`field.ID`.newValue"}
 		{% endif %}
 
 		{control}
 		<eav-select {% if empty(disableNewOptionValues) %}new="{t _enter_other}"{% endif %}>
-			<span class="prefix">[[field.valuePrefix()]]</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
+			<span class="prefix">[[field.valuePrefix()]]</span>{selectfield name="`prefix``fieldName`" ng_model=ngmodel options=field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
 			{% if empty(disableNewOptionValues) %}
 				<div class="newOptionValue" style="display: none">
-					{textfield ng_model=$ngmodelnew name="`$prefix`other[`$field.ID`]" class="text" noFormat=true}
+					{textfield ng_model=ngmodelnew name="`prefix`other[`field.ID`]" class="text" noFormat=true}
 				</div>
 			{% endif %}
 		</eav-select>
 		{/control}
 	{% endif %}
 
-{% elseif $field.type == 2 %}
+{% elseif field.type == 2 %}
 	{control}
-		<span class="prefix">[[field.valuePrefix()]]</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
+		<span class="prefix">[[field.valuePrefix()]]</span>{textfield name="`prefix``fieldName`" number="float" class="text numeric number" noFormat=true ng_model=ngmodel noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
 	{/control}
 
-{% elseif $field.type == 3 %}
+{% elseif field.type == 3 %}
 	{% if empty(disableAutocomplete) %}
-		{assign var="autocompleteController" value=$autocompleteController|@or:'backend.product'}
-		{assign var="autocomplete" value="controller=`$autocompleteController` field=`$fieldName`"}
+		{assign var="autocompleteController" value=autocompleteController|@or:'backend.product'}
+		{assign var="autocomplete" value="controller=`autocompleteController` field=`fieldName`"}
 	{% endif %}
-	{textfield name="`$prefix``$fieldName`" class="text [[textFieldClass]]" ng_model=$ngmodel autocomplete=$autocomplete}
+	{textfield name="`prefix``fieldName`" class="text [[textFieldClass]]" ng_model=ngmodel autocomplete=autocomplete}
 
-{% elseif $field.type == 4 %}
-	{textarea tinymce=true name="`$prefix``$fieldName`" class="tinyMCE" ng_model=$ngmodel}
+{% elseif field.type == 4 %}
+	{textarea tinymce=true name="`prefix``fieldName`" class="tinyMCE" ng_model=ngmodel}
 	<div class="text-error hidden"></div>
 
-{% elseif $field.type == 6 %}
-	{calendar name="`$prefix``$fieldName`" ng_model=$ngmodel}
+{% elseif field.type == 6 %}
+	{calendar name="`prefix``fieldName`" ng_model=ngmodel}
 {% endif %}

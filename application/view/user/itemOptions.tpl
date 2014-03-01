@@ -1,27 +1,27 @@
 {% if !empty(options) %}
 	<ul class="itemOptions">
-	{foreach from=$options item=option}
+	{% for option in options %}
 		<li>
 			[[option.Choice.Option.name()]]:
-			{% if 0 == $option.Choice.Option.type %}
+			{% if 0 == option.Choice.Option.type %}
 				{t _option_yes}
-			{% elseif 1 == $option.Choice.Option.type %}
+			{% elseif 1 == option.Choice.Option.type %}
 				[[option.Choice.name()]]
-			{% elseif 3 == $option.Choice.Option.type %}
-				<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.Choice.Option.ID`") ]]">[[option.fileName]]</a>
-				{% if $option.small_url %}
+			{% elseif 3 == option.Choice.Option.type %}
+				<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`option.Choice.Option.ID`") ]]">[[option.fileName]]</a>
+				{% if option.small_url %}
 					<div class="optionImage">
-						<a href="{static url=$option.large_url}" rel="lightbox"><img src="{static url=$option.small_url}" /></a>
+						<a href="{static url=option.large_url}" rel="lightbox"><img src="{static url=option.small_url}" /></a>
 					</div>
 				{% endif %}
 			{% else %}
-				{$option.optionText|@htmlspecialchars}
+				{option.optionText|@htmlspecialchars}
 			{% endif %}
 
-			{% if $option.priceDiff != 0 %}
+			{% if option.priceDiff != 0 %}
 				<span class="optionPrice">([[option.formattedPrice]])</span>
 			{% endif %}
 		</li>
-	{/foreach}
+	{% endfor %}
 	</ul>
 {% endif %}

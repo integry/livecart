@@ -29,23 +29,23 @@
 </div>
 
 <ul class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit groupList">
-{foreach $items as $item}
-	{% if $lastProductRelationshipGroup != $item.ProductList.ID  %}
-		{% if $lastProductRelationshipGroup > 0 %}</ul></li>{% endif %}
+{foreach items as item}
+	{% if lastProductRelationshipGroup != item.ProductList.ID  %}
+		{% if lastProductRelationshipGroup > 0 %}</ul></li>{% endif %}
 		<li id="[[item.ProductList.ID]]" class="groupContainer">
 			<span class="groupTitle">[[item.ProductList.name]]</span>
 			[[ partial("backend/productList/form.tpl") ]]
 			<ul id="[[item.ProductList.ID]]" class="subList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_subList">
 	{% endif %}
 
-	{% if $item.Product.ID %} {* For empty groups *}
+	{% if item.Product.ID %} {* For empty groups *}
 		<li id="[[item.ID]]">
 			[[ partial('backend/productListItem/add.tpl', ['product': item.Product]) ]]
 		</li>
 	{% endif %}
 
-	{% set lastProductRelationshipGroup = $item.ProductList.ID %}
-{/foreach}
+	{% set lastProductRelationshipGroup = item.ProductList.ID %}
+{% endfor %}
 </ul>
 
 <div class="blankItem" class="dom_template">

@@ -7,16 +7,16 @@
 				<form action="[[ url("backend.Customize/changeTheme") ]]" class="form-horizontal">
 					{t _theme}
 					<select id="themeMenu" name="theme">
-						{foreach $themes as $thm}
-							<option {% if $currentTheme == $thm %}selected="selected" {% endif %}value="{$thm|escape}">{$thm|escape}</option>
-						{/foreach}
+						{foreach themes as thm}
+							<option {% if currentTheme == thm %}selected="selected" {% endif %}value="{thm|escape}">{thm|escape}</option>
+						{% endfor %}
 					</select>
 				</form>
 			</li>
 
-			<li id="modeTemplate" {% if 'template' == $mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
-			<li id="modeCss" {% if 'css' == $mode %}class="active"{% endif %}><a  href="{link controller="backend.customize" action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
-			{% if 'css' == $mode %}
+			<li id="modeTemplate" {% if 'template' == mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=template" returnPath=true}">{t _templates}</a></li>
+			<li id="modeCss" {% if 'css' == mode %}class="active"{% endif %}><a  href="{link controller="backend.customize" action=mode query="mode=css" returnPath=true}">{t _css}</a></li>
+			{% if 'css' == mode %}
 				<input type="button" class="button" id="cssNewRule" value="{t _css_add}" />
 				<input type="button" class="button" id="cssSave" value="{t _css_save}" />
 				<span class="progressIndicator" id="cssSaveIndicator" style="display: none;"></span>
@@ -42,7 +42,7 @@
 					</form>
 				</div>
 			{% endif %}
-			<li id="modeTranslation" {% if 'translate' == $mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
+			<li id="modeTranslation" {% if 'translate' == mode %}class="active"{% endif %}><a href="{link controller="backend.customize" action=mode query="mode=translate" returnPath=true}">{t _translations}</a></li>
 
 			<li id="modeExit"><a href="{link controller="backend.customize" action=mode query="mode=exit" returnPath=true}">{t _exit}</a></li>
 
@@ -52,10 +52,10 @@
 	</div>
 </div>
 
-{% if 'css' == $mode %}
+{% if 'css' == mode %}
 	<script type="text/javascript">
 		Router.setUrlTemplate('[[ url("controller/action") ]]');
-		var cust = new CssCustomize({json array=$theme});
+		var cust = new CssCustomize({json array=theme});
 		cust.errSelectorMsg = '[[ escape({t _css_err_selector}) ]]';
 		cust.errTextMsg = '[[ escape({t _css_err_text}) ]]';
 		cust.ruleAddedMsg = '[[ escape({t _css_rule_added}) ]]';
@@ -67,5 +67,5 @@
 {% endif %}
 
 <script type="text/javascript">
-	new Customize.ThemesMenu($("themeMenu"));
+	new Customize.ThemesMenu(("themeMenu"));
 </script>

@@ -8,7 +8,7 @@
 
 	<title>
 		LiveCart Installer
-		{* $PAGE_TITLE *}
+		{* PAGE_TITLE *}
 	</title>
 	<base href="{baseUrl}" />
 

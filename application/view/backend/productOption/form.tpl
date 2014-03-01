@@ -79,8 +79,8 @@
 			{/input}
 
 			{input name="maxFileSize"}
-				{capture assign=maxTip}{maketext text=_ProductOption_maxFileSize_help params=$maxUploadSize}{/capture}
-				{label}{tip _ProductOption_maxFileSize $maxTip}:{/label}
+				{capture assign=maxTip}{maketext text=_ProductOption_maxFileSize_help params=maxUploadSize}{/capture}
+				{label}{tip _ProductOption_maxFileSize maxTip}:{/label}
 				<input type="text" name="maxFileSize" class="number productOption_form_maxFileSize"  /> {t _ProductOption_megabytes}
 			{/input}
 		</div>
@@ -101,17 +101,17 @@
 		<div class="clear"></div>
 
 		{language}
-			{input name="name_`$lang.ID`"}
+			{input name="name_`lang.ID`"}
 				{label}{t _ProductOption_title}:{/label}
 				<input type="text" name="name_[[lang.ID]]" />
 			{/input}
 
-			{input name="selectMessage_`$lang.ID`"}
+			{input name="selectMessage_`lang.ID`"}
 				{label}{toolTip label=_ProductOption_selectMessage hint=_tip_ProductOption_selectMessage}:{/label}
 				<textarea name="selectMessage_[[lang.ID]]" class="productOption_form_description"></textarea>
 			{/input}
 
-			{input name="description_`$lang.ID`"}
+			{input name="description_`lang.ID`"}
 				{label}{tip _ProductOption_description}:{/label}
 				<textarea name="description_[[lang.ID]]" class="productOption_form_description"></textarea>
 			{/input}

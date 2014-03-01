@@ -5,4 +5,4 @@
 
 -----------------------------------------------
 אם אין ברצונך לקבל עוד עדכונים מהחנות שלנו, אנא בקר בלינק שלהלן על מנת להסיר את עצמך מרשימת הדיוור:
-[[ fullurl("newsletter/unsubscribe", email=`$email`) ]]
+[[ fullurl("newsletter/unsubscribe", email=`email`) ]]

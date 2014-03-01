@@ -5,8 +5,8 @@
 
 	<div class="accordion-body">
 		<div class="accordion-inner">
-			{% if $user.ID > 0 %}
-				{form action="onePageCheckout/doSelectBillingAddress" method="POST" handle=$form class="form-vertical"}
+			{% if user.ID > 0 %}
+				{form action="onePageCheckout/doSelectBillingAddress" method="POST" handle=form class="form-vertical"}
 					[[ partial('checkout/block/selectAddress.tpl', ['addresses': billingAddresses, 'prefix': "billing", 'states': billing_states]) ]]
 					[[ partial("checkout/orderFields.tpl") ]]
 					[[ partial("onePageCheckout/block/continueButton.tpl") ]]

@@ -38,7 +38,7 @@
 		window.onload = window.opener.popupOnload;
 	}
 
-	Backend.Category.init({json array=$categoryList});
+	Backend.Category.init({json array=categoryList});
 </script>
 
 </body>

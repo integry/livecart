@@ -1,20 +1,20 @@
 <ul class="menu">
 	<li>
-		{form handle=$form class="orderStatus" action="backend.customerOrder/update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
+		{form handle=form class="orderStatus" action="backend.customerOrder/update" id="orderInfo_`order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
 			{hidden name="ID"}
 			{hidden name="isCancelled"}
 				<label for="order_[[order.ID]]_status" style="width: auto; float: none;">{t _status}: </label>
-				{selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
+				{selectfield options=statuses id="order_`order.ID`_status" name="status" class="status"}
 				<div class="errorText hidden"></div>
 		{/form}
 		<div class="order_acceptanceStatus" >
 			{t _this_order_is}
-			<span class="order_acceptanceStatusValue" id="order_acceptanceStatusValue_[[order.ID]]" style="color: {% if $order.isCancelled %}red{% else %}green{% endif %}">
-				{% if $order.isCancelled %}{t _canceled}{% else %}{t _accepted}{% endif %}
+			<span class="order_acceptanceStatusValue" id="order_acceptanceStatusValue_[[order.ID]]" style="color: {% if order.isCancelled %}red{% else %}green{% endif %}">
+				{% if order.isCancelled %}{t _canceled}{% else %}{t _accepted}{% endif %}
 			</span>
 		</div>
 	</li>
-	{% if !$order.isFinalized %}
+	{% if !order.isFinalized %}
 	<li {denied role='order.update'}style="display: none"{/denied} class="order_unfinalized">
 		<span style="display: none;" id="order_[[order.ID]]_isFinalizedIndicator" class="progressIndicator"></span>
 		<a id="order_[[order.ID]]_isFinalized" href="[[ url("backend.customerOrder/finalize/" ~ order.ID) ]]">
@@ -31,10 +31,10 @@
 	</li>
 
 	<li {denied role='order.update'}style="display: none"{/denied}
-		class="{% if $order.isCancelled %}order_accept{% else %}order_cancel{% endif %}">
+		class="{% if order.isCancelled %}order_accept{% else %}order_cancel{% endif %}">
 		<span style="display: none;" id="order_[[order.ID]]_isCanceledIndicator" class="progressIndicator"></span>
 		<a id="order_[[order.ID]]_isCanceled" href="[[ url("backend.customerOrder/setIsCanceled/" ~ order.ID) ]]">
-			{% if $order.isCancelled %}{t _accept_order}{% else %}{t _cancel_order}{% endif %}
+			{% if order.isCancelled %}{t _accept_order}{% else %}{t _cancel_order}{% endif %}
 		</a>
 	</li>
 
@@ -43,7 +43,7 @@
 		<a id="order_[[order.ID]]_addCoupon" href="[[ url("backend.customerOrder/addCoupon/" ~ order.ID) ]]?coupon=_coupon_">{t _add_coupon}</a>
 	</li>
 
-	{% if $order.isFinalized %}
+	{% if order.isFinalized %}
 		<li {denied role='order.update'}style="display: none"{/denied} class="order_recalculateDiscounts">
 			<a id="order_[[order.ID]]_recalculateDiscounts" href="[[ url("backend.customerOrder/recalculateDiscounts/" ~ order.ID) ]]">
 				{t _recalculate_discounts}
@@ -56,19 +56,19 @@
 
 
 <div class="addressContainer">
-	{% if $formShippingAddress || !$formBillingAddress %}
-		{form handle=$formShippingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+	{% if formShippingAddress || !formBillingAddress %}
+		{form handle=formShippingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_shippingAddress">
 				<legend>{t _shipping_address}</legend>
-				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_shippingAddress", 'address': order.ShippingAddress, 'states': shippingStates, 'order': order]) ]]
+				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`order.ID`_shippingAddress", 'address': order.ShippingAddress, 'states': shippingStates, 'order': order]) ]]
 			</fieldset>
 		{/form}
 	{% endif %}
-	{% if $formBillingAddress || !$formShippingAddress %}
-		{form handle=$formBillingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+	{% if formBillingAddress || !formShippingAddress %}
+		{form handle=formBillingAddress action="backend.customerOrder/updateAddress" id="orderInfo_`order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
 			<fieldset class="order_billingAddress">
 				<legend>{t _billing_address}</legend>
-				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`$order.ID`_billingAddress", 'address': order.BillingAddress, 'states': billingStates, 'order': order]) ]]
+				[[ partial('backend/customerOrder/address.tpl', ['type': "order_`order.ID`_billingAddress", 'address': order.BillingAddress, 'states': billingStates, 'order': order]) ]]
 			</fieldset>
 		{/form}
 	{% endif %}
@@ -77,24 +77,24 @@
 <fieldset class="order_info">
 	<div class="clearfix invoiceNumber">
 		<label class="param">{t _order_id}</label>
-		<label class="value" id="invoiceNumber[[order.ID]]">{$order.invoiceNumber|default:$order.ID}</label>
+		<label class="value" id="invoiceNumber[[order.ID]]">{order.invoiceNumber|default:order.ID}</label>
 	</div>
 
-	{% if $order.User %}
+	{% if order.User %}
 	<div class="clearfix">
 		<label class="param">{t _user}</label>
 		<label class="value">
-			<a href="{backendUserUrl user=$order.User}">
+			<a href="{backendUserUrl user=order.User}">
 				[[order.User.fullName]]
 			</a>
 		</label>
 	</div>
 	{% endif %}
 
-	<div class="clearfix orderAmount {% if !$order.isPaid %}unpaid{% endif %}">
+	<div class="clearfix orderAmount {% if !order.isPaid %}unpaid{% endif %}">
 		<label class="param">{t _amount}</label>
 		<label class="value">
-			[[order.Currency.pricePrefix]]<span class="order_totalAmount">{$order.totalAmount|default:0|string_format:"%.2f"}</span>[[order.Currency.priceSuffix]]
+			[[order.Currency.pricePrefix]]<span class="order_totalAmount">{order.totalAmount|default:0|string_format:"%.2f"}</span>[[order.Currency.priceSuffix]]
 		</label>
 		<span class="notPaid">
 			<input type="checkbox" class="checkbox" id="{uniqid}" value="1" onchange="Backend.CustomerOrder.prototype.changePaidStatus(this, '[[ url("backend.payment/changeOrderPaidStatus/" ~ order.ID, "'status=_stat_'") ]]');">
@@ -102,7 +102,7 @@
 		</span>
 	</div>
 
-	{% if $order.dateCompleted %}
+	{% if order.dateCompleted %}
 		<div class="clearfix">
 			<label class="param" for="order_[[order.ID]]_dateCreated">{t _date_created}</label>
 			<label id="dateCreatedLabel">
@@ -110,7 +110,7 @@
 				<span id="dateCreatedVisible">[[order.dateCompleted]]</span>
 			</label>
 
-			{form id="calendarform" handle=$dateForm class="hidden" action="backend.customerOrder/updateDate" method="POST"}
+			{form id="calendarform" handle=dateForm class="hidden" action="backend.customerOrder/updateDate" method="POST"}
 				{calendar name="dateCompleted" id="dateCompleted"}
 
 				<span class="progressIndicator" id="indicatorDateCompleted" style="display: none;"></span>
@@ -126,16 +126,16 @@
 	{% if 'ENABLE_MULTIADDRESS'|@config %}
 	<div class="clearfix">
 		<label class="param" for="order_[[order.ID]])_isMultiAddress">{t CustomerOrder.isMultiAddress}</label>
-		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '[[ url("backend.customerOrder/setMultiAddress/" ~ order.ID, "'status=_stat_'") ]]', [[order.ID]]);"><option value=0>{t _no}</option><option value=1{% if $order.isMultiAddress %} selected="selected"{% endif %}>{t _yes}</option></select>
+		<select style="width: auto; float: left;" onchange="Backend.CustomerOrder.prototype.setMultiAddress(this, '[[ url("backend.customerOrder/setMultiAddress/" ~ order.ID, "'status=_stat_'") ]]', [[order.ID]]);"><option value=0>{t _no}</option><option value=1{% if order.isMultiAddress %} selected="selected"{% endif %}>{t _yes}</option></select>
 		<span class="progressIndicator" style="display: none; float: left; padding-top: 0; padding-left: 0;"></span>
 	</div>
 	{% endif %}
 
-	{% if $order.isRecurring %}
+	{% if order.isRecurring %}
 		<div class="clearfix">
 			<label class="param">{t _recurring_status}:</label>
 			<label class="value" id="recurringStatus[[order.ID]]">
-				{% if $order.rebillsLeft > 0 %}
+				{% if order.rebillsLeft > 0 %}
 					{t _recurring_status_active}
 				{% else %}
 					{t _recurring_status_expired}
@@ -146,14 +146,14 @@
 		<div class="clearfix">
 			<label class="param">{t _remaining_rebills}:</label>
 			<label class="value" id="remainingRebillsValue[[order.ID]]">
-				{% if is_numeric($order.rebillsLeft) %}
+				{% if is_numeric(order.rebillsLeft) %}
 					[[order.rebillsLeft]]
 				{% else %}
 					0
 				{% endif %}
 			</label>
 
-			<span class="stopRebillsLinkContainer" style="{% if $order.rebillsLeft == 0 %}display:none;{% endif %}">
+			<span class="stopRebillsLinkContainer" style="{% if order.rebillsLeft == 0 %}display:none;{% endif %}">
 				<span class="progressIndicator" style="display:none;"></span>
 				<a href="#" id="stopRebills[[order.ID]]">{t _cancel_subscription}</a>
 				<input type="hidden" id="cancelSubscriptionURL[[order.ID]]" value="[[ url("backend.CustomerOrder/cancelSubscription/" ~ order.ID) ]]" />
@@ -174,11 +174,11 @@
 
 {* count how many unshipped shipments *}
 {% set shipmentCount = 0 %}
-{foreach item="shipment" from=$shipments}
-	{% if $shipment.status != 3 && $shipment.isShippable %}
-		{assign var="shipmentCount" value=$shipmentCount+1}
+{foreach item="shipment" from=shipments}
+	{% if shipment.status != 3 && shipment.isShippable %}
+		{assign var="shipmentCount" value=shipmentCount+1}
 	{% endif %}
-{/foreach}
+{% endfor %}
 
 <fieldset {denied role='order.update'}style="display: none"{/denied}>
 	<ul class="menu" id="orderShipments_menu_[[orderID]]">
@@ -227,14 +227,14 @@
 	<div class="clear" />
 	<div class="tip">{t _search_product_tip1}<br />{t _search_product_tip2}</div>
 
-	<div class="{% if $shipmentCount <= 1 %}singleShipment{% endif %}">
+	<div class="{% if shipmentCount <= 1 %}singleShipment{% endif %}">
 		<label>{t _add_to_shipment}:</label>
 		<select id="order[[orderID]]_addToShipment" class="addToShipment">
-			{foreach item="shipment" from=$shipments}
-				{% if $shipment.status != 3 && $shipment.isShippable %}
+			{foreach item="shipment" from=shipments}
+				{% if shipment.status != 3 && shipment.isShippable %}
 					<option value="[[shipment.ID]]">{t _shipment} #[[shipment.ID]]</option>
 				{% endif %}
-			{/foreach}
+			{% endfor %}
 		</select>
 	</div>
 
@@ -248,26 +248,26 @@
 <div id="orderShipmentItem_[[orderID]]_empty" style="display: none">[[ partial('backend/shipment/itemAmount.tpl', ['shipment': null]) ]]</div>
 
 
-{% if $order.discounts || $order.coupons %}
+{% if order.discounts || order.coupons %}
 	<fieldset class="discounts">
 		<legend>{t _discounts}</legend>
 
-		{% if $order.coupons %}
+		{% if order.coupons %}
 			<div class="appliedCoupons">
 				{t _coupons}:
-				{foreach from=$order.coupons item=coupon name=coupons}
-					<strong>[[coupon.couponCode]]</strong>{% if !$smarty.foreach.coupons.last %}, {% endif %}
-				{/foreach}
+				{foreach from=order.coupons item=coupon name=coupons}
+					<strong>[[coupon.couponCode]]</strong>{% if !smarty.foreach.coupons.last %}, {% endif %}
+				{% endfor %}
 			</div>
 		{% endif %}
 
 		<table class="discounts">
-			{foreach from=$order.discounts item=discount name=discounts}
+			{foreach from=order.discounts item=discount name=discounts}
 				<tr>
 					<td>[[discount.description]]</td>
 					<td class="amount">[[discount.formatted_amount]]</td>
 				</tr>
-			{/foreach}
+			{% endfor %}
 		</table>
 	</fieldset>
 {% endif %}
@@ -279,7 +279,7 @@
 			<li id="orderShipments_list_[[orderID]]_[[downloadableShipment.ID]]" class="orderShipment" >
 				[[ partial('backend/shipment/shipment.tpl', ['shipment': downloadableShipment, 'notShippable': true, 'downloadable': 1]) ]]
 
-				{% if $downloadableShipment.items|@count > 0 %}
+				{% if downloadableShipment.items|@count > 0 %}
 					<script type="text/javascript">
 						Element.show("order[[orderID]]_downloadableShipments");
 					</script>
@@ -293,9 +293,9 @@
 {* Not Shipped Shipments *}
 <div id="order[[orderID]]_shippableShipments" class="shippableShipments shipmentCategoty" style="display: none">
 	<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
-	<ul id="orderShipments_list_[[orderID]]" class="orderShipments {% if $shipmentCount <= 1 %}singleShipment{% endif %}">
-		{foreach item="shipment" from=$shipments}
-			{% if $shipment.status != 3 && $shipment.isShippable %}
+	<ul id="orderShipments_list_[[orderID]]" class="orderShipments {% if shipmentCount <= 1 %}singleShipment{% endif %}">
+		{foreach item="shipment" from=shipments}
+			{% if shipment.status != 3 && shipment.isShippable %}
 				<li id="orderShipments_list_[[orderID]]_[[shipment.ID]]" class="orderShipment downloadableOrder">
 					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">
@@ -303,7 +303,7 @@
 					</script>
 				</li>
 			{% endif %}
-		{/foreach}
+		{% endfor %}
 	</ul>
 </div>
 
@@ -312,20 +312,20 @@
 <div id="order[[orderID]]_shippedShipments" class="shippedShipments shipmentCategoty" style="display: none">
 	<h2 class="shippedShipmentsTitle">{t _shipped}</h2>
 	{% set shipmentCount = 0 %}
-	{foreach item="shipment" from=$shipments}
-		{% if $shipment.status == 3 && $shipment.isShippable %}
-			{assign var="shipmentCount" value=$shipmentCount+1}
+	{foreach item="shipment" from=shipments}
+		{% if shipment.status == 3 && shipment.isShippable %}
+			{assign var="shipmentCount" value=shipmentCount+1}
 		{% endif %}
-	{/foreach}
-	<ul id="orderShipments_list_[[orderID]]_shipped" class="orderShippedShipments {% if $shipmentCount <= 1 %}singleShipment{% endif %}">
-		{foreach item="shipment" from=$shipments}
-			{% if $shipment.status == 3 && $shipment.isShippable %}
+	{% endfor %}
+	<ul id="orderShipments_list_[[orderID]]_shipped" class="orderShippedShipments {% if shipmentCount <= 1 %}singleShipment{% endif %}">
+		{foreach item="shipment" from=shipments}
+			{% if shipment.status == 3 && shipment.isShippable %}
 				<li id="orderShipments_list_[[orderID]]_shipped_[[shipment.ID]]" class="orderShipment">
 					[[ partial("backend/shipment/shipment.tpl") ]]
 					<script type="text/javascript">Element.show("order[[orderID]]_shippedShipments");</script>
 				</li>
 			{% endif %}
-		{/foreach}
+		{% endfor %}
 	</ul>
 </div>
 
@@ -353,7 +353,7 @@
 	Backend.Shipment.Links.removeEmptyShipments = '[[ url("backend.customerOrder/removeEmptyShipments") ]]';
 
 
-	Backend.Shipment.Statuses = {json array=$statuses};
+	Backend.Shipment.Statuses = {json array=statuses};
 
 	Backend.Shipment.Messages = {};
 	Backend.Shipment.Messages.areYouSureYouWantToDelete = '[[ addslashes({t _are_you_sure_you_want_to_delete_group}) ]]';
@@ -379,35 +379,35 @@
 	ActiveList.prototype.getInstance("orderShipmentsItems_list_[[orderID]]_[[downloadableShipment.ID]]", Backend.OrderedItem.activeListCallbacks);
 	var groupList = ActiveList.prototype.getInstance('orderShipments_list_[[orderID]]', Backend.Shipment.Callbacks);
 
-	{foreach item="shipment" from=$shipments}
-		{% if $shipment.isShippable %}
-			var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_[[orderID]]{% if $shipment.isShipped %}_shipped{% endif %}_[[shipment.ID]]', {isShipped: {% if $shipment.isShipped %}true{% else %}false{% endif %}});
+	{foreach item="shipment" from=shipments}
+		{% if shipment.isShippable %}
+			var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_[[orderID]]{% if shipment.isShipped %}_shipped{% endif %}_[[shipment.ID]]', {isShipped: {% if shipment.isShipped %}true{% else %}false{% endif %}});
 		{% else %}
 			var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_[[orderID]]_[[shipment.ID]]');
 		{% endif %}
-	{/foreach}
+	{% endfor %}
 
 	groupList.createSortable(true);
 	</script>
 
 
 <script type="text/javascript">
-	Backend.CustomerOrder.prototype.treeBrowser.selectItem({$type|default:0}, false);
+	Backend.CustomerOrder.prototype.treeBrowser.selectItem({type|default:0}, false);
 
-	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
+	Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=existingUserAddresses}
 
-	var status = Backend.CustomerOrder.Editor.prototype.getInstance([[order.ID]], true, {json array=$hideShipped}, [[order.isCancelled]], [[order.isFinalized]], {json array=$order.invoiceNumber});
+	var status = Backend.CustomerOrder.Editor.prototype.getInstance([[order.ID]], true, {json array=hideShipped}, [[order.isCancelled]], [[order.isFinalized]], {json array=order.invoiceNumber});
 
 	{% if !empty(formShippingAddress) %}
-		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('orderInfo_[[order.ID]]_shippingAddress_form'), 'shippingAddress');
+		var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance(('orderInfo_[[order.ID]]_shippingAddress_form'), 'shippingAddress');
 	{% endif %}
 
 	{% if !empty(formBillingAddress) %}
-		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('orderInfo_[[order.ID]]_billingAddress_form'), 'billingAddress');
+		var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance(('orderInfo_[[order.ID]]_billingAddress_form'), 'billingAddress');
 	{% endif %}
 
-	{% if $order.dateCompleted %}
+	{% if order.dateCompleted %}
 		var dateComplededEditor = new Backend.CustomerOrder.DateCompletedEditor();
 	{% endif %}
-	status.toggleInvoicesTab({% if $order.isRecurring %}1{% else %}0{% endif %});
+	status.toggleInvoicesTab({% if order.isRecurring %}1{% else %}0{% endif %});
 </script>

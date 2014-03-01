@@ -1,7 +1,7 @@
 {function name="catPath" category=null}
 	{% if !empty(category) %}
-		{% if $category.ParentNode %}
-			{catPath category=$category.ParentNode} &gt;
+		{% if category.ParentNode %}
+			{catPath category=category.ParentNode} &gt;
 		{% endif %}
 		[[category.name()]]
 	{% endif %}
@@ -21,5 +21,5 @@
 </li>
 
 <script type="text/javascript">
-	new Backend.CategoryRelationship($('tabRelatedCategoryContent_[[category.ID]]'), {json array=$category}, {json array=$categories});
+	new Backend.CategoryRelationship(('tabRelatedCategoryContent_[[category.ID]]'), {json array=category}, {json array=categories});
 </script>

@@ -31,7 +31,7 @@
 
 
 <div id="manImgAdd_[[ownerId]]" class="manImageEditForm" style="display: none;">
-{form handle=$form action="backend.manufacturerImage/upload" method="post" onsubmit="$('manImageList_`$ownerId`').handler.upload(this);" target="manImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
+{form handle=form action="backend.manufacturerImage/upload" method="post" onsubmit="('manImageList_`ownerId`').handler.upload(this);" target="manImgUpload_`ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 
 	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
@@ -42,13 +42,13 @@
 		{input name="image"}
 			{label}{t _image_file}:{/label}
 			{filefield}
-			<div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
+			<div class="maxFileSize">{maketext text=_max_file_size params=maxSize}</div>
 		{/input}
 
 		[[ textfld('title', '_image_title') ]]
 
 		{language}
-			[[ textfld('title_`$lang.ID`', '_image_title') ]]
+			[[ textfld('title_`lang.ID`', '_image_title') ]]
 		{/language}
 
 		<fieldset class="controls">
@@ -61,12 +61,12 @@
 
 
 	<script type="text/javascript">
-		Element.observe($('manImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
+		Element.observe(('manImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
 			var form = ('manImgAdd_[[ownerId]]');
 
-			$("manImageList_[[ownerId]]").handler.cancelAdd();
+			("manImageList_[[ownerId]]").handler.cancelAdd();
 
 			var menu = new ActiveForm.Slide('manImgMenu_[[ownerId]]');
 			menu.hide("manImageAdd", form);
@@ -93,7 +93,7 @@
 
 
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("manImageList_[[ownerId]]"), 'man');
+	var handler = new Backend.ObjectImage(("manImageList_[[ownerId]]"), 'man');
 	handler.initList([[images]]);
 
 	handler.setDeleteUrl('[[ url("backend.manufacturerImage/delete") ]]');

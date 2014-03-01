@@ -2,10 +2,10 @@
 	prefix="newsletterSubscriber"
 	id=0
 	controller="backend.newsletterSubscriber" action="lists"
-	displayedColumns=$displayedColumns
-	availableColumns=$availableColumns
+	displayedColumns=displayedColumns
+	availableColumns=availableColumns
 	totalCount=0
-	filters=$filters
+	filters=filters
 	container="tabSubscribers"
 	count="backend/newsletterSubscriber/count.tpl"
 	massAction="backend/newsletterSubscriber/massAction.tpl"
@@ -17,7 +17,7 @@
 
 
 	var massHandler = new ActiveGrid.MassActionHandler(
-						$('newsletterSubscriberMass_0'),
+						('newsletterSubscriberMass_0'),
 						window.activeGrids['newsletterSubscriber_0']
 						);
 	massHandler.deleteConfirmMessage = '[[ addslashes({t _newsletter_delete_confirm}) ]]' ;

@@ -9,7 +9,7 @@
 				<li>
 			{% endif %}
 
-				{# <a href="{categoryUrl data=$category filters=$category.filters}">[[category.name()]]</a> #}
+				{# <a href="{categoryUrl data=category filters=category.filters}">[[category.name()]]</a> #}
 				<a href="[[ url(route(category)) ]]">[[category.name()]]</a>
 
 				{% if config('DISPLAY_NUM_CAT') %}

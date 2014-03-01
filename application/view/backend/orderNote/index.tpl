@@ -13,7 +13,7 @@
 
 			<legend>[[ capitalize({t _add_response}) ]]</legend>
 
-			{form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
+			{form action="controller=backend.orderNote action=add id=`order.ID`" method="POST" handle=form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
 
 				<p>
 					{textarea name="comment"}
@@ -36,16 +36,16 @@
 
 <fieldset class="container orderNoteContainer">
 	<ul class="notes">
-	{foreach from=$notes item=note}
+	{% for note in notes %}
 		[[ partial("backend/orderNote/view.tpl") ]]
 	{foreachelse}
 		<div class="noRecords"><div style="display: block;">{t _no_messages}</div></div>
-	{/foreach}
+	{% endfor %}
 	</ul>
 </fieldset>
 
 <script type="text/javascript">
-	Backend.OrderNote.init($('orderNoteMenu_[[order.ID]]'));
+	Backend.OrderNote.init(('orderNoteMenu_[[order.ID]]'));
 </script>
 
 <div class="clear"></div>

@@ -1,5 +1,5 @@
-{% if 'SHOW_SKU_CART'|config %}
-	{assign var="extraColspanSize" value=1+$extraColspanSize}
+{% if config('SHOW_SKU_CART') %}
+	{assign var="extraColspanSize" value=1+extraColspanSize}
 {% endif %}
 <h2>{t _shopping_cart}</h2>
 
@@ -9,14 +9,14 @@
 {capture assign="cartUpdate"}
 	<td id="cartUpdate"><input type="submit" class="submit" value="{t _update}" /></td>
 {/capture}
-{assign var="cartUpdate" value=$cartUpdate|@str_split:10000}
-{php}$GLOBALS['cartUpdate'] = $smarty->getTemplateVars('cartUpdate'); $smarty->assignByRef('GLOBALS', $GLOBALS);{/php}
+{assign var="cartUpdate" value=cartUpdate|@str_split:10000}
+{php}GLOBALS['cartUpdate'] = smarty->getTemplateVars('cartUpdate'); smarty->assignByRef('GLOBALS', GLOBALS);{/php}
 
-{form action="onePageCheckout/updateCart" method="POST" enctype="multipart/form-data" handle=$form id="cartItems" class="form-horizontal"}
+{form action="onePageCheckout/updateCart" method="POST" enctype="multipart/form-data" handle=form id="cartItems" class="form-horizontal"}
 <table id="cart">
 	<thead>
 		<tr>
-			<th colspan="{% if 'SHOW_SKU_CART'|config %}4{% else %}3{% endif %}" class="cartListTitle"></th>
+			<th colspan="{% if config('SHOW_SKU_CART') %}4{% else %}3{% endif %}" class="cartListTitle"></th>
 			<th class="cartPrice">{t _price}</th>
 			<th class="cartQuant">{t _quantity}</th>
 		</tr>
@@ -27,7 +27,7 @@
 		[[ partial("order/block/discounts.tpl") ]]
 		[[ partial("order/block/shipping.tpl") ]]
 
-		{% if !'HIDE_TAXES'|config %}
+		{% if !config('HIDE_TAXES') %}
 			[[ partial("order/block/taxes.tpl") ]]
 		{% endif %}
 

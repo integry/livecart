@@ -21,7 +21,7 @@
 			[[address.city]]
 		</p>
 		<p>
-			{% if $address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
+			{% if address.stateName %}[[address.stateName]], {% endif %}[[address.postalCode]]
 		</p>
 		<p>
 			[[address.countryName]]
@@ -34,19 +34,19 @@
 
 {% if empty(hideAddress) %}
 <div id="overviewAddresses">
-	{% if $order.ShippingAddress && !$order.isMultiAddress %}
+	{% if order.ShippingAddress && !order.isMultiAddress %}
 		<div class="addressContainer">
 			<h3>{t _will_ship_to}:</h3>
 
 
-            {% if $order.isLocalPickup %}
-                {foreach $order.shipments as $shipment}
+            {% if order.isLocalPickup %}
+                {foreach order.shipments as shipment}
                     <div class="ShippingServiceDescription">
-                        {$shipment.ShippingService.description()|escape}
+                        {shipment.ShippingService.description()|escape}
                     </div>
-                {/foreach}
+                {% endfor %}
             {% else %}
-                {address address=$order.ShippingAddress}
+                {address address=order.ShippingAddress}
             {% endif %}
 			{% if empty(nochanges) %}
 				<a href="[[ url("checkout/selectAddress") ]]">{t _change}</a>
@@ -54,10 +54,10 @@
 		</div>
 	{% endif %}
 
-	{% if $order.BillingAddress && !'REQUIRE_SAME_ADDRESS'|config && ($order.ShippingAddress.compact != $order.BillingAddress.compact) %}
+	{% if order.BillingAddress && !config('REQUIRE_SAME_ADDRESS') && (order.ShippingAddress.compact != order.BillingAddress.compact) %}
 	<div class="addressContainer">
 		<h3>{t _will_bill_to}:</h3>
-		{address address=$order.BillingAddress}
+		{address address=order.BillingAddress}
 		{% if empty(nochanges) %}
 			<a href="[[ url("checkout/selectAddress") ]]">{t _change}</a>
 		{% endif %}

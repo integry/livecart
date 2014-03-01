@@ -1,4 +1,4 @@
-{% if $chartType < 2 %}
+{% if chartType < 2 %}
 	<div class="intervalSelector">
 		<span>{t _interval}:</span>
 		<select class="intervalSelect">

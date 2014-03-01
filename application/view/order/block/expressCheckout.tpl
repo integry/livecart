@@ -1,7 +1,7 @@
-{% if $expressMethods && $cart.isOrderable && !$cart.isMultiAddress %}
+{% if expressMethods && cart.isOrderable && !cart.isMultiAddress %}
 	<div id="expressCheckoutMethods">
-		{foreach from=$expressMethods item=method}
+		{% for method in expressMethods %}
 			<a href="[[ url("checkout/express/" ~ method) ]]"><img src="{s image/payment/[[method]].gif}" /></a>
-		{/foreach}
+		{% endfor %}
 	</div>
 {% endif %}

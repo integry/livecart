@@ -35,7 +35,7 @@
 
 
 <div id="catImgAdd_[[ownerId]]" class="catImageEditform style="display: none;">
-{form handle=$form action="backend.categoryImage/upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
+{form handle=form action="backend.categoryImage/upload" method="post" onsubmit="('catImageList_`ownerId`').handler.upload(this);" target="catImgUpload_`ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
 
 	<input type="hidden" name="ownerId" value="[[ownerId]]" />
 	<input type="hidden" name="imageId" value="" />
@@ -46,13 +46,13 @@
 		{input name="image"}
 			{label}{tip _image_file}:{/label}
 			{filefield}
-			<span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+			<span class="maxFileSize">{maketext text=_max_file_size params=maxSize}</span>
 		{/input}
 
 		[[ textfld('title', '_image_title') ]]
 
 		{language}
-			[[ textfld('title_`$lang.ID`', '_image_title') ]]
+			[[ textfld('title_`lang.ID`', '_image_title') ]]
 		{/language}
 
 		<fieldset class="controls">
@@ -65,12 +65,12 @@
 
 
 	<script type="text/javascript">
-		Element.observe($('catImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
+		Element.observe(('catImgAdd_[[ownerId]]').down("a.cancel"), "click", function(e)
 		{
 			e.preventDefault();
 			var form = ('catImgAdd_[[ownerId]]');
 
-			$("catImageList_[[ownerId]]").handler.cancelAdd();
+			("catImageList_[[ownerId]]").handler.cancelAdd();
 
 			var menu = new ActiveForm.Slide('catImgMenu_[[ownerId]]');
 			menu.hide("catImageAdd", form);
@@ -97,7 +97,7 @@
 
 
 <script type="text/javascript">
-	var handler = new Backend.ObjectImage($("catImageList_[[ownerId]]"), 'cat');
+	var handler = new Backend.ObjectImage(("catImageList_[[ownerId]]"), 'cat');
 	handler.initList([[images]]);
 
 	handler.setDeleteUrl('[[ url("backend.categoryImage/delete") ]]');

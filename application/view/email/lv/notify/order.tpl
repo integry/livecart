@@ -2,7 +2,7 @@ Saņemts jauns pasūtījums [[ config('STORE_NAME') ]]
 Pasūtījuma ID: [[order.invoiceNumber]]
 
 Pasūtījuma administrācija:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 Pasūtītas sekojošas preces:
 [[ partial("email/blockOrder.tpl") ]]

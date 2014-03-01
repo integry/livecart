@@ -42,7 +42,7 @@
 <script type="text/javascript">
 	window.ordersActiveGrid = {};
 
-	var users = new Backend.UserGroup({json array=$userGroups});
+	var users = new Backend.UserGroup({json array=userGroups});
 	window.usersActiveGrid = {};
 </script>
 

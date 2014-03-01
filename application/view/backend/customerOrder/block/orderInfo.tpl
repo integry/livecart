@@ -1,7 +1,7 @@
 <div>
-	<a href="{link controller="backend.customerOrder query="rt=`$randomToken`"}#order_[[order.ID]]__" class="qeInvoiceNumber">{$order.invoiceNumber|escape}</a>
+	<a href="{link controller="backend.customerOrder query="rt=`randomToken`"}#order_[[order.ID]]__" class="qeInvoiceNumber">{order.invoiceNumber|escape}</a>
 	{% if !empty(statusEditor) %}
-		<span style="margin-left: 2em;">{t _status}: {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}</span>
+		<span style="margin-left: 2em;">{t _status}: {selectfield options=statuses id="order_`order.ID`_status" name="status" class="status"}</span>
 	{% endif %}
 
 	<div class="qeOrderSideMenu">
@@ -23,28 +23,28 @@
 <table class="qeProducts">
 	<tbody>
 
-		{foreach $order.cartItems as $cartIem}
+		{foreach order.cartItems as cartIem}
 			<tr>
 				<td class="qeProduct">
-					{% if $cartIem.Product.ID %}
-						<a href="{link controller="backend.category query="rt=`$randomToken`"}#product_[[cartIem.Product.ID]]__">{$cartIem.Product.name|escape}</a>
+					{% if cartIem.Product.ID %}
+						<a href="{link controller="backend.category query="rt=`randomToken`"}#product_[[cartIem.Product.ID]]__">{cartIem.Product.name|escape}</a>
 					{% else %}
 						[[cartIem.name]]
 					{% endif %}
 				</td>
-				<td class="qeCount">&times;{$cartIem.count|escape}</td>
-				<td class="qePrice">{$cartIem.formattedDisplayPrice|escape}</td>
+				<td class="qeCount">&times;{cartIem.count|escape}</td>
+				<td class="qePrice">{cartIem.formattedDisplayPrice|escape}</td>
 			</tr>
-		{/foreach}
+		{% endfor %}
 	</tbody>
 </table>
 
 <div class="qeAddresses">
-	{% if $order.ShippingAddress %}
+	{% if order.ShippingAddress %}
 		<p class="shipping">{t _shipping_address}: [[order.ShippingAddress.compact]] </p>
 	{% endif %}
 
-	{% if $order.BillingAddress %}
+	{% if order.BillingAddress %}
 		<p class="billing">{t _billing_address}: [[order.BillingAddress.compact]]</p>
 	{% endif %}
 </div>

@@ -6,25 +6,25 @@
 	<div class="accordion-body">
 		<div class="accordion-inner">
 			<div class="form">
-				{form action="onePageCheckout/doSelectShippingMethod" method="POST" handle=$form}
-					{foreach from=$shipments key="key" item="shipment"}
+				{form action="onePageCheckout/doSelectShippingMethod" method="POST" handle=form}
+					{foreach from=shipments key="key" item="shipment"}
 
-						{% if $shipment.isShippable %}
-							{% if $order.isMultiAddress %}
+						{% if shipment.isShippable %}
+							{% if order.isMultiAddress %}
 								<h2>[[shipment.ShippingAddress.compact]]</h2>
 							{% endif %}
 
-							{% if $shipments|@count > 1 %}
+							{% if shipments|@count > 1 %}
 								[[ partial("checkout/shipmentProductList.tpl") ]]
 							{% endif %}
 
-							{% if $rates.$key %}
+							{% if rates.key %}
 								[[ partial("checkout/block/shipmentSelectShippingRateFields.tpl") ]]
 							{% else %}
 								<span class="text-danger">{t _err_no_rates_for_address}</span>
 							{% endif %}
 						{% endif %}
-					{/foreach}
+					{% endfor %}
 
 					[[ partial("onePageCheckout/block/continueButton.tpl") ]]
 				{/form}
@@ -40,12 +40,12 @@
 
 		{% if !empty(preview_shipping_methods) %}
 			<div class="stepPreview">
-			{foreach from=$preview_shipping_methods item=method}
+			{% for method in preview_shipping_methods %}
 				<div class="shippingPreview">
 					[[method.ShippingService.name()]]
-					({$method.formattedPrice[$method.costCurrency]})
+					({method.formattedPrice[method.costCurrency]})
 				</div>
-			{/foreach}
+			{% endfor %}
 			</div>
 		{% endif %}
 	</div>

@@ -2,7 +2,7 @@ Nouvelle commande placée sur [[ config('STORE_NAME') ]]
 Commande ID: [[order.invoiceNumber]]
 
 Administration de la commande:
-{backendOrderUrl order=$order url=true}
+{backendOrderUrl order=order url=true}
 
 The following items have been ordered:
 [[ partial("email/blockOrder.tpl") ]]

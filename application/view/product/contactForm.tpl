@@ -2,7 +2,7 @@
 <h2>{t _inquire}<small>{t _inquire_title}</small></h2>
 
 <div>
-{form action="product/sendContactForm" method="POST" handle=$contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;" class="form-horizontal"}
+{form action="product/sendContactForm" method="POST" handle=contactForm id="productContactForm" onsubmit="new Product.ContactForm(this); return false;" class="form-horizontal"}
 	[[ textfld('name', '_inquiry_name') ]]
 
 	{* anti-spam *}

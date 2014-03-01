@@ -1,7 +1,7 @@
 {capture assign="body"}
 	[[ partial("order/changeMessages.tpl") ]]
 
-	{% if !$cart.cartItems %}
+	{% if !cart.cartItems %}
 		<div class="emptyBasket">
 			{t _empty_basket}. <a href="[[ url(return) ]]">{t _continue_shopping}</a>.
 		</div>
