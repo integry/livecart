@@ -5,11 +5,6 @@ Options -Indexes
 
 	RewriteRule ^$ public/index.php?_url=/$1 [QSA,L]
 
-	#demo images
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^public\/upload\/(.*)$ http://demoimg.livecart.com/upload/$1 [R,L]
-
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 
