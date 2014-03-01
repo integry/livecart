@@ -5,7 +5,7 @@
 {% block content %}
 
 	<p>
-	{% if $subscriber.isEnabled %}
+	{% if subscriber and subscriber.isEnabled %}
 		{t _confirm_successful}
 	{% else %}
 		{t _confirm_unsuccessful}

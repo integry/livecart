@@ -64,7 +64,7 @@
 {foreach name="productOptionForeach" item="field" from=$options}
 	{% if $field.ID %}
 		<li id="productOption_items_list_[[parentID]]_[[field.ProductOptionGroup.ID]]_[[field.ID]]">
-			<span class="productOption_title">[[field.name_lang]]</span>
+			<span class="productOption_title">[[field.name()]]</span>
 			<span class="productOption_choiceCount"></span>
 		</li>
 	{% endif %}

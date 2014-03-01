@@ -20,7 +20,7 @@
 	{% if $productFile.ProductFileGroup.ID %}{break}{% endif %}
 	{% if $productFile.ID %}
 		<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
-			<span class="productFile_item_title">[[productFile.title_lang]]</span>
+			<span class="productFile_item_title">[[productFile.title()]]</span>
 		</li>
 	{% endif %}
 {/foreach}
@@ -34,7 +34,7 @@
 	{% if $lastProductFileGroup != $productFile.ProductFileGroup.ID  %}
 		{% if $lastProductFileGroup > 0 %}</ul></li>{% endif %}
 		<li id="productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="productFileGroup_item">
-			<span class="productFileGroup_title">[[productFile.ProductFileGroup.name_lang]]</span>
+			<span class="productFileGroup_title">[[productFile.ProductFileGroup.name()]]</span>
 			<div id="activeList_editContainer_productFileGroup_list_[[productID]]_[[productFile.ProductFileGroup.ID]]" class="activeList_editContainer activeList_container" style="display: none">
 				[[ partial("backend/productFileGroup/form.tpl") ]]
 			</div>
@@ -43,7 +43,7 @@
 
 	{% if $productFile.ID %} {* For empty groups *}
 	<li id="productFile_list_[[productID]]_[[productFile.ProductFileGroup.ID]]_[[productFile.ID]]">
-		<span class="productFile_item_title">[[productFile.title_lang]]</span>
+		<span class="productFile_item_title">[[productFile.title()]]</span>
 	</li>
 	{% endif %}
 

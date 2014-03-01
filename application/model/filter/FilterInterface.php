@@ -1,5 +1,7 @@
 <?php
 
+namespace filter;
+
 /**
  * Defines common interface for different types of filters.
  * It makes it possible to filter products not only by their attribute values, but also by price, manufacturer,
@@ -15,14 +17,14 @@ interface FilterInterface
 	 *
 	 * @return Condition
 	 */
-	public function getCondition();
+	public function setCondition(\Phalcon\Mvc\Model\Query\Builder $query, $params);
 	
 	/**
 	 *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular Filter
 	 *	
 	 *	@param	ARSelectFilter	$filter	Filter instance
 	 */
-	public function defineJoin(ARSelectFilter $filter);	
+	//public function defineJoin(ARSelectFilter $filter);	
 }
 
 ?>

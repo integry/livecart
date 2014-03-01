@@ -7,14 +7,14 @@
 <a href="[[ url(return) ]]" class="btn btn-primary return"><span class="glyphicon glyphicon-arrow-left"></span> {t _continue_shopping}</a>
 
 {foreach from=$products item=category}
-	<h2>[[category.category.name_lang]]</h2>
+	<h2>[[category.category.name()]]</h2>
 	<table class="compareData table table-striped table-hover">
 		<thead>
 			<tr>
 				<th></th>
 				{foreach from=$category.products item=product}
 					<th>
-						<a href="{productUrl product=$product}">[[product.name_lang]]</a>
+						<a href="{productUrl product=$product}">[[product.name()]]</a>
 						[[ partial("product/block/smallImage.tpl") ]]
 					</th>
 				{/foreach}
@@ -36,14 +36,14 @@
 				{% if $group.group %}
 					<tr class="specificationGroup heading{% if $smarty.foreach.groups.first %} first{% endif %}">
 						{assign var="cnt" value=$category.products|@count}
-						<th colspan="{$cnt+1}">[[group.group.name_lang]]</th>
+						<th colspan="{$cnt+1}">[[group.group.name()]]</th>
 					</tr>
 				{% endif %}
 
 				{foreach from=$group.attributes item=attr name="attributes"}
 					{% if $attr.isDisplayed %}
 					<tr>
-						<td class="param">[[attr.name_lang]]</td>
+						<td class="param">[[attr.name()]]</td>
 						{foreach from=$category.products item="product"}
 							<td class="value">
 								[[ partial('product/attributeValue.tpl', ['attr': product.attributes[$attr.ID]]) ]]

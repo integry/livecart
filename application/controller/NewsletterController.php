@@ -8,14 +8,14 @@ class NewsletterController extends FrontendController
 		$email = $this->request->get('email');
 
 		// delete from subscriber table
-		$f = new ARDeleteFilter('NewsletterSubscriber.email = :NewsletterSubscriber.email:', array('NewsletterSubscriber.email' => $email));
-		ActiveRecordModel::deleteRecordSet('NewsletterSubscriber', $f);
+		//$f = new ARDeleteFilter('NewsletterSubscriber.email = :NewsletterSubscriber.email:', array('NewsletterSubscriber.email' => $email));
+		//ActiveRecordModel::deleteRecordSet('NewsletterSubscriber', $f);
 
 		// add user to subscriber table
-		if ($user = User::getInstanceByEmail($email))
+		if ($user = \user\User::getInstanceByEmail($email))
 		{
-			$s = NewsletterSubscriber::getNewInstanceByUser($user);
-			$s->isEnabled->set(false);
+			$s = \newsletter\NewsletterSubscriber::getNewInstanceByUser($user);
+			$s->isEnabled = false;
 			$s->save();
 		}
 
@@ -62,14 +62,14 @@ class NewsletterController extends FrontendController
 
 	public function confirmAction()
 	{
-		$instance = NewsletterSubscriber::getInstanceByEmail($this->request->get('email'));
+		$instance = \newsletter\NewsletterSubscriber::getInstanceByEmail($this->request->get('email'));
 		if ($instance && ($instance->confirmationCode == $this->request->get('code')))
 		{
-			$instance->isEnabled->set(true);
+			$instance->isEnabled = true;
 			$instance->save();
 		}
 
-		$this->set('subscriber', $instance->toArray());
+		$this->set('subscriber', $instance);
 	}
 
 	public function getSubscribeValidatorAction()

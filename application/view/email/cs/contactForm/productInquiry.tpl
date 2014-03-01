@@ -1,5 +1,5 @@
 [[ config('STORE_NAME') ]] dotaz na zboží
-Název zboží: [[product.name_lang]]
+Název zboží: [[product.name()]]
 Kód: [[product.sku]]
 
 [[message]]

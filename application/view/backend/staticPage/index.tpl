@@ -1,6 +1,6 @@
 <div id="staticPageContainer" ng-controller="StaticPageController" ng-init="setTree([[ json(pages) ]])">
 	<div class="row">
-	<div class="treeContainer col-lg-3">
+	<div class="treeContainer col-sm-3">
 		[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 
 		<ul class="verticalMenu">
@@ -9,7 +9,7 @@
 		</ul>
 	</div>
 
-	<div class="treeManagerContainer col-lg-9">
+	<div class="treeManagerContainer col-sm-9">
 
 		<tabset>
 			<tab ng-repeat="(index,vals) in pages" ng-click="selectID(vals.ID)" heading="{{getTabTitle(vals)}}">
@@ -80,7 +80,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-lg-12">
+					<div class="col-sm-12">
 						<submit>{t _save}</submit>
 						{t _or}
 						<a class="cancel" id="cancel" ng-click="cancel(vals)">{t _cancel}</a>

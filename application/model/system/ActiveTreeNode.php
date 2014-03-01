@@ -52,7 +52,7 @@ namespace system;
  * @package application/model/system
  *
  */
-class ActiveTreeNode extends \ActiveRecordModel
+class ActiveTreeNode extends \system\MultilingualObject
 {
 	/**
 	 * Table field name for left value container of tree traversal order
@@ -366,14 +366,14 @@ class ActiveTreeNode extends \ActiveRecordModel
 	private function getPathNodeFilter($includeRootNode)
 	{
 		$className = get_class($this);
-		$this->load();
+
 
 		$filter = new ARSelectFilter();
 
 		$cond = $this->getPathNodeCondition();
 		if (!$includeRootNode)
 		{
-			$cond->addAND(new OperatorCond(new ARFieldHandle($className, "ID"), self::ROOT_ID, "<>"));
+			$cond->andWhere(new OperatorCond(new ARFieldHandle($className, "ID"), self::ROOT_ID, "<>"));
 		}
 
 		$filter->setCondition($cond);
@@ -388,7 +388,7 @@ class ActiveTreeNode extends \ActiveRecordModel
 		$leftValue = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
 		$rightValue = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
-		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
+		$cond->andWhere(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
 		return $cond;
 	}
 
@@ -397,7 +397,7 @@ class ActiveTreeNode extends \ActiveRecordModel
 	 */
 	function getWidth()
 	{
-		if($this->isLoaded()) $this->load();
+		if($this->isLoaded())
 
 		$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 		$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
@@ -413,7 +413,7 @@ class ActiveTreeNode extends \ActiveRecordModel
 	 */
 	public function moveTo(ActiveTreeNode $parentNode, ActiveTreeNode $beforeNode=null)
 	{
-		if(!$this->isLoaded()) $this->load();
+		if(!$this->isLoaded())
 		$className = get_class($this);
 		$db = ActiveRecord::getDBConnection();
 
@@ -582,7 +582,7 @@ class ActiveTreeNode extends \ActiveRecordModel
 		return;
 		
 		$className = get_class($this);
-		$this->load();
+
 
 		$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 		$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
@@ -739,11 +739,11 @@ class ActiveTreeNode extends \ActiveRecordModel
 
 	private function getSibling($count = 0, $direction = self::DIRECTION_RIGHT, $loadReferencedRecords = false)
 	{
-		if(!$this->isLoaded()) $this->load();
+		if(!$this->isLoaded())
 		$className = get_class($this);
 		$filter = new ARSelectFilter();
 		$cond = new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->getID());
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? "<" : ">"));
+		$cond->andWhere(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? "<" : ">"));
 		$filter->setCondition($cond);
 		$filter->orderBy(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC);
 		$filter->limit(1, $count);
@@ -799,7 +799,7 @@ class ActiveTreeNode extends \ActiveRecordModel
 
 	public function getFirstChild($loadReferencedRecords = false)
 	{
-		if(!$this->isLoaded()) $this->load();
+		if(!$this->isLoaded())
 		$className = get_class($this);
 
 		$filter = new ARSelectFilter();

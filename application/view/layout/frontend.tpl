@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="LiveCart">
+<html lang="en" ng-app="LiveCart" xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" xml:lang="en" lang="en">
 	<head>
 		<base href="[[ url("public") ]]/"></base>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -13,6 +13,8 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+		<script src="../public/filemanager/plugin.min.js"></script>
+		<script src="javascript/library/angular/tinymce.js"></script>
 		
 		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"></link>
@@ -23,26 +25,30 @@
 		<script src="javascript/library/jquery/plugins.js"></script>
 		<link href="stylesheet/library/jquery/jquery-plugins.css" rel="stylesheet"></link>
 		
-		<script src="../module/heysuccess/public/javascript/frontend/Frontend.js"></script>
 		<script src="javascript/common.js"></script>
 		
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>
-		<link href="upload/css/heysuccess.css" rel="stylesheet"></link>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.js"></script>
 		<link href="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.css" rel="stylesheet"></link>
 		<script src="http://code.angularjs.org/1.2.0-rc.2/angular-resource.min.js"></script>
+		
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
 
 		{% block head %}{% endblock %}
-
+		[[ partial("layout/frontend/head.tpl") ]]
+		
 		<script type="text/javascript">
 			Router.setUrlTemplate("[[ url("controller/action") ]]");
 		</script>
 
-		<title>{% block title %}{% endblock %}</title>
+		<title>{% block title %}{% endblock %}{% if 'index' != volt.dispatcher.getControllerName() %} - [[ config('SITE_NAME') ]]{% endif %}</title>
+		
+		<meta name="description" content="{% block metadescr %}[[ meta(config('INDEX_META_DESCRIPTION')) ]]{% endblock %}" />
+		<meta name="og:description" content="{% block ogmetadescr %}[[ meta(config('INDEX_META_DESCRIPTION')) ]]{% endblock %}" />
 	</head>
-	<body ng-controller="HeySuccessController">
+	<body>
 		<div id="container" class="container">
 			{% block header %}[[ partial("layout/frontend/header.tpl") ]]{% endblock %}
 

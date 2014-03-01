@@ -10,11 +10,11 @@
 		{foreach from=$moreOptions[$item.ID] item=option}
 			{% if $item.options[$option.ID] %}
 				<div class="nonEditableOption">
-					[[option.name_lang]]:
+					[[option.name()]]:
 					{% if 0 == $option.type %}
 						{t _option_yes}
 					{% elseif 1 == $option.type %}
-						{$item.options[$option.ID].Choice.name_lang}
+						{$item.options[$option.ID].Choice.name()}
 					{% elseif 3 == $option.type %}
 						<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.ID`") ]]">{$item.options[$option.ID].fileName}</a>
 						{% if $item.options[$option.ID].small_url %}

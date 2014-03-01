@@ -31,7 +31,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col-lg-5">
+				<div class="col-sm-5">
 					{% if empty(disableNewOptionValues) %}
 						<div ng-repeat="value in newValues">
 							{textfield placeholder="{t _other}" class="newOptionValue" ng_model="value.value" ng_change="handleNewValues()" noFormat=true}
@@ -39,7 +39,7 @@
 					{% endif %}
 				</div>
 
-				<div class="col-lg-7 selectMenu">
+				<div class="col-sm-7 selectMenu">
 					<a ng-click="selectAll()" class="eavSelectAll">{t _select_all}</a> | <a ng-click="deselectAll()" class="deselect eavDeselectAll">{t _deselect_all}</a> | <a class="eavSort" ng-click="sort()">A-Z</a> | <input type="text" ng-model="filter" placeholder="{t _eav_filter}" class="text filter" />
 				</div>
 			</div>
@@ -54,7 +54,7 @@
 
 		{control}
 		<eav-select {% if empty(disableNewOptionValues) %}new="{t _enter_other}"{% endif %}>
-			<span class="prefix">[[field.valuePrefix_lang]]</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix_lang]]</span>
+			<span class="prefix">[[field.valuePrefix()]]</span>{selectfield name="`$prefix``$fieldName`" ng_model=$ngmodel options=$field.values class="select" noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
 			{% if empty(disableNewOptionValues) %}
 				<div class="newOptionValue" style="display: none">
 					{textfield ng_model=$ngmodelnew name="`$prefix`other[`$field.ID`]" class="text" noFormat=true}
@@ -66,7 +66,7 @@
 
 {% elseif $field.type == 2 %}
 	{control}
-		<span class="prefix">[[field.valuePrefix_lang]]</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">[[field.valueSuffix_lang]]</span>
+		<span class="prefix">[[field.valuePrefix()]]</span>{textfield name="`$prefix``$fieldName`" number="float" class="text numeric number" noFormat=true ng_model=$ngmodel noFormat=true}<span class="suffix">[[field.valueSuffix()]]</span>
 	{/control}
 
 {% elseif $field.type == 3 %}

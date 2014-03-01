@@ -1,7 +1,10 @@
 [[ global('layoutspanLeft', 3) ]]
 
-<div class="col col-lg-[[ global('layoutspanLeft') ]]" id="leftSide">
+<div class="col-sm-[[ global('layoutspanLeft') ]]" id="leftSide">
 
+	[[ render('frontend/boxCategoryBlock') ]]
+	
+	{#
 	{block LEFT_SIDE}
 
 	{% if 'CATEGORY_MENU_TYPE' == 'CAT_MENU_FLYOUT' %}
@@ -15,4 +18,6 @@
 	{block INFORMATION}
 	{block NEWSLETTER}
 	{block QUICKNAV}
+	#}
+	
 </div>

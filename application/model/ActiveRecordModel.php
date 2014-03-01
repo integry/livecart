@@ -579,6 +579,11 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	{
 		return htmlentities(json_encode($this->toArray()));
 	}
+	
+	protected function getConfig()
+	{
+		return $this->getDI()->get('config');
+	}
 }
 
 ?>

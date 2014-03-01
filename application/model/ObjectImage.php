@@ -66,7 +66,7 @@ abstract class ObjectImage extends \system\MultilingualObject
 			// set next image (by position) as the main image
 			$f = new ARSelectFilter();
 			$cond = new EqualsCond(new ARFieldHandle(get_class($inst), $foreignKeyName), $owner->getID());
-			$cond->addAND(new NotEqualsCond(new ARFieldHandle(get_class($inst), 'ID'), $inst->getID()));
+			$cond->andWhere(new NotEqualsCond(new ARFieldHandle(get_class($inst), 'ID'), $inst->getID()));
 			$f->setCondition($cond);
 			$f->orderBy(new ARFieldHandle(get_class($inst), 'position'));
 			$f->limit(1);

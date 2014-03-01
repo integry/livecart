@@ -127,7 +127,7 @@ class ActiveGrid extends \Phalcon\DI\Injectable
 						$condTo = new EqualsOrLessCond($handle, getDateFromString($to));
 						if ($cond)
 						{
-							$cond->addAnd($condTo);
+							$cond->andWhere($condTo);
 						}
 						else
 						{

@@ -11,27 +11,27 @@
 <[[container]]>
 	{foreach from=$item.attributes item="attr" name="attributes"}
 
-		{% if $attr.values || $attr.value || $attr.value_lang %}
+		{% if $attr.values || $attr.value || $attr.value() %}
 
 			{% if $prevAttr.EavField.EavFieldGroup.ID != $attr.EavField.EavFieldGroup.ID %}
 				<[[row]] class="specificationGroup{% if $smarty.foreach.attributes.first %} first{% endif %}">
-					<[[cell]] class="param">[[attr.EavField.EavFieldGroup.name_lang]]</[[cell]]>
+					<[[cell]] class="param">[[attr.EavField.EavFieldGroup.name()]]</[[cell]]>
 					<[[cell]] class="value"></[[cell]]>
 				</[[row]]>
 			{% endif %}
 			<[[row]]>
-				<[[cell]] class="param">[[attr.EavField.name_lang]]</[[cell]]>
+				<[[cell]] class="param">[[attr.EavField.name()]]</[[cell]]>
 				<[[cell]] class="value">
 					{% if $attr.values %}
 						<ul class="attributeList{% if $attr.values|@count == 1 %} singleValue{% endif %}">
 							{foreach from=$attr.values item="value"}
-								<li> [[value.value_lang]]</li>
+								<li> [[value.value()]]</li>
 							{/foreach}
 						</ul>
-					{% elseif $attr.value_lang %}
-						[[attr.value_lang]]
+					{% elseif $attr.value() %}
+						[[attr.value()]]
 					{% elseif $attr.value %}
-						[[attr.EavField.valuePrefix_lang]][[attr.value]][[attr.EavField.valueSuffix_lang]]
+						[[attr.EavField.valuePrefix()]][[attr.value]][[attr.EavField.valueSuffix()]]
 					{% endif %}
 				</[[cell]]>
 			</[[row]]>

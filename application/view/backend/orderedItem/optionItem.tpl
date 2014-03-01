@@ -5,18 +5,18 @@
 	{% if 0 == $option.type %}
 		{checkbox}
 		{label}
-			[[option.name_lang]]
+			[[option.name()]]
 			{% if $option.DefaultChoice.priceDiff != 0 %}
 				({$option.DefaultChoice.formattedPrice.$currency})
 			{% endif %}
 		{/label}
 	{% else %}
-		{label}[[option.name_lang]]{/label}
+		{label}[[option.name()]]{/label}
 		{% if 1 == $option.type %}
 			<select name="[[fieldName]]">
 				{foreach from=$option.choices item=choice}
 					<option value="[[choice.ID]]"{% if $selectedChoice.Choice.ID == $choice.ID %} selected="selected"{% endif %}>
-						[[choice.name_lang]]
+						[[choice.name()]]
 						{% if $choice.priceDiff != 0 %}
 							({$choice.formattedPrice.$currency})</label>
 						{% endif %}

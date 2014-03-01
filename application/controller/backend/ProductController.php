@@ -846,7 +846,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 
 			$locale = $this->locale->getLocaleCode();
 			$langCond = new LikeCond(Product::getLangSearchHandle('Product.name', $locale), $this->request->get($field) . '%');
-			$c->addAND($langCond);
+			$c->andWhere($langCond);
 
 		  	$f->orderBy(Product::getLangSearchHandle('Product.name', $locale), 'ASC');
 
@@ -1055,12 +1055,12 @@ class ProductController extends ActiveGridController// implements MassActionInte
 
 			if ('now' != $from)
 			{
-				$cond->addAND(new EqualsOrMoreCond('CustomerOrder.dateCompleted', getDateFromString($from)));
+				$cond->andWhere(new EqualsOrMoreCond('CustomerOrder.dateCompleted', getDateFromString($from)));
 			}
 
 			if ('now' != $to)
 			{
-				$cond->addAnd(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
+				$cond->andWhere(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
 			}
 
 			$f = new ARSelectFilter($cond);
@@ -1436,7 +1436,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 				mkdir($thumbDir, 0777, true);
 				chmod($thumbDir, 0777);
 			}
-			$conf = self::getApplication()->getConfig();
+			$conf = $this->getConfig();
 			$img = new ImageManipulator($path);
 			$thumbSize = ProductImage::getImageSizes();
 

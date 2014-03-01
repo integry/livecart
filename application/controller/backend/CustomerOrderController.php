@@ -877,7 +877,7 @@ class CustomerOrderController extends ActiveGridController
 
 		if ($this->request->get('userID'))
 		{
-			$cond->addAND('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->request->get('userID')));
+			$cond->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->request->get('userID')));
 		}
 
 		$filter->setCondition($cond);
@@ -1005,8 +1005,8 @@ class CustomerOrderController extends ActiveGridController
 			$lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
 			$lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
 
-			$cond->addAND($firstNameCond);
-			$cond->addAND($lastNameCond);
+			$cond->andWhere($firstNameCond);
+			$cond->andWhere($lastNameCond);
 		 }
 	}
 
@@ -1025,7 +1025,7 @@ class CustomerOrderController extends ActiveGridController
 			$c = new LikeCond(new ARFieldHandle('UserAddress', "stateName"), '%' . $value . '%');
 			$c->addOR(new LikeCond(new ARFieldHandle('State', "name"), '%' . $value . '%'));
 
-			$cond->addAND($c);
+			$cond->andWhere($c);
 			unset($filters['ShippingAddress.stateName']);
 			$this->request->set('filters', $filters);
 		}
@@ -1047,7 +1047,7 @@ class CustomerOrderController extends ActiveGridController
 
 				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING));
 				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
-				$cond->addAND($cond2);
+				$cond->andWhere($cond2);
 				break;
 			case self::TYPE_NEW:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
@@ -1055,27 +1055,27 @@ class CustomerOrderController extends ActiveGridController
 
 				// @todo fix NEW status = NULL bug
 				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
-				$cond->addAND($cond2);
+				$cond->andWhere($cond2);
 				break;
 			case self::TYPE_PROCESSING:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 				break;
 			case self::TYPE_AWAITING:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 				break;
 			case self::TYPE_SHIPPED:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 				break;
 			case self::TYPE_RETURNED:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 				break;
 			case self::TYPE_CANCELLED:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), true);
-				$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 				break;
 			case self::TYPE_CARTS:
 				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
@@ -1096,22 +1096,22 @@ class CustomerOrderController extends ActiveGridController
 
 			case self::TYPE_RECURRING_ALL:
 				$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
-				$cond->addAND('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
-				$cond->addAND(new IsNullCond('CustomerOrder.parentID'));
+				$cond->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
+				$cond->andWhere(new IsNullCond('CustomerOrder.parentID'));
 				break;
 
 			case self::TYPE_RECURRING_EXPIRED:
 				$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
-				$cond->addAnd(new EqualsOrLessCond('CustomerOrder.rebillsLeft', 0));
-				$cond->addAND('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
-				$cond->addAND(new IsNullCond('CustomerOrder.parentID'));
+				$cond->andWhere(new EqualsOrLessCond('CustomerOrder.rebillsLeft', 0));
+				$cond->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
+				$cond->andWhere(new IsNullCond('CustomerOrder.parentID'));
 				break;
 
 			case self::TYPE_RECURRING_CANCELLED:
 				$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
-				$cond->addAND('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 1));
-				$cond->addAND('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
-				$cond->addAND(new IsNullCond('CustomerOrder.parentID'));
+				$cond->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 1));
+				$cond->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
+				$cond->andWhere(new IsNullCond('CustomerOrder.parentID'));
 				break;
 
 			case self::TYPE_RECURRING_WITH_PARENT:
@@ -1121,7 +1121,7 @@ class CustomerOrderController extends ActiveGridController
 					$parentID = -1;
 				}
 				$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
-				$cond->addAND('CustomerOrder.parentID = :CustomerOrder.parentID:', array('CustomerOrder.parentID' => $parentID));
+				$cond->andWhere('CustomerOrder.parentID = :CustomerOrder.parentID:', array('CustomerOrder.parentID' => $parentID));
 				break;
 
 			default:
@@ -1136,7 +1136,7 @@ class CustomerOrderController extends ActiveGridController
 			self::TYPE_RETURNED,
 			self::TYPE_RECURRING_CANCELLED)))
 		{
-			$cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
+			$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
 		}
 // $f  = new ARSelectFilter();
 // $f->setCondition($cond);

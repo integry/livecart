@@ -54,7 +54,7 @@
 				{foreach $order.User.attributes as $attr}
 					{% if $attr.EavField.isDisplayedInList && ($attr.value || $attr.values) %}
 						<p>
-							[[attr.EavField.name_lang]]:
+							[[attr.EavField.name()]]:
 							[[ partial("product/attributeValue.tpl") ]]
 						</p>
 					{% endif %}
@@ -109,7 +109,7 @@
 				</tr>
 				{foreach from=$order.taxes[$order.Currency.ID] item=tax}
 					<tr class="taxSubtotal">
-						<td>[[tax.name_lang]]:</td>
+						<td>[[tax.name()]]:</td>
 						<td class="amount">[[tax.formattedAmount]]</td>
 					</tr>
 				{/foreach}

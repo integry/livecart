@@ -7,7 +7,7 @@
 {form action="install/setConfig" method="POST" handle=$form class="form-horizontal"}
 	[[ textfld('name', '_store_name') ]]
 
-	[[ selectfld('language', '_base_language', languages) ]]
+	[[ selectfld('language', '_base()uage', languages) ]]
 
 	[[ selectfld('curr', '_base_currency', currencies) ]]
 

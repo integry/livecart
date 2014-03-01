@@ -85,7 +85,7 @@ class Currency extends \ActiveRecordModel
 	{
 		if (!$this->isLoaded())
 		{
-			$this->load();
+
 		}
 
 		$isNegative = ($price < 0);
@@ -106,7 +106,7 @@ class Currency extends \ActiveRecordModel
 		{
 			try
 			{
-				$this->load();
+
 			}
 			catch (ARNotFoundException $e)
 			{

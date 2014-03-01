@@ -75,7 +75,7 @@ class PriceFilter implements FilterInterface
 	{
 		$from = new EqualsOrMoreCond('ProductPrice.price', $this->priceFrom);
 		$to =   new EqualsOrLessCond('ProductPrice.price', $this->priceTo);
-		$from->addAND($to);
+		$from->andWhere($to);
 
 		return $from;
 	}

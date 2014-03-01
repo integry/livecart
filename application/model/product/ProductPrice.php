@@ -48,11 +48,11 @@ class ProductPrice extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 		$cond = 'ProductPrice.productID = :ProductPrice.productID:', array('ProductPrice.productID' => $product->getID());
 
-		$cond->addAND('ProductPrice.currencyID = :ProductPrice.currencyID:', array('ProductPrice.currencyID' => $currency->getID()));
-		$cond->addAND('ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => $type));
+		$cond->andWhere('ProductPrice.currencyID = :ProductPrice.currencyID:', array('ProductPrice.currencyID' => $currency->getID()));
+		$cond->andWhere('ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => $type));
 		if ($recurring)
 		{
-			$cond->addAND('ProductPrice.recurringID = :ProductPrice.recurringID:', array('ProductPrice.recurringID' => $recurring->getID()));
+			$cond->andWhere('ProductPrice.recurringID = :ProductPrice.recurringID:', array('ProductPrice.recurringID' => $recurring->getID()));
 		}
 		$filter->setCondition($cond);
 

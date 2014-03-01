@@ -2,7 +2,7 @@
 	<form action="[[ url("backend.specFieldGroup/save") ]]/" method="post" class="{denied role="category.update"}formReadonly{/denied} specField_group_form_node">
 		<input type="hidden" name="categoryID" class="specField_group_categoryID" />
 		<fieldset class="specField_group_translations specField_step_main">
-			<div class="specField_group_default_language">
+			<div class="specField_group_default()uage">
 				<label class="specField_group_name_label">{t _specField_group_title}</label>
 				<fieldset class="error" style="display: block;">
 					<input type="text" name="name" class="specField_group_name_label" {denied role="category.update"}readonly="readonly"{/denied} autocomplete="off" />

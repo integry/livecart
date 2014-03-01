@@ -171,7 +171,7 @@ class ProductOption extends MultilingualObject
 				$category->load();
 			}
 			$c = new EqualsOrLessCond('Category.lft', $category->lft);
-			$c->addAND(new EqualsOrMoreCond('Category.rgt', $category->rgt));
+			$c->andWhere(new EqualsOrMoreCond('Category.rgt', $category->rgt));
 
 			if (!isset($categoryCond))
 			{

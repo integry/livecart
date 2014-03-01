@@ -13,7 +13,7 @@
 <ul class="activeList activeList_add_delete activeList_add_edit" id="recurringProductPeriods_[[product.ID]]">
 	{foreach from=$recurringProductPeriods item="recurringProductPeriod"}
 		<li id="recurringProductPeriod_[[recurringProductPeriod.productID]]_[[recurringProductPeriod.ID]]">
-			<span class="error">{$recurringProductPeriod.name_lang|escape}</span>
+			<span class="error">{$recurringProductPeriod.name()|escape}</span>
 		</li>
 	{/foreach}
 </ul>

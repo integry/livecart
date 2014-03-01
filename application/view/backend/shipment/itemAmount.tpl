@@ -12,10 +12,10 @@
 		<td class="orderShipmentsItem_info_name_td">
 			<div class="orderShipmentsItem_info_name">
 				{% if $item.Product.ID %}
-					<a href="{backendProductUrl product=$item.Product}">[[item.Product.name_lang]]</a>
+					<a href="{backendProductUrl product=$item.Product}">[[item.Product.name()]]</a>
 					<a class="external" href="{productUrl product=$item.Product}" target="_blank"></a>
 				{% else %}
-					<span>[[item.Product.name_lang]]</span>
+					<span>[[item.Product.name()]]</span>
 				{% endif %}
 				{% if $allOptions[$item.Product.ID] || $item.options %}
 					<span class="basePrice">([[item.formattedBasePrice]])</span>
@@ -23,11 +23,11 @@
 						<ul class="itemOptions">
 						{foreach from=$item.options item=option}
 							<li>
-								[[option.Choice.Option.name_lang]]:
+								[[option.Choice.Option.name()]]:
 								{% if 0 == $option.Choice.Option.type %}
 									{t _option_yes}
 								{% elseif 1 == $option.Choice.Option.type %}
-									[[option.Choice.name_lang]]
+									[[option.Choice.name()]]
 								{% elseif 3 == $option.Choice.Option.type %}
 									<a href="[[ url("backend.orderedItem/downloadOptionFile/" ~ item.ID, "option=`$option.Choice.Option.ID`") ]]">[[option.fileName]]</a>
 									{% if $option.small_url %}

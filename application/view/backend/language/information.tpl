@@ -28,7 +28,7 @@
 						{% if $key == '$locale->GetLanguages()' %}
 							{img src="/lcart/public/image/unverified_flags/`$key2`.png"}
 
-							<a href="http://en.wikipedia.org/wiki/[[item2]]_language" target="blank_">[[item2]]</a>
+							<a href="http://en.wikipedia.org/wiki/[[item2]]()uage" target="blank_">[[item2]]</a>
 						{% else %}
 							[[item2]]
 						{% endif %}

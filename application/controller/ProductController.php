@@ -250,8 +250,8 @@ class ProductController extends CatalogController
 			$categories[] = array($cat['Category']);
 
 			$cond = new OperatorCond('Category.lft', $cat['Category']['lft'], "<");
-			$cond->addAND(new OperatorCond('Category.rgt', $cat['Category']['rgt'], ">"));
-			$pathC->addAnd($cond);
+			$cond->andWhere(new OperatorCond('Category.rgt', $cat['Category']['rgt'], ">"));
+			$pathC->andWhere($cond);
 		}
 
 		if ($categories)
@@ -876,7 +876,7 @@ class ProductController extends CatalogController
 				if ($hours = $this->config->get('RATING_SAME_IP_TIME'))
 				{
 					//$cond = 'ProductRating.ip = :ProductRating.ip:', array('ProductRating.ip' => $this->request->getIPLong());
-					$cond->addAnd(new MoreThanCond('ProductRating.dateCreated', getDateFromString('-' . $hours . ' hours')));
+					$cond->andWhere(new MoreThanCond('ProductRating.dateCreated', getDateFromString('-' . $hours . ' hours')));
 				}
 			}
 

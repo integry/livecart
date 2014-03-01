@@ -160,6 +160,11 @@ class Email extends \Phalcon\DI\Injectable
 			{
 				$name = '"' . $name . '"';
 			}
+			
+			if(preg_match('#[^ a-zA-Z0-9]#', $name))
+			{
+				$name = '';
+			}
 
 			$this->message->addTo($email, $name);
 		}

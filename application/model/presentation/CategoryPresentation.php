@@ -111,8 +111,8 @@ class CategoryPresentation extends ActiveRecordModel
 	{
 		$own = new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $category->getID());
 		$parent = new EqualsOrLessCond('Category.lft', $category->lft);
-		$parent->addAND(new EqualsOrMoreCond('Category.rgt', $category->rgt));
-		$parent->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isSubcategories'), true));
+		$parent->andWhere(new EqualsOrMoreCond('Category.rgt', $category->rgt));
+		$parent->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'isSubcategories'), true));
 		$own->addOR($parent);
 
 		return $own;

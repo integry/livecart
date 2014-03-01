@@ -1,6 +1,6 @@
 {% set layoutspanLeft = 3 %}
 
-<div class="col col-lg-[[layoutspanLeft]]">
+<div class="col-sm-[[layoutspanLeft]]">
 
 <div id="userMenuContainer">
 	<ul id="userMenu" class="list-group">

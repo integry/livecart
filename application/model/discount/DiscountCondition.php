@@ -118,14 +118,14 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 	public static function isCouponCodes()
 	{
 		$c = new NotEqualsCond(new ARFieldHandle(__CLASS__, 'couponCode'), '');
-		$c->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
+		$c->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
 		return ActiveRecordModel::getRecordCount(__CLASS__, new ARSelectFilter($c));
 	}
 
 	public static function getInstanceByCoupon($code)
 	{
 		$c = new EqualsCond(new ARFieldHandle(__CLASS__, 'couponCode'), $code);
-		$c->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
+		$c->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'isEnabled'), 1));
 		$set = ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter($c));
 		if ($set->size())
 		{

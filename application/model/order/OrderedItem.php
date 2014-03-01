@@ -73,7 +73,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	{
 		if ($this->isLoaded() == false)
 		{
-			$this->load();
+
 		}
 		return $this->customerOrder->getCurrency();
 	}

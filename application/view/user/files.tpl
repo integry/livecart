@@ -17,7 +17,7 @@
 
 	{foreach from=$files item="item"}
 		<h3>
-			<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name_lang]]</a>
+			<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name()]]</a>
 		</h3>
 		[[ partial('user/fileList.tpl', ['item': item]) ]]
 	{/foreach}

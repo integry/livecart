@@ -2,7 +2,7 @@
 
 	{foreach $ratingTypes as $type}
 		{input name="rating_`$type.ID`"}
-			{label}{$type.name_lang|@or:_rating}:{/label}
+			{label}{$type.name()|@or:_rating}:{/label}
 			{selectfield options=$ratingOptions}
 		{/input}
 	{/foreach}

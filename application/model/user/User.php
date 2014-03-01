@@ -456,7 +456,7 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	 */
 	public function loadAddresses()
 	{
-		$this->load();
+
 
 		if ($this->defaultBillingAddress)
 		{

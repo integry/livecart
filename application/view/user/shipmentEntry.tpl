@@ -23,7 +23,7 @@
 		{% if !'HIDE_TAXES'|config || $showTaxes %}
 			{foreach from=$shipment.taxes item="tax"}
 				<tr>
-					<td colspan="4" class="tax">[[tax.TaxRate.Tax.name_lang]]:</td>
+					<td colspan="4" class="tax">[[tax.TaxRate.Tax.name()]]:</td>
 					<td>{$tax.formattedAmount[$order.Currency.ID]}</td>
 				</tr>
 			{/foreach}

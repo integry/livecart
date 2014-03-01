@@ -155,13 +155,13 @@ class ShippingService extends MultilingualObject implements EavAble
 		{
 			$weight = $shipment->getChargeableWeight($this->deliveryZone);
 			$cond = new EqualsOrLessCond('ShippingRate.weightRangeStart', $weight * 1.000001);
-			$cond->addAND(new EqualsOrMoreCond('ShippingRate.weightRangeEnd', $weight * 0.99999));
+			$cond->andWhere(new EqualsOrMoreCond('ShippingRate.weightRangeEnd', $weight * 0.99999));
 		}
 		else
 		{
 			$total = $shipment->getSubTotal(Shipment::WITHOUT_TAXES);
 			$cond = new EqualsOrLessCond('ShippingRate.subtotalRangeStart', $total * 1.000001);
-			$cond->addAND(new EqualsOrMoreCond('ShippingRate.subtotalRangeEnd', $total * 0.99999));
+			$cond->andWhere(new EqualsOrMoreCond('ShippingRate.subtotalRangeEnd', $total * 0.99999));
 		}
 
 		$f = query::query()->where('ShippingRate.shippingServiceID = :ShippingRate.shippingServiceID:', array('ShippingRate.shippingServiceID' => $this->getID()));

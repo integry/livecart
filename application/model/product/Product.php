@@ -9,7 +9,7 @@ namespace product;
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class Product extends \ActiveRecordModel implements \eav\EavAble
+class Product extends \system\MultilingualObject implements \eav\EavAble
 {
 	/*
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
@@ -255,7 +255,7 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 			}
 		}
 
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 
 		if ($isUnlimitedStock || ($config->get('INVENTORY_TRACKING') == 'DISABLE'))
 		{
@@ -314,7 +314,7 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 	{
 		if ($isEnabled)
 		{
-			$config = self::getApplication()->getConfig();
+			$config = $this->getConfig();
 
 			if (!self::isInventoryTracked($type, $isUnlimitedStock))
 			{
@@ -338,7 +338,7 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 
 	public function getMaxOrderableCount()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 
 		if (!$this->isInventoryTracked() || $this->isBackOrderable)
 		{
@@ -1217,7 +1217,7 @@ class Product extends \ActiveRecordModel implements \eav\EavAble
 		foreach ($productArray as $product)
 		{
 			$cond = lte('Category.lft', $product['Category']['lft']);
-			$cond->addAnd(gte('Category.rgt', $product['Category']['rgt']));
+			$cond->andWhere(gte('Category.rgt', $product['Category']['rgt']));
 			$conditions[] = $cond;
 		}
 

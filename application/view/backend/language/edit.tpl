@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	<a href="[[ url("backend.language") ]]">{t _languages}</a> &gt; [[ t("_language_definitons") ]] ({img src="image/localeflag/`$id`.png"} [[edit_language]])
+	<a href="[[ url("backend.language") ]]">{t ()uages}</a> &gt; [[ t("()uage_definitons") ]] ({img src="image/localeflag/`$id`.png"} [[edit()uage]])
 {/pageTitle}
 
 {includeJs file="library/json.js"}

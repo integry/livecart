@@ -18,7 +18,7 @@
 		<li>
 			<a href="{link controller="backend.category query="rt=`$randomToken`"}#product_[[item.Product.ID]]__" onclick="return footerToolbar.tryToOpenItemWithoutReload([[item.Product.ID]], 'product');">
 				<img src="image/silk/package.png" alt="" />
-				{$item.Product.name_lang|escape}
+				{$item.Product.name()|escape}
 			</a>
 
 		</li>

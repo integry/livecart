@@ -5,7 +5,7 @@
 {includeJs file="backend/Language.js"}
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Language.css"}
-{pageTitle help="settings.languages"}{t _admin_languages}{/pageTitle}
+{pageTitle help="settings.languages"}{t _admin()uages}{/pageTitle}
 
 [[ partial("layout/backend/header.tpl") ]]
 
@@ -29,7 +29,7 @@
 <fieldset class="container" {denied role="language.create"}style="display: none;"{/denied}>
 	<ul class="menu" id="langPageMenu">
 		<li class="addNewLanguage">
-			<a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a>
+			<a href="#" onClick="lng.showAddForm(); return false;">{t _add()uage}</a>
 			<span class="progressIndicator" id="langAddMenuLoadIndicator" style="display: none;"></span>
 		</li>
 	</ul>
@@ -61,7 +61,7 @@
 				<a href="[[ url("backend.language/setDefault") ]]/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
 					{t _set_as_default}
 				</a>
-				<span class="langDefault">{t _default_language}</span>
+				<span class="langDefault">{t _default()uage}</span>
 			</div>
 
 		</div>

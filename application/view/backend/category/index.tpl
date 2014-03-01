@@ -1,6 +1,6 @@
 <div ng-controller="CategoryController" ng-init="setTree([[ json(categoryList) ]]); expandRoot();">
 	<div class="row">
-		<div class="treeContainer col-lg-3">
+		<div class="treeContainer col-sm-3">
 			[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 			
 			<ul id="categoryBrowserActions" class="verticalMenu">
@@ -19,7 +19,7 @@
 
 		</div>
 
-		<div class="col-lg-9">
+		<div class="col-sm-9">
 			<section ui-view></section>
 		</div>
 	</div>

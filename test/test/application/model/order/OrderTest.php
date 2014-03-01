@@ -1757,7 +1757,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInvoiceNumbers()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 		$config->setRuntime('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
 		$config->setRuntime('SequentialInvoiceNumber_START_AT', '0');
 		$config->setRuntime('SequentialInvoiceNumber_STEP', '1');
@@ -1789,7 +1789,7 @@ class OrderTest extends OrderTestCommon
 
 	public function testInvoiceNumbersWithPrefixes()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 		$config->setRuntime('INVOICE_NUMBER_GENERATOR', 'SequentialInvoiceNumber');
 		$config->setRuntime('SequentialInvoiceNumber_START_AT', '50000');
 		$config->setRuntime('SequentialInvoiceNumber_STEP', '5');

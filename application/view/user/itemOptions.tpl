@@ -2,11 +2,11 @@
 	<ul class="itemOptions">
 	{foreach from=$options item=option}
 		<li>
-			[[option.Choice.Option.name_lang]]:
+			[[option.Choice.Option.name()]]:
 			{% if 0 == $option.Choice.Option.type %}
 				{t _option_yes}
 			{% elseif 1 == $option.Choice.Option.type %}
-				[[option.Choice.name_lang]]
+				[[option.Choice.name()]]
 			{% elseif 3 == $option.Choice.Option.type %}
 				<a href="[[ url("order/downloadOptionFile/" ~ item.ID, "option=`$option.Choice.Option.ID`") ]]">[[option.fileName]]</a>
 				{% if $option.small_url %}

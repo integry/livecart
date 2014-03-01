@@ -1,3 +1,3 @@
 <fieldset class="languageForm">
-	<legend>{t _langform_translate}</legend>
+	<legend>{t ()form_translate}</legend>
 	<tabset>

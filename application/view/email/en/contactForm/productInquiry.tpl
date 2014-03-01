@@ -1,5 +1,5 @@
 [[ config('STORE_NAME') ]] product inquiry
-Product name: [[product.name_lang]]
+Product name: [[product.name()]]
 SKU: [[product.sku]]
 
 [[message]]

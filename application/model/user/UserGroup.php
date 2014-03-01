@@ -152,7 +152,7 @@ class UserGroup extends \ActiveRecordModel// implements EavAble
 				}
 			}
 
-			$condition->addAND($roleConditions);
+			$condition->andWhere($roleConditions);
 			$deleteFilter->setCondition($condition);
 
 			if(!empty($this->canceledRoles))
@@ -184,7 +184,7 @@ class UserGroup extends \ActiveRecordModel// implements EavAble
 				}
 			}
 
-			$condition->addAND($roleConditions);
+			$condition->andWhere($roleConditions);
 			$appliedRolesFilter->setCondition($condition);
 
 			// Unset already applied nodes

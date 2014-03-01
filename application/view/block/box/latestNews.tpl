@@ -6,7 +6,7 @@
 			{foreach from=$news item=entry name=news}
 				{% if !$smarty.foreach.news.last || !$isNewsArchive %}
 					<li>
-						<a href="{newsUrl news=$entry}">[[entry.title_lang]]</a>
+						<a href="{newsUrl news=$entry}">[[entry.title()]]</a>
 						<span class="date">[[entry.formatted_time.date_medium]]</span>
 					</li>
 				{% else %}

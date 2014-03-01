@@ -50,7 +50,7 @@ abstract class UserAddressType extends ActiveRecordModel
 	public function save()
 	{
 
-		$this->load();
+
 
 		$this->userAddress->load();
 		$this->userAddress->save();

@@ -3,26 +3,26 @@
 <div class="radio">
 	<label>
 		{radio name="shipping_`$key`" value=$rate.serviceID}
-		[[rate.ShippingService.name_lang]]
+		[[rate.ShippingService.name()]]
 		(&rlm;<strong>{$rate.taxPrice.$currency}</strong>)
 	</label>
 
 	{% if $rate.ShippingService.attributes %}
 		<dl class="dl-horizontal">
 		{foreach $rate.ShippingService.attributes as $attr}
-			{% if $attr.values || $attr.value || $attr.value_lang %}
-			<dt>[[attr.EavField.name_lang]]</dt>
+			{% if $attr.values || $attr.value || $attr.value() %}
+			<dt>[[attr.EavField.name()]]</dt>
 			<dd>
 				{% if $attr.values %}
 					<ul class="attributeList{% if $attr.values|@count == 1 %} singleValue{% endif %}">
 						{foreach from=$attr.values item="value"}
-							<li class="fieldDescription"> [[value.value_lang]]</li>
+							<li class="fieldDescription"> [[value.value()]]</li>
 						{/foreach}
 					</ul>
-				{% elseif $attr.value_lang %}
-					[[attr.value_lang]]
+				{% elseif $attr.value() %}
+					[[attr.value()]]
 				{% elseif $attr.value %}
-					[[attr.EavField.valuePrefix_lang]][[attr.value]][[attr.EavField.valueSuffix_lang]]
+					[[attr.EavField.valuePrefix()]][[attr.value]][[attr.EavField.valueSuffix()]]
 				{% endif %}
 			</dd>
 			{% endif %}
@@ -31,8 +31,8 @@
 	{% endif %}
 
 	<span class="help-block">
-		{% if $rate.ShippingService.description_lang %}
-			{$rate.ShippingService.description_lang|escape}<br />
+		{% if $rate.ShippingService.description() %}
+			{$rate.ShippingService.description()|escape}<br />
 		{% endif %}
 		{% if $rate.ShippingService.formatted_deliveryTimeMaxDays && $rate.ShippingService.formatted_deliveryTimeMinDays %}
 			{t _deliveryDate_between}:

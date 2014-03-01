@@ -86,7 +86,7 @@
 
 	{% if $field.ID %}
 	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
-		<span class="specField_title">[[field.name_lang]]</span>
+		<span class="specField_title">[[field.name()]]</span>
 	</li>
 	{% endif %}
 {/foreach}
@@ -101,13 +101,13 @@
 	{% if $lastSpecFieldGroup != $field.SpecFieldGroup.ID  %}
 		{% if $lastSpecFieldGroup > 0 %}</ul></li>{% endif %}
 		<li id="specField_groups_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]">
-			<span class="specField_group_title">[[field.SpecFieldGroup.name_lang]]</span>
+			<span class="specField_group_title">[[field.SpecFieldGroup.name()]]</span>
 			<ul id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit  activeList_accept_specFieldList">
 	{% endif %}
 
 	{% if $field.ID %} {* For empty groups *}
 	<li id="specField_items_list_[[categoryID]]_[[field.SpecFieldGroup.ID]]_[[field.ID]]">
-		<span class="specField_title">[[field.name_lang]]</span>
+		<span class="specField_title">[[field.name()]]</span>
 	</li>
 	{% endif %}
 

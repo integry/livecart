@@ -44,9 +44,9 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$this->request->set('id', $this->product->getID());
 
-		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
-		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
-		self::getApplication()->getConfig()->set('REVIEWS_WITH_RATINGS', false);
+		$this->getConfig()->set('ENABLE_REVIEWS', true);
+		$this->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
+		$this->getConfig()->set('REVIEWS_WITH_RATINGS', false);
 	}
 
 	public function testSimpleRating()
@@ -92,8 +92,8 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 	public function testAnonymousReviews()
 	{
-		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
-		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
+		$this->getConfig()->set('ENABLE_REVIEWS', true);
+		$this->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
 
 		$this->request->set('rating_', 4);
 		$this->request->set('nickname', 'tester');
@@ -116,8 +116,8 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 	public function testNonAnonymousReviews()
 	{
-		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
-		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', false);
+		$this->getConfig()->set('ENABLE_REVIEWS', true);
+		$this->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', false);
 		$this->request->set('rating_', 4);
 		$this->request->set('ajax', 'true');
 
@@ -136,9 +136,9 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$user = User::getNewInstance('i-want-to-rate@example.com');
 		$user->save();
 
-		self::getApplication()->getConfig()->set('ENABLE_REVIEWS', true);
-		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', false);
-		self::getApplication()->getConfig()->set('REQUIRE_PURCHASE_TO_RATE', true);
+		$this->getConfig()->set('ENABLE_REVIEWS', true);
+		$this->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', false);
+		$this->getConfig()->set('REQUIRE_PURCHASE_TO_RATE', true);
 
 		$this->request->set('rating_', 4);
 		$this->request->set('ajax', 'true');
@@ -173,9 +173,9 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 	public function testReviewRequiredWithRating()
 	{
-		self::getApplication()->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
-		self::getApplication()->getConfig()->set('REQUIRE_PURCHASE_TO_RATE', false);
-		self::getApplication()->getConfig()->set('REVIEWS_WITH_RATINGS', true);
+		$this->getConfig()->set('ENABLE_ANONYMOUS_RATINGS', true);
+		$this->getConfig()->set('REQUIRE_PURCHASE_TO_RATE', false);
+		$this->getConfig()->set('REVIEWS_WITH_RATINGS', true);
 
 		$this->request->set('rating_', 4);
 		$this->request->set('ajax', 'true');
@@ -218,7 +218,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 	public function testDoubleRatingsByUser()
 	{
-		self::getApplication()->getConfig()->set('REVIEWS_WITH_RATINGS', false);
+		$this->getConfig()->set('REVIEWS_WITH_RATINGS', false);
 
 		$user = User::getNewInstance('i-want-to-rate@example.com');
 		$user->save();
@@ -242,8 +242,8 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 	public function testDoubleRatingsByIP()
 	{
-		self::getApplication()->getConfig()->set('REVIEWS_WITH_RATINGS', false);
-		self::getApplication()->getConfig()->set('RATING_SAME_IP_TIME', 24);
+		$this->getConfig()->set('REVIEWS_WITH_RATINGS', false);
+		$this->getConfig()->set('RATING_SAME_IP_TIME', 24);
 
 		$this->request->set('rating_', 4);
 		$this->request->set('ajax', 'true');
@@ -263,7 +263,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 	{
 		$_SERVER['REMOTE_ADDR'] = '255.255.255.254';
 
-		self::getApplication()->getConfig()->set('RATING_SAME_IP_TIME', 24);
+		$this->getConfig()->set('RATING_SAME_IP_TIME', 24);
 
 		$this->request->set('rating_', 4);
 		$this->request->set('ajax', 'true');
@@ -278,13 +278,13 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertRatingError();
 
 		// no time difference - vote as much as you want
-		self::getApplication()->getConfig()->set('RATING_SAME_IP_TIME', 0);
+		$this->getConfig()->set('RATING_SAME_IP_TIME', 0);
 		$this->assertRatingError(false);
 	}
 
 	public function testReviewApproval()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 		$config->set('RATING_SAME_IP_TIME', 0);
 
 		$this->request->set('rating_', 4);
@@ -319,7 +319,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->request->set('title', 'summary');
 		$this->request->set('ajax', 'true');
 
-		self::getApplication()->getConfig()->set('APPROVE_REVIEWS', 'APPROVE_REVIEWS_AUTO');
+		$this->getConfig()->set('APPROVE_REVIEWS', 'APPROVE_REVIEWS_AUTO');
 		$this->controller->rate();
 		$this->assertEqual($this->getReviewCount(), 1);
 	}

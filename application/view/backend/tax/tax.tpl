@@ -39,7 +39,7 @@
 									<tbody>
 										{foreach $classes as $class}
 											<tr>
-												<td>[[class.name_lang]]</td>
+												<td>[[class.name()]]</td>
 												<td>
 													{input name="taxRate_`$zone.ID`_`$class.ID`"}
 														{textfield class="number" value=$zone.taxRates[$zone.ID][$class.ID].rate|default:0} %

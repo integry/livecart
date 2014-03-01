@@ -1,4 +1,4 @@
-<dialog fullHeight=true class="col-lg-11" cancel="cancel()">
+<dialog fullHeight=true class="col-sm-11" cancel="cancel()">
 	<dialog-header>{{product.name}}</dialog-header>
 	<dialog-body>
 		[[ partial("backend/product/basicData.tpl") ]]

@@ -96,7 +96,7 @@
 				<label>{t _import_category}</label>
 				<label>
 					{foreach from=$catPath item=node name="catPath"}
-						<a href="[[ url("backend.csvImport/index") ]]?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name_lang]]</a>
+						<a href="[[ url("backend.csvImport/index") ]]?file=[[file]]&category=[[node.ID]]&selectCategory=true">[[node.name()]]</a>
 						{% if !$smarty.foreach.catPath.last %}
 							&gt;
 						{% endif %}

@@ -54,13 +54,13 @@
 		{% if !empty(attributes) %}
 			<optgroup label="{t _set_attributes}">
 				{foreach from=$attributes item=attr}
-					<option value="set_specField_[[attr.ID]]">[[attr.name_lang]]</option>
+					<option value="set_specField_[[attr.ID]]">[[attr.name()]]</option>
 				{/foreach}
 			</optgroup>
 
 			<optgroup label="{t _remove_attributes}">
 				{foreach from=$attributes item=attr}
-					<option value="remove_specField_[[attr.ID]]">[[attr.name_lang]]</option>
+					<option value="remove_specField_[[attr.ID]]">[[attr.name()]]</option>
 				{/foreach}
 			</optgroup>
 		{% endif %}

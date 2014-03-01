@@ -1,30 +1,34 @@
-{function name="categoryTree" node=false filters=false}
-	{% if !empty(node) %}
-		{$level=$level+1}
+{%- macro categoryTree(node, filters) %}
+	{% if node %}
+		{% set level=level+1 %}
 		<ul class="nav nav-pills nav-stacked">
-		{foreach from=$node item=category}
-			{% if $category.ID == $currentId %}
+		{% for category in node %}
+			{% if category.ID == currentId %}
 				<li class="active">
 			{% else %}
 				<li>
 			{% endif %}
-					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
 
-					{% if 'DISPLAY_NUM_CAT'|config %}
-						[[ partial('block/count.tpl', ['count': category.count]) ]]
-					{% endif %}
-					{% if $category.subCategories %}
-		   				{categoryTree node=$category.subCategories}
-					{% endif %}
-				</li>
-		{/foreach}
+				{# <a href="{categoryUrl data=$category filters=$category.filters}">[[category.name()]]</a> #}
+				<a href="[[ url(route(category)) ]]">[[category.name()]]</a>
 
-		{% if 2 == $level %}
+				{% if config('DISPLAY_NUM_CAT') %}
+					[[ partial('block/count.tpl', ['count': category.count]) ]]
+				{% endif %}
+
+				{% if !empty(category.subCategories) %}
+					[[ categoryTree(category.subCategories, level) ]]
+				{% endif %}
+
+			</li>
+		{% endfor %}
+
+		{% if 2 == level %}
 		<div class="divider"></div>
 		{% endif %}
 		</ul>
 	{% endif %}
-{/function}
+{%- endmacro %}
 
 <div class="panel panel-primary categories">
 	<div class="panel-heading">
@@ -33,6 +37,6 @@
 	</div>
 
 	<div class="content">
-		{categoryTree node=$categories level=0}
+		[[ categoryTree(categories, 0) ]]
 	</div>
 </div>

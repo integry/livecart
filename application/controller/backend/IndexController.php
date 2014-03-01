@@ -38,7 +38,7 @@ class IndexController extends ControllerBackend
 
 		// inventory stats
 		$lowStock = new EqualsOrLessCond('Product.stockCount', $this->config->get('LOW_STOCK'));
-		$lowStock->addAnd(new MoreThanCond('Product.stockCount', 0));
+		$lowStock->andWhere(new MoreThanCond('Product.stockCount', 0));
 
 		$conditions = array(
 
@@ -49,7 +49,7 @@ class IndexController extends ControllerBackend
 
 		foreach ($conditions as $key => $cond)
 		{
-			$cond->addAnd('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true));
+			$cond->andWhere('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true));
 			$inventoryCount[$key] = ActiveRecordModel::getRecordCount('Product', new ARSelectFilter($cond));
 		}
 
@@ -120,7 +120,7 @@ class IndexController extends ControllerBackend
 
 		if ('now' != $to)
 		{
-			$cond->addAnd(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
+			$cond->andWhere(new EqualsOrLessCond('CustomerOrder.dateCompleted', getDateFromString($to)));
 		}
 
 		$f = new ARSelectFilter($cond);

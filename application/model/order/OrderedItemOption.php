@@ -141,7 +141,7 @@ class OrderedItemOption extends ActiveRecordModel
 			chmod($dir, 0777);
 		}
 
-		$conf = self::getApplication()->getConfig();
+		$conf = $this->getConfig();
 		$img = new ImageManipulator($source);
 		$img->setQuality($conf->get('IMG_O_Q_' . $confSuffix));
 		$img->resize($conf->get('IMG_O_W_' . $confSuffix), $conf->get('IMG_O_H_' . $confSuffix), $target);

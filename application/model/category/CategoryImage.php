@@ -30,7 +30,7 @@ class CategoryImage extends ObjectImage
 	{
 		if (!$this->isLoaded)
 		{
-			$this->load();
+
 		}
 
 	  	return self::getImagePath($this->getID(), $this->category->getID(), $size);
@@ -38,7 +38,7 @@ class CategoryImage extends ObjectImage
 
 	public static function getImageSizes()
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 
 		$sizes = array();
 		$k = 0;

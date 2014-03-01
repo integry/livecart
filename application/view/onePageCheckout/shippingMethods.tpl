@@ -42,7 +42,7 @@
 			<div class="stepPreview">
 			{foreach from=$preview_shipping_methods item=method}
 				<div class="shippingPreview">
-					[[method.ShippingService.name_lang]]
+					[[method.ShippingService.name()]]
 					({$method.formattedPrice[$method.costCurrency]})
 				</div>
 			{/foreach}

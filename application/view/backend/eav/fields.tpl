@@ -11,7 +11,7 @@
 				{header}
 					{% if !empty(groupID) %}
 						<fieldset class="eavGroup">
-							<legend>{$fieldList.0.$groupClass.name_lang}</legend>
+							<legend>{$fieldList.0.$groupClass.name()}</legend>
 					{% endif %}
 				{/header}
 				{content}
@@ -19,10 +19,10 @@
 						{% if !$filter || ($filter && ($field[$filter] || ($field.handle == $filter))) %}
 							{capture assign=class}eavField field_[[field.fieldName]] eavHandle_[[field.handle]] {% if $field.isRequired %}required{% endif %} {% if !$field.isDisplayed %}notDisplayed{% endif %}{/capture}
 							{input name=$field.fieldName class=$class}
-								{label}[[field.name_lang]]:{/label}
+								{label}[[field.name()]]:{/label}
 								[[ partial('backend/eav/specFieldFactory.tpl', ['field': field, 'autocompleteController': "backend.eavFieldValue"]) ]]
 								{% if $field.description %}
-									<div class="fieldDescription">[[field.description_lang]]</div>
+									<div class="fieldDescription">[[field.description()]]</div>
 								{% endif %}
 							{/input}
 						{% endif %}

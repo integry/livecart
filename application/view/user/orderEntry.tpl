@@ -49,9 +49,9 @@
 		{foreach from=$order.cartItems item="item"}
 			<li>[[item.count]] x
 				{% if $item.Product.isDownloadable %}
-					<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name_lang]]</a>
+					<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name()]]</a>
 				{% else %}
-					[[item.Product.name_lang]]
+					[[item.Product.name()]]
 				{% endif %}
 
 				{sect}
@@ -61,7 +61,7 @@
 					{content}
 						{foreach $item.subItems as $subItem}
 							{% if $subItem.Product.isDownloadable %}
-								<li><a href="[[ url("user/item/" ~ subItem.ID) ]]">[[subItem.Product.name_lang]]</a></li>
+								<li><a href="[[ url("user/item/" ~ subItem.ID) ]]">[[subItem.Product.name()]]</a></li>
 							{% endif %}
 						{/foreach}
 					{/content}

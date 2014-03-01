@@ -10,7 +10,7 @@
 		<td class="cartImage">
 			{% if $item.Product.DefaultImage.urls.1 %}
 			<a href="{productUrl product=$item.Product}">
-				{img src=$item.Product.DefaultImage.urls.1 alt=$item.Product.name_lang|escape}
+				{img src=$item.Product.DefaultImage.urls.1 alt=$item.Product.name()|escape}
 			</a>
 			{% endif %}
 		</td>
@@ -22,11 +22,11 @@
 		<td class="cartName">
 			<div>
 				{% if $item.Product.ID %}
-					<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
+					<a href="{productUrl product=$item.Product}">[[item.Product.name()]]</a>
 				{% else %}
-					<span>[[item.Product.name_lang]]</span>
+					<span>[[item.Product.name()]]</span>
 				{% endif %}
-				<small class="categoryName">(&rlm;[[item.Product.Category.name_lang]])</small>
+				<small class="categoryName">(&rlm;[[item.Product.Category.name()]])</small>
 			</div>
 
 			[[ partial("order/itemVariations.tpl") ]]

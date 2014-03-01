@@ -197,7 +197,17 @@ class RolesParser
 		{
 			if($method->isPublic() && !$method->isConstructor() && !$method->isStatic())
 			{
-				$this->roles[$className . '::' . $method->getName()] = $this->parseMethod($method, $this->roles[$className]);
+				$name = $method->getName();
+				if (substr($name, -6) == 'Action')
+				{
+					$name = substr($name, 0, -6);
+				}
+				else
+				{
+					continue;
+				}
+				
+				$this->roles[$className . '::' . $name] = $this->parseMethod($method, $this->roles[$className]);
 			}
 		}
 	}

@@ -179,7 +179,7 @@ class StaticPage extends \system\MultilingualObject implements \eav\EavAble
 		{
 			if (!file_exists($this->getFileName()))
 			{
-				$this->load();
+
 				$this->saveFile();
 			}
 

@@ -1,5 +1,5 @@
 [[ config('STORE_NAME') ]] طلب المنتج
-اسم المنتج : [[product.name_lang]]
+اسم المنتج : [[product.name()]]
 SKU: [[product.sku]]
 
 [[message]]

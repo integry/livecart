@@ -63,13 +63,13 @@ class EmailTemplate extends Template
 
 	public function getBody()
 	{
-		$this->load();
+
 		return $this->body;
 	}
 
 	public function getHTML()
 	{
-		$this->load();
+
 		return $this->html;
 	}
 

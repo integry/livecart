@@ -42,7 +42,7 @@ class ManufacturerImage extends ObjectImage
 	{
 		if (!self::$imageSizes)
 		{
-			$config = self::getApplication()->getConfig();
+			$config = $this->getConfig();
 
 			$sizes = array();
 			$k = 0;

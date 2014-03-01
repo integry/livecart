@@ -131,7 +131,7 @@ class ShippingRate extends MultilingualObject
 	{
 		if(!$this->isLoaded() && $this->isExistingRecord())
 		{
-			$this->load();
+
 		}
 
 		$service = $this->shippingService;

@@ -50,7 +50,7 @@
 	<ul id="filter_items_list_[[categoryID]]" class="filterList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit ">
 	{foreach item="filter" from=$filters}
 		<li id="filter_items_list_[[categoryID]]_[[filter.ID]]" {% if $filter.filtersCount == 0 %}class="filtergroup_has_no_filters"{% endif %}>
-			<span class="filter_title">[[filter.name_lang]]</span> <span class="filter_count">([[filter.filtersCount]])</span>
+			<span class="filter_title">[[filter.name()]]</span> <span class="filter_count">([[filter.filtersCount]])</span>
 		</li>
 	{/foreach}
 	</ul>

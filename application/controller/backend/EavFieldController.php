@@ -303,8 +303,8 @@ class EavFieldController extends ControllerBackend
 			$values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
 			$filter = new ARSelectFilter();
 				$handleCond = new EqualsCond(new ARFieldHandle($this->getFieldClass(), 'handle'), $values['handle']);
-				$handleCond->addAND(new EqualsCond(new ARFieldHandle($this->getFieldClass(), call_user_func(array($this->getFieldClass(), 'getOwnerIDColumnName'))), $values['categoryID']));
-				$handleCond->addAND(new NotEqualsCond(new ARFieldHandle($this->getFieldClass(), 'ID'), $values['ID']));
+				$handleCond->andWhere(new EqualsCond(new ARFieldHandle($this->getFieldClass(), call_user_func(array($this->getFieldClass(), 'getOwnerIDColumnName'))), $values['categoryID']));
+				$handleCond->andWhere(new NotEqualsCond(new ARFieldHandle($this->getFieldClass(), 'ID'), $values['ID']));
 			$filter->setCondition($handleCond);
 			if(count(ActiveRecordModel::getRecordSetArray($this->getFieldClass(), $filter)) > 0)
 			{

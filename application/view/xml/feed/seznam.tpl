@@ -2,8 +2,8 @@
 <SHOP>
 	{foreach from=$feed item=product}
 		<SHOPITEM>
-			<PRODUCT><![CDATA[[[product.name_lang]]]]></PRODUCT>
-			<DESCRIPTION><![CDATA[[[product.longDescription_lang]]]]></DESCRIPTION>
+			<PRODUCT><![CDATA[[[product.name()]]]]></PRODUCT>
+			<DESCRIPTION><![CDATA[[[product.longDescription()]]]]></DESCRIPTION>
 			<URL><![CDATA[{productUrl product=$product full=true}]]></URL>
 
 			{% if $product.DefaultImage.ID %}

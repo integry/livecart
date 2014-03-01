@@ -98,7 +98,7 @@
 		<!-- STEP 3 -->
 		<fieldset class="filter_step_translations container">
 		{language}
-			<fieldset class="activeForm_translation_values filter_language_translation">
+			<fieldset class="activeForm_translation_values filter()uage_translation">
 				<fieldset class="error">
 					<label>{t _Filter_name}</label>
 					<input type="text" name="name_[[lang.ID]]" {denied role="category.update"}readonly="readonly"{/denied} />

@@ -78,7 +78,7 @@
 	{foreach name="shipments" item="shipment" from=$shipments}
 		<fieldset class="error">
 			<input name="shipment" type="radio" value="[[shipment.ID]]" id="shipment[[shipment.ID]]" class="checkbox" {% if empty(checked) %}checked="checked"{% endif %}>
-			<label for="shipment[[shipment.ID]]" class="checkbox"><b>{t _shipment} #[[shipment.ID]]</b> ([[shipment.ShippingService.name_lang]] - [[shipment.formatted_totalAmount]])</label>
+			<label for="shipment[[shipment.ID]]" class="checkbox"><b>{t _shipment} #[[shipment.ID]]</b> ([[shipment.ShippingService.name()]] - [[shipment.formatted_totalAmount]])</label>
 		</fieldset>
 
 	{/foreach}

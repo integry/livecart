@@ -22,7 +22,7 @@ if (window.attachEvent) window.attachEvent("onload", sfHover);
 		<ul class="unstyled" id="dynamicNav">
 		{foreach from=$node item=category}
 				<li class="{% if $category.parentNodeID == 1 %}topCategory{% endif %} {% if $category.lft <= $currentCategory.lft && $category.rgt >= $currentCategory.rgt %} dynCurrent{% endif %}{% if $category.subCategories %} hasSubs{% else %} noSubs{% endif %}">
-					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name_lang]]</a>
+					<a href="{categoryUrl data=$category filters=$category.filters}">[[category.name()]]</a>
 					{% if 'DISPLAY_NUM_CAT'|config %}
 						[[ partial('block/count.tpl', ['count': category.count]) ]]
 					{% endif %}

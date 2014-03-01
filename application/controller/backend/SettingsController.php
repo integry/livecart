@@ -6,9 +6,8 @@
  *
  * @package application/controller/backend
  * @author Integry Systems
- * @role settings
  */
-class SettingsController extends StoreManagementController
+class SettingsController extends ControllerBackend
 {
 	/**
 	 *	Main settings page
@@ -69,9 +68,6 @@ class SettingsController extends StoreManagementController
 		$this->set('multiLingualValues', $multiLingualValues);
 	}
 
-	/**
-	 * @role update
-	 */
 	public function saveAction()
 	{
 		$values = $layouts = array();

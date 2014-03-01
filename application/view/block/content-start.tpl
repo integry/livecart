@@ -1,4 +1,4 @@
-<div id="content" class="col col-lg-[[12 - global('layoutspanLeft') - global('layoutspanRight')]]">
+<div id="content" class="col-sm-[[12 - global('layoutspanLeft') - global('layoutspanRight')]]">
 
 {# block BREADCRUMB #}
 

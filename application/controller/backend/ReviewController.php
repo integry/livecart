@@ -141,7 +141,7 @@ class ReviewController extends ActiveGridController
 			$owner = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 			$cond = new EqualsOrMoreCond('Category.lft', $owner->lft);
-			$cond->addAND(new EqualsOrLessCond('Category.rgt', $owner->rgt));
+			$cond->andWhere(new EqualsOrLessCond('Category.rgt', $owner->rgt));
 		}
 		else
 		{

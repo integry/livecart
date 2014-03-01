@@ -2,7 +2,7 @@
 <root>
 	{foreach from=$feed item=product}
 	<item>
-		<name><![CDATA[[[product.name_lang_safe]]]]></name>
+		<name><![CDATA[[[product.name()_safe]]]]></name>
 		<link><![CDATA[{productUrl product=$product full=true}]]></link>
 		<price>{% if $product.price_LVL %}[[product.price_LVL]]{% endif %}</price>
 		<image>{% if $product.DefaultImage.ID %}<![CDATA[[[product.DefaultImage.urls.4]]]]>{% endif %}</image>

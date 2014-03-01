@@ -1,8 +1,8 @@
 {% extends "layout/frontend.tpl" %}
-
+{% block title %}Not found{% endblock %}
 
 {% block content %}
 
-[[description]] [Error Code [[id]]]
+Page not found
 
 {% endblock %}

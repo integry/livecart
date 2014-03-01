@@ -93,7 +93,7 @@ return;
 		foreach($roleNames as $roleName)
 		{
 			$condition->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
-			$deleteCondition->addAnd(new NotEqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
+			$deleteCondition->andWhere(new NotEqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
 		}
 
 		$filter->setCondition($condition);

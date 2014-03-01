@@ -7,21 +7,9 @@
  */
 class ErrController extends FrontendController
 {
-	public function initialize()
-	{
-		parent::initialize();
-		$this->loadLanguageFile('Err');
-	}
-
 	public function indexAction()
 	{
-
-		$this->set('id', $this->request->get('id'));
-		$this->set('ajax', $this->request->get('ajax'));
-		$this->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
-
-		$response->setStatusCode($this->request->get('id'));
-
+		$this->response->setHeader(404, 'Not Found');
 	}
 
 	public function redirectAction()
@@ -45,11 +33,6 @@ class ErrController extends FrontendController
 				$this->set('id', $id);
 				$response->setStatusCode($this->request->get('id'));
 		}
-	}
-
-	public function backendBrowserAction()
-	{
-
 	}
 
 	public function databaseAction()

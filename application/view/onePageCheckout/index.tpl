@@ -19,7 +19,7 @@
 
 <div class="row">
 
-	<div class="col col-lg-8" id="checkout-left">
+	<div class="col-sm-8" id="checkout-left">
 
 	{% if !$user.ID %}
 	<div id="checkout-login" class="step">
@@ -50,7 +50,7 @@
 
 	</div>
 
-	<div class="col col-lg-4" id="checkout-right">
+	<div class="col-sm-4" id="checkout-right">
 		<div id="checkout-right-inner">
 			<div id="checkout-cart">
 				[[cart]]

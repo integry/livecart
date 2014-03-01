@@ -15,7 +15,7 @@
 			<h4>{t _remove_filter}:</h4>
 			<ul>
 			{foreach from=$filters item=filter}
-				<li><a href="{categoryUrl data=$category filters=$filters removeFilter=$filter}">[[filter.filterGroup.name_lang]] [[filter.name_lang]]</a></li>
+				<li><a href="{categoryUrl data=$category filters=$filters removeFilter=$filter}">[[filter.filterGroup.name()]] [[filter.name()]]</a></li>
 			{/foreach}
 			</ul>
 		</div>
@@ -46,7 +46,7 @@
 
 		{foreach from=$groups item="group"}
 			{% if $group.displayLocation == 0 %}
-				[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': group, 'title': group.name_lang, 'allLink': group.more, 'allTitle': _show_all]) ]]
+				[[ partial($FILTER_STYLE_TEMPLATE, ['sectionFilters': group, 'title': group.name(), 'allLink': group.more, 'allTitle': _show_all]) ]]
 			{% endif %}
 		{/foreach}
 

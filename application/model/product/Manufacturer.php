@@ -72,7 +72,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		$f = new ARSelectFilter();
 
 		$ids = $counts = $letters = array();
-		$sql = !self::getApplication()->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID, 1 AS cnt FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
+		$sql = !$this->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID, 1 AS cnt FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID), COUNT(*) AS cnt FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
 		foreach (ActiveRecordModel::getDataBySQL($sql) as $row)
 		{
 			$ids[] = $row['manufacturerID'];
@@ -107,7 +107,7 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 	{
 		$letters = $ids = array();
 		$f = new ARSelectFilter();
-		$sql = !self::getApplication()->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID) FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
+		$sql = !$this->getConfig()->get('MANUFACTURER_PAGE_DISPLAY_ACTIVE') ? 'SELECT DISTINCT(ID) as manufacturerID FROM Manufacturer ' . $f->createString() . ' GROUP BY manufacturerID' : 'SELECT DISTINCT(manufacturerID) FROM Product ' . $f->createString() . ' GROUP BY manufacturerID';
 		foreach (ActiveRecordModel::getDataBySQL($sql) as $row)
 		{
 			$ids[] = $row['manufacturerID'];

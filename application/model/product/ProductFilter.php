@@ -1,5 +1,8 @@
 <?php
 
+namespace product;
+
+use category\Category;
 
 /**
  * Category product filter. Generates ARSelectFilter object for selecting products
@@ -8,47 +11,33 @@
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class ProductFilter
+class ProductFilter extends \Phalcon\Mvc\Model\Query\Builder
 {
 	private $category = null;
 
-	private $selectFilter = null;
-
-	private $productFilter;
-
 	private $filters = array();
 
-	private $includeSubcategories = false;
-
-	public function __construct(Category $category, ARSelectFilter $filter)
+	public function __construct($params = NULL)
+	{
+		parent::__construct($params);
+		$this->join('category\Category');
+		$this->from('product\Product');
+	}
+	
+	public function setCategory(Category $category, $includeSubcategories)
 	{
 		$this->category = $category;
-		$this->productFilter = $filter;
+		$this->category->setProductCondition($this, $includeSubcategories);
 	}
-
+	
 	/**
 	 * Applies a filter to a product set
 	 *
 	 * @param Filter $filter
 	 */
-	public function applyFilter(FilterInterface $filter)
+	public function applyFilter(\filter\FilterInterface $filter, $params)
 	{
-		$this->filters[] = $filter;
-	}
-
-	public function getFilters()
-	{
-		return $this->filters;
-	}
-
-	public function getFilterCount()
-	{
-		return count($this->filters);
-	}
-
-	public function getBaseFilter()
-	{
-		return $this->productFilter;
+		$filter->setCondition($this, $params);
 	}
 
 	public function getSelectFilter($disableFilters = false)
@@ -104,24 +93,9 @@ class ProductFilter
 	  	return $this->category;
 	}
 
-	public function includeSubcategories()
-	{
-		$this->includeSubcategories = true;
-	}
-
 	public function setEnabledOnly()
 	{
-		$this->productFilter->andWhere('Product.isEnabled = :Product.isEnabled:', array('Product.isEnabled' => true));
-	}
-
-	public function isSubcategories()
-	{
-		return $this->includeSubcategories;
-	}
-
-	public function setFilters($filters)
-	{
-		$this->filters = $filters;
+		$this->andWhere('product\Product.isEnabled = :isEnabled:', array('isEnabled' => true));
 	}
 }
 

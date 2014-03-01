@@ -266,7 +266,7 @@ class CategoryController extends ControllerBackend
 		$category = Category::getInstanceByID($categoryId, Category::LOAD_DATA);
 
 		$reviewCond = new EqualsOrMoreCond('Category.lft', $category->lft);
-		$reviewCond->addAND(new EqualsOrLessCond('Category.rgt', $category->rgt));
+		$reviewCond->andWhere(new EqualsOrLessCond('Category.rgt', $category->rgt));
 
 		return array(
 			'tabProducts' => $category->totalProductCount,

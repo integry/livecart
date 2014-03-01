@@ -16,14 +16,6 @@ abstract class ControllerBackend extends ControllerBase
 		
 		$this->loadLanguageFile('backend/abstract/Backend');
 		
-		$details = include dirname(dirname(dirname(dirname(__FILE__)))) . '/adminpass.php';
-		if (!isset($_SERVER['PHP_AUTH_USER']) || !(($_SERVER['PHP_AUTH_USER'] == $details[0]) && ($_SERVER['PHP_AUTH_PW'] == $details[1]))) {
-				header('WWW-Authenticate: Basic realm="HeySuccess Admin"');
-				header('HTTP/1.0 401 Unauthorized');
-				echo 'Unauthorized';
-				exit;
-		}
-
 		$user = $this->sessionUser->getUser();
 		if ((!$user || !$user->getID() || !$user->userGroupID)  && !($this instanceof SessionController))
 		{

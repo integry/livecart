@@ -12,14 +12,14 @@
 			<tr>
 				<td class="productName">
 					{% if $item.Product.ID %}
-						<a href="{productUrl product=$item.Product}">[[item.Product.name_lang]]</a>
+						<a href="{productUrl product=$item.Product}">[[item.Product.name()]]</a>
 					{% else %}
-						<span>[[item.Product.name_lang]]</span>
+						<span>[[item.Product.name()]]</span>
 					{% endif %}
 
 					{% if $item.recurringID && $recurringPlans[$item.recurringID] %}
 						{assign var="period" value=$recurringPlans[$item.recurringID]}
-						{$period.name_lang|escape}
+						{$period.name()|escape}
 
 						<span class="recurringPlan">
 						({$period.ProductPrice_period.formated_price.$currency}
@@ -64,7 +64,7 @@
 			{foreach from=$shipment.taxes item="tax"}
 				{% if $tax.amount %}
 					<tr>
-						<td colspan="3" class="tax">[[tax.TaxRate.Tax.name_lang]] ([[tax.TaxRate.rate]]%):</td>
+						<td colspan="3" class="tax">[[tax.TaxRate.Tax.name()]] ([[tax.TaxRate.rate]]%):</td>
 						<td>{$tax.formattedAmount.$currency}</td>
 					</tr>
 				{% endif %}

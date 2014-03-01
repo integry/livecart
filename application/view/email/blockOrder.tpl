@@ -11,7 +11,7 @@
 {% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{''|@str_pad_left:27}---------------------------------
 [[ @str_pad_left:49({t _subtotal_before_tax}) ]]: [[order.formatted_subtotalBeforeTaxes]]
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{$tax.name_lang|@str_pad_left:49}: [[tax.formattedAmount]]
+{% if !empty(SHOW_SKU) %}{''|@str_pad_left:10}{% endif %}{$tax.name()|@str_pad_left:49}: [[tax.formattedAmount]]
 {/foreach}
 {% endif %}
 {foreach from=$order.discounts item=discount}
@@ -42,7 +42,7 @@
 {% if $order.taxes[$order.Currency.ID] && !'HIDE_TAXES'|config %}
 <tr><td colspan="{% if !empty(SHOW_SKU) %}4{% else %}3{% endif %}">{t _subtotal_before_tax}</td><td align="right">[[order.formatted_subtotalBeforeTaxes]]</td></tr>
 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-<tr><td colspan="{% if !empty(SHOW_SKU) %}4{% else %}3{% endif %}">[[tax.name_lang]]</td><td align="right">[[tax.formattedAmount]]</td></tr>
+<tr><td colspan="{% if !empty(SHOW_SKU) %}4{% else %}3{% endif %}">[[tax.name()]]</td><td align="right">[[tax.formattedAmount]]</td></tr>
 {/foreach}
 {% endif %}
 {foreach from=$order.discounts item=discount}

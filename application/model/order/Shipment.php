@@ -826,7 +826,7 @@ class Shipment extends \ActiveRecordModel
 
 	public function getCurrency()
 	{
-		$this->load();
+
 		$this->getCustomerorderBy()->load();
 		return $this->getCustomerorderBy()->getCurrency();
 	}
@@ -853,13 +853,13 @@ class Shipment extends \ActiveRecordModel
 
 	public function getShippingTaxZone()
 	{
-		$shippingTaxZoneId = self::getApplication()->getConfig()->get('DELIVERY_TAX');
+		$shippingTaxZoneId = $this->getConfig()->get('DELIVERY_TAX');
 		return !is_numeric($shippingTaxZoneId) ? $this->getTaxZone() : DeliveryZone::getInstanceById($shippingTaxZoneId, DeliveryZone::LOAD_DATA);
 	}
 
 	public function getShippingTaxClass()
 	{
-		$shippingTaxClassId = self::getApplication()->getConfig()->get('DELIVERY_TAX_CLASS');
+		$shippingTaxClassId = $this->getConfig()->get('DELIVERY_TAX_CLASS');
 		return !is_numeric($shippingTaxClassId) ? null : TaxClass::getInstanceById($shippingTaxClassId, TaxClass::LOAD_DATA);
 	}
 
@@ -867,7 +867,7 @@ class Shipment extends \ActiveRecordModel
 	{
 		if (!$this->taxes)
 		{
-			$this->load();
+
 
 			if ($this->isLoaded() && $this->getCustomerorderBy()->isFinalized)
 			{

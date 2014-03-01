@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application/model/user/User');
+namespace newsletter;
 
 /**
  * Newsletter subscriber
@@ -8,42 +8,32 @@ ClassLoader::import('application/model/user/User');
  * @package application/model/newsletter
  * @author Integry Systems <http://integry.com>
  */
-class NewsletterSubscriber extends ActiveRecordModel
+class NewsletterSubscriber extends \ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
+	public $ID;
+	public $userID;
+	public $isEnabled;
+	public $email;
+	public $confirmationCode;
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", null, ARInteger::instance()));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("email", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("confirmationCode", ARVarchar::instance(40)));
-	}
-
-	public static function getNewInstanceByUser(User $user)
+	public static function getNewInstanceByUser(\user\User $user)
 	{
 		$instance = new self();
-		$instance->user->set($user);
-		$instance->email->set($user->email);
+		$instance->userID = $user->getID();
+		$instance->email = $user->email;
 		return $instance;
 	}
 
 	public static function getNewInstanceByEmail($email)
 	{
 		$instance = new self();
-		$instance->email->set($email);
+		$instance->email = $email;
 		return $instance;
 	}
 
 	public static function getInstanceByEmail($email)
 	{
-		$s = self::getRecordSet(__class__, new ARSelectFilter(new EqualsCond(new ARFieldHandle(__class__, 'email'), $email)));
-		if ($s->size())
-		{
-			return $s->get(0);
-		}
+		return self::query()->where('email = :email:', array('email' => $email))->execute()->getFirst();
 	}
 
 	public function beforeCreate()
@@ -54,9 +44,7 @@ class NewsletterSubscriber extends ActiveRecordModel
 			$str .= chr(rand(0, 255));
 		}
 
-		$this->confirmationCode->set(substr(md5($str), 0, 12));
-
-
+		$this->confirmationCode = substr(md5($str), 0, 12);
 	}
 }
 

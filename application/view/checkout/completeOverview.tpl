@@ -42,7 +42,7 @@
             {% if $order.isLocalPickup %}
                 {foreach $order.shipments as $shipment}
                     <div class="ShippingServiceDescription">
-                        {$shipment.ShippingService.description_lang|escape}
+                        {$shipment.ShippingService.description()|escape}
                     </div>
                 {/foreach}
             {% else %}

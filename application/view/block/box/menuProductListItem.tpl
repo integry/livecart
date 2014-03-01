@@ -1,9 +1,9 @@
 <div class="image">
 	<a href="{productUrl product=$product}">
 	{% if $product.DefaultImage.urls.1 %}
-		{img src=$product.DefaultImage.urls.1 alt=$product.name_lang|escape}
+		{img src=$product.DefaultImage.urls.1 alt=$product.name()|escape}
 	{% else %}
-		{img src='MISSING_IMG_THUMB'|config alt=$product.name_lang|escape}
+		{img src='MISSING_IMG_THUMB'|config alt=$product.name()|escape}
 	{% endif %}
 	</a>
 </div>
@@ -12,7 +12,7 @@
 	{% if !empty(productInfoTemplate) %}
 		[[ partial(productInfoTemplate) ]]
 	{% endif %}
-	<a href="{productUrl product=$product}" class="productName">[[product.name_lang]]</a>
+	<a href="{productUrl product=$product}" class="productName">[[product.name()]]</a>
 </div>
 
 <div class="pricingInfo">

@@ -3,7 +3,7 @@
 		{% if $category.ParentNode %}
 			{catPath category=$category.ParentNode} &gt;
 		{% endif %}
-		[[category.name_lang]]
+		[[category.name()]]
 	{% endif %}
 {/function}
 

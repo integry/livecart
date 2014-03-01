@@ -44,7 +44,7 @@
 
 		{foreach from=$order.taxes.$currency item="tax"}
 			<tr>
-				<td colspan="[[colspan]]" class="tax">[[tax.name_lang]]:</td>
+				<td colspan="[[colspan]]" class="tax">[[tax.name()]]:</td>
 				<td>[[tax.formattedAmount]]</td>
 			</tr>
 		{/foreach}

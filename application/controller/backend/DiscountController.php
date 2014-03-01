@@ -344,7 +344,7 @@ class DiscountController extends ActiveGridController
 				$c = new IsNullCond(new ARFieldHandle('DiscountConditionRecord', $field));
 				if (isset($cond))
 				{
-					$cond->addAND($c);
+					$cond->andWhere($c);
 				}
 				else
 				{

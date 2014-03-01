@@ -2,10 +2,10 @@
 {% if empty(html) %}
 {foreach from=$shipment.items item=item}
 
-{% if !empty(SHOW_SKU) %}{$item.Product.sku|@str_pad_iconv:10}{% endif %}{$item.Product.name_lang|truncate:29:"...":"true"|@str_pad_iconv:31}{$item.formattedDisplayPrice|truncate:9:"..."|@str_pad:10}{$item.count|truncate:8:"..."|@str_pad:9}[[item.formattedDisplaySubTotal]]
+{% if !empty(SHOW_SKU) %}{$item.Product.sku|@str_pad_iconv:10}{% endif %}{$item.Product.name()|truncate:29:"...":"true"|@str_pad_iconv:31}{$item.formattedDisplayPrice|truncate:9:"..."|@str_pad:10}{$item.count|truncate:8:"..."|@str_pad:9}[[item.formattedDisplaySubTotal]]
 {% if $item.options %}
 {foreach from=$item.options item=option}
-[[option.Choice.Option.name_lang]]: {% if 0 == $option.Choice.Option.type %}{t _option_yes}{% elseif 1 == $option.Choice.Option.type %}[[option.Choice.name_lang]]{% else %}{$option.optionText|@htmlspecialchars}{% endif %} {% if $option.priceDiff != 0 %}([[option.formattedPrice]]){% endif %}
+[[option.Choice.Option.name()]]: {% if 0 == $option.Choice.Option.type %}{t _option_yes}{% elseif 1 == $option.Choice.Option.type %}[[option.Choice.name()]]{% else %}{$option.optionText|@htmlspecialchars}{% endif %} {% if $option.priceDiff != 0 %}([[option.formattedPrice]]){% endif %}
 
 {/foreach}
 
@@ -22,10 +22,10 @@
 	</td>
 	{% endif %}
 	<td>
-		[[item.Product.name_lang]]
+		[[item.Product.name()]]
 		{% if $item.options %}
 			{foreach from=$item.options item=option}
-				<small>[[option.Choice.Option.name_lang]]: {% if 0 == $option.Choice.Option.type %}{t _option_yes}{% elseif 1 == $option.Choice.Option.type %}[[option.Choice.name_lang]]{% else %}{$option.optionText|@htmlspecialchars}{% endif %} {% if $option.priceDiff != 0 %}([[option.formattedPrice]]){% endif %}</small><br />
+				<small>[[option.Choice.Option.name()]]: {% if 0 == $option.Choice.Option.type %}{t _option_yes}{% elseif 1 == $option.Choice.Option.type %}[[option.Choice.name()]]{% else %}{$option.optionText|@htmlspecialchars}{% endif %} {% if $option.priceDiff != 0 %}([[option.formattedPrice]]){% endif %}</small><br />
 			{/foreach}
 		{% endif %}
 	</td>

@@ -85,7 +85,7 @@ class LiveCartSmarty extends Smarty
 	 */
 	public function config($key)
 	{
-		$config = self::getApplication()->getConfig();
+		$config = $this->getConfig();
 		if ($config->has($key))
 		{
 			return $config->get($key);
@@ -97,7 +97,7 @@ class LiveCartSmarty extends Smarty
 	 */
 	public function branding($string)
 	{
-		$softName = self::getApplication()->getConfig()->get('SOFT_NAME');
+		$softName = $this->getConfig()->get('SOFT_NAME');
 		return 'LiveCart' != $softName ? str_replace('LiveCart', $softName, $string) : $string;
 	}
 

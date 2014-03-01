@@ -10,12 +10,12 @@
 
 		{foreach from=$feed item=product}
 			<item>
-				<title><![CDATA[[[product.name_lang_utf8]]]]></title>
+				<title><![CDATA[[[product.name()_utf8]]]]></title>
 
-				{% if $product.shortDescription_lang_utf8 %}
-					<description><![CDATA[[[product.shortDescription_lang_utf8]]]]></description>
-				{% elseif $product.longDescription_lang_utf8 %}
-					<description><![CDATA[[[product.longDescription_lang_utf8]]]]></description>
+				{% if $product.shortDescription()_utf8 %}
+					<description><![CDATA[[[product.shortDescription()_utf8]]]]></description>
+				{% elseif $product.longDescription()_utf8 %}
+					<description><![CDATA[[[product.longDescription()_utf8]]]]></description>
 				{% endif %}
 
 				<link><![CDATA[{productUrl product=$product full=true}]]></link>
@@ -41,7 +41,7 @@
 				{% endif %}
 
 				<g:condition>new</g:condition>
-				<g:product_type><![CDATA[{$product.Category.name_lang|@htmlentities}]]></g:product_type>
+				<g:product_type><![CDATA[{$product.Category.name()|@htmlentities}]]></g:product_type>
 				<g:availability><![CDATA[{% if $product.isAvailable %}in stock{% else %}out of stock{% endif %}]]></g:availability>
 
 			</item>

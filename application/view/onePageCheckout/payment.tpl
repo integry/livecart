@@ -57,14 +57,14 @@
 					<hr />
 
 					<div class="row">
-						<div class="col col-lg-6">
+						<div class="col-sm-6">
 							<div class="grandTotal">
 								{t _total}:
 								<span class="orderTotal">{$order.formattedTotal.$currency}</span>
 							</div>
 						</div>
 
-						<div class="completeOrderButton text-right col col-lg-6">
+						<div class="completeOrderButton text-right col-sm-6">
 							[[ partial("onePageCheckout/block/submitButton.tpl") ]]
 						</div>
 					</div>
