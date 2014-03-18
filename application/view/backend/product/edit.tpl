@@ -1,6 +1,6 @@
 <dialog fullHeight=true class="" cancel="cancel()">
 	<dialog-header>
-		<span ng-show="vals.ID">{{vals.name}} {{ vals.ID }}</span>
+		<span ng-show="vals.ID">{{vals.name}}</span>
 		<span ng-show="!vals.ID">{t _add_product}</span>
 	</dialog-header>
 	<dialog-body>

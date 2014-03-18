@@ -803,18 +803,20 @@ backendComponents.directive('imageField', function($compile, $timeout)
 			{
 				response = JSON.parse(response);
 				
-				if (response.image)
-				{
-					scope.image = response.image;
-					scope.imageError = '';
-				}
-				else
+				if (response.error)
 				{
 					scope.image = '';
 					scope.imageError = response.error;
+					var paths = null;
+				}
+				else
+				{
+					scope.image = response[0].image;
+					scope.imageError = '';
+					var paths = _.pluck(response, 'image');
 				}
 				
-				scope.$apply(scope.model + ' = ' + JSON.stringify(scope.image));
+				scope.$apply(scope.model + ' = ' + JSON.stringify(paths));
 				
 				scope.$apply();
 			}
@@ -844,7 +846,7 @@ backendComponents.directive('imageField', function($compile, $timeout)
 			$scope.uploadFile = function() {
 				var fd = new FormData()
 				for (var i in $scope.files) {
-					fd.append("uploadedFile", $scope.files[i])
+					fd.append("uploadedFile[]", $scope.files[i])
 				}
 				
 				fd.append('size', $attrs.size);
@@ -854,7 +856,7 @@ backendComponents.directive('imageField', function($compile, $timeout)
 				xhr.addEventListener("load", uploadComplete, false)
 				xhr.addEventListener("error", uploadFailed, false)
 				xhr.addEventListener("abort", uploadCanceled, false)
-				xhr.open("POST", "../heysuccess/upload")
+				xhr.open("POST", "../upload")
 				$scope.progressVisible = true
 				xhr.send(fd)
 			}

@@ -27,18 +27,6 @@
 					</a>
 				</div>
 				
-				<div class="btn-group" ng-show="isMassAllowed()">
-					<a class="btn btn-default" ng-click="set('priority', 1)" title="1">
-						1
-					</a>
-					<a class="btn btn-default" ng-click="set('priority', 2)" title="2">
-						2
-					</a>
-					<a class="btn btn-default" ng-click="set('priority', 3)" title="3">
-						3
-					</a>
-				</div>
-				
 			</div>
 		</menu>
 		<actions>

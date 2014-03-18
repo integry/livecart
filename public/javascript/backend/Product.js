@@ -199,7 +199,10 @@ app.controller('ProductImagesController', function ($scope, $http)
 		if (newImage.path)
 		{
 			$scope.image = '';
-			$scope.images.push({uploadedPath: newImage.path});
+			angular.forEach(newImage.path, function(path)
+			{
+				$scope.images.push({uploadedPath: path});
+			});
 			$scope.newimage = {};
 		}
 	}, true);

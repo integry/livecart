@@ -4,11 +4,9 @@
 
 {% block content %}
 
-	<div id="logoContainer">
-		{# <img src="[[ config('BACKEND_LOGIN_LOGO') ]]" /> #}
-	</div>
+	<div id="logoContainer" class="col-lg-3 center-block">
 
-	<div id="loginContainer">
+	{# <img src="[[ config('BACKEND_LOGIN_LOGO') ]]" /> #}
 
 	{% if req('failed') %}
 		<div class="loginFailed">{t _login_failed}</div>
