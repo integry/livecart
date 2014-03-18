@@ -60,7 +60,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	//public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
 	//public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
-	public $expires;
 	public $promotions;
 	public $isEnabled;
 	public $sku;
@@ -132,10 +131,10 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	 *
 	 * @return Product
 	 */
-	public static function getNewInstance(Category $category)
+	public static function getNewInstance(\category\Category $category)
 	{
 		$product = new self();
-		$product->categoryID = $category;
+		$product->categoryID = $category->getID();
 		return $product;
 	}
 
@@ -602,19 +601,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 			return $weight;
 		}
-	}
-
-	public static function getRequestInstance(\Phalcon\Http\Request $request, $field = 'ID')
-	{
-		$product = parent::getRequestInstance($request, $field);
-		if (!$product->getID())
-		{
-			$data = $request->getJSON();
-			$category = Category::getRequestInstance($request, $field);
-			$product = Product::getNewInstance($category);
-		}
-
-		return $product;
 	}
 
 	/*####################  Saving ####################*/

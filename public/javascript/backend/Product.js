@@ -8,12 +8,25 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
     	}
     );
 
+	$scope.add = function(id)
+	{
+		$modal.open({templateUrl: Router.createUrl('backend/product', 'edit'), 
+					controller: 'EditProductController',
+					resolve: {
+							categoryID: function() { return $scope.id },
+							id: function() { return null } 
+							}
+							});
+	};
+	
 	$scope.edit = function(id)
 	{
 		$modal.open({templateUrl: Router.createUrl('backend/product', 'edit'), 
 					controller: 'EditProductController',
 					resolve: {
-							id: function() { return id } }
+							id: function() { return id },
+							categoryID: function() { return null } 
+							 }
 							});
 	};
 	
@@ -58,19 +71,19 @@ app.controller('ProductPresentationController', function ($scope, $http)
     };
 });
 
-app.controller('EditProductController', function ($scope, $http, $modal, id)
+app.controller('EditProductController', function ($scope, $http, $modal, id, categoryID)
 {
 	$scope.id = id;
 	
 	// if id != 0 --> edit product
 	// if categoryID != 0 --> add new product
-	$http.get(Router.createUrl('backend/product', 'get', {id: id})).
+	$http.get(Router.createUrl('backend/product', 'get', {id: id, categoryID: categoryID})).
 		success(function(data)
 		{
 			$scope.vals = data;
 		});
 		
-	$http.get(Router.createUrl('backend/product', 'eav', {id: id})).
+	$http.get(Router.createUrl('backend/product', 'eav', {id: id, categoryID: categoryID})).
 		success(function(data)
 		{
 			$scope.eav = data;
@@ -78,7 +91,17 @@ app.controller('EditProductController', function ($scope, $http, $modal, id)
 
 	$scope.save = function(form)
 	{
-		$http.post(Router.createUrl('backend/product', 'update'), $scope.vals).success(success('The product has been saved'));
+		if (form.$invalid)
+		{
+			return;
+		}
+		
+		$http.post(Router.createUrl('backend/product', 'update'), $scope.vals).success(function(res)
+		{
+			success('The product has been saved')();
+			$scope.vals = res;
+			$scope.id = res.ID;
+		});
 	}
 });
 
@@ -132,7 +155,7 @@ app.controller('ProductCategoriesController', function ($scope, $rootScope, $htt
 		$scope.categories.main = id;
 	};
 	
-	$scope.$watch('categories', function() { console.log(JSON.stringify($scope.categories)); }, true);
+	//$scope.$watch('categories', function() { console.log(JSON.stringify($scope.categories)); }, true);
 });
 
 app.controller('ProductImagesController', function ($scope, $http)

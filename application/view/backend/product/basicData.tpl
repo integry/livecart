@@ -1,4 +1,4 @@
-[[ form('', ['ng-submit': 'save()', 'ng-init': ';']) ]] >
+[[ form('', ['ng-submit': 'save(form)', 'ng-init': ';']) ]] >
 	[[ partial('backend/product/form/main.tpl') ]]
 </form>
 

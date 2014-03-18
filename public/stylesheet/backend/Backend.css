@@ -6,6 +6,8 @@
 
 .nav-tabs { margin-bottom: 1em; }
 
+.center-block { float: none; }
+
 a { cursor: pointer; }
 
 .btn-toolbar

@@ -5,14 +5,9 @@
 
 	[[ textfld('name', tip('_product_name')) ]]
 	
-	{#
-	[[ checkbox('autosku', '_generate_sku') ]]
+	[[ checkbox('autosku', '_sku_code') ]]
 
-	{input name="sku"}
-		{label}{tip _sku_code _hint_sku}:{/label}
-		{textfield class="product_sku" ng_disabled="product.autosku == true" autocomplete="controller=backend.product field=sku"}
-	{/input}
-	#}
+	[[ textfld('sku', tip('_hint_sku'), ['ng-disabled': 'vals.autosku']) ]]
 
 	[[ textareafld('shortDescription', tip('_short_description'), ['ui-my-tinymce': '']) ]]
 	[[ textareafld('longDescription', tip('_long_description'), ['ui-my-tinymce': '']) ]]
@@ -60,10 +55,6 @@
 	#}
 
 	[[ checkbox('isFeatured', tip('_mark_as_featured_product')) ]]
-	
-	[[ checkbox('isTop', 'Always on top') ]]
-	
-	[[ selectfld('priority', 'Priority', ['3': '3', '2': '2', '1': '1']) ]]
 	
 	<eav-fields config="eav"></eav-fields>
 

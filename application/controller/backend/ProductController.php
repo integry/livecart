@@ -122,7 +122,16 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	
 	public function eavAction()
 	{
-		$product = Product::getInstanceByID($this->request->get('id'));
+		if ((int)$this->request->get('id'))
+		{
+			$product = Product::getInstanceByID($this->request->get('id'));
+		}
+		else
+		{
+			$cat = Category::getInstanceByID($this->request->get('categoryID'), true);
+			$product = Product::getNewInstance($cat);
+		}
+		
 		$manager = new \eav\EavFieldManager(\eav\EavField::getClassID($product));
 		$manager->loadFields();
 		
@@ -417,24 +426,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	protected function getSelectFilter()
 	{
 		$f = parent::getSelectFilter();
-		$f->columns('product\Product.*, user\User.*');
-		$f->join('heysuccess\application\model\UserProduct', 'heysuccess\application\model\UserProduct.productID=product\Product.ID', '', 'LEFT');
 		$f->join('category\Category');
-		$f->join('user\User', 'heysuccess\application\model\UserProduct.userID=user\User.ID', '', 'LEFT');
-		
-		$f->andWhere('(heysuccess\application\model\UserProduct.isDraft IS NULL) OR (heysuccess\application\model\UserProduct.isDraft = 0)');
-		
-		$id = $this->getRequestCategory();
-		$category = Category::getInstanceByID($id);
-		$category->setProductCondition($f, true);
-		
-		// @todo: remove
-		if (!in_array($id, array(37, 38, 39)))
-		{
-			$f->andWhere('SUBQUERY("(SELECT COUNT(*) FROM ProductCategory WHERE ProductCategory.categoryID IN(37,38,39) AND ProductCategory.productID=Product.ID)") = 0');
-			$f->andWhere('product\Product.categoryID != 37');
-			$f->andWhere('product\Product.isEnabled = 1');
-		}
 
 		return $f;
 	}
@@ -661,13 +653,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	public function getAvailableColumns(Category $category, $specField = true)
 	{
 		$availableColumns = parent::getAvailableColumns();
-		
-		$availableColumns['user\User.firstName'] = array
-			(
-				'name' => $this->translate('user\User.firstName'),
-				'type' => 'text'
-			);
-		
+
 		// specField columns
 /*
 		if ($specField)
@@ -807,7 +793,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	protected function getDefaultColumns()
 	{
 		//return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');
-		return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'product\Product.isEnabled', 'product\Product.priority', 'product\Product.expires', 'user\User.firstName');
+		return array('product\Product.ID','product\Product.sku', 'product\Product.name', 'product\Product.isEnabled');
 	}
 
 	public function autoCompleteAction()
@@ -911,7 +897,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	 */
 	public function addAction()
 	{
-		$response = $this->productForm(false);
+		//$response = $this->productForm(false);
 	}
 
 	/**
@@ -936,6 +922,16 @@ class ProductController extends ActiveGridController// implements MassActionInte
 	public function updateAction()
 	{
 	  	$product = Product::getRequestInstance($this->request);
+	  	
+	  	if (!$product)
+	  	{
+	  		if (!$this->request->getJSON('ID'))
+			{
+				$category = Category::getRequestInstance($this->request, 'categoryID');
+				$product = Product::getNewInstance($category);
+			}
+		}
+	  	
 	  	//$product->loadPricing();
 	  	$product->loadSpecification();
 
