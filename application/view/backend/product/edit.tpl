@@ -1,4 +1,4 @@
-<dialog fullHeight=true class="" cancel="cancel()">
+<dialog fullHeight=true class="product-edit" cancel="cancel()">
 	<dialog-header>
 		<span ng-show="vals.ID">{{vals.name}}</span>
 		<span ng-show="!vals.ID">{t _add_product}</span>

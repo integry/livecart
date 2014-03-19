@@ -1,5 +1,5 @@
-<fieldset>
-	<legend>{t _main_details}</legend>
+<div>
+	<h2>{t _main_details}</h2>
 
 	[[ selectfld('isEnabled', tip( '_availability'), productStatuses) ]]
 
@@ -58,4 +58,4 @@
 	
 	<eav-fields config="eav"></eav-fields>
 
-</fieldset>
+</div>

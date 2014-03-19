@@ -145,15 +145,15 @@ class MassActionProcessor
 
 		if (substr($act, 0, 7) == 'enable_')
 		{
-			$record->setFieldValue($field, 1);
+			$record->writeAttribute($field, 1);
 		}
 		else if (substr($act, 0, 8) == 'disable_')
 		{
-			$record->setFieldValue($field, 0);
+			$record->writeAttribute($field, 0);
 		}
 		else if (substr($act, 0, 4) == 'set_')
 		{
-			$record->setFieldValue($field, $this->request->get('set_' . $field));
+			$record->writeAttribute($field, $this->request->get('set_' . $field));
 		}
 	}
 

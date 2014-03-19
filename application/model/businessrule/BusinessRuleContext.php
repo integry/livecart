@@ -1,5 +1,6 @@
 <?php
 
+namespace businessrule;
 
 /**
  * Defines context for evaluating business rules
@@ -24,7 +25,7 @@ class BusinessRuleContext
 		$this->order = $order;
 	}
 
-	public function setUser(User $user)
+	public function setUser(\user\User $user)
 	{
 		$this->user = $user;
 	}

@@ -381,7 +381,7 @@ class Transaction extends ActiveRecordModel implements EavAble
 		}
 
 		// encrypt card number
-		if ($this->ccLastDigits->isModified())
+		if ($this->hasChanged('ccLastDigits'))
 		{
 			$this->ccLastDigits = $this->encrypt($this->ccLastDigits));
 		}

@@ -42,7 +42,7 @@ abstract class EavFieldValueControllerCommon extends StoreManagementController
 			if(!empty($key) && !preg_match('/^new/', $key))
 			{
 				$specField = $this->getInstanceByID($key);
-				$specField->setFieldValue('position', $position);
+				$specField->writeAttribute('position', $position);
 				$specField->save();
 			}
 		}

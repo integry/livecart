@@ -35,7 +35,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 		}
 		$valueArray[$langCode] = $value;
 
-		$this->setFieldValue($fieldName, $valueArray);
+		$this->writeAttribute($fieldName, $valueArray);
 	}
 
 	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true)
@@ -255,7 +255,7 @@ abstract class MultilingualObject extends \ActiveRecordModel implements Multilin
 
 	public function __call($method, $arguments = NULL)
 	{
-		if (isset($this->$method) && (empty($arguments) || (strlen($arguments[0]) == 2)))
+		if (property_exists($this, $method) && (empty($arguments) || (strlen($arguments[0]) == 2)))
 		{
 			return $this->getCurrentLangValue($method);
 		}

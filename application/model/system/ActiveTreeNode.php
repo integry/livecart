@@ -494,22 +494,22 @@ class ActiveTreeNode extends \system\MultilingualObject
 			{
 				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_l && $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) <= $t_r)
 				{
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME));
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME));
+					$instance->writeAttribute(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME));
+					$instance->writeAttribute(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME));
 				}
 				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
+					$instance->writeAttribute(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
 				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
+					$instance->writeAttribute(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
 				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $leftPosition)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) + $width);
+					$instance->writeAttribute(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) + $width);
 				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $leftPosition)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) + $width);
+					$instance->writeAttribute(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) + $width);
 
 				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) < 0)
 				{
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $moveDistance);
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $moveDistance);
+					$instance->writeAttribute(self::LEFT_NODE_FIELD_NAME, -$instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $moveDistance);
+					$instance->writeAttribute(self::RIGHT_NODE_FIELD_NAME, -$instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $moveDistance);
 				}
 			}
 		}
@@ -609,9 +609,9 @@ class ActiveTreeNode extends \system\MultilingualObject
 			foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
 			{
 				if($instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
-					$instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
+					$instance->writeAttribute(self::RIGHT_NODE_FIELD_NAME, $instance->readAttribute(self::RIGHT_NODE_FIELD_NAME) - $width);
 				if($instance->readAttribute(self::LEFT_NODE_FIELD_NAME) >= $t_l)
-					$instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
+					$instance->writeAttribute(self::LEFT_NODE_FIELD_NAME, $instance->readAttribute(self::LEFT_NODE_FIELD_NAME) - $width);
 			}
 		}
 		catch (Exception $e)

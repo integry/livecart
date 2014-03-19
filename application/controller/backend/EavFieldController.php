@@ -103,7 +103,7 @@ class EavFieldController extends ControllerBackend
 			if(!empty($key))
 			{
 				$specField = $this->getFieldInstanceByID($key);
-				$specField->setFieldValue('position', $position);
+				$specField->writeAttribute('position', $position);
 
 				if(isset($match[1]))
 				{
@@ -194,11 +194,11 @@ class EavFieldController extends ControllerBackend
 			foreach ($specField->getSchema()->getFieldsByType('ARBool') as $field)
 			{
 				$name = $field->getName();
-				$specField->setFieldValue($name, $this->request->get($name, null, 0));
+				$specField->writeAttribute($name, $this->request->get($name, null, 0));
 			}
 
-			$specField->setFieldValue('dataType', $dataType);
-			$specField->setFieldValue('type', $type);
+			$specField->writeAttribute('dataType', $dataType);
+			$specField->writeAttribute('type', $type);
 
 			$specField->save();
 
@@ -231,14 +231,14 @@ class EavFieldController extends ControllerBackend
 
 					if(EavFieldCommon::TYPE_NUMBERS_SELECTOR == $type)
 					{
-						$specFieldValues->setFieldValue('value', $value);
+						$specFieldValues->writeAttribute('value', $value);
 					}
 					else
 					{
 						$specFieldValues->setLanguageField('value', $value, $this->specFieldConfig['languageCodes']);
 					}
 
-					$specFieldValues->setFieldValue('position', $position++);
+					$specFieldValues->writeAttribute('position', $position++);
 					$specFieldValues->save();
 
 	   				if(preg_match('/^new/', $key))

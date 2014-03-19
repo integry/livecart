@@ -1,5 +1,13 @@
 [[ form('', ['ng-submit': 'save(form)', 'ng-init': ';']) ]] >
-	[[ partial('backend/product/form/main.tpl') ]]
+	
+	<div class="row">
+		<div class="col-lg-8">
+			[[ partial('backend/product/form/main.tpl') ]]
+		</div>
+		<div class="col-lg-4">
+			[[ partial('backend/product/form/pricing.tpl') ]]
+		</div>
+	</div>
 </form>
 
 {#

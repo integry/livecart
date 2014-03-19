@@ -55,7 +55,7 @@ class FilterGroupController extends StoreManagementController
 
 		if($specFieldID = $this->request->get('specFieldID', false))
 		{
-			$filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
+			$filterGroup->writeAttribute('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
 		}
 
 		return $this->save($filterGroup);
@@ -181,7 +181,7 @@ class FilterGroupController extends StoreManagementController
 			if(!empty($key))
 			{
 				$group = FilterGroup::getInstanceByID((int)$key);
-				$group->setFieldValue('position', (int)$position);
+				$group->writeAttribute('position', (int)$position);
 				$group->save();
 			}
 		}

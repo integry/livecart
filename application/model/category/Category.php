@@ -159,7 +159,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 		try
 		{
 			$activeProductCount = $this->activeProductCount;
-			if ($this->isEnabled->isModified())
+			if ($this->hasChanged('isEnabled'))
 			{
 				if ($this->isEnabled())
 				{
@@ -210,9 +210,9 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 
 			foreach ($this->getPathNodeSet(true) as $node)
 			{
-				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
-				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
-				$node->setFieldValue("availableProductCount", "availableProductCount - " . $availableProductCount);
+				$node->writeAttribute("activeProductCount", "activeProductCount - " . $activeProductCount);
+				$node->writeAttribute("totalProductCount", "totalProductCount - " . $totalProductCount);
+				$node->writeAttribute("availableProductCount", "availableProductCount - " . $availableProductCount);
 
 				$node->save();
 			}

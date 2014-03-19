@@ -73,9 +73,9 @@ class ProductController extends ActiveGridController// implements MassActionInte
 //		$this->set("productTypes", $types);
 		$this->set("productStatuses", $status);
 
-/*
 		$this->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$this->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+/*
 		$this->set("shippingClasses", $this->getSelectOptionsFromSet(ShippingClass::getAllClasses()));
 		$this->set("taxClasses", $this->getSelectOptionsFromSet(TaxClass::getAllClasses()));
 
@@ -99,7 +99,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 		{
 			$product = Product::getInstanceByID($this->request->get('id'));
 			$product->loadSpecification();
-			//$product->loadPricing();
+			$product->loadPricing();
 
 			$arr = $product->toArray();
 
@@ -932,7 +932,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 			}
 		}
 	  	
-	  	//$product->loadPricing();
+	  	$product->loadPricing();
 	  	$product->loadSpecification();
 
 	  	return $this->save($product);
@@ -1099,18 +1099,20 @@ class ProductController extends ActiveGridController// implements MassActionInte
 			{
 				$value = $this->request->get($field, null, null);
 				$instance = $value ? ActiveRecordModel::getInstanceByID($class, $value) : null;
-				$product->setFieldValue($field, $instance);
+				$product->writeAttribute($field, $instance);
 			}
 			*/
 
 			$product->save();
 			$product->getSpecification()->save();
+			$product->getPricingHandler()->save();
 
 			/*
 			// presentation
 			$instance = CategoryPresentation::getInstance($product);
 			$instance->loadRequestData($this->request);
 			$instance->save();
+			*/
 
 			// save pricing
 			$product->loadPricing();
@@ -1172,7 +1174,6 @@ class ProductController extends ActiveGridController// implements MassActionInte
 					}
 				}
 			}
-			*/
 
 			echo json_encode($product->toArray());exit;
 		}

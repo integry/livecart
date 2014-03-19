@@ -142,19 +142,19 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 						break;
 
 						case 'ARBool':
-							$this->setFieldValue($name, in_array(strtolower($request->get($reqName)), array('on', 1, 'yes', 'true')));
+							$this->writeAttribute($name, in_array(strtolower($request->get($reqName)), array('on', 1, 'yes', 'true')));
 						break;
 
 						case 'ARInteger':
 						case 'ARFloat':
 							if (is_numeric($request->get($reqName)))
 							{
-								$this->setFieldValue($name, $request->get($reqName));
+								$this->writeAttribute($name, $request->get($reqName));
 							}
 						break;
 
 						default:
-							$this->setFieldValue($name, $request->get($reqName));
+							$this->writeAttribute($name, $request->get($reqName));
 						break;
 					}
 				}
@@ -511,7 +511,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 			}
 		}
 		
-		if (isset($this->$method) && (!empty($arguments) && (in_array(substr($arguments[0], 0, 2), array('d_', 't_')))))
+		if (property_exists($this, $method) && (!empty($arguments) && (in_array(substr($arguments[0], 0, 2), array('d_', 't_')))))
 		{
 			return $this->getFormattedTime($method, $arguments[0]);
 		}
@@ -583,6 +583,11 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	protected function getConfig()
 	{
 		return $this->getDI()->get('config');
+	}
+
+	protected function getApplication()
+	{
+		return $this->getDI()->get('application');
 	}
 }
 

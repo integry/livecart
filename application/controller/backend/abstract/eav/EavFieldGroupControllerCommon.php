@@ -70,7 +70,7 @@ abstract class EavFieldGroupControllerCommon extends StoreManagementController
 		{
 			// Except new fields, because they are not yet in database
 			$group = $this->getInstanceByID($key);
-			$group->setFieldValue('position', $position);
+			$group->writeAttribute('position', $position);
 			$group->save();
 		}
 

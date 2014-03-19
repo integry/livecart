@@ -7,27 +7,21 @@
  * @package application/helper/check
  * @author Integry Systems 
  */
-class IsUniqueSkuCheck extends Check
+class IsUniqueSkuCheck extends \Phalcon\Validation\Validator
 {
-	var $product;
-	
-	public function __construct($errorMessage, Product $product)
+	public function validate(\LiveCartValidator $validator, $field)
 	{
-		parent::__construct($errorMessage);
-		$this->product = $product;  
-	}
-	
-	public function isValid($value)
-	{
-		$filter = new ARSelectFilter();
-		$cond = 'Product.sku = :Product.sku:', array('Product.sku' => $value);
-		if ($this->product->getID())
-		{
-		  	$cond->andWhere(new NotEqualsCond('Product.ID', $this->product->getID()));
-		}
-		$filter->setCondition($cond);	
-		
-		return (ActiveRecordModel::getRecordCount('Product', $filter) == 0);
+ 		$sku = $validator->getValue($field);
+ 		
+ 		$prod = \product\Product::getInstanceBySKU($sku);
+
+        if ($prod)
+        {
+            $validator->appendMessage(new \Phalcon\Validation\Message($this->getOption('message'), $field));
+            return false;
+        }
+
+        return true;
 	}
 }
 

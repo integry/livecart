@@ -1,5 +1,6 @@
 <?php
 
+namespace product;
 
 /**
  * Product pricing logic. Allows to modify product prices and calculates prices for other currencies
@@ -26,15 +27,22 @@ class ProductPricing
 
 	private $application;
 
-	public function __construct(Product $product, $prices = null, LiveCart $application)
+	public function __construct(Product $product, $prices = null)
 	{
 		$this->product = $product;
-		$this->application = $application;
+		$this->application = $product->getDI()->get('application');
 
 		if (is_null($prices) && $product->getID())
 		{
-			$prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());
+			$prices = $product->getRelated("ProductPrice");
 		}
+		
+		foreach ($prices as $price)
+		{
+			$this->setPrice($price);
+		}
+
+		return;
 
 		if ($prices instanceof ARSet)
 		{
@@ -49,11 +57,11 @@ class ProductPricing
 			{
 				if (array_key_exists('ID', $price))
 				{
-					$this->prices[$id] = ProductPrice::getInstance($product, Currency::getInstanceById($id));
+					$this->prices[$id] = ProductPrice::getInstance($product, \Currency::getInstanceById($id));
 				}
 				else
 				{
-					$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+					$this->prices[$id] = ProductPrice::getNewInstance($product, \Currency::getInstanceById($id));
 				}
 				$this->prices[$id]->price->set($price['price']);
 				$this->prices[$id]->listPrice->set($price['listPrice']);
@@ -84,10 +92,10 @@ class ProductPricing
 	/**
 	 * Get price
 	 *
-	 * @param Currency $currency
+	 * @param \Currency $currency
 	 * @return ProductPrice
 	 */
-	public function getPrice(Currency $currency)
+	public function getPrice(\Currency $currency)
 	{
 		if (!$this->isPriceSet($currency))
 		{
@@ -105,10 +113,10 @@ class ProductPricing
 	 */
 	public function getPriceByCurrencyCode($currencyCode)
 	{
-	  	return $this->getPrice(Currency::getInstanceByID($currencyCode));
+	  	return $this->getPrice(\Currency::getInstanceByID($currencyCode));
 	}
 
-	public function removePrice(Currency $currency)
+	public function removePrice(\Currency $currency)
 	{
 		$this->removedPrices[$currency->getID()] = $currency;
 		unset($this->prices[$currency->getID()]);
@@ -130,7 +138,7 @@ class ProductPricing
 		unset($this->prices[$currencyCode]);
 	}
 
-	public function isPriceSet(Currency $currency)
+	public function isPriceSet(\Currency $currency)
 	{
 		return isset($this->prices[$currency->getID()]);
 	}
@@ -208,7 +216,7 @@ class ProductPricing
 
 		$formattedPrice = $calculated = array();
 
-		$parent = $this->product->parent;
+		$parent = $this->product->getParent();
 		$setting = $this->product->getChildSetting('price');
 
 		foreach ($this->application->getCurrencySet() as $id => $currency)
@@ -261,9 +269,9 @@ class ProductPricing
 
 	public function getDiscountPrices(User $user, $currency)
 	{
-		if (!$currency instanceof Currency)
+		if (!$currency instanceof \Currency)
 		{
-			$currency = Currency::getInstanceByID($currency);
+			$currency = \Currency::getInstanceByID($currency);
 		}
 
 		$price = $this->getPrice($currency);
@@ -303,21 +311,6 @@ class ProductPricing
 		{
 			$this->prices[$k] = clone $price;
 		}
-	}
-
-	public function __destruct()
-	{
-		foreach ($this->prices as $k => $price)
-		{
-			$this->prices[$k]->__destruct();
-		}
-		unset($this->prices);
-
-		foreach ($this->removedPrices as $k => $price)
-		{
-			$this->removedPrices[$k]->__destruct();
-		}
-		unset($this->removedPrices);
 	}
 }
 

@@ -83,11 +83,6 @@ class Currency extends \ActiveRecordModel
 
 	public function getFormattedPrice($price)
 	{
-		if (!$this->isLoaded())
-		{
-
-		}
-
 		$isNegative = ($price < 0);
 		if ($isNegative)
 		{
@@ -102,19 +97,6 @@ class Currency extends \ActiveRecordModel
 
 	public function round($price)
 	{
-		if (!$this->isLoaded())
-		{
-			try
-			{
-
-			}
-			catch (ARNotFoundException $e)
-			{
-				// do nothing?
-				$this->markAsLoaded();
-			}
-		}
-
 		$number = number_format($price, !is_null($this->decimalCount) ? $this->decimalCount : 2, '.', '');
 
 		return $number;

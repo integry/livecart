@@ -1,5 +1,6 @@
 <?php
 
+namespace product;
 
 /**
  * Product price class. Prices can be entered in different currencies.
@@ -8,29 +9,34 @@
  * @package application/model/product
  * @author Integry Systems <http://integry.com>getRecurringProductPeriodPrices
  */
-class ProductPrice extends ActiveRecordModel
+class ProductPrice extends \ActiveRecordModel
 {
 	const TYPE_GENERAL_PRICE = 0;
 	const TYPE_SETUP_PRICE = 1;
 	const TYPE_PERIOD_PRICE = 2;
 
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $productID;
+	public $currencyID;
+	//public $recurringID", "RecurringProductPeriod", "ID", "RecurringProductPeriod;
+	public $price;
+	public $listPrice;
+	public $type;
+	public $serializedRules;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("ProductPrice");
-		public $ID;
-		public $productID", "Product", "ID", null, ARInteger::instance()));
-		public $currencyID", "Currency", "ID", null, ARChar::instance()));
-		public $recurringID", "RecurringProductPeriod", "ID", "RecurringProductPeriod;
-		public $price;
-		public $listPrice;
-		public $type;
-		public $serializedRules;
+		$cascade = array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            );
+            
+		$this->belongsTo('productID', 'product\Product', 'ID', array('foreignKey' => true, 'alias' => 'Product'));
+		$this->belongsTo('currencyID', 'Currency', 'ID', array('foreignKey' => true, 'alias' => 'Currency'));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	public static function getNewInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
+	public static function getNewInstance(Product $product, \Currency $currency, $recurring = null, $type = 0)
 	{
 		$instance = new self();
 		$instance->product = $product;
@@ -43,23 +49,22 @@ class ProductPrice extends ActiveRecordModel
 		return $instance;
 	}
 
-	public static function getInstance(Product $product, Currency $currency, $recurring = null, $type = 0)
+	public static function getInstance(Product $product, \Currency $currency, $recurring = null, $type = 0)
 	{
 		$filter = new ARSelectFilter();
-		$cond = 'ProductPrice.productID = :ProductPrice.productID:', array('ProductPrice.productID' => $product->getID());
-
-		$cond->andWhere('ProductPrice.currencyID = :ProductPrice.currencyID:', array('ProductPrice.currencyID' => $currency->getID()));
-		$cond->andWhere('ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => $type));
+		$cond = ProductPrice::query()->where('ProductPrice.productID = :ProductPrice.productID:', array('ProductPrice.productID' => $product->getID()))
+					->andWhere('ProductPrice.currencyID = :ProductPrice.currencyID:', array('ProductPrice.currencyID' => $currency->getID()))
+					->andWhere('ProductPrice.type = :ProductPrice.type:', array('ProductPrice.type' => $type));
+					
 		if ($recurring)
 		{
 			$cond->andWhere('ProductPrice.recurringID = :ProductPrice.recurringID:', array('ProductPrice.recurringID' => $recurring->getID()));
 		}
-		$filter->setCondition($cond);
 
-		$set = parent::getRecordSet('ProductPrice', $filter);
-		if ($set->size() > 0)
+		$set = $cond->execute();
+		if ($set->count() > 0)
 		{
-			$instance = $set->get(0);
+			$instance = $set->current();
 		}
 		else
 		{
@@ -67,19 +72,6 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		return $instance;
-	}
-
-	/**
-	 * Loads a set of active record product price by using a filter
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -307,7 +299,7 @@ class ProductPrice extends ActiveRecordModel
 
 	public function multiplyPrice($multiply, $increaseQuantPrices = false)
 	{
-		$this->price = $this->price * $multiply);
+		$this->price = $this->price * $multiply;
 
 		if ($increaseQuantPrices)
 		{
@@ -390,10 +382,10 @@ class ProductPrice extends ActiveRecordModel
 	private function setRules($rules)
 	{
 		ksort($rules);
-		$this->serializedRules = serialize($rules));
+		$this->serializedRules = serialize($rules);
 	}
 
-	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
+	public static function calculatePrice(Product $product, \Currency $currency, $basePrice = null)
 	{
 		if (is_null($basePrice))
 		{
@@ -404,7 +396,7 @@ class ProductPrice extends ActiveRecordModel
 		return self::convertPrice($currency, $basePrice);
 	}
 
-	public static function convertPrice(Currency $currency, $basePrice)
+	public static function convertPrice(\Currency $currency, $basePrice)
 	{
 		$rate = (float)$currency->rate;
 		if ($rate)

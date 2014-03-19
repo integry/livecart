@@ -37,13 +37,13 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	 * @return ARSet
 	 */
 
-	//private $relationships = null;
+	private $relationships = null;
 
 	/**
 	 * Removed relationships
 	 * @return ARSet
 	 */
-	//private $removedRelationships = null;
+	private $removedRelationships = null;
 
 	//private $bundledProducts = null;
 
@@ -122,6 +122,12 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
             'foreignKey' => $cascade
         ));
 
+        $this->hasMany('ID', 'product\ProductPrice', 'productID', array(
+            'alias' => 'ProductPrice',
+            'foreignKey' => $cascade
+        ));
+        
+        $this->keepSnapshots(true);
 	}
 
 	/**
@@ -146,21 +152,9 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	 *
 	 * @return Product
 	 */
-	public static function getInstanceBySKU($sku, $loadReferencedRecords = false)
+	public static function getInstanceBySKU($sku)
 	{
-		$f = new ARSelectFilter();
-		$f->setCondition('Product.sku = :Product.sku:', array('Product.sku' => $sku));
-		$f->limit(1);
-
-		$set = self::getRecordSet($f, $loadReferencedRecords);
-		if (!$set->size())
-		{
-			return false;
-		}
-		else
-		{
-			return $set->get(0);
-		}
+		return self::query()->where('sku = :sku:', array('sku' => $sku))->execute()->getFirst();
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -349,8 +343,9 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	private function loadPricingFromRequest(\Phalcon\Http\Request $request, $listPrice = false, $removeMissing = false)
 	{
-		$prices = $request->get('defined' . ($listPrice ? 'listPrice' : ''));
-		foreach (self::getApplication()->getCurrencyArray() as $currency)
+		$prices = $request->getJson('price');
+		$prices = $prices['defined' . ($listPrice ? 'listPrice' : '')];
+		foreach ($this->getApplication()->getCurrencyArray() as $currency)
 		{
 			if (isset($prices[$currency]) && strlen($prices[$currency]))
 			{
@@ -363,7 +358,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		}
 	}
 
-	public function zloadRequestData(\Phalcon\Http\Request $request, $removeMissingPrices = true)
+	public function loadRequestData(\Phalcon\Http\Request $request, $removeMissingPrices = true)
 	{
 		// basic data
 		parent::loadRequestData($request);
@@ -373,13 +368,13 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 			$this->save();
 		}
 
+		/*
 		// set manufacturer
 		if ($man = $request->get('Manufacturer'))
 		{
 			$this->manufacturer = !empty($man['name']) ? Manufacturer::getInstanceByName($man['name']) : null;
 		}
-
-		$this->getSpecification()->loadRequestData($request);
+		*/
 
 		// set prices
 		$this->loadPricingFromRequest($request, false, $removeMissingPrices);
@@ -499,7 +494,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		}
 		else
 		{
-			$instance->setFieldValue($listPrice ? 'listPrice' : 'price', $price);
+			$instance->writeAttribute($listPrice ? 'listPrice' : 'price', $price);
 		}
 
 		$this->getPricingHandler()->setPrice($instance);
@@ -674,18 +669,18 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 			$availableChange = 0;
 
 			// when isEnabled flag is modified the activeProductCount will always either increase or decrease
-			if ($this->isEnabled->isModified())
+			if ($this->hasChanged('isEnabled'))
 			{
 				$activeChange = $this->isEnabled ? 1 : -1;
 
 				// when the stock count is larger than 0, the availableProductCount should also change by one
-				if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount > 0))
+				if ($this->isDownloadable() || (!$this->hasChanged('stockCount') && $this->stockCount > 0))
 				{
 					$availableChange = $this->isEnabled ? 1 : -1;
 				}
 			}
 
-			if ($this->stockCount->isModified() && $this->isEnabled)
+			if ($this->hasChanged('stockCount') && $this->isEnabled)
 			{
 				// decrease available product count
 				if ($this->stockCount == 0 && $this->stockCount->getInitialValue() > 0)
@@ -739,43 +734,44 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	/**
 	 *  @todo move the SKU checking to insert() - otherwise seems to break some tests for now
 	 */
-	public function xbeforeSave($forceOperation = null)
+	public function beforeSave()
 	{
-		self::beginTransaction();
+		//self::beginTransaction();
 
+/*
 		if ($this->manufacturer)
 		{
 			$this->manufacturer->save();
 		}
+*/
 
 		// update parent inventory counter
-		if ($this->stockCount->isModified() && $this->parent)
+		if ($this->hasChanged('stockCount') && $this->parent)
 		{
 			$stockDifference = $this->stockCount - $this->stockCount->getInitialValue();
 
 			$this->parent->stockCount = $this->parent->stockCount + $stockDifference;
 			$this->parent->save();
 		}
+	}
 
-		parent::save($forceOperation);
-
+	public function afterSave()
+	{
 		// generate SKU automatically if not set
 		if (!$this->sku)
 		{
-			ClassLoader::import('application/helper/check/IsUniqueSkuCheck');
-
-			if (!$this->parent)
+			if (true || !$this->parent)
 			{
 				$sku = $this->getID();
 
 				do
 				{
-					$check = new IsUniqueSkuCheck('', $this);
-					$exists = $check->isValid('SKU' . $sku);
-					if (!$exists)
+					$exists = \product\Product::getInstanceBySKU('SKU' . $sku);
+					if ($exists)
 					{
 						$sku = '0' . $sku;
 					}
+					break;
 				}
 				while (!$exists);
 
@@ -802,12 +798,12 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		}
 
 		$this->getSpecification()->save();
-		$this->getPricingHandler()->save();
+		//$this->getPricingHandler()->save();
 		$this->saveRelationships();
 
-		Category::updateCategoryIntervals($this->getID());
+		// \category\Category::updateCategoryIntervals($this->getID());
 
-		self::commit();
+		//self::commit();
 	}
 
 	/**
@@ -847,26 +843,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		}
 	}
 
-	public function delete()
-	{
-		if (37 == $this->categoryID)
-		{
-			$res = parent::delete();
-			var_dump($res);
-			var_dump($this->getMessages());
-			return $res;
-		}
-		
-		// @todo: remove
-		$this->isEnabled = false;
-		$this->categoryID = 37;
-		$this->save();
-		
-		$this->getRelated('ProductCategory')->delete();
-		
-		//return self::deleteByID($this->getID());
-	}
-
 	public function updateCategoryCounters(ARUpdateFilter $catUpdate, Category $category)
 	{
 		if ($catUpdate->isModifierSet())
@@ -887,7 +863,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function saveRelationships()
 	{
-		foreach($this->getRemovedRelationships() as $relationship)
+		foreach((array)$this->getRemovedRelationships() as $relationship)
 		{
 			$relationship->delete();
 		}
@@ -897,7 +873,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 			return;
 		}
 
-		foreach($this->relationships as $type => $relationships)
+		foreach((array)$this->relationships as $type => $relationships)
 		{
 			foreach ($relationships as $relationship)
 			{
@@ -913,9 +889,17 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		return ProductSpecification::sortAttributesByHandle('ProductSpecification', $array);
 	}
 
-	public function ztoArray()
+	public function toArray()
 	{
 	  	$array = parent::toArray();
+		
+		if (!empty($this->pricingHandlerInstance))
+		{
+			$array['price'] = $this->pricingHandlerInstance->toArray();
+		}
+		
+		return $array;
+		
 		$array['attributes'] = $this->getSpecification()->toArray();
 	  	if ($this->isLoaded())
 	  	{
@@ -1080,7 +1064,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function loadPricing($pricingData = null)
 	{
-		$this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
+		$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);
 	}
 
 	public function getPricesFields()
@@ -1272,8 +1256,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	private function getRemovedRelationships()
 	{
-		if(is_null($this->removedRelationships)) $this->removedRelationships = new ARSet();
-
 		return $this->removedRelationships;
 	}
 

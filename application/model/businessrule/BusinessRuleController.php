@@ -1,6 +1,6 @@
 <?php
 
-
+namespace businessrule;
 
 /**
  * Determines which rules and actions are applicable

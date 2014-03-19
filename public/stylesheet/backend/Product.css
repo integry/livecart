@@ -1,48 +1,11 @@
-span.thumbnail img
+.modal-dialog.product-edit
 {
-	display: none;
-}
-
-
-#productManagerContainer span.tabCounter
-{
-    margin-left: 6px;
-	vertical-align: middle;
-}
-
-.doneProduct
-{
-    float: left;
-    margin-bottom: 8px !important;
-}
-
-#productPage
-{
-	padding-right: 22px;
-	background-image: url(../../image/silk/gif/resultset_next.gif);
-	background-position: center right;
-	background-repeat: no-repeat;
-	float: right;
-}
-
-#toggle_tabProductBundle
-{
-	display: none !important;
+	width: 90%;
 }
 
 /*************************
 	Product form
 *************************/
-.productForm.intangible .shipping, .productForm.intangible .inventory
-{
-    display: none;
-}
-
-.productForm.intangible .inventory.downloadableInventory
-{
-	display: block;
-}
-
 .autoSKU
 {
     position: relative;
@@ -62,90 +25,6 @@ span.thumbnail img
 .listPrice input
 {
 	font-size: smaller;
-}
-
-/*************************
-	Product list
-*************************/
-li.addProduct
-{
-    background-image:url(../../image/silk/add.png);
-}
-
-.productsList
-{
-  	width: 100%;
-}
-
-.cell_cb input
-{
-	float: none;
-	margin-right: 0;
-	width: auto;
-}
-
-.headRow .cell_cb span
-{
-	display: none;
-}
-
-.cellt_numeric, .cellt_bool, .cellt_date
-{
-	width: 10%;
-	text-align: center;
-}
-
-.cell_Product_sku
-{
-	max-width: 10% !important;
-}
-
-.cell_Product_name
-{
-	max-width: 38% !important;
-}
-
-.cell_Manufacturer_name
-{
-	max-width: 15% !important;
-}
-
-.cell_ProductPrice_price
-{
-	max-width: 13% !important;
-	text-align: center;
-}
-
-.cell_Product_stockCount
-{
-	max-width: 10% !important;
-	text-align: center;
-}
-
-.cell_Product_isEnabled
-{
-	max-width: 10% !important;
-	text-align: center;
-}
-
-.lowStock
-{
-  	color: red;
-}
-
-.notEnabled
-{
-/*  	color: red;*/
-}
-
-/* Hide product type */
-.cell_hiddenType, #column_hiddenType, #column_hiddenType_label {
-    display: none;
-}
-
-.activeGridcolumn_hiddenType
-{
-    display: none;
 }
 
 /********************
@@ -226,21 +105,4 @@ quantity-price .number
 .quantityRow, .groupColumn
 {
 	background-color: lightyellow;
-}
-
-.prodImageEditForm .addForm
-{
-	margin: 1.5em;
-}
-
-.productImages .thumbsContainer .fileName
-{
-	margin-right:10px;
-	float:left;
-}
-
-.productImages .thumbsContainer,
-.productImages .thumbsContainer .fileImage img
-{
-	margin-bottom:6px;
 }

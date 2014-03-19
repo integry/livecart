@@ -49,7 +49,7 @@ class FilterController extends StoreManagementController
 			if(!empty($key) && !preg_match('/^new/', $key))
 			{
 				$filter = Filter::getInstanceByID((int)$key);
-				$filter->setFieldValue('position', (int)$position);
+				$filter->writeAttribute('position', (int)$position);
 				$filter->save();
 			}
 		}

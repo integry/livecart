@@ -256,7 +256,7 @@ class ProductOptionController extends StoreManagementController
 			if(!empty($key))
 			{
 				$productOption = ProductOption::getInstanceByID((int)$key);
-				$productOption->setFieldValue('position', (int)$position);
+				$productOption->writeAttribute('position', (int)$position);
 				$productOption->save();
 			}
 		}
@@ -278,7 +278,7 @@ class ProductOptionController extends StoreManagementController
 			if(!empty($key))
 			{
 				$productOption = ProductOptionChoice::getInstanceByID((int)$key);
-				$productOption->setFieldValue('position', (int)$position);
+				$productOption->writeAttribute('position', (int)$position);
 				$productOption->save();
 			}
 		}

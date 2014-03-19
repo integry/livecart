@@ -105,6 +105,20 @@ app.controller('EditProductController', function ($scope, $http, $modal, id, cat
 	}
 });
 
+app.controller('ProductPricingController', function ($scope)
+{
+	$scope.setCurrencies = function(main, other)
+	{
+		$scope.currencies = [main];
+	};
+	
+	$scope.curr = function(currency)
+	{
+		console.log(currency);
+		return currency;
+	}
+});
+
 app.controller('ProductMainCategoryController', function ($scope, $rootScope, $http, treeService)
 {
 	$scope.tree = treeService;

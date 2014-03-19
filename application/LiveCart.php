@@ -1373,11 +1373,11 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (!$this->businessRuleController)
 		{
-			$context = new BusinessRuleContext();
+			$context = new \businessrule\BusinessRuleContext();
 
-			if ($items = SessionOrder::getOrderItems())
+			if ($items = \order\SessionOrder::getOrderItems())
 			{
-				$context->orderBy($items);
+				$context->setOrder($items);
 			}
 
 			if ($this->sessionUser->getUser())
@@ -1385,9 +1385,10 @@ class LiveCart extends \Phalcon\Mvc\Application
 				$context->setUser($this->sessionUser->getUser());
 			}
 
-			$this->businessRuleController = new BusinessRuleController($context);
+			$this->businessRuleController = new \businessrule\BusinessRuleController($context);
 
-			if ($this->isBackend())
+			// @todo remove
+			if (true || $this->isBackend())
 			{
 				$this->businessRuleController->disableDisplayDiscounts();
 			}

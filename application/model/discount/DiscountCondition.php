@@ -228,7 +228,7 @@ class DiscountCondition extends ActiveTreeNode implements MultilingualObjectInte
 
 	private function setSerializedCond($cond)
 	{
-		return $this->setFieldValue('serializedCondition', serialize($cond));
+		return $this->writeAttribute('serializedCondition', serialize($cond));
 	}
 
 	public function getType()

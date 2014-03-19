@@ -12,11 +12,11 @@ class UserMassActionProcessor extends MassActionProcessor
 	{
 		if (substr($this->getAction(), 0, 7) == 'enable_')
 		{
-			$user->setFieldValue('isEnabled', 1);
+			$user->writeAttribute('isEnabled', 1);
 		}
 		else if (substr($this->getAction(), 0, 8) == 'disable_')
 		{
-			$user->setFieldValue('isEnabled', 0);
+			$user->writeAttribute('isEnabled', 0);
 		}
 	}
 }

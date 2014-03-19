@@ -128,7 +128,7 @@ class EavfieldController extends ActiveGridController
 			if(!empty($key))
 			{
 				$specField = $this->getFieldInstanceByID($key);
-				$specField->setFieldValue('position', $position);
+				$specField->writeAttribute('position', $position);
 
 				if(isset($match[1]))
 				{

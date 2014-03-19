@@ -1,5 +1,6 @@
 <?php
 
+namespace order;
 
 /**
  *
@@ -125,6 +126,8 @@ class SessionOrder
 
 	public static function getOrderItems()
 	{
+		return array();
+		
 		$session = new Session();
 		$data = $session->get('orderData');
 		if (isset($data['items']))

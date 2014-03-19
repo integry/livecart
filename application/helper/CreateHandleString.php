@@ -57,6 +57,6 @@ class CreateHandleString
 		}
 
 		// optimized for performance
-		return $cache[$str] = preg_replace('/ {1,}/', '-', trim(strtr($str, '$&+\/:;=?@."\'#*><-,', '                        ')));
+		return $cache[$str] = preg_replace('/ {1,}/', '-', trim(strtr($str, '$&+\/:;=?@."\'#*><-,%', '                        ')));
 	}
 }

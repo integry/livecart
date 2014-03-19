@@ -646,7 +646,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$product = $this->getProduct();
 
 			// changed product (usually a different variation)
-			if ($this->product->isModified())
+			if ($this->hasChanged('product'))
 			{
 				// unreserve original item
 				if ($orig = $this->product->getInitialValue())
@@ -680,7 +680,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 					$this->reserve();
 				}
 			}
-			else if ($this->count->isModified())
+			else if ($this->hasChanged('count'))
 			{
 				$delta = $this->count - $this->reservedProductCount;
 				$this->reservedProductCount = $this->count;

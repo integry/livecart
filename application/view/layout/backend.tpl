@@ -9,8 +9,6 @@
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
-		<script src="http://mgcrea.github.io/angular-strap/vendor/bootstrap-datepicker.js"></script>
-		<link href="http://mgcrea.github.io/angular-strap/vendor/bootstrap-datepicker.css" rel="stylesheet"></link>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -41,8 +39,8 @@
 		<script src="javascript/library/jquery/plugins.js"></script>
 		<link href="stylesheet/library/jquery/jquery-plugins.css" rel="stylesheet"></link>
 		
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"></link>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet"></link>
 		<link href="//cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.css"></link>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.js"></script>
@@ -62,7 +60,7 @@
 		<title>{% block title %}{% endblock %}</title>
 	</head>
 	
-	<body ng-controller="BackendController" ng-init="usergroup=<?php echo volt->user->userGroupID; ?>" class="group_<?php echo volt->user->userGroupID; ?>">
+	<body ng-controller="BackendController">
 		{% block content %}
 		<div id="messages"></div>
 		<div class="xrow">
@@ -83,11 +81,11 @@
 			  	<a ng-click="setPage('user')">Users</a>
 			  </li>
 
-			  <li class="active">
+			  <li>
 			  	<a ng-click="setPage('eavField')">Custom Fields</a>
 			  </li>
 
-			  <li class="active">
+			  <li>
 			  	<a ng-click="setPage('staticPage')">Pages</a>
 			  </li>
 			</ul>
