@@ -1,14 +1,18 @@
-{includeJs file="frontend/Product.js"}
+{% extends "layout/frontend.tpl" %}
+{% block title %}
+	[[ product.name() ]]
+	{% set metaDescription = strip_tags(product.shortDescription()) %}
+	{% set metaKeywords = product.keywords %}
+{% endblock %}
 
-{assign var="metaDescription" value=product.shortDescription()|@strip_tags}
-{% set metaKeywords = product.keywords %}
-{canonical}{productUrl product=product}{/canonical}
-{% block title %}{product.pageTitle()|default:product.name()}{% endblock %}
+{% block content %}
 
+[[ render("product/images") ]]
+
+[[ product.longDescription() ]]
+
+{#
 <div class="productIndex productCategory_[[product.Category.ID]] product_[[product.ID]]">
-
-[[ partial("product/layout.tpl") ]]
-[[ partial('block/content-start.tpl', ['hideTitle': true]) ]]
 
 [[ partial("product/head.tpl") ]]
 
@@ -48,9 +52,8 @@
 			{% endif %}
 		</div>
 	{% endif %}
+#}
+
 </div>
 
 {% endblock %}
-
-
-</div>

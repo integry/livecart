@@ -4,7 +4,7 @@
 	{% if validator and validator.getAngularValues() %}
 		<script type="text/javascript">window.vals = [[ validator.getAngularValues() ]];</script>
 	{% endif %}
-	<my-form name="form" ng-submit="checkErrors(event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; {% if empty(params['ng-init']) %}vals={};{% else %} [[ params['ng-init'] ]]{% endif %}" {% if validator %}default-values="vals"{% endif %}
+	<my-form name="form" ng-submit="checkErrors($event, form); {% if !empty(params['ng-submit']) %}[[ params['ng-submit'] ]]{% endif %}" novalidate="" ng-init="isSubmitted=0; {% if empty(params['ng-init']) %}vals={};{% else %} [[ params['ng-init'] ]]{% endif %}" {% if validator %}default-values="vals"{% endif %}
 
 	{% if action %}
 		action="[[ url(action) ]]"
@@ -23,7 +23,7 @@
 	{% set validator = global('validator') %}
 	{% if validator %}
 		{% for val in validator.getValidators(field) %}
-			<div ng-show="isSubmitted && form.[[field]].error.[[ validator.getAngularErrType(val) ]]" class="text-danger">[[ val.getOption('message') ]]</div>
+			<div ng-show="isSubmitted && form.[[field]].$error.[[ validator.getAngularErrType(val) ]]" class="text-danger">[[ val.getOption('message') ]]</div>
 		{% endfor %}
 
 		{% for error in validator.getFieldMessages(field) %}
@@ -57,7 +57,7 @@
 	name="[[field]]" class="{% if empty(params['noformcontrol']) %}form-control{% endif %}
 	{% if !empty(params['class']) %}[[ params['class'] ]]{% endif %}"
 	{% if params %}
-		<?php unset(params['class']); ?>
+		<?php unset($params['class']); ?>
 		{% for key, value in params %}
 			[[key]]="[[value]]"
 		{% endfor %}
@@ -67,21 +67,21 @@
 {%- endmacro %}
 
 {%- macro textfld(field, title, params) %}
-	{% set validator = global('validator') %}
+	{% set validator = global('validator') %} 
     [[ startinput(field, 'textfld', params) ]]
         [[ label(t(title)) ]]
-		{% if !empty(validator) and validator.hasFilter(field, 'int') %}<?php params['type'] = 'number'; ?>{% endif %}
-        <input {% if params and !empty(params['type']) and (params['type'] == 'number') %} filter-number<?php unset(params['type']); ?> {% endif %} type="{% if params and !empty(params['type']) %}[[ params['type'] ]]{% else %}text{% endif %}" [[ inputattributes(field, params) ]] />
+		{% if !empty(validator) and validator.hasFilter(field, 'int') %}<?php $params['type'] = 'number'; ?>{% endif %}
+        <input {% if params and !empty(params['type']) and (params['type'] == 'number') %} filter-number<?php unset($params['type']); ?> {% endif %} type="{% if params and !empty(params['type']) %}[[ params['type'] ]]{% else %}text{% endif %}" [[ inputattributes(field, params) ]] />
     [[ endinput(field) ]]
 {%- endmacro %}
 
 {%- macro pwdfld(field, title, params) %}
-    <?php params = is_array(params) ? params : array(); params['type'] = 'password'; ?>
+    <?php $params = is_array($params) ? $params : array(); $params['type'] = 'password'; ?>
     [[ textfld(field, title, params) ]]
 {%- endmacro %}
 
 {%- macro filefld(field, title, params) %}
-    <?php params = is_array(params) ? params : array(); params['type'] = 'file'; ?>
+    <?php $params = is_array($params) ? $params : array(); $params['type'] = 'file'; ?>
     [[ textfld(field, title, params) ]]
 {%- endmacro %}
 
@@ -106,7 +106,7 @@
 {%- macro checkbox(field, title, params) %}
     [[ startinput(field, 'checkbox') ]]
         [[ open_label() ]]
-        	<?php params = is_array(params) ? params : array(); params['noformcontrol'] = true; ?>
+        	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
         	<input type="checkbox" [[ inputattributes(field, params) ]] {% if empty(params['skip-ng-defaults']) %}value="1" ng-true-value="1" ng-false-value="0"{% endif %} />
         	[[ t(title) ]]
         </label>
@@ -116,7 +116,7 @@
 {%- macro radio(field, title, params) %}
     [[ startinput(field, 'radio') ]]
         [[ open_label() ]]
-        	<?php params = is_array(params) ? params : array(); params['noformcontrol'] = true; ?>
+        	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
         	<input type="radio" [[ inputattributes(field, params) ]] />
         	[[ t(title) ]]
         </label>

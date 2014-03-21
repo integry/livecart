@@ -372,7 +372,7 @@ class CategoryController extends ControllerBackend
 
 	public function reindexAction()
 	{
-		ActiveTreeNode::reindex("Category");
+		Category::reindex();
 	}
 
 	/**

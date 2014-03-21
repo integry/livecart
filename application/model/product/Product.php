@@ -107,6 +107,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
                 'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
             );
             
+		$this->belongsTo('productID', 'product\Product', 'ID', array('foreignKey' => true, 'alias' => 'Parent'));
 		$this->belongsTo('categoryID', 'category\Category', 'ID', array('foreignKey' => true, 'alias' => 'Category'));
 		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => $cascade, 'alias' => 'EavObject'));
 		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('foreignKey' => $cascade, 'alias' => 'DefaultImage'));
@@ -127,6 +128,11 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
             'foreignKey' => $cascade
         ));
         
+        $this->hasMany('ID', 'product\Product', 'parentID', array(
+            'alias' => 'Variation',
+            'foreignKey' => $cascade
+        ));
+
         $this->keepSnapshots(true);
 	}
 
@@ -471,9 +477,9 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	 */
 	public function getPricingHandler()
 	{
-		if (!$this->pricingHandlerInstance)
+		if (empty($this->pricingHandlerInstance))
 		{
-			$this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
+			$this->pricingHandlerInstance = new ProductPricing($this, null, $this->getApplication());
 		}
 
 		return $this->pricingHandlerInstance;
@@ -526,6 +532,15 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		}
 
 		return $price;
+	}
+	
+	public function getFormattedPrice($currencyCode)
+	{
+		$price = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+		if ($price && $price->getID())
+		{
+			return $price->get_Currency()->getFormattedPrice($price->getPrice());
+		}
 	}
 
 	public function addRelatedProduct(Product $product, $type = 0)

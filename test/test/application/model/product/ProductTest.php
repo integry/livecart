@@ -56,7 +56,7 @@ class ProductTest extends LiveCartTest
 		$this->product = Product::getNewInstance($this->productCategory, 'test');
 		$this->product->setValueByLang("name", "en", "Test product...");
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
-		$this->product->setFieldValue("isEnabled", true);
+		$this->product->writeAttribute("isEnabled", true);
 		$this->product->save();
 
 		$this->usd = new Currency;

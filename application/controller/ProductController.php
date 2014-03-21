@@ -1,5 +1,7 @@
 <?php
 
+use \product\Product;
+
 /**
  *
  * @author Integry Systems
@@ -9,6 +11,7 @@ class ProductController extends CatalogController
 {
 	public $filters = array();
 
+	/*
 	public function initialize()
 	{
 		parent::initialize();
@@ -32,14 +35,18 @@ class ProductController extends CatalogController
 
 		$this->addBlock('PRODUCT-PURCHASE-VARIATIONS', 'purchaseVariations', 'product/block/purchaseVariations');
 	}
+	*/
 
 	public function indexAction()
 	{
 		$this->loadLanguageFile('Category');
 
-		$product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceByID($this->request->getParam('id'), array('ProductImage', 'Manufacturer', 'Category'));
 		$this->product = $product;
+		
+		$this->set('product', $product);
 
+		/*
 		if (!$product->isEnabled || $product->parent)
 		{
 			throw new ARNotFoundException('Product', $product->getID());
@@ -278,7 +285,7 @@ class ProductController extends CatalogController
 		}
 		$this->set('enlargeProductThumbnailOnMouseOver',
 			$this->config->get('_ENLARGE_PRODUCT_THUMBNAILS_ON') == 'P_THUMB_ENLARGE_MOUSEOVER');
-
+		*/
 	}
 
 	public function quickShopAction()
@@ -362,9 +369,9 @@ class ProductController extends CatalogController
 		return new BlockResponse();
 	}
 
-	public function imagesBlockAction()
+	public function imagesAction()
 	{
-		return new BlockResponse();
+		$this->set('images', \product\ProductImage::query()->where('productID = :id:', array('id' => $this->request->getParam('id')))->orderBy('position ASC')->execute());
 	}
 
 	public function summaryBlockAction()

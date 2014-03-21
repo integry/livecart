@@ -39,7 +39,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 
 	public function initialize()
 	{
-		$this->belongsTo('parentNodeID', 'category\Category', 'ID', array('alias' => 'Category'));
+		$this->belongsTo('parentNodeID', 'category\Category', 'ID', array('alias' => 'Parent'));
 		
         $this->hasMany('parentNodeID', 'category\Category', 'ID', array(
             'alias' => 'Category',
@@ -257,7 +257,7 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	{
 	  	if (!$this->subCategorySetCache)
 	  	{
-			$this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+			$this->subCategorySetCache = $this->getSubcategoryFilter()->getQuery()->execute();
 		}
 
 		return $this->subCategorySetCache;
@@ -306,21 +306,9 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	 * @param bool $loadReferencedRecords
 	 * @return ARSet
 	 */
-	public function getSiblingSet($loadSelf = true, $loadReferencedRecords = false)
+	public function getSiblings($loadSelf = true, $loadReferencedRecords = false)
 	{
-	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
-	}
-
-	/**
-	 * Returns an array of siblings (categories with the same parent)
-	 *
-	 * @param bool $loadSelf whether to include own instance
-	 * @param bool $loadReferencedRecords
-	 * @return ARSet
-	 */
-	public function getSiblingArray($loadSelf = true, $loadReferencedRecords = false)
-	{
-	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
+	  	return $this->getSiblingFilter($loadSelf)->execute();
 	}
 
 	/**
@@ -329,24 +317,22 @@ class Category extends ActiveTreeNode //implements MultilingualObjectInterface, 
 	 * @param bool $loadSelf
 	 * @return ARSelectFilter
 	 */
-	/*
 	private function getSiblingFilter($loadSelf)
 	{
-	  	$filter = new ARSelectFilter();
-	  	$cond = 'Category.parentNodeID = :Category.parentNodeID:', array('Category.parentNodeID' => $this->parentNode->getID());
-	  	$cond->andWhere('Category.isEnabled = :Category.isEnabled:', array('Category.isEnabled' => 1));
+		$cond = $this->query()->where('parentNodeID = :parentNodeID:', array('parentNodeID' => $this->getParent()->getID()))
+					  ->andWhere('isEnabled = 1');
 
 		if (!$loadSelf)
 		{
-			$cond->andWhere(new NotEqualsCond('Category.ID', $this->getID()));
+			$cond->andWhere('ID != :self:', array('self' => $this->getID()));
 		}
 
-		$filter->setCondition($cond);
-	  	$filter->orderBy('Category.lft', 'ASC');
-
-	  	return $filter;
+	  	$cond->orderBy('lft ASC');
+	  	
+	  	return $cond;
 	}
 
+	/*
 	public function getBranchFilter(ARSelectFilter $filter = null)
 	{
 		if (is_null($filter))

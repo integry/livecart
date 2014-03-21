@@ -71,6 +71,16 @@ class LivePaginator extends \Phalcon\Paginator\Adapter\Model
 			return $this->getCurrentPage() + 1;
 		}
 	}
+	
+	public function getFrom()
+	{
+		return (($this->getCurrentPage() - 1) * $this->_limitRows) + 1;
+	}
+	
+	public function getTo()
+	{
+		return ($this->getCurrentPage() * $this->_limitRows);
+	}
 }
 
 ?>

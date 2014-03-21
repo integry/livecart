@@ -12,9 +12,6 @@
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-		<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-		<script src="../public/filemanager/plugin.min.js"></script>
-		<script src="javascript/library/angular/tinymce.js"></script>
 		
 		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"></link>
@@ -29,6 +26,8 @@
 		
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>
+		
+		<link href="stylesheet/frontend/Frontend.css" rel="stylesheet"></link>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.js"></script>
 		<link href="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.css" rel="stylesheet"></link>
@@ -61,7 +60,9 @@
 				{% block contentend %}[[ partial("block/content-stop.tpl") ]]{% endblock %}
 			</div>
 
-			{% block footer %}[[ partial("layout/frontend/footer.tpl") ]]{% endblock %}
+			<div class="row">
+				{% block footer %}[[ partial("layout/frontend/footer.tpl") ]]{% endblock %}
+			</div>
 		</div>
 	</body>
 </html>

@@ -46,16 +46,13 @@ class CategoryController extends CatalogController
 			$query->setCategory($category, true);
 		}
 		
-		//$query->setCategory($category, true);
+		$query->setCategory($category, true);
 		$query->setEnabledOnly();
 		$filters = $this->applyFilters($query);
 		
 		$query->columns('product\Product.*, product\ProductImage.*, category\Category.*')
-			//->join('category\Category', 'product\Product.categoryID=category\Category.ID', '', 'LEFT')
 			->join('product\ProductImage', 'product\Product.defaultImageID=product\ProductImage.ID', '', 'LEFT')
-			->join('eav\EavObject');
-
-		$query->orderBy('COALESCE(isTop, 0) DESC, product\Product.priority ASC, product\Product.ID DESC');
+			->join('eav\EavObject', 'product\Product.eavObjectID=eav\EavObject.ID', '', 'LEFT');
 
 		$set = $query->getQuery()->execute();
 		
@@ -89,6 +86,7 @@ class CategoryController extends CatalogController
 		$this->set('filters', $filters);
 		$this->set('count', $set->count());
 		$this->set('paginator', $paginator);
+		$this->set('currency', $this->application->getDefaultCurrencyCode());
 		
 		if ($this->request->getJsonRawBody())
 		{
@@ -1213,6 +1211,8 @@ class CategoryController extends CatalogController
 		{
 			$this->category = Category::getInstanceById($this->request->getParam('id', 1));
 		}
+		
+		$_REQUEST['__current_cat'] = $this->category->getID();
 
 		return $this->category;
 	}

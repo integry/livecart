@@ -20,7 +20,7 @@ class ProductFilter extends \Phalcon\Mvc\Model\Query\Builder
 	public function __construct($params = NULL)
 	{
 		parent::__construct($params);
-		$this->join('category\Category');
+		$this->join('category\Category', 'product\Product.categoryID=category\Category.ID', '', 'LEFT');
 		$this->from('product\Product');
 	}
 	

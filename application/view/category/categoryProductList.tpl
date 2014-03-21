@@ -1,7 +1,7 @@
 {% if !empty(products) %}
 	<div class="row resultStats">
 		<div class="col-sm-6 pagingInfo text-muted">
-			{maketext text=_showing_products params="`offsetStart`,`offsetEnd`,`count`"}
+			[[ maketext('_showing_products', [paginator.getFrom(), paginator.getTo(), count]) ]]
 		</div>
 
 		<div class="col-sm-6 listOptions">
@@ -24,6 +24,6 @@
 	<hr />
 
 	{% if !empty(products) %}
-		[[ partial('category/productListLayout.tpl', ['products': products]) ]]
+		[[ partial('category/productListLayout.tpl') ]]
 	{% endif %}
 {% endif %}

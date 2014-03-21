@@ -400,12 +400,14 @@ class FrontendController extends ControllerBase
 		{
 			$currentCategory = $this->getCategory();
 
+			$parent = $currentCategory->getParent();
+			
 			// get path of the current category (except for top categories)
-			if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode && (1 < $currentCategory->parentNode->getID())))
+			if (!(1 == $currentCategory->getID()) && ($parent && (1 < $parent->getID())))
 			{
-				$path = $currentCategory->getPathNodeArray();
+				$path = $currentCategory->getPathNodes();
 
-				$topCategoryId = $path[0]['ID'];
+				$topCategoryId = $path[0]->getID();
 				unset($path[0]);
 			}
 			else
@@ -438,25 +440,27 @@ class FrontendController extends ControllerBase
 		}
 
 		$currentCategory = $this->getCategory();
+		$parent = $currentCategory->getParent();
+		$subCategories = array();
 
 		// get sibling (same-level) categories (except for top categories)
-		if (!(1 == $currentCategory->getID()) && ($currentCategory->parentNode && (1 < $currentCategory->parentNode->getID())))
+		if (!(1 == $currentCategory->getID()) && ($parent && (1 < $parent->getID())))
 		{
-			$siblings = $currentCategory->getSiblingArray();
+			$siblings = persist($currentCategory->getSiblings());
 
 			foreach ($path as &$node)
 			{
-			  	if ($node['ID'] != $this->getCategory()->getID())
+			  	if ($node->getID() != $this->getCategory()->getID())
 			  	{
-					$current['subCategories'] = array(0 => &$node);
+					$subCategories[$current->getID()] = array(0 => &$node);
 				  	$current =& $node;
 				}
 				else
 				{
-					$current['subCategories'] =& $siblings;
-					foreach ($current['subCategories'] as &$sib)
+					$subCategories[$current->getID()] =& $siblings;
+					foreach ($subCategories[$current->getID()] as &$sib)
 					{
-					  	if ($sib['ID'] == $this->getCategory()->getID())
+					  	if ($sib->getID() == $this->getCategory()->getID())
 					  	{
 							$current =& $sib;
 						}
@@ -468,14 +472,10 @@ class FrontendController extends ControllerBase
 		// get subcategories of the current category (except for the root category)
 		if ($this->getCategory()->getID() > 1)
 		{
-			$subcategories = $currentCategory->getSubcategorySet()->toArray();
-
-			if ($subcategories)
-			{
-				$current['subCategories'] = $subcategories;
-			}
+			$subCategories[$current->getID()] = $currentCategory->getSubcategorySet();
 		}
-
+		
+		$this->set('subCategories', $subCategories);
 		$this->set('categories', $topCategories);
 		$this->set('currentId', $this->getCategory()->getID());
 		$this->set('lang', 'en');
@@ -785,8 +785,17 @@ class FrontendController extends ControllerBase
 
 	protected function getCategory()
 	{
-		$cat = Category::getRootNode();
-		return $cat;
+		$curr = $this->request->get('__current_cat');
+		if (!empty($curr))
+		{
+			$this->category = Category::getInstanceById($curr);
+		}
+		else
+		{
+			$this->category = Category::getRootNode();
+		}
+		
+		return $this->category;
 	}
 
 	/*

@@ -1,10 +1,13 @@
 {% if config('DISPLAY_PRICES') %}
 <span class="price">
-	{product.formattedPrice.currency}
+	[[ product.getFormattedPrice(currency) ]]
+	
+	{#
 	{% if product.formattedListPrice.currency %}
 		<span class="listPrice">
 			{product.formattedListPrice.currency}
 		</span>
 	{% endif %}
+	#}
 </span>
 {% endif %}

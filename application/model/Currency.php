@@ -32,6 +32,7 @@ class Currency extends \ActiveRecordModel
 	public $thousandSeparator;
 	public $decimalCount;
 	public $rounding;
+	public $roundingRules;
 
 	/*####################  Static method implementations ####################*/
 

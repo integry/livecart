@@ -312,52 +312,21 @@ class ActiveTreeNode extends \system\MultilingualObject
 	 *
 	 * @see ARSet
 	 */
-	public function getPathNodeSet($includeRootNode = false, $loadReferencedRecords = false)
+	public function getPathNodes($includeRootNode = false, $loadReferencedRecords = false)
 	{
-		$className = get_class($this);
-
-		// cache data if referenced records are not being loaded
-		if (!$loadReferencedRecords)
+		if (!$this->pathNodes)
 		{
-			if (!$this->pathNodes)
-			{
-				  $this->pathNodes = ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter(true), false);
-			}
-
-			$nodeSet = clone $this->pathNodes;
-
-			if (!$includeRootNode)
-			{
-				$nodeSet->remove(0);
-			}
-
-			return $nodeSet;
-
+			$this->pathNodes = $this->getPathNodeFilter(true)->execute();
 		}
-		else
+
+		$nodeSet = persist($this->pathNodes);
+
+		if (!$includeRootNode)
 		{
-			  return ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
-
+			array_shift($nodeSet);
 		}
-	}
 
-	/**
-	 * Gets a hierarchial path to a given tree node
-	 *
-	 * The result is a sequence of record starting from a root node
-	 * E.x. Consider a tree branch: Electronics -> Computers -> Laptops
-	 * The path of "Laptops" will be a record set (ARSet) with a following order of records:
-	 * 1. Electronics
-	 * 2. Computers
-	 *
-	 * @param bool $includeRootNode
-	 * @param bool $loadReferencedRecords
-	 * @return array
-	 */
-	public function getPathNodeArray($includeRootNode = false, $loadReferencedRecords = false)
-	{
-		$className = get_class($this);
-		return ActiveTreeNode::getRecordSetArray($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
+		return $nodeSet;
 	}
 
 	/**
@@ -365,31 +334,20 @@ class ActiveTreeNode extends \system\MultilingualObject
 	 */
 	private function getPathNodeFilter($includeRootNode)
 	{
-		$className = get_class($this);
-
-
-		$filter = new ARSelectFilter();
-
 		$cond = $this->getPathNodeCondition();
 		if (!$includeRootNode)
 		{
-			$cond->andWhere(new OperatorCond(new ARFieldHandle($className, "ID"), self::ROOT_ID, "<>"));
+			$cond->andWhere('ID <> :rootID:', array('rootID' => self::ROOT_ID));
 		}
 
-		$filter->setCondition($cond);
-		$filter->orderBy(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
+		$cond->orderBy(self::LEFT_NODE_FIELD_NAME . ' ASC');
 
-		return $filter;
+		return $cond;
 	}
 
 	public function getPathNodeCondition()
 	{
-		$className = get_class($this);
-		$leftValue = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
-		$rightValue = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
-		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
-		$cond->andWhere(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
-		return $cond;
+		return $this->query()->where(self::LEFT_NODE_FIELD_NAME . '<= :lft: AND ' . self::RIGHT_NODE_FIELD_NAME . '>= :rgt:', array('lft' => $this->readAttribute(self::LEFT_NODE_FIELD_NAME), 'rgt' => $this->readAttribute(self::RIGHT_NODE_FIELD_NAME)));
 	}
 
 	/**
@@ -397,8 +355,6 @@ class ActiveTreeNode extends \system\MultilingualObject
 	 */
 	function getWidth()
 	{
-		if($this->isLoaded())
-
 		$t_r = $this->readAttribute(self::RIGHT_NODE_FIELD_NAME);
 		$t_l = $this->readAttribute(self::LEFT_NODE_FIELD_NAME);
 		return abs($t_r - $t_l) + 1;
@@ -413,7 +369,6 @@ class ActiveTreeNode extends \system\MultilingualObject
 	 */
 	public function moveTo(ActiveTreeNode $parentNode, ActiveTreeNode $beforeNode=null)
 	{
-		if(!$this->isLoaded())
 		$className = get_class($this);
 		$db = ActiveRecord::getDBConnection();
 

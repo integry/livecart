@@ -423,19 +423,18 @@ class ProductController extends ActiveGridController// implements MassActionInte
 		return $value;
 	}
 
-	protected function getSelectFilter()
+	protected function createSelectFilter()
 	{
-		$f = parent::getSelectFilter();
-		$f->join('category\Category');
-
-		return $f;
+		$category = Category::getInstanceByID($this->request->getParam(0));
+		
+		$filter = new \product\ProductFilter;
+		$filter->setCategory($category, true);
+		
+		return $filter;
 	}
 
 	protected function xxgetSelectFilter()
 	{
-
-		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
-
 		$filter = new ARSelectFilter($category->getProductCondition(true));
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 

@@ -1,4 +1,4 @@
-{%- macro categoryTree(node, filters) %}
+{%- macro categoryTree(node, filters, currentId, subCategories) %}
 	{% if node %}
 		{% set level=level+1 %}
 		<ul class="nav nav-pills nav-stacked">
@@ -9,16 +9,16 @@
 				<li>
 			{% endif %}
 
-				{# <a href="{categoryUrl data=category filters=category.filters}">[[category.name()]]</a> #}
-				<a href="[[ url(route(category)) ]]">[[category.name()]]</a>
+			{# <a href="{categoryUrl data=category filters=category.filters}">[[category.name()]]</a> #}
+			<a href="[[ url(route(category)) ]]">[[category.name()]]</a>
 
-				{% if config('DISPLAY_NUM_CAT') %}
-					[[ partial('block/count.tpl', ['count': category.count]) ]]
-				{% endif %}
+			{% if config('DISPLAY_NUM_CAT') %}
+				[[ partial('block/count.tpl', ['count': category.count]) ]]
+			{% endif %}
 
-				{% if !empty(category.subCategories) %}
-					[[ categoryTree(category.subCategories, level) ]]
-				{% endif %}
+			{% if !empty(subCategories[category.ID]) %}
+				[[ categoryTree(subCategories[category.ID], level, currentId, subCategories) ]]
+			{% endif %}
 
 			</li>
 		{% endfor %}
@@ -37,6 +37,6 @@
 	</div>
 
 	<div class="content">
-		[[ categoryTree(categories, 0) ]]
+		[[ categoryTree(categories, 0, currentId, subCategories) ]]
 	</div>
 </div>

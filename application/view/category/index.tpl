@@ -1,7 +1,7 @@
 {% extends "layout/frontend.tpl" %}
 
+{% block title %}[[ title(category.name()) ]]{% endblock %}
 {#
-{% block title %}{category.pageTitle()|default:category.name()}{% endblock %}
 {% set metaKeywords = category.keywords() %}
 #}
 
@@ -59,4 +59,5 @@
 	
 	[[ paginator(paginator, url(route(category)) ~ '/___', ['ng-click': 'setPage(___, event)']) ]]
 
+</div>
 {% endblock %}

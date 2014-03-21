@@ -590,10 +590,15 @@ abstract class ActiveGridController extends ControllerBackend
 		
 		return $this->eavInstance;
 	}
+	
+	protected function createSelectFilter()
+	{
+		return $this->modelsManager->createBuilder()->from($this->getClassName());
+	}
 
 	protected function getSelectFilter()
 	{
-		$f = $this->modelsManager->createBuilder()->from($this->getClassName());
+		$f = $this->createSelectFilter();
 
 		/*
 		// specField columns

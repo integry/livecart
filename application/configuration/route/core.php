@@ -2,8 +2,10 @@
 
 include_once __ROOT__ . '/application/helper/CreateHandleString.php';
 
-$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2));
-$router->add("#^/([a-zA-Z0-9\_\-]+)\-([0-9]+)/([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2, "page" => 3));
+$handle = '([^\.\047]{0,})';
+
+$router->add("#^/" . $handle . "\-([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2));
+$router->add("#^/" . $handle . "\-([0-9]+)/([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2, "page" => 3));
 //$router->add("#^/opportunity/" . $handle . "\-([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'view', "id" => 1));
 //$router->add("#^/profile/([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'profile', "id" => 1));
 
@@ -47,10 +49,15 @@ $router->add('/backend', array(
 	'action' => 'index'
 ));
 
-$router->add('/{slug:[a-z\-]+}-{id:[0-9]+}', array(
+$router->add('/{slug:[a-zA-Z0-9\-]+}-{id:[0-9]+}', array(
         'controller' => 'category',
         'action' => 'index'
     ))->setName('category');
+
+$router->add('/shop/{slug:[a-zA-Z0-9\-]+}-{id:[0-9]+}', array(
+        'controller' => 'product',
+        'action' => 'index'
+    ))->setName('product');
 
 function route($object)
 {
@@ -58,4 +65,10 @@ function route($object)
 	{
 		return array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'category');
 	}
+	
+	else if ($object instanceof \product\Product)
+	{
+		return array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'product');
+	}
+
 }
