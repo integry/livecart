@@ -170,7 +170,7 @@ abstract class CatalogController extends FrontendController
 				$filterValues = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
 				foreach ($filterValues as $value)
 				{
-					$this->filters[] = new SelectorFilter($value, $filterGroups->filter('specField', $value->specField)->get(0));
+					$this->filters[] = new SelectorFilter($value, $filterGroups->filter('specField', $value->specField)->shift());
 				}
 			}
 

@@ -42,12 +42,12 @@ class StaticPage extends \system\MultilingualObject implements \eav\EavAble
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'handle'), $handle));
 		$s = self::getRecordSet(__CLASS__, $f);
 
-		if (!$s->size())
+		if (!$s->count())
 		{
 			throw new ARNotFoundException(__CLASS__, 'handle: ' . $handle);
 		}
 
-		return $s->get(0);
+		return $s->shift();
 	}
 
 	public static function getIsInformationMenuCondition()

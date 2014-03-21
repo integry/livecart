@@ -135,9 +135,9 @@ class ShippingRateImport extends DataImport
 		}
 
 		$services = ActiveRecordModel::getRecordSet('ShippingService', $f);
-		if ($services->get(0))
+		if ($services->shift())
 		{
-			$service = $services->get(0);
+			$service = $services->shift();
 
 			// temporary
 			$service->deleteRelatedRecordSet('ShippingRate');

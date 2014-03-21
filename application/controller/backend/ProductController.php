@@ -943,9 +943,9 @@ class ProductController extends ActiveGridController// implements MassActionInte
 		$product->loadSpecification();
 
 		$set = $product->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
-		if ($set->size())
+		if ($set->count())
 		{
-			$response->get('productForm')->setData($set->get(0)->toArray());
+			$response->get('productForm')->setData($set->shift()->toArray());
 		}
 
 		// pricing
@@ -1187,7 +1187,7 @@ class ProductController extends ActiveGridController// implements MassActionInte
 
 	private function getSelectOptionsFromSet(ARSet $set)
 	{
-		if (!$set->size())
+		if (!$set->count())
 		{
 			return array();
 		}

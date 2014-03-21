@@ -12,18 +12,11 @@ class FrontendController extends ControllerBase
 {
 	protected $breadCrumb = array();
 
-	/**
-	 *	Session order instance
-	 */
-	protected $order;
-
 	public function ___constructAction(LiveCart $application)
 	{
 		parent::__construct($application);
 
 		$this->request->sanitizeAllData();
-
-		unset($this->order);
 
 		// variables to append automatically to all URLs
 		foreach (array('currency', 'sort', 'layout') as $key)
@@ -798,8 +791,7 @@ class FrontendController extends ControllerBase
 		return $this->category;
 	}
 
-	/*
-	public function __getAction($name)
+	public function __get($name)
 	{
 		if ($inst = parent::__get($name))
 		{
@@ -809,7 +801,7 @@ class FrontendController extends ControllerBase
 		switch ($name)
 	  	{
 			case 'order':
-								$this->order = SessionOrder::getorderBy();
+				$this->order = SessionOrder::getorderBy();
 
 				// check if order currency matches the request currency
 				if (!$this->order->currency || ($this->order->currency->getID() != $this->getRequestCurrency()))
@@ -824,7 +816,6 @@ class FrontendController extends ControllerBase
 			break;
 		}
 	}
-	*/
 }
 
 ?>

@@ -1362,7 +1362,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 			foreach ($options as $mainIndex => $mainOption)
 			{
-				for ($k = $mainIndex + 1; $k <= $options->size(); $k++)
+				for ($k = $mainIndex + 1; $k <= $options->count(); $k++)
 				{
 					if ($options->get($k) && ($mainOption->getID() == $options->get($k)->getID()))
 					{
@@ -1516,7 +1516,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		$filter->setCondition(
 			'RecurringProductPeriod.ID = :RecurringProductPeriod.ID:', array('RecurringProductPeriod.ID' => $recurringID));
 		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
-		if ($rs->size() == 0)
+		if ($rs->count() == 0)
 		{
 			return $returnDefaultIfNotFound ? $this->getDefaultRecurringProductPeriod() :  null;
 		}
@@ -1528,7 +1528,7 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		$filter = new ARSelectFilter();
 		$filter->limit(1);
 		$rs = RecurringProductPeriod::getRecordSetByProduct($this, $filter);
-		if ($rs->size() == 0)
+		if ($rs->count() == 0)
 		{
 			return null;
 		}

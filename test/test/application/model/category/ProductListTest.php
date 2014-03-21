@@ -37,7 +37,7 @@ class ProductListTest extends LiveCartTest
 
 		$lists = ProductList::getCategoryLists($root);
 
-		$this->assertSame($lists->get(0), $list);
+		$this->assertSame($lists->shift(), $list);
 		$this->assertSame($lists->get(1), $list2);
 
 		$this->assertEqual($list->position, 0);

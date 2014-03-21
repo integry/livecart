@@ -31,9 +31,9 @@ class CategoryPresentation extends ActiveRecordModel
 	{
 		$parentClass = get_class($parent);
 		$set = $parent->getRelatedRecordSet(__CLASS__, new ARSelectFilter(), array($parentClass));
-		if ($set->size())
+		if ($set->count())
 		{
-			return $set->get(0);
+			return $set->shift();
 		}
 		else
 		{
@@ -86,7 +86,7 @@ class CategoryPresentation extends ActiveRecordModel
 
 	private function getInheritedConfig(ARSet $set)
 	{
-		if ($set->size())
+		if ($set->count())
 		{
 			// category level configuration?
 			$prod = $set->shift();

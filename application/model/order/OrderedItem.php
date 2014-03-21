@@ -851,13 +851,13 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		$f = query::query()->where('ProductFile.ID = :ProductFile.ID:', array('ProductFile.ID' => $id));
 		$f->andWhere('ProductFile.productID = :ProductFile.productID:', array('ProductFile.productID' => $this->product->getID()));
 		$s = ActiveRecordModel::getRecordSet('ProductFile', $f);
-		if (!$s->size())
+		if (!$s->count())
 		{
 			return false;
 		}
 		else
 		{
-			return $s->get(0);
+			return $s->shift();
 		}
 	}
 

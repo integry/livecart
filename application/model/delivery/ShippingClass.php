@@ -84,7 +84,7 @@ class ShippingClass extends MultilingualObject
 				)
 			);
 
-		return ActiveRecordModel::getRecordSet('ShippingClass', $f)->get(0);
+		return ActiveRecordModel::getRecordSet('ShippingClass', $f)->shift();
 	}
 
 	public function beforeCreate()

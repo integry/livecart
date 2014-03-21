@@ -105,7 +105,7 @@ class RecurringProductPeriod extends MultilingualObject
 		$array = parent::toArray();
 		$rs = ProductPrice::getRecurringProductPeriodPrices($this, $currencyID);
 		$currencies = array();
-		if ($rs && $rs->size())
+		if ($rs && $rs->count())
 		{
 			$mapping = array(
 				ProductPrice::TYPE_PERIOD_PRICE => 'ProductPrice_period',

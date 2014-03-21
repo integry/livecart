@@ -18,12 +18,12 @@ class NewsController extends FrontendController
 		$f->andWhere('NewsPost.isEnabled = :NewsPost.isEnabled:', array('NewsPost.isEnabled' => true));
 
 		$s = ActiveRecordModel::getRecordSet('NewsPost', $f);
-		if (!$s->size())
+		if (!$s->count())
 		{
 			throw new ARNotFoundException('NewsPost', $this->request->get('id'));
 		}
 
-		$newsPost = $s->get(0)->toArray();
+		$newsPost = $s->shift()->toArray();
 
 		$this->addIndexBreadCrumb();
 		$this->addBreadCrumb($newsPost['title_lang'], '');

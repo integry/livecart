@@ -48,7 +48,7 @@ class ProductOptionTest extends LiveCartTest
 
 		$this->assertNotEquals($cloned->getID(), $this->option->getID());
 		$this->assertSame($cloned->product, $cloned->getField('productID'));
-		$this->assertEquals($cloned->getChoiceSet()->size(), count($this->choices));
+		$this->assertEquals($cloned->getChoiceSet()->count(), count($this->choices));
 
 		foreach ($cloned->getChoiceSet() as $key => $choice)
 		{

@@ -86,7 +86,7 @@ class DeliveryZone extends MultilingualObject
 		$defaultZoneRates = self::getDefaultZoneInstance()->getTaxRates();
 		$ownRates = $this->getTaxRates();
 
-		if (!$ownRates->size() || !$defaultZoneRates->size())
+		if (!$ownRates->count() || !$defaultZoneRates->count())
 		{
 			return false;
 		}
@@ -256,7 +256,7 @@ class DeliveryZone extends MultilingualObject
 
 	private function hasMaskGroupMatch(ARSet $masks, $addressString)
 	{
-		if (!$masks->size())
+		if (!$masks->count())
 		{
 			return true;
 		}

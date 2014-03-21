@@ -632,7 +632,7 @@ class ShopScriptImport extends LiveCartImportDriver
 
 		$order->save();
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		if ($shipment)
 		{
 			$shipment->shippingAmount->set($order->rawData['shipping_cost']);

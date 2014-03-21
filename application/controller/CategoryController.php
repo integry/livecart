@@ -321,10 +321,10 @@ class CategoryController extends CatalogController
 
 		// search redirects
 		// no products found, but found one category name - redirect to this category
-		if (isset($foundCategories) && (1 == $foundCategories->size()) && !$products)
+		if (isset($foundCategories) && (1 == $foundCategories->count()) && !$products)
 		{
 			include_once($this->config->getPath('application/helper/smarty') . '/function.categoryUrl.php');
-			return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
+			return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->shift()->toArray()), $this->application));
 		}
 
 		$filterArray = array();

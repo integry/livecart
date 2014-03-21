@@ -99,7 +99,7 @@ class IndexController extends ControllerBackend
 
 		$customerOrders = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 		$ordersArray = array();
-		if($customerOrders->size() > 0)
+		if($customerOrders->count() > 0)
 		{
 			$i = 0;
 			foreach($customerOrders as $order)

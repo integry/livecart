@@ -157,7 +157,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 
 		if ($this->orderedItems)
 		{
-			if (!$this->shipments || !$this->shipments->size())
+			if (!$this->shipments || !$this->shipments->count())
 			{
 				$this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), array('UserAddress', 'ShippingService'));
 
@@ -171,7 +171,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 				}
 			}
 
-			if (!$this->shipments->size() && !$this->isFinalized)
+			if (!$this->shipments->count() && !$this->isFinalized)
 			{
 				$this->shipments = unserialize($this->shipping);
 			}
@@ -280,7 +280,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			$item = OrderedItem::getNewInstance($this, $product, $count);
 			$this->orderedItems[] = $item;
 
-			if (!$this->isFinalized || !$this->shipments || !$this->shipments->size())
+			if (!$this->isFinalized || !$this->shipments || !$this->shipments->count())
 			{
 				if ($shipment)
 				{
@@ -291,7 +291,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			{
 				if (!$shipment)
 				{
-					$shipment = $this->shipments->get(0);
+					$shipment = $this->shipments->shift();
 				}
 
 				$shipment->addItem($item);
@@ -1277,7 +1277,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 	{
 		$total = 0;
 
-		if ($this->shipments instanceof ARSet && !$this->shipments->size())
+		if ($this->shipments instanceof ARSet && !$this->shipments->count())
 		{
 			$this->shipments = null;
 		}
@@ -1428,7 +1428,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 
 	public function isShippingSelected()
 	{
-		$selected = $this->shipments ? $this->shipments->size() : 0;
+		$selected = $this->shipments ? $this->shipments->count() : 0;
 
 		if (!$this->shipments)
 		{
@@ -2051,7 +2051,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 	 */
 	public function getShipments()
 	{
-		if (!$this->shipments || !$this->shipments->size())
+		if (!$this->shipments || !$this->shipments->count())
 		{
 			if ($this->getID() && ($this->isFinalized || $this->isMultiAddress))
 			{
@@ -2085,7 +2085,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			}
 			else
 			{
-				if (!$this->shipments || !$this->shipments->size())
+				if (!$this->shipments || !$this->shipments->count())
 				{
 
 					$this->shipments = array();
@@ -2528,9 +2528,9 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 			}
 		}
 
-		if ($addresses->size())
+		if ($addresses->count())
 		{
-			return $addresses->get(0)->userAddress;
+			return $addresses->shift()->userAddress;
 		}
 
 		return null;
@@ -2772,7 +2772,7 @@ class CustomerOrder extends \ActiveRecordModel //implements EavAble, BusinessRul
 		$count = 0;
 		$orderIDrecurringItemIDMapping = self::getRecurringPeriodsEndingTodayArray($ts);
 		$orders = self::getRecurringOrders($orderIDrecurringItemIDMapping);
-		if ($orders->size() == 0)
+		if ($orders->count() == 0)
 		{
 			return $generatedInvoiceIDs;
 		}

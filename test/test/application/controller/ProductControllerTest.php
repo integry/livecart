@@ -111,7 +111,7 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->assertEqual($this->product->rating, 4);
 		$this->assertIsA($response, 'JSONResponse');
 
-		$this->assertEqual($this->product->getRelatedRecordSet('ProductReview', new ARSelectFilter())->size(), 1);
+		$this->assertEqual($this->product->getRelatedRecordSet('ProductReview', new ARSelectFilter())->count(), 1);
 	}
 
 	public function testNonAnonymousReviews()
@@ -209,9 +209,9 @@ class ProductControllerTest extends LiveCartTest implements ControllerTestCase
 
 		// delete review
 		$reviews = $this->product->getRelatedRecordSet('ProductReview', new ARSelectFilter());
-		$this->assertEqual($reviews->size(), 1);
+		$this->assertEqual($reviews->count(), 1);
 
-		$reviews->get(0)->delete();
+		$reviews->shift()->delete();
 		$this->product->reload();
 		$this->assertEqual($this->product->reviewCount, 0);
 	}

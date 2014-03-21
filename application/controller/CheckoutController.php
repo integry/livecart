@@ -393,9 +393,9 @@ class CheckoutController extends FrontendController
 					$f->andWhere('BillingAddress.userAddressID = :BillingAddress.userAddressID:', array('BillingAddress.userAddressID' => $this->request->get('billingAddress')));
 					$r = ActiveRecordModel::getRecordSet('BillingAddress', $f, array('UserAddress'));
 
-					if ($r->size())
+					if ($r->count())
 					{
-						$billing = $r->get(0);
+						$billing = $r->shift();
 					}
 					else if (!($billing = $this->user->defaultBillingAddress))
 					{
@@ -433,12 +433,12 @@ class CheckoutController extends FrontendController
 					$f->andWhere('ShippingAddress.userAddressID = :ShippingAddress.userAddressID:', array('ShippingAddress.userAddressID' => $this->request->get('shippingAddress')));
 					$r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
 
-					if (!$r->size())
+					if (!$r->count())
 					{
 						throw new ApplicationException('Invalid shipping address');
 					}
 
-					$shipping = $r->get(0)->userAddress;
+					$shipping = $r->shift()->userAddress;
 				}
 
 				$this->order->shippingAddress->set($shipping);
@@ -540,11 +540,11 @@ class CheckoutController extends FrontendController
 
 			$shipmentRates = $shipment->getAvailableRates();
 
-			if ($shipmentRates->size() > 1)
+			if ($shipmentRates->count() > 1)
 			{
 				$needSelecting = true;
 			}
-			else if (!$shipmentRates->size())
+			else if (!$shipmentRates->count())
 			{
 				$validator = $this->buildAddressSelectorValidator($this->order, 'shipping');
 				$validator->triggerError('selectedAddress', $this->translate('_err_no_rates_for_address'));
@@ -554,7 +554,7 @@ class CheckoutController extends FrontendController
 			}
 			else
 			{
-				$shipment->setRateId($shipmentRates->get(0)->getServiceId());
+				$shipment->setRateId($shipmentRates->shift()->getServiceId());
 				if ($this->order->isMultiAddress)
 				{
 					$shipment->save();
@@ -936,7 +936,7 @@ class CheckoutController extends FrontendController
 		{
 			$response = $this->registerPayment($result, $handler);
 
-			$trans = $this->order->getTransactions()->get(0);
+			$trans = $this->order->getTransactions()->shift();
 
 			$eavObject = EavObject::getInstance($trans);
 			$eavObject->setStringIdentifier('creditcard');
@@ -1266,9 +1266,9 @@ class CheckoutController extends FrontendController
 				$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
 
 				$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
-				if ($s->size())
+				if ($s->count())
 				{
-					$order = $s->get(0);
+					$order = $s->shift();
 					$order->loadAll();
 					$this->paymentOrder = $this->order = $order;
 				}

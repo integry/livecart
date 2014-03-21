@@ -515,7 +515,7 @@ class ProductImport extends DataImport
 						)
 					);
 
-				$cat = ActiveRecordModel::getRecordSet('Category', $f)->get(0);
+				$cat = ActiveRecordModel::getRecordSet('Category', $f)->shift();
 				if (!$cat)
 				{
 					$cat = Category::getNewInstance(Category::getInstanceByID($hashRoot));
@@ -596,9 +596,9 @@ class ProductImport extends DataImport
 			$types = $product->getRelatedRecordSet('ProductVariationType', $f);
 		}
 
-		if (isset($types) && $types->size())
+		if (isset($types) && $types->count())
 		{
-			return $types->get(0);
+			return $types->shift();
 		}
 		else
 		{
@@ -629,9 +629,9 @@ class ProductImport extends DataImport
 		);
 
 		$values = $type->getRelatedRecordSet('ProductVariation', $f);
-		if ($values->size())
+		if ($values->count())
 		{
-			$variation = $values->get(0);
+			$variation = $values->shift();
 		}
 		else
 		{

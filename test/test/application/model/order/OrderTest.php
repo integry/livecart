@@ -39,7 +39,7 @@ class OrderTest extends OrderTestCommon
 			$this->order->addProduct($product, 1);
 		}
 
-		$this->assertEqual($this->order->getShipments()->size(), 2);
+		$this->assertEqual($this->order->getShipments()->count(), 2);
 	}
 
 /*
@@ -73,8 +73,8 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertEqual($subTotal, $this->order->getSubTotal($this->usd));
 
-		$this->assertEqual($shipments->size(), $this->order->getShipments()->size());
-		$this->assertEqual(count($shipments->get(0)->getItems()), count($this->order->getShipments()->get(0)->getItems()));
+		$this->assertEqual($shipments->count(), $this->order->getShipments()->count());
+		$this->assertEqual(count($shipments->shift()->getItems()), count($this->order->getShipments()->shift()->getItems()));
 	}
 */
 
@@ -275,8 +275,8 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($loadedOrder->getSubTotal($this->usd), $price);
 
 		// check created shipments
-		$this->assertEqual($loadedOrder->getShipments()->size(), 1);
-		$this->assertTrue($loadedOrder->getShipments()->get(0)->getID() > 0);
+		$this->assertEqual($loadedOrder->getShipments()->count(), 1);
+		$this->assertTrue($loadedOrder->getShipments()->shift()->getID() > 0);
 	}
 
 	function testDigitalItemsAddedThroughShipment()
@@ -334,12 +334,12 @@ class OrderTest extends OrderTestCommon
 		$total = $shippingWithTax + $itemPriceWithTax;
 		$tax = 40; // (100 + 100) * 0.2
 
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$this->assertEqual($shipment->getTotal(true), $itemPriceWithTax);
 
 		$rates = $zone->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->assertEqual($this->order->getSubTotalBeforeTax($this->usd), $total - $tax);
@@ -350,11 +350,11 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$order->loadAll();
 
-		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
+		$this->assertEqual($order->getShipments()->shift()->getTaxAmount($this->usd), $tax);
 
 		$order->finalize();
 
-		$this->assertEqual($order->getShipments()->get(0)->getTaxAmount($this->usd), $tax);
+		$this->assertEqual($order->getShipments()->shift()->getTaxAmount($this->usd), $tax);
 
 		$this->assertEqual($order->getTotal(true), $total);
 
@@ -402,13 +402,13 @@ class OrderTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
-		$this->assertEquals($rates->get(0)->getAmountByCurrency($this->usd), 115);
+		$this->assertEquals($rates->shift()->getAmountByCurrency($this->usd), 115);
 	}
 
 	public function testInventory()
@@ -745,7 +745,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertSame($containerItem->product, $container);
 
 		$subItems = $containerItem->getSubItems();
-		$this->assertEqual($subItems->size(), count($this->products));
+		$this->assertEqual($subItems->count(), count($this->products));
 
 		// the sub-items should never show up in the order product list
 		ActiveRecord::clearPool();
@@ -803,8 +803,8 @@ class OrderTest extends OrderTestCommon
 		$order->save();
 		$order->finalize();
 
-		$this->assertEqual($order->getShipments()->size(), 1);
-		$this->assertFalse($order->getShipments()->get(0)->isShippable());
+		$this->assertEqual($order->getShipments()->count(), 1);
+		$this->assertFalse($order->getShipments()->shift()->isShippable());
 	}
 
 	public function testFixedDiscountWithoutTaxAndShipping()
@@ -847,10 +847,10 @@ class OrderTest extends OrderTestCommon
 		$this->order->addProduct($this->products[0]);
 		$this->order->save();
 
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$initTotal = $this->order->getTotal(true);
@@ -1589,7 +1589,7 @@ class OrderTest extends OrderTestCommon
 		$item->count->set(2);
 
 		// shipments shouldn't be reset like for regular orders
-		$this->assertEquals($this->order->getShipments()->size(), 2);
+		$this->assertEquals($this->order->getShipments()->count(), 2);
 
 		$price = $product->getPrice($this->usd);
 		$this->assertEquals($this->order->getTotal(true), ($price * 1.2) + ($price * 2 * 1.15));
@@ -1598,13 +1598,13 @@ class OrderTest extends OrderTestCommon
 		$this->assertEqual($shipment1->getDeliveryZone()->getID(), $zone1->getID());
 
 		// check if shipping rates are available
-		$this->assertEqual($shipment1->getShippingRates()->size(), 1);
-		$this->assertEqual($shipment1->getShippingRates()->get(0)->getCostAmount(), 100);
-		$this->assertEqual($shipment2->getShippingRates()->get(0)->getCostAmount(), 78);
+		$this->assertEqual($shipment1->getShippingRates()->count(), 1);
+		$this->assertEqual($shipment1->getShippingRates()->shift()->getCostAmount(), 100);
+		$this->assertEqual($shipment2->getShippingRates()->shift()->getCostAmount(), 78);
 
 		foreach (array($shipment1, $shipment2) as $shipment)
 		{
-			$shipment->setRateId($shipment->getShippingRates()->get(0)->getServiceID());
+			$shipment->setRateId($shipment->getShippingRates()->shift()->getServiceID());
 			$shipment->recalculateAmounts();
 			$shipment->save();
 		}
@@ -1617,7 +1617,7 @@ class OrderTest extends OrderTestCommon
 		$order = CustomerOrder::getInstanceById($this->order->getID(), true);
 		$order->loadAll();
 
-		$this->assertEquals($order->getShipments()->size(), 2);
+		$this->assertEquals($order->getShipments()->count(), 2);
 		foreach ($order->getShipments() as $key => $shipment)
 		{
 			$this->assertEquals(count($shipment->getItems()), 1);
@@ -1644,7 +1644,7 @@ class OrderTest extends OrderTestCommon
 
 		$this->order->addProduct($this->products[0], 1, true, $shipment1);
 		$this->order->addProduct($this->products[1], 3, true, $shipment2);
-		$this->assertEquals(2, $this->order->getShipments()->size());
+		$this->assertEquals(2, $this->order->getShipments()->count());
 
 		foreach ($this->order->getShipments() as $shipment)
 		{
@@ -1667,7 +1667,7 @@ class OrderTest extends OrderTestCommon
 		$this->assertNotEquals($cloned->getID(), $this->order->getID());
 
 		// check original order
-		$this->assertEquals(2, $reloaded->getShipments()->size());
+		$this->assertEquals(2, $reloaded->getShipments()->count());
 		$this->assertEquals(2, count($reloaded->getOrderedItems()));
 		$this->assertEquals(1, array_shift($reloaded->getItemsByProduct($this->products[0]))->count);
 		$this->assertEquals($total, $reloaded->getTotal(true));
@@ -1697,8 +1697,8 @@ class OrderTest extends OrderTestCommon
 		}
 
 		$this->assertEquals(2, count($order->getOrderedItems()));
-		$this->assertEquals(2, $order->getShipments()->size());
-		$this->assertEquals(1, count($order->getShipments()->get(0)->getItems()));
+		$this->assertEquals(2, $order->getShipments()->count());
+		$this->assertEquals(1, count($order->getShipments()->shift()->getItems()));
 		$this->assertEquals(1, count($order->getShipments()->get(1)->getItems()));
 
 		$item = array_shift($order->getShipments()->get(1)->getItems());
@@ -1879,15 +1879,15 @@ class OrderTest extends OrderTestCommon
 
 		$this->assertSame($this->order->getDeliveryZone(), $this->newZone);
 
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 
 		$rates = $shipment->getShippingRates();
-		$this->assertEqual($rates->size(), 0);
+		$this->assertEqual($rates->count(), 0);
 
 		$this->newZone->isFreeShipping->set(true);
 		$this->assertEqual($shipment->getChargeableWeight(), 0);
 		$rates = $shipment->getShippingRates();
-		$this->assertEqual($rates->size(), 1);
+		$this->assertEqual($rates->count(), 1);
 	}
 
 	public function testFindOrdersWithRecurringPeriodEndingToday_basic()
@@ -1926,7 +1926,7 @@ class OrderTest extends OrderTestCommon
 
 		$orders = CustomerOrder::findOrdersWithRecurringPeriodEndingToday();
 
-		$this->assertEquals(1, $orders->size());
+		$this->assertEquals(1, $orders->count());
 	}
 
 	public function testFindOrdersWithRecurringPeriodEndingToday_withoutInvoiceOrders()
@@ -1947,7 +1947,7 @@ class OrderTest extends OrderTestCommon
 		$order->startDate->set(date('Y-m-d 00:00:02', strtotime('+3 days', strtotime('-16 days'))));
 		$order->save();
 		$orders = CustomerOrder::findOrdersWithRecurringPeriodEndingToday();
-		$this->assertEquals(1, $orders->size());
+		$this->assertEquals(1, $orders->count());
 	}
 
 	public function testGenerateInvoiceNumber()
@@ -2006,7 +2006,7 @@ class OrderTest extends OrderTestCommon
 		$filter->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder','parentID'), $orderID));
 		$filter->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder','ID'), $ids[0]));
 		$rs = ActiveRecordModel::getRecordSet('CustomerOrder', $filter);
-		$this->assertEquals(1, $rs->size(), 'Should generate one invoice order');
+		$this->assertEquals(1, $rs->count(), 'Should generate one invoice order');
 		$invoice = $rs->shift();
 		$this->assertEquals('Recurring Order #1-1', $invoice->invoiceNumber);
 		$items = $invoice->getOrderedItems();
@@ -2215,7 +2215,7 @@ class OrderTest extends OrderTestCommon
 		// 2010-02-28
 		// 2010-03-01
 
-		$this->assertEquals(3, $order->getShipments()->size());
+		$this->assertEquals(3, $order->getShipments()->count());
 		$this->assertEquals(-1, $order->rebillsLeft);
 
 		// from 2009-12-01 to 2010-01-04 there should be nothing to generate (see timeline above)

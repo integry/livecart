@@ -169,7 +169,7 @@ class ShippingService extends MultilingualObject implements EavAble
 
 		$rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
 
-		if (!$rates->size())
+		if (!$rates->count())
 		{
 			return null;
 		}

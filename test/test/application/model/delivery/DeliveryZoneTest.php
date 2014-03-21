@@ -99,7 +99,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$countries = $zone->getCountries();
 
 		$this->assertEquals($countries->getTotalRecordCount(), 1);
-		$this->assertTrue($countries->get(0) === $deliveryCountry);
+		$this->assertTrue($countries->shift() === $deliveryCountry);
 	}
 
 	public function testGetDeliveryZoneStates()
@@ -114,7 +114,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$states = $zone->getStates();
 
 		$this->assertEquals($states->getTotalRecordCount(), 1);
-		$this->assertTrue($states->get(0) === $deliveryState);
+		$this->assertTrue($states->shift() === $deliveryState);
 	}
 
 	public function testGetDeliveryZoneCityMasks()
@@ -129,7 +129,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$masks = $zone->getCityMasks();
 
 		$this->assertEquals($masks->getTotalRecordCount(), 1);
-		$this->assertTrue($masks->get(0) === $mask);
+		$this->assertTrue($masks->shift() === $mask);
 	}
 
 	public function testGetDeliveryZoneZipMasks()
@@ -144,7 +144,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$masks = $zone->getZipMasks();
 
 		$this->assertEquals($masks->getTotalRecordCount(), 1);
-		$this->assertTrue($masks->get(0) === $mask);
+		$this->assertTrue($masks->shift() === $mask);
 	}
 
 	public function testGetDeliveryZoneAddressMasks()
@@ -159,7 +159,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$masks = $zone->getAddressMasks();
 
 		$this->assertEquals($masks->getTotalRecordCount(), 1);
-		$this->assertTrue($masks->get(0) === $mask);
+		$this->assertTrue($masks->shift() === $mask);
 	}
 
 	public function testGetZoneServices()
@@ -174,7 +174,7 @@ class DeliveryZoneTest extends LiveCartTest
 		$service2->save();
 
 		$services = $zone->getShippingServices();
-		$this->assertTrue($service1 === $services->get(0));
+		$this->assertTrue($service1 === $services->shift());
 		$this->assertTrue($service2 === $services->get(1));
 	}
 
@@ -193,7 +193,7 @@ class DeliveryZoneTest extends LiveCartTest
 
 		$taxRates = $zone->getTaxRates();
 		$this->assertEquals($taxRates->getTotalRecordCount(), 1);
-		$this->assertTrue($taxRates->get(0) === $taxRate);
+		$this->assertTrue($taxRates->shift() === $taxRate);
 	}
 
 	public function testFindZoneWithMasks()

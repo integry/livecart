@@ -229,7 +229,7 @@ abstract class ObjectImageController extends StoreManagementController
 			$offset += $chunk;
 			ActiveRecord::clearPool();
 		}
-		while ($set->size() > 0);
+		while ($set->count() > 0);
 	}
 
 	private function getFlushResponse($data)

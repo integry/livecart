@@ -37,7 +37,7 @@ class CategoryRelationshipController extends StoreManagementController
 
 		// check if the category is not assigned to this category already
 		$f = select(eq('CategoryRelationship.relatedCategoryID', $relatedCategory->getID()));
-		if ($category->getRelatedRecordSet('CategoryRelationship', $f)->size())
+		if ($category->getRelatedRecordSet('CategoryRelationship', $f)->count())
 		{
 			return new JSONResponse(false, 'failure', $this->translate('_err_already_assigned'));
 		}

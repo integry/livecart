@@ -87,7 +87,7 @@ class LiveCartTransaction extends TransactionDetails
 			}
 		}
 
-		if ($variations->size())
+		if ($variations->count())
 		{
 			$variations->loadVariations();
 		}

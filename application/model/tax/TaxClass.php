@@ -87,7 +87,7 @@ class TaxClass extends MultilingualObject
 				)
 			);
 
-		return ActiveRecordModel::getRecordSet('TaxClass', $f)->get(0);
+		return ActiveRecordModel::getRecordSet('TaxClass', $f)->shift();
 	}
 
 	public function beforeCreate()

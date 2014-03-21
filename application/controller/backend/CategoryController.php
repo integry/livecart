@@ -67,9 +67,9 @@ class CategoryController extends ControllerBackend
 
 		/*
 		$set = $category->getRelatedRecordSet('CategoryPresentation', new ARSelectFilter());
-		if ($set->size())
+		if ($set->count())
 		{
-			$arr['presentation'] = $set->get(0)->toFlatArray();
+			$arr['presentation'] = $set->shift()->toFlatArray();
 		}
 		*/
 		
@@ -196,7 +196,7 @@ class CategoryController extends ControllerBackend
 							new AndChainCondition(array(
 								eq(f('Category.lft'), $sequence[0]),
 								eq(f('Category.rgt'), $sequence[1])))));
-						if($categorySet->size() != 1)
+						if($categorySet->count() != 1)
 						{
 							continue;
 						}
@@ -274,7 +274,7 @@ class CategoryController extends ControllerBackend
 			'tabFields' => $this->getSpecFieldCount($category),
 			'tabImages' => $this->getCategoryImageCount($category),
 			'tabOptions' => $category->getOptions()->getTotalRecordCount(),
-			'tabRatingCategories' => ProductRatingType::getCategoryRatingTypes($category)->size(),
+			'tabRatingCategories' => ProductRatingType::getCategoryRatingTypes($category)->count(),
 			'tabReviews' => ActiveRecordModel::getRecordCount('ProductReview', new ARSelectFilter($reviewCond), array('Category', 'Product')),
 			'tabProductLists' => $category->getRelatedRecordCount('ProductList'),
 		);

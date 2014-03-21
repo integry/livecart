@@ -29,4 +29,9 @@ class LiveCartRequest extends \Phalcon\Http\Request
 		$params = array_filter(array($this->getDI()->get('dispatcher')->getParam($key), $this->get($key), $this->getJson($key), $default));
 		return array_shift($params);
 	}
+	
+	public function set($key, $value)
+	{
+		$_REQUEST[$key] = $value;
+	}
 }

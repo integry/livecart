@@ -878,7 +878,7 @@ class Shipment extends \ActiveRecordModel
 				}
 			}
 
-			if (!$this->taxes || !$this->taxes->size())
+			if (!$this->taxes || !$this->taxes->count())
 			{
 				$this->taxes = new ARSet();
 				$taxes = array();

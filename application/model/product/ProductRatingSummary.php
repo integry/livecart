@@ -35,9 +35,9 @@ class ProductRatingSummary extends ActiveRecordModel
 	{
 		$field = new ARFieldHandle(__CLASS__, 'ratingTypeID');
 		$summary = $product->getRelatedRecordSet(__CLASS__, new ARSelectFilter($type ? new EqualsCond($field, $type->getID()) : new IsNullCond($field)));
-		if ($summary->size())
+		if ($summary->count())
 		{
-			return $summary->get(0);
+			return $summary->shift();
 		}
 		else
 		{

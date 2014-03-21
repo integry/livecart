@@ -56,10 +56,10 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
@@ -98,10 +98,10 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
@@ -144,13 +144,13 @@ class ShipmentTaxTest extends OrderTestCommon
 
 
 		// there should only be one ShipmentTax instance for this shipment
-		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->size(), 1);
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->count(), 1);
 
 		// reload order and add more items
 		ActiveRecord::clearPool();
 		$order = CustomerOrder::getInstanceByID($this->order->getID(), true);
 		$order->loadAll();
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		$order->addProduct($this->products[1], 1, false, $shipment); // $200
 
 		$shipment->recalculateAmounts(false);
@@ -158,7 +158,7 @@ class ShipmentTaxTest extends OrderTestCommon
 
 		// @todo: fix failing assertion
 		// 2 ShipmentTax records are created for the same tax type (1st is not deleted, before the 2nd is created)
-		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
+		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->count(), 'expecting one ShipmentTax');
 
 		$order->save();
 		$this->order->finalize();
@@ -178,12 +178,12 @@ class ShipmentTaxTest extends OrderTestCommon
 				"\n";
 		}
 		*/
-		$this->assertEquals(1, $order->getShipments()->size(), 'expecting one shipment');
-		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->get(0)->shipmentID->getTaxAmount(), 40);
+		$this->assertEquals(1, $order->getShipments()->count(), 'expecting one shipment');
+		$this->assertEqual(40 , $shipment->getRelatedRecordSet('ShipmentTax')->shift()->shipmentID->getTaxAmount(), 40);
 
 		// @todo: fix failing assertion
-		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->size(), 'expecting one ShipmentTax');
-		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->get(0)->amount, 40);
+		$this->assertEquals(1, $shipment->getRelatedRecordSet('ShipmentTax')->count(), 'expecting one ShipmentTax');
+		$this->assertEqual($shipment->getRelatedRecordSet('ShipmentTax')->shift()->amount, 40);
 	}
 
 	/**
@@ -228,15 +228,15 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
 
-		$this->assertEquals($this->order->shipments->get(0)->shippingAmount, 16.95);
+		$this->assertEquals($this->order->shipments->shift()->shippingAmount, 16.95);
 
 		$expectedTotal = round(50 * 1.05 * 1.075, 2) + round(16.95 * 1.05 * 1.075, 2);
 		$this->assertEquals($this->order->getTotal(true), $expectedTotal);
@@ -297,10 +297,10 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
@@ -350,10 +350,10 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
@@ -384,15 +384,15 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();
 		$this->assertEquals(round($this->order->getSubTotal(), 2), round(100 / 1.19, 2));
-		$this->assertEquals($this->order->getShipments()->get(0)->getTotal(), 100 + 100);
+		$this->assertEquals($this->order->getShipments()->shift()->getTotal(), 100 + 100);
 		$this->assertEquals($this->order->getTotal(), 100 + 100);
 	}
 
@@ -422,11 +422,11 @@ class ShipmentTaxTest extends OrderTestCommon
 		$this->order->save();
 
 		// set shipping rate
-		$shipment = $this->order->getShipments()->get(0);
+		$shipment = $this->order->getShipments()->shift();
 		$rates = $this->order->getDeliveryZone()->getShippingRates($shipment);
 
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->order->finalize();

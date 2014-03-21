@@ -109,7 +109,7 @@ class State extends ActiveRecordModel
 
 		if ($states)
 		{
-			return $states->get(0);
+			return $states->shift();
 		}
 		else
 		{

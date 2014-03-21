@@ -39,9 +39,9 @@ class ExpressCheckout extends ActiveRecordModel
 	{
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
 		$s = self::getRecordSet(__CLASS__, $f);
-		if ($s->size())
+		if ($s->count())
 		{
-			return $s->get(0);
+			return $s->shift();
 		}
 	}
 

@@ -58,7 +58,7 @@ class ProductBundleTest extends LiveCartTest
 		}
 
 		$list = ProductBundle::getBundledProductSet($this->container);
-		$this->assertEqual($list->size(), count($products));
+		$this->assertEqual($list->count(), count($products));
 
 		foreach ($list as $index => $item)
 		{

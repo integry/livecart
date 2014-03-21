@@ -131,9 +131,9 @@ class ProductOption extends MultilingualObject
 	public function getChoiceByID($id)
 	{
 		$s = $this->getRelatedRecordSet('ProductOptionChoice', query::query()->where('ProductOptionChoice.ID = :ProductOptionChoice.ID:', array('ProductOptionChoice.ID' => $id)));
-		if ($s->size())
+		if ($s->count())
 		{
-			return $s->get(0);
+			return $s->shift();
 		}
 	}
 

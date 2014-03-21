@@ -498,12 +498,12 @@ class UserController extends FrontendController
 		$f = query::query()->where('CustomerOrder.ID = :CustomerOrder.ID:', array('CustomerOrder.ID' => $this->request->get('id')));
 		$f->andWhere('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 		$set = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
-		if (!$set->size() || !$this->buildNoteValidator()->isValid())
+		if (!$set->count() || !$this->buildNoteValidator()->isValid())
 		{
 			return $this->response->redirect('user/index');
 		}
 
-		$order = $set->get(0);
+		$order = $set->shift();
 		$note = OrderNote::getNewInstance($order, $this->user);
 		$note->text->set($this->request->get('text'));
 		$note->isAdmin->set(false);
@@ -711,9 +711,9 @@ class UserController extends FrontendController
 
 		if (!$this->order->user || $this->order->user->getID() == $this->user->getID())
 		{
-			if ($s->size())
+			if ($s->count())
 			{
-				$order = $s->get(0);
+				$order = $s->shift();
 				if ($this->order->getID() != $order->getID())
 				{
 					$sessionOrder = SessionOrder::getorderBy();
@@ -1124,12 +1124,12 @@ class UserController extends FrontendController
 		$s = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('CustomerOrder', 'Product'));
 
 		// OrderedItem does not exist
-		if (!$s->size())
+		if (!$s->count())
 		{
 			return $this->response->redirect('user/index');
 		}
 
-		$item = $s->get(0);
+		$item = $s->shift();
 		$file = $item->getFileByID($this->request->get('fileID'));
 
 		// file does not exist for OrderedItem
@@ -1524,9 +1524,9 @@ class UserController extends FrontendController
 		$f->andWhere('CustomerOrder.isCancelled = :CustomerOrder.isCancelled:', array('CustomerOrder.isCancelled' => 0));
 
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, array('User'));
-		if ($s->size())
+		if ($s->count())
 		{
-			$order = $s->get(0);
+			$order = $s->shift();
 			$order->loadAll();
 
 			if ($order->user)

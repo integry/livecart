@@ -61,7 +61,7 @@ class ShippingServiceTest extends LiveCartTest
 		$service2->save();
 
 		$services = ShippingService::getByDeliveryZone($this->deliveryZone);
-		$this->assertTrue($service1 === $services->get(0));
+		$this->assertTrue($service1 === $services->shift());
 		$this->assertTrue($service2 === $services->get(1));
 	}
 
@@ -76,7 +76,7 @@ class ShippingServiceTest extends LiveCartTest
 		$rate2->save();
 
 		$rates = $service->getRates();
-		$this->assertTrue($rate1 === $rates->get(0));
+		$this->assertTrue($rate1 === $rates->shift());
 		$this->assertTrue($rate2 === $rates->get(1));
 	}
 }

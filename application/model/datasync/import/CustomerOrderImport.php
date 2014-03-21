@@ -197,7 +197,7 @@ class CustomerOrderImport extends DataImport
 		$items = $instance->getItemsByProduct($product);
 		
 		// create initial shipment
-		if (!$instance->getShipments()->size())
+		if (!$instance->getShipments()->count())
 		{
 			$shipment = Shipment::getNewInstance($instance);
 			$shipment->save();
@@ -266,7 +266,7 @@ class CustomerOrderImport extends DataImport
 
 		if (!$shipment)
 		{
-			$shipment = $instance->getShipments()->get(0);
+			$shipment = $instance->getShipments()->shift();
 		}
 		
 		$item->shipment->set($shipment);

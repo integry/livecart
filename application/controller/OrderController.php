@@ -1,5 +1,8 @@
 <?php
 
+use \product\Product;
+use \order\CustomerOrder;
+use \order\OrderedItem;
 
 /**
  * @author Integry Systems
@@ -7,11 +10,6 @@
  */
 class OrderController extends FrontendController
 {
-	/**
-	 * @var CustomerOrder
-	 */
-	protected $order;
-
 	/**
 	 *  View shopping cart contents
 	 */
@@ -544,9 +542,8 @@ class OrderController extends FrontendController
 		// avoid search engines adding items to cart...
 		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
 		{
-			return new RawResponse();
+			return;
 		}
-		ActiveRecordModel::beginTransaction();
 
 		if (!$this->request->get('count'))
 		{
@@ -607,8 +604,6 @@ class OrderController extends FrontendController
 
 		$this->order->mergeItems();
 		SessionOrder::save($this->order);
-
-		ActiveRecordModel::commit();
 
 		if (!$this->isAjax())
 		{
@@ -674,17 +669,17 @@ class OrderController extends FrontendController
 			return '"';
 		}
 
-		$product = Product::getInstanceByID($id, true, array('Category'));
-		$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
+		$product = Product::getInstanceByID($id);
+		$productRedirect = $this->response->redirect(route($product));
+		//$productRedirect = new ActionRedirectResponse('product', 'index', array('id' => $product->getID(), 'query' => 'return=' . $this->request->get('return')));
 		if (!$product->isAvailable())
 		{
-			$productController = new ProductController($this->application);
-			$productController->setErrorMessage($this->translate('_product_unavailable'));
-			return $productRedirect;
+			$this->flashSession->error($this->translate('_product_unavailable'));
+			return $productRedirect->send();
 		}
 
+		/*
 		$variations = !$product->parent ? $product->getVariationData($this->application) : array();
-
 
 		// add first variations by default?
 		$autoVariation = false;
@@ -696,15 +691,19 @@ class OrderController extends FrontendController
 				$autoVariation = true;
 			}
 		}
+		*/
 
+		/*
 		$validator = ProductController::buildAddToCartValidator($product->getOptions(true)->toArray(), $autoVariation ? array() : $variations, $prefix);
 		if (!$validator->isValid())
 		{
-			return $productRedirect;
+			return $productRedirect->send();
 		}
+		*/
 
 		// check if a variation needs to be added to cart instead of a parent product
-		if ($variations)
+		/*
+		if (!empty($variations))
 		{
 			if ($autoVariation)
 			{
@@ -721,7 +720,7 @@ class OrderController extends FrontendController
 
 				if (!$foundVariation)
 				{
-					return $productRedirect;
+					return $productRedirect->send();
 				}
 			}
 			else
@@ -729,8 +728,9 @@ class OrderController extends FrontendController
 				$product = $this->getVariationFromRequest($variations);
 			}
 		}
+		*/
 
-		$count = $this->request->get($prefix . 'count', 1);
+		$count = $this->request->get($prefix . 'count', null, 1);
 		if ($count < $product->getMinimumQuantity())
 		{
 			$count = $product->getMinimumQuantity();
@@ -958,9 +958,9 @@ class OrderController extends FrontendController
 					eq('ProductOptionChoice.optionID', $this->request->get('option')));
 
 		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
-		if ($set->size())
+		if ($set->count())
 		{
-			return new ObjectFileResponse($set->get(0)->getFile());
+			return new ObjectFileResponse($set->shift()->getFile());
 		}
 	}
 
@@ -1183,6 +1183,7 @@ class OrderController extends FrontendController
 
 	public static function addOptionValidation(\Phalcon\Validation $validator, $option, $fieldName)
 	{
+/*
 		$app = ActiveRecordModel::getApplication();
 		if (ProductOption::TYPE_FILE == $option['type'])
 		{
@@ -1203,6 +1204,7 @@ class OrderController extends FrontendController
 		{
 			$validator->add($fieldName, new Validator\PresenceOf(array('message' => $app->translate('_err_option_' . $option['type'])));
 		}
+*/
 	}
 
 	protected function isTosInCartPage()

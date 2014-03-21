@@ -526,7 +526,7 @@ class XCartImport extends LiveCartImportDriver
 
 		$order->save();
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		$shipment->shippingAmount->set($order->rawData['shipping_cost']);
 		$shipment->save();
 

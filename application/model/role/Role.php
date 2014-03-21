@@ -43,7 +43,7 @@ class Role extends \ActiveRecordModel
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $name));
 
 		$arSet = self::getRecordSet($filter);
-		return $arSet->getTotalRecordCount() > 0 ? $arSet->get(0) : null;
+		return $arSet->getTotalRecordCount() > 0 ? $arSet->shift() : null;
 	}
 
 	/**

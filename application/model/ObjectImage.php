@@ -71,9 +71,9 @@ abstract class ObjectImage extends \system\MultilingualObject
 			$f->orderBy(new ARFieldHandle(get_class($inst), 'position'));
 			$f->limit(1);
 			$newDefaultImage = ActiveRecordModel::getRecordSet(get_class($inst), $f);
-			if ($newDefaultImage->size() > 0)
+			if ($newDefaultImage->count() > 0)
 			{
-			  	$owner->defaultImage = $newDefaultImage->get(0));
+			  	$owner->defaultImage = $newDefaultImage->shift());
 			  	$owner->save();
 			}
 		}

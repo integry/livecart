@@ -84,7 +84,7 @@ class ShippingRateTest extends LiveCartTest
 		$rate2->save();
 
 		$rates = ShippingRate::getRecordSetByService($this->shippingService);
-		$this->assertTrue($rate1 === $rates->get(0));
+		$this->assertTrue($rate1 === $rates->shift());
 		$this->assertTrue($rate2 === $rates->get(1));
 	}
 }

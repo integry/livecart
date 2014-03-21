@@ -502,7 +502,7 @@ class OsCommerceImport extends LiveCartImportDriver
 
 		$order->save();
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 
 		if ($shipment)
 		{

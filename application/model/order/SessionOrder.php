@@ -2,30 +2,36 @@
 
 namespace order;
 
+use order\CustomerOrder;
+use user\User;
+
 /**
  *
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class SessionOrder
+class SessionOrder extends \Phalcon\DI\Injectable
 {
-	private static $instance = null;
+	private $instance = null;
+	
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
+	{
+		$this->setDI($di);
+	}
 
 	/**
 	 * Get CustomerOrder instance from session
 	 *
 	 * @return CustomerOrder
 	 */
-	public static function getorderBy()
+	public function getOrder()
 	{
-		if (self::$instance)
+		if ($this->instance)
 		{
-			return self::$instance;
+			return $this->instance;
 		}
 
-		$session = new Session();
-
-		$id = $session->get('CustomerOrder');
+		$id = $this->session->get('CustomerOrder');
 		if ($id)
 		{
 			try
@@ -52,14 +58,14 @@ class SessionOrder
 			// get the last unfinalized order by this user
 			if ($userId > 0)
 			{
-				$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $userId));
-				$f->andWhere(new NotEqualsCond('CustomerOrder.isFinalized', true));
-				$f->orderBy('CustomerOrder.ID', 'DESC');
+				$f = CustomerOrder::query()->where('userID = :userID:', array('userID' => $userId));
+				$f->andWhere('isFinalized != 1');
+				$f->orderBy('ID DESC');
 				$f->limit(1);
-				$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
-				if ($orders->size())
+				$orders = $f->execute();
+				if ($orders->count())
 				{
-					$instance = $orders->get(0);
+					$instance = $orders->shift();
 				}
 			}
 		}
@@ -67,7 +73,7 @@ class SessionOrder
 		if (!isset($instance))
 		{
 			$instance = CustomerOrder::getNewInstance(User::getNewInstance(0));
-			$instance->user->set(NULL);
+			//$instance->setUser(null);
 		}
 
 		if (!$instance->user && $this->sessionUser->getUser()->getID() > 0)
@@ -78,7 +84,7 @@ class SessionOrder
 
 		if ($instance->isFinalized)
 		{
-			$session->unsetValue('CustomerOrder');
+			$this->session->unsetValue('CustomerOrder');
 			return self::getorderBy();
 		}
 
@@ -92,10 +98,10 @@ class SessionOrder
 		return $instance;
 	}
 
-	public static function orderBy(CustomerOrder $order)
+	public function setOrder(CustomerOrder $order)
 	{
-		$session = new Session();
-		$session->set('CustomerOrder', $order->getID());
+		
+		$this->session->set('CustomerOrder', $order->getID());
 
 		$currency = $order->getCurrency();
 		$currID = $currency->getID();
@@ -119,35 +125,35 @@ class SessionOrder
 		$orderArray['items']->setCoupons($order->getCoupons());
 		$orderArray['items']->setTotal($total);
 
-		$session->set('orderData', $orderArray);
+		$this->session->set('orderData', $orderArray);
 
 		self::$instance = $order;
 	}
 
-	public static function getOrderItems()
+	public function getOrderItems()
 	{
 		return array();
 		
-		$session = new Session();
-		$data = $session->get('orderData');
+		
+		$data = $this->session->get('orderData');
 		if (isset($data['items']))
 		{
 			return $data['items'];
 		}
 	}
 
-	public static function getOrderData()
+	public function getOrderData()
 	{
 		self::orderBy(self::getorderBy());
-		$session = new Session();
-		return $session->get('orderData');
+		
+		return $this->session->get('orderData');
 	}
 
-	public static function getEstimateAddress()
+	public function getEstimateAddress()
 	{
-		$session = new Session();
+		
 
-		if ($address = $session->get('shippingEstimateAddress'))
+		if ($address = $this->session->get('shippingEstimateAddress'))
 		{
 			return unserialize($address);
 		}
@@ -178,7 +184,7 @@ class SessionOrder
 		return self::getDefaultEstimateAddress();
 	}
 
-	public static function getDefaultEstimateAddress()
+	public function getDefaultEstimateAddress()
 	{
 		$config = ActiveRecordModel::getApplication()->getConfig();
 		$address = UserAddress::getNewInstance();
@@ -192,29 +198,22 @@ class SessionOrder
 		return $address;
 	}
 
-	public static function setEstimateAddress(UserAddress $address)
+	public function setEstimateAddress(UserAddress $address)
 	{
 		$order = self::getorderBy();
 		$estimateAddress = clone $address;
 		$estimateAddress->removeSpecification();
-		$session = new Session();
-		$session->set('shippingEstimateAddress', $estimateAddress);
+		
+		$this->session->set('shippingEstimateAddress', $estimateAddress);
 	}
 
-	public static function save(CustomerOrder $order)
+	public function save(CustomerOrder $order)
 	{
 		// mark shipment data as modified - to force saving
 		$order->getShipments();
 
 		$order->save();
 		self::orderBy($order);
-	}
-
-	public static function destroy()
-	{
-		$session = new Session();
-		$session->unsetValue('CustomerOrder');
-		$session->unsetValue('orderData');
 	}
 }
 

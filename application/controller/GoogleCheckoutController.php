@@ -56,7 +56,7 @@ class GoogleCheckoutController extends CheckoutController
 			$shipping = $array['ORDER-ADJUSTMENT'][0]['SHIPPING'][0]['MERCHANT-CALCULATED-SHIPPING-ADJUSTMENT'][0];
 			$shippingName = $shipping['SHIPPING-NAME'][0]['VALUE'];
 
-			$shipment = $order->getShipments()->get(0);
+			$shipment = $order->getShipments()->shift();
 			foreach ($shipment->getAvailableRates() as $rate)
 			{
 				$rate = $rate->toArray();
@@ -224,7 +224,7 @@ class GoogleCheckoutController extends CheckoutController
 			return array();
 		}
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		$rates = array();
 		foreach ($addresses as $id => $address)
 		{

@@ -71,7 +71,7 @@ class UserGroupTest extends LiveCartTest
 
 		$rolesRecordSet = $userGroup->getRolesRecordSet();
 		$this->assertEqual($rolesRecordSet->getTotalRecordCount(), 1);
-		$this->assertSame($rolesRecordSet->get(0), $role);
+		$this->assertSame($rolesRecordSet->shift(), $role);
 	}
 
 	public function testApplyRoles()

@@ -42,8 +42,8 @@ class EavFieldTest extends LiveCartTest
 		$otherField->save();
 
 		$fields = EavField::getFieldsByClass('Manufacturer');
-		$this->assertEqual($fields->size(), 1);
-		$this->assertEqual($fields->get(0), $field);
+		$this->assertEqual($fields->count(), 1);
+		$this->assertEqual($fields->shift(), $field);
 	}
 }
 

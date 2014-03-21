@@ -72,7 +72,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 		$this->order->save();
 
 		$order = $this->reloadorderBy($this->order);
-		$this->assertEqual($order->getShipments()->size(), 2);
+		$this->assertEqual($order->getShipments()->count(), 2);
 		$this->assertEqual(count($order->getOrderedItems()), 3);
 
 		$this->controller->orderBy($order = $this->reloadorderBy($this->order));
@@ -82,7 +82,7 @@ class OrderControllerTest extends LiveCartTest implements ControllerTestCase
 
 		$this->assertIsA($response, 'ActionRedirectResponse');
 		$this->assertEqual($order->isMultiAddress, '0');
-		$this->assertEqual($order->getShipments()->size(), 1);
+		$this->assertEqual($order->getShipments()->count(), 1);
 		$this->assertEqual(count($order->getOrderedItems()), 2);
 	}
 

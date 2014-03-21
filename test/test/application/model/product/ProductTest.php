@@ -668,7 +668,7 @@ class ProductTest extends LiveCartTest
 		$rel = ProductRelationship::getNewInstance($this->product, $related, $relGroup);
 		$rel->save();
 
-		$this->assertEquals(1, $this->product->getRelationships()->size());
+		$this->assertEquals(1, $this->product->getRelationships()->count());
 
 		$cloned = clone $this->product;
 		$this->assertEquals(100, $cloned->getSpecification()->getAttribute($numField)->value);
@@ -690,12 +690,12 @@ class ProductTest extends LiveCartTest
 
 		// related products
 		$rel = $reloaded->getRelationships();
-		$this->assertEquals(1, $rel->size());
-		$this->assertSame($reloaded, $rel->get(0)->productRelationshipGroup->product);
+		$this->assertEquals(1, $rel->count());
+		$this->assertSame($reloaded, $rel->shift()->productRelationshipGroup->product);
 
 		// options
 		$clonedOpts = ProductOption::getProductOptions($reloaded);
-		$this->assertEquals(1, $clonedOpts->size());
+		$this->assertEquals(1, $clonedOpts->count());
 
 		// image
 		$this->assertTrue(is_object($reloaded->defaultImage));

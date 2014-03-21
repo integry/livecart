@@ -42,7 +42,7 @@ class ProductRelationship extends ActiveRecordModel
 		$f->andWhere(new EqualsCond(new ARFieldHandle(__CLASS__, 'type'), $type));
 
 		$set = parent::getRecordSet(__CLASS__, $f, $loadReferencedRecords);
-		return $set->size() ? $set->get(0) : null;
+		return $set->count() ? $set->shift() : null;
 	}
 
 	/**

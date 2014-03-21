@@ -44,10 +44,10 @@ class ProductRatingTypeTest extends LiveCartTest
 
 		$types = ProductRatingType::getProductRatingTypes($product);
 
-		$this->assertEqual($types->size(), 2);
+		$this->assertEqual($types->count(), 2);
 
 		// parent category types should go first
-		$this->assertSame($types->get(0), $rootType);
+		$this->assertSame($types->shift(), $rootType);
 		$this->assertSame($types->get(1), $subType);
 	}
 

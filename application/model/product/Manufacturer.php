@@ -45,9 +45,9 @@ class Manufacturer extends ActiveRecordModel implements EavAble
 		$filter->setCondition('Manufacturer.name = :Manufacturer.name:', array('Manufacturer.name' => $name));
 		$filter->limit(1);
 		$set = ActiveRecordModel::getRecordSet('Manufacturer', $filter);
-		if ($set->size() > 0)
+		if ($set->count() > 0)
 		{
-			return $set->get(0);
+			return $set->shift();
 		}
 		else
 		{

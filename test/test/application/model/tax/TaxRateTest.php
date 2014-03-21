@@ -133,9 +133,9 @@ class TaxRateTest extends LiveCartTest
 
 		ActiveRecord::clearPool();
 		$reloaded = CustomerOrder::getInstanceById($order->getID(), true);
-		$this->assertEqual($reloaded->getShipments()->size(), 1);
-		$this->assertTrue($reloaded->getShipments()->get(0)->isExistingRecord());
-		$this->assertEqual($reloaded->getShipments()->get(0)->getRelatedRecordSet('ShipmentTax')->size(), 1);
+		$this->assertEqual($reloaded->getShipments()->count(), 1);
+		$this->assertTrue($reloaded->getShipments()->shift()->isExistingRecord());
+		$this->assertEqual($reloaded->getShipments()->shift()->getRelatedRecordSet('ShipmentTax')->count(), 1);
 	}
 
 	public function testDefaultZoneVAT()
@@ -169,7 +169,7 @@ class TaxRateTest extends LiveCartTest
 	private function assertDefaultZoneorderBy(CustomerOrder $order, Currency $currency)
 	{
 		$this->assertEquals(100, $order->getTotal());
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 
 		$shipmentArray = $shipment->toArray();
 
@@ -260,10 +260,10 @@ class TaxRateTest extends LiveCartTest
 		$shippingRate->flatCharge->set(100);
 		$shippingRate->save();
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		$rates = $order->getDeliveryZone()->getShippingRates($shipment);
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->assertEqual($order->getTaxAmount(), 42);
@@ -354,11 +354,11 @@ class TaxRateTest extends LiveCartTest
 		$shippingRate->flatCharge->set(100);
 		$shippingRate->save();
 
-		$shipment = $order->getShipments()->get(0);
+		$shipment = $order->getShipments()->shift();
 		$rates = $order->getDeliveryZone()->getShippingRates($shipment);
 
 		$shipment->setAvailableRates($rates);
-		$shipment->setRateId($rates->get(0)->getServiceID());
+		$shipment->setRateId($rates->shift()->getServiceID());
 		$shipment->save();
 
 		$this->assertEqual($order->getTotal(true), 250);

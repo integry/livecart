@@ -73,7 +73,7 @@ class DiscountConditionTest extends LiveCartTest
 		$condition = DiscountCondition::getNewInstance();
 		$condition->save();
 
-		$this->assertSame($this->root->getDirectChildNodes()->get(0), $condition);
+		$this->assertSame($this->root->getDirectChildNodes()->shift(), $condition);
 	}
 
 	public function testBasicRestrictions()
@@ -434,7 +434,7 @@ class DiscountConditionTest extends LiveCartTest
 		$this->order->addProduct($this->product1, 1, true);
 		$this->order->save();
 		OrderCoupon::getNewInstance($this->order, $code)->save();
-		$this->assertEquals(1, $this->order->getCoupons(true)->size());
+		$this->assertEquals(1, $this->order->getCoupons(true)->count());
 		$this->order->save();
 		$this->order->finalize();
 
@@ -444,16 +444,16 @@ class DiscountConditionTest extends LiveCartTest
 		OrderCoupon::getNewInstance($newOrder, $code)->save();
 		$newOrder->getCoupons(true);
 
-		$this->assertEquals(0, $newOrder->getCoupons(true)->size());
+		$this->assertEquals(0, $newOrder->getCoupons(true)->count());
 
 		// increase limit - will pass
 		$condition->couponLimitCount->set(2);
 		OrderCoupon::getNewInstance($newOrder, $code)->save();
-		$this->assertEquals(1, $newOrder->getCoupons(true)->size());
+		$this->assertEquals(1, $newOrder->getCoupons(true)->count());
 
 		// remove coupon
 		$condition->couponLimitCount->set(1);
-		$this->assertEquals(0, $newOrder->getCoupons(true)->size());
+		$this->assertEquals(0, $newOrder->getCoupons(true)->count());
 
 		// change limit type to per user and change order user
 		$otherUser = User::getNewInstance('discount...otheruser@test');
@@ -464,7 +464,7 @@ class DiscountConditionTest extends LiveCartTest
 		$condition->couponLimitType->set(DiscountCondition::COUPON_LIMIT_USER);
 		OrderCoupon::getNewInstance($newOrder, $code)->save();
 
-		$this->assertEquals(1, $newOrder->getCoupons(true)->size());
+		$this->assertEquals(1, $newOrder->getCoupons(true)->count());
 	}
 
 	/**

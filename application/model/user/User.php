@@ -476,9 +476,9 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 		$f->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => true));
 
 		$s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
-		if ($s->size())
+		if ($s->count())
 		{
-			$order = $s->get(0);
+			$order = $s->shift();
 			$order->loadAll();
 			return $order;
 		}

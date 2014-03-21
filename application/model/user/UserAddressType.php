@@ -39,12 +39,12 @@ abstract class UserAddressType extends ActiveRecordModel
 		$f->andWhere(new EqualsCond(new ARFieldHandle($className, 'userID'), $user->getID()));
 		$s = ActiveRecordModel::getRecordSet($className, $f, array('UserAddress'));
 
-		if (!$s->size())
+		if (!$s->count())
 		{
 			throw new ARNotFoundException($className, $addressID);
 		}
 
-		return $s->get(0);
+		return $s->shift();
 	}
 
 	public function save()

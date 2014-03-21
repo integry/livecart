@@ -52,7 +52,7 @@ class OrderedItemController extends StoreManagementController
 
 			if (empty($shipment))
 			{
-				$shipment = $order->getShipments()->get(0);
+				$shipment = $order->getShipments()->shift();
 			}
 
 			if (!$shipment)
@@ -626,9 +626,9 @@ class OrderedItemController extends StoreManagementController
 					eq('ProductOptionChoice.optionID', $this->request->get('option')));
 
 		$set = ActiveRecordModel::getRecordSet('OrderedItemOption', $f, array('CustomerOrder', 'OrderedItem', 'ProductOptionChoice'));
-		if ($set->size())
+		if ($set->count())
 		{
-			return new ObjectFileResponse($set->get(0)->getFile());
+			return new ObjectFileResponse($set->shift()->getFile());
 		}
 	}
 
