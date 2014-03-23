@@ -1,5 +1,6 @@
 <?php
 
+namespace tax;
 
 /**
  * Defines a tax. Actual tax rates have to be defined for each DeliveryZone separately.
@@ -7,31 +8,11 @@
  * @package application/model/tax
  * @author Integry Systems <http://integry.com>
  */
-class Tax extends MultilingualObject
+class Tax extends \MultilingualObject
 {
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Tax");
-
-		public $ID;
-		public $name;
-		public $position;
-	}
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return Tax
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
+	public $ID;
+	public $name;
+	public $position;
 
 	/**
 	 * Create new tax
@@ -111,9 +92,7 @@ class Tax extends MultilingualObject
 
 	public function beforeCreate()
 	{
-	  	$this->setLastPosition();
-
-		parent::insert();
+		$this->setLastPosition();
 	}
 }
 

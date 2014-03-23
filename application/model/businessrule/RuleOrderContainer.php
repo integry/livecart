@@ -1,5 +1,8 @@
 <?php
 
+namespace businessrule;
+
+require_once(dirname(__file__) . '/interface/BusinessRuleOrderInterface.php');
 
 /**
  * Implements setItemPrice and getItemPrice methods of OrderedItem
@@ -92,7 +95,7 @@ class RuleOrderContainer implements BusinessRuleOrderInterface
 		return '';
 	}
 
-	public function setCoupons(ARSet $coupons)
+	public function setCoupons($coupons)
 	{
 		$this->coupons = array();
 		foreach ($coupons as $coupon)

@@ -1,0 +1,2302 @@
+.todo { border: 1px dashed red; }
+
+.valign * { vertical-align: middle; }
+
+#topMenu ul.nav li.dropdown:hover ul.dropdown-menu
+{
+    display: block;
+    margin: 0;
+}
+
+#topMenu a.menu:after, #topMenu .dropdown-toggle:after
+{
+    content: none;
+}
+
+.sidebar-nav
+{
+	padding: 9px 0;
+}
+
+div.btn-group:hover ul.dropdown-menu{
+    display: block;
+}
+
+div.btn-group ul.dropdown-menu{
+    margin-top: 0px;
+}
+
+.tab-content
+{
+	padding-top: 1em;
+}
+
+.form-vertical .control-group
+{
+	margin-bottom: 10px;
+}
+
+/* resets */
+ol
+{
+	margin-left: 2em;
+}
+
+.descr li,
+#productDescription li,
+.message li,
+.staticPageText li
+{
+	list-style-type: disc;
+	margin-left: 1.5em;
+}
+
+.descr ol li,
+#productDescription ol li,
+.message ol li,
+.staticPageText ol li
+{
+	list-style-type: decimal;
+}
+
+.clear
+{
+    clear: both;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    float: none !important;
+}
+
+/*****************************
+	Common declarations
+*****************************/
+
+/* 100% width labels */
+.productOptions label.field,
+.productVariations label,
+.reviewForm label,
+#noteForm label,
+label.cancel,
+.eavAttributes label
+{
+	float: none;
+	width: auto;
+}
+
+/* bold things */
+.price,
+.required label,
+.eavAttributes .attrName,
+.featured .title a,
+.currentName,
+.filterGroup .showAll,
+.subCatName,
+.notFoundMain,
+.currentPage,
+.spec,
+.overallRating,
+.ratingCategoryName,
+.reviewTitle,
+#rateProduct .heading,
+.readAllReviews,
+div.checkout a,
+.subTotalCalc,
+.shipment .subTotal,
+#cart .subTotal,
+#payTotal .subTotal,
+#invoicePaymentInfo .grandTotal td.amount,
+#invoicePaymentInfo .amountDue td.amount,
+.multiAddress .shipmentAddress,
+#userMenu li.active,
+.cancelled,
+#checkoutProgress a.active,
+ul.downloadFile li.fileGroup
+{
+	font-weight: bold;
+}
+
+/* red things */
+a.messages,
+.cancelled,
+.errorMsg,
+.discount .actualPrice
+{
+	color: red;
+}
+
+/* smaller input fields */
+#language select,
+.cartName small
+{
+	font-size: 0.85em;
+	padding: 0;
+}
+
+/* smaller text */
+.logout,
+.latestNewsSide .date,
+li.moreSubCats,
+.spec,
+.listPrice,
+.productListRating a,
+.overallRating a,
+.noStock, .lowStock,
+.forgottenPassword,
+#cart .productOptionsMenu,
+.cartControl a,
+.subTotalCalc,
+.fieldDescription,
+.progressOrder,
+a.cvv,
+.multiAddress .shipmentAddress
+{
+	font-size: smaller;
+}
+
+/* centered text */
+.subCategories td.subCatImage,
+ul.productList .image,
+.overallRating,
+.noStock, .lowStock,
+#imageContainer,
+#moreImages,
+#rateProduct table td,
+.cartQuant,
+.cartImage,
+#cartUpdate,
+#couponCodes .container,
+#checkoutProgress,
+.addressSelector .selector,
+#invoiceHeader,
+.compactProductList .image,
+.compactProductList .pricingInfo,
+.compareBoxMenu
+{
+	text-align: center;
+}
+
+/* right aligned text */
+#mainInfo td.param,
+.ratingBreakdown,
+td.addToWishList,
+.reviewIndex .pagingInfo,
+.multiAddressCheckout,
+#expressCheckoutMethods,
+.orderOverviewControls,
+div.addressControl,
+#invoicePaymentInfo td.amount,
+.multiAddressCheckout
+{
+    text-align: right;
+}
+
+/* vertical centering */
+.subCatImage,
+.subCategories td.details,
+.overallRating *,
+#mainInfo td,
+.ratingCategoryName,
+.ratingPreview,
+#cart td, #wishList td,
+.addressSelector .selector,
+#otherMethods img,
+img.calendar_button
+{
+    vertical-align: middle;
+}
+
+/* left floats */
+.allFilters .filterGroup,
+#ratingSummary,
+.ratingBreakdown,
+#imageContainer,
+#bundle .pricingInfo,
+.bundleList, .bundleInfo,
+.reviewIndex #ratingSummary,
+.checkoutHeader h1,
+#billingAddressColumn,
+#shippingSelector,
+.addressContainer,
+#cvvExample,
+.newCustomer,
+div.addressBlock,
+.orderDetails .orderMenu,
+.responseUser,
+.manufacturerColumn,
+.manufacturerAttributes,
+#cvvHelp,
+.paymentMethods,
+.compactProductList div
+{
+	float: left;
+}
+
+/* right floats */
+div.review .ratingBreakdown,
+.checkoutButtons,
+#checkoutProgress,
+.returningCustomer,
+.noteDate,
+.checkout-pay .completeOverview,
+.manufacturerImage
+{
+	float: right;
+}
+
+/* links/menus with background images */
+#userMenu li,
+a.invoice, a.viewOrder, a.reorder, a.messages,
+ul.downloadFile li
+{
+	padding-left: 22px;
+}
+
+/* background color 1: light grey */
+tr.odd,
+div.addressBlock,
+.orderDetails,
+.noteText,
+#checkoutProgress a,
+.dynamicMenu ul,
+#background-color1-var
+{
+    background-color: #F9F9F9;
+}
+
+thead,
+tr.heading td,
+#heading-color-var
+{
+    background-color: #ddd;
+}
+
+tr.even td,
+#background-color2-var
+{
+    background-color: #eee;
+}
+
+/* light yellow background */
+.highlight,
+span.templateLocator span.templateName,
+#payTotal div,
+#testHandlerWarning,
+#checkoutProgress a.active
+{
+	background-color: #fffccc;
+}
+
+tr.odd td, tr.even td
+{
+	border-bottom-width: 1px;
+}
+
+/*****************************
+	Layout
+*****************************/
+#footer
+{
+	border-top-width: 1px;
+  	padding: 20px;
+  	text-align:center;
+}
+
+#leftSide
+{
+	overflow: visible;
+	position: relative;
+}
+
+#rightSide
+{
+	display: none;
+}
+
+#content,
+#leftSide,
+#rightSide,
+#userMenuContainer
+{
+	padding-top: 10px;
+}
+
+/*****************************
+	Header
+*****************************/
+#header
+{
+    padding-top: 6px;
+	z-index: 50;
+	position: relative;
+	width: 100%;
+}
+
+#logoContainer
+{
+	padding: 8px;
+}
+
+#topMenuContainer
+{
+	text-align: right;
+	padding-bottom: 10px;
+}
+
+#topMenuContainer .dropdown-menu
+{
+	text-align: left;
+}
+
+#currency, #language
+{
+	margin: 5px 0 10px 10px;
+}
+
+/*****************************
+	Category box
+*****************************/
+.categories .nav .nav
+{
+	margin-left: 20px;
+}
+
+/*****************************
+	Filters
+*****************************/
+.filterGroup ul
+{
+	text-indent: 22px;
+	font-size: 90%;
+	overflow-y: auto;
+	max-height: 400px;
+	padding-left: 3px;
+}
+
+.filterGroup ul li a
+{
+    color: #BB5500;
+}
+
+.filterGroup h4
+{
+	margin-top: 5px;
+}
+
+.filterGroup .showAll
+{
+	background-image: url(../../image/silk/gif/tag_yellow.gif);
+}
+
+.filterGroup.filterTypeCheckbox li div
+{
+	background-image:none;
+}
+.filterGroup.filterTypeCheckbox li div input.checkbox
+{
+	vertical-align: middle;
+	float: none;
+	margin-left: -1em;
+}
+
+.filterGroup.filterTypeCheckbox li div
+{
+	padding: 0;
+	margin-bottom: 1px;
+}
+
+.filterTop
+{
+	padding: 0.5em 0;
+}
+
+.filterTop select
+{
+	width: auto;
+	margin-right: 1em;
+}
+
+.topMenuFilterCaption
+{
+	white-space: nowrap;
+}
+
+.filterGroup ul li label
+{
+	display: inline;
+	vertical-align: middle;
+}
+
+/*****************************
+	Information menu
+*****************************/
+.informationMenu ul li
+{
+    margin-bottom: 5px;
+}
+
+/*****************************
+	Latest news block
+*****************************/
+.latestNewsSide .date
+{
+	display: block;
+	margin-bottom: 0.5em;
+}
+
+/*****************************
+	Sub-category list
+*****************************/
+.subCatName
+{
+    font-size: larger;
+}
+
+.subCategoryItem
+{
+	margin-bottom: 1em;
+}
+
+ul.subSubCats
+{
+    margin-top: 12px;
+}
+
+.modelSearchResults
+{
+	margin-bottom: 1em;
+}
+
+.allResults
+{
+	font-size: smaller;
+	margin-top: 0.5em;
+}
+
+/*****************************
+	Product list
+*****************************/
+.keywords
+{
+	font-style: italic;
+}
+
+.narrowByCat
+{
+	margin-bottom: 2em;
+}
+
+.allFilters li
+{
+	margin-bottom: 5px !important;
+}
+
+.allFilters legend
+{
+	color: black;
+    background: url(../../image/silk/gif/zoom.gif) 6px center no-repeat;
+    padding-left: 28px;
+    margin-left: 5px;
+}
+
+.allFilters .filterGroup
+{
+    width: 30%;
+}
+
+.foundCategories
+{
+	margin-bottom: 1em;
+	margin-left: 1em;
+}
+
+.resultStats
+{
+    margin-bottom: 15px;
+    padding-bottom: 4px;
+    border-bottom-width: 1px;
+    font-size: 110%;
+    position: relative;
+}
+
+#productSort
+{
+	font-size: 12px;
+	width: 130px;
+}
+
+.listOptions
+{
+	text-align: right;
+}
+
+.category-allProducts .categoryLayoutSwitch
+{
+	display: none;
+}
+
+.productGridItem
+{
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+h3.productTitle
+{
+	margin-top: 0;
+}
+
+.listPrice
+{
+	text-decoration: line-through;
+	font-weight: normal;
+}
+
+.productTable a.direction_asc,
+.productTable a.direction_desc
+{
+	display: block;
+	padding-right: 20px;
+	background-position: right;
+}
+
+.productTable a.direction_asc
+{
+	background-image: url(../../image/silk/gif/sort_asc.gif);
+}
+
+.productTable a.direction_desc
+{
+	background-image: url(../../image/silk/gif/sort_desc.gif);
+}
+
+.shortDescr
+{
+	font-size: 90%;
+}
+
+.productSeparator
+{
+    border-bottom-width: 1px;
+    margin: 15px auto -7px 120px;
+}
+
+.productAction
+{
+	font-size: smaller;
+}
+
+.productAction > .actionItem:after
+{
+	color: #CCCCCC;
+	content: " | ";
+	display: inline-block;
+	padding: 0 2px 0 5px;
+}
+
+.productAction > .actionItem:last-child:after
+{
+	content: '';
+	padding: 0;
+}
+
+#actionButtons
+{
+	text-align: center;
+}
+
+.compare .checkbox
+{
+	float: none;
+}
+
+.compare label
+{
+	display: inline;
+}
+
+ul.attributeList
+{
+	margin-bottom: 0;
+}
+
+a.progressIndicator
+{
+	padding: 0;
+	padding-left: 16px;
+	background-position: center left;
+}
+
+.delete:hover
+{
+	opacity: 1;
+	text-decoration: none;
+}
+
+.delete
+{
+	color: red;
+	opacity: 0.5;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+/*****************************
+	Product page
+*****************************/
+#ratingSummary
+{
+	width: 250px;
+}
+
+table.productDetailsTable
+{
+	width: auto;
+	min-width: 25%;
+}
+
+.websiteUrl a
+{
+  	background-image: url(../../image/backend/icon/exLink.gif) !important;
+}
+
+.overallRating a
+{
+	font-weight: normal;
+}
+
+.ratingBreakdown
+{
+	color: #888;
+	clear: left;
+	margin-top: 0.5em;
+}
+
+.price
+{
+	color: #a52a2a;
+}
+
+.price.progressIndicator
+{
+	padding: 0 0 0 16px;
+	background-position: center left;
+}
+
+#mainInfo .price
+{
+	font-size: larger;
+}
+
+.price.quantityPrice
+{
+	font-size: 1em !important;
+}
+
+.productOptions .productOption
+{
+	margin: 3px 0;
+}
+
+.productOptions .description
+{
+	font-size: 0.85em;
+	white-space: normal;
+	width: 250px;
+	margin: 0;
+}
+
+.radioOptions
+{
+	padding-left: 0.5em;
+	border-width: 1px;
+}
+
+.purchaseVariations
+{
+	padding: 0.5em;
+	display: block;
+}
+
+.purchaseVariations .cartLinks
+{
+	padding: 1em 0;
+}
+
+.purchaseVariations .productOption
+{
+	margin: 5px 0;
+}
+
+#productSpecification td
+{
+    padding: 5px 10px;
+}
+
+tr.specificationGroup td.param
+{
+	border-right: 0 !important;
+}
+
+tr.specificationGroup td.value
+{
+	border-left: 0 !important;
+}
+
+ul.attributeList.singleValue
+{
+	list-style: none;
+	margin-left: 0;
+}
+
+#imageContainer
+{
+	width: 450px;
+}
+
+#outerImageContainer #imageContainer
+{
+	width: auto;
+	float: none;
+}
+
+#lightbox
+{
+	padding: 2px !important;
+}
+
+#keyboardMsg
+{
+	display: none;
+}
+
+#lightboxCaption
+{
+	font-size: 1.2em;
+}
+
+#mainImage
+{
+    margin: 20px;
+}
+
+#largeImage.multipleImages
+{
+	height: 350px;
+}
+
+#largeImage.missingImage
+{
+	height: auto;
+}
+
+#moreImages img, .compareData div.image img
+{
+	border: 1px solid black;
+	margin-right: 4px;
+	cursor: pointer;
+}
+
+#rateProduct
+{
+	margin-left: 10px;
+}
+
+#rateProduct table td
+{
+	padding: 4px;
+}
+
+#rateProduct table .text-danger
+{
+	position: relative;
+	white-space: nowrap;
+	left: -85px;
+}
+
+.ratingPreview
+{
+	background-color: transparent !important;
+}
+
+.reviewTitle
+{
+	line-height: 1.5em;
+}
+
+.reviewText
+{
+	margin-top: 0;
+}
+
+div.review
+{
+	padding-top: 1em;
+	border-top-width: 1px;
+}
+
+div.review.first
+{
+	padding-top: 0;
+	border: 0;
+}
+
+div.review .ratingBreakdown
+{
+	margin: 0.5em;
+	padding: 1em;
+	border-width: 1px;
+}
+
+#bundle .productInfo
+{
+	width: 150px;
+}
+
+.bundleList, .bundleInfo
+{
+	padding-right: 0.5em;
+	margin-left: 1em;
+}
+
+.bundleList
+{
+	border-right: 1px;
+}
+
+.bundlePrice
+{
+	font-size: larger;
+}
+
+select.quantity
+{
+	width: auto;
+}
+
+/*****************************
+	Review page
+*****************************/
+.reviewIndex .pagingInfo
+{
+	float: none;
+	margin-top: 0;
+	position: absolute;
+	bottom: 5px;
+	right: 0;
+}
+
+/*****************************
+	Users
+*****************************/
+.forgottenPassword
+{
+    display: block;
+}
+
+/*****************************
+	Shopping cart
+*****************************/
+#cart, #wishList, #expressCheckoutMethods
+{
+	width: 700px;
+	margin: 0 auto;
+}
+
+#wishList table
+{
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+#wishList
+{
+    margin-bottom: 15px;
+}
+
+#cart td, #wishList td
+{
+	overflow: hidden;
+	padding: 3px;
+}
+
+#cart .productOptions
+{
+	margin: 0.5em 0;
+}
+
+.cartControl
+{
+	width: 120px;
+	overflow: hidden;
+	padding-left: 1em !important;
+}
+
+.cartQuant
+{
+	width: 80px;
+}
+
+.cartPrice
+{
+	width: 100px;
+	white-space: nowrap;
+}
+
+.subTotalCalc
+{
+	color: #777777;
+}
+
+.cartImage
+{
+	width: 60px;
+	padding: 7px !important;
+}
+
+.cartImage img
+{
+	border-width: 1px;
+}
+
+.cartQuant input.text
+{
+	width: 50px;
+}
+
+.checkoutButtons
+{
+    width: 300px;
+    text-align: right;
+}
+
+#tosContainer input,
+#tosContainer label
+{
+	float: none;
+	display: inline;
+}
+
+.multiAddressCheckout
+{
+	display: block;
+	padding-top: 1em;
+}
+
+select.multiAddress
+{
+	width: 100%;
+}
+
+#expressCheckoutMethods
+{
+    padding: 20px;
+}
+
+#expressCheckoutMethods img
+{
+	vertical-align: top;
+}
+
+.text.coupon
+{
+	width: 160px;
+}
+
+#cartFields .wide, #cartFields textarea
+{
+	width: 100%;
+}
+
+#cartFields textarea
+{
+	height: 80px;
+}
+
+/*****************************
+	Checkout
+***************************/
+
+/* Progress bar */
+
+.checkoutHeader,
+.checkoutHeader h1
+{
+    line-height: 2em;
+}
+
+#checkoutProgress
+{
+    width: auto;
+    padding-top: 1em;
+	height: 3em;
+}
+
+#checkoutProgress a
+{
+    padding: 10px;
+    border-width: 2px;
+    margin-right: 20px;
+}
+
+/* completed steps */
+#checkoutProgress a.completed
+{
+    border-color: #70D66D;
+}
+
+/* current step */
+#checkoutProgress a.active
+{
+    border-color: #ADD8E6;
+}
+
+.progressOrder
+{
+    margin-right: 5px;
+}
+
+/* Select address */
+
+table.addressSelector
+{
+	width: 100%;
+}
+
+.selector.addAddress
+{
+	vertical-align: top;
+	padding-top: 5px;
+}
+
+.addressSelector a
+{
+    margin-left: 5px;
+}
+
+.addressSelector .address
+{
+    padding: 5px;
+}
+
+.addressSelector .address p
+{
+    margin: 3px;
+}
+
+#billingAddressColumn
+{
+	clear: left;
+	margin-right: 1%;
+}
+
+#billingAddressColumn,
+#shippingSelector
+{
+	width: 49%;
+}
+
+.addAddress .address,
+.addAddress .addressBlock
+{
+	width: 97%;
+}
+
+.addAddress .addressBlock label
+{
+	width: 120px;
+}
+
+.addAddress .addressBlock input,
+.addAddress .addressBlock select
+{
+	width: 97%;
+}
+
+/* Shipping method */
+
+#shippingSelect
+{
+    margin-top: 1.5em;
+}
+
+.shipment
+{
+    width: 70%;
+    border-width: 1px;
+}
+
+.userViewOrder .shipment
+{
+    width: 90%;
+}
+
+.shipment td
+{
+    width: 12%;
+}
+
+.shipment .productName
+{
+    width: 64%;
+}
+
+td.productNameRow
+{
+	padding-top: 0;
+}
+
+.shipment .subTotal, #cart .subTotal
+{
+	white-space: nowrap;
+	font-size: larger;
+}
+
+.subTotalCaption, .shipment td.tax
+{
+    text-align: right !important;
+}
+
+.shippingMethods
+{
+    padding-left: 30px;
+    padding-bottom: 20px;
+    clear: both;
+}
+
+#cartItems h2
+{
+	clear: left;
+}
+
+/* Payments */
+.name_ccExpiryYear select
+{
+	width: auto;
+}
+
+#ccCVV
+{
+    width: 4em;
+}
+
+#payTotal
+{
+	margin-top: 20px;
+}
+
+#payTotal div
+{
+	font-size: larger;
+	padding: 6px;
+	display: inline;
+	margin: 20px;
+	border: 2px solid #FFFC8C;
+}
+
+#payItems
+{
+	margin-top: 5px;
+}
+
+#expressComplete
+{
+    display: block;
+    padding-top: 15px;
+    margin-left: 22px;
+}
+
+.orderOverviewControls a
+{
+    margin-bottom: -25px;
+}
+
+.user-pay .orderOverviewControls, .user-pay .addressContainer a
+{
+	display: none;
+}
+
+.multiAddress .overviewShippingInfo td
+{
+	padding-bottom: 1em;
+}
+
+#overviewAddresses
+{
+    padding-top: 0.5em;
+    padding-bottom: 2em;
+}
+
+.addressContainer
+{
+    width: 50%;
+}
+
+#otherMethods a
+{
+    margin-right: 2em;
+}
+
+.checkoutPay h2
+{
+    margin-bottom: 24px;
+}
+
+#cvvHelp
+{
+    width: 340px;
+    padding: 5px;
+}
+
+#testHandlerWarning
+{
+    font-size: 0.85em;
+    margin: 1em auto;
+    border: 1px solid yellow;
+    padding: 5px;
+    text-align: center;
+}
+
+#paymentError .errorMsg
+{
+    padding-top: 10px;
+}
+
+.checkout-pay .completeOverview
+{
+	width: 40%;
+	margin: 0 1%;
+	padding: 0 1%;
+	background-color: #F8F8F8;
+}
+
+.paymentMethods
+{
+	width: 53%;
+}
+
+tr.topLine td
+{
+	border-bottom-width: 0;
+}
+
+.completeOverview .shipment
+{
+	width: auto;
+}
+
+#miniCartContents
+{
+	padding: 10px;
+	font-size: 85%;
+}
+
+.miniCartCount,
+.miniCartTotalAmount
+{
+	font-weight: bold;
+}
+
+.miniCartTotal
+{
+	text-align: center;
+}
+
+/***************************
+	User account
+***************************/
+.newCustomer
+{
+	width: 55%;
+}
+
+.returningCustomer
+{
+	width: 43%;
+}
+
+.userLogin .failed
+{
+    margin: 0;
+}
+
+/***************************
+	User addresses
+***************************/
+div.address,
+div.addressBlock
+{
+    width: 230px;
+}
+
+div.addressBlock
+{
+    border-width: 1px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+div.addressControl
+{
+    width: 250px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+/***************************
+	Orders
+***************************/
+.orderDetails
+{
+    border-width: 1px;
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.orderMenu
+{
+    padding-left: 10px;
+}
+
+.orderDetails .orderMenu
+{
+    width: 200px;
+}
+
+.orderDetails .orderContent
+{
+    margin-left: 220px;
+}
+
+#content .orderMenu ul
+{
+    margin: 5px;
+    margin-left: 0;
+}
+
+.orderMenu li
+{
+    padding: 4px;
+    margin-left: 0;
+}
+
+.orderMenu .orderTotal
+{
+    padding-top: 10px;
+}
+
+div.orderStatus
+{
+    padding: 6px;
+}
+
+a.invoice
+{
+	background-image: url(../../image/silk/gif/printer.gif);
+}
+
+a.viewOrder
+{
+	background-image: url(../../image/silk/gif/page_white_text.gif);
+}
+
+a.reorder
+{
+	background-image: url(../../image/silk/gif/cart_put.gif);
+}
+
+a.messages
+{
+	background-image: url(../../image/silk/gif/email.gif);
+}
+
+.subItemList
+{
+	margin: 4px;
+}
+
+.shipmentAddress
+{
+	margin-bottom: 0.5em;
+}
+
+/***************************
+	File downloads
+***************************/
+ul.downloadFile li
+{
+    background-image: url(../../image/silk/gif/disk.gif);
+    margin-bottom: 4px;
+}
+
+ul.downloadFile li.fileGroup
+{
+    background-image: none;
+    margin-top: 7px;
+}
+
+/***************************
+	Order notes
+***************************/
+ul.notes
+{
+    margin-top: 15px;
+}
+
+ul.notes li
+{
+    margin-bottom: 10px;
+}
+
+.noteText
+{
+    border-width: 1px;
+    padding: 5px;
+    margin-top: 5px;
+    font-family: "Lucida Console", Monospace;
+}
+
+ul.notes li.responder_1 .noteText
+{
+    border: 1px solid #AA0000;
+}
+
+.noteAbout
+{
+    border-bottom-width: 1px;
+    padding-bottom: 5px;
+}
+
+#noteForm
+{
+    margin-top: 2em;
+    display: block;
+}
+
+/***************************
+	Invoices
+***************************/
+#invoiceHeader
+{
+    border-bottom: 1px solid black;
+    position: relative;
+    margin-top: 20px;
+}
+
+#invoiceLogo
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#invoice h1
+{
+    padding-top: 20px;
+}
+
+#invoiceContacts h2
+{
+    border: none;
+}
+
+#invoiceDate
+{
+    padding-bottom: 10px;
+}
+
+#invoicePaymentInfo td
+{
+    padding: 5px;
+    width: 300px;
+}
+
+.basePrice
+{
+    display: none;
+}
+
+.discount .basePrice
+{
+	text-decoration: line-through;
+	display: inline;
+	margin-right: 4px;
+}
+
+#invoicePaymentInfo td.amount
+{
+    width: auto;
+}
+
+#invoicePaymentInfo .beforeTaxSubtotal td.amount,
+#invoicePaymentInfo .amountPaid td,
+#invoicePaymentInfo .grandTotal td.amount
+{
+    border-top: 1px solid black;
+}
+
+#invoicePaymentInfo .grandTotal td.amount
+{
+    padding-bottom: 10px;
+}
+
+.itemOptions
+{
+	padding: 0.5em;
+	font-size: 0.85em;
+	color: #777;
+}
+
+.itemOptions .optionPrice
+{
+	color: #444;
+}
+
+/***************************
+	Manufacturers
+***************************/
+.manufacturerColumn
+{
+	margin-left: 2.5%;
+}
+
+.manufacturerImage
+{
+	margin: 1em;
+	margin-top: 0;
+	border-width: 1px;
+}
+
+.manufacturerAttributes
+{
+	margin-left: 1em;
+}
+
+
+.manufacturerLetterFilter
+{
+	background-color:#eee;
+	margin-bottom: 1em;
+}
+
+.manufacturerLetterFilter li
+{
+	display:inline;
+}
+
+.manufacturerLetterFilter .selectedLetter
+{
+	color: green;
+}
+
+/*************************
+	Contact form
+*************************/
+#contactForm textarea
+{
+	width: 500px;
+	height: 200px;
+	min-width: 500px;
+}
+
+/*************************
+	Static pages
+*************************/
+.staticSubpages
+{
+	margin-bottom: 1em;
+}
+
+/***************************
+	Customization
+***************************/
+span.templateLocator
+{
+	display: block;
+}
+
+span.templateLocator.activeTpl
+{
+	border: 2px dotted red;
+	position: relative;
+	z-index: 2;
+	padding: 2px;
+}
+
+span.templateLocator span.templateName
+{
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 15px;
+	padding: 3px;
+	z-index: 100;
+	padding-left: 25px;
+	background-image: url(../../image/silk/gif/layout_edit.gif);
+	background-position: 4px center;
+}
+
+span.templateLocator.activeTpl:hover > span.templateName:first-child
+{
+	display: inline;
+}
+
+/***************************
+	Form styling
+***************************/
+.confirmationMessage, .errorMessage, .infoMessage
+{
+	border: 1px solid #0c0;
+	background-color: #efe;
+	padding: 7px;
+	padding-left: 30px;
+	background-image: url(../../image/silk/gif/tick.gif);
+	background-position: 5px center;
+	margin: 0.5em;
+}
+
+.errorMessage
+{
+	border: 1px solid #c00;
+	background-color: #fee;
+	background-image: url(../../image/silk/gif/cancel.gif);
+}
+
+.infoMessage
+{
+	border: 1px solid #FFF000;
+	background-color: #FFFCCC;
+	background-image: url(../../image/silk/gif/information.gif);
+}
+
+form
+{
+     display: inline;
+}
+
+.required label span.label
+{
+	background: url(../../image/required.gif) right center no-repeat;
+	padding-right: 9px;
+}
+
+label.cancel
+{
+    display: inline;
+}
+
+input.submit, input.button, input.reset
+{
+    width: auto;
+}
+
+.highlight
+{
+	border: 1px solid yellow;
+	padding: 1em;
+}
+
+.hidden
+{
+	display: none;
+}
+
+.visible
+{
+	display: block;
+}
+
+.progressIndicator
+{
+	background-image: url(../../image/indicator.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	clear: none;
+}
+
+span.progressIndicator
+{
+	padding: 8px;
+}
+
+.glyphicon.progressIndicator
+{
+	padding: 0;
+	background-image: none;
+}
+
+input.progressIndicator.text
+{
+	background-position: right center;
+}
+
+.progressIndicator.checkbox
+{
+	float: left;
+	margin-right: 5px;
+}
+
+label.text
+{
+    width: auto;
+}
+
+input.wide
+{
+  	width: 35em;
+}
+
+input.money, input.number
+{
+  	width: 5em;
+}
+
+input.date
+{
+  	width: 7em;
+}
+
+/***************************
+	Calendar
+***************************/
+img.calendar_button
+{
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+/***************************
+	EAV
+***************************/
+.eavAttributes .attrValue
+{
+	margin-left: 1em;
+}
+
+.eavContainer .wide
+{
+	width: 15em;
+}
+
+fieldset.eavGroup
+{
+	clear: left;
+}
+
+/*************************
+	Special offers (sale items)
+*************************/
+.compactProductList ul
+{
+	margin-top: 0.5em;
+}
+
+.compactProductList .image
+{
+	width: 45px;
+}
+
+.compactProductList .productInfo
+{
+	width: 100px;
+	font-size: 0.85em;
+	overflow: hidden;
+}
+
+.compactProductList .pricingInfo .price
+{
+	width: 70px;
+	font-size: 1em;
+}
+
+.compactProductList li
+{
+	margin-bottom: 7px;
+}
+
+.compactProductList div
+{
+	position: relative;
+}
+
+/*************************
+	AJAX
+*************************/
+#ajaxMessage
+{
+	position: fixed;
+	top: 1em;
+	right: 1em;
+	z-index: 50000;
+}
+
+/*************************
+	Dynamic menu
+*************************/
+.dynamicMenu li
+{
+	border-collapse: collapse;
+}
+
+.dynamicMenu, .dynamicMenu ul { /* all lists */
+	padding: 0;
+	margin: 0;
+	z-index: 10;
+	position: relative;
+}
+
+.dynamicMenu li { /* all list items */
+	position : relative;
+	margin: 0;
+	border-top-width: 1px;
+}
+
+.dynamicMenu li ul { /* second-level lists */
+	position : absolute;
+	left: -999em;
+	margin-left : 188px;
+	margin-top : 0;
+	top: -1px;
+	z-index: 10000;
+}
+
+.dynamicMenu ul ul
+{
+	border-width: 1px;
+	border-top: 0;
+	padding-left: 0;
+}
+
+.dynamicMenu li:hover > a
+.dynamicMenu li.sfhover > a
+{
+	background-color: lightyellow;
+}
+
+.dynamicMenu li ul ul { /* third-and-above-level lists */
+	left: -999em;
+}
+
+.dynamicMenu li a
+{
+	width: 174px;
+	display : block;
+	text-decoration : none;
+	padding-right: 0;
+	margin-left: 0;
+	padding: 4px;
+	padding-left: 12px;
+}
+
+.dynamicMenu ul li.noSubs a
+{
+	background-image: none !important
+}
+
+.dynamicMenu li:hover ul ul, .dynamicMenu li:hover ul ul ul, .dynamicMenu li.sfhover ul ul, .dynamicMenu li.sfhover ul ul ul {
+	left: -999em;
+}
+
+.dynamicMenu li:hover ul, .dynamicMenu li li:hover ul, .dynamicMenu li li li:hover ul, .dynamicMenu li.sfhover ul, .dynamicMenu li li.sfhover ul, .dynamicMenu li li li.sfhover ul { /* lists nested under hovered list items */
+	left: auto;
+}
+
+/*************************
+	One page checkout
+*************************/
+.one-page-checkout-login-field
+{
+	margin-right: 1em;
+}
+
+.one-page-checkout-login-field input.text
+{
+	width: 12em;
+}
+
+.one-page-checkout-login-field label
+{
+	display: block;
+	float: none;
+	width: auto;
+}
+
+#checkout-cart #cart
+{
+	width: 100%;
+}
+
+#checkout-cart .cartControl *,
+#checkout-cart .categoryName
+{
+	display: none;
+}
+
+#checkout-cart .cartControl
+{
+	width: 0px;
+	padding: 0;
+}
+
+#checkout-overview .addressContainer a
+{
+	display: none;
+}
+
+#checkout-payment.singleMethod #checkout-select-payment-method
+{
+	display: none;
+}
+
+.onePageCheckout-index h2 .step
+{
+	padding: 5px;
+	margin: 0 7px;
+}
+
+/* .onePageCheckout-index .step-disabled .accordion-inner, */
+.onePageCheckout-index .notAvailable
+{
+	display: none;
+}
+
+.onePageCheckout-index .downloadable #checkout-shipping-method
+{
+	display: none;
+}
+
+.onePageCheckout-index .step-disabled .notAvailable
+{
+	display: block;
+}
+
+.checkout-otherMethods td
+{
+	padding: 0.5em 0;
+}
+
+.onePageCheckout-index #checkout-payment form .submit,
+.onePageCheckout-index #ccForm .form-actions
+{
+	display: none !important;
+}
+
+#checkout-return-to-overview
+{
+	float: right;
+	margin-bottom: 5px;
+}
+
+.grandTotal
+{
+	font-size: larger;
+}
+
+.grandTotal .orderTotal
+{
+	font-weight: bold;
+}
+
+#checkout-place-order
+{
+	margin: 1em 0;
+}
+
+.onePageCheckout-index .showCart #checkout-overview h2,
+.onePageCheckout-index .showCart .orderOverviewControls,
+.onePageCheckout-index .showCart #checkout-return-to-overview,
+.onePageCheckout-index .showCart #payItems
+{
+	display: none;
+}
+
+#upsellProducts .checkProduct
+{
+	float:left;
+	width:20px
+}
+
+#upsellProducts .image
+{
+	width:45px;
+}
+
+#upsellProducts .pricingInfo
+{
+	position:absolute;
+	margin-left:65px; /* 20px + 45px */
+}
+#upsellProducts .pricingInfo .price
+{
+	font-size:small;
+}
+
+#checkout-options, #checkoutLogin, .registerColumn
+{
+	display: inline-block;
+	width: 48%;
+	margin-right: 1%;
+	vertical-align: top;
+}
+
+.onePageCheckout-index .step-disabled .notAvailable
+{
+	display: none !important;
+}
+
+.onePageCheckout-index .modifyStep
+{
+	float: right;
+}
+
+.step-status-icon
+{
+	font-size: larger;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.ok-sign
+{
+	color: green;
+}
+
+.incomplete-sign
+{
+	display: none;
+}
+
+.step-incomplete .incomplete-sign
+{
+	display: inline-block;
+}
+
+.step-incomplete .modifyStep,
+.step-incomplete .ok-sign,
+.step.opened .modifyStep,
+.step.closed .closed,
+.step.closed .accordion-inner,
+.step.opened .open,
+.step-disabled .modifyLink
+{
+	display: none;
+}
+
+.step-disabled
+{
+	opacity: 0.6;
+}
+
+.onePageCheckout-index .step
+{
+	margin-bottom: 1em;
+}
+
+.stepPreview
+{
+	padding: 0 0 7px 15px;
+}
+
+.onePageCheckout-index .step.opened .stepPreview
+{
+	display: none;
+}
+
+.onePageCheckout-index .step .modifyStep
+{
+	margin-right: 1em;
+}
+
+.onePageCheckout-index #checkout-right h2
+{
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.amountCalculcation
+{
+	white-space: nowrap;
+}
+
+/******* tabs *********/
+h2 small
+{
+	display: none;
+}
+
+.productRecurring td.withRadio
+{
+	text-align:center;
+	vertical-align:text-top;
+}
+
+.productRecurring .name {
+	display:block;
+	clear:both;
+	font-size:14px;
+	font-weight:bold;
+}
+
+.productRecurring label
+{
+	clear:both;
+}
+
+.invoiceTable
+{
+	width: 90%;
+	border-width: 1px;
+	margin-bottom: 14px;
+}
+
+.invoiceTable th,
+.invoiceTable td
+{
+	text-align:center;
+	padding:4px;
+}
+
+.invoiceTable .number
+{
+	text-align:left;
+	width:140px;
+}
+
+.invoiceTable .amount
+{
+	width:80px;
+	font-weight:bold;
+}
+
+.invoiceTable .date
+{
+	text-align:left;
+	width:100px;
+}
+
+.invoiceTable .status
+{
+	text-align:right;
+}
+
+.invoiceTable .paid
+{
+	color: green;
+}
+
+.cancelFurtherRebills a,
+.invoiceTable .unpaid
+{
+	color: red;
+}
+
+.cancelFurtherRebills
+{
+	margin-top:14px;
+}
+
+.recurringPlan
+{
+	font-size:x-small;
+}
+
+/* quick shop */
+#quickShopContainer h1
+{
+	display: none;
+}
+
+#quickShopContainer .modal-dialog
+{
+	width: 760px;
+}
+
+#quickShopContainer select.quantity
+{
+	display: inline-block;
+}
+
+#quickShopContainer #actionButtons p
+{
+	display: inline;
+}
+
+.quickShopMenu
+{
+	position: absolute;
+}
+
+#quickShopContainer #productToCart span.param
+{
+	display: none;
+}
+
+#quickShopContainer #productSummaryContainer .col
+{
+	width: 100%;
+}
+
+.modal-footer .pager
+{
+	margin: 0;
+}
+
+/**** color options ****/
+.colorOptionsWidget input,
+.colorOptionsWidget .optionName
+{
+	display: none;
+}
+
+.colorOptionsWidget label,
+.colorOptionsWidget p
+{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.colorOptionsWidget label
+{
+	min-width: 20px;
+	min-height: 20px;
+	line-height: 20px;
+	padding: 0;
+}
+
+.colorOptionsWidget p.selected
+{
+	border-width: 1px;
+	padding: 1px;
+	border-color: black;
+	background-color: white;
+	font-weight: bold;
+}
+
+.colorOptionsWidget .optionPrice
+{
+	padding: 0 5px;
+	font-size: 85%;
+}
+
+#shoppingCartContainer #cartItems h2
+{
+	display: none;
+}
+
+#shoppingCartContainer #shippingEstimation
+{
+	display: none;
+}
+
+#shoppingCartContainer .tablescroll_foot
+{
+	margin-top: 10px;
+}
+
+#shoppingCartContainer .tablescroll_head
+{
+	margin-right: 15px;
+}

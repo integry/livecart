@@ -23,6 +23,7 @@
 		<link href="stylesheet/library/jquery/jquery-plugins.css" rel="stylesheet"></link>
 		
 		<script src="javascript/common.js"></script>
+		<script src="javascript/Order.js"></script>
 		
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css" rel="stylesheet"></link>

@@ -104,7 +104,7 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 			$this->setOrReturnGlobal('validator', $params['validator']);
 		}
 
-		return parent::render($path ? $path : $templatePath, $params, $mustClean);
+		parent::render($path ? $path : $templatePath, $params, $mustClean);
 	}
 	
 	public function renderBlock($action, $params = array())
@@ -132,7 +132,7 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 	public function partial($partialPath, $params = array(), $currentScope = array())
 	{
 		$params = array_merge($this->globals, $params, $currentScope);
-		return parent::render($this->getTemplatePath($partialPath), $params);
+		parent::render($this->getTemplatePath($partialPath), $params);
 	}
 
 	public function setOrReturnGlobal($key, $value = null)

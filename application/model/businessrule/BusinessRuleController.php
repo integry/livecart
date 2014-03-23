@@ -57,11 +57,14 @@ class BusinessRuleController
 				$this->updateRuleCache();
 			}
 
+			/*
 			$this->conditions = unserialize(include $file);
 			foreach ($this->conditions as $condition)
 			{
 				$condition->setController($this);
 			}
+			*/
+			$this->conditions = array();
 		}
 
 		return $this->conditions;
@@ -133,7 +136,7 @@ class BusinessRuleController
 	private function updateRuleCache()
 	{
 		$paths = array();
-		$app = ActiveRecordModel::getApplication();
+		$app = $this->context->getDI()->get('application');
 		foreach (array('condition', 'action') as $type)
 		{
 			$path = 'application/model/businessrule.' . $type;
@@ -143,6 +146,7 @@ class BusinessRuleController
 			}
 		}
 
+		/*
 		$f = select(eq('DiscountCondition.isEnabled', true));
 		$f->orderBy(f('DiscountCondition.position'));
 		$conditions = ActiveRecord::getRecordSetArray('DiscountCondition', $f);
@@ -184,11 +188,12 @@ class BusinessRuleController
 
 		$rootCond = RuleCondition::createFromArray($idMap[DiscountCondition::ROOT_ID]);
 		file_put_contents(self::getRuleFile(), '<?php $paths = ' . var_export($paths, true) . '; foreach ($paths as $path) { include_once($path); } return ' . var_export(serialize($rootCond->getConditions()), true) . '; ?>');
+		*/
 	}
 
 	private function getRuleFile()
 	{
-		return $this->config->getPath('cache/') . 'businessrules.php';
+		return $this->context->getDI()->get('config')->getPath('cache/') . 'businessrules.php';
 	}
 }
 

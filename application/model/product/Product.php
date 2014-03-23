@@ -2,6 +2,8 @@
 
 namespace product;
 
+use \order\OrderedItem;
+
 /**
  * One of the main entities of the system - defines and handles product related logic.
  * This class allows to assign or change product attribute values, product files, images, related products, etc.
@@ -58,7 +60,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	public $defaultImageID;
 	public $parentID;//", "Product", "ID", null, ARInteger::instance()));
 	//public $shippingClassID", "ShippingClass", "ID", null, ARInteger::instance()));
-	//public $taxClassID", "TaxClass", "ID", null, ARInteger::instance()));
 
 	public $promotions;
 	public $isEnabled;
@@ -103,35 +104,18 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function initialize()
 	{
-		$cascade = array(
-                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
-            );
-            
 		$this->belongsTo('productID', 'product\Product', 'ID', array('foreignKey' => true, 'alias' => 'Parent'));
-		$this->belongsTo('categoryID', 'category\Category', 'ID', array('foreignKey' => true, 'alias' => 'Category'));
-		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => $cascade, 'alias' => 'EavObject'));
-		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('foreignKey' => $cascade, 'alias' => 'DefaultImage'));
-		$this->hasOne('ID', 'heysuccess\application\model\UserProduct', 'productID', array('foreignKey' => $cascade, 'alias' => 'UserProduct'));
+		$this->belongsTo('categoryID', 'category\Category', 'ID', array('alias' => 'Category'));
+		$this->belongsTo('taxClassID', 'tax\TaxClass', 'ID', array('alias' => 'TaxClass'));
 		
-        $this->hasMany('ID', 'category\ProductCategory', 'productID', array(
-            'alias' => 'ProductCategory',
-            'foreignKey' => $cascade
-        ));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('alias' => 'EavObject'));
+		$this->hasOne('defaultImageID', 'product\ProductImage', 'ID', array('alias' => 'DefaultImage'));
 
-        $this->hasMany('ID', 'product\ProductImage', 'productID', array(
-            'alias' => 'ProductImages',
-            'foreignKey' => $cascade
-        ));
-
-        $this->hasMany('ID', 'product\ProductPrice', 'productID', array(
-            'alias' => 'ProductPrice',
-            'foreignKey' => $cascade
-        ));
-        
-        $this->hasMany('ID', 'product\Product', 'parentID', array(
-            'alias' => 'Variation',
-            'foreignKey' => $cascade
-        ));
+        $this->hasMany('ID', 'category\ProductCategory', 'productID', array('alias' => 'ProductCategory'));
+        $this->hasMany('ID', 'product\ProductImage', 'productID', array('alias' => 'ProductImages'));
+        $this->hasMany('ID', 'product\ProductPrice', 'productID', array('alias' => 'ProductPrice'));
+        $this->hasMany('ID', 'product\Product', 'parentID', array('alias' => 'Variation'));
+        $this->hasMany('ID', 'order\OrderedItem', 'productID', array('alias' => 'OrderedItem'));
 
         $this->keepSnapshots(true);
 	}
@@ -932,8 +916,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 			$array['variations'][$variation->getID()] = $variation->toArray();
 		}
 
-		$this->setArrayData($array);
-
 	  	return $array;
 	}
 
@@ -1024,7 +1006,6 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 	public function getName($languageCode = null)
 	{
 		$parent = $this->getParent();
-		$parent->load();
 
 		foreach (array($parent, $this) as $product)
 		{
@@ -1324,8 +1305,10 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function getOptions($includeInheritedOptions = false)
 	{
+		return array();
+		
 		$parent = $this->getParent();
-		ClassLoader::import('application/model/product/ProductOption');
+
 		$f = new ARSelectFilter();
 		$f->orderBy('ProductOption.position', 'ASC');
 		$options = $parent->getRelatedRecordSet('ProductOption', $f, array('DefaultChoice' => 'ProductOptionChoice'));

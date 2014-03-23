@@ -1,5 +1,7 @@
 <?php
 
+namespace businessrule;
+
 /**
  * Implements methods of CustomerOrder
  *

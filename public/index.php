@@ -4,7 +4,8 @@ use \Phalcon\Mvc\Dispatcher as PhDispatcher;
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
-session_set_cookie_params(86400 * 2);
+Phalcon\Mvc\Model::setup(['exceptionOnFailedSave' => true]);
+ini_set('phalcon.orm.virtual_foreign_keys', false);
 
 class MyRouter extends \Phalcon\Mvc\Router
 {
@@ -147,6 +148,14 @@ try
 		return $di->get('sessionUser')->getUser();
 	});
 
+	$di->set('sessionOrder', function() use ($di) {
+		return new \order\SessionOrder($di);
+	});
+
+	$di->set('order', function() use ($di) {
+		return $di->get('sessionOrder')->getOrder();
+	});
+
 	$di->set('session', function() {
 		$session = new Phalcon\Session\Adapter\Files();
 		if (!session_id())
@@ -275,7 +284,11 @@ function dump_livecart_trace(Exception $e)
 {
 	echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";
 	echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+	
+//	var_dump($e->getMessages());
+
 	echo getFileTrace($e->getTrace());
+
 	//var_dump($e);
 	exit;
 }

@@ -1,50 +1,18 @@
 <?php
 
+namespace tax;
+
 /**
  * Defines a tax class
  *
  * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
-class TaxClass extends MultilingualObject
+class TaxClass extends \system\MultilingualObject
 {
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName($className);
-
-		public $ID;
-		public $name;
-		public $position;
-	}
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return TaxClass
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
-
-	/**
-	 * Create new shipping class
-	 *
-	 * @param string $$defaultLanguageName Type name spelled in default language
-	 * @return TaxClass
-	 */
-	public static function getNewInstance($defaultLanguageName)
-	{
-	  	$instance = new self();
-	  	$instance->setValueByLang('name', null, $defaultLanguageName);
-
-	  	return $instance;
-	}
+	public $ID;
+	public $name;
+	public $position;
 
 	/**
 	 * Load record set
@@ -92,9 +60,7 @@ class TaxClass extends MultilingualObject
 
 	public function beforeCreate()
 	{
-	  	$this->setLastPosition();
-
-		parent::insert();
+		$this->setLastPosition();
 	}
 }
 

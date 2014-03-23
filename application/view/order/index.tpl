@@ -1,9 +1,49 @@
 {% extends "layout/frontend.tpl" %}
 
 {% title %}{t _your_basket}{% endblock %}
-[[ partial("checkout/layout.tpl") ]]
+
 {% block content %}
 
+	<div ng-controller="OrderController" ng-init="setOrder([[ json(order.toArray()) ]])">
+		<table class="table table-striped shopping-cart">
+			<thead>
+				<tr>
+					<th></th>
+					<th>{t _price}</th>
+					<th>{t _quantity}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in order.OrderedItems">
+					<td class="col-lg-6">{{ item.name }}</td>
+					<td class="col-lg-3">{{ item.formattedDisplaySubTotal }}</td>
+					<td class="col-lg-3">
+						<button class="btn btn-default btn-xs" ng-click="decCount(item)" ng-disabled="item.count <= 1">-</button>
+						<input class="form-control quantity" ng-model="item.count" />
+						<button class="btn btn-default btn-xs" ng-click="incCount(item)">+</button>
+						<button class="btn btn-default btn-xs" ng-click="remove(item)"><span class="glyphicon glyphicon-remove"></span></button>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>{t _total}:</td>
+					<td>{{ order.formattedTotal[order.currencyID] }}</td>
+				</tr>
+			</tfoot>
+		</table>
+		
+		<div class="row">
+			<div class="col-md-6">
+				
+			</div>
+			<div class="col-md-6 text-right">
+				<a class="btn btn-primary">{t _checkout}</a>
+			</div>
+		</div>
+	</div>
+	
+	{#
 	<div class="checkoutHeader">
 		{% if cart.cartItems && !isOnePageCheckout %}
 			[[ partial('checkout/checkoutProgress.tpl', ['progress': "progressCart", 'order': cart]) ]]
@@ -27,14 +67,6 @@
 			[[ partial("order/wishList.tpl") ]]
 		</div>
 	{% endif %}
-
-	{% endif %}
-
-	<div class="clear"></div>
+	#}
 
 {% endblock %}
-
-
-<script type="text/javascript">
-	new Order.OptionLoader(('cart'));
-</script>

@@ -10,6 +10,19 @@ use \order\OrderedItem;
  */
 class OrderController extends FrontendController
 {
+	public function getAction()
+	{
+		echo json_encode($this->order->toArray());
+	}
+	
+	public function updateAction()
+	{
+		$this->order->loadRequestData($this->request);
+		$this->order->save();
+		
+		echo json_encode(array('order' => $this->order->toArray()));
+	}
+	
 	/**
 	 *  View shopping cart contents
 	 */
@@ -123,11 +136,14 @@ class OrderController extends FrontendController
 
 	private function getCartPageResponse()
 	{
+		$this->set('order', $this->order);
+		
+		return;
+		
 		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
 		$this->order->setUser($this->user);
 		$this->order->loadItemData();
-
 
 		if ($result = $this->order->updateToStock())
 		{
@@ -358,7 +374,7 @@ class OrderController extends FrontendController
 	/**
 	 *  Update product quantities
 	 */
-	public function updateAction()
+	public function xupdateAction()
 	{
 		// TOS
 		if ($this->isTosInCartPage())
@@ -603,7 +619,7 @@ class OrderController extends FrontendController
 		}
 
 		$this->order->mergeItems();
-		SessionOrder::save($this->order);
+		$this->sessionOrder->setOrder($this->order);
 
 		if (!$this->isAjax())
 		{
@@ -613,7 +629,8 @@ class OrderController extends FrontendController
 			}
 			else
 			{
-				return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
+				return $this->response->redirect('order/index');
+				//return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 			}
 		}
 		else
@@ -739,7 +756,7 @@ class OrderController extends FrontendController
 		$item = $this->order->addProduct($product, $count);
 		if ($item instanceof OrderedItem)
 		{
-			$item->name->set($product->name);
+			$item->name = $product->name;
 			foreach ($product->getOptions(true) as $option)
 			{
 				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
@@ -776,6 +793,8 @@ class OrderController extends FrontendController
 		}
 
 		$this->order->updateToStock(false);
+		
+		$this->order->save();
 
 		return $item;
 	}

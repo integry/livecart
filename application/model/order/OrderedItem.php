@@ -2,6 +2,9 @@
 
 namespace order;
 
+use \product\Product;
+use \Currency;
+
 /**
  * Represents a shopping basket item (one or more instances of the same product)
  *
@@ -32,9 +35,6 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	const OUT_OF_STOCK = 2;
 
 	public $ID;
-	public $productID;
-	public $customerOrderID;
-//	public $shipmentID", "Shipment", "ID", "Shipment;
 //	public $parentID", "OrderedItem", "ID", "OrderedItem;
 //	public $recurringParentID", "OrderedItem", "ID", "OrderedItem;
 	public $price;
@@ -46,8 +46,9 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function initialize()
 	{
-		$this->belongsTo('customerOrderID', 'order\CustomerOrder', 'ID', array('foreignKey' => true, 'alias' => 'CustomerOrder'));
-		$this->hasOne('productID', 'product\Product', 'ID', array('foreignKey' => true, 'alias' => 'Product'));
+		$this->belongsTo('customerOrderID', 'order\CustomerOrder', 'ID', array('alias' => 'CustomerOrder'));
+		$this->belongsTo('shipmentID', 'order\Shipment', 'ID', array('alias' => 'Shipment'));
+		$this->belongsTo('productID', 'product\Product', 'ID', array('alias' => 'Product'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -55,7 +56,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	public static function getNewInstance(CustomerOrder $order, \product\Product $product, $count = 1)
 	{
 		$instance = new self();
-		$instance->customerOrder = $order;
+		//$instance->customerOrder = $order;
 		$instance->product = $product;
 		$instance->count = $count;
 
@@ -63,7 +64,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		{
 			$instance->price = $instance->getItemPrice(false);
 		}
-
+		
 		return $instance;
 	}
 
@@ -71,20 +72,18 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function getCurrency()
 	{
-		if ($this->isLoaded() == false)
-		{
-
-		}
 		return $this->customerOrder->getCurrency();
 	}
 
 	public function getSubTotal($includeTaxes = true, $applyDiscounts = true)
 	{
 		// bundle items do not affect order total - only the parent item has a set price
-		if ($this->parent)
+		/*
+		if ($this->getParent())
 		{
 			return 0;
 		}
+		*/
 
 		$subTotal = $this->getPrice($includeTaxes, false) * $this->count;
 
@@ -250,10 +249,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		$isFinalized = $order->isFinalized;
 		$product = $this->getProduct();
 		$price = 0;
-		if ($product->isLoaded() == false)
-		{
-			$product->load();
-		}
+
 		if ($product->type == Product::TYPE_RECURRING)
 		{
 			if ($order->parentID == null)
@@ -297,6 +293,8 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function reduceBaseTaxes($price, $product = null)
 	{
+		return $price;
+		
 		$product = $product ? $product : $this->getProduct();
 		if (!is_array($product))
 		{
@@ -453,11 +451,6 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function addOptionChoice(\product\ProductOptionChoice $choice)
 	{
-		if (!$choice->isLoaded())
-		{
-			$choice->load();
-		}
-
 		foreach ($this->optionChoices as $key => $ch)
 		{
 			// already added?
@@ -520,22 +513,14 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		}
 	}
 
-	public function getProduct()
-	{
-		$product = $this->product;
-		if (!$product)
-		{
-			$product = new Product;
-			$product->setID(0);
-			$product->markAsLoaded();
-		}
-
-		return $product;
-	}
-
 	public function getCount()
 	{
 		return $this->count;
+	}
+	
+	public function setCount($count)
+	{
+		$this->count = $count;
 	}
 
 	public function getSubItems()
@@ -615,8 +600,10 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
   	/*####################  Saving ####################*/
 
-	public function beforeCreate()
+	public function xbeforeCreate()
 	{
+		return;
+		
 		if ($this->shipment && !$this->shipment->isExistingRecord())
 		{
 			$this->shipment = null;
@@ -630,8 +617,11 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	}
 
-	public function beforeSave()
+	public function xbeforeSave()
 	{
+		var_dump('saving');
+		return;
+		
 		// update inventory
 		$shipment = $this->shipment;
 		if (!$shipment && $this->parent)
@@ -690,8 +680,9 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		}
 	}
 
-	public function afterSave()
+	public function xafterSave()
 	{
+		return;
 		// save options
 		foreach ($this->removedChoices as $rem)
 		{
@@ -718,31 +709,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	protected function beforeUpdate()
 	{
-		if (is_null($this->shipment) || !$this->shipment->getID())
-		{
-			$this->shipment->setNull(false);
-			$this->shipment->resetModifiedStatus();
-		}
-
-		if ($this->isModified())
-		{
-			$user = $this->customerOrder->user;
-			if ($user)
-			{
-				$user->load();
-			}
-
-			if ($this->price->isNull())
-			{
-				$this->price = $this->getProduct()->getItemPrice($this);
-			}
-
-			return parent::update();
-		}
-		else
-		{
-			return false;
-		}
+		$this->price = $this->getProduct()->getItemPrice($this);
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -794,6 +761,8 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$array['formattedSubTotalWithoutTax'] = $currency->getFormattedPrice($array['displaySubTotalWithoutTax']);
 		}
 
+		return $array;
+		
 		$array['options'] = array();
 		foreach ($this->optionChoices as $id => $choice)
 		{
@@ -814,27 +783,6 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			if (count($ritemArray)) // should be 1 or 0
 			{
 				$array['recurringID'] = $ritemArray[0]['recurringID'];
-			}
-		}
-
-		$this->setArrayData($array);
-
-		return $array;
-	}
-
-	public static function transformArray($array, ARSchema $schema)
-	{
-		$array = parent::transformArray($array, $schema);
-
-		// deleted product
-		if (!isset($array['Product']) && isset($array['name_lang']))
-		{
-			$array['Product']['name'] = $array['name'];
-			$array['Product']['name_lang'] = $array['name_lang'];
-			$array['Product']['nameData'] = $array['nameData'];
-			if (isset($array['nameData']['sku']))
-			{
-				$array['Product']['sku'] = $array['nameData']['sku'];
 			}
 		}
 
@@ -867,6 +815,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
 	}
 
+/*
 	public function delete()
 	{
 		$ri = RecurringItem::getInstanceByOrderedItem($this);
@@ -876,13 +825,9 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		}
 		parent::delete();
 	}
+*/
 
 	/*
-	public function __destruct()
-	{
-		parent::destruct(array('productID', 'shipmentID'));
-	}
-
 	public function __clone()
 	{
 		parent::__clone();

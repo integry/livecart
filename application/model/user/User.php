@@ -50,11 +50,6 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 			)
 		));
 
-        $this->hasMany('ID', 'heysuccess\application\model\UserProduct', 'userID', array(
-            'foreignKey' => array('action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE),
-            'alias' => 'UserProduct'
-        ));
-
 		$this->belongsTo('userGroupID', 'user\UserGroup', 'ID', array('alias' => 'UserGroup'));
 		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => array('action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE), 'alias' => 'EavObject'));
 	}
@@ -429,8 +424,6 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	{
 		$array = parent::toArray($args);
 		$array['newPassword'] = $this->newPassword;
-
-		$this->setArrayData($array);
 
 		return $array;
 	}

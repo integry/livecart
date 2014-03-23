@@ -1,5 +1,6 @@
 <?php
 
+namespace tax;
 
 /**
  * Defines a tax rate for a DeliveryZone. Tax rates are applied to order totals and shipping charges as well.
@@ -7,34 +8,16 @@
  * @package application/model/tax
  * @author Integry Systems <http://integry.com>
  */
-class TaxRate extends MultilingualObject
+class TaxRate extends \ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $rate;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("TaxRate");
-
-		public $ID;
-		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
-		public $taxID", "Tax", "ID", "Tax;
-		public $taxClassID", "TaxClass", "ID", "TaxClass;
-
-		public $rate;
-		$schema->registerAutoReference('taxClassID');
-	}
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return TaxRate
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+		$this->belongsTo('deliveryZoneID', 'delivery\DeliveryZone', 'ID', array('alias' => 'DeliveryZone'));
+		$this->belongsTo('taxID', 'tax\Tax', 'ID', array('alias' => 'Tax'));
+		$this->belongsTo('taxClassID', 'tax\TaxClass', 'ID', array('alias' => 'TaxClass'));
 	}
 
 	/**
@@ -45,15 +28,10 @@ class TaxRate extends MultilingualObject
 	 * @param float $rate Rate in percents
 	 * @return TaxRate
 	 */
-	public static function getNewInstance(DeliveryZone $deliveryZone = null, Tax $tax, $rate)
+	public static function getNewInstance(\delivery\DeliveryZone $deliveryZone, Tax $tax, $rate)
 	{
 	  	$instance = new self();
-
-		if($deliveryZone)
-		{
-			$instance->deliveryZone = $deliveryZone;
-		}
-
+		$instance->deliveryZone = $deliveryZone;
 	  	$instance->tax = $tax;
 	  	$instance->rate = $rate;
 
@@ -79,30 +57,6 @@ class TaxRate extends MultilingualObject
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	/**
-	 * Load rates from known delivery zone
-	 *
-	 * @param DeliveryZone $deliveryZone
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $loadReferencedRecords = array('Tax'))
-	{
- 		$filter = new ARSelectFilter();
-
-		if(!$deliveryZone || $deliveryZone->isDefault())
-		{
-			$filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
-		}
-		else
-		{
-			$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
-		}
-
-		return self::getRecordSet($filter, $loadReferencedRecords);
-	}
-
 	public function applyTax($amount)
 	{
 		return $amount + $this->getTaxAmount($amount);
@@ -122,16 +76,6 @@ class TaxRate extends MultilingualObject
 		}
 
 		return $position;
-	}
-
-	public function beforeCreate()
-	{
-		if (!$this->deliveryZone || $this->deliveryZone->isDefault())
-		{
-			$this->deliveryZone = null;
-		}
-
-
 	}
 }
 

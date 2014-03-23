@@ -322,8 +322,6 @@ class ProductOption extends MultilingualObject
 			}
 		}
 
-		$this->setArrayData($array);
-
 	  	return $array;
 	}
 

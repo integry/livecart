@@ -36,7 +36,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		{
 			try
 			{
-				$instance = CustomerOrder::getInstanceById($id, true);
+				$instance = CustomerOrder::getInstanceById($id);
 
 				if (!$instance->getOrderedItems())
 				{
@@ -85,16 +85,17 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		if ($instance->isFinalized)
 		{
 			$this->session->unsetValue('CustomerOrder');
-			return self::getorderBy();
+			return $this->getsetOrder();
 		}
 
 		// fixes issue when trying to add OrderedItem to unsaved(without ID) CustomerOrder.
 		// ~ but i don't know if returning unsaved CustomerOrder is expected behaviour.
-		if ($instance->isExistingRecord() == false)
+		if (!$instance->getDirtyState())
 		{
-			$instance->save(true);
+			$instance->save();
 		}
-		self::orderBy($instance);
+		
+		$this->setOrder($instance);
 		return $instance;
 	}
 
@@ -115,19 +116,21 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		$isOrderable = $order->isOrderable();
 		$orderArray['isOrderable'] = is_bool($isOrderable) ? $isOrderable : false;
 
+		/*
 		$items = array();
 		foreach ($order->getPurchasedItems() as $item)
 		{
 			$items[] = $item->toArray();
 		}
 
-		$orderArray['items'] = new RuleOrderContainer($items);
+		$orderArray['items'] = new \businessrule\RuleOrderContainer($items);
 		$orderArray['items']->setCoupons($order->getCoupons());
 		$orderArray['items']->setTotal($total);
+		*/
 
 		$this->session->set('orderData', $orderArray);
 
-		self::$instance = $order;
+		$this->instance = $order;
 	}
 
 	public function getOrderItems()
@@ -144,7 +147,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 	public function getOrderData()
 	{
-		self::orderBy(self::getorderBy());
+		$this->setOrder($this->getsetOrder());
 		
 		return $this->session->get('orderData');
 	}
@@ -159,7 +162,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		}
 		else
 		{
-			$order = self::getorderBy();
+			$order = $this->getsetOrder();
 			if ($order->shippingAddress)
 			{
 				return $order->shippingAddress;
@@ -181,7 +184,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 			}
 		}
 
-		return self::getDefaultEstimateAddress();
+		return $this->getDefaultEstimateAddress();
 	}
 
 	public function getDefaultEstimateAddress()
@@ -200,7 +203,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 	public function setEstimateAddress(UserAddress $address)
 	{
-		$order = self::getorderBy();
+		$order = $this->getsetOrder();
 		$estimateAddress = clone $address;
 		$estimateAddress->removeSpecification();
 		
@@ -213,7 +216,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		$order->getShipments();
 
 		$order->save();
-		self::orderBy($order);
+		$this->setOrder($order);
 	}
 }
 

@@ -1,5 +1,6 @@
 <?php
 
+namespace user;
 
 /**
  * Customer billing or shipping address
@@ -7,30 +8,29 @@
  * @package application/model/user
  * @author Integry Systems <http://integry.com>
  */
-class UserAddress extends ActiveRecordModel implements EavAble
+class UserAddress extends \ActiveRecordModel implements \eav\EavAble
 {
-	/**
-	 * Define database schema
-	 */
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+//	public $stateID", "State", "ID", 'State;
+	public $eavObject;
+	public $firstName;
+	public $lastName;
+	public $companyName;
+	public $address1;
+	public $address2;
+	public $city;
+	public $stateName;
+	public $postalCode;
+	public $countryID;
+	public $phone;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
+		$cascade = array(
+                'action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            );
 
-
-		public $ID;
-		public $stateID", "State", "ID", 'State;
-		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-		public $firstName;
-		public $lastName;
-		public $companyName;
-		public $address1;
-		public $address2;
-		public $city;
-		public $stateName;
-		public $postalCode;
-		public $countryID;
-		public $phone;
-		$schema->registerAutoReference('stateID');
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => $cascade, 'alias' => 'EavObject'));
 	}
 
 	public static function getNewInstance()
@@ -41,15 +41,15 @@ class UserAddress extends ActiveRecordModel implements EavAble
 	public static function getNewInstanceByTransaction(TransactionDetails $details)
 	{
 		$instance = self::getNewInstance();
-		$instance->firstName = $details->firstName);
-		$instance->lastName = $details->lastName);
-		$instance->companyName = $details->companyName);
-		$instance->address1 = $details->address);
-		$instance->city = $details->city);
-		$instance->stateName = $details->state);
-		$instance->postalCode = $details->postalCode);
-		$instance->countryID = $details->country);
-		$instance->phone = $details->phone);
+		$instance->firstName = $details->firstName;
+		$instance->lastName = $details->lastName;
+		$instance->companyName = $details->companyName;
+		$instance->address1 = $details->address;
+		$instance->city = $details->city;
+		$instance->stateName = $details->state;
+		$instance->postalCode = $details->postalCode;
+		$instance->countryID = $details->country;
+		$instance->phone = $details->phone;
 		return $instance;
 	}
 
@@ -116,13 +116,13 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		if ($request->get($prefix . 'stateID'))
 		{
-			$this->state = State::getInstanceByID((int)$request->get($prefix . 'stateID'), true));
-			$this->stateName = null);
+			$this->state = State::getInstanceByID((int)$request->get($prefix . 'stateID'), true);
+			$this->stateName = null;
 		}
 		else if ($request->has($prefix . 'stateName'))
 		{
-			$this->stateName = $request->get($prefix . 'stateName'));
-			$this->state = null);
+			$this->stateName = $request->get($prefix . 'stateName');
+			$this->state = null;
 		}
 	}
 
@@ -147,13 +147,8 @@ class UserAddress extends ActiveRecordModel implements EavAble
 
 		if ($this->serializedState)
 		{
-			$this->state = State::getInstanceByID($this->serializedState, true));
+			$this->state = State::getInstanceByID($this->serializedState, true);
 		}
-	}
-
-	public function __destruct()
-	{
-		parent::destruct(array('stateID'));
 	}
 }
 ?>

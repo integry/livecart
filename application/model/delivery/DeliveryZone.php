@@ -1,5 +1,6 @@
 <?php
 
+namespace delivery;
 
 /**
  * Delivery zones are used to classify shipping locations, which allows to define different
@@ -16,7 +17,7 @@
  * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
-class DeliveryZone extends MultilingualObject
+class DeliveryZone extends \ActiveRecordModel
 {
 	const BOTH_RATES = 0;
 	const TAX_RATES = 1;
@@ -26,54 +27,23 @@ class DeliveryZone extends MultilingualObject
 
 	private $taxRates = null;
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("DeliveryZone");
+	public $ID;
+	public $name;
+	public $isEnabled;
+	public $isFreeShipping;
+	public $isRealTimeDisabled;
+	public $type;
 
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARText::instance()));
-		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
-		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
-		$schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
-		$schema->registerField(new ARField("type", ARInteger::instance(1)));
+	public function initialize()
+	{
+        $this->hasMany('ID', 'tax\TaxRate', 'deliveryZoneID', array('alias' => 'TaxRates'));
 	}
 
 	/*####################  Static method implementations ####################*/
 
-	/**
-	 * @return DeliveryZone
-	 */
-	public static function getNewInstance()
-	{
-	  	return new self();
-	}
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 *
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return DeliveryZone
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		if ((0 == $recordID) && $loadRecordData)
-		{
-			return self::getDefaultZoneInstance();
-		}
-		else
-		{
-			return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-		}
-	}
-
 	public function isDefault()
 	{
-		return 0 == $this->getID();
+		return 1 == $this->getID();
 	}
 
 	public function isTaxIncludedInPrice()
@@ -83,8 +53,8 @@ class DeliveryZone extends MultilingualObject
 
 	public function hasSameTaxRatesAsDefaultZone()
 	{
-		$defaultZoneRates = self::getDefaultZoneInstance()->getTaxRates();
-		$ownRates = $this->getTaxRates();
+		$defaultZoneRates = self::getDefaultZoneInstance()->taxRates;
+		$ownRates = $this->taxRates;
 
 		if (!$ownRates->count() || !$defaultZoneRates->count())
 		{
@@ -162,10 +132,6 @@ class DeliveryZone extends MultilingualObject
 
 	public static function getAllZonesByAddress(UserAddress $address, $type = 0)
 	{
-		if (!$address->isLoaded())
-		{
-			$address->load();
-		}
 		$zones = array();
 		// get zones by state
 		if ($address->state)
@@ -233,7 +199,7 @@ class DeliveryZone extends MultilingualObject
 	 */
 	public static function getDefaultZoneInstance()
 	{
-		return self::getInstanceById(0);
+		return self::getInstanceById(1);
 	}
 
 	/*####################  Get related objects ####################*/
@@ -386,20 +352,6 @@ class DeliveryZone extends MultilingualObject
 		}
 
 		return $defined;
-	}
-
-	/**
-	 *
-	 *	@return ARSet
-	 */
-	public function getTaxRates($includeDisabled = true, $loadReferencedRecords = array('Tax'))
-	{
-		if (!$this->taxRates)
-		{
-			$this->taxRates = TaxRate::getRecordSetByDeliveryZone($this, $loadReferencedRecords);
-		}
-
-		return $this->taxRates;
 	}
 
 	/**

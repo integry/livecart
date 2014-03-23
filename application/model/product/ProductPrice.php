@@ -2,6 +2,8 @@
 
 namespace product;
 
+use \order\OrderedItem;
+
 /**
  * Product price class. Prices can be entered in different currencies.
  * Each instance of ProductPrice determines product price in a particular currency.

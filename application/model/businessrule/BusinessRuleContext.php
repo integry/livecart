@@ -8,7 +8,7 @@ namespace businessrule;
  * @author Integry Systems
  * @package application/model/businessrule
  */
-class BusinessRuleContext
+class BusinessRuleContext extends \Phalcon\DI\Injectable
 {
 	private $order;
 
@@ -20,7 +20,12 @@ class BusinessRuleContext
 
 	private $messages = array();
 
-	public function orderBy(BusinessRuleOrderInterface $order)
+	public function __construct(\Phalcon\DI\FactoryDefault $di)
+	{
+		$this->setDI($di);
+	}
+
+	public function setOrder(BusinessRuleOrderInterface $order)
 	{
 		$this->order = $order;
 	}

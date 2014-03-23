@@ -37,9 +37,7 @@ class Shipment extends \ActiveRecordModel
 	const WITHOUT_TAXES = false;
 
 	public $ID;
-	public $orderID;
 	//public $shippingServiceID", "ShippingService", "ID", "ShippingService;
-	//public $shippingAddressID", "shippingAddress", "ID", 'UserAddress;
 
 	public $trackingCode;
 	public $dateShipped;
@@ -52,6 +50,8 @@ class Shipment extends \ActiveRecordModel
 	public function initialize()
 	{
 		$this->belongsTo('orderID', 'order\CustomerOrder', 'ID', array('foreignKey' => true, 'alias' => 'CustomerOrder'));
+		$this->hasOne('shippingAddressID', 'user\UserAddress', 'ID', array('alias' => 'ShippingAddress'));
+		$this->hasMany('ID', '\order\OrderedItem', 'customerOrderID', array('alias' => 'OrderedItems'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -717,11 +717,6 @@ class Shipment extends \ActiveRecordModel
 
 	}
 
-	protected function afterUpdate()
-	{
-		$this->getCustomerorderBy()->save();
-	}
-
 	/*####################  Data array transformation ####################*/
 
 	public function toArray()
@@ -1010,15 +1005,6 @@ class Shipment extends \ActiveRecordModel
 		{
 			$this->addItem(clone $item);
 		}
-	}
-
-	public function __destruct()
-	{
-		$this->taxes = null;
-		$this->fixedTaxes = null;
-		$this->items = null;
-
-		parent::__destruct();
 	}
 }
 
