@@ -74,11 +74,17 @@ a { cursor: pointer; }
 .tree
 {
 	overflow: auto;
+	padding-top: 10px;
 }
 
 .tree ul
 {
 	margin-left: 20px;
+}
+
+.tree ul:first-child
+{
+	margin-left: 10px;
 }
 
 .tree .minimized-true ul
@@ -96,4 +102,19 @@ a { cursor: pointer; }
 	display: inline-block;
 	cursor: pointer;
 	white-space: nowrap;
+}
+
+/* vertical menu */
+.verticalMenu
+{
+	margin-top: 10px;
+	text-align: center;
+}
+
+.verticalMenu .btn
+{
+	display: inline-block;
+	width: 75%;
+	margin-bottom: 10px;
+	text-align: left;
 }

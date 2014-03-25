@@ -3,10 +3,16 @@
 	<div class="treeContainer col-sm-3">
 		[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 
-		<ul class="verticalMenu">
-			<li id="addMenu" class="addTreeNode"><a ng-click="add()">{t _add_new}</a></li>
-			<li id="removeMenu" ng-show="activeID" class="removeTreeNode"><a ng-click="remove()">{t _remove}</a></li>
-		</ul>
+		<div class="verticalMenu">
+			<a class="btn btn-primary" ng-click="add()">
+				<span class="glyphicon glyphicon-plus-sign"></span>
+				{t _add_new}
+			</a>
+			<a class="btn btn-danger" ng-show="activeID" ng-click="remove()">
+				<span class="glyphicon glyphicon-remove-sign"></span>
+				{t _remove}
+			</a>
+		</div>
 	</div>
 
 	<div class="treeManagerContainer col-sm-9">

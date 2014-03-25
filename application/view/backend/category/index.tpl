@@ -3,19 +3,17 @@
 		<div class="treeContainer col-sm-3">
 			[[ partial('block/backend/tree.tpl', ['sortable': true]) ]]
 			
-			<ul id="categoryBrowserActions" class="verticalMenu">
-				<li class="addTreeNode">
-					<a ng-click="add(activeID)">
-						{t _create_subcategory}
-					</a>
-				</li>
+			<div class="verticalMenu">
+				<a class="btn btn-primary" ng-click="add(activeID)">
+					<span class="glyphicon glyphicon-plus-sign"></span>
+					{t _create_subcategory}
+				</a>
 
-				<li class="removeTreeNode" ng-show="activeID > 1">
-					<a ng-click="remove()">
-						{t _remove_category}
-					</a>
-				</li>
-			</ul>
+				<a class="btn btn-danger" ng-click="remove()" ng-show="activeID > 1">
+					<span class="glyphicon glyphicon-remove-sign"></span>
+					{t _remove_category}
+				</a>
+			</div>
 
 		</div>
 
