@@ -23,7 +23,7 @@
 	{% set validator = global('validator') %}
 	{% if validator %}
 		{% for val in validator.getValidators(field) %}
-			<div ng-show="isSubmitted && form.[[field]].$error.[[ validator.getAngularErrType(val) ]]" class="text-danger">[[ val.getOption('message') ]]</div>
+			<div ng-show="isSubmitted && form['[[field]]'].$error.[[ validator.getAngularErrType(val) ]]" class="text-danger">[[ val.getOption('message') ]]</div>
 		{% endfor %}
 
 		{% for error in validator.getFieldMessages(field) %}

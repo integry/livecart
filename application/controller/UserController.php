@@ -1417,44 +1417,45 @@ class UserController extends FrontendController
 		$validator->add('email', new \helper\check\IsUniqueEmailCheck(array('message' => $emailErr)));
 	}
 
-	public function validateAddressAction(\Phalcon\Validation $validator, $fieldPrefix = '', $orCheck = false)
+	public function validateAddress(\Phalcon\Validation $validator, $fieldPrefix = '')
 	{
-		$this->validateName($validator, $fieldPrefix, $orCheck);
+		$this->validateName($validator, $fieldPrefix);
 
-		$fields = $checks = array();
+		$checks = array();
 
 		$displayedFields = $this->config->get('USER_FIELDS');
 
 		if ($this->config->get('REQUIRE_PHONE') && !empty($displayedFields['PHONE']))
 		{
-			$fields[] = $fieldPrefix . 'phone';
-			$checks[] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_phone')));
+			$checks['phone'] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_phone')));
 		}
 
 		if (!empty($displayedFields['ADDRESS1']))
 		{
-			$fields[] = $fieldPrefix . 'address1';
-			$checks[] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_address')));
+			$checks['address1'] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_address')));
 		}
 
 		if (!empty($displayedFields['CITY']))
 		{
-			$fields[] = $fieldPrefix . 'city';
-			$checks[] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_city')));
+			$checks['city'] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_city')));
 		}
 
 		if (!empty($displayedFields['COUNTRY']))
 		{
-			$fields[] = $fieldPrefix . 'country';
-			$checks[] = new Validator\PresenceOf(array('message' => $this->translate('_err_select_country')));
+			$checks['country'] = new Validator\PresenceOf(array('message' => $this->translate('_err_select_country')));
 		}
 
 		if (!empty($displayedFields['POSTALCODE']))
 		{
-			$fields[] = $fieldPrefix . 'postalCode';
-			$checks[] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_zip')));
+			$checks['postalCode'] = new Validator\PresenceOf(array('message' => $this->translate('_err_enter_zip')));
+		}
+		
+		foreach ($checks as $field => $check)
+		{
+			$validator->add($fieldPrefix . $field, $check);
 		}
 
+/*
 		// custom field validation
 		$tempVal = $this->getValidator('tempVal', $this->request);
 		UserAddress::getNewInstance()->getSpecification()->setValidation($tempVal, null, $fieldPrefix);
@@ -1490,6 +1491,7 @@ class UserController extends FrontendController
 			$stateCheck = new OrCheck($fieldList, $checkList, $this->request);
 			$validator->add($fieldPrefix . 'state_select', $stateCheck);
 		}
+		*/
 	}
 
 	private function validatePassword(\Phalcon\Validation $validator)

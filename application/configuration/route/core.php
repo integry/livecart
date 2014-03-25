@@ -13,6 +13,12 @@ $router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage"
 //$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
 $router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
 
+$router->add('/backend', array(
+	'module' => 'backend',
+	'controller' => 'index',
+	'action' => 'index'
+));
+
 $router->add('/:controller/:action/{[0-9]+}', array(
 	'controller' => 1,
 	'action' => 2,
@@ -41,12 +47,6 @@ $router->add('/backend/:controller/:action', array(
 $router->add('/backend/:controller', array(
 	'module' => 'backend',
 	'controller' => 1
-));
-
-$router->add('/backend', array(
-	'module' => 'backend',
-	'controller' => 'index',
-	'action' => 'index'
 ));
 
 $router->add('/{slug:[a-zA-Z0-9\-]+}-{id:[0-9]+}', array(

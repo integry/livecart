@@ -1,11 +1,11 @@
-{% if fields.FIRSTNAME %}
-	[[ textfld('`prefix`firstName', '_your_first_name') ]]
+{% if !empty(fields['FIRSTNAME']) %}
+	[[ textfld(prefix ~ 'firstName', '_your_first_name') ]]
 {% endif %}
 
-{% if fields.LASTNAME %}
-	[[ textfld('`prefix`lastName', '_your_last_name') ]]
+{% if !empty(fields['LASTNAME']) %}
+	[[ textfld(prefix ~ 'lastName', '_your_last_name') ]]
 {% endif %}
 
-{% if fields.COMPANYNAME %}
-	[[ textfld('`prefix`companyName', '_company_name') ]]
+{% if !empty(fields['COMPANYNAME']) %}
+	[[ textfld(prefix ~ 'companyName', '_company_name') ]]
 {% endif %}

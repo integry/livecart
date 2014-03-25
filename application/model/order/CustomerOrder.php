@@ -82,7 +82,6 @@ class CustomerOrder extends \ActiveRecordModel implements \eav\EavAble, \busines
 	public $status;
 	public $shipping;
 	public $rebillsLeft;
-	//public $orderedItems = array();
 	
 	public function initialize()
 	{
@@ -115,14 +114,6 @@ class CustomerOrder extends \ActiveRecordModel implements \eav\EavAble, \busines
 	public static function getInstanceByInvoiceNumber($id, $loadReferencedRecords = false)
 	{
 		return self::getRecordSet(select(eq(f('CustomerOrder.invoiceNumber'), $id)), $loadReferencedRecords)->shift();
-	}
-
-	/**
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/

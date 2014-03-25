@@ -19,7 +19,7 @@ abstract class ControllerBackend extends ControllerBase
 		$user = $this->sessionUser->getUser();
 		if ((!$user || !$user->getID() || !$user->userGroupID)  && !($this instanceof SessionController))
 		{
-			header('Location: ' . $this->url->get('user/logout'));
+			header('Location: ' . $this->url->get('backend/session'));
 			die('');
 		}
 		

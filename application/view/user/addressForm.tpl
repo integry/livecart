@@ -1,21 +1,8 @@
-{assign var="fields" value=config('USER_FIELDS')}
+{% set fields = config('USER_FIELDS') %}
+{% if empty(prefix) %}{% set prefix = '' %}{% endif %}
 
-<div class="registerColumn">
-	<fieldset>
-		<legend>{t _your_personal_details}</legend>
-		[[ partial("user/block/nameFields.tpl") ]]
-		[[ partial("user/block/phoneField.tpl") ]]
-	</fieldset>
-</div>
+[[ partial("user/block/nameFields.tpl", ['fields': fields, 'prefix': prefix]) ]]
+[[ partial("user/block/phoneField.tpl", ['fields': fields, 'prefix': prefix]) ]]
+[[ partial("user/block/addressFields.tpl", ['fields': fields, 'prefix': prefix]) ]]
 
-<div class="registerColumn">
-	<fieldset>
-		<legend>{t _your_address}</legend>
-		[[ partial("user/block/addressFields.tpl") ]]
-		[[ partial('block/eav/fields.tpl', ['item': address, 'eavPrefix': prefix]) ]]
-	</fieldset>
-</div>
-
-{% if !empty(return) %}
-	<input type="hidden" name="return" value="[[return]]" />
-{% endif %}
+{# [[ partial('block/eav/fields.tpl', ['item': address, 'eavPrefix': prefix]) ]] #}

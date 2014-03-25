@@ -1,4 +1,4 @@
-.todo { border: 1px dashed red; }
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
 .valign * { vertical-align: middle; }
 

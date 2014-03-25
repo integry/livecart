@@ -178,6 +178,7 @@ backendComponents.directive('myForm', function($compile, $timeout)
 			
             scope.$on('submit', function() 
             {
+                console.log('sadasd');
                 setTimeout(function() 
                 {
                 	if (!element.attr('direct-submit') && element.attr('ng-submit'))
@@ -211,6 +212,7 @@ backendComponents.directive('myForm', function($compile, $timeout)
 			
 			scope.markSubmitted = function()
 			{
+				console.log('test');
 				scope.customErrors = {};
 				scope.isSubmitted = 1;
 				

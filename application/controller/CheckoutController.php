@@ -72,7 +72,7 @@ class CheckoutController extends FrontendController
 		$this->loadLanguageFile('User');
 
 		parent::initialize();
-		$this->addBreadCrumb($this->translate('_checkout'), $this->url->get('order/index'), true));
+		$this->addBreadCrumb($this->translate('_checkout'), $this->url->get('order/index'), true);
 
 		$action = $this->router->getActionName();
 
@@ -81,21 +81,21 @@ class CheckoutController extends FrontendController
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_select_addresses'), $this->url->get('checkout/selectAddress'), true));
+		$this->addBreadCrumb($this->translate('_select_addresses'), $this->url->get('checkout/selectAddress'), true);
 
 		if ('selectAddress' == $action)
 		{
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_shipping'), $this->url->get('checkout/shipping'), true));
+		$this->addBreadCrumb($this->translate('_shipping'), $this->url->get('checkout/shipping'), true);
 
 		if ('shipping' == $action)
 		{
 			return false;
 		}
 
-		$this->addBreadCrumb($this->translate('_pay'), $this->url->get('checkout/pay'), true));
+		$this->addBreadCrumb($this->translate('_pay'), $this->url->get('checkout/pay'), true);
 	}
 
 	/**
@@ -103,15 +103,12 @@ class CheckoutController extends FrontendController
 	 */
 	public function indexAction()
 	{
-		if ($this->user->isLoggedIn())
-		{
-			// try to go to payment page
-			return $this->response->redirect('checkout/pay');
-		}
-		else
-		{
-			return $this->response->redirect('user/checkout');
-		}
+		$this->setValidator($this->buildValidator());
+	}
+	
+	public function popupAction()
+	{
+		
 	}
 
 	/**
@@ -125,8 +122,8 @@ class CheckoutController extends FrontendController
 		$handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
 		$handler->orderBy($this->order);
 
-		$returnUrl = $this->router->createFullUrl($this->url->get('checkout/expressReturn', 'id' => $class), true));
-		$cancelUrl = $this->router->createFullUrl($this->url->get('order'), true));
+		//$returnUrl = $this->router->createFullUrl($this->url->get('checkout/expressReturn', 'id' => $class), true));
+		//$cancelUrl = $this->router->createFullUrl($this->url->get('order'), true));
 		$url = $handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
 		$this->order->setCheckoutStep(CustomerOrder::CHECKOUT_PAY);
 
@@ -1100,10 +1097,10 @@ class CheckoutController extends FrontendController
 		$this->order = $order;
 
 		$handler = $this->application->getPaymentHandler($class, $this->getTransaction());
-		$handler->setNotifyUrl($this->router->createFullUrl($this->url->get('checkout/notify', 'id' => $class, 'query' => $notifyParams))));
-		$handler->setReturnUrl($this->router->createFullUrl($this->url->get('checkout/completeExternal', 'id' => $order->getID()))));
-		$handler->setCancelUrl($this->router->createFullUrl($this->url->get('checkout/pay')));
-		$handler->setSiteUrl($this->router->createFullUrl($this->url->get('index/index')));
+//		$handler->setNotifyUrl($this->router->createFullUrl($this->url->get('checkout/notify', 'id' => $class, 'query' => $notifyParams))));
+//		$handler->setReturnUrl($this->router->createFullUrl($this->url->get('checkout/completeExternal', 'id' => $order->getID()))));
+//		$handler->setCancelUrl($this->router->createFullUrl($this->url->get('checkout/pay')));
+//		$handler->setSiteUrl($this->router->createFullUrl($this->url->get('index/index')));
 
 		// transaction information is not return back online, so the order is finalized right away
 		if (!$handler->isNotify())
@@ -1174,7 +1171,7 @@ class CheckoutController extends FrontendController
 			$returnUrl = $handler->getReturnUrlFromRequest($this->request->toArray());
 			if (!$returnUrl)
 			{
-				$returnUrl = $this->url->get('checkout/completed', 'query' => array('id' => $this->order->getID())));
+				//$returnUrl = $this->url->get('checkout/completed', 'query' => array('id' => $this->order->getID())));
 				$returnUrl = $this->router->createFullUrl($returnUrl);
 			}
 
@@ -1217,7 +1214,7 @@ class CheckoutController extends FrontendController
 		$order->loadAll();
 
 		$this->set('order', $order->toArray());
-		$this->set('url', $this->url->get('user/viewOrder', 'id' => $this->session->get('completedOrderID')), true));
+		//$this->set('url', $this->url->get('user/viewOrder', 'id' => $this->session->get('completedOrderID')), true));
 
 		if (!$order->isPaid)
 		{
@@ -1533,19 +1530,20 @@ class CheckoutController extends FrontendController
 		return !$this->config->get('REQUIRE_SAME_ADDRESS') && $this->order->isShippingRequired();
 	}
 
+	protected function buildValidator()
+	{
+		$validator = $this->getValidator('checkout');
+		
+		$this->validateAddress($validator, 'BillingAddress.');
+		$this->validateAddress($validator, 'ShippingAddress.');
+		
+		return $validator;
+	}
+	
 	protected function validateAddress(\Phalcon\Validation $validator, $prefix)
 	{
-		$someValidator = $this->getValidator('foo', $this->request);
-				$con = new UserController($this->application);
-		$con->validateAddress($someValidator, $prefix, 'shipping_' == $prefix);
-
-		foreach ($someValidator->getValidatorVars() as $field => $var)
-		{
-			foreach ($var->getChecks() as $check)
-			{
-				$validator->add($field, new OrCheck(array($field, substr($prefix, 0, -1) . 'Address'), array($check, new Validator\PresenceOf()), $this->request));
-			}
-		}
+		$con = new UserController($this->getDI());
+		$con->validateAddress($validator, $prefix, 'shipping_' == $prefix);
 	}
 
 	public function buildCreditCardFormAction(CreditCardPayment $ccHandler)
@@ -1588,6 +1586,7 @@ class CheckoutController extends FrontendController
 }
 
 
+/*
 class CheckoutBillingAddressCheckCondition extends CheckCondition
 {
 	function isSatisfied()
@@ -1604,5 +1603,4 @@ class CheckoutShippingAddressCheckCondition extends CheckCondition
 				!$this->request->get('sameAsBilling');
 	}
 }
-
-?>
+*/
