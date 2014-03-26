@@ -36,7 +36,8 @@ class DeliveryZone extends \ActiveRecordModel
 
 	public function initialize()
 	{
-        $this->hasMany('ID', 'tax\TaxRate', 'deliveryZoneID', array('alias' => 'TaxRates'));
+		$this->hasMany('ID', 'tax\TaxRate', 'deliveryZoneID', array('alias' => 'TaxRates'));
+		$this->hasMany('ID', 'delivery\ShippingService', 'deliveryZoneID', array('alias' => 'ShippingServices'));
 	}
 
 	/*####################  Static method implementations ####################*/

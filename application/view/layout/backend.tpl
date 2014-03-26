@@ -26,6 +26,7 @@
 		<script src="javascript/library/angular/ng-grid-scroller/ng-grid-select-all.js"></script>
 		
 		<script src="javascript/backend/Backend.js"></script>
+		<script src="javascript/backend/DeliveryZone.js"></script>
 		<script src="javascript/backend/Category.js"></script>
 		<script src="javascript/backend/Product.js"></script>
 		<script src="javascript/backend/StaticPage.js"></script>
@@ -50,6 +51,7 @@
 		<link href="stylesheet/backend/Backend.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Eav.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Product.css" rel="stylesheet"></link>
+		<link href="stylesheet/backend/DeliveryZone.css" rel="stylesheet"></link>
 
 		{% block head %}{% endblock %}
 
@@ -87,6 +89,10 @@
 
 			  <li>
 			  	<a ng-click="setPage('staticPage')">Pages</a>
+			  </li>
+
+			  <li>
+			  	<a ng-click="setPage('zone')">Shipping & Taxes</a>
 			  </li>
 			</ul>
 

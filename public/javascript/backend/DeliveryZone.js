@@ -1,7 +1,173 @@
 /**
  *	@author Integry Systems
  */
+function DeliveryZoneController($scope, $http, $modal)
+{
+	$scope.setZones = function(zones)
+	{
+		$scope.zones = zones;
+	};
+	
+	$scope.setCountries = function(countries)
+	{
+		$scope.countries = countries;
+	};
+	
+	$scope.open = function(id)
+	{
+		$modal.open({templateUrl: Router.createUrl('backend/deliveryzone', 'edit'), 
+					controller: 'EditDeliveryZoneController',
+					resolve: {
+							id: function() { return id },
+							 }
+							});
+	};
 
+	$scope.add = function()
+	{
+		if (!$scope.pages.length || $scope.pages[0].ID)
+		{
+			$scope.pages.splice(0, 0, {id: null, children: []});
+		}
+
+		$scope.activeID = null;
+	};
+
+	$scope.remove = function()
+	{
+		if (confirm($scope.getTranslation('_del_conf')))
+		{
+			$http.post(Router.createUrl('backend/staticpage', 'delete', {id: $scope.activeID})).success(success('The page has been removed'));
+			$scope.tree.remove($scope.activeID);
+			$scope.activeID = null;
+		}
+	};
+};
+
+app.controller('EditDeliveryZoneController', function ($scope, $http, $modal, id)
+{
+	$scope.id = id;
+	
+	$http.get(Router.createUrl('backend/deliveryzone', 'get', {id: id})).
+		success(function(data)
+		{
+			$scope.vals = data;
+		});
+		
+	$scope.save = function(form)
+	{
+		if (form.$invalid)
+		{
+			return;
+		}
+		
+		$http.post(Router.createUrl('backend/product', 'update'), $scope.vals).success(function(res)
+		{
+			success('The product has been saved')();
+			$scope.vals = res;
+			$scope.id = res.ID;
+		});
+	}
+});
+
+app.controller('ShippingServiceController', function ($scope, $http, $resource, $modal)
+{
+    $scope.resource = $resource('../backend/shippingservice/:verb/:id', 
+    	{id: $scope.id, verb: '@verb'}, 
+    	{
+    		query:  {method:'POST', isArray: false, params: { verb: 'lists' }},
+    		mass:  {method:'POST', params: { verb: 'mass' }}
+    	}
+    );
+
+	$scope.add = function(id)
+	{
+		return $scope.edit(null, $scope.id);
+	};
+	
+	$scope.edit = function(id, zoneID)
+	{
+		$modal.open({templateUrl: Router.createUrl('backend/shippingservice', 'edit'), 
+					controller: 'EditShippingServiceController',
+					resolve: {
+							id: function() { return id },
+							zoneID: function() { return zoneID } 
+							}
+							});
+	};
+});
+
+app.controller('EditShippingServiceController', function ($scope, $http, $modal, id, zoneID, $timeout)
+{
+	$scope.id = id;
+	
+	$scope.vals = {rates: []};
+	
+	$http.get(Router.createUrl('backend/shippingservice', 'get', {id: id, zoneID: zoneID})).
+		success(function(data)
+		{
+			$scope.vals = data;
+			if (zoneID)
+			{
+				$scope.vals.deliveryZoneID = zoneID;
+			}
+		});
+		
+	$scope.save = function(form)
+	{
+		if (form.$invalid)
+		{
+			return;
+		}
+		
+		$http.post(Router.createUrl('backend/shippingservice', 'update'), $scope.vals).success(function(res)
+		{
+			success('Shipping rates have been saved')();
+			$scope.vals = res;
+			$scope.id = res.ID;
+		});
+	};
+	
+	$scope.isWeight = function()
+	{
+		return $scope.vals.rangeType == 0;
+	};
+
+	$scope.$watch('vals.rates', function()
+	{
+		if (!$scope.vals.rates)
+		{
+			$scope.vals.rates = [];
+		}
+		
+		var field = $scope.isWeight() ? 'weightRangeEnd' : 'subtotalRangeEnd';
+		
+		var filtered = _.filter($scope.vals.rates, function(value) { return value[field] != ''; });
+		filtered = _.sortBy(filtered, field);
+		$scope.vals.rates = filtered;
+			
+		if (filtered.length == $scope.vals.rates.length - 1)
+		{
+			return;
+		}
+		
+		var newRate = {};
+		newRate[field] = '';
+		$scope.vals.rates = filtered;
+		$scope.vals.rates.push(newRate);
+	}, true);
+	
+	$scope.deleteRate = function(rate)
+	{
+		var i = $scope.vals.rates.indexOf(rate);
+		if (i > -1)
+		{
+			$scope.vals.rates.splice(i, 1);
+		}
+	};
+});
+
+/*
 Backend.DeliveryZone = Class.create();
 Backend.DeliveryZone.prototype =
 {
@@ -57,7 +223,8 @@ Backend.DeliveryZone.prototype =
 			// items for delivery and tax zones should be equal, because any of them can be converted to type 'both zones'.
 			for(index=0; index < len; index++)
 			{
-				this.updateTreeBrowserNodeVisibility(index, zones[1]['items'][index].type, /*fix tree lines only when adding last item */ index+1 == len, true);
+				//fix tree lines only when adding last item 
+				this.updateTreeBrowserNodeVisibility(index, zones[1]['items'][index].type,  index+1 == len, true);
 			}
 		}
 
@@ -910,13 +1077,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 		// fix treeBrowser selection, if selected item is about to be become hidden
 		var parentId = Backend.DeliveryZone.prototype.treeBrowser.getParentId(Backend.DeliveryZone.prototype.selectedItemId);
 
-		if (/* selected delivery zones child  && in type dropdown selected tax zone */
+		//selected delivery zones child  && in type dropdown selected tax zone
+		if (
 			parentId == -2 && this.nodes.type.value == 1)
 		{
 			Backend.DeliveryZone.prototype.selectedItemId = Backend.DeliveryZone.prototype.getTreeBrowserItemIdInSecondLeaf(Backend.DeliveryZone.prototype.activeZone);
 			Backend.DeliveryZone.prototype.treeBrowser.selectItem(Backend.DeliveryZone.prototype.selectedItemId);
 		}
-		else if (/* selected tax zones child  && in type dropdown selected delivery zone */
+		//selected tax zones child  && in type dropdown selected delivery zone 
+		else if (
 				parentId == -3 && this.nodes.type.value == 2)
 		{
 			Backend.DeliveryZone.prototype.selectedItemId = Backend.DeliveryZone.prototype.selectedItemId.split("_").pop();
@@ -1680,7 +1849,8 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		);
 	},
 
-	updateRangeStartValue: function(node /* parent of cell where to update start value (!not from where) */)
+	//parent of cell where to update start value (!not from where)
+	updateRangeStartValue: function(node )
 	{
 		node = $(node);
 		if (node.hasClassName("rangeStart") == false)
@@ -2351,3 +2521,4 @@ Backend.DeliveryZone.WeightTable.prototype = {
 		}
 	}
 };
+*/

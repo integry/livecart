@@ -7,14 +7,15 @@
  * @package application/controller/backend
  * @author Integry Systems
  */
-class ErrController extends BackendController
+class ErrController extends ControllerBackend
 {
 	public function indexAction()
 	{
-
+throw new Exception('whats up?');
+var_dump('error', $this->request->get('id'));exit;
 		$this->set('id', $this->request->get('id'));
 		$this->set('ajax', $this->request->get('ajax'));
-		$this->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
+		//$this->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
 
 	}
 

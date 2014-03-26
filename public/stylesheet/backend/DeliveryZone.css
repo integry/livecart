@@ -1,3 +1,9 @@
+.modal-dialog.shippingservice-edit
+{
+	width: 90%;
+}
+
+/*
 .containerTableStyle, #deliveryZoneBrowser
 {
     height: 250px;
@@ -86,7 +92,6 @@ ul.menu li.addNewRate
     padding-left: 0;
 }
 
-/* Weight range */
 .shippingService_weightRange
 {
    position: relative !important;
@@ -221,7 +226,6 @@ li.testAdress a
 	margin-top: 3px;
 }
 
-/* TODO: fix all references in js and get rid of this workround */
 #shippingService_ratesList__
 {
 	display:none !important;
@@ -290,3 +294,5 @@ fieldset.container.multiSelect
 	display: inline-block;
 	vertical-align: top;
 }
+
+*/

@@ -17,9 +17,9 @@ class DeliveryZoneController extends ControllerBackend
 	public function indexAction()
 	{
 		$zones = array(
-			1 => array('id' => 1, 'title' => $this->translate('_default_zone')),
-			-2 => array('id' => -2, 'title' => $this->translate('_delivery_zones')),
-			-3 => array('id' => -3, 'title' => $this->translate('_tax_zones'))
+			array('id' => 1, 'title' => $this->translate('_default_zone')),
+			array('id' => -2, 'title' => $this->translate('_delivery_zones')),
+			array('id' => -3, 'title' => $this->translate('_tax_zones'))
 		);
 
 		$f = DeliveryZone::query();
@@ -29,19 +29,62 @@ class DeliveryZoneController extends ControllerBackend
 		{
 			if (1 == $zone['ID'])
 			{
-				continue;
+				$parent = 0;
+				$zone['name'] = $this->translate('_default_zone');
+			}
+			else
+			{
+				$parent = -2;
 			}
 
-			$zone['id'] = $zone['ID'];
-
-			$zones[-2]['children'][] =& $zone;
+			$zones[$parent]['children'][] = $zone;
 		}
 
 		$this->set('zones', $zones);
-		//$this->set('countryGroups', $this->locale->info()->getCountryGroups());
+		$this->set('countryGroups', $this->locale->info()->getCountryGroups());
 		//$this->set('testAddress', new Form(new \Phalcon\Validation('testAddress', $this->request)));
-		//$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
+		$this->set('countries', array_merge(array('' => ''), $this->application->getEnabledCountries()));
 		$this->loadLanguageFile('backend/ShippingService');
+	}
+	
+	public function editAction()
+	{
+		
+	}
+	
+	public function settingsAction()
+	{
+		
+	}
+	
+	public function getAction()
+	{
+		$zone = DeliveryZone::getInstanceByID($this->request->getParam('id'));
+		echo json_encode($zone->toArray());
+	}
+
+	public function shippingServicesAction()
+	{
+		$zone = DeliveryZone::getInstanceByID($this->request->getParam('id'));
+		echo json_encode($zone->toArray());
+	}
+
+	/**
+	 * @role update
+	 */
+	public function saveAction()
+	{
+		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
+		$zone->name->set($this->request->get('name'));
+		$zone->type->set((int)$this->request->get('type'));
+
+		$zone->isEnabled->set((int)$this->request->get('isEnabled'));
+		$zone->isFreeShipping->set((int)$this->request->get('isFreeShipping'));
+		$zone->isRealTimeDisabled->set((int)$this->request->get('isRealTimeDisabled'));
+
+		$zone->save();
+
+		return new JSONResponse(false, 'success');
 	}
 
 	public function countriesAndStatesAction()
@@ -79,7 +122,6 @@ class DeliveryZoneController extends ControllerBackend
 		$form->set('stateListCountry', $stateCountry);
 
 		$states = $this->getStates($deliveryZone, $stateCountry);
-
 
 		$this->set('form', $form);
 		$this->set('zoneID', $id);
@@ -171,24 +213,6 @@ class DeliveryZoneController extends ControllerBackend
 		$zone->save();
 
 		return new JSONResponse(array('zone' => $zone->toArray()), 'success', $this->translate('_new_delivery_zone_was_successfully_created'));
-	}
-
-	/**
-	 * @role update
-	 */
-	public function saveAction()
-	{
-		$zone = DeliveryZone::getInstanceByID((int)$this->getId());
-		$zone->name->set($this->request->get('name'));
-		$zone->type->set((int)$this->request->get('type'));
-
-		$zone->isEnabled->set((int)$this->request->get('isEnabled'));
-		$zone->isFreeShipping->set((int)$this->request->get('isFreeShipping'));
-		$zone->isRealTimeDisabled->set((int)$this->request->get('isRealTimeDisabled'));
-
-		$zone->save();
-
-		return new JSONResponse(false, 'success');
 	}
 
 	/**

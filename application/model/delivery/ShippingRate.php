@@ -1,5 +1,7 @@
 <?php
 
+namespace delivery;
+
 /**
  * Define rules for shipping cost calculation, which can be based on shipment weight, subtotal,
  * number of items, etc. Each ShippingRate entity defines one concrete shipping cost calculation
@@ -17,42 +19,25 @@
  * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
-class ShippingRate extends MultilingualObject
+class ShippingRate extends \ActiveRecordModel
 {
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $weightRangeStart;
+	public $weightRangeEnd;
+	public $subtotalRangeStart;
+	public $subtotalRangeEnd;
+	public $flatCharge;
+	public $perItemCharge;
+	public $subtotalPercentCharge;
+	public $perKgCharge;
+	public $perItemChargeClass;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("ShippingRate");
-
-		public $ID;
-		public $shippingServiceID;
-
-		public $weightRangeStart;
-		public $weightRangeEnd;
-		public $subtotalRangeStart;
-		public $subtotalRangeEnd;
-		public $flatCharge;
-		public $perItemCharge;
-		public $subtotalPercentCharge;
-		public $perKgCharge;
-		public $perItemChargeClass;
+		$this->belongsTo('shippingServiceID', 'delivery\ShippingService', 'ID', array('alias' => 'ShippingService'));
 	}
 
 	/*####################  Static method implementations ####################*/
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return ShippingRate
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
 
 	/**
 	 * Create new shipping rate instance
@@ -62,28 +47,12 @@ class ShippingRate extends MultilingualObject
 	 * @param float $rangeEnd Higher range limit
 	 * @return ShippingRate
 	 */
-	public static function getNewInstance(ShippingService $shippingService, $rangeStart, $rangeEnd)
+	public static function getNewInstance(ShippingService $shippingService)
 	{
 	  	$instance = new self();
 	  	$instance->shippingService = $shippingService;
 
-	  	$instance->setRangeStart($rangeStart);
-	  	$instance->setRangeEnd($rangeEnd);
-
 	  	return $instance;
-	}
-
-	/**
-	 * Load service rates record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Instance retrieval ####################*/
@@ -109,12 +78,12 @@ class ShippingRate extends MultilingualObject
 
 	public function setRangeStart($rangeStart)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart = $rangeStart) : $this->subtotalRangeStart = $rangeStart;
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart = $rangeStart : $this->subtotalRangeStart = $rangeStart;
 	}
 
 	public function setRangeEnd($rangeEnd)
 	{
-		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd = $rangeEnd) : $this->subtotalRangeEnd = $rangeEnd;
+		return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd = $rangeEnd : $this->subtotalRangeEnd = $rangeEnd;
 	}
 
 	public function getRangeStart()
@@ -129,18 +98,7 @@ class ShippingRate extends MultilingualObject
 
 	public function getRangeType()
 	{
-		if(!$this->isLoaded() && $this->isExistingRecord())
-		{
-
-		}
-
-		$service = $this->shippingService;
-		if(!$service->isLoaded())
-		{
-			$service->load();
-		}
-
-		return $service->rangeType;
+		return $this->shippingService->rangeType;
 	}
 
 	public function setClassItemCharge(ShippingClass $class, $charge)
@@ -151,14 +109,9 @@ class ShippingRate extends MultilingualObject
 	/**
 	 *  Get per item charge for particular item depending on its shipping class
 	 */
-	public function getItemCharge(OrderedItem $item)
+	public function getItemCharge(\order\OrderedItem $item)
 	{
 		$product = $item->getProduct()->getParent();
-
-		if (!$product->isLoaded())
-		{
-			$product->load();
-		}
 
 		$class = $product->shippingClass;
 		if (!$class)

@@ -1,5 +1,7 @@
 <?php
 
+namespace delivery;
+
 /**
  * Pre-defined shipping service plan, that is assigned to a particular DeliveryZone.
  * Each ShippingService entity can contain several ShippingRate entities to determine
@@ -11,45 +13,28 @@
  * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
-class ShippingService extends MultilingualObject implements EavAble
+class ShippingService extends \system\MultilingualObject implements \eav\EavAble
 {
 	const WEIGHT_BASED = 0;
 	const SUBTOTAL_BASED = 1;
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("ShippingService");
+	public $ID;
+	public $isFinal;
+	public $name;
+	public $position;
+	public $rangeType;
+	public $description;
+	public $deliveryTimeMinDays;
+	public $deliveryTimeMaxDays;
+	public $isLocalPickup;
 
-		public $ID;
-		public $deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone;
-		public $isFinal;
-		public $name;
-		public $position;
-		public $rangeType;
-		public $description;
-		public $deliveryTimeMinDays;
-		public $deliveryTimeMaxDays;
-		public $eavObjectID", "eavObject", "ID", 'EavObject', ARInteger::instance()), false);
-        public $isLocalPickup;
+	public function initialize()
+	{
+		$this->hasMany('ID', 'delivery\ShippingRate', 'shippingServiceID', array('alias' => 'ShippingRates'));
+		$this->belongsTo('deliveryZoneID', 'delivery\DeliveryZone', 'ID', array('alias' => 'DeliveryZone'));
 	}
 
 	/*####################  Static method implementations ####################*/
-
-	/**
-	 * Gets an existing record instance
-	 *
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return ShippingService
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
 
 	/**
 	 * Create new shipping service
@@ -59,30 +44,12 @@ class ShippingService extends MultilingualObject implements EavAble
 	 * @param integer $calculationCriteria Shipping price calculation criteria. 0 for weight based calculations, 1 for subtotal based calculations
 	 * @return ShippingService
 	 */
-	public static function getNewInstance(DeliveryZone $deliveryZone = null, $defaultLanguageName, $calculationCriteria)
+	public static function getNewInstance(DeliveryZone $deliveryZone)
 	{
 		$instance = new self();
-		if($deliveryZone)
-		{
-			$instance->deliveryZone = $deliveryZone;
-		}
-		$instance->setValueByLang('name', null, $defaultLanguageName);
-		$instance->rangeType = $calculationCriteria;
+		$instance->deliveryZone = $deliveryZone;
 
 		return $instance;
-	}
-
-	/**
-	 * Load delivery services record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Instance retrieval ####################*/
@@ -203,16 +170,6 @@ class ShippingService extends MultilingualObject implements EavAble
 		}
 
 		return ShipmentDeliveryRate::getNewInstance($this, $maxRate);
-	}
-
-	public function save($forceOperation = null)
-	{
-		if ($this->deliveryZone && (0 == $this->deliveryZone->getID()))
-		{
-			$this->deliveryZone = null);
-		}
-
-		return parent::save($forceOperation);
 	}
 
 	public function deleteShippingRates()

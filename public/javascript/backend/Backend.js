@@ -87,9 +87,6 @@ angular
         });
     });
 
-/*
-
-*/
 
 var app = angular.module('LiveCart', ['ui.bootstrap', 'ui.myTinymce', 'ui', 'ui.router', 'loadingOnAJAX', 'globalErrors', 'tree', 'backendComponents', 'ngGrid', 'ngResource']);
 
@@ -153,21 +150,13 @@ app.config(function($stateProvider)
 	  templateUrl: '../backend/staticPage',
 	  url: '/staticPage'
 	})
-	.state('successstory', {
-	  templateUrl: '../successstory',
-	  url: '/successstory'
+	.state('zone', {
+	  templateUrl: '../backend/deliveryzone',
+	  url: '/zone'
 	})
 	.state('simplesettings', {
 	  templateUrl: '../simplesettings/index?' + Math.random(),
 	  url: '/simplesettings'
-	})
-	.state('managePartner', {
-	  templateUrl: '../managePartner',
-	  url: '/managePartner'
-	})
-	.state('export', {
-	  templateUrl: '../export',
-	  url: '/export'
 	})
 
 	;

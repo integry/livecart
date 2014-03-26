@@ -2,43 +2,12 @@
 	<input type="hidden" name="deliveryZoneID" value="[[service.DeliveryZone.ID]]" />
 	<input type="hidden" name="serviceID" value="[[service.ID]]" />
 
-	[[ textfld('name', '_name', class: 'observed shippingService_name') ]]
-
-	{input name="isFinal"}
-		{checkbox class="checkbox observed shippingService_isFinal"}
-		{label}{tip _disable_other_services}{/label}
-	{/input}
-
-	{input name="isLocalPickup"}
-		{checkbox class="checkbox observed shippingService_isLocalPickup"}
-		{label}{tip _is_local_pickup}{/label}
-	{/input}
-
-	{input name="rangeType" class="rangeType"}
-		{radio class="checkbox shippingService_rangeType" value="0"}
-		{label}{tip _weight_based_calculations}{/label}
-	{/input}
-
-	{input name="rangeType" class="rangeType"}
-		{radio class="checkbox shippingService_rangeType" value="1"}
-		{label}{tip _subtotal_based_calculations}{/label}
-	{/input}
-
-	{input name="rangeTypeStatic" class="rangeTypeStatic"}
-		<label>{tip _range_type}</label>
-		<label style="width: auto;">{% if service.rangeType == 0 %}{tip _weight_based_calculations}{% else %}{tip _subtotal_based_calculations}{% endif %}</label>
-	{/input}
-
 	<div class="expectedDeliveryInterval">
 		{input name="deliveryTimeMinDays"}
-			{label}{tip _expected_delivery_time}{/label}
-			{textfield name="deliveryTimeMinDays" class="number observed shippingService_deliveryTimeMinDays"}
-			<span class="labelIntervalTo">{t _to}</span>
-			{textfield name="deliveryTimeMaxDays" class="number observed shippingService_deliveryTimeMinDays"}
 		{/input}
 	</div>
 
-	[[ textarea('description', tip('_description'), class: 'observed shippingService_description') ]]
+	
 
 	<fieldset class="shippingService_rates ">
 		<legend>{t _shipping_service_rates}</legend>

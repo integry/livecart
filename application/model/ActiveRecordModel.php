@@ -3,6 +3,7 @@
 use eav\EavAble;
 use eav\EavObject;
 use eav\EavSpecificationManager;
+use Phalcon\Db\Column;
 
 Phalcon\Mvc\Model::setup(['exceptionOnFailedSave' => true]);
 
@@ -348,6 +349,29 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	public function toArray()
 	{
 		$array = parent::toArray();
+
+        // fix data types
+        $metadata = $this->getDI()->get('modelsMetadata');
+        $types = $metadata->getDataTypes($this);
+        foreach ($types as $attribute => $type) 
+        {
+            if (!is_null($array[$attribute])) 
+            {
+                switch ($type) 
+                {
+                    case Column::TYPE_INTEGER:
+                        $array[$attribute] = (int) $array[$attribute];
+                    break;
+                    case Column::TYPE_DECIMAL:
+                    case Column::TYPE_FLOAT:
+                        $array[$attribute] = (float) $array[$attribute];
+                    break;
+                    case Column::TYPE_BOOLEAN:
+                        $array[$attribute] = (bool) $array[$attribute];
+                    break;
+                }
+            }
+        }
 
 		if ($this->specificationInstance)
 		{
