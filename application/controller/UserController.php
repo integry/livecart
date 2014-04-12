@@ -43,18 +43,21 @@ class UserController extends FrontendController
 	 */
 	public function indexAction()
 	{
-		return;
-		//return $this->response->redirect('seller/index');
-		$this->addAccountBreadcrumb();
+//		$this->addAccountBreadcrumb();
 
 		// get recent orders
-		$f = new ARSelectFilter();
-		$f->limit($this->config->get('USER_COUNT_RECENT_ORDERS'));
-		$f->setCondition(new IsNullCond('CustomerOrder.parentID'));
-		$orders = $this->loadOrders($f);
-		$orderArray = $this->getOrderArray($orders);
+		$orders = \order\CustomerOrder::query()
+						->where('userID = :user: AND isFinalized = 1', array('user' => $this->user->getID()))
+						->orderBy('ID DESC')
+						->limit($this->config->get('USER_COUNT_RECENT_ORDERS'))
+						->execute();
+						
+		$this->set('orders', toArray($orders));
+		
+		$this->set('user', $this->user);
 
 		// get last invoice & unpaid count
+		/*
 		$pendingInvoiceCount = $this->user->countPendingInvoices();
 
 		$lastInvoiceArray = array();
@@ -67,28 +70,26 @@ class UserController extends FrontendController
 			));
 			$lastInvoiceArray = $this->getOrderArray($this->loadOrders($f));
 		}
+		*/
 
 		// get downloadable items
+		/*
 		$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 		$f->limit(self::COUNT_RECENT_FILES);
-
-
 
 		$this->set('orders', $orderArray);
 		$this->set('files', $this->loadDownloadableItems(query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()))));
 
 		// get unread messages
-				$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
+		$f = query::query()->where('CustomerOrder.userID = :CustomerOrder.userID:', array('CustomerOrder.userID' => $this->user->getID()));
 		$f->andWhere('OrderNote.isAdmin = :OrderNote.isAdmin:', array('OrderNote.isAdmin' => 1));
 		$f->andWhere('OrderNote.isRead = :OrderNote.isRead:', array('OrderNote.isRead' => 0));
 		$f->orderBy('OrderNote.ID', 'DESC');
 		$this->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User', 'CustomerOrder')));
 
-		// feedback/confirmation message that was stored in session by some other action
-		$this->set('userConfirm', $this->session->pullValue('userConfirm'));
 		$this->set('pendingInvoiceCount', $pendingInvoiceCount);
 		$this->set('lastInvoiceArray', $lastInvoiceArray);
-
+		*/
 	}
 
 	/**
@@ -673,29 +674,51 @@ class UserController extends FrontendController
 	}
 
 	/**
+	 *  Login form
+	 */
+	public function loginPopupAction()
+	{
+	}
+
+	/**
 	 *  Process actual login
 	 */
 	public function doLoginAction()
 	{
-		$user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
+		$user = User::getInstanceByLogin($this->request->getParam('email'), $this->request->getParam('password'));
 		if (!$user)
 		{
-			return $this->response->redirect('user/login?failed=true');
+			if ($this->request->getParam('ajax'))
+			{
+				echo json_encode(array('error' => true));
+				return;
+			}
+			else
+			{
+				return $this->response->redirect('user/login?failed=true');
+			}
 		}
 
 		// login
 		$this->sessionUser->setUser($user);
 
 		$this->user = $user;
-		$this->mergeorderBy();
+		//$this->mergeOrder();
 
-		if ($return = $this->request->get('return'))
+		if ($this->request->getParam('ajax'))
 		{
-			return $this->response->redirect($return, true);
+			echo json_encode($this->user->toArray());
 		}
 		else
 		{
-			return $this->response->redirect('user/index');
+			if ($return = $this->request->get('return'))
+			{
+				return $this->response->redirect($return, true);
+			}
+			else
+			{
+				return $this->response->redirect('user/index');
+			}
 		}
 	}
 

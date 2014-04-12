@@ -6,7 +6,7 @@
 #}
 
 {% block content %}
-<div class="categoryIndex category_[[category.ID]]">
+<div class="categoryIndex category_[[category.ID]]" ng-controller="CategoryController">
 
 	{#
 	[[ partial("category/head.tpl") ]]
@@ -57,7 +57,7 @@
 	
 	[[ partial("category/categoryProductList.tpl") ]]
 	
-	[[ paginator(paginator, url(route(category)) ~ '/___', ['ng-click': 'setPage(___, event)']) ]]
+	[[ paginator(paginator, url(route(category)) ~ '/___?sort=' ~ sort, ['ng-click': 'setPage(___, event)']) ]]
 
 </div>
 {% endblock %}

@@ -4,6 +4,8 @@ namespace order;
 
 use \product\Product;
 use \Currency;
+use \product\ProductOption;
+use \product\ProductOptionChoice;
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)
@@ -13,8 +15,6 @@ use \Currency;
  */
 class OrderedItem extends \ActiveRecordModel //MultilingualObject implements BusinessRuleProductInterface
 {
-	protected $optionChoices = array();
-
 	protected $removedChoices = array();
 
 	protected $subItems = null;
@@ -49,6 +49,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		$this->belongsTo('customerOrderID', 'order\CustomerOrder', 'ID', array('alias' => 'CustomerOrder'));
 		$this->belongsTo('shipmentID', 'order\Shipment', 'ID', array('alias' => 'Shipment'));
 		$this->belongsTo('productID', 'product\Product', 'ID', array('alias' => 'Product'));
+		$this->hasMany('ID', 'order\OrderedItemOption', 'orderedItemID', array('alias' => 'Options'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -72,7 +73,14 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function getCurrency()
 	{
-		return $this->customerOrder->getCurrency();
+		if (!$this->customerOrder)
+		{
+			return $this->getDI()->get('application')->getDefaultCurrency();
+		}
+		else
+		{
+			return $this->customerOrder->currency;
+		}
 	}
 
 	public function getSubTotal($includeTaxes = true, $applyDiscounts = true)
@@ -124,7 +132,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$price = $this->getItemPrice();
 			$this->originalPrice = $price;
 
-			foreach ($this->optionChoices as $choice)
+			foreach ($this->options as $choice)
 			{
 				if ($isFinalized)
 				{
@@ -133,7 +141,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 				}
 				else
 				{
-					$optionPrice = $choice->choice->getPriceDiff($currency->getID());
+					$optionPrice = $choice->choice->getPriceDiff($currency);
 				}
 
 				$price += $this->reduceBaseTaxes($optionPrice);
@@ -213,7 +221,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function getTaxRates()
 	{
-		$class = $this->getProduct()->getParent()->taxClass;
+		$class = $this->product->getParent()->taxClass;
 		$rates = array();
 		foreach ($this->customerOrder->getTaxZone()->getTaxRates() as $rate)
 		{
@@ -247,7 +255,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	{
 		$order = $this->customerOrder;
 		$isFinalized = $order->isFinalized;
-		$product = $this->getProduct();
+		$product = $this->product;
 		$price = 0;
 
 		if ($product->type == Product::TYPE_RECURRING)
@@ -280,7 +288,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		}
 		else
 		{
-			$price = $isFinalized ? $this->price : $this->getProduct()->getItemPrice($this);
+			$price = $isFinalized ? $this->price : $this->product->getItemPrice($this);
 		}
 
 		if (!$isFinalized)
@@ -295,7 +303,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	{
 		return $price;
 		
-		$product = $product ? $product : $this->getProduct();
+		$product = $product ? $product : $this->product;
 		if (!is_array($product))
 		{
 			$class = $product->getParent()->taxClass;
@@ -319,7 +327,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function reserve($unreserve = false, Product $product = null)
 	{
-		$product = is_null($product) ? $this->getProduct() : $product;
+		$product = is_null($product) ? $this->product : $product;
 		if (!$product->isBundle())
 		{
 			if ($product->isInventoryTracked() && !(!$unreserve && $this->reservedProductCount))
@@ -365,7 +373,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 	 */
 	public function removeFromInventory()
 	{
-		$product = $this->getProduct();
+		$product = $this->product;
 		if (!$product->isBundle())
 		{
 			$product->reservedCount = $product->reservedCount - $this->reservedProductCount;
@@ -486,7 +494,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 	public function getOptions()
 	{
-		return $this->optionChoices;
+		return $this->options;
 	}
 
 	public function loadOptions()
@@ -496,9 +504,9 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$this->optionChoices[$option->choice->option->getID()] = $option;
 		}
 
-		if ($this->getProduct()->parent)
+		if ($this->product->parent)
 		{
-			$this->getProduct()->parent->load();
+			$this->product->parent->load();
 		}
 	}
 
@@ -523,9 +531,50 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		$this->count = $count;
 	}
 
+	public function loadData($item)
+	{
+		$this->setCount($item['count']);
+		
+		$existing = $this->options;
+		if (!empty($item['options']))
+		{
+			foreach ($item['options'] as $id => $option)
+			{
+				$found = false;
+				foreach ($existing as $opt)
+				{
+					if ($opt->choice->productOption->getID() == $id)
+					{
+						$found = true;
+						break;
+					}
+				}
+				
+				if (!$found)
+				{
+					$productOption = ProductOption::getInstanceByID($id);
+					$opt = OrderedItemOption::getNewInstance($this, $productOption->choices->getFirst());
+				}
+				
+				$opt->loadData($option);
+				$opt->orderedItem = $this;
+				$opt->orderedItemID = $this->getID();
+				
+				if ($opt->getID())
+				{
+					$opt->save();
+				}
+				
+				$this->options = [$opt];
+			}
+		}
+		
+		//var_dump($this->options->toArray());
+	}
+
 	public function getSubItems()
 	{
-		if (!$this->getProduct()->isBundle())
+		if (!$this->product->isBundle())
 		{
 			return null;
 		}
@@ -611,7 +660,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 		if (!$this->price)
 		{
-			$this->price = $this->getProduct()->getItemPrice($this);
+			$this->price = $this->product->getItemPrice($this);
 		}
 
 
@@ -633,7 +682,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 		if ($shipment && $order->isFinalized && !$order->isCancelled && self::getApplication()->isInventoryTracking())
 		{
-			$product = $this->getProduct();
+			$product = $this->product;
 
 			// changed product (usually a different variation)
 			if ($this->hasChanged('product'))
@@ -695,7 +744,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 		}
 
 		// save sub-items for bundles
-		if ($this->getProduct()->isBundle())
+		if ($this->product->isBundle())
 		{
 			foreach ($this->getSubItems() as $item)
 			{
@@ -703,22 +752,42 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			}
 		}
 
-		$this->getProduct()->save();
+		$this->product->save();
 		$this->subItems = null;
 	}
 
-	protected function beforeUpdate()
+	public function beforeSave()
 	{
-		$this->price = $this->getProduct()->getItemPrice($this);
+		$this->price = $this->product->getItemPrice($this);
+	}
+
+	public function afterSave()
+	{
+		//var_dump($this->productID);
+		/*
+		if (!$this->price)
+		{
+			$this->price = $this->product->getItemPrice($this);
+			$this->save();
+		}
+		*/
 	}
 
 	/*####################  Data array transformation ####################*/
 
 	public function toArray()
 	{
+		$order = $this->customerOrder;
+		if (!$order)
+		{
+			$order = new CustomerOrder();
+		}
+		
 		$array = parent::toArray();
+		$array['Product'] = $this->product->toArray();
+	
 		$array['priceCurrencyID'] = $this->getCurrency()->getID();
-		$isTaxIncludedInPrice = $this->customerOrder->getTaxZone()->isTaxIncludedInPrice();
+		$isTaxIncludedInPrice = $order->getTaxZone()->isTaxIncludedInPrice();
 
 		if (isset($array['price']))
 		{
@@ -745,9 +814,9 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 				$array['itemBasePrice'] = $array['itemPrice'];
 			}
 
-			if ($this->optionChoices && !$this->customerOrder->isFinalized)
+			if ($this->options && !$this->customerOrder->isFinalized)
 			{
-				foreach ($this->optionChoices as $choice)
+				foreach ($this->options as $choice)
 				{
 					$array['itemBasePrice'] += $choice->choice->getPriceDiff($this->getCurrency());
 				}
@@ -761,13 +830,13 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 			$array['formattedSubTotalWithoutTax'] = $currency->getFormattedPrice($array['displaySubTotalWithoutTax']);
 		}
 
-		return $array;
-		
 		$array['options'] = array();
-		foreach ($this->optionChoices as $id => $choice)
+		foreach ($this->options as $choice)
 		{
-			$array['options'][$id] = $choice->toArray();
+			$array['options'][$choice->choice->optionID] = $choice->toArray();
 		}
+
+		return $array;
 
 		$array['subItems'] = array();
 		if ($this->subItems)

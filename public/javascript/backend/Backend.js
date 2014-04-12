@@ -117,6 +117,17 @@ app.config(function($stateProvider)
           $scope.id = $stateParams.id;
         }
     })
+	.state('order', {
+	  templateUrl: '../backend/customerorder',
+	  url: '/order'
+	})
+	.state('order.list', {
+        url: '/orders',
+        templateUrl: '../backend/customerorder/list',
+        controller: function($scope, $stateParams){
+          $scope.id = $stateParams.id;
+        }
+    })
 	.state('user', {
 	  templateUrl: '../backend/usergroup',
 	  url: '/user'
@@ -135,6 +146,10 @@ app.config(function($stateProvider)
           $scope.id = $stateParams.id;
         }
     })
+	.state('gallery', {
+	  templateUrl: '../backend/gallery',
+	  url: '/gallery'
+	})
 	.state('eavField', {
 	  templateUrl: '../backend/eavField',
 	  url: '/eavField'
@@ -155,8 +170,8 @@ app.config(function($stateProvider)
 	  url: '/zone'
 	})
 	.state('simplesettings', {
-	  templateUrl: '../simplesettings/index?' + Math.random(),
-	  url: '/simplesettings'
+	  templateUrl: '../backend/simplesettings/index?' + Math.random(),
+	  url: '/backend/simplesettings'
 	})
 
 	;

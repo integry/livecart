@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 		
@@ -25,15 +25,23 @@
 		<script src="javascript/common.js"></script>
 		<script src="javascript/Order.js"></script>
 		
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"></link>
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet"></link>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"></link>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" rel="stylesheet"></link>
 		
 		<link href="stylesheet/frontend/Frontend.css" rel="stylesheet"></link>
 
-		<script src="//code.angularjs.org/1.2.15/angular-resource.min.js"></script>
-		
+		<script src="//code.angularjs.org/1.2.16/angular-resource.min.js"></script>
+		<script src="//code.angularjs.org/1.2.16/angular-animate.min.js"></script>
+	
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
 
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet/less" type="text/css" href="upload/css/kameja.less" />
+		
+		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.0/less.min.js"></script>
+		
+		<script src="upload/theme/kameja/kameja.js"></script>
+		
 		{% block head %}{% endblock %}
 		[[ partial("layout/frontend/head.tpl") ]]
 		
@@ -41,12 +49,12 @@
 			Router.setUrlTemplate("[[ url("controller/action") ]]");
 		</script>
 
-		<title>{% block title %}{% endblock %}{% if 'index' != volt.dispatcher.getControllerName() %} - [[ config('SITE_NAME') ]]{% endif %}</title>
+		<title>{% block title %}{% endblock %}{% if 'index' != volt.dispatcher.getControllerName() %} - [[ config('STORE_NAME') ]]{% endif %}</title>
 		
 		<meta name="description" content="{% block metadescr %}[[ meta(config('INDEX_META_DESCRIPTION')) ]]{% endblock %}" />
 		<meta name="og:description" content="{% block ogmetadescr %}[[ meta(config('INDEX_META_DESCRIPTION')) ]]{% endblock %}" />
 	</head>
-	<body>
+	<body class="[[ volt.dispatcher.getControllerName() ]] [[ volt.dispatcher.getControllerName() ]]-[[ volt.dispatcher.getActionName() ]] {% block bg %}{% endblock %} [[ volt.dispatcher.getParam('handle') ]] " ng-controller="AppController" ng-init="setEnv([[ json(env()) ]])" ng-cloak>
 		<div id="container" class="container">
 			{% block header %}[[ partial("layout/frontend/header.tpl") ]]{% endblock %}
 

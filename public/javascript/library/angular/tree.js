@@ -267,8 +267,9 @@ treeModule.factory('treeService', function($timeout)
 
 		update: function (event, ui)
 		{
+			var item = angular.element($(event.originalEvent.target).closest('li'));
 			var root = event.target,
-			  item = angular.element(ui.item),
+			  //item = angular.element(ui.item),
 			  parent = item.parent(),
 			  target = (parent[0] === root) ? data : parent.scope().child,
 			  child = item.scope().child,

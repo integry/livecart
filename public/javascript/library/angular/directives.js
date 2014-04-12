@@ -178,7 +178,6 @@ backendComponents.directive('myForm', function($compile, $timeout)
 			
             scope.$on('submit', function() 
             {
-                console.log('sadasd');
                 setTimeout(function() 
                 {
                 	if (!element.attr('direct-submit') && element.attr('ng-submit'))
@@ -212,7 +211,6 @@ backendComponents.directive('myForm', function($compile, $timeout)
 			
 			scope.markSubmitted = function()
 			{
-				console.log('test');
 				scope.customErrors = {};
 				scope.isSubmitted = 1;
 				
@@ -294,7 +292,7 @@ backendComponents.directive('dialog', function($compile)
         replace: true,
         transclude: true,
         scope: {cancel: '&'},
-        template: '<div class="modal-dialog" ng-init="setSize();"><div class="modal-content" ng-transclude></div></div>',
+        template: '<div class="xmodal-dialog" ng-init="setSize()" ng-transclude></div>',
         controller: function($scope, $element, $attrs)
         {
 			$scope.close = function()
@@ -327,28 +325,8 @@ backendComponents.directive('dialog', function($compile)
 				this.previousHeight = windowHeight;
 				this.previousDialogHeight = dialogHeight;
 
-				$scope.center();
-
 				return body.css("max-height", "" + height + "px");
 			};
-
-			$scope.center = function()
-			{
-				$element.css({
-					'margin-left': function ()
-					{
-						return (jQuery(window).width() - jQuery(this).width()) / 2;
-					}
-					/*
-					,
-					'margin-top': function ()
-					{
-						console.log(jQuery(window).height(), jQuery(this).height());
-						return (jQuery(window).height() - jQuery(this).height()) / 2;
-					}
-					*/
-				});
-			}
 
 			if ($attrs.fullheight)
 			{
@@ -362,8 +340,6 @@ backendComponents.directive('dialog', function($compile)
 					$scope.setFullHeight();
 				});
 			}
-
-			$scope.center();
 		}
     };
 });
@@ -760,10 +736,10 @@ backendComponents.directive('imageField', function($compile, $timeout)
         replace: true,
         template: '	<div>' +
 
-		'<input type="file" ng-model-instant multiple onchange="angular.element(this).scope().setFiles(this)" />' +
+		'<input type="file" ng-model-instant onchange="angular.element(this).scope().setFiles(this)" />' +
 		'<div class="row" ng-show="getImage()">' +
 			'<div class="col-lg-12">' +
-				'<img ng-src="{{ getImage() }}" style="max-height: 300px;" />' +
+				'<img ng-src="{{ getImage() }}" style="max-height: 300px;" class="img-responsive" />' +
 				'<a class="glyphicon glyphicon-remove-circle" style="color: red; margin-left: 10px;" ng-show="image" ng-click="removeImage()"></a>' +
 			'</div>' +
 		'</div><div ng-show="progressVisible" class="uploadProgress">Uploading...</div>' +
@@ -777,6 +753,11 @@ backendComponents.directive('imageField', function($compile, $timeout)
 		{
 			scope.model = attrs.ngModel;
 			scope.size = attrs.size;
+			
+			if (!attrs.single)
+			{
+				element.find('input').attr('multiple', 'multiple');
+			}
 			
 			var unwatch = scope.$watch(attrs.ngModel, function(newVal)
 			{
@@ -816,6 +797,11 @@ backendComponents.directive('imageField', function($compile, $timeout)
 					scope.image = response[0].image;
 					scope.imageError = '';
 					var paths = _.pluck(response, 'image');
+				}
+				
+				if (attrs.single && paths)
+				{
+					paths = paths[0];
 				}
 				
 				scope.$apply(scope.model + ' = ' + JSON.stringify(paths));
@@ -989,7 +975,12 @@ backendComponents.directive('eavField', function($compile, $timeout)
 				var html = '<select ng-options="o.ID as o.value for o in options" ng-click="opts()"></select>';
 				var input = 'select';
 			}
-			else if ("3" == config.type || "4" == config.type)
+			else if ("3" == config.type)
+			{
+				var html = '<input type="text" />';
+				var input = 'input';
+			}
+			else if ("4" == config.type)
 			{
 				var html = '<textarea' + (attrs.plain ? '' :' ui-my-tinymce') + '></textarea>';
 				var input = 'textarea';
@@ -1024,7 +1015,7 @@ backendComponents.directive('eavField', function($compile, $timeout)
 				var fieldName = 'eav_' + config.ID;
 				if (config.isRequired)
 				{
-					html = html + '<div class="text-danger" ng-show="isSubmitted && eavform.' + fieldName + '.$error.required">This field cannot be left blank</div>';
+					html = html + '<div class="text-danger" ng-show="isSubmitted && eavform.' + fieldName + '.$error.required">Lūdzu aizpildiet šo lauku</div>';
 				}
 				
 				html = '<div><ng-form name="eavform">' + html + element.html() + '</ng-form></div>';
@@ -1038,7 +1029,7 @@ backendComponents.directive('eavField', function($compile, $timeout)
 				attrElem.attr('placeholder', config.description);
 				attrElem.attr('name', fieldName);
 				
-				if (parseInt(config.isRequired))
+				if (config.isRequired)
 				{
 					attrElem.attr('ng-required', true);
 				}
@@ -1370,4 +1361,96 @@ backendComponents.directive('tabsetLazy', function () {
         '<a href="" ng-click="select()">{{ title }}</a>' +
       '</li>'
   };
+});
+
+backendComponents.directive('prodOption', function($compile, $timeout)
+{
+    return {
+        restrict: "E",
+        scope: false,
+        replace: true,
+        link: function(scope, element, attrs)
+		{
+			if ("1" == scope.option.type)
+			{
+				var html = '<select ng-options="o.ID as o.name for o in option.choices"></select>';
+				var input = 'select';
+			}
+			/*
+			else if ("3" == config.type)
+			{
+				var html = '<input type="text" />';
+				var input = 'input';
+			}
+			else if ("4" == config.type)
+			{
+				var html = '<textarea' + (attrs.plain ? '' :' ui-my-tinymce') + '></textarea>';
+				var input = 'textarea';
+			}
+			else if ("6" == config.type)
+			{
+				//var html = '<input type="text" datepicker-popup="dd-MMMM-yyyy" is-open="opened" min="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" />';
+				var html = '<div><date-field></date-field></div>';
+				//<span class="glyphicon glyphicon-calendar"></span></button>
+
+				scope.toggleMin = function() {
+				scope.minDate = ( scope.minDate ) ? null : new Date();
+				};
+				scope.toggleMin();
+
+				scope.open = function() {
+				$timeout(function() {
+				  scope.opened = true;
+				});
+				};
+
+				scope.dateOptions = {
+				'year-format': "'yy'",
+				'starting-day': 1
+				};
+				
+				var input = 'date-field';
+			}
+			*/
+			
+			if (html)
+			{
+				var fieldName = 'opt_' + scope.option.ID;
+				if (scope.option.isRequired)
+				{
+					html = html + '<div class="text-danger" ng-show="isSubmitted && eavform.' + fieldName + '.$error.required">Lūdzu aizpildiet šo lauku</div>';
+				}
+				
+				html = '<div><ng-form name="optform">' + html + element.html() + '</ng-form></div>';
+				
+				var newElem = angular.element(html);
+				
+				var attrElem = input ? newElem.find(input) : newElem;
+				
+				attrElem.attr('ng-model', 'item.options.' + scope.option.ID + '.choiceID');
+				attrElem.addClass('form-control');
+				attrElem.attr('placeholder', scope.option.description);
+				attrElem.attr('name', fieldName);
+				
+				if (scope.option.isRequired)
+				{
+					attrElem.attr('ng-required', true);
+				}
+				
+				/*
+				delete attrs.$attr.config;
+				if (input == 'date-field')
+				{
+					backendComponents.copyAttrs(attrElem, attrs);
+				}
+				*/
+
+				newElem = $compile(newElem)(scope);
+				element.replaceWith(newElem);
+				
+				//var form = angular.element(newElem.closest('form'));
+				//$compile(form)(form.scope());
+			}
+    	}
+    };
 });

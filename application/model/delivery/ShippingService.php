@@ -2,6 +2,8 @@
 
 namespace delivery;
 
+use order\Shipment;
+
 /**
  * Pre-defined shipping service plan, that is assigned to a particular DeliveryZone.
  * Each ShippingService entity can contain several ShippingRate entities to determine
@@ -52,49 +54,6 @@ class ShippingService extends \system\MultilingualObject implements \eav\EavAble
 		return $instance;
 	}
 
-	/*####################  Instance retrieval ####################*/
-
-	/**
-	 * Load delivery services record by Delivery zone
-	 *
-	 * @param DeliveryZone $deliveryZone
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getByDeliveryZone(DeliveryZone $deliveryZone = null, $loadReferencedRecords = false)
-	{
- 		$filter = new ARSelectFilter();
-
-		$filter->orderBy(new ARFieldHandle(__CLASS__, "position"), 'ASC');
-
-		if (!$deliveryZone)
-		{
-			$deliveryZone = DeliveryZone::getDefaultZoneInstance();
-		}
-
-		if ($deliveryZone->isDefault())
-		{
-			$filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
-		}
-		else
-		{
-			$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
-		}
-
-		$services = self::getRecordSet($filter, $loadReferencedRecords);
-
-		if ($deliveryZone->isDefault())
-		{
-			foreach ($services as $service)
-			{
-				$service->deliveryZone = $deliveryZone;
-			}
-		}
-
-		return $services;
-	}
-
 	/*####################  Get related objects ####################*/
 
 	/**
@@ -117,25 +76,23 @@ class ShippingService extends \system\MultilingualObject implements \eav\EavAble
 	{
 		$hasFreeShipping = false;
 
+		$f = ShippingRate::query()->where('shippingServiceID = :shippingServiceID:', array('shippingServiceID' => $this->getID()));
+
 		// get applicable rates
 		if (self::WEIGHT_BASED == $this->rangeType)
 		{
 			$weight = $shipment->getChargeableWeight($this->deliveryZone);
-			$cond = new EqualsOrLessCond('ShippingRate.weightRangeStart', $weight * 1.000001);
-			$cond->andWhere(new EqualsOrMoreCond('ShippingRate.weightRangeEnd', $weight * 0.99999));
+			$f->andWhere('(weightRangeStart <= :weightRangeStart:) OR (weightRangeStart IS NULL)', array('weightRangeStart' => $weight * 1.000001));
+			$f->andWhere('weightRangeEnd >= :weightRangeEnd:', array('weightRangeEnd' => $weight * 0.99999));
 		}
 		else
 		{
 			$total = $shipment->getSubTotal(Shipment::WITHOUT_TAXES);
-			$cond = new EqualsOrLessCond('ShippingRate.subtotalRangeStart', $total * 1.000001);
-			$cond->andWhere(new EqualsOrMoreCond('ShippingRate.subtotalRangeEnd', $total * 0.99999));
+			$f->andWhere('(subtotalRangeStart <= :subtotalRangeStart:) OR (subtotalRangeStart IS NULL)', array('subtotalRangeStart' => $total * 1.000001));
+			$f->andWhere('subtotalRangeEnd >= :subtotalRangeEnd:', array('subtotalRangeEnd' => $total * 0.99999));
 		}
 
-		$f = query::query()->where('ShippingRate.shippingServiceID = :ShippingRate.shippingServiceID:', array('ShippingRate.shippingServiceID' => $this->getID()));
-		$f->andWhere($cond);
-
-		$rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
-
+		$rates = $f->execute();
 		if (!$rates->count())
 		{
 			return null;

@@ -1,0 +1,293 @@
+_add_gallery=Add new gallery
+_cancel_add_gallery=Cancel adding new gallery
+
+# Gallery tabs
+_gallery_page=Gallery page
+_basic_data=Basic data
+_gallery_details=Gallery Details
+_stock_pricing=Stock & Pricing
+_images=Images
+_variations=Variations
+_related=Cross-sell
+_upsell=Up-sell
+_files=Files
+_info=Info
+_options=Options
+_bundled_gallerys=Bundled Gallerys
+_recurring_plan=Recurring plan
+_gallery_categories=Categories
+
+_save_gallery_details=Save gallery details
+
+# Confirmation
+_could_not_save_gallery_information=Could not save gallery information
+_new_gallery_was_successfully_created=New gallery was successfully created
+_mass_action_succeed=Mass action succeeded
+_move_succeeded=Gallerys were moved successfully
+_themes_removed=Design themes were removed from selected gallerys
+
+# Gallery list
+
+_process=Save
+_nothing_selected=Please select at least one gallery first
+_delete_conf=Really delete the selected gallerys?
+_copy_conf=Copy selected gallerys to this category?
+_gallery_information_was_successfully_saved=Gallery information was successfully saved
+_with_selected=With selected
+_new_gallery=New Gallery
+
+_move_to_category=Move to other category
+_add_to_category=Add to additional category
+_copy_to_category=Copy to other category
+_set_manufacter=Set manufacturer
+_set_keywords=Set keywords
+_set_website_address=Set website address
+_set_price=Set price
+_set_stock=Set stock
+_set_shipping_weight=Set shipping weight (kg)
+_set_minimum_quantity=Set minimum order quantity
+_set_shipping_surcharge=Set shipping surcharge
+_set_as_featured_gallery=Set as featured gallery
+_set_attribute_value=Set Attribute Value
+_set_tax_class=Set tax class
+_set_shipping_class=Set shipping class
+_clear_attribute_value=Clear Attribute Value
+_add_related_gallery=Add related gallery
+_increase_price=Increase price (percent)
+_inc_quant_prices=Increase quantity/group prices
+_increase_stock=Increase stock (count)
+_unset_featured_gallery=Unset featured gallery
+_inventory_and_pricing=Inventory &amp; Pricing
+_shipping_opts=Shipping Options
+_enable_free_shipping=Enable free shipping
+_disable_free_shipping=Disable free shipping
+_disable_back_ordering=Disable back-ordering
+_enable_back_ordering=Enable back-ordering
+_requires_separate_shippment=Require separate shipment
+_do_not_require_separate_shippment=Do not require separate shipment
+_set_theme=Set design theme
+_multiply_price=Multiply price
+_divide_price=Divide price
+
+_enter_sku=Please enter gallery SKU
+
+_listing_gallerys=Listing gallerys $from - $to of $count
+_no_gallerys_found=No gallerys found
+
+position=Position
+_position=Position
+
+Gallery.ID=ID
+allery.name=Name
+Gallery.name=Name
+Gallery.sku=SKU
+Gallery.stockCount=In stock
+Gallery.isEnabled=Enabled
+Gallery.shortDescription=Short description
+Gallery.longDescription=Long description
+Gallery.keywords=Keywords
+Gallery.dateCreated=Creation date
+Gallery.dateUpdated=Last updated
+Gallery.URL=Website URL
+Gallery.handle=URL Handle
+Gallery.isFeatured=Featured
+Gallery.type=Gallery type
+Gallery.minimumQuantity=Minimum order quantity
+Gallery.reservedCount=Reserved gallery count
+Gallery.shippingSurchargeAmount=Shipping surcharge amount
+Gallery.isSeparateShipment=Separate shipment required
+Gallery.isFreeShipping=Free shipping available
+Gallery.isBackOrderable=Available for backordering
+Gallery.shippingWeight=Shipping weight
+Gallery.isFractionalUnit=Is fractional unit
+Gallery.isUnlimitedStock=Is unlimited inventory
+Gallery.rating=Rating
+Gallery.ratingCount=Number of ratings
+Gallery.parentID=Parent gallery ID
+Gallery.reviewCount=Review count
+Gallery.fractionalStep=Quantity increment
+Gallery.position=Sort order
+Gallery.pageTitle=Page title
+Parent.sku=Parent SKU
+GalleryPrice.GroupPrice=User group price
+GalleryVariationType.name=Variation
+
+Manufacturer.name=Manufacturer
+GalleryPrice.price=Price
+GalleryPrice.listPrice=List price
+GalleryImage.url=Image URL
+
+Gallery.shippingClass=Shipping class
+Gallery.taxClass=Tax class
+
+# Main form
+
+_gallery=Gallery
+_availability=Availability
+_disabled=Disabled
+_enabled=Enabled (visible)
+
+_tangible=Tangible (shippable)
+_intangible=Intangible (downloadable)
+_bundle=Bundle (container)
+_recurring=Recurring
+
+_inventory=Inventory
+_items_in_stock=Items in stock
+_main_details=Main Details
+_gallery_name=Gallery name
+_handle=Handle
+_sku_code=SKU (code)
+_generate_sku=Generate SKU automatically
+_short_description=Short description
+_long_description=Long description
+_shippingClass=Shipping class
+_taxClass=Tax class
+_gallery_type=Gallery type
+_website_address=Website address
+_manufacturer=Manufacturer
+_keywords=Keywords
+_mark_as_featured_gallery=Mark as featured gallery
+_mark_as_sale_gallery=Mark as on-sale gallery
+_allow_fractional_quantities=Allow fractional quantities
+_fractionalStep=Quantity increment
+_hint_fractionalStep=Special quantity increments - for example, entering 0.2 would only allow ordering quanties of 0.2, 0.4, 0.6, etc.
+_sort_order=Sort order
+_hint_sort_order=Change this to manually manipulate the display order of gallerys. The bigger the number, the higher the gallery will be displayed in the gallery list.
+_pageTitle=Page title
+_hint_pageTitle=Display different page title than gallery name for SEO purposes
+
+_presentation=Presentation
+_theme=Design theme
+
+# Pricing and shipping
+
+_pricing=Pricing
+_list_price=List price
+_shipping=Ordering & Shipping
+_shipping_weight=Shipping weight
+
+_minimum_order_quantity=Minimum order quantity
+_shipping_surcharge=Shipping surcharge
+_requires_separate_shipment=Requires separate shipment
+_qualifies_for_free_shipping=Qualifies for free shipping
+_allow_back_ordering=Allow back-ordering
+_unlimited_stock=Unlimited inventory
+
+_all_customers=All customers
+
+# Gallery attributes
+_gallery_specification=Gallery Specification
+_specification_attributes=Specification Attributes
+
+_save_and_another=Save and add another
+_save_and_continue=Save and continue editing
+
+# Errors
+
+_err_name_empty=Please enter gallery name
+_err_sku_not_unique=A gallery with such SKU already exists
+_err_sku_empty=SKU is not specified
+_err_stock_required=Stock count is not specified
+_err_stock_not_numeric=Numeric value required
+_err_stock_negative=Stock count can not be negative
+_err_price_invalid=Price is invalid
+_err_weight_not_numeric=Weight is not numeric value
+_err_quantity_not_numeric=Quantity is not numeric value
+_err_quantity_negative=Quantity can not be negative
+_err_price_empty=Please enter price
+_err_price_negative=Price can not be negative
+_err_surcharge_not_numeric=Sucharge amount must be a numeric value
+_err_specfield_multivaluerequired=At least one option must be selected
+
+# Form field hints
+
+_hint_sku=Stock keeping unit is a specific number or code designating one specific gallery.
+
+_hint_shortdescr=A brief gallery description. Short description is displayed in the gallery list page where concise information about gallerys is provided. It is also used in the meta description tags for the gallery page.
+
+_hint_longdescr=Detailed description which is displayed in the gallery details page where detailed information about gallery is provided.
+
+_hint_keywords=Supply words or phrases here that may assist users in searching gallerys.
+
+_hint_featured=Featured gallerys are displayed above all other gallerys, so marking a gallery as featured will provide extra exposure to this gallery.
+
+_hint_sale=On-sale gallerys are displayed in separate blocks throughout the store, which help to improve visibility for gallerys that are on special sale.
+
+_hint_surcharge=Define additional shipping charges for this particular gallery
+
+_tip_theme=Use a different display theme for the detail page of this gallery
+_tip_show_variation_images=Display clickable thumbnail images of all gallery variations in the gallery detail page
+_tip_allow_all_variations=Display all variation combinations with order quantity selections in the gallery detail page. This allows customers to add different variations of the same base gallery to the shopping basket at the same time.
+
+_tip_taxClass=Different tax rates can be applied to different types of gallerys
+_tip_shippingClass=Different per-item shipping charge can be applied to different types of gallerys (for example, shipping a DVD would cost $2, while a book would cost $3)
+_tip_gallery_type=<ul><li>Tangible - a gallery that requires physical shipping</li><li>Intangible - downloadable gallery (software, e-books, music, etc.)</li><li>Bundle - a gallery container that consists of other gallerys</li></ul>
+_tip_website_address=A clickable link in gallery detail page
+_tip_availability=Disabled gallerys are not visible in store and their detail pages are not accessible
+_tip_unlimited_stock=When marked, the gallery is always considered to be in stock
+_tip_items_in_stock=The number of items currently in stock
+_tip_main_currency_price=The base gallery price
+_tip_list_price=<em>Regular</em> price (as opposed to the current <em>sale</em> price), which is displayed with a strikeout near the base gallery price
+_tip_secondary_currency_price=Gallery price in other currencies. In most cases this can be left blank as currency conversion is done automatically. However you can still manually specify the gallery prices at every currency by entering them here.
+_tip_quantity=The minimum order quantity for the particular discount level
+_tip_group=Limit the price for a particular user group only
+_tip_requires_separate_shipment=Automatically place the gallery in a separate shipment. This is usually necessary for bulky gallerys or gallerys that require special handling (fragile, non-standard dimensions, etc.)
+_tip_qualifies_for_free_shipping=If free shipping is enabled this gallery is not counted towards the order shipping price
+_tip_allow_back_ordering=Allow the customers to order this gallery even if it is out of stock
+_tip_allow_fractional_quantities=Useful for gallerys that are sold by weight, length, etc. This allows customers to enter quantities with decimal points.
+_tip_shipping_weight=Weight that is used to calculate the total shipment weight and determining the shipping rates
+_tip_shipping_surcharge=Add extra surcharge for this gallery to all applicable shipping rates
+_tip_minimum_order_quantity=Set the minimum quantity this gallery can be purchased at
+
+# Info tab
+_date_created=Date created
+_purchase_stats=Number Of Items Purchased
+_no_purchases=This gallery has never been purchased yet
+_together_with=Purchased Together With
+
+_last_1_h=Last hour
+_last_3_h=Last 3 hours
+_last_6_h=Last 6 hours
+_last_12_h=Last 12 hours
+_last_24_h=Last 24 hours
+_last_3_d=Last 3 days
+_this_week=This week
+_last_week=Last week
+_this_month=This month
+_last_month=Last month
+_this_year=This year
+_last_year=Last year
+_overall=Overall
+
+# Confirmations
+_gallery_prices_were_successfully_updated=Gallery prices were successfully updated
+_gallery_prices_could_not_be_updated=Gallery prices could not be updated
+
+_inventory=Inventory
+_items_in_stock=Items in stock
+_pricing=Pricing
+_shipping_weight=Shipping weight
+
+_set_quant=Set quantity/group prices
+_quantity=Quantity
+_group=User group
+
+_minimum_order_quantity=Minimum order quantity
+_shipping_surcharge=Shipping surcharge
+_requires_separate_shipment=Requires separate shipment
+_qualifies_for_free_shipping=Qualifies for free shipping
+_allow_back_ordering=Allow back-ordering
+
+_image=Image
+_gallery_image_file=Image file
+_tip_gallery_image_file=Select gallery image file
+_error_uploading_image=Error while uploading image
+_delete=Delete
+
+_set_attributes=Set attribute
+_remove_attributes=Remove attribute value
+
+# categories
+_primary_category=Primary Category
+_additional_categories=Additional Categories

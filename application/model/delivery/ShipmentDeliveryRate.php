@@ -1,8 +1,15 @@
 <?php
 
-ClassLoader::import('library/shipping/ShippingRateSet');
-ClassLoader::import('library/shipping/ShippingRateResult');
-ClassLoader::import('application/model/delivery/ShippingService');
+namespace delivery;
+
+use \Currency;
+
+//ClassLoader::import('library/shipping/ShippingRateSet');
+//ClassLoader::import('library/shipping/ShippingRateResult');
+//ClassLoader::import('application/model/delivery/ShippingService');
+
+require_once(__ROOT__ . '/library/shipping/ShippingRateResult.php');
+require_once(__ROOT__ . '/library/shipping/ShippingRateSet.php');
 
 /**
  * Shipping cost calculation result for a particular Shipment. One Shipment can have several
@@ -12,29 +19,18 @@ ClassLoader::import('application/model/delivery/ShippingService');
  * @package application/model/delivery
  * @author Integry Systems <http://integry.com>
  */
-class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
+class ShipmentDeliveryRate extends \ShippingRateResult implements \Serializable
 {
 	protected $amountWithTax;
 	protected $amountWithoutTax;
 
-	/**
-	 * @var LiveCart
-	 */
-	private $application;
-
 	private $service;
-
-	public function setApplication($application)
-	{
-		$this->application = $application;
-	}
 
 	public static function getNewInstance(ShippingService $service, $cost)
 	{
-		$inst = new ShipmentDeliveryRate();
+		$inst = new ShipmentDeliveryRate($service->getDI());
 		$inst->setServiceId($service->getID());
-		$inst->setApplication($service->getApplication());
-		$inst->setCost((string)round($cost, 3), $service->getApplication()->getDefaultCurrencyCode());
+		$inst->setCost((string)round($cost, 3), $inst->application->getDefaultCurrencyCode());
 		$inst->setService($service);
 		$inst->setServiceName($service->getValueByLang('name'));
 		return $inst;
@@ -135,11 +131,6 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 			$array['costAmount'] = $amount;
 		}
 
-		if (!$this->application)
-		{
-			$this->application = ActiveRecordModel::getApplication();
-		}
-
 		$amountCurrency = Currency::getInstanceById($array['costCurrency']);
 		$currencies = $this->application->getCurrencySet();
 
@@ -167,12 +158,13 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		$id = $this->getServiceID();
 		if (is_numeric($id))
 		{
-			try
+			$service = ShippingService::getInstanceById($id);
+			
+			if ($service)
 			{
-				$service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);
 				$array['ShippingService'] = $service->toArray();
 			}
-			catch (ARNotFoundException $e)
+			else
 			{
 				return array();
 			}
@@ -202,4 +194,3 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 		}
 	}
 }
-?>

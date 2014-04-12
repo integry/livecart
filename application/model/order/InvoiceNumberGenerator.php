@@ -1,5 +1,6 @@
 <?php
 
+namespace order;
 
 /**
  * Defines abstract interface for invoice ID number generator classes
@@ -18,8 +19,9 @@ abstract class InvoiceNumberGenerator
 
 	public static function getGenerator(CustomerOrder $order)
 	{
-		$class = ActiveRecordModel::getApplication()->getConfig()->get('INVOICE_NUMBER_GENERATOR');
-		self::loadGeneratorClass($class);
+		$class = $order->getDI()->get('config')->get('INVOICE_NUMBER_GENERATOR');
+		self::loadGeneratorClass($class, $order);
+		$class = '\order\invoiceNumber\\' . $class;
 
 		return new $class($order);
 	}
@@ -35,19 +37,19 @@ abstract class InvoiceNumberGenerator
 		return $classes;
 	}
 
-	private static function loadGeneratorClass($class)
+	private static function loadGeneratorClass($class, CustomerOrder $order)
 	{
-		$files = self::getGeneratorFiles();
+		$files = self::getGeneratorFiles($order);
 		if (isset($files[$class]))
 		{
 			include_once $files[$class];
 		}
 	}
 
-	private static function getGeneratorFiles()
+	private static function getGeneratorFiles(CustomerOrder $order)
 	{
 		$files = array();
-		foreach (ActiveRecordModel::getApplication()->getConfigContainer()->getDirectoriesByMountPath('application/model/order/invoiceNumber') as $dir)
+		foreach ($order->getDI()->get('application')->getConfigContainer()->getDirectoriesByMountPath('application/model/order/invoiceNumber') as $dir)
 		{
 			foreach (glob($dir . '/*.php') as $file)
 			{
@@ -56,6 +58,11 @@ abstract class InvoiceNumberGenerator
 		}
 
 		return $files;
+	}
+	
+	protected function getConfig()
+	{
+		return $this->order->getDI()->get('config');
 	}
 
 	public abstract function getNumber();

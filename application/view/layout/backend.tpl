@@ -6,9 +6,12 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=100" />
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"></link>
 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -17,9 +20,6 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.js"></script>
 		<script src="javascript/library/angular/tinymce.js"></script>
 		
-		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-		<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"></link>
-
 		<script src="javascript/library/angular/tree.js"></script>
 		<script src="javascript/library/angular/directives.js"></script>
 		<script src="javascript/library/angular/ng-grid-scroller/ng-grid-scroller.js"></script>
@@ -31,7 +31,10 @@
 		<script src="javascript/backend/Product.js"></script>
 		<script src="javascript/backend/StaticPage.js"></script>
 		<script src="javascript/backend/User.js"></script>
+		<script src="javascript/backend/CustomerOrder.js"></script>
 		<script src="javascript/backend/Eav.js"></script>
+		<script src="javascript/backend/Gallery.js"></script>
+		<script src="javascript/backend/SimpleSettings.js"></script>
 
 		<script src="javascript/common.js"></script>
 		
@@ -46,7 +49,7 @@
 
 		<script src="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.js"></script>
 		<link href="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.7/ng-grid.min.css" rel="stylesheet"></link>
-		<script src="http://code.angularjs.org/1.2.0-rc.3/angular-resource.min.js"></script>
+		<script src="//code.angularjs.org/1.2.15/angular-resource.min.js"></script>
 		
 		<link href="stylesheet/backend/Backend.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Eav.css" rel="stylesheet"></link>
@@ -80,6 +83,10 @@
 			  </li>
 
 			  <li>
+			  	<a ng-click="setPage('order')">Orders</a>
+			  </li>
+
+			  <li>
 			  	<a ng-click="setPage('user')">Users</a>
 			  </li>
 
@@ -94,6 +101,15 @@
 			  <li>
 			  	<a ng-click="setPage('zone')">Shipping & Taxes</a>
 			  </li>
+
+			  <li>
+			  	<a ng-click="setPage('gallery')">Galleries</a>
+			  </li>
+
+			  <li>
+			  	<a ng-click="setPage('simplesettings')">Settings</a>
+			  </li>
+
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">

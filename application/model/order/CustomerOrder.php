@@ -91,8 +91,8 @@ class CustomerOrder extends \ActiveRecordModel implements \eav\EavAble, \busines
 		$this->hasOne('billingAddressID', 'user\UserAddress', 'ID', array('alias' => 'BillingAddress'));
 		$this->hasOne('shippingAddressID', 'user\UserAddress', 'ID', array('alias' => 'ShippingAddress'));
 
-        $this->hasMany('ID', '\order\OrderedItem', 'customerOrderID', array('alias' => 'OrderedItems'));
-        $this->hasMany('ID', '\order\Shipment', 'orderID', array('alias' => 'Shipments'));
+        $this->hasMany('ID', 'order\OrderedItem', 'customerOrderID', array('alias' => 'OrderedItems'));
+        $this->hasMany('ID', 'order\Shipment', 'orderID', array('alias' => 'Shipments'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -106,7 +106,7 @@ class CustomerOrder extends \ActiveRecordModel implements \eav\EavAble, \busines
 			$instance->user = $user;
 		}
 		
-		$instance->currencyID = 'USD';
+		$instance->currencyID = $instance->getDI()->get('application')->getDefaultCurrencyCode();
 
 		return $instance;
 	}
@@ -455,8 +455,11 @@ return;
 	 */
 	public function addItem(OrderedItem $orderedItem)
 	{
+		$items = persist($this->orderedItems);
+		$items[] = $orderedItem;
+		$this->orderedItems = $items;
+		
 		$orderedItem->customerOrder = $this;
-		$this->orderedItems[] = $orderedItem;
 
 		if ($orderedItem->shipment)
 		{
@@ -508,6 +511,7 @@ return;
 	 */
 	public function finalize($options = array())
 	{
+		/*
 		$rebillsLeft = 0;
 
 		if ($this->isFinalized && empty($options['allowRefinalize']))
@@ -679,8 +683,6 @@ return;
 
 		// set order total
 
-		$this->totalAmount = $this->getTotal(true);
-
 		// save shipment taxes
 		foreach ($this->shipments as $shipment)
 		{
@@ -695,13 +697,11 @@ return;
 
 		$this->setPaidStatus();
 
-		$this->dateCompleted = new ARSerializableDateTime();
+		*/
 
+		$this->totalAmount = $this->getTotal(true);
 		$this->isFinalized = true;
-
-		// @todo: fix order total calculation
-		$shipments = $this->shipments;
-		unset($this->shipments);
+		$this->dateCompleted = now();
 
 		if (!$this->invoiceNumber)
 		{
@@ -715,7 +715,7 @@ return;
 					$this->save();
 					$saved = true;
 				}
-				catch (SQLException $e)
+				catch (Exception $e)
 				{
 				}
 			}
@@ -744,12 +744,7 @@ return;
 
 		$this->event('after-finalize');
 
-		$this->getDI()->get('db')->commit();
-
-		// @todo: see above
-		$this->shipments = $shipments;
-
-		return $wishList;
+//		return $wishList;
 	}
 
 	public function cancel()
@@ -883,7 +878,7 @@ return;
 		}
 	}
 
-	public function setUser(User $user)
+	public function setUser(\user\User $user)
 	{
 		if ($this->user && ($this->user->getID() == $user->getID()))
 		{
@@ -891,6 +886,9 @@ return;
 		}
 
 		$this->user = $user;
+
+		return;
+		
 		$this->setCheckoutStep(self::CHECKOUT_USER);
 
 		foreach (array(array('defaultBillingAddress' => 'billingAddress'),
@@ -1273,7 +1271,7 @@ return;
 	{
 		$total = 0;
 
-		if ($this->shipments && $this->shipments->count())
+		if ($this->shipments && count($this->shipments))
 		{
 			// @todo: the tax calculation is slightly off when it's calculated for the first time, so it has to be called twice
 			$this->getTaxes();
@@ -1410,7 +1408,7 @@ return;
 
 	public function isShippingSelected()
 	{
-		$selected = $this->shipments ? $this->shipments->count() : 0;
+		$selected = $this->shipments ? count($this->shipments) : 0;
 
 		if (!$this->shipments)
 		{
@@ -1690,10 +1688,14 @@ return;
 	{
 		$array = parent::toArray();
 		
+		$count = 0;
 		foreach ($this->orderedItems as $item)
 		{
 			$array['OrderedItems'][] = $item->toArray();
+			$count += $item->count;
 		}
+		
+		$array['itemCount'] = $count;
 		
 		$currency = $this->getCurrency();
 		$id = $currency->getID();
@@ -2021,16 +2023,12 @@ return;
 	 */
 	public function getShipments()
 	{
-		if (!$this->shipments || !$this->shipments->count())
+		if (!$this->shipments || !count($this->shipments))
 		{
 			if ($this->getID() && ($this->isFinalized || $this->isMultiAddress))
 			{
 				$this->loadItems();
 
-				$filter = query::query()->where('Shipment.orderID = :Shipment.orderID:', array('Shipment.orderID' => $this->getID()));
-				$filter->orderBy('Shipment.status');
-
-				$this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService'));
 				foreach($this->shipments as $shipment)
 				{
 					$shipment->loadItems();
@@ -2081,20 +2079,19 @@ return;
 							if (!isset($main))
 							{
 								$main = Shipment::getNewInstance($this);
+								$this->shipments[] = $main;
 							}
 							$main->addItem($item);
 						}
 					}
-
+					
 					if (isset($downloadable))
 					{
-						$this->shipments->unshift($downloadable);
+						$this->shipments[] = $downloadable;
 					}
 				}
 
 				$this->event('getShipments');
-
-				$this->shipping = serialize($this->shipments);
 			}
 		}
 
@@ -2345,7 +2342,8 @@ return;
 				if ($reqItem['ID'] == $item->getID())
 				{
 					$found = true;
-					$item->setCount($reqItem['count']);
+					$item->loadData($reqItem);
+					//$item->setCount($reqItem['count']);
 					$item->save();
 					unset($items[$key]);
 					break;
@@ -2567,7 +2565,7 @@ return;
 
 	public static function hasRecurringorderBy()
 	{
-
+		return false;
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'isRecurring'), 1));
 		return (bool)ActiveRecordModel::getRecordCount(__CLASS__, $filter);

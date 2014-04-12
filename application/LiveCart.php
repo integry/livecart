@@ -127,7 +127,8 @@ class LiveCart extends \Phalcon\Mvc\Application
 					"host" => $dsn['host'],
 					"username" => $dsn['user'],
 					"password" => !empty($dsn['password']) ? $dsn['password'] : '',
-					"dbname" => substr($dsn['path'], 1)
+					"dbname" => substr($dsn['path'], 1),
+					//'charset'   =>'utf8'
 				));
 				
 				//Listen all the database events
@@ -196,6 +197,15 @@ class LiveCart extends \Phalcon\Mvc\Application
 			$this->router->setBaseDir($_SERVER['baseDir'], $_SERVER['virtualBaseDir']);
 			//$this->router->enableURLRewrite(false);
 		}
+	}
+	
+	public function getEnvVars()
+	{
+		$env = array();
+		$env['user'] = $this->user->toArray();
+		$env['cart'] = $this->order->toArray();
+		
+		return $env;
 	}
 
 	protected function loadCoreModules()
@@ -1373,7 +1383,7 @@ class LiveCart extends \Phalcon\Mvc\Application
 	{
 		if (!$this->businessRuleController)
 		{
-			$context = new \businessrule\BusinessRuleContext();
+			$context = new \businessrule\BusinessRuleContext($this->getDI());
 
 			if ($items = \order\SessionOrder::getOrderItems())
 			{

@@ -53,10 +53,12 @@ class CategoryController extends CatalogController
 		$query->columns('product\Product.*, product\ProductImage.*, category\Category.*')
 			->join('product\ProductImage', 'product\Product.defaultImageID=product\ProductImage.ID', '', 'LEFT')
 			->join('eav\EavObject', 'product\Product.eavObjectID=eav\EavObject.ID', '', 'LEFT');
+			
+		$query->setSortOrder($this->request);
 
 		$set = $query->getQuery()->execute();
 		
-		$perPage = 10;
+		$perPage = $this->config->get('NUM_PRODUCTS_PER_CAT');
 		$page = $this->request->getParam('page', 1);
 		$paginator = new LivePaginator(
 			array(
@@ -84,13 +86,28 @@ class CategoryController extends CatalogController
 		$this->set('category', $category);
 		$this->set('products', $products);
 		$this->set('filters', $filters);
+		$this->set('filterParams', $this->getFilterParams($query));
 		$this->set('count', $set->count());
 		$this->set('paginator', $paginator);
 		$this->set('currency', $this->application->getDefaultCurrencyCode());
-		
+		$this->set('search', $this->getSearchTerm());
+ 		$this->set('sortOptions', $this->getSortOptions());
+ 		$this->set('sort', $query->getSortOrder());
+ 		
 		if ($this->request->getJsonRawBody())
 		{
 			$this->view->pick('category/ajax');
+		}
+	}
+	
+	private function getSearchTerm()
+	{
+		foreach ($this->filters as $filter)
+		{
+			if ($filter instanceof filter\SearchFilter)
+			{
+				return $filter->getKeywords();
+			}
 		}
 	}
 	
@@ -106,14 +123,20 @@ class CategoryController extends CatalogController
 			}
 		}
 		
+		$instances = array();
 		if ($filters)
 		{
 			$instances = filter\FilterGroup::query()->inWhere('ID', array_keys($filters))->execute();
-			
-			foreach ($instances as $filter)
-			{
-				$query->applyFilter($filter, $filters[$filter->getID()]);
-			}
+		}
+		
+		if ($q = $this->request->getParam('q'))
+		{
+			$instances[] = new \filter\SearchFilter($q);
+		}
+
+		foreach ($instances as $filter)
+		{
+			$query->applyFilter($filter, $filters[$filter->getID()]);
 		}
 		
 		$cats = $this->request->getParam('cats');
@@ -139,6 +162,8 @@ class CategoryController extends CatalogController
 			$ends = substr($ends, 0, 10);
 			$query->andWhere('SUBQUERY("SELECT dateValue FROM EavObjectValue WHERE EavObjectValue.objectID=EavObject.ID AND EavObjectValue.fieldID=12 LIMIT 1") <= :enddate:', array('enddate' => $ends));
 		}
+		
+		$this->filters = $instances;
 		
 		return json_encode($filters);
 	}
@@ -211,28 +236,6 @@ class CategoryController extends CatalogController
 			return $this->response->redirect('index/index');
 		}
 
-		// sorting
-		$sort = array();
-		$opts = $this->config->get('ALLOWED_SORT_ORDER');
-		if ($opts)
-		{
-			foreach ($opts as $opt => $status)
-			{
-				$sort[strtolower($opt)] = $this->translate($opt);
-			}
-		}
-
-		foreach ($this->getCategory()->getSpecificationFieldArray() as $field)
-		{
-			if ($field['isSortable'])
-			{
-				$sortName = $field['dataType'] == SpecField::DATATYPE_NUMBERS ? '_sort_num' : '_sort_text';
-				$sort[$field['ID'] . '-' . $field['handle'] . '_asc'] = $this->maketext($sortName . '_asc', $field['name_lang']);
-				$sort[$field['ID'] . '-' . $field['handle'] . '_desc'] = $this->maketext($sortName . '_desc', $field['name_lang']);
-			}
-		}
-
-		$order = $this->request->get('sort');
 
 		$products = $this->getProductsArray($productFilter);
 		$this->hasProducts = count($products) > 0;
@@ -354,7 +357,7 @@ class CategoryController extends CatalogController
 		$this->set('subCategories', $subCategories);
 
 		$this->set('currency', $this->getRequestCurrency());
-		$this->set('sortOptions', $sort);
+
 		$this->set('sortForm', $this->buildSortForm($order));
 		$this->set('sortField', $order);
 		$this->set('categoryNarrow', $categoryNarrow);
@@ -494,6 +497,43 @@ class CategoryController extends CatalogController
 		}
 
 		return implode(',', $filterChainHandle);
+	}
+	
+	private function getFilterParams(product\ProductFilter $query)
+	{
+		$params = array();
+		$json = $this->getFilterJson();
+		foreach ($json as $key => $value)
+		{
+			if ($value['ID'] == 's')
+			{
+				$params['q'] = $value['handle'];
+				unset($json[$key]);
+			}
+		}
+		
+		if ($json)
+		{
+			$params['filters'] = json_encode($json);
+		}
+		
+		if (!$query->isDefaultSortOrder())
+		{
+			$params['sort'] = $query->getSortOrder();
+		}
+		
+		return $params;
+	}
+
+	private function getFilterJson()
+	{
+		$json = array();
+		foreach ($this->filters as $filter)
+		{
+			$json[] = $filter->toArray();
+		}
+		
+		return $json;
 	}
 
 	/**
@@ -1203,6 +1243,35 @@ class CategoryController extends CatalogController
 		}
 
 		return $res;
+	}
+
+	protected function getSortOptions()
+	{
+		$sort = array();
+		$opts = $this->config->get('ALLOWED_SORT_ORDER');
+		if ($opts)
+		{
+			foreach ($opts as $opt => $status)
+			{
+				$sort[strtolower($opt)] = $this->translate($opt);
+			}
+		}
+
+		/*
+		foreach ($this->getCategory()->getSpecificationFieldArray() as $field)
+		{
+			if ($field['isSortable'])
+			{
+				$sortName = $field['dataType'] == SpecField::DATATYPE_NUMBERS ? '_sort_num' : '_sort_text';
+				$sort[$field['ID'] . '-' . $field['handle'] . '_asc'] = $this->maketext($sortName . '_asc', $field['name_lang']);
+				$sort[$field['ID'] . '-' . $field['handle'] . '_desc'] = $this->maketext($sortName . '_desc', $field['name_lang']);
+			}
+		}
+		*/
+
+		return $sort;
+
+		//$order = $this->request->get('sort');
 	}
 
 	protected function getCategory()

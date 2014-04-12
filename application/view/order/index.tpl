@@ -11,23 +11,23 @@
 					<th></th>
 					<th>{t _price}</th>
 					<th>{t _quantity}</th>
+					<th>{t _subtotal}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="item in order.OrderedItems">
 					<td class="col-lg-6">{{ item.name }}</td>
-					<td class="col-lg-3">{{ item.formattedDisplaySubTotal }}</td>
+					<td class="col-lg-3">{{ item.formattedDisplayPrice }}</td>
 					<td class="col-lg-3">
-						<button class="btn btn-default btn-xs" ng-click="decCount(item)" ng-disabled="item.count <= 1">-</button>
-						<input class="form-control quantity" ng-model="item.count" />
-						<button class="btn btn-default btn-xs" ng-click="incCount(item)">+</button>
-						<button class="btn btn-default btn-xs" ng-click="remove(item)"><span class="glyphicon glyphicon-remove"></span></button>
+						[[ partial("product/block/quantity.tpl") ]]
+						<button class="btn btn-default btn-xs btn-remove" ng-click="remove(item)"><span class="glyphicon glyphicon-remove"></span></button>
 					</td>
+					<td class="col-lg-3">{{ item.formattedDisplaySubTotal }}</td>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
-					<td>{t _total}:</td>
+					<td colspan="3">{t _total}:</td>
 					<td>{{ order.formattedTotal[order.currencyID] }}</td>
 				</tr>
 			</tfoot>

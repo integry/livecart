@@ -5,13 +5,13 @@ include_once __ROOT__ . '/application/helper/CreateHandleString.php';
 $handle = '([^\.\047]{0,})';
 
 $router->add("#^/" . $handle . "\-([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2));
-$router->add("#^/" . $handle . "\-([0-9]+)/([0-9]+)$#", array("controller" => 'category', "action" => 'index', "id" => 2, "page" => 3));
+$router->add('/' . $handle . '-{id:[0-9]+}/{page:[_0-9]+}', array("controller" => 'category', "action" => 'index', "slug" => 1))->setName('category-page');
 //$router->add("#^/opportunity/" . $handle . "\-([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'view', "id" => 1));
 //$router->add("#^/profile/([0-9]+)$#", array("controller" => 'heysuccess', "action" => 'profile', "id" => 1));
 
-$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"));
+$router->add("/{handle:[\-a-zA-Z0-9]+}.html", array("controller" => "staticPage", "action" => "view"))->setName('staticpage');
 //$router->add("/{:controller/:action/{id:[0-9]+}", array("controller" => "staticPage", "action" => "view"));
-$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
+$router->add("#^/([a-zA-Z0-9\_\-]+)/([a-zA-Z0-9\.\_]+)/([\-0-9]+)$#", array("controller" => 1, "action" => 2, "id" => 3));
 
 $router->add('/backend', array(
 	'module' => 'backend',
@@ -49,26 +49,38 @@ $router->add('/backend/:controller', array(
 	'controller' => 1
 ));
 
-$router->add('/{slug:[a-zA-Z0-9\-]+}-{id:[0-9]+}', array(
+$router->add('/' . $handle . '-{id:[0-9]+}', array(
+        'slug' => 1,
         'controller' => 'category',
         'action' => 'index'
     ))->setName('category');
 
-$router->add('/shop/{slug:[a-zA-Z0-9\-]+}-{id:[0-9]+}', array(
+$router->add('/shop/' . $handle . '-{id:[0-9]+}', array(
+        'slug' => 1,
         'controller' => 'product',
         'action' => 'index'
     ))->setName('product');
 
-function route($object)
+function route($object, $params = array())
 {
+	$route = array();
+	
 	if ($object instanceof \category\Category)
 	{
-		return array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'category');
+		$route = array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'category');
 	}
 	
 	else if ($object instanceof \product\Product)
 	{
-		return array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'product');
+		$route = array('id' => $object->getID(), 'slug' => CreateHandleString::create($object->name()), 'for' => 'product');
 	}
 
+	else if ($object instanceof \staticpage\StaticPage)
+	{
+		$route = array('id' => $object->getID(), 'handle' => CreateHandleString::create($object->handle), 'for' => 'staticpage');
+	}
+	
+	$route = array_merge($route, $params);
+	
+	return $route;
 }

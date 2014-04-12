@@ -39,13 +39,41 @@ class ProductController extends CatalogController
 
 	public function indexAction()
 	{
+		$product = Product::getInstanceByID($this->request->getParam('id'));
+		
+		/*
+		set_time_limit(0);
+
+		$q = $product->getReadConnection()->query('SELECT * FROM kameja.products_pics');
+		$q->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+			
+		while ($row = $q->fetchArray())
+		{
+			$file = '/var/tmp/kameja/' . str_replace('/small/', '/full/', $row['name']);
+			$prod = Product::getInstanceByID($row['p_id']);
+			
+			if (!$prod)
+			{
+				continue;
+			}
+			
+			$img = \product\ProductImage::getNewInstance($prod);
+			$img->position = $row['p_pic'];
+			$img->save();
+			$img->setFile($file);
+			
+			var_dump($row);
+		}
+		*/
+		
 		$this->loadLanguageFile('Category');
 
-		$product = Product::getInstanceByID($this->request->getParam('id'), array('ProductImage', 'Manufacturer', 'Category'));
+		$product = Product::getInstanceByID($this->request->getParam('id'));
 		$this->product = $product;
 		
 		$this->set('product', $product);
-
+		$this->set('currency', $this->request->get('currency', null, $this->application->getDefaultCurrencyCode()));
+		
 		/*
 		if (!$product->isEnabled || $product->parent)
 		{
@@ -112,7 +140,6 @@ class ProductController extends CatalogController
 		$this->set('product', $productArray);
 		$this->set('category', $productArray['Category']);
 		$this->set('quantity', $this->getQuantities($product));
-		$this->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		$this->set('catRoute', $catRoute);
 		$this->set('context', $this->getContext());
 
@@ -223,23 +250,6 @@ class ProductController extends CatalogController
 			$this->set('presentation', $theme->toFlatArray());
 		}
 
-		// product images
-		$images = $product->getImageArray();
-		if ($theme && $theme->isVariationImages)
-		{
-			if ($variations = $this->getVariations())
-			{
-				foreach ($variations['products'] as $prod)
-				{
-					if (!empty($prod['DefaultImage']['ID']))
-					{
-						$images[] = $prod['DefaultImage'];
-					}
-				}
-			}
-		}
-		$this->set('images', $images);
-
 		// discounted pricing
 		$this->set('quantityPricing', $product->getPricingHandler()->getDiscountPrices($this->user, $this->getRequestCurrency()));
 		$this->set('files', $this->getPublicFiles());
@@ -286,6 +296,16 @@ class ProductController extends CatalogController
 		$this->set('enlargeProductThumbnailOnMouseOver',
 			$this->config->get('_ENLARGE_PRODUCT_THUMBNAILS_ON') == 'P_THUMB_ENLARGE_MOUSEOVER');
 		*/
+	}
+	
+	public function orderAction()
+	{
+		
+	}
+	
+	public function popupAction()
+	{
+		return $this->indexAction();
 	}
 
 	public function quickShopAction()

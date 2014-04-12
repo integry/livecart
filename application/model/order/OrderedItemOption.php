@@ -1,5 +1,9 @@
 <?php
 
+namespace order;
+
+use \product\ProductOption;
+use \product\ProductOptionChoice;
 
 /**
  * Represents a shopping basket item configuration value
@@ -7,25 +11,15 @@
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class OrderedItemOption extends ActiveRecordModel
+class OrderedItemOption extends \ActiveRecordModel
 {
-	/**
-	 * Define database schema used by this active record instance
-	 *
-	 * @param string $className Schema name
-	 */
-	public static function defineSchema($className = __CLASS__)
+	public $priceDiff;
+	public $optionText;
+
+	public function initialize()
 	{
-
-
-		$schema->registerField(new ARPrimaryForeignKeyField("orderedItemID", "OrderedItem", "ID", "OrderedItem;
-		$schema->registerField(new ARPrimaryForeignKeyField("choiceID", "ProductOptionChoice", "ID", "ProductOptionChoice;
-
-		public $priceDiff;
-		public $optionText;
-
-		$schema->registerCircularReference('Choice', 'ProductOptionChoice');
-		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
+		$this->belongsTo('orderedItemID', 'order\OrderedItem', 'ID', array('alias' => 'OrderedItem'));
+		$this->belongsTo('choiceID', 'product\ProductOptionChoice', 'ID', array('alias' => 'Choice'));
 	}
 
 	/*####################  Static method implementations ####################*/
@@ -33,9 +27,8 @@ class OrderedItemOption extends ActiveRecordModel
 	public static function getNewInstance(OrderedItem $item, ProductOptionChoice $choice)
 	{
 		$instance = new self();
-		$instance->orderedItem = $item;
+		$instance->orderedItemID = $item->getID();
 		$instance->choice = $choice;
-
 		return $instance;
 	}
 
@@ -57,23 +50,35 @@ class OrderedItemOption extends ActiveRecordModel
 
 	/*####################  Saving ####################*/
 
-	public function save()
+	public function beforeSave()
 	{
+		// @todo: remove this wtf (https://github.com/phalcon/cphalcon/issues/2317)
+		if (isset($this->changedChoice))
+		{
+			$this->choiceID = $this->changedChoice;
+		}
+		
 		if (!$this->orderedItem->customerOrder->isFinalized)
 		{
 			$this->updatePriceDiff();
 		}
-
-		return parent::save();
 	}
 
 	public function beforeCreate()
 	{
 		$this->updatePriceDiff();
-
-
+	}
+	
+	public function loadData($data)
+	{
+		$id = is_array($data) ? $data['choiceID'] : $data;
+		$this->choice = ProductOptionChoice::getInstanceByID($id);
+		$this->choiceID = $id;
+		$this->changedChoice = $id;
+		$this->save();
 	}
 
+/*
 	public function delete()
 	{
 		return self::deleteByID($this->getID());
@@ -93,11 +98,12 @@ class OrderedItemOption extends ActiveRecordModel
 			unlink(self::getFilePath($this->optionText));
 		}
 	}
+*/
 
 	public function updatePriceDiff()
 	{
-		$currency = $this->orderedItem->customerOrder->currencyID->getID();
-		$this->priceDiff = $this->choice->getPriceDiff($currency));
+		$currency = $this->orderedItem->customerOrder->currency;
+		$this->priceDiff = $this->choice->getPriceDiff($currency);
 	}
 
 	public function setFile($fileArray)
@@ -181,6 +187,14 @@ class OrderedItemOption extends ActiveRecordModel
 
 	/*####################  Data array transformation ####################*/
 
+	public function toArray()
+	{
+		$array = parent::toArray();
+		$array['choiceID'] = (int)$this->choice->getID();
+		
+		return $array;
+	}
+
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
@@ -205,5 +219,3 @@ class OrderedItemOption extends ActiveRecordModel
 	}
 
 }
-
-?>

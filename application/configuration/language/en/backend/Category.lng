@@ -78,37 +78,6 @@ _productFile_embedded=Embed media file in page (supported formats: [_1])
 # Product relationship
 _product_relationship_group_title=Title
 
-# Product options
-_ProductOption_main=Main
-_ProductOption_values=Choices
-_ProductOption_is_required=Required
-_ProductOption_displayed_in_product_page=Displayed in product page
-_ProductOption_displayed_in_list=Displayed in product list
-_ProductOption_displayed_in_cart=Displayed in shopping cart
-_ProductOption_type=Type
-_ProductOption_type_bool=Checkbox
-_ProductOption_type_select=Selection
-_ProductOption_type_text=Text entry
-_ProductOption_type_file=Customer file upload
-_ProductOption_title=Title
-_ProductOption_selectMessage=Default selection message
-_ProductOption_display_as=Display selection as
-_ProductOption_displayType_selectBox=Select box
-_ProductOption_displayType_radioButtons=Radio buttons
-_ProductOption_displayType_color=Color selector
-_ProductOption_color=Color
-_ProductOption_maxFileSize=Max file size
-_ProductOption_maxFileSize_help=File size cannot exceed [_1] as per PHP configuration
-_ProductOption_fileExtensions=Allowed file extensions
-_ProductOption_fileExtensions_help=Separated by spaces. For example, <strong>jpg png gif</strong>
-_ProductOption_megabytes=MB
-_option_price_diff=Price difference
-_ProductOption_price_included=Include product price in option display price
-_ProductOption_description=Description
-_option_name=Title
-_ProductOption_add_values=Add choice
-_select_color=Select color
-
 # index
 _products=Products
 _category_details=Category Details

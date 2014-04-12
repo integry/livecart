@@ -16,6 +16,8 @@ class ProductFilter extends \Phalcon\Mvc\Model\Query\Builder
 	private $category = null;
 
 	private $filters = array();
+	
+	private $sort;
 
 	public function __construct($params = NULL)
 	{
@@ -77,15 +79,15 @@ class ProductFilter extends \Phalcon\Mvc\Model\Query\Builder
 		return $selectFilter;
 	}
 
-	public function orderByPrice(Currency $currency, $direction = 'ASC')
+	public function orderByPrice($direction = 'ASC')
 	{
 	  	if ('ASC' != $direction)
 	  	{
 			$direction = 'DESC';
 		}
-
-		$currency->defineProductJoin($this->selectFilter);
-		$this->selectFilter->orderBy(new ARFieldHandle($currency->getJoinAlias(), 'price'), $direction);
+		
+		$this->join('product\ProductPrice', '(product\ProductPrice.productID=product\Product.ID) AND (product\ProductPrice.currencyID = "' . $this->category->getDI()->get('application')->getDefaultCurrencyCode() . '")', '', 'LEFT');
+		$this->orderBy('product\ProductPrice.price ' . $direction);
 	}
 
 	public function getCategory()
@@ -96,6 +98,51 @@ class ProductFilter extends \Phalcon\Mvc\Model\Query\Builder
 	public function setEnabledOnly()
 	{
 		$this->andWhere('product\Product.isEnabled = :isEnabled:', array('isEnabled' => true));
+	}
+	
+	public function setSortOrder($request)
+	{
+		$sort = $request->getParam('sort');
+		if (!$sort)
+		{
+			$sort = $this->getDefaultSortOrder();
+		}
+		
+		switch (strtoupper($sort))
+		{
+			case 'SALES_RANK':
+				$this->orderBy('product\Product.salesRank');
+			break;
+
+			case 'PRICE_ASC':
+				$this->orderByPrice('ASC');
+			break;
+
+			case 'PRICE_DESC':
+				$this->orderByPrice('DESC');
+			break;
+			
+			case 'NEWEST_ARRIVALS':
+				$this->orderBy('product\Product.ID DESC');
+			break;
+		}
+
+		$this->sort = $sort;
+	}
+	
+	public function getSortOrder()
+	{
+		return strtolower($this->sort);
+	}
+	
+	public function isDefaultSortOrder()
+	{
+		return strtolower($this->getSortOrder()) == strtolower($this->getDefaultSortOrder());
+	}
+
+	public function getDefaultSortOrder()
+	{
+		return $this->category->getDI()->get('config')->get('SORT_ORDER');
 	}
 }
 

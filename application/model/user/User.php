@@ -21,9 +21,9 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	public $grantedRoles = array();
 
 	public $ID;
-	public $defaultShippingAddressID;
-	public $defaultBillingAddressID;
-	public $userGroupID;
+	//public $defaultShippingAddressID;
+	//public $defaultBillingAddressID;
+	//public $userGroupID;
 	
 	public $eavObjectID;
 	
@@ -51,7 +51,7 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 		));
 
 		$this->belongsTo('userGroupID', 'user\UserGroup', 'ID', array('alias' => 'UserGroup'));
-		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('foreignKey' => array('action' => \Phalcon\Mvc\Model\Relation::ACTION_CASCADE), 'alias' => 'EavObject'));
+		$this->hasOne('eavObjectID', 'eav\EavObject', 'ID', array('alias' => 'EavObject'));
 	}
 
     public function validation()
@@ -84,7 +84,6 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	{
 		$instance = new self();
 		$instance->email = $email;
-		$instance->photoReviewed = 1;
 
 		if ($userGroup)
 		{

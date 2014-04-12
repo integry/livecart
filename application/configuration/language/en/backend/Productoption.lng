@@ -1,0 +1,40 @@
+_ProductOption_remove_question=Really remove this product option?
+_add_option=Add new option
+_cancel_adding_new_field=Cancel adding new option
+
+_error_name_empty=Please enter the product option name
+_error_record_id_is_not_valid=The product option does not exist
+_could_not_remove_option=Could not remove option
+_could_not_remove_option_choice=Could not remove option choice
+
+# Product options
+_ProductOption_main=Main
+_ProductOption_values=Choices
+
+ProductOption.isRequired=Required
+ProductOption.isDisplayed=Displayed in product page
+ProductOption.isDisplayedInList=Displayed in product list
+ProductOption.isDisplayedInCart=Displayed in shopping cart
+ProductOption.type=Type
+_ProductOption_type_bool=Checkbox
+_ProductOption_type_select=Selection
+_ProductOption_type_text=Text entry
+_ProductOption_type_file=Customer file upload
+ProductOption.name=Title
+ProductOption.selectMessage=Default selection message
+ProductOption.displayType=Display selection as
+_ProductOption_displayType_selectBox=Select box
+_ProductOption_displayType_radioButtons=Radio buttons
+_ProductOption_displayType_color=Color selector
+_ProductOption_color=Color
+_ProductOption_maxFileSize=Max file size
+_ProductOption_maxFileSize_help=File size cannot exceed [_1] as per PHP configuration
+_ProductOption_fileExtensions=Allowed file extensions
+_ProductOption_fileExtensions_help=Separated by spaces. For example, <strong>jpg png gif</strong>
+_ProductOption_megabytes=MB
+_option_price_diff=Price difference
+_ProductOption_price_included=Include product price in option display price
+ProductOption.description=Description
+_option_name=Title
+_ProductOption_add_values=Add choice
+_select_color=Select color

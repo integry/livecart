@@ -4,9 +4,11 @@
 _login=Sign In
 _your_pass=Your password
 _password_sent=Password Sent
-_has_been_sent_to=Your new password has been sent to <strong>[_1]</strong>.
+_password_emailed=Your new password has been e-mailed to you!
 _pass_security_warning=<span style="color:red; font-weight: bold;">Note:</span> for security reasons this message is displayed even if the email address was not found in our database.
 _remind_pass=Remind Password
+_register=Register
+_login_success=Login successful!
 
 _returning=Returning Customer
 _new_cust=New Customer

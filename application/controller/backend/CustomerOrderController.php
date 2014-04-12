@@ -1,6 +1,8 @@
 <?php
 
+require_once(dirname(__FILE__) . '/abstract/ActiveGridController.php');
 
+use Phalcon\Validation\Validator;
 
 
 /**
@@ -1095,7 +1097,7 @@ class CustomerOrderController extends ActiveGridController
 				break;
 
 			case self::TYPE_RECURRING_ALL:
-				$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
+				//$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
 				$cond->andWhere('CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1));
 				$cond->andWhere(new IsNullCond('CustomerOrder.parentID'));
 				break;

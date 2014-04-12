@@ -3,7 +3,7 @@
 	{block LIST-IMAGE}
 	{block QUICK-SHOP product=product}
 #}
-	<a href="{productUrl product=product filterChainHandle=filterChainHandle category=category}">
+	<a href="[[ url(route(product)) ]]" ng-click="showProduct([[ product.ID ]], $event)">
 	{% if product.get_DefaultImage() and product.get_DefaultImage().getID() %}
 		<img src="[[ product.get_DefaultImage().getPath(2) ]]" />
 	{% else %}

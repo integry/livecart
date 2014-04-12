@@ -1,5 +1,5 @@
-{% if product.isFractionalUnit || config('QUANT_FIELD_TYPE') == 'QUANT_INPUT' %}
-	{textfield name=field|default:"count" class="quantityInput col-sm-2"}
-{% else %}
-	{selectfield name=field|default:"count" options=quantity class="quantity" noFormat=true}
-{% endif %}
+<div class="quantity-select">
+	<button class="btn btn-default btn-xs btn-dec" ng-click="decCount(item)" ng-disabled="item.count <= 1">-</button>
+	<input class="form-control quantity" ng-model="item.count" />
+	<button class="btn btn-default btn-xs btn-inc" ng-click="incCount(item)">+</button>
+</div>

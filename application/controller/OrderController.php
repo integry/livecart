@@ -3,6 +3,7 @@
 use \product\Product;
 use \order\CustomerOrder;
 use \order\OrderedItem;
+use \order\SessionOrder;
 
 /**
  * @author Integry Systems
@@ -18,6 +19,7 @@ class OrderController extends FrontendController
 	public function updateAction()
 	{
 		$this->order->loadRequestData($this->request);
+		$this->estimateShippingCost();
 		$this->order->save();
 		
 		echo json_encode(array('order' => $this->order->toArray()));
@@ -48,7 +50,10 @@ class OrderController extends FrontendController
 
 		$this->order->getTotal(true);
 
-		$response = $this->getCartPageResponse();
+		$this->getCartPageResponse();
+		
+		$fields = new \eav\EavFieldManager('CustomerOrder');
+		$fields->setResponse($this);
 
 		$this->addBreadCrumb($this->translate('_my_basket'), '');
 	}
@@ -138,18 +143,17 @@ class OrderController extends FrontendController
 	{
 		$this->set('order', $this->order);
 		
-		return;
-		
-		$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
+		//$this->addBreadCrumb($this->translate('_my_session'), $this->router->createUrlFromRoute($this->request->get('return'), true));
 
 		$this->order->setUser($this->user);
-		$this->order->loadItemData();
+		//$this->order->loadItemData();
 
 		if ($result = $this->order->updateToStock())
 		{
 			$this->set('changes', $result);
 		}
 
+/*
 		$options = $this->getItemOptions();
 		$currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);
 		$form = $this->buildCartForm($this->order, $options);
@@ -158,7 +162,7 @@ class OrderController extends FrontendController
 		{
 			$form->set('tos', $this->session->get('tos'));
 		}
-
+*/
 		if ($this->config->get('ENABLE_SHIPPING_ESTIMATE'))
 		{
 			$this->loadLanguageFile('User');
@@ -169,18 +173,8 @@ class OrderController extends FrontendController
 				$this->set('isShippingEstimated', true);
 			}
 
-			$address = $this->order->shippingAddress;
-			foreach (array('countryID' => 'country', 'stateName' => 'state_text', 'postalCode' => 'postalCode', 'city' => 'city') as $addressKey => $formKey)
-			{
-				$form->set('estimate_' . $formKey, $address->$addressKey);
-			}
-
-			if ($address->state && $address->state->getID())
-			{
-				$form->set('estimate_state_select', $address->state->getID());
-			}
-
-			$this->set('countries', $this->getCountryList($form));
+			/*
+			$this->set('countries', $this->getCountryList());
 			$this->set('states', $this->getStateList($form->get('estimate_country')));
 
 			$hideConf = (array)$this->config->get('SHIP_ESTIMATE_HIDE_ENTRY');
@@ -191,7 +185,10 @@ class OrderController extends FrontendController
 						$this->order->isMultiAddress;
 
 			$this->set('hideShippingEstimationForm', $hideForm);
+			*/
 		}
+		
+		return;
 
 		$orderArray = $this->order->toArray();
 
@@ -245,8 +242,8 @@ class OrderController extends FrontendController
 			return false;
 		}
 
-		$estimateAddress = SessionOrder::getEstimateAddress();
-		$this->order->shippingAddress->set($estimateAddress);
+		$estimateAddress = $this->sessionOrder->getEstimateAddress();
+		$this->order->shippingAddress = $estimateAddress;
 
 		$isShippingEstimated = false;
 		foreach ($this->order->getShipments() as $shipment)
@@ -315,8 +312,14 @@ class OrderController extends FrontendController
 
 	public function optionsAction()
 	{
-		$response = $this->index();
-		$this->set('editOption', $this->request->get('id'));
+		$products = Product::query()->inWhere('ID', $this->request->getJSON('ids'))->execute();
+		$options = array();
+		foreach ($products as $product)
+		{
+			$options[$product->getID()] = toArray($product->productOptions);
+		}
+		
+		echo json_encode($options);
 	}
 
 	public function optionFormAction(CustomerOrder $order = null, $filter = 'isDisplayed')
@@ -549,26 +552,50 @@ class OrderController extends FrontendController
 
 		return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
+	
+	public function itemPriceAction()
+	{
+		$order = $this->order;
+		$data = $this->request->getJsonRawBody();
+		$item = OrderedItem::getNewInstance($order, Product::getInstanceByID($data['productID']));
+		$item->customerOrder = $order;
+		$item->save();
+		$item->loadData($data);
+		$item->delete();
+		
+		echo json_encode($item->toArray());
+	}
 
 	/**
 	 *  Add a new product to shopping cart
 	 */
 	public function addToCartAction()
 	{
-		// avoid search engines adding items to cart...
-		if ($this->request->get('csid') && ($this->request->get('csid') != session_id()))
-		{
-			return;
-		}
-
-		if (!$this->request->get('count'))
+		$this->order->save();
+		var_dump($this->order->toArray());
+		
+		if (!$this->request->getParam('count'))
 		{
 			$this->request->set('count', 1);
 		}
 
-		if ($id = $this->request->get('id'))
+		if ($id = $this->request->getParam('id'))
 		{
 			$res = $this->addProductToCart($id);
+			$data = $this->request->getJsonRawBody();
+			
+			if ($data)
+			{
+				$res->loadData($data);
+			}
+			
+			$this->order->save();
+			//$res->save();
+			
+			foreach ($res->options as $opt)
+			{
+				$opt->save();
+			}
 
 			if ($res instanceof ActionRedirectResponse)
 			{
@@ -582,9 +609,9 @@ class OrderController extends FrontendController
 				}
 			}
 
-			if ($res->count < $this->request->get('count'))
+			if ($res->count < $this->request->getParam('count'))
 			{
-				$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count, $this->request->get('count'))));
+				//$this->setErrorMessage($this->makeText('_add_to_cart_quant_error', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()), $res->count, $this->request->get('count'))));
 			}
 
 			$this->setMessage($this->makeText('_added_to_cart', array(Product::getInstanceByID($id)->getName($this->getRequestLanguage()))));
@@ -681,7 +708,7 @@ class OrderController extends FrontendController
 
 	private function addProductToCart($id, $prefix = '')
 	{
-		if ($prefix && !$this->request->get($prefix . 'count'))
+		if ($prefix && !$this->request->getParam($prefix . 'count'))
 		{
 			return '"';
 		}
@@ -747,7 +774,7 @@ class OrderController extends FrontendController
 		}
 		*/
 
-		$count = $this->request->get($prefix . 'count', null, 1);
+		$count = $this->request->getParam($prefix . 'count', null, 1);
 		if ($count < $product->getMinimumQuantity())
 		{
 			$count = $product->getMinimumQuantity();
@@ -759,7 +786,7 @@ class OrderController extends FrontendController
 			$item->name = $product->name;
 			foreach ($product->getOptions(true) as $option)
 			{
-				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
+//				$this->modifyItemOption($item, $option, $this->request, $prefix . 'option_' . $option->getID());
 			}
 
 			if ($this->order->isMultiAddress)
@@ -767,6 +794,7 @@ class OrderController extends FrontendController
 				$item->save();
 			}
 
+			/*
 			if ($product->type == Product::TYPE_RECURRING)
 			{
 				if ($item->isExistingRecord() == false)
@@ -790,6 +818,7 @@ class OrderController extends FrontendController
 				}
 				// what if product with type recurring but no plan? just ignore?
 			}
+			*/
 		}
 
 		$this->order->updateToStock(false);

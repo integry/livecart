@@ -34,12 +34,15 @@ class ProductPricing
 
 		if (is_null($prices) && $product->getID())
 		{
-			$prices = $product->getRelated("ProductPrice");
+			$prices = $product->productPrices;
 		}
 		
-		foreach ($prices as $price)
+		if (!empty($prices))
 		{
-			$this->setPrice($price);
+			foreach ($prices as $price)
+			{
+				$this->setPrice($price);
+			}
 		}
 
 		return;

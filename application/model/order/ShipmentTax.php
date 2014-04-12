@@ -1,5 +1,6 @@
 <?php
 
+namespace order;
 
 /**
  * Tax amount for a particular shipment. One shipment can have multiple taxes, depending on
@@ -8,23 +9,17 @@
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class ShipmentTax extends ActiveRecordModel
+class ShipmentTax extends \ActiveRecordModel
 {
 	const TYPE_SUBTOTAL = 1;
 
 	const TYPE_SHIPPING = 2;
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName(__class__);
-
-		public $ID;
-		public $taxRateID;
-		public $shipmentID;
-		public $type;
-		public $amount;
-	}
+	public $ID;
+//	public $taxRateID;
+//	public $shipmentID;
+	public $type;
+	public $amount;
 
 	/**
 	 * Create a new instance
@@ -69,7 +64,7 @@ class ShipmentTax extends ActiveRecordModel
 
 			if (!$totalAmount)
 			{
-				$this->amount = 0);
+				$this->amount = 0;
 				return;
 			}
 

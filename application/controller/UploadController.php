@@ -23,7 +23,7 @@ class UploadController extends ControllerBase
 			$size = $this->request->get('size');
 			if (!$size || !strpos($size, 'x'))
 			{
-				$size = '316x195';
+				$size = '2000x2000';
 			}
 			
 			$sizes = explode('x', $size);

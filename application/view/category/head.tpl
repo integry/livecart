@@ -18,6 +18,7 @@
 	<h1>[[category.name()]]{% if !empty(searchQuery) %} &gt;&gt; "<span class="keywords">[[searchQuery]]</span>"{% endif %}</h1>
 {% endif %}
 
+test
 {% if config('DISPLAY_CATEGORY_DESC') && category.description() %}
 	<div class="descr categoryDescr">
 		<p>[[category.description()]]</p>

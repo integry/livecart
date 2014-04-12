@@ -43,6 +43,19 @@ class FrontendController extends ControllerBase
 			$this->loadLanguageFile('Customize');
 		}
 	}
+	
+	public function menuAction($handle = '', $type = '')
+	{
+		$menu = \menu\Menu::query()->where('handle = :handle:', array('handle' => $handle))->execute()->getFirst();
+		$this->set('menu', $menu);
+
+		if (!$type)
+		{
+			$type = 'horizontal';
+		}
+		
+		$this->set('type', $type);
+	}
 
 	public function initialize()
 	{
@@ -471,6 +484,7 @@ class FrontendController extends ControllerBase
 		$this->set('subCategories', $subCategories);
 		$this->set('categories', $topCategories);
 		$this->set('currentId', $this->getCategory()->getID());
+		$this->set('current', $this->getCategory());
 		$this->set('lang', 'en');
 	}
 

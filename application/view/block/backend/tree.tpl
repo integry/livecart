@@ -8,7 +8,7 @@
 		forcePlaceholderSize: true,
 		toleranceElement: '> div'
 		}"
-		ui-nested-sortable-stop="updatePosition(event, ui)"
+		ui-nested-sortable-stop="updatePosition($event, ui)"
 		{% endif %}
 		>
 		<li ya-tree="child in data.children at ul" class="minimized-{{child.open != true}}" {% if !empty(checkboxes) %}checkboxes="[[ checkboxes ]]"{% endif %} >

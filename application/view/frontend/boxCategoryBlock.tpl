@@ -1,9 +1,9 @@
-{%- macro categoryTree(node, filters, currentId, subCategories) %}
+{%- macro categoryTree(node, filters, current, subCategories) %}
 	{% if node %}
 		{% set level=level+1 %}
 		<ul class="nav nav-pills nav-stacked">
 		{% for category in node %}
-			{% if category.ID == currentId %}
+			{% if category.lft <= current.lft and category.rgt >= current.rgt %}
 				<li class="active">
 			{% else %}
 				<li>
@@ -17,7 +17,7 @@
 			{% endif %}
 
 			{% if !empty(subCategories[category.ID]) %}
-				[[ categoryTree(subCategories[category.ID], level, currentId, subCategories) ]]
+				[[ categoryTree(subCategories[category.ID], level, current, subCategories) ]]
 			{% endif %}
 
 			</li>
@@ -37,6 +37,6 @@
 	</div>
 
 	<div class="content">
-		[[ categoryTree(categories, 0, currentId, subCategories) ]]
+		[[ categoryTree(categories, 0, current, subCategories) ]]
 	</div>
 </div>

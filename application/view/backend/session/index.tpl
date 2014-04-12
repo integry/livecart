@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	<div id="logoContainer" class="col-lg-3 center-block">
+	<div id="logoContainer" class="col-lg-3 center-block" style="margin-top: 10%">
 
 	{# <img src="[[ config('BACKEND_LOGIN_LOGO') ]]" /> #}
 
@@ -12,18 +12,21 @@
 		<div class="loginFailed">{t _login_failed}</div>
 	{% endif %}
 
-	<my-form action="[[ url("backend/session/doLogin") ]]" method="post" />
+	<div class="well">
+		<my-form action="[[ url("backend/session/doLogin") ]]" method="post" />
 
-		[[ textfld('email', '_email', ['type': 'email']) ]]
+			[[ textfld('email', '_email', ['type': 'email']) ]]
 
-		[[ pwdfld('password', '_your_pass') ]]
-		<a href="[[ url("user/remindPassword") ]]" class="forgottenPassword">
-			{t _remind_password}
-		</a>
-		
-		[[ partial('block/submit.tpl', ['caption': "_login"]) ]]
+			[[ pwdfld('password', '_your_pass') ]]
+			<a href="[[ url("user/remindPassword") ]]" class="forgottenPassword">
+				{t _remind_password}
+			</a>
+			
+			[[ partial('block/submit.tpl', ['caption': "_login"]) ]]
 
-	</form>
+		</my-form>
+	</div>
+	
 	</div>
 
 {% endblock %}

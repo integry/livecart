@@ -2,12 +2,10 @@
 <span class="price">
 	[[ product.getFormattedPrice(currency) ]]
 	
-	{#
-	{% if product.formattedListPrice.currency %}
+	{% if product.getListPrice(currency) %}
 		<span class="listPrice">
-			{product.formattedListPrice.currency}
+			[[ product.getFormattedListPrice(currency) ]]
 		</span>
 	{% endif %}
-	#}
 </span>
 {% endif %}

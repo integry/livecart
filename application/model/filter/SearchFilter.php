@@ -1,5 +1,6 @@
 <?php
 
+namespace filter;
 
 /**
  * Filter product list by search keyword.
@@ -17,7 +18,7 @@ class SearchFilter implements FilterInterface
 		$this->query = rawurldecode(preg_replace('/(_)([0-9A-Z]{2})/', '%$2', $searchQuery));
 	}
 
-	public function getCondition()
+	public function setCondition(\Phalcon\Mvc\Model\Query\Builder $builder, $params)
 	{
 		// analyze search query
 		// find exact phrases first
@@ -39,28 +40,17 @@ class SearchFilter implements FilterInterface
 
 		foreach ($phrases as $phrase)
 		{
-			$searchCond = null;
 			foreach ($searchFields as $field)
 			{
-				$cond = new LikeCond(new ARFieldHandle('Product', $field), '%' . $phrase . '%');
-				if (!$searchCond)
-				{
-					$searchCond = $cond;
-				}
-				else
-				{
-					$searchCond->addOr($cond);
-				}
+				$conditions[] = '\product\Product.' . $field . ' LIKE :search:';
 			}
-
-			$conditions[] = $searchCond;
 		}
+		
+		$builder->andWhere(implode(' OR ', $conditions), array('search' => '%' . $phrase . '%'));
 
-		$condition = new AndChainCondition($conditions);
+		//$builder->getDI()->get('application')->processInstancePlugins('searchFilter', $condition);
 
-		ActiveRecordModel::getApplication()->processInstancePlugins('searchFilter', $condition);
-
-		return $condition;
+		return $builder;
 	}
 
 	public function getCleanedQuery($query)
@@ -72,11 +62,6 @@ class SearchFilter implements FilterInterface
 		$query = trim($query);
 
 		return $query;
-	}
-
-	public function defineJoin(ARSelectFilter $filter)
-	{
-		/* do nothing */
 	}
 
 	public function getID()

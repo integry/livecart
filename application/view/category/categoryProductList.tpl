@@ -6,16 +6,11 @@
 
 		<div class="col-sm-6 listOptions">
 			
-			{#
-			{% if sortOptions && (sortOptions|@count > 1) %}
+			{% if sortOptions and (count(sortOptions) > 1) %}
 			<span class="sortOptions">
-					{t _sort_by}
-					{form handle=sortForm action="self" method="get"}
-					{selectfield id="productSort" name="sort" options=sortOptions onchange="this.form.submit();"}
-					{/form}
+				[[ select("sort", sortOptions, 'class': 'form-control', 'ng-model': 'sort', 'ng-init': 'sort = "' ~ sort ~ '"') ]]
 			</span>
 			{% endif %}
-			#}
 
 			{# [[ partial("category/block/switchListLayout.tpl") ]] #}
 		</div>

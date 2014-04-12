@@ -15,7 +15,8 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
 					resolve: {
 							categoryID: function() { return $scope.id },
 							id: function() { return null } 
-							}
+							},
+					windowClass: 'product-edit'
 							});
 	};
 	
@@ -26,7 +27,8 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
 					resolve: {
 							id: function() { return id },
 							categoryID: function() { return null } 
-							 }
+							 },
+					windowClass: 'product-edit'
 							});
 	};
 	
@@ -41,15 +43,6 @@ app.controller('ProductController', function ($scope, $http, $resource, $modal)
 		params[key] = value;
 		$scope.massAction('setValue', params);
 	};
-
-/*
-	$scope.add = function()
-	{
-		return;
-		var d = $modal.dialog({dialogFade: false, resolve: {categoryID: function(){ return $scope.id; }, id: function(){ return null; } }});
-		d.open(Router.createUrl('backend/product', 'add'), 'EditProductController');
-	};
-*/
 });
 
 app.controller('ProductPresentationController', function ($scope, $http)
@@ -81,6 +74,7 @@ app.controller('EditProductController', function ($scope, $http, $modal, id, cat
 		success(function(data)
 		{
 			$scope.vals = data;
+			$scope.vals.isEnabled = data.isEnabled ? 1 : 0;
 		});
 		
 	$http.get(Router.createUrl('backend/product', 'eav', {id: id, categoryID: categoryID})).
@@ -371,4 +365,110 @@ app.directive('quantityPrice', function($compile)
 			$scope.addQuantity();
 		}
     };
+});
+
+app.controller('ProductOptionController', function ($scope, $http, $resource, $modal)
+{
+    $scope.resource = $resource('../backend/productoption/:verb/:id', 
+    	{id: $scope.id, verb: '@verb'}, 
+    	{
+    		query:  {method:'POST', isArray: false, params: { verb: 'lists' }},
+    		mass:  {method:'POST', params: { verb: 'mass' }}
+    	}
+    );
+
+	$scope.add = function(id)
+	{
+		$modal.open({templateUrl: Router.createUrl('backend/productoption', 'edit'), 
+					controller: 'EditProductOptionController',
+					resolve: {
+							productID: function() { return $scope.id },
+							id: function() { return null } 
+							},
+					windowClass: 'productoption-edit'
+							});
+	};
+	
+	$scope.edit = function(id)
+	{
+		$modal.open({templateUrl: Router.createUrl('backend/productoption', 'edit'), 
+					controller: 'EditProductOptionController',
+					resolve: {
+							id: function() { return id },
+							productID: function() { return null } 
+							 },
+					windowClass: 'productoption-edit'
+							});
+	};
+});
+
+app.controller('EditProductOptionController', function ($scope, $resource, $modal, id, productID, $http)
+{
+	$scope.form = null;
+    
+    var query = id ? {id: id} : {productID: productID};
+    $http.post('../backend/productoption/get', query).success(function(res)
+    {
+    	$scope.vals = res;
+    	if (productID)
+    	{
+    		$scope.vals.productID = productID;
+		}
+	});
+
+	$scope.isSelect = function()
+	{
+		return $scope.vals && (($scope.vals.type == 1) || ($scope.vals.type == 5));
+	};
+
+	$scope.isNumber = function()
+	{
+		return $scope.vals && (($scope.vals.type == 1) || ($scope.vals.type == 2));
+	};
+	
+	$scope.addRemoveValues = function()
+	{
+		if (!$scope.vals)
+		{
+			return;
+		}
+		
+		if (!$scope.vals.choices)
+		{
+			$scope.vals.choices = [];
+		}
+		
+		var filtered = _.filter($scope.vals.choices, function(value) { return value.name != ''; });
+		
+		if (filtered.length == $scope.vals.choices.length - 1)
+		{
+			return;
+		}
+		
+		$scope.vals.choices = filtered;
+		$scope.vals.choices.push({name: ''});
+	};
+	
+	$scope.$watch('vals.choices', function()
+	{
+		$scope.addRemoveValues();
+	});
+	
+	$scope.save = function()
+	{
+		if (!$scope.getChildScopeForm($scope).$invalid)
+		{
+			$http.post('../backend/productoption/save', $scope.vals).success(
+			function(res)
+			{
+				$scope.vals = res;
+				success('The option has been saved')();
+			});
+		}
+	};
+	
+	$scope.sortAZ = function()
+	{
+		$scope.vals.choices = _.sortBy($scope.vals.choices, 'value');
+	};
 });

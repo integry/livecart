@@ -1,5 +1,6 @@
 <?php
 
+use order\CustomerOrder;
 
 /**
  *  Handles order checkout process

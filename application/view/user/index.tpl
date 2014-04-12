@@ -1,58 +1,36 @@
 {% extends "layout/frontend.tpl" %}
 
-{% block title %}{t _your_account} ([[user.fullName]]){% endblock %}
-[[ partial("user/layout.tpl") ]]
-[[ partial('user/userMenu.tpl', ['current': "homeMenu"]) ]]
+{% block title %}{t _your_account} ([[user.firstName]]){% endblock %}
+
+{% block left %}
+	[[ partial('user/userMenu.tpl', ['current': "homeMenu"]) ]]
+{% endblock %}
+
 {% block content %}
 
-	{% if !empty(userConfirm) %}
-	<div class="confirmationMessage">
-		[[userConfirm]]
+	<h2>{t _recent_orders}</h2>
+	<div ng-init="orders = [[ json(orders) ]]">
+	<div ng-repeat="order in orders">
+		
+		<div class="well">
+			<div class="row">
+				<div class="col-sm-3">
+					<div><strong>{{ order.invoiceNumber }}</strong></div>
+					<div>{{ order.dateCompleted }}</div>
+					<div><strong>{{ order.formattedTotal[order.currencyID] }}</strong></div>
+				</div>
+				<div class="col-sm-9">
+					<ul class="list-unstyled">
+						<li ng-repeat="item in order.OrderedItems">
+							{{ item.count }} x {{ item.name }}
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		
 	</div>
-	{% endif %}
-
-	{% if !empty(message) %}
-		<div class="confirmationMessage">[[message]]</div>
-	{% endif %}
-
-	{% if !empty(notes) %}
-		<h2 id="unreadMessages">{t _unread_msg}</h2>
-		<ul class="notes">
-			{% for note in notes %}
-			   <a href="[[ url("user/viewOrder/" ~ note.orderID) ]]#msg">{t _order} #[[note.orderID]]</a>
-			   [[ partial('user/orderNote.tpl', ['note': note]) ]]
-			{% endfor %}
-		</ul>
-	{% endif %}
-
-	{% if !empty(files) %}
-		<h2 id="recentDownloads">{t _download_recent}</h2>
-
-		{foreach from=files item="item"}
-			<h3>
-				<a href="[[ url("user/item/" ~ item.ID) ]]">[[item.Product.name()]]</a>
-			</h3>
-			[[ partial('user/fileList.tpl', ['item': item]) ]]
-			<div class="clear"></div>
-		{% endfor %}
-	{% endif %}
-
-	{% if !empty(orders) %}
-		<h2 id="recentOrders">{t _recent_orders}</h2>
-		{foreach from=orders item="order"}
-			[[ partial('user/orderEntry.tpl', ['order': order]) ]]
-		{% endfor %}
-	{% else %}
-		<p>
-			{t _no_orders_placed}
-		</p>
-	{% endif %}
-
-	<div class="clear"></div>
-
-	{% if pendingInvoiceCount > 0 %}
-		<h2>{t _invoices}</h2>
-		[[ partial('user/invoicesTable.tpl', ['itemList': lastInvoiceArray, 'paginateAction': "pendingInvoice", 'textDisplaying': _displaying_invoices, 'textFound': _invoices_found, 'id': 0, 'query': '', 'pendingInvoiceCount': pendingInvoiceCount]) ]]
-	{% endif %}
+	</div>
 
 {% endblock %}

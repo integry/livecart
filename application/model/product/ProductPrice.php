@@ -82,6 +82,7 @@ class ProductPrice extends \ActiveRecordModel
 	{
 		$price = $this->price;
 
+		/*
 		if ($parent = $this->product->parent)
 		{
 			$parentPrice = $parent->getPricingHandler()->getPrice($this->currency)->getPrice();
@@ -93,6 +94,7 @@ class ProductPrice extends \ActiveRecordModel
 			$price = self::getApplication()->getDisplayTaxPrice($price, $this->product);
 			$price = self::getApplication()->getBusinessRuleController()->getProductPrice($this->product, $price);
 		}
+		*/
 
 		if (!$price)
 		{
@@ -127,6 +129,7 @@ class ProductPrice extends \ActiveRecordModel
 		$price = $this->getPrice($applyRounding);
 		$rules = is_array($this->serializedRules) ? $this->serializedRules : unserialize($this->serializedRules);
 
+		/*
 		if ($parent = $this->product->parent)
 		{
 			$priceSetting = $this->product->getChildSetting('price');
@@ -142,7 +145,8 @@ class ProductPrice extends \ActiveRecordModel
 				$price = $this->recalculatePrice();
 			}
 		}
-
+		*/
+		
 		if ($price)
 		{
 			// quantity/group based prices

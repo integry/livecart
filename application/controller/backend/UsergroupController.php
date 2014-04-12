@@ -19,8 +19,8 @@ class UserGroupController extends ActiveGridController
 	public function indexAction()
 	{
 		$userGroups = array();
-		$userGroups[] = array('id' => -2, 'title' => $this->translate('_all_users'));
-		$userGroups[] = array('id' => -1, 'title' => $this->translate('_default_user_group'));
+		$userGroups[] = array('id' => '00', 'title' => $this->translate('_all_users'));
+		$userGroups[] = array('id' => '0', 'title' => $this->translate('_default_user_group'));
 		foreach(UserGroup::query()->execute() as $group)
 		{
 			$arr = $group->toArray();
@@ -198,7 +198,7 @@ class UserGroupController extends ActiveGridController
 		{
 			$filter->andWhere('userGroupID = :userGroupID:', array('userGroupID' => $id));
 		}
-		else if($id == -1)
+		else if(!$id)
 		{
 			// without group
 			$filter->andWhere('userGroupID IS NULL');
@@ -210,7 +210,6 @@ class UserGroupController extends ActiveGridController
 		}
 
 		//$filter->addField('(SELECT COUNT(*) > 0 From SessionData WHERE userID=User.ID)', '', 'isOnline');
-
 		return $filter;
 	}
 

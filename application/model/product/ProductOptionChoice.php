@@ -1,7 +1,6 @@
 <?php
 
-ClassLoader::import('application/model/product/ProductOption');
-ClassLoader::import('application/model/product/ProductPrice');
+namespace product;
 
 /**
  * One of the main entities of the system - defines and handles product related logic.
@@ -10,23 +9,18 @@ ClassLoader::import('application/model/product/ProductPrice');
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class ProductOptionChoice extends MultilingualObject
+class ProductOptionChoice extends \system\MultilingualObject
 {
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $priceDiff;
+	public $hasImage;
+	public $position;
+	public $name;
+	public $config;
+
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("ProductOptionChoice");
-
-		public $ID;
-		public $optionID", "ProductOption", "ID", "ProductOption;
-
-		public $priceDiff;
-		public $hasImage;
-		public $position;
-		public $name;
-		public $config;
-
-		$schema->registerCircularReference('Option', 'ProductOption');
+		$this->belongsTo('optionID', 'product\ProductOption', 'ID', array('alias' => 'ProductOption'));
 	}
 
 	/**
@@ -39,52 +33,24 @@ class ProductOptionChoice extends MultilingualObject
 	public static function getNewInstance(ProductOption $option)
 	{
 		$choice = new self();
-		$choice->option = $option;
+		$choice->productOption = $option;
 
 		return $choice;
 	}
 
-	/**
-	 * Get ActiveRecord instance
-	 *
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return Product
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function getPriceDiff($currencyCode, $basePrice = false)
+	public function getPriceDiff(\Currency $currency, $basePrice = false)
 	{
 		$basePrice = false === $basePrice ? $this->priceDiff : $basePrice;
-		return ProductPrice::convertPrice(Currency::getInstanceByID($currencyCode), $basePrice);
+		return ProductPrice::convertPrice($currency, $basePrice);
 	}
 
 	public function setColor($color)
 	{
 		$config = unserialize($this->config);
 		$config['color'] = $color;
-		$this->config = serialize($config));
-	}
-
-	/*####################  Saving ####################*/
-
-	/**
-	 * Removes an option choice from database
-	 *
-	 * @param int $recordID
-	 * @return bool
-	 * @throws Exception
-	 */
-	public static function deleteByID($recordID)
-	{
-		return parent::deleteByID(__CLASS__, $recordID);
+		$this->config = serialize($config);
 	}
 
 	/*####################  Data array transformation ####################*/

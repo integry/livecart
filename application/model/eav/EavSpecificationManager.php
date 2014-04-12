@@ -90,7 +90,7 @@ class EavSpecificationManager
 	public function setOwner(\ActiveRecordModel $owner)
 	{
 		$this->owner = $owner;
-		$eavObject = $owner->get_EavObject();
+		$eavObject = $owner->eavObject();
 		if (!$eavObject)
 		{
 			return;
@@ -278,7 +278,7 @@ class EavSpecificationManager
 
 	public function save()
 	{
-		$obj = $this->owner->get_EavObject();
+		$obj = $this->owner->eavObject;
 		foreach ($this->removedAttributes as $attribute)
 		{
 			$attribute->delete();

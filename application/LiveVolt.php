@@ -46,6 +46,10 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 				return '$volt->getDI()->get(\'request\')->get(' . $resolvedArgs . ')';
 			});
 
+			$this->_compiler->addFunction('env', function($resolvedArgs, $exprArgs) {
+				return '$volt->getDI()->get(\'application\')->getEnvVars(' . $resolvedArgs . ')';
+			});
+
 			// read macro param
 			$this->_compiler->addFunction('param', function($resolvedArgs, $exprArgs) {
 				return '(!empty($params[' . $resolvedArgs . ']) ? $params[' . $resolvedArgs . '] : \'\')';
@@ -77,6 +81,7 @@ class LiveVolt extends \Phalcon\Mvc\View\Engine\Volt
 
 			$this->_compiler->addFunction('route', 'route');
 			$this->_compiler->addFunction('count', 'count');
+			$this->_compiler->addFunction('toArray', 'toArray');
 			$this->_compiler->addFunction('round', 'round');
 			$this->_compiler->addFunction('is_null', 'is_null');
 			$this->_compiler->addFunction('strip_tags', 'strip_tags');

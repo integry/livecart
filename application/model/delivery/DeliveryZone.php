@@ -2,6 +2,10 @@
 
 namespace delivery;
 
+use \order\Shipment;
+
+require_once(__ROOT__ . '/library/shipping/ShippingRateSet.php');
+
 /**
  * Delivery zones are used to classify shipping locations, which allows to define different
  * shipping rates and taxes for different delivery addresses.
@@ -257,7 +261,7 @@ class DeliveryZone extends \ActiveRecordModel
 	 */
 	public function getDefinedShippingRates(Shipment $shipment)
 	{
-		$rates = new ShippingRateSet();
+		$rates = new \ShippingRateSet();
 		foreach ($this->getShippingServices() as $service)
 		{
 			$rate = $service->getDeliveryRate($shipment);
@@ -311,7 +315,7 @@ class DeliveryZone extends \ActiveRecordModel
 		$defined = $this->getDefinedShippingRates($shipment);
 		if (!$this->isRealTimeDisabled)
 		{
-			$defined->merge($this->getRealTimeRates($shipment));
+			//$defined = array_merge($this->getRealTimeRates($shipment));
 		}
 
 		// calculate surcharge
@@ -399,12 +403,11 @@ class DeliveryZone extends \ActiveRecordModel
 	/**
 	 * Get set of shipping sevices available in current zone
 	 *
-	 * @param boolean $loadReferencedRecords
 	 * @return ARSet
 	 */
-	public function getShippingServices($loadReferencedRecords = false)
+	public function getShippingServices()
 	{
-		return ShippingService::getByDeliveryZone($this, $loadReferencedRecords);
+		return $this->shippingServices;
 	}
 }
 

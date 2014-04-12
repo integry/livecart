@@ -184,6 +184,7 @@ try
 				"dispatch:beforeException",
 				function($event, $dispatcher, $exception)
 				{
+					//var_dump($exception->getMessage());exit;
 					switch ($exception->getCode()) {
 						case PhDispatcher::EXCEPTION_HANDLER_NOT_FOUND:
 						case PhDispatcher::EXCEPTION_ACTION_NOT_FOUND:
@@ -392,5 +393,20 @@ function persist(\Phalcon\Mvc\Model\Resultset\Simple $set)
 	return $array;
 }
 
+function toArray(\Phalcon\Mvc\Model\Resultset\Simple $set)
+{
+	$array = array();
+	foreach ($set as $item)
+	{
+		$array[] = $item->toArray();
+	}
+	
+	return $array;
+}
+
+function now()
+{
+	return date('Y-m-d H:i:s');
+}
 
 ?>

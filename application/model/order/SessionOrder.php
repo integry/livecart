@@ -34,10 +34,10 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		$id = $this->session->get('CustomerOrder');
 		if ($id)
 		{
-			try
-			{
-				$instance = CustomerOrder::getInstanceById($id);
+			$instance = CustomerOrder::getInstanceById($id);
 
+			if ($instance)
+			{
 				if (!$instance->getOrderedItems())
 				{
 					$instance->loadItems();
@@ -45,13 +45,9 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 				$instance->isSyncedToSession = true;
 			}
-			catch (ARNotFoundException $e)
-			{
-				unset($instance);
-			}
 		}
 
-		if (!isset($instance))
+		if (empty($instance))
 		{
 			$userId = $this->sessionUser->getUser()->getID();
 
@@ -70,7 +66,7 @@ class SessionOrder extends \Phalcon\DI\Injectable
 			}
 		}
 
-		if (!isset($instance))
+		if (empty($instance))
 		{
 			$instance = CustomerOrder::getNewInstance(User::getNewInstance(0));
 			//$instance->setUser(null);
@@ -84,8 +80,8 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 		if ($instance->isFinalized)
 		{
-			$this->session->unsetValue('CustomerOrder');
-			return $this->getsetOrder();
+			$this->session->remove('CustomerOrder');
+			return $this->getOrder();
 		}
 
 		// fixes issue when trying to add OrderedItem to unsaved(without ID) CustomerOrder.
@@ -154,15 +150,13 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 	public function getEstimateAddress()
 	{
-		
-
 		if ($address = $this->session->get('shippingEstimateAddress'))
 		{
 			return unserialize($address);
 		}
 		else
 		{
-			$order = $this->getsetOrder();
+			$order = $this->getOrder();
 			if ($order->shippingAddress)
 			{
 				return $order->shippingAddress;
@@ -171,16 +165,15 @@ class SessionOrder extends \Phalcon\DI\Injectable
 			$user = $order->user;
 			if ($user && !$user->isAnonymous())
 			{
-				$user->load(true);
+				/*
 				foreach (array('defaultShippingAddress', 'defaultBillingAddress') as $key)
 				{
 					if ($address = $user->$key)
 					{
-						$address->load(array('UserAddress'));
-						$address->userAddress->load();
 						return $address->userAddress;
 					}
 				}
+				*/
 			}
 		}
 
@@ -189,13 +182,13 @@ class SessionOrder extends \Phalcon\DI\Injectable
 
 	public function getDefaultEstimateAddress()
 	{
-		$config = ActiveRecordModel::getApplication()->getConfig();
-		$address = UserAddress::getNewInstance();
-		$address->countryID->set($config->get('DEF_COUNTRY'));
+		$config = $this->config;
+		$address = \user\UserAddress::getNewInstance();
+		$address->countryID = $config->get('DEF_COUNTRY');
 
 		if ($state = $config->get('DEF_STATE'))
 		{
-			$address->state->set(State::getInstanceByID($config->get('DEF_STATE')));
+			$address->state = State::getInstanceByID($config->get('DEF_STATE'));
 		}
 
 		return $address;
@@ -219,5 +212,5 @@ class SessionOrder extends \Phalcon\DI\Injectable
 		$this->setOrder($order);
 	}
 }
-
+1
 ?>

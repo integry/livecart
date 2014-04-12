@@ -5,13 +5,6 @@
 			
 			[[ checkbox('isEnabled', '_is_enabled') ]]
 			
-			<div ng-show="vals.image">
-				[[ checkbox('photoReviewed', 'Profile photo reviewed') ]]
-				<img ng-src="upload/user/{{ vals.image }}" />
-				<a ng-click="vals.image = ''; vals.photoReviewed = 1;">Delete photo</a>
-				<br /><br />
-			</div>
-
 			[[ selectfld('UserGroup', '_user_group', availableUserGroups) ]]
 
 			[[ textfld('firstName', '_first_name') ]]

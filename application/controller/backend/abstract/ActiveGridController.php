@@ -43,7 +43,7 @@ abstract class ActiveGridController extends ControllerBackend
 	public function listsAction()
 	{
 		$filter = $this->getListFilter();
-		$this->setDefaultSortorderBy($filter);
+		$this->setDefaultSortOrder($filter);
 		$recordCount = true;
 
 		$exportBufferIndex = 0;
@@ -715,7 +715,7 @@ abstract class ActiveGridController extends ControllerBackend
 		return 'exported.csv';
 	}
 
-	protected function setDefaultSortorderBy(Builder $filter)
+	protected function setDefaultSortOrder(Builder $filter)
 	{
 		$filter->orderBy($this->getClassName() . '.ID DESC');
 	}

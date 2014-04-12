@@ -1,5 +1,8 @@
 <?php
 
+namespace product;
+
+use \category\Category;
 
 /**
  * Configurable product options
@@ -7,7 +10,7 @@
  * @package application/model/product
  * @author Integry Systems <http://integry.com>
  */
-class ProductOption extends MultilingualObject
+class ProductOption extends \system\MultilingualObject
 {
 	const TYPE_BOOL = 0;
 	const TYPE_SELECT = 1;
@@ -18,33 +21,37 @@ class ProductOption extends MultilingualObject
 	const DISPLAYTYPE_RADIO = 1;
 	const DISPLAYTYPE_COLOR = 2;
 
-	protected $choices = array();
-
-	public static function defineSchema($className = __CLASS__)
+	public $ID;
+	public $name;
+	public $description;
+	public $selectMessage;
+	public $type;
+	public $displayType;
+	public $isRequired;
+	public $isDisplayed;
+	public $isDisplayedInList;
+	public $isDisplayedInCart;
+	public $isPriceIncluded;
+	public $position;
+	public $maxFileSize;
+	public $fileExtensions;
+	
+	public function initialize()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("ProductOption");
+		$this->belongsTo('productID', 'product\Product', 'ID', array('alias' => 'Product'));
+		//$this->belongsTo('categoryID', 'category\Category', 'ID', array('alias' => 'Category'));
+        $this->hasMany('ID', 'product\ProductOptionChoice', 'optionID', array('alias' => 'Choices'));
+        //$this->hasOne('ID', 'product\ProductOptionChoice', 'defaultChoiceID', array('alias' => 'DefaultChoice'));
+	}
+	
+	protected function _preSaveRelatedRecords()
+	{
+		return true;
+	}
 
-		public $ID;
-		public $productID", "Product", "ID", null, ARInteger::instance()));
-		public $categoryID", "Category", "ID", null, ARInteger::instance()));
-		public $defaultChoiceID", "ProductOptionChoice", "ID", "ProductOptionChoice;
-
-		public $name;
-		public $description;
-		public $selectMessage;
-		public $type;
-		public $displayType;
-		public $isRequired;
-		public $isDisplayed;
-		public $isDisplayedInList;
-		public $isDisplayedInCart;
-		public $isPriceIncluded;
-		public $position;
-		public $maxFileSize;
-		public $fileExtensions;
-
-		$schema->registerCircularReference('DefaultChoice', 'ProductOptionChoice');
+	protected function _postSaveRelatedRecords()
+	{
+		return true;
 	}
 
 	/**
@@ -54,13 +61,13 @@ class ProductOption extends MultilingualObject
 	 *
 	 * @return Product
 	 */
-	public static function getNewInstance(ActiveRecordModel $parent)
+	public static function getNewInstance(\ActiveRecordModel $parent)
 	{
 		$option = new self();
 
 		if ($parent instanceof Product)
 		{
-			$option->product = $parent;
+			$option->productID = $parent->getID();
 		}
 		else if ($parent instanceof Category)
 		{
@@ -72,33 +79,6 @@ class ProductOption extends MultilingualObject
 		}
 
 		return $option;
-	}
-
-	/**
-	 * Get ActiveRecord instance
-	 *
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return Product
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get products record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/*####################  Value retrieval and manipulation ####################*/
@@ -130,18 +110,13 @@ class ProductOption extends MultilingualObject
 
 	public function getChoiceByID($id)
 	{
-		$s = $this->getRelatedRecordSet('ProductOptionChoice', query::query()->where('ProductOptionChoice.ID = :ProductOptionChoice.ID:', array('ProductOptionChoice.ID' => $id)));
-		if ($s->count())
+		foreach ($this->choices as $choice)
 		{
-			return $s->shift();
+			if ($choice->getID() == $id)
+			{
+				return $choice;
+			}
 		}
-	}
-
-	public static function getProductOptions(Product $product)
-	{
-		$options = $product->getRelatedRecordSet('ProductOption');
-		self::loadChoicesForRecordSet($options);
-		return $options;
 	}
 
 	public static function loadOptionsForProductSet(ARSet $products)
@@ -296,14 +271,7 @@ class ProductOption extends MultilingualObject
 
 	public function beforeCreate()
 	{
-	  	$this->setLastPosition();
-
-		parent::insert();
-	}
-
-	public static function deleteByID($id)
-	{
-		return parent::deleteByID(__class__, $id);
+		$this->setLastPosition();
 	}
 
 	/*####################  Data array transformation ####################*/
@@ -311,31 +279,11 @@ class ProductOption extends MultilingualObject
 	public function toArray()
 	{
 		$array = parent::toArray();
-
-	  	if ($this->choices)
-	  	{
-	  		$array['choices'] = array();
-
-	  		foreach ($this->choices as $choice)
-	  		{
-	  			$array['choices'][] = $choice->toArray();
-			}
-		}
-
-	  	return $array;
+		$array['choices'] = toArray($this->getChoices());
+		return $array;
 	}
 
-	/*####################  Get related objects ####################*/
-
-	public function getChoiceSet()
-	{
-		$f = new ARSelectFilter();
-		$f->orderBy('ProductOptionChoice.position');
-
-		return $this->getRelatedRecordSet('ProductOptionChoice', $f);
-	}
-
-	public function __clone()
+	public function z__clone()
 	{
 		parent::__clone();
 

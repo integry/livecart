@@ -37,7 +37,7 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 
 	public function getID()
 	{
-		return $this->ID;
+		return isset($this->ID) ? $this->ID : null;
 	}
 
 	public function setID($id)
@@ -602,6 +602,11 @@ abstract class ActiveRecordModel extends \Phalcon\Mvc\Model
 	public function toAngular()
 	{
 		return htmlentities(json_encode($this->toArray()));
+	}
+	
+	public function isDeleted()
+	{
+		return $this->getDirtyState() == Phalcon\Mvc\Model::DIRTY_STATE_DETACHED;
 	}
 	
 	protected function getConfig()

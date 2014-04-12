@@ -113,9 +113,10 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
         $this->hasMany('ID', 'category\ProductCategory', 'productID', array('alias' => 'ProductCategory'));
         $this->hasMany('ID', 'product\ProductImage', 'productID', array('alias' => 'ProductImages'));
-        $this->hasMany('ID', 'product\ProductPrice', 'productID', array('alias' => 'ProductPrice'));
-        $this->hasMany('ID', 'product\Product', 'parentID', array('alias' => 'Variation'));
-        $this->hasMany('ID', 'order\OrderedItem', 'productID', array('alias' => 'OrderedItem'));
+        $this->hasMany('ID', 'product\ProductPrice', 'productID', array('alias' => 'ProductPrices'));
+        //$this->hasMany('ID', 'product\Product', 'parentID', array('alias' => 'Variation'));
+        $this->hasMany('ID', 'product\ProductOption', 'productID', array('alias' => 'ProductOptions'));
+        //$this->hasMany('ID', 'order\OrderedItem', 'productID', array('alias' => 'OrderedItem'));
 
         $this->keepSnapshots(true);
 	}
@@ -492,9 +493,20 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function getItemPrice(OrderedItem $item, $applyRounding = true, Currency $currency = null)
 	{
-		$currency = $currency ? $currency : $item->getCurrency();
-		$currencyCode = $currency->getID();
-		$price = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode)->getItemPrice($item, $applyRounding);
+		//$currency = $currency ? $currency : $item->getCurrency();
+		//$currencyCode = $currency->getID();
+		//$priceInstance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+		$priceInstance = $this->productPrices->getFirst();
+		//$price = $priceInstance->getItemPrice($item, $applyRounding);
+		$price = $priceInstance->price;
+		return $price;
+	}
+
+	public function getListPrice($currencyCode)
+	{
+		$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+		$price = $instance->listPrice;
+
 		return $price;
 	}
 
@@ -524,6 +536,15 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		if ($price && $price->getID())
 		{
 			return $price->get_Currency()->getFormattedPrice($price->getPrice());
+		}
+	}
+	
+	public function getFormattedListPrice($currencyCode)
+	{
+		$price = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+		if ($price && $price->getID())
+		{
+			return $price->get_Currency()->getFormattedPrice($this->getListPrice($currencyCode));
 		}
 	}
 
@@ -745,12 +766,21 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 */
 
 		// update parent inventory counter
-		if ($this->hasChanged('stockCount') && $this->parent)
+		try
 		{
-			$stockDifference = $this->stockCount - $this->stockCount->getInitialValue();
+			/*
+			if ($this->hasChanged('stockCount') && $this->parent)
+			{
+				$stockDifference = $this->stockCount - $this->stockCount->getInitialValue();
 
-			$this->parent->stockCount = $this->parent->stockCount + $stockDifference;
-			$this->parent->save();
+				$this->parent->stockCount = $this->parent->stockCount + $stockDifference;
+				$this->parent->save();
+			}
+			*/
+		}
+		catch (\Phalcon\Mvc\Model\Exception $e)
+		{
+			
 		}
 	}
 
@@ -796,9 +826,9 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 			parent::save();
 		}
 
-		$this->getSpecification()->save();
+		//$this->getSpecification()->save();
 		//$this->getPricingHandler()->save();
-		$this->saveRelationships();
+		//$this->saveRelationships();
 
 		// \category\Category::updateCategoryIntervals($this->getID());
 
@@ -895,6 +925,10 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 		if (!empty($this->pricingHandlerInstance))
 		{
 			$array['price'] = $this->pricingHandlerInstance->toArray();
+		}
+		else
+		{
+			$array['price'] = (new ProductPricing($this))->toArray();
 		}
 		
 		return $array;
@@ -1305,6 +1339,8 @@ class Product extends \system\MultilingualObject implements \eav\EavAble
 
 	public function getOptions($includeInheritedOptions = false)
 	{
+		return $this->productOptions;
+		
 		return array();
 		
 		$parent = $this->getParent();

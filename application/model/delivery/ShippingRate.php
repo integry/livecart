@@ -113,7 +113,9 @@ class ShippingRate extends \ActiveRecordModel
 	{
 		$product = $item->getProduct()->getParent();
 
-		$class = $product->shippingClass;
+		//$class = $product->shippingClass;
+		// @todo: remove
+		$class = null;
 		if (!$class)
 		{
 			return $this->perItemCharge;

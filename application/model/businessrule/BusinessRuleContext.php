@@ -185,7 +185,7 @@ class BusinessRuleContext extends \Phalcon\DI\Injectable
 			return 0;
 		}
 
-		return is_null($this->user->userGroup) ? 0 : $this->user->userGroup->getID();
+		return !$this->user->userGroup ? 0 : $this->user->userGroup->getID();
 	}
 
 	public function addMessage($type, $text)

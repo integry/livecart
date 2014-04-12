@@ -4,7 +4,7 @@
 
 	[[ textfld('name', '_category_name') ]]
 
-	[[ textareafld('description', tip('_descr'), ['class': 'tinyMCE']) ]]
+	[[ textareafld('description', tip('_descr'), ['ui-my-tinymce': '']) ]]
 
 	[[ textareafld('keywords', tip('_keywords')) ]]
 

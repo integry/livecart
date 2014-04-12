@@ -42,3 +42,8 @@ div.btn-group ul.dropdown-menu{
 	text-align: center;
 	width: 40%;
 }
+
+.listPrice
+{
+	text-decoration: line-through;
+}

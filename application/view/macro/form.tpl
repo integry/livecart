@@ -107,7 +107,7 @@
     [[ startinput(field, 'checkbox') ]]
         [[ open_label() ]]
         	<?php $params = is_array($params) ? $params : array(); $params['noformcontrol'] = true; ?>
-        	<input type="checkbox" [[ inputattributes(field, params) ]] {% if empty(params['skip-ng-defaults']) %}value="1" ng-true-value="1" ng-false-value="0"{% endif %} />
+        	<input type="checkbox" [[ inputattributes(field, params) ]] {% if empty(params['skip-ng-defaults']) %}value="1" {# ng-true-value="1" ng-false-value="0" #}{% endif %} />
         	[[ t(title) ]]
         </label>
     [[ endinput(field) ]]

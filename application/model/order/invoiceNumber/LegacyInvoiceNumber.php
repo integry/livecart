@@ -1,5 +1,6 @@
 <?php
 
+namespace order\invoiceNumber;
 
 /**
  * Legacy invoice numbers (pre 1.3.0)
@@ -8,7 +9,7 @@
  * @package application/model/order
  * @author Integry Systems <http://integry.com>
  */
-class LegacyInvoiceNumber extends InvoiceNumberGenerator
+class LegacyInvoiceNumber extends \order\InvoiceNumberGenerator
 {
 	private $selectFilter;
 
