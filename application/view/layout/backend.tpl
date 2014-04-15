@@ -33,6 +33,8 @@
 		<script src="javascript/backend/User.js"></script>
 		<script src="javascript/backend/CustomerOrder.js"></script>
 		<script src="javascript/backend/Eav.js"></script>
+		<script src="javascript/Order.js"></script>
+		
 		<script src="javascript/backend/Gallery.js"></script>
 		<script src="javascript/backend/SimpleSettings.js"></script>
 
@@ -54,7 +56,10 @@
 		<link href="stylesheet/backend/Backend.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Eav.css" rel="stylesheet"></link>
 		<link href="stylesheet/backend/Product.css" rel="stylesheet"></link>
+		<link href="stylesheet/backend/CustomerOrder.less" rel="stylesheet/less" type="text/css"></link>
 		<link href="stylesheet/backend/DeliveryZone.css" rel="stylesheet"></link>
+		
+		<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.0/less.min.js"></script>
 
 		{% block head %}{% endblock %}
 

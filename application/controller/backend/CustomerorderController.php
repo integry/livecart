@@ -78,6 +78,78 @@ class CustomerOrderController extends ActiveGridController
 	{
 	}
 
+	public function editAction()
+	{
+		$this->set('statuses', array(
+									CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
+									CustomerOrder::STATUS_PROCESSING  => $this->translate('_status_processing'),
+									CustomerOrder::STATUS_AWAITING  => $this->translate('_status_awaiting'),
+									CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
+									CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
+						));
+	}
+	
+	public function previewAction()
+	{
+		$this->db->begin();
+		
+		$order = $this->updateRequestOrder();
+		$array = $order->toArray();
+		
+		$this->db->rollback();
+		
+		echo json_encode(array('order' => $array));
+	}
+	
+	public function updateAction()
+	{
+		$order = $this->updateRequestOrder();
+		
+		echo json_encode(array('order' => $order->toArray()));
+	}
+	
+	private function updateRequestOrder()
+	{
+		$data = $this->request->getJson('order');
+		$order = CustomerOrder::getInstanceByID($data['ID']);
+		$order->loadRequestData($this->request);
+		$order->status = $data['status'];
+		$order->getTotal(true);
+		$order->save();
+		
+		return $order;
+	}
+
+	public function getAction()
+	{
+		if ((int)$this->request->get('id'))
+		{
+			$order = CustomerOrder::getInstanceByID($this->request->get('id'));
+			$order->getSpecification();
+
+			$arr = $order->toArray();
+		}
+
+		echo json_encode($arr);
+	}
+	
+	public function eavAction()
+	{
+		if ((int)$this->request->get('id'))
+		{
+			$order = CustomerOrder::getInstanceByID($this->request->get('id'));
+		}
+		else
+		{
+			$order = new CustomerOrder();
+		}
+		
+		$manager = new \eav\EavFieldManager(\eav\EavField::getClassID($order));
+		$manager->loadFields();
+		
+		echo json_encode($manager->toArray());
+	}
+
 	protected function getClassName()
 	{
 		return 'order\CustomerOrder';
@@ -85,7 +157,7 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getReferencedData()
 	{
-		return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'BillingAddress', 'State');
+		//return array('User', 'Currency', 'ShippingAddress' => 'UserAddress', 'BillingAddress', 'State');
 	}
 
 	protected function getDefaultColumns()
@@ -100,18 +172,6 @@ class CustomerOrderController extends ActiveGridController
 			'order\CustomerOrder.status',
 			//'User.ID'
 		);
-	}
-
-	public function assignStatusesAction(ActionResponse $response)
-	{
-
-		$this->set('statuses', array(
-										CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
-										CustomerOrder::STATUS_PROCESSING  => $this->translate('_status_processing'),
-										CustomerOrder::STATUS_AWAITING  => $this->translate('_status_awaiting'),
-										CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
-										CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
-						));
 	}
 
 	public function infoAction()
@@ -742,6 +802,10 @@ class CustomerOrderController extends ActiveGridController
 	{
 		$filter = parent::getSelectFilter();
 		
+		$this->applyTypeCondition($filter, $this->dispatcher->getParam(0));
+		
+		$filter->andWhere('isFinalized = 1');
+		
 		return $filter;
 
 		$id = $this->request->get('id');
@@ -1042,56 +1106,44 @@ class CustomerOrderController extends ActiveGridController
 		}
 	}
 
-	private function getTypeCondition($type)
+	private function applyTypeCondition($filter, $type)
 	{
 		switch($type)
 		{
 			case self::TYPE_ALL:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
+				$filter->andWhere('isFinalized = 1');
 				break;
 			case self::TYPE_CURRENT:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
-
-				// @todo fix NEW status = NULL bug
-				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
-
-				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING));
-				$cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
-				$cond->andWhere($cond2);
+				$filter->andWhere('isFinalized = 1');
+				$filter->inWhere('status', array(CustomerOrder::STATUS_PROCESSING, CustomerOrder::STATUS_AWAITING, CustomerOrder::STATUS_NEW, null));
 				break;
 			case self::TYPE_NEW:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-				$cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
-
-				// @todo fix NEW status = NULL bug
-				$cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
-				$cond->andWhere($cond2);
+				$filter->andWhere('isFinalized = 1');
+				$filter->inWhere('status', array(CustomerOrder::STATUS_NEW, null));
 				break;
 			case self::TYPE_PROCESSING:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
-				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-				break;
-			case self::TYPE_AWAITING:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
-				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-				break;
-			case self::TYPE_SHIPPED:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-				break;
-			case self::TYPE_RETURNED:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
-				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-				break;
-			case self::TYPE_CANCELLED:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), true);
-				$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-				break;
-			case self::TYPE_CARTS:
-				$cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
+				$filter->andWhere('isFinalized = 1 AND status=:status:', array('status' => CustomerOrder::STATUS_PROCESSING));
 				break;
 
+			case self::TYPE_AWAITING:
+				$filter->andWhere('isFinalized = 1 AND status=:status:', array('status' => CustomerOrder::STATUS_AWAITING));
+				break;
+
+			case self::TYPE_SHIPPED:
+				$filter->andWhere('isFinalized = 1 AND status=:status:', array('status' => CustomerOrder::STATUS_SHIPPED));
+				break;
+			
+			case self::TYPE_RETURNED:
+				$filter->andWhere('isFinalized = 1 AND status=:status:', array('status' => CustomerOrder::STATUS_RETURNED));
+				break;
+			case self::TYPE_CANCELLED:
+				$filter->andWhere('isFinalized = 1 AND isCancelled = 1');
+				break;
+			case self::TYPE_CARTS:
+				$filter->andWhere('isFinalized = 0');
+				break;
+
+/*
 			case self::TYPE_RECURRING:
 				$cond = new AndChainCondition(array(
 					'CustomerOrder.isFinalized = :CustomerOrder.isFinalized:', array('CustomerOrder.isFinalized' => 1),
@@ -1134,11 +1186,13 @@ class CustomerOrderController extends ActiveGridController
 				//$cond = 'CustomerOrder.isRecurring = :CustomerOrder.isRecurring:', array('CustomerOrder.isRecurring' => 1);
 				$cond->andWhere('CustomerOrder.parentID = :CustomerOrder.parentID:', array('CustomerOrder.parentID' => $parentID));
 				break;
+				*/
 
 			default:
 				return;
 		}
 
+		/*
 		$filters = $this->request->get('filters');
 		if (!in_array($type, array(
 			self::TYPE_CANCELLED,
@@ -1149,10 +1203,7 @@ class CustomerOrderController extends ActiveGridController
 		{
 			$cond->andWhere(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
 		}
-// $f  = new ARSelectFilter();
-// $f->setCondition($cond);
-// pp($f->createString());
-		return $cond;
+		*/
 	}
 
 	/**
@@ -1177,7 +1228,7 @@ class CustomerOrderController extends ActiveGridController
 	/**
 	 * @role update
 	 */
-	public function updateAction()
+	public function xupdateAction()
 	{
 		$order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
 		$order->loadAll();
@@ -1383,20 +1434,22 @@ class CustomerOrderController extends ActiveGridController
 		return trim($item);
 	}
 
-	public function getAvailableColumnsAction()
+	public function getAvailableColumns()
 	{
 		// get available columns
 		$availableColumns = parent::getAvailableColumns();
-		unset($availableColumns['CustomerOrder.shipping']);
-		unset($availableColumns['CustomerOrder.isFinalized']);
-		unset($availableColumns['CustomerOrder.checkoutStep']);
+		unset($availableColumns['order\CustomerOrder.shipping']);
+		unset($availableColumns['order\CustomerOrder.isFinalized']);
+		unset($availableColumns['order\CustomerOrder.checkoutStep']);
 
+		/*
 		$availableColumns['HasUsedCoupon'] = array('type' => 'bool', 'name' => $this->translate('HasUsedCoupon'));
 		$availableColumns['UsedCouponCount'] = array('type' => 'numeric', 'name' => $this->translate('UsedCouponCount'));
 		$availableColumns['ProductCount'] = array('type' => 'numeric', 'name' => $this->translate('ProductCount'));
 		$availableColumns['UniqueProductCount'] = array('type' => 'numeric', 'name' => $this->translate('UniqueProductCount'));
 		$availableColumns['HasUnreadCustomerMessage'] = array('type' => 'bool', 'name' => $this->translate('HasUnreadCustomerMessage'));
 		$availableColumns['HasUnrespondedCustomerMessage'] = array('type' => 'bool', 'name' => $this->translate('HasUnrespondedCustomerMessage'));
+		*/
 		return $availableColumns;
 	}
 
@@ -1417,11 +1470,10 @@ class CustomerOrderController extends ActiveGridController
 
 	protected function getCustomColumns()
 	{
-
+return array();
 		$availableColumns = array();
 
 		$availableColumns['User.email'] = 'text';
-		$availableColumns['User.ID'] = 'text';
 		$availableColumns['User.fullName'] = 'text';
 
 		$availableColumns['CustomerOrder.status'] = 'text';

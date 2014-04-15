@@ -45,14 +45,12 @@ class SequentialInvoiceNumber extends \order\InvoiceNumberGenerator
 		}
 
 		// avoid selecting the same order if the invoice number is already taken
-		/*
-		$this->getSelectFilter()->andWhere('ID != :id:', array('id' => $last['ID']));
+		//$this->getSelectFilter()->andWhere('ID != :id:', array('id' => $last->getID()));
 
 		$lastNumber += max($config->get('SequentialInvoiceNumber_STEP'), 1);
 		$lastNumber = str_pad($lastNumber, $config->get('SequentialInvoiceNumber_MIN_LENGTH'), '0', STR_PAD_LEFT);
 
 		$lastNumber = $prefix . $lastNumber . $suffix;
-		*/
 
 		return $lastNumber;
 	}

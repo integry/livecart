@@ -6,6 +6,7 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
 Phalcon\Mvc\Model::setup(['exceptionOnFailedSave' => true]);
 ini_set('phalcon.orm.virtual_foreign_keys', false);
+ini_set('phalcon.orm.not_null_validations', false);
 
 class MyRouter extends \Phalcon\Mvc\Router
 {

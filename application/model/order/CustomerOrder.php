@@ -927,13 +927,11 @@ return;
 
 	/*####################  Saving ####################*/
 
-	public function xbeforeSave()
+	public function beforeSave()
 	{
+		$this->totalAmount = $this->getTotal(true);
+		
 		return;
-		if (!$this->orderedItems)
-		{
-			$this->loadItems();
-		}
 
 		// remove zero-count items
 		foreach ($this->orderedItems as $item)

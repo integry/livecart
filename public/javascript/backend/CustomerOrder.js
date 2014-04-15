@@ -54,6 +54,7 @@ app.controller('CustomerOrderController', function ($scope, $http, $resource, $m
 	{
 		$modal.open({templateUrl: Router.createUrl('backend/customerorder', 'edit'), 
 					controller: 'EditCustomerOrderController',
+					windowClass: 'order-edit',
 					resolve: {
 							id: function() { return id } }
 							});
@@ -76,7 +77,7 @@ app.controller('EditCustomerOrderController', function ($scope, $http, $modal, i
 	$http.get(Router.createUrl('backend/customerorder', 'get', {id: id})).
 		success(function(data)
 		{
-			$scope.vals = data;
+			$scope.order = data;
 		});
 		
 	$http.get(Router.createUrl('backend/customerorder', 'eav', {id: id})).
@@ -87,6 +88,6 @@ app.controller('EditCustomerOrderController', function ($scope, $http, $modal, i
 
 	$scope.save = function(form)
 	{
-		$http.post(Router.createUrl('backend/customerorder', 'update'), $scope.vals).success(success('User account has been saved'));
+		$http.post(Router.createUrl('backend/customerorder', 'update'), {order: $scope.order}).success(success('Order has been saved'));
 	}
 });

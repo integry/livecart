@@ -122,7 +122,7 @@ app.config(function($stateProvider)
 	  url: '/order'
 	})
 	.state('order.list', {
-        url: '/orders',
+        url: '/orders/:id',
         templateUrl: '../backend/customerorder/list',
         controller: function($scope, $stateParams){
           $scope.id = $stateParams.id;

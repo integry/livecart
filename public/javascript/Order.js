@@ -1,5 +1,7 @@
 function OrderController($scope, $rootScope, $http)
 {
+	$scope.updateURL = '../order/update/';
+	
 	$scope.setOrder = function(order)
 	{
 		if (order.OrderedItems)
@@ -68,7 +70,7 @@ function OrderController($scope, $rootScope, $http)
 			return;
 		}
 		
-		$http.post('../order/update', {order: $scope.order}).success(function(res)
+		$http.post($scope.updateURL, {order: $scope.order}).success(function(res)
 		{
 			$scope.setOrder(res.order);
 			$scope.options = false;

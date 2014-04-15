@@ -134,7 +134,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 			foreach ($this->options as $choice)
 			{
-				if ($isFinalized)
+				if ($isFinalized && false)
 				{
 					//$optionPrice = $choice->priceDiff;
 					$optionPrice = 0;
@@ -149,6 +149,7 @@ class OrderedItem extends \ActiveRecordModel //MultilingualObject implements Bus
 
 			$this->itemPrice = $price;
 		}
+
 		return $this->itemPrice;
 	}
 

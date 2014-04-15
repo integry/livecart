@@ -25,8 +25,6 @@ class User extends \ActiveRecordModel implements \eav\EavAble
 	//public $defaultBillingAddressID;
 	//public $userGroupID;
 	
-	public $eavObjectID;
-	
 	public $locale;
 	public $email;
 	public $password;
