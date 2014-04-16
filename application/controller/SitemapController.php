@@ -1,10 +1,8 @@
 <?php
 
-
-ClassLoader::importNow('application/helper/smarty/function#categoryUrl');
-ClassLoader::importNow('application/helper/smarty/function#productUrl');
-ClassLoader::importNow('application/helper/smarty/function#newsUrl');
-
+use product\Product;
+use category\Category;
+use staticpage\StaticPage;
 
 /**
  * Generates XML sitemaps
@@ -18,11 +16,9 @@ class SitemapController extends FrontendController
 
 	public function initialize()
 	{
-		$this->setLayout('empty');
-
 		if (!$this->config->get('ENABLE_SITEMAPS'))
 		{
-			throw new ActionNotFoundException($this);
+			return $this->response->redirect('/');
 		}
 	}
 
@@ -38,31 +34,31 @@ class SitemapController extends FrontendController
 			{
 				foreach ($languages as $lang)
 				{
-					$params = array('controller' => 'sitemap', 'action' => 'sitemap', 'id' => $k, 'type' => $type);
+					$params = array('id' => $k, 'type' => $type);
 					if ($lang != $defaultLanguage)
 					{
 						$params['requestLanguage'] = $lang;
 					}
-					$maps[] = array('loc' => $this->router->createFullUrl($this->router->createUrl($params)));
+					$maps[] = array('loc' => $this->url->get('sitemap/sitemap', $params));
 				}
 			}
 		}
 
-		$this->router->removeAutoAppendVariable('requestLanguage');
-
 		$this->set('maps', $maps);
+		$this->set('xml', '<' . '?xml');
 	}
 
 	public function sitemapAction()
 	{
 		$class = $this->request->get('type');
-		$page = $this->request->get('id', 0);
+		$page = $this->request->get('id', null, 0);
 
 		if (!in_array($class, $this->getSupportedTypes()))
 		{
 			throw new ActionNotFoundException($this);
 		}
 
+		/*
 		$cache = new OutputCache('sitemap', $this->request->get('route'));
 		if ($cache->isCached() && ($cache->getAge() < 86400))
 		{
@@ -70,6 +66,7 @@ class SitemapController extends FrontendController
 		}
 
 		$this->setCache($cache);
+		*/
 
 		$f = $this->getSelectFilter($class);
 
@@ -80,6 +77,7 @@ class SitemapController extends FrontendController
 		}
 
 		$this->set('entries', $entries);
+		$this->set('xml', '<' . '?xml');
 	}
 
 	public function fullAction()
@@ -124,7 +122,7 @@ class SitemapController extends FrontendController
 			return new RawResponse('unauthorized');
 		}
 
-		$url = $this->router->createFullUrl($this->url->get('sitemap')));
+		$url = $this->router->createFullUrl($this->url->get('sitemap'));
 		$ping = array(
 			'Google' => 'http://www.google.com/webmasters/tools/ping?sitemap=' . $url,
 			'MSN Live' => 'http://www.bing.com/webmaster/ping.aspx?siteMap=' . $url,
@@ -142,30 +140,31 @@ class SitemapController extends FrontendController
 
 	private function getSupportedTypes()
 	{
-		return array('Category', 'Product', 'NewsPost', 'StaticPage');
+		return array('category\Category', 'product\Product', /* 'NewsPost', */'staticpage\StaticPage');
 	}
 
 	private function getEntryData($class, $row, $params = array())
 	{
 		switch ($class)
 		{
-			case 'StaticPage':
+			case 'staticpage\StaticPage':
 				return $this->getStaticPageEntry($row, $params);
 
 			case 'NewsPost':
 				return $this->getNewsPostEntry($row, $params);
 
-			case 'Product':
+			case 'product\Product':
 				return $this->getProductEntry($row, $params);
 
-			case 'Category':
+			case 'category\Category':
 				return $this->getCategoryEntry($row, $params);
 		}
 	}
 
 	private function getStaticPageEntry($row, $params)
 	{
-		$urlParams = array('controller' => 'staticPage',
+		return array('loc' => $this->url->get(route($row)));
+		$urlParams = array('controller' => 'staticpage\StaticPage',
 						   'action' => 'view',
 						   'handle' => $row['handle'],
 						   );
@@ -179,66 +178,49 @@ class SitemapController extends FrontendController
 
 	private function getCategoryEntry($row, $params)
 	{
-		$row['name'] = unserialize($row['name']);
-		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('Category'));
-
-		return array('loc' => $this->router->createFullUrl(createCategoryUrl(array('data' => $row, 'params' => $params), $this->application)));
+		return array('loc' => $this->url->get(route($row)));
 	}
 
 	private function getProductEntry($row, $params)
 	{
-		$row['name'] = unserialize($row['name']);
-		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('Product'));
-
-		return array('loc' => $this->router->createFullUrl(createProductUrl(array('product' => $row), $this->application)));
+		return array('loc' => $this->url->get(route($row)));
 	}
 
 	private function getNewsPostEntry($row, $params)
 	{
-		$row['title'] = unserialize($row['title']);
-		$row = MultilingualObject::transformArray($row, ActiveRecord::getSchemaInstance('NewsPost'));
-
-		return array('loc' => $this->router->createFullUrl(createNewsPostUrl(array('news' => $row), $this->application)));
+		return array('loc' => $this->url->get(route($row)));
 	}
 
-	private function getPage($class, $page, ARSelectFilter $f, $fields)
+	private function getPage($class, $page, $f, $fields)
 	{
 		$f->limit(self::MAX_URLS, $page * self::MAX_URLS);
 
-		$query = new ARSelectQueryBuilder();
-		$query->setFilter($f);
-		$query->includeTable($class);
-		foreach ($fields as $field)
-		{
-			$query->addField($field);
-		}
-
-		return ActiveRecord::fetchDataFromDB($query);
+		return $f->getQuery()->execute();
 	}
 
 	private function getSelectFilter($class)
 	{
-		if ('Product' == $class)
+		if ('product\Product' == $class)
 		{
 			$cat = Category::getRootNode();
-			$f = $cat->getProductFilter(new ARSelectFilter());
-			$f->andWhere($cat->getProductCondition(true));
-			$f->joinTable('Category', 'Product', 'ID', 'categoryID');
-
+			$f = new \product\ProductFilter($cat);
 			return $f;
 		}
+		
+		$f = $this->modelsManager->createBuilder()
+			->addFrom($class)
+			->columns($class . '.*');
 
-		$f = new ARSelectFilter();
-		$f->orderBy(new ARFieldHandle($class, 'ID'));
+		$f->orderBy($class . '.ID');
 
-		if ('StaticPage' != $class)
+		if ('staticpage\StaticPage' != $class)
 		{
-			$f->setCondition(new EqualsCond(new ARFieldHandle($class, 'isEnabled'), true));
+			$f->andWhere('isEnabled = 1');
 		}
 
-		if ('Category' == $class)
+		if ('category\Category' == $class)
 		{
-			$f->andWhere(new NotEqualsCond(new ARFieldHandle($class, 'ID'), Category::ROOT_ID));
+			$f->andWhere('ID != :root:', array('root' => Category::ROOT_ID));
 		}
 
 		return $f;
@@ -248,13 +230,13 @@ class SitemapController extends FrontendController
 	{
 		switch ($class)
 		{
-			case 'StaticPage':
+			case 'staticpage\StaticPage':
 				return array('ID', 'handle');
 
-			case 'Category':
+			case 'category\Category':
 				return array('ID', 'name');
 
-			case 'Product':
+			case 'product\Product':
 				return array('Product.ID AS ID', 'Product.name AS name');
 
 			case 'NewsPost':
@@ -262,9 +244,9 @@ class SitemapController extends FrontendController
 		}
 	}
 
-	private function getPageCount($class, ARSelectFilter $f)
+	private function getPageCount($class, $f)
 	{
-		return ceil(ActiveRecord::getRecordCount($class, $f) / self::MAX_URLS);
+		return ceil($f->getQuery()->execute()->count() / self::MAX_URLS);
 	}
 
 	private function fetchURL($url, $headersOnly = false)
