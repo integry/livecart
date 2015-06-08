@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import('application.model.session.SessionHandler');
+ClassLoader::import('application.model.session.BaseSessionHandler');
 ClassLoader::import('application.model.session.SessionData');
 
 /**
@@ -9,7 +9,7 @@ ClassLoader::import('application.model.session.SessionData');
  * @package application.model.session
  * @author Integry Systems
  */
-class DatabaseSessionHandler extends SessionHandler
+class DatabaseSessionHandler extends BaseSessionHandler
 {
 	const KEEPALIVE_INTERVAL = 60;
 
@@ -18,7 +18,7 @@ class DatabaseSessionHandler extends SessionHandler
 	protected $id;
 	protected $originalData;
 
-	public function open()
+	public function open($savePath, $sessionName)
 	{
 		try
 		{

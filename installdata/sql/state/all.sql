@@ -1,3 +1,4 @@
+SET FOREIGN_KEY_CHECKS=0;
 TRUNCATE TABLE `State`;
 
 INSERT INTO `State` (`ID`, `countryID`, `code`, `name`, `subdivisionType`) VALUES
@@ -4206,3 +4207,5 @@ INSERT INTO `State` (`ID`, `countryID`, `code`, `name`, `subdivisionType`) VALUE
 (4200, 'ZW', 'MS', 'Matabeleland South', NULL),
 (4201, 'ZW', 'MV', 'Masvingo', NULL),
 (4202, 'ZW', 'MW', 'Mashonaland West', NULL);
+
+SET FOREIGN_KEY_CHECKS=1;
