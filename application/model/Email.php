@@ -211,8 +211,10 @@ class Email
 
 				$paths = array(
 								'storage.customize.view.email.' . $locale . '.' . $templateFile,
+								'storage.customize.view.module.' . $module .'.email.'. $locale . '.' . $path,
 								'module.' . $module . '.application.view.email.' . $locale . '.' . $path,
 								'storage.customize.view.email.en.' . $templateFile,
+								'storage.customize.view.module.' . $module .'.email.en.' . '.' . $path,
 								'module.' . $module . '.application.view.email.en.' . $path,
 							);
 			}
