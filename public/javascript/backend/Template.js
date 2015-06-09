@@ -171,6 +171,7 @@ Backend.Template.prototype =
 
 	tabTitleFromTemplateId: function(id)
 	{
+		if (id instanceof Array) id= id.pop();
 		return id.split("/").pop();
 	},
 
