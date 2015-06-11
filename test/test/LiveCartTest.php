@@ -9,6 +9,12 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
+        # Do not convert warnings to exceptions.
+        PHPUnit_Framework_Error_Warning::$enabled = FALSE;
+
+        # Do not convert notice and strict to exceptions
+        PHPUnit_Framework_Error_Notice::$enabled = FALSE;
+
 		parent::setUp();
 
 		$this->config = ActiveRecordModel::getApplication()->getConfig();

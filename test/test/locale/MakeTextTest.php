@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/Initialize.php';
+require_once dirname(__FILE__) . '/../Initialize.php';
 
 /**
  * @author Integry Systems
