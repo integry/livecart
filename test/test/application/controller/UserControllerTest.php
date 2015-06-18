@@ -168,6 +168,70 @@ class UserControllerTest extends LiveCartTest implements ControllerTestCase
 
 	}
 
+	public function testDeleteDefaultShippingAddress()
+	{
+		//add another address
+		$defaultShippingAddress = $this->user->defaultShippingAddress->get()->userAddress->get();
+		$address = clone $defaultShippingAddress;
+		$address->save();
+		$shipping = ShippingAddress::getNewInstance($this->user, $address);
+		$shipping->save();
+
+		//delete the default shipping address
+		$defaultShippingAddressId = $this->user->defaultShippingAddress->get()->getID();
+		$this->request->set('id', $defaultShippingAddressId);
+		$this->controller->deleteShippingAddress();
+
+		//verify that the address was deleted
+		$this->assertEquals(1, count($this->user->getShippingAddressArray()));
+
+		//verify that the stored defaultShippingAddressID has changed
+		if (null!=$this->user->defaultShippingAddress->get())
+		{
+			$this->assertNotEquals($defaultShippingAddressId, $this->user->defaultShippingAddress->get()->getID());
+		}
+
+		//delete all addresses and verify that the stored defaultShippingAddressID is null
+		foreach ($this->user->getShippingAddressArray() as $address)
+		{
+			$this->request->set('id', $address['ID']);
+			$this->controller->deleteShippingAddress();
+		}
+		$this->assertEquals(null, $this->user->defaultShippingAddress->get());
+	}
+
+	public function testDeleteDefaultBillingAddress()
+	{
+		//add another address
+		$defaultBillingAddress = $this->user->defaultBillingAddress->get()->userAddress->get();
+		$address = clone $defaultBillingAddress;
+		$address->save();
+		$billing = BillingAddress::getNewInstance($this->user, $address);
+		$billing->save();
+
+		//delete the default billing address
+		$defaultBillingAddressId = $this->user->defaultBillingAddress->get()->getID();
+		$this->request->set('id', $defaultBillingAddressId);
+		$this->controller->deleteBillingAddress();
+
+		//verify that the address was deleted
+		$this->assertEquals(1, count($this->user->getBillingAddressArray()));
+
+		//verify that the stored defaultBillingAddressID has changed
+		if (null!=$this->user->defaultBillingAddress->get())
+		{
+			$this->assertNotEquals($defaultBillingAddressId, $this->user->defaultBillingAddress->get()->getID());
+		}
+
+		//delete all addresses and verify that the stored defaultBillingAddressID is null
+		foreach ($this->user->getBillingAddressArray() as $address)
+		{
+			$this->request->set('id', $address['ID']);
+			$this->controller->deleteBillingAddress();
+		}
+		$this->assertEquals(null, $this->user->defaultBillingAddress->get());
+	}
+
 	private function setUpController(FrontendController $controller)
 	{
 		$this->initOrder();

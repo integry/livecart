@@ -785,7 +785,14 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $res = $this->deleteAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+
+			$remainingAddresses = $this->user->getShippingAddressSet();
+			//ARSet->get() returns null if there is no such record index
+			$this->user->defaultShippingAddress->set($remainingAddresses->get(0));
+            $this->user->save();
+
+			return $res;
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -800,7 +807,14 @@ class UserController extends FrontendController
 	{
 		try
 		{
-			return $this->deleteAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $res = $this->deleteAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+
+			$remainingAddresses = $this->user->getBillingAddressSet();
+			//ARSet->get() returns null if there is no such record index
+			$this->user->defaultBillingAddress->set($remainingAddresses->get(0));
+			$this->user->save();
+
+			return $res;
 		}
 		catch (ARNotFoundException $e)
 		{
