@@ -1098,12 +1098,22 @@ class CheckoutController extends FrontendController
 		}
 
 		$order = CustomerOrder::getInstanceById($orderId, CustomerOrder::LOAD_DATA);
+		$originalCurrency = $order->getCurrency()->getID();//Get the original shopping cart currency
 		$order->setPaymentMethod(get_class($handler));
 		$order->loadAll();
 		$this->order = $order;
 		$handler->setDetails($this->getTransaction());
 
 		$result = $handler->notify($this->request->toArray());
+
+		if ($this->order->getCurrency()->getID()!=$originalCurrency)
+		{
+			//Update the order currency to match the currency the user made the purchase with
+			$this->order->changeCurrency(Currency::getInstanceByID($originalCurrency));
+
+			//Recalculate all prices, as changing currency does not apply business rules/discounts/etc.
+			$this->order->getTotal(true);
+		}
 
 		if ($result instanceof TransactionResult)
 		{

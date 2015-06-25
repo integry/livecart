@@ -8,6 +8,7 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 	protected $config;
 	protected $userEmail = 'test@test.com';
 	protected $userPassword = 'testerer';
+	protected $usd2eru =2;
 
 	public function setUp()
 	{
@@ -16,6 +17,9 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 
         # Do not convert notice and strict to exceptions
         PHPUnit_Framework_Error_Notice::$enabled = FALSE;
+
+		# Do not convert deprecated notices to exceptions
+		PHPUnit_Framework_Error_Deprecated::$enabled = FALSE;
 
 		parent::setUp();
 
@@ -70,6 +74,17 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 			$this->usd = Currency::getNewInstance('USD');
 			$this->usd->setAsDefault();
 			$this->usd->save();
+		}
+
+		if (ActiveRecord::objectExists('Currency', 'EUR'))
+		{
+			$this->eur = Currency::getInstanceByID('EUR', Currency::LOAD_DATA);
+		}
+		else
+		{
+			$this->eur = Currency::getNewInstance('EUR');
+			$this->eur->rate->set($this->usd2eru);
+			$this->eur->save();
 		}
 	}
 
