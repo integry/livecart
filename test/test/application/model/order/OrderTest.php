@@ -1893,6 +1893,34 @@ class OrderTest extends OrderTestCommon
 
 	}
 
+	/**
+	 * Testing that alternating between currencies correctly change the prices of each OrderedItem
+	 */
+	public function testChangeCurrency()
+	{
+		$this->order->addProduct($this->products[0], 1);
+		$this->order->currency->set($this->usd);
+		$this->order->save(true);
+
+		//force ActiveReccord to generate $toArrayData for each OrderedItem
+		$this->order->toArray();
+
+		//change the currency, cached $toArrayData should be updated for each OrderedItem
+		$this->order->changeCurrency($this->eur);
+
+		//All prices should match because we don't have any discounts or taxes applied
+		$prices = array('itemBasePrice', 'displayPrice', 'displayPriceWithoutTax', 'itemPrice');
+
+		foreach ($this->order->getOrderedItems() as $item)
+		{
+			$itemArray = $item->toArray();
+			$itemArray = array_intersect_key($item->toArray(),array_flip($prices));
+			$pricesArray = array_fill_keys($prices, (float)$item->getProduct()->getPrice($this->eur));
+
+			$this->assertSame($itemArray, $pricesArray);
+		}
+	}
+
 	private function createOrderWithZone(DeliveryZone $zone = null)
 	{
 		if (is_null($zone))
