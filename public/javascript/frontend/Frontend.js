@@ -231,7 +231,9 @@ Product.Variations = function(container, variations, options)
 	if ($('productPrice'))
 	{
 		this.priceContainer = $('productPrice').down('.price').down('.realPrice');
+		this.listPriceContainer = $('productPrice').down('.price').down('.listPrice');
 		this.defaultPrice = this.priceContainer.innerHTML;
+		if (this.listPriceContainer) this.defaultListPrice = this.listPriceContainer.innerHTML;
 	}
 
 	$H(this.variations.variations).each(function(value)
@@ -409,6 +411,7 @@ Product.Variations.prototype =
 		if (this.isPriceChanged(product))
 		{
 			this.updatePrice(this.getProductPrice(product));
+			this.updateListPrice(this.getProductListPrice(product));
 		}
 
 		if (product.DefaultImage && product.DefaultImage.paths)
@@ -442,6 +445,11 @@ Product.Variations.prototype =
 		return (product.formattedPrice && product.formattedPrice[this.options.currency]) ? product.formattedPrice[this.options.currency] : this.defaultPrice;
 	},
 
+	getProductListPrice: function(product)
+	{
+		return (product.formattedListPrice && product.formattedListPrice[this.options.currency]) ? product.formattedListPrice[this.options.currency] : this.defaultListPrice;
+	},
+
 	isPriceChanged: function(product)
 	{
 		return parseInt(product['price_' + this.options.currency]) > 0;
@@ -452,6 +460,14 @@ Product.Variations.prototype =
 		if (this.priceContainer)
 		{
 			this.priceContainer.innerHTML = price ? price : this.defaultPrice;
+		}
+	},
+
+	updateListPrice: function(price)
+	{
+		if (this.listPriceContainer)
+		{
+			this.listPriceContainer.innerHTML = price ? price : this.defaultListPrice;
 		}
 	},
 
