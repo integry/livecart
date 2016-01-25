@@ -907,7 +907,9 @@ class ProductController extends ActiveGridController implements MassActionInterf
 			foreach ($pricesData['calculated'] as $currency => $price)
 			{
 				$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
+				$pricesData['listPrice_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['listPrice_' . $currency] : '';
 				$productFormData['price_' . $currency] = $pricesData['price_' . $currency];
+				$productFormData['listPrice_' . $currency] = $pricesData['listPrice_' . $currency];
 			}
 		}
 
