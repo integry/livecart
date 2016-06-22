@@ -517,7 +517,11 @@ SSL_DOMAIN=Use a different domain name for secure pages (e.g. secure.mysite.com)
 # Technical
 _technical=Technical
 _cache=Caching
+_queue=Message Queue
 CACHE_METHOD=Caching method
+QUEUE_METHOD=Queue method
+CACHE_TIMEOUT=Cache timeout in seconds
+CACHE_PREFIX=Cache prefix (chars and underscores only). Normally blank, but set to 'dev_' in case you have dev machine on the same server (so caches for live and dev won't interfere)
 _proxy=Use proxy server for outgoing connections
 PROXY_HOST=Proxy server host name
 PROXY_PORT=Proxy server port

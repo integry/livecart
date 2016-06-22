@@ -777,6 +777,24 @@ CREATE TABLE DeliveryZoneCityMask (
 )
 ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+
+# ---------------------------------------------------------------------- #
+# Add table "MysqlQueue"                                       			 #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE IF NOT EXISTS `MysqlQueue` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` int(10) DEFAULT NULL COMMENT 'Queue name',
+  `message` longblob COMMENT 'The queued message',
+  `added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the message was added to the queue',
+  `consumed` TIMESTAMP NULL DEFAULT NULL COMMENT 'When the message was consumed for the last time',
+  `priority` INT NOT NULL DEFAULT  '0' COMMENT 'The higher the value, the sooner the message will be consumed',
+  `isProcessed` tinyint(1) DEFAULT NULL COMMENT 'Determines if the message is being processed',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+CREATE INDEX IDX_name ON MysqlQueue (name);
+CREATE INDEX IDX_priority ON MysqlQueue (priority);
+
 # ---------------------------------------------------------------------- #
 # Add table "DeliveryZoneZipMask"                                        #
 # ---------------------------------------------------------------------- #

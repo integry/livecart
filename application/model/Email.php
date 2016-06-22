@@ -7,6 +7,8 @@ ClassLoader::import('library.swiftmailer.lib.swift_required', true);
 ClassLoader::ignoreMissingClasses(false);
 
 ClassLoader::import('application.model.template.EditedCssFile');
+ClassLoader::import('application.model.email.SimpleEmailMessage');
+ClassLoader::import('application.model.email.EmailQueue');
 
 /**
  * E-mail handler
@@ -42,47 +44,20 @@ class Email
 
 	private $message;
 
+	private $simpleMessage;
+
+	private $config;
+
 	public function __construct(LiveCart $application)
 	{
 		$this->application = $application;
 		$this->set('request', $application->getRequest()->toArray());
 
-		$config = $this->application->getConfig();
+		$this->config = $this->application->getConfig();
 
-		ClassLoader::ignoreMissingClasses();
+		$this->simpleMessage = new SimpleEmailMessage();
 
-		if ('SMTP' == $config->get('EMAIL_METHOD'))
-		{
-			$server = $config->get('SMTP_SERVER');
-			if (!$server)
-			{
-				$server = ini_get('SMTP');
-			}
-
-			$this->connection = Swift_SmtpTransport::newInstance($server, $config->get('SMTP_PORT'));
-
-			if ($config->get('SMTP_USERNAME'))
-			{
-				$this->connection->setUsername($config->get('SMTP_USERNAME'));
-				$this->connection->setPassword($config->get('SMTP_PASSWORD'));
-			}
-		}
-		else if ('FAKE' == $config->get('EMAIL_METHOD'))
-		{
-			$this->connection = Swift_Connection_Fake::newInstance();
-		}
-		else
-		{
-			$this->connection = Swift_MailTransport::newInstance();
-		}
-
-		$this->swiftInstance = Swift_Mailer::newInstance($this->connection);
-
-		$this->message = Swift_Message::newInstance();
-
-		$this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
-
-		ClassLoader::ignoreMissingClasses(false);
+		$this->setFrom($this->config->get('MAIN_EMAIL'), $this->config->get('STORE_NAME'));
 	}
 
 	public function getMessage()
@@ -145,6 +120,11 @@ class Email
 		$this->html = $html;
 	}
 
+	public function getHTML()
+	{
+		return $this->html;
+	}
+
 	public function setFrom($email, $name)
 	{
 		if ($name)
@@ -152,16 +132,17 @@ class Email
 			$name = '"' . $name . '"';
 		}
 
-		$this->message->setFrom(array($email => $name));
+		$this->simpleMessage->setFrom(array($email => $name));
 	}
 
-	public function resetRecipients()
-	{
-		$headers = $this->message->getHeaders();
-		$headers->remove('To');
-		$headers->remove('Cc');
-		$headers->remove('Bcc');
-	}
+// ?? not used...
+//	public function resetRecipients()
+//	{
+//		$headers = $this->message->getHeaders();
+//		$headers->remove('To');
+//		$headers->remove('Cc');
+//		$headers->remove('Bcc');
+//	}
 
 	public function setTo($emailAddresses, $name = null)
 	{
@@ -172,18 +153,18 @@ class Email
 				$name = '"' . $name . '"';
 			}
 
-			$this->message->addTo($email, $name);
+			$this->simpleMessage->addTo($email, $name);
 		}
 	}
 
 	public function setCc($email, $name)
 	{
-		$this->message->addCc($email, $name);
+		$this->simpleMessage->addCc($email, $name);
 	}
 
 	public function setBcc($email, $name)
 	{
-		$this->message->addBcc($email, $name);
+		$this->simpleMessage->addBcc($email, $name);
 	}
 
 	public function setTemplate($templateFile)
@@ -278,58 +259,143 @@ class Email
 		return $this->locale ? $this->locale : $this->application->getLocaleCode();
 	}
 
-	public function send()
+	/**
+	 * Used to strip application and config references before this object is serialized.
+	 */
+	public function __sleep()
+	{
+		$skipAttributes = array('config', 'application', 'swiftInstance');
+		return array_diff(array_keys(get_object_vars($this)), $skipAttributes);
+	}
+
+	/**
+	 * Use after unserializing to restore the $application reference
+	 * @param $application
+	 */
+	public function setApplication($application)
+	{
+		$this->application = $application;
+	}
+
+	/**
+	 * Use after unserializing to restore the $config reference
+	 * @param $config
+	 */
+	public function setConfig($config)
+	{
+		$this->config = $config;
+	}
+
+	public function generateEmailBody()
+	{
+		$originalLocale = $this->application->getLocale();
+		$emailLocale = Locale::getInstance($this->getLocale());
+		$this->application->setLocale($emailLocale);
+		$this->application->getLocale()->translationManager()->loadFile('User');
+		$this->application->loadLanguageFiles();
+
+		$smarty = $this->application->getRenderer()->getSmartyInstance();
+
+		foreach ($this->values as $key => $value)
+		{
+			$smarty->assign($key, $value);
+		}
+
+		//?$router = $this->application->getRouter();
+
+		$smarty->assign('html', false);
+
+		$smarty->disableTemplateLocator();
+		$text = $smarty->fetch($this->template);
+		$smarty->enableTemplateLocator();
+
+		$parts = explode("\n", $text, 2);
+		$this->subject = array_shift($parts);
+		$this->setText(array_shift($parts));
+
+		// fix URLs
+		$this->text = str_replace('&amp;', '&', $this->text);
+
+		if ($this->application->getConfig()->get('HTML_EMAIL'))
+		{
+			$smarty->assign('html', true);
+			$html = array_pop(explode("\n", $smarty->fetch($this->template), 2));
+
+			$css = new EditedCssFile('email');
+			$smarty->assign('cssStyle', str_replace("\n", ' ', $css->getCode()));
+
+			$smarty->assign('messageHtml', $html);
+			$html = $smarty->fetch($this->getTemplatePath('htmlWrapper'));
+
+			$this->setHtml($html);
+		}
+
+		$this->application->setLocale($originalLocale);
+	}
+
+	/**
+	 * This method is used to queue or send an email. If the $instant parameter is true, the mail will not be queued, but sent directly.
+	 *
+	 * @param bool $instant Set to true to send the email instantly
+	 * @param int $priority The higher the value, the more likely the email will be retrieved from the queue with the next pull.
+	 * @return bool|int
+	 */
+	public function send($instant = false, $priority = 10)
 	{
 		ClassLoader::ignoreMissingClasses();
+
+		//If not an instant message and there is a queue, add it to the mail queue
+		if(!$instant && 'NoQueue' != $this->config->get('QUEUE_METHOD'))
+		{
+			try
+			{
+				//If all is right with the queue, return without sending the message.
+				$queue = new EmailQueue($this->application->getConfig());
+				$queue->send($this, $priority);
+				return;
+			}
+			catch(Exception $e)
+			{
+				//Continue with the sending, obviously the queue has some problems.
+			}
+		}
+
+		$this->message = Swift_Message::newInstance();
+		$this->simpleMessage->populateMessage($this->message);
+
+		if ('SMTP' == $this->config->get('EMAIL_METHOD'))
+		{
+			$server = $this->config->get('SMTP_SERVER');
+			if (!$server)
+			{
+				$server = ini_get('SMTP');
+			}
+
+			$this->connection = Swift_SmtpTransport::newInstance($server, $this->config->get('SMTP_PORT'));
+
+			if ($this->config->get('SMTP_USERNAME'))
+			{
+				$this->connection->setUsername($this->config->get('SMTP_USERNAME'));
+				$this->connection->setPassword($this->config->get('SMTP_PASSWORD'));
+			}
+		}
+		else if ('FAKE' == $this->config->get('EMAIL_METHOD'))
+		{
+			$this->connection = Swift_Connection_Fake::newInstance();
+		}
+		else
+		{
+			$this->connection = Swift_MailTransport::newInstance();
+		}
+
+		$this->swiftInstance = Swift_Mailer::newInstance($this->connection);
 
 		$this->application->processInstancePlugins('email-prepare-send', $this);
 		$this->application->processInstancePlugins('email-prepare-send/' . $this->relativeTemplatePath, $this);
 
 		if ($this->template)
 		{
-			$originalLocale = $this->application->getLocale();
-			$emailLocale = Locale::getInstance($this->getLocale());
-			$this->application->setLocale($emailLocale);
-			$this->application->getLocale()->translationManager()->loadFile('User');
-			$this->application->loadLanguageFiles();
-
-			$smarty = $this->application->getRenderer()->getSmartyInstance();
-
-			foreach ($this->values as $key => $value)
-			{
-				$smarty->assign($key, $value);
-			}
-
-			$router = $this->application->getRouter();
-
-			$smarty->assign('html', false);
-
-			$smarty->disableTemplateLocator();
-			$text = $smarty->fetch($this->template);
-			$smarty->enableTemplateLocator();
-
-			$parts = explode("\n", $text, 2);
-			$this->subject = array_shift($parts);
-			$this->setText(array_shift($parts));
-
-			// fix URLs
-			$this->text = str_replace('&amp;', '&', $this->text);
-
-			if ($this->application->getConfig()->get('HTML_EMAIL'))
-			{
-				$smarty->assign('html', true);
-				$html = array_pop(explode("\n", $smarty->fetch($this->template), 2));
-
-				$css = new EditedCssFile('email');
-				$smarty->assign('cssStyle', str_replace("\n", ' ', $css->getCode()));
-
-				$smarty->assign('messageHtml', $html);
-				$html = $smarty->fetch($this->getTemplatePath('htmlWrapper'));
-
-				$this->setHtml($html);
-			}
-
-			$this->application->setLocale($originalLocale);
+			$this->generateEmailBody();
 		}
 
 		$this->application->processInstancePlugins('email-before-send', $this);
@@ -359,6 +425,12 @@ class Email
 			return false;
 		}
 
+		if ($this->application->isDevMode())
+		{
+			$mailLogger = new \Swift_Plugins_Loggers_ArrayLogger();
+			$this->swiftInstance->registerPlugin(new \Swift_Plugins_LoggerPlugin($mailLogger));
+		}
+
 		try
 		{
 			$res = $this->swiftInstance->send($this->message);
@@ -370,6 +442,11 @@ class Email
 			$this->application->processInstancePlugins('email-fail-send', $this, array('exception' => $e));
 			ClassLoader::ignoreMissingClasses(false);
 			return false;
+		}
+
+		if ($this->application->isDevMode() && !$res)
+		{
+			echo "Switmailer error:".$mailLogger->dump();
 		}
 
 		$this->application->processInstancePlugins('email-after-send/' . $this->relativeTemplatePath, $this);
