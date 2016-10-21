@@ -821,6 +821,36 @@ class ProductTest extends LiveCartTest
 		$this->assertEquals(20, $this->product->stockCount->get());
 	}
 
+    /**
+     * Testing if getProductsPurchasedTogether() returns correct results when variations are purchased
+     */
+    public function testVariationsPurchasedTogether()
+    {
+        $this->initOrder();
+
+        $parentProduct = $this->product;
+
+        $childProduct = $parentProduct->createChildProduct();
+        $childProduct->isEnabled->set(true);
+        $childProduct->stockCount->set(1);
+        $childProduct->save();
+
+        $product = Product::getInstanceByID($childProduct->getID(), true);
+
+        $this->order->addProduct($this->products[0], 1);
+        $this->order->addProduct($this->products[1], 2);
+        $this->order->addProduct($product, 1);
+        $this->order->save();
+        $this->order->finalize();
+
+        /*
+         * Because variations are added as child products, if an order contains a child product and regular products,
+         * querying getProductsPurchasedTogether() of the parent product should return the regular products.
+         * */
+        $purchasedTogetherProducts = $parentProduct->getProductsPurchasedTogether(2);
+        $this->assertEquals(2, count($purchasedTogetherProducts));
+    }
+
 	function test_SuiteTearDown()
 	{
 		ActiveRecordModel::rollback();

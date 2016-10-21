@@ -166,6 +166,10 @@ class LiveCart extends Application implements Serializable
 			{
 				error_reporting(E_ALL & ~E_DEPRECATED);
 			}
+            elseif(phpversion() >= '5.4')
+            {
+                error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+            }
 			else
 			{
 				error_reporting(E_ALL);

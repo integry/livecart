@@ -760,11 +760,11 @@ abstract class EavSpecificationManagerCommon
 		$group = $groupClass . '.position AS SpecFieldGroupPosition, ' . $groupClass . '.name AS SpecFieldGroupName, ';
 
 		$query = '
-		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $dateClass . ' ' . $cond . '
+		SELECT ' . $dateClass . '.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* FROM ' . $dateClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $stringClass . ' ' . $cond . '
+		SELECT ' . $stringClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* FROM ' . $stringClass . ' ' . $cond . '
 		UNION
-		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* as valueID FROM ' . $numericClass . ' ' . $cond . '
+		SELECT ' . $numericClass . '.*, NULL, NULL AS specFieldValuePosition, ' . $group . $fieldClass . '.* FROM ' . $numericClass . ' ' . $cond . '
 		UNION
 		SELECT ' . $valueItemClass . '.' . $objectColumn . ', ' . $valueItemClass . '.' . $fieldColumn . ', ' . $valueClass . '.value, ' . $valueClass . '.ID, ' . $valueClass . '.position, ' . $group . $fieldClass . '.*
 				 FROM ' . $valueItemClass . '

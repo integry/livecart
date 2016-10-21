@@ -1395,6 +1395,22 @@ class Product extends MultilingualObject
 			$limit = 0;
 		}
 
+        $sql = 'select ID from Product where isEnabled=1 and (ID ='.$this->getID().' or parentID='.$this->getID().')';
+        $products = ActiveRecord::getDataBySql($sql);
+        $childProducts = array();
+        if (count($products>0))
+        {
+            foreach ($products as $key => $prod)
+            {
+                $childProducts[]=$prod['ID'];
+            }
+        }
+        else
+        {
+            $childProducts[] = $this->getID();
+        }
+
+
 		$sql = 'SELECT
 					COUNT(*) AS cnt, COALESCE(ParentProduct.ID, OtherItem.productID) AS ID FROM OrderedItem
 				LEFT JOIN
@@ -1406,7 +1422,7 @@ class Product extends MultilingualObject
 				LEFT JOIN
 					Product AS ParentProduct ON Product.parentID=ParentProduct.ID
 				WHERE
-					CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $this->getID() . ' AND OtherItem.productID!=' . $this->getID() . ($enabledOnly? ' AND Product.isEnabled=1' : '') . '
+					CustomerOrder.isFinalized=1 AND OrderedItem.productID in (' . implode(',',$childProducts) . ') AND OtherItem.productID not in (' . implode(',',$childProducts).')' . ($enabledOnly? ' AND Product.isEnabled=1' : '') . '
 				GROUP
 					BY OtherItem.productID
 				ORDER BY

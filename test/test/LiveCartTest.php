@@ -6,9 +6,21 @@ ClassLoader::import('application.model.user.UserAddress');
 abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 {
 	protected $config;
+	protected $userEmail = 'test@test.com';
+	protected $userPassword = 'testerer';
+	protected $usd2eru =2;
 
 	public function setUp()
 	{
+        # Do not convert warnings to exceptions.
+        PHPUnit_Framework_Error_Warning::$enabled = FALSE;
+
+        # Do not convert notice and strict to exceptions
+        PHPUnit_Framework_Error_Notice::$enabled = FALSE;
+
+		# Do not convert deprecated notices to exceptions
+		PHPUnit_Framework_Error_Deprecated::$enabled = FALSE;
+
 		parent::setUp();
 
 		$this->config = ActiveRecordModel::getApplication()->getConfig();
@@ -23,6 +35,11 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 		ActiveRecordModel::executeUpdate('DELETE FROM DeliveryZone');
 
 		$this->getApplication()->clearCachedVars();
+
+		if ($this instanceof ControllerTestCase)
+		{
+			$this->request = self::getApplication()->getRequest();
+		}
 	}
 
 	public function tearDown()
@@ -58,19 +75,25 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 			$this->usd->setAsDefault();
 			$this->usd->save();
 		}
+
+		if (ActiveRecord::objectExists('Currency', 'EUR'))
+		{
+			$this->eur = Currency::getInstanceByID('EUR', Currency::LOAD_DATA);
+		}
+		else
+		{
+			$this->eur = Currency::getNewInstance('EUR');
+			$this->eur->rate->set($this->usd2eru);
+			$this->eur->save();
+		}
 	}
 
-	protected function initOrder()
+	protected function initUser()
 	{
-		// set up currency
-		$this->setUpCurrency();
-		$this->usd->decimalCount->set(2);
-		$this->usd->clearRoundingRules();
-		$this->usd->save();
-
-		// initialize order
-		ActiveRecordModel::executeUpdate('DELETE FROM User WHERE email="test@test.com"');
-		$user = User::getNewInstance('test@test.com');
+		ActiveRecordModel::executeUpdate('DELETE FROM User WHERE email="'.$this->userEmail.'"');
+		$user = User::getNewInstance($this->userEmail);
+		$user->setPassword($this->userPassword);
+		$user->isEnabled->set(true);
 		$user->save();
 		$this->user = $user;
 
@@ -87,10 +110,23 @@ abstract class LiveCartTest extends PHPUnit_Framework_TestCase
 		$address->save();
 		$shipping = ShippingAddress::getNewInstance($user, $address);
 		$shipping->save();
+	}
 
-		$this->order = CustomerOrder::getNewInstance($user);
-		$this->order->shippingAddress->set($shipping->userAddress->get());
-		$this->order->billingAddress->set($billing->userAddress->get());
+	protected function initOrder()
+	{
+		// set up currency
+		$this->setUpCurrency();
+		$this->usd->decimalCount->set(2);
+		$this->usd->clearRoundingRules();
+		$this->usd->save();
+
+		// initialize user
+		$this->initUser();
+
+		// initialize order
+		$this->order = CustomerOrder::getNewInstance($this->user);
+		$this->order->shippingAddress->set($this->user->defaultShippingAddress->get()->userAddress->get());
+		$this->order->billingAddress->set($this->user->defaultBillingAddress->get()->userAddress->get());
 
 		// set up products
 		$product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test1');

@@ -94,7 +94,7 @@ class NewsletterMessage extends ActiveRecordModel
 			$this->save();
 		}
 
-		return $email->send();
+		return $email->send(false, $priority = 0);
 	}
 
 	public function markAsSent()

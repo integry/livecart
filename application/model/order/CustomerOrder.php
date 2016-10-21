@@ -1482,7 +1482,10 @@ class CustomerOrder extends ActiveRecordModel implements EavAble, BusinessRuleOr
 		{
 			$item->price->set($item->getProduct()->getItemPrice($item, true, $currency));
 			$item->setItemPrice($item->price->get());
-			$item->save();
+			$item->save(true);
+
+			//force update cache array ($toArrayData), otherwise $item->toArray()['price'] returns the price in the old currency
+			$item->resetArrayData();
 		}
 
 		$this->save();
